@@ -2,7 +2,6 @@
     这个文件是xuzhengx写的 
     仅供学习与参考（当然你也没法拿这个卖钱）
     （应该是卖不出去的）
-    没有通知xuzhengx，未来可能会删除
 '''
 
 import json, os, random, re, copy
