@@ -1,0 +1,86 @@
+// 可能有朋友不是很清楚我在干什么，这里贴一个物理实验室存档的例子
+// 稍微观察下就会发现我们想修改的实验状态全部在StatusSave的长长的字符串内，而且也是字符串Json
+// StatusSave内的Elements就是所有原件的数据，Wires就是所有导线的数据
+// Python的字典与Json高度吻合，因此我可以非常方便的搞一些操作（尽管没有发布的初代糊得非常潦草，使用字符串拼接实现的）
+// Python真香（）    （然而Python对函数重载的支持不如c++，吐槽一下）
+{
+  "Type": 0,
+  "Experiment": {
+    "ID": null,
+    "Type": 0,
+    "Components": 2,
+    "Subject": null,
+    "StatusSave": "{\"SimulationSpeed\":1.0,\"Elements\":[{\"ModelID\":\"Logic Input\",\"Identifier\":\"-8623101643133265133\",\"IsBroken\":false,\"IsLocked\":false,\"Properties\":{\"高电平\":3.0,\"低电平\":0.0,\"锁定\":1.0},\"Statistics\":{\"电流\":0.0,\"电压\":0.0,\"功率\":0.0},\"Position\":\"0,0.1,0\",\"Rotation\":\"0,0,0\",\"DiagramCached\":false,\"DiagramPosition\":{\"X\":0,\"Y\":0,\"Magnitude\":0.0},\"DiagramRotation\":0},{\"ModelID\":\"Logic Input\",\"Identifier\":\"8684869079147189793\",\"IsBroken\":false,\"IsLocked\":false,\"Properties\":{\"高电平\":3.0,\"低电平\":0.0,\"锁定\":1.0},\"Statistics\":{\"电流\":0.0,\"电压\":0.0,\"功率\":0.0},\"Position\":\"1,0.1,1\",\"Rotation\":\"0,180,0\",\"DiagramCached\":false,\"DiagramPosition\":{\"X\":0,\"Y\":0,\"Magnitude\":0.0},\"DiagramRotation\":0}],\"Wires\":[]}",
+    "CameraSave": "{\"Mode\":0,\"Distance\":2.7,\"VisionCenter\":\"-0.59454,1.08,-0.3229674\",\"TargetRotation\":\"50,0,0\"}", // 正常物实存档的Identifier是Unix时间戳，这里的Identifier是我的python脚本生成的
+    "Version": 2404,
+    "CreationDate": 1673507277861,
+    "Paused": false,
+    "Summary": null,
+    "Plots": null
+  },
+  "ID": null,
+  "Summary": {
+    "Type": 0,
+    "ParentID": null,
+    "ParentName": null,
+    "ParentCategory": null,
+    "ContentID": null,
+    "Editor": null,
+    "Coauthors": [],
+    "Description": null,
+    "LocalizedDescription": null,
+    "Tags": [
+      "Type-0"
+    ],
+    "ModelID": null,
+    "ModelName": null,
+    "ModelTags": [],
+    "Version": 0,
+    "Language": null,
+    "Visits": 0,
+    "Stars": 0,
+    "Supports": 0,
+    "Remixes": 0,
+    "Comments": 0,
+    "Price": 0,
+    "Popularity": 0,
+    "CreationDate": 1673086932246,
+    "UpdateDate": 0,
+    "SortingDate": 0,
+    "ID": null,
+    "Category": null,
+    "Subject": "测逝",
+    "LocalizedSubject": null,
+    "Image": 0,
+    "ImageRegion": 0,
+    "User": {
+      "ID": null,
+      "Nickname": null,
+      "Signature": null,
+      "Avatar": 0,
+      "AvatarRegion": 0,
+      "Decoration": 0,
+      "Verification": null
+    },
+    "Visibility": 0,
+    "Settings": {},
+    "Multilingual": false
+  },
+  "CreationDate": 0,
+  "InternalName": "自动保存-电学",
+  "Speed": 1.0,
+  "SpeedMinimum": 0.0002,
+  "SpeedMaximum": 2.0,
+  "SpeedReal": 0.0,
+  "Paused": false,
+  "Version": 0,
+  "CameraSnapshot": null,
+  "Plots": [],
+  "Widgets": [],
+  "WidgetGroups": [],
+  "Bookmarks": {},
+  "Interfaces": {
+    "Play-Expanded": false,
+    "Chart-Expanded": false
+  }
+}
