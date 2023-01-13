@@ -11,16 +11,23 @@
 
 #### 使用说明
 
-open_Experiment("(Your .sav's path)") # 打开存档
-read_Experiment() # 如果你希望程序不覆盖掉存档中已有的实验状态，需要这样写
-
-logicInput(0, 0, 0.1) # 创建一个逻辑输入，坐标为(0, 0, 0.1)
-o = orGate() # 你也可以不写坐标，默认是(0,0,0)，请注意2原件的坐标不允许重叠！
-             # 此时o存储的是orGate的self
-wire(o, 0, (0,0,0), 1) # wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝")
-                       # SourceLabel与TargetLabel支持传入self与坐标（用tuple表示）
-write_Experiment() # 将程序中生成的原件，导线等等写入存档
-        # 然后打开存档见证奇迹（更详细的内容以后写，如果你能加入我就太好了）
+'''打开存档'''
+open_Experiment("(Your .sav's path)")
+'''如果你希望程序不覆盖掉存档中已有的实验状态，需要这样写'''
+read_Experiment()
+'''创建一个逻辑输入，坐标为(0, 0, 0.1)'''
+logicInput(0, 0, 0.1) 
+'''你也可以不写坐标，默认是(0,0,0)，请注意2原件的坐标不允许重叠！'''
+o = orGate() '''此时o存储的是orGate的self'''
+'''wire输入格式：
+    wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝")
+    SourceLabel与TargetLabel支持传入self与坐标（用tuple表示）
+'''
+wire(o, 0, (0,0,0), 1)
+'''将程序中生成的原件，导线等等写入存档'''
+write_Experiment()
+'''然后打开存档见证奇迹
+（更详细的内容以后写，如果你能加入我就太好了）'''
 
 #### 参与贡献
 
