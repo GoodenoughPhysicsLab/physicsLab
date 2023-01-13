@@ -72,6 +72,7 @@ def open_Experiment(file: str):
 def write_Experiment():
     global _savName, _sav, _StatusSave
     _StatusSave["Elements"] = [i.arguments for i in list(_elements_Address.values())]
+    _StatusSave["Wires"] = _wires
     _sav["Experiment"]["StatusSave"] = json.dumps(_StatusSave)
     with open(_savName, "w", encoding="UTF-8") as f:
         f.write(json.dumps(_sav))
@@ -114,7 +115,7 @@ class _element:
         return self.arguments["ModelID"]
 
 def _element_Init_HEAD(func):
-    def result(self, x: float = 0, y: float = 0, z: float = 0):
+    def result(self, x : float = 0, y : float = 0, z : float = 0):
         global _Elements
         self.position = self.format_Positon((x, y, z))
         if (self.position in _Elements):
@@ -250,7 +251,7 @@ class fullAdder(_element):
         self.arguments = {'ModelID': 'Full Adder', 'Identifier': '', 'IsBroken': False,
                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '锁定': 1.0}, 'Statistics': {},
                           'Position': '', 'Rotation': '', 'DiagramCached': False,
-                          'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+                          'DiagramPosition': {'X': 0, 'Y': 0, 'Z': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 二位乘法器
 class multiplier(_element):
@@ -311,6 +312,30 @@ class random_Generator(_element):
                           "Rotation": '', "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
 
+class simpleSwitch(_element):
+    @_element_Init_HEAD
+    def __init__(self):
+        self.arguments = {"ModelID": "Simple Switch", "Identifier": "", "IsBroken": False,
+                          "IsLocked": False, "Properties": {"开关": 0, "锁定": 1.0},
+                          "Statistics": {}, "Position": "",
+                          "Rotation": '', "DiagramCached": False,
+                          "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
+
 ''' wire还需要想想 
 可以支持传入 self 与 位置 来连接导线
 '''
+def wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝"):
+    if (type(SourceLabel) == tuple and len(SourceLabel) == 3):
+        SourceLabel = _elements_Address[SourceLabel]
+    elif (SourceLabel not in _elements_Address.values()):
+        raise RuntimeError("SourceLabel must be a Positon or self")
+    if (type(TargetLabel) == tuple and len(TargetLabel) == 3):
+        TargetLabel = _elements_Address[TargetLabel]
+    elif (TargetLabel not in _elements_Address.values()):
+        raise RuntimeError("TargetLabel must be a Positon or self")
+
+    if (color not in ["黑", "蓝", "红", "绿"]):
+        raise RuntimeError("illegal color")
+    _wires.append({"Source": SourceLabel.arguments["Identifier"], "SourcePin": SourcePin,
+                   "Target": TargetLabel.arguments["Identifier"], "TargetPin": TargetPin,
+                   "ColorName": f"{color}色导线"})
