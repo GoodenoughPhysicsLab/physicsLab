@@ -7,7 +7,7 @@ FILE_HEAD = "C:/Users/Administrator/AppData/LocalLow/CIVITAS/Quantum Physics/Cir
 # _xxx 不是文件向外暴露出的接口，文件外请谨慎访问与修改
 _savName = "" # sav的文件名
 _StatusSave = {"SimulationSpeed":1.0, "Elements":[], "Wires":[]}
-_Elements = [] # 装原件的坐标
+_Elements = [] # 装原件的arguments
 _wires = []
 _sav = {"Type": 0, "Experiment": {"ID": None, "Type": 0, "Components": 7, "Subject": None,
     "StatusSave": "",  # elements and wires: __sav["Experiment"]["StatusSave"] = json.dumps(__StatusSave)
@@ -50,6 +50,12 @@ D触发器：       逻辑输入、逻辑输出：
 
 '''
 
+def show_Elements():
+    print(_Elements)
+
+def show_wires():
+    print(_wires)
+
 # 打开一个指定的sav文件
 def open_Experiment(file: str):
     file = file.strip()
@@ -71,7 +77,7 @@ def open_Experiment(file: str):
 # 将编译完成的json写入sav
 def write_Experiment():
     global _savName, _sav, _StatusSave
-    _StatusSave["Elements"] = [i.arguments for i in list(_elements_Address.values())]
+    _StatusSave["Elements"] = _Elements
     _StatusSave["Wires"] = _wires
     _sav["Experiment"]["StatusSave"] = json.dumps(_StatusSave)
     with open(_savName, "w", encoding="UTF-8") as f:
@@ -79,7 +85,19 @@ def write_Experiment():
 
 # 读取sav文件已有的原件与导线
 def read_Experiment():
-    pass
+    global _Elements, _wires
+    with open(_savName, encoding='UTF-8') as f:
+        readmem = json.loads(f.read())
+        _Elements = json.loads(readmem["Experiment"]["StatusSave"])["Elements"]
+        _wires = json.loads(readmem['Experiment']['StatusSave'])['Wires']
+
+        for element in _Elements:
+            sign1 = element['Position'].find(',')
+            sign2 = element['Position'].find(',', sign1 + 1)
+            num1 = round(float(element['Position'][:sign1:]), 1)
+            num2 = round(float(element['Position'][sign1 + 1: sign2:]), 1)
+            num3 = round(float(element['Position'][sign2 + 1::]), 1)
+            element['Position'] = f"{num1},{num2},{num3}"
 
 # 重命名sav
 def rename_sav(name: str):
@@ -120,15 +138,15 @@ def _element_Init_HEAD(func):
         self.position = self.format_Positon((x, y, z))
         if (self.position in _Elements):
             raise RuntimeError("The position already exists")
-        _Elements.append(self.position)
-        _elements_Address[self.position] = self
         func(self, x, y, z)
+        _Elements.append(self.arguments)
+        _elements_Address[self.position] = self
         self.arguments["Identifier"] = hash(self.position).__str__()
         self.set_Position(self.position)
         self.set_Rotation()
     return result
 
-# 下一波更新：简化argument，把大部分放到装饰器里面（如果不想搞就不搞了）
+# arguments这个名字取得真糟糕，但懒得改了
 
 class logicInput(_element):
     @_element_Init_HEAD
@@ -321,9 +339,8 @@ class simpleSwitch(_element):
                           "Rotation": '', "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
 
-''' wire还需要想想 
-可以支持传入 self 与 位置 来连接导线
-'''
+
+# 可以支持传入 self 与 位置 来连接导线
 def wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝"):
     if (type(SourceLabel) == tuple and len(SourceLabel) == 3):
         SourceLabel = _elements_Address[SourceLabel]
@@ -334,7 +351,7 @@ def wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "�
     elif (TargetLabel not in _elements_Address.values()):
         raise RuntimeError("TargetLabel must be a Positon or self")
 
-    if (color not in ["黑", "蓝", "红", "绿"]):
+    if (color not in ["黑", "蓝", "红", "绿", "黄"]):
         raise RuntimeError("illegal color")
     _wires.append({"Source": SourceLabel.arguments["Identifier"], "SourcePin": SourcePin,
                    "Target": TargetLabel.arguments["Identifier"], "TargetPin": TargetPin,
