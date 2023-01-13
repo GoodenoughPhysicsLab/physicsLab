@@ -3,21 +3,24 @@
 #### 介绍
 通过一些命令对物理实验室存档进行操作
 
-#### 软件架构
-软件架构说明
-
-
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+1.  打开Code文件夹中的physicsLab.py，复制或下载到本地
+2.  打开physicsLab.py，在代码中修改文件路径（推荐）
+3.  如果你的ide无法找到physicsLab,py，你需要sys.path.append('(path of physicsLab.py)')来解决这个问题
 
 #### 使用说明
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
+open_Experiment("(Your .sav's path)") # 打开存档
+read_Experiment() # 如果你希望程序不覆盖掉存档中已有的实验状态，需要这样写
+
+logicInput(0, 0, 0.1) # 创建一个逻辑输入，坐标为(0, 0, 0.1)
+o = orGate() # 你也可以不写坐标，默认是(0,0,0)，请注意2原件的坐标不允许重叠！
+             # 此时o存储的是orGate的self
+wire(o, 0, (0,0,0), 1) # wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝")
+                       # SourceLabel与TargetLabel支持传入self与坐标（用tuple表示）
+write_Experiment() # 将程序中生成的原件，导线等等写入存档
+        # 然后打开存档见证奇迹（更详细的内容以后写，如果你能加入我就太好了）
 
 #### 参与贡献
 
@@ -25,7 +28,7 @@
 2.  新建 Feat_xxx 分支
 3.  提交代码
 4.  新建 Pull Request
-
+5.  补充readme
 
 #### 特技
 
