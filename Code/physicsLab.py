@@ -92,7 +92,7 @@ def write_Experiment() -> None:
 
 # 创建原件，本质上仍然是实例化
 def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0) -> _Elements:
-    return eval(name.replace(' ', '_') + f'({round(x, 1)},{round(z, 1)},{round(y, 1)})')
+    return eval(name.replace(' ', '_') + f'({round(x, 2)},{round(z, 2)},{round(y, 2)})')
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
@@ -106,9 +106,9 @@ def read_Experiment() -> None:
             # 坐标标准化（消除浮点误差）
             sign1 = element['Position'].find(',')
             sign2 = element['Position'].find(',', sign1 + 1)
-            num1 = round(float(element['Position'][:sign1:]), 1)
-            num2 = round(float(element['Position'][sign1 + 1: sign2:]), 1)
-            num3 = round(float(element['Position'][sign2 + 1::]), 1)
+            num1 = round(float(element['Position'][:sign1:]), 2)
+            num2 = round(float(element['Position'][sign1 + 1: sign2:]), 2)
+            num3 = round(float(element['Position'][sign2 + 1::]), 2)
             element['Position'] = f"{num1},{num2},{num3}"  # x, z, y
             # 实例化对象
             obj = eval(element["ModelID"].replace(' ', '_') + f"({num1},{num3},{num2})")
@@ -136,14 +136,14 @@ def get_element(position: tuple) -> _Elements:
 # 所有原件的父类，不要实例化
 class _element:
     def set_Rotation(self, xRotation: float = 0, yRotation: float = 0, zRotation: float = 180):
-        self.arguments["Rotation"] = f"{round(xRotation)},{round(zRotation)},{round(yRotation)}"
+        self.arguments["Rotation"] = f"{round(xRotation, 2)},{round(zRotation, 2)},{round(yRotation, 2)}"
         return self.arguments["Rotation"]
 
     def format_Positon(self) -> tuple:
         if (type(self.position) != tuple or self.position.__len__() != 3):
             raise RuntimeError("Position must be a tuple of length three but gets some other value")
-        self.position = (round(self.position[0], 1), round(self.position[1], 1), round(self.position[2], 1))
-        return (round(self.position[0], 1), round(self.position[1], 1), round(self.position[2], 1))
+        self.position = (round(self.position[0], 2), round(self.position[1], 2), round(self.position[2], 2))
+        return (round(self.position[0], 2), round(self.position[1], 2), round(self.position[2], 2))
 
     def type(self):
         return self.arguments["ModelID"]
@@ -153,7 +153,7 @@ class _element:
 def _element_Init_HEAD(func : Callable) -> Callable:
     def result(self, x : float = 0, y : float = 0, z : float = 0) -> None:
         global _Elements
-        self.position = (round(x, 1), round(y, 1), round(z, 1))
+        self.position = (round(x, 2), round(y, 2), round(z, 2))
         if (self.position in _elements_Address.keys()):
             raise RuntimeError("The position already exists")
         func(self, x, y, z)
