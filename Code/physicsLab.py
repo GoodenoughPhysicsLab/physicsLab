@@ -4,7 +4,7 @@ import json
 FILE_HEAD = "C:/Users/Administrator/AppData/LocalLow/CIVITAS/Quantum Physics/Circuit/"
 # end define
 
-# _xxx 不是文件向外暴露出的接口，文件外请谨慎访问与修改
+# _xxx 不是文件向外暴露出的接口，文件外无法访问
 _savName = "" # sav的文件名
 _StatusSave = {"SimulationSpeed":1.0, "Elements":[], "Wires":[]}
 _Elements = [] # 装原件的arguments
@@ -28,14 +28,20 @@ _elements_Address = {} # key为position，value为self
 '''
 原件引脚编号：
 
-D触发器：       逻辑输入、逻辑输出：
-2 0            0
-3 1          
+D触发器：       逻辑输入、逻辑输出：      是门、非门：       比较器
+2    0         0                     0 1              1
+                                                          2
+3    1                                                0
 
-与门，或门，或非门，蕴含非门：
-0
-    2
-1
+三引脚门电路：   全加器：
+0             2    0
+    2         3
+1             4    1
+
+继电器pin
+0   4
+  1  
+2   3
 
 二位乘法器：
 4  0
@@ -50,10 +56,10 @@ D触发器：       逻辑输入、逻辑输出：
 
 '''
 
-def show_Elements():
+def print_Elements():
     print(_Elements)
 
-def show_wires():
+def print_wires():
     print(_wires)
 
 # 打开一个指定的sav文件
@@ -91,13 +97,20 @@ def read_Experiment():
         _Elements = json.loads(readmem["Experiment"]["StatusSave"])["Elements"]
         _wires = json.loads(readmem['Experiment']['StatusSave'])['Wires']
 
-        for element in _Elements:
+        it = iter(_Elements)
+        try: # for in在这个的应用中有问题，所以手搓了一下
+            element = next(it)
+            # 坐标标准化（消除浮点误差）
             sign1 = element['Position'].find(',')
             sign2 = element['Position'].find(',', sign1 + 1)
             num1 = round(float(element['Position'][:sign1:]), 1)
             num2 = round(float(element['Position'][sign1 + 1: sign2:]), 1)
             num3 = round(float(element['Position'][sign2 + 1::]), 1)
             element['Position'] = f"{num1},{num2},{num3}"
+            # 实例化对象
+            eval(element["ModelID"].replace(' ', '_') + f"({num1},{num3},{num2})")
+        except:
+            pass
 
 # 重命名sav
 def rename_sav(name: str):
@@ -136,7 +149,7 @@ def _element_Init_HEAD(func):
     def result(self, x : float = 0, y : float = 0, z : float = 0):
         global _Elements
         self.position = self.format_Positon((x, y, z))
-        if (self.position in _Elements):
+        if (self.position in _elements_Address.keys()):
             raise RuntimeError("The position already exists")
         func(self, x, y, z)
         _Elements.append(self.arguments)
@@ -148,7 +161,7 @@ def _element_Init_HEAD(func):
 
 # arguments这个名字取得真糟糕，但懒得改了
 
-class logicInput(_element):
+class Logic_Input(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {"ModelID": "Logic Input", "Identifier": "",
@@ -159,7 +172,7 @@ class logicInput(_element):
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
                           "DiagramRotation": 0}
 
-class logicOutput(_element):
+class Logic_Output(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {'ModelID': 'Logic Output', 'Identifier': "",
@@ -169,7 +182,7 @@ class logicOutput(_element):
                           'Rotation': '0,180,0', 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
-class yesGate(_element):
+class Yes_Gate(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {'ModelID': 'Yes Gate', 'Identifier': "", 'IsBroken': False,
@@ -178,7 +191,7 @@ class yesGate(_element):
                           'Rotation': '', 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
-class noGate(_element):
+class No_Gate(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {'ModelID': 'No Gate', 'Identifier': "", 'IsBroken': False,
@@ -186,7 +199,7 @@ class noGate(_element):
                           'Statistics': {}, 'Position': "", 'Rotation': '', 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
-class orGate(_element):
+class Or_Gate(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {'ModelID': 'Or Gate', 'Identifier': '', 'IsBroken': False,
@@ -194,7 +207,7 @@ class orGate(_element):
                           'Statistics': {}, 'Position': "", 'Rotation': "", 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
-class andGate(_element):
+class And_Gate(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {'ModelID': 'And Gate', 'Identifier': '', 'IsBroken': False,
@@ -202,7 +215,7 @@ class andGate(_element):
                           'Statistics': {}, 'Position': "", 'Rotation': "", 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
-class norGate(_element):
+class Nor_Gate(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {'ModelID': 'Nor Gate', 'Identifier': '', 'IsBroken': False,
@@ -210,7 +223,7 @@ class norGate(_element):
                           'Statistics': {}, 'Position': "", 'Rotation': "", 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
-class nAndGate(_element):
+class Nand_Gate(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {'ModelID': 'Nand Gate', 'Identifier': '', 'IsBroken': False,
@@ -218,7 +231,7 @@ class nAndGate(_element):
                           'Statistics': {}, 'Position': '', 'Rotation': '', 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
-class xorGate(_element):
+class Xor_Gate(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {'ModelID': 'Xor Gate', 'Identifier': '', 'IsBroken': False,
@@ -227,7 +240,7 @@ class xorGate(_element):
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 同或门
-class xNorGate(_element):
+class Xnor_Gate(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {'ModelID': 'Xnor Gate', 'Identifier': '', 'IsBroken': False,
@@ -236,7 +249,7 @@ class xNorGate(_element):
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 蕴含门
-class impGate(_element):
+class Imp_Gate(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {'ModelID': 'Imp Gate', 'Identifier': '', 'IsBroken': False,
@@ -245,7 +258,7 @@ class impGate(_element):
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 蕴含非门
-class nImpGate(_element):
+class Nimp_Gate(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {'ModelID': 'Nimp Gate', 'Identifier': '', 'IsBroken': False,
@@ -254,7 +267,7 @@ class nImpGate(_element):
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 半加器
-class halfAdder(_element):
+class Half_Adder(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {'ModelID': 'Half Adder', 'Identifier': '', 'IsBroken': False,
@@ -263,7 +276,7 @@ class halfAdder(_element):
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 全加器
-class fullAdder(_element):
+class Full_Adder(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {'ModelID': 'Full Adder', 'Identifier': '', 'IsBroken': False,
@@ -272,7 +285,7 @@ class fullAdder(_element):
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Z': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 二位乘法器
-class multiplier(_element):
+class Multiplier(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {'ModelID': 'Multiplier', 'Identifier': '', 'IsBroken': False,
@@ -281,7 +294,7 @@ class multiplier(_element):
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # D触发器
-class d_Fiopflop(_element):
+class D_Fiopflop(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {"ModelID": "D Flipflop", "Identifier": "", "IsBroken": False,
@@ -291,7 +304,7 @@ class d_Fiopflop(_element):
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
 
 # T触发器
-class t_Fiopflop(_element):
+class T_Fiopflop(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {"ModelID": "T Flipflop", "Identifier": "", "IsBroken": False,
@@ -301,7 +314,7 @@ class t_Fiopflop(_element):
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
 
 # JK触发器
-class jk_Fiopflop(_element):
+class JK_Fiopflop(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {"ModelID": "JK Flipflop", "Identifier": "", "IsBroken": False,
@@ -311,7 +324,7 @@ class jk_Fiopflop(_element):
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
 
 # 计数器
-class counter(_element):
+class Counter(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {"ModelID": "Counter", "Identifier": "", "IsBroken": False,
@@ -321,7 +334,7 @@ class counter(_element):
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
 
 # 随机数发生器
-class random_Generator(_element):
+class Random_Generator(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self.arguments = {"ModelID": "Random Generator", "Identifier": "", "IsBroken": False,
@@ -330,7 +343,7 @@ class random_Generator(_element):
                           "Rotation": '', "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
 
-class simpleSwitch(_element):
+class Simple_Switch(_element):
     @_element_Init_HEAD
     def __init__(self):
         self.arguments = {"ModelID": "Simple Switch", "Identifier": "", "IsBroken": False,
@@ -342,6 +355,7 @@ class simpleSwitch(_element):
 
 # 可以支持传入 self 与 位置 来连接导线
 def wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝"):
+    SourcePin, TargetPin = int(SourcePin), int(TargetPin)
     if (type(SourceLabel) == tuple and len(SourceLabel) == 3):
         SourceLabel = _elements_Address[SourceLabel]
     elif (SourceLabel not in _elements_Address.values()):
