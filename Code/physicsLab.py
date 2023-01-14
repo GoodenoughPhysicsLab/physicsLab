@@ -108,9 +108,9 @@ def read_Experiment():
                 num2 = round(float(element['Position'][sign1 + 1: sign2:]), 1)
                 num3 = round(float(element['Position'][sign2 + 1::]), 1)
                 element['Position'] = f"{num1},{num2},{num3}"
-            # 实例化对象
+                # 实例化对象
                 eval(element["ModelID"].replace(' ', '_') + f"({num1},{num3},{num2})")
-        except:
+        except StopIteration:
             pass
 
 # 重命名sav
