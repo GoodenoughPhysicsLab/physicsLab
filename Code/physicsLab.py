@@ -24,7 +24,7 @@ _sav = {"Type": 0, "Experiment": {"ID": None, "Type": 0, "Components": 7, "Subje
         "Speed": 1.0, "SpeedMinimum": 0.0002, "SpeedMaximum": 2.0, "SpeedReal": 0.0, "Paused": False, "Version": 0, "CameraSnapshot": None, "Plots": [], "Widgets": [],
         "WidgetGroups": [], "Bookmarks": {}, "Interfaces": {"Play-Expanded": False,"Chart-Expanded": False}}
 _ifndef_open_Experiment = False
-_elements_Address : dict = {} # key为position，value为self
+_elements_Address = {} # key为position，value为self
 
 '''
 原件引脚编号：
@@ -96,27 +96,29 @@ def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0) -> _Elem
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
-    global _Elements, _wires
+    global _wires
     with open(_savName, encoding='UTF-8') as f:
         readmem = json.loads(f.read())
-        _Elements = json.loads(readmem["Experiment"]["StatusSave"])["Elements"]
+        _local_Elements = json.loads(readmem["Experiment"]["StatusSave"])["Elements"]
         _wires = json.loads(readmem['Experiment']['StatusSave'])['Wires']
 
-        it = iter(_Elements)
-        try: # for in在这个的应用中有问题，所以手搓了一下
-            while (True):
-                element = next(it)
-                # 坐标标准化（消除浮点误差）
-                sign1 = element['Position'].find(',')
-                sign2 = element['Position'].find(',', sign1 + 1)
-                num1 = round(float(element['Position'][:sign1:]), 1)
-                num2 = round(float(element['Position'][sign1 + 1: sign2:]), 1)
-                num3 = round(float(element['Position'][sign2 + 1::]), 1)
-                element['Position'] = f"{num1},{num2},{num3}"
-                # 实例化对象
-                eval(element["ModelID"].replace(' ', '_') + f"({num1},{num3},{num2})")
-        except StopIteration:
-            pass
+        for element in _local_Elements:
+            # 坐标标准化（消除浮点误差）
+            sign1 = element['Position'].find(',')
+            sign2 = element['Position'].find(',', sign1 + 1)
+            num1 = round(float(element['Position'][:sign1:]), 1)
+            num2 = round(float(element['Position'][sign1 + 1: sign2:]), 1)
+            num3 = round(float(element['Position'][sign2 + 1::]), 1)
+            element['Position'] = f"{num1},{num2},{num3}"  # x, z, y
+            # 实例化对象
+            obj = eval(element["ModelID"].replace(' ', '_') + f"({num1},{num3},{num2})")
+            sign1 = element['Rotation'].find(',')
+            sign2 = element['Rotation'].find(',', sign1 + 1)
+            x = float(element['Rotation'][:sign1:])
+            z = float(element['Rotation'][sign1 + 1: sign2:])
+            y = float(element['Rotation'][sign2 + 1::])
+            obj.set_Rotation(x, y, z)
+
 
 # 重命名sav
 def rename_sav(name: str) -> None:
@@ -137,31 +139,28 @@ class _element:
         self.arguments["Rotation"] = f"{round(xRotation)},{round(zRotation)},{round(yRotation)}"
         return self.arguments["Rotation"]
 
-    def format_Positon(self, position: tuple) -> tuple:
-        if (type(position) != tuple or position.__len__() != 3):
+    def format_Positon(self) -> tuple:
+        if (type(self.position) != tuple or self.position.__len__() != 3):
             raise RuntimeError("Position must be a tuple of length three but gets some other value")
-        return (round(position[0], 1), round(position[1], 1), round(position[2], 1)) # (x, y, z)
-
-    def set_Position(self, position: tuple) -> tuple:
-        self.position = self.format_Positon(position)
-        self.arguments["Position"] = f"{self.position[0]},{self.position[2]},{self.position[1]}"
-        return self.arguments["Position"]
+        self.position = (round(self.position[0], 1), round(self.position[1], 1), round(self.position[2], 1))
+        return (round(self.position[0], 1), round(self.position[1], 1), round(self.position[2], 1))
 
     def type(self):
         return self.arguments["ModelID"]
+
 
 # 装饰器
 def _element_Init_HEAD(func : Callable) -> Callable:
     def result(self, x : float = 0, y : float = 0, z : float = 0) -> None:
         global _Elements
-        self.position = self.format_Positon((x, y, z))
+        self.position = (round(x, 1), round(y, 1), round(z, 1))
         if (self.position in _elements_Address.keys()):
             raise RuntimeError("The position already exists")
         func(self, x, y, z)
         _Elements.append(self.arguments)
         _elements_Address[self.position] = self
         self.arguments["Identifier"] = hash(self.position).__str__()
-        self.set_Position(self.position)
+        self.arguments["Position"] = f"{self.position[0]},{self.position[2]},{self.position[1]}"
         self.set_Rotation()
     return result
 
