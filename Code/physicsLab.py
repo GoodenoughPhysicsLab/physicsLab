@@ -1,4 +1,5 @@
 import json
+from typing import Union, Callable
 
 # define
 FILE_HEAD = "C:/Users/Administrator/AppData/LocalLow/CIVITAS/Quantum Physics/Circuit/"
@@ -23,7 +24,7 @@ _sav = {"Type": 0, "Experiment": {"ID": None, "Type": 0, "Components": 7, "Subje
         "Speed": 1.0, "SpeedMinimum": 0.0002, "SpeedMaximum": 2.0, "SpeedReal": 0.0, "Paused": False, "Version": 0, "CameraSnapshot": None, "Plots": [], "Widgets": [],
         "WidgetGroups": [], "Bookmarks": {}, "Interfaces": {"Play-Expanded": False,"Chart-Expanded": False}}
 _ifndef_open_Experiment = False
-_elements_Address = {} # key为position，value为self
+_elements_Address : dict = {} # key为position，value为self
 
 '''
 原件引脚编号：
@@ -63,7 +64,7 @@ def print_wires():
     print(_wires)
 
 # 打开一个指定的sav文件
-def open_Experiment(file: str):
+def open_Experiment(file: str) -> None:
     file = file.strip()
     if (file[len(file) - 4: len(file)] != ".sav"):
         raise RuntimeError("The open file must be of type sav")
@@ -81,7 +82,7 @@ def open_Experiment(file: str):
         _sav["InternalName"] = _sav["Summary"]["Subject"]
 
 # 将编译完成的json写入sav
-def write_Experiment():
+def write_Experiment() -> None:
     global _savName, _sav, _StatusSave
     _StatusSave["Elements"] = _Elements
     _StatusSave["Wires"] = _wires
@@ -89,8 +90,12 @@ def write_Experiment():
     with open(_savName, "w", encoding="UTF-8") as f:
         f.write(json.dumps(_sav))
 
+# 创建原件，本质上仍然是实例化
+def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0) -> _Elements:
+    return eval(name.replace(' ', '_') + f'({round(x, 1)},{round(z, 1)},{round(y, 1)})')
+
 # 读取sav文件已有的原件与导线
-def read_Experiment():
+def read_Experiment() -> None:
     global _Elements, _wires
     with open(_savName, encoding='UTF-8') as f:
         readmem = json.loads(f.read())
@@ -114,14 +119,14 @@ def read_Experiment():
             pass
 
 # 重命名sav
-def rename_sav(name: str):
+def rename_sav(name: str) -> None:
     global _sav
     name = str(name)
     _sav["Summary"]["Subject"] = name
     _sav["InternalName"] = name
 
 # 获取对应坐标的self
-def get_element(position):
+def get_element(position: tuple) -> _Elements:
     if (type(position) != tuple or position.__len__() != 3):
         raise RuntimeError("Position must be a tuple of length three but gets some other value")
     return _elements_Address[(position)]
@@ -132,22 +137,22 @@ class _element:
         self.arguments["Rotation"] = f"{round(xRotation)},{round(zRotation)},{round(yRotation)}"
         return self.arguments["Rotation"]
 
-    def format_Positon(self, position):
+    def format_Positon(self, position: tuple) -> tuple:
         if (type(position) != tuple or position.__len__() != 3):
             raise RuntimeError("Position must be a tuple of length three but gets some other value")
-        return (round(position[0], 1), round(position[1], 1), round(position[2], 1))
+        return (round(position[0], 1), round(position[1], 1), round(position[2], 1)) # (x, y, z)
 
-    def set_Position(self, position):
-        input_self = _elements_Address[position]
-        input_self.position = input_self.format_Positon(position)
-        input_self.arguments["Position"] = f"{input_self.position[0]},{input_self.position[2]},{input_self.position[1]}"
-        return input_self.arguments["Position"]
+    def set_Position(self, position: tuple) -> tuple:
+        self.position = self.format_Positon(position)
+        self.arguments["Position"] = f"{self.position[0]},{self.position[2]},{self.position[1]}"
+        return self.arguments["Position"]
 
     def type(self):
         return self.arguments["ModelID"]
 
-def _element_Init_HEAD(func):
-    def result(self, x : float = 0, y : float = 0, z : float = 0):
+# 装饰器
+def _element_Init_HEAD(func : Callable) -> Callable:
+    def result(self, x : float = 0, y : float = 0, z : float = 0) -> None:
         global _Elements
         self.position = self.format_Positon((x, y, z))
         if (self.position in _elements_Address.keys()):
@@ -354,8 +359,8 @@ class Simple_Switch(_element):
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
 
 
-# 可以支持传入 self 与 位置 来连接导线
-def wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝"):
+# 可以支持传入 self 与 位置（tuple） 来连接导线
+def wire(SourceLabel : Union[_element, tuple], SourcePin : int, TargetLabel, TargetPin : int, color = "蓝"):
     SourcePin, TargetPin = int(SourcePin), int(TargetPin)
     if (type(SourceLabel) == tuple and len(SourceLabel) == 3):
         SourceLabel = _elements_Address[SourceLabel]
