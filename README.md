@@ -16,9 +16,9 @@ open_Experiment("(Your .sav's path)")
 2. '''如果你希望程序不覆盖掉存档中已有的实验状态，需要这样写'''
 read_Experiment()
 3. '''创建一个逻辑输入，坐标为(0, 0, 0.1)'''
-logicInput(0, 0, 0.1) 
+Logic_Input(0, 0, 0.1) 
 4. '''你也可以不写坐标，默认是(0,0,0)，请注意2原件的坐标不允许重叠！'''
-o = orGate() '''此时o存储的是orGate的self'''
+o = Or_Gate() '''此时o存储的是orGate的self'''
 5. '''wire输入格式：
     wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝")
     SourceLabel与TargetLabel支持传入self与坐标（用tuple表示）
