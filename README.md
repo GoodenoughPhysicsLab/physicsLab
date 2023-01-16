@@ -13,24 +13,25 @@ sys.path.append('(path of physicsLab.py)')
 ```
 #### 使用说明
 
-1. 打开存档  
+```diff
+ # 打开存档  
 open_Experiment("(Your .sav's path)")  
-2. 如果你希望程序不覆盖掉存档中已有的实验状态，需要这样写  
+ # 如果你希望程序不覆盖掉存档中已有的实验状态，需要这样写  
 read_Experiment()  
-3. 创建一个逻辑输入，坐标为(0, 0, 0.1)  
+ # 创建一个逻辑输入，坐标为(0, 0, 0.1)  
 Logic_Input(0, 0, 0.1)   
-4. 你也可以不写坐标，默认是(0,0,0)，请注意2原件的坐标不允许重叠！  
+ # 你也可以不写坐标，默认是(0,0,0)，请注意2原件的坐标不允许重叠！  
 o = Or_Gate() # 此时o存储的是orGate的self  
-5. wire输入格式 (  
-    wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝")  
-    SourceLabel与TargetLabel支持传入self与坐标（用tuple表示）  
-)  
+ # wire输入格式 (  
+ #    wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝")  
+ #    SourceLabel与TargetLabel支持传入self与坐标（用tuple表示）   
+ # )  
 wire(o.i_up, o.i_low)  
-6. 将程序中生成的原件，导线等等写入存档  
+ # 将程序中生成的原件，导线等等写入存档  
 write_Experiment()  
-7. 然后打开存档见证奇迹  
-（更详细的内容请看api.txt，后续也会贴上一些测试代码作为示例代码）
-
+ # 然后打开存档见证奇迹  
+ # （更详细的内容请看api.txt，后续也会贴上一些测试代码作为示例代码）
+```
 #### 优点
 1. 通过read_Experiment()，你无须把所有连接导线的工作交给代码。因为用代码写并不意味着方便。你现在可以手动连接部分导线，并通过保存的形式，让程序在下次也可以轻松读取。这也意味着你不用一口气把控制整个电路的脚本写出来，而是每次写一部分，并把更适合代码的工作交给代码完成。
 
