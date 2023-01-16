@@ -91,7 +91,7 @@ def write_Experiment() -> None:
         f.write(json.dumps(_sav))
 
 # 创建原件，本质上仍然是实例化
-def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0) -> _Elements:
+def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
     return eval(name.replace(' ', '_') + f'({round(x, 2)},{round(z, 2)},{round(y, 2)})')
 
 # 读取sav文件已有的原件与导线
@@ -128,10 +128,29 @@ def rename_sav(name: str) -> None:
     _sav["InternalName"] = name
 
 # 获取对应坐标的self
-def get_element(position: tuple) -> _Elements:
-    if (type(position) != tuple or position.__len__() != 3):
-        raise RuntimeError("Position must be a tuple of length three but gets some other value")
-    return _elements_Address[(position)]
+def get_element(x, y, z):
+    return _elements_Address[(x, y, z)]
+
+# 删除原件
+def del_element(self) -> None:
+    try:
+        identifier = self.arguments['Identifier']
+        if (self.father_type() == 'element'):
+            for element in _Elements:
+                if (identifier == element['Identifier']):
+                    # 删除原件
+                    _Elements.remove(element)
+                    # 删除导线
+                    i = 0
+                    while (i < _wires.__len__()):
+                        wire = _wires[i]
+                        if (wire['Source'] == identifier or wire['Target'] == identifier):
+                            _wires.pop(i)
+                        else:
+                            i += 1
+                    return
+    except:
+        raise RuntimeError('Unable to delete a nonexistent element')
 
 # 所有原件的父类，不要实例化
 class _element:
@@ -145,8 +164,11 @@ class _element:
         self.position = (round(self.position[0], 2), round(self.position[1], 2), round(self.position[2], 2))
         return (round(self.position[0], 2), round(self.position[1], 2), round(self.position[2], 2))
 
+    def father_type(self):
+        return 'element'
+
     def type(self):
-        return self.arguments["ModelID"]
+        return self.arguments['ModelID']
 
 
 # 装饰器
@@ -164,7 +186,16 @@ def _element_Init_HEAD(func : Callable) -> Callable:
         self.set_Rotation()
     return result
 
-# arguments这个名字取得真糟糕，但懒得改了
+# 引脚类
+class _element_Pin:
+    def __init__(self, input_self,  pinLabel : int):
+        self.element_self = input_self
+        self.pinLabel = pinLabel
+
+    def type(self) -> str:
+        return 'element Pin'
+
+# arguments这里是参数的意思
 
 class Logic_Input(_element):
     @_element_Init_HEAD
@@ -176,6 +207,7 @@ class Logic_Input(_element):
                           "Rotation": "", "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
                           "DiagramRotation": 0}
+        self.i = _element_Pin(self, 0)
 
 class Logic_Output(_element):
     @_element_Init_HEAD
@@ -186,90 +218,90 @@ class Logic_Output(_element):
                           'Position': "",
                           'Rotation': '0,180,0', 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        self.o = _element_Pin(self, 0)
 
-class Yes_Gate(_element):
+class _2_pin_Gate(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        self.arguments = {'ModelID': 'Yes Gate', 'Identifier': "", 'IsBroken': False,
+        self.arguments = {'ModelID': '', 'Identifier': "", 'IsBroken': False,
                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '最大电流': 0.1, '锁定': 1.0},
                           'Statistics': {}, 'Position': "",
                           'Rotation': '', 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        self.i = _element_Pin(self, 0)
+        self.o = _element_Pin(self, 1)
 
-class No_Gate(_element):
+# 是门
+class Yes_Gate(_2_pin_Gate):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super(Yes_Gate, self).__init__(x, y, z)
+        self.arguments['ModelID'] = 'Yes Gate'
+
+# 非门
+class No_Gate(_2_pin_Gate):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super(No_Gate, self).__init__(x, y, z)
+        self.arguments['MOdelID'] = 'No Gate'
+
+# 3引脚门电路
+class _3_pin_Gate(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        self.arguments = {'ModelID': 'No Gate', 'Identifier': "", 'IsBroken': False,
-                          'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '最大电流': 0.1, '锁定': 1.0},
-                          'Statistics': {}, 'Position': "", 'Rotation': '', 'DiagramCached': False,
-                          'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
-
-class Or_Gate(_element):
-    @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        self.arguments = {'ModelID': 'Or Gate', 'Identifier': '', 'IsBroken': False,
-                          'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '最大电流': 0.1, '锁定': 1.0},
-                          'Statistics': {}, 'Position': "", 'Rotation': "", 'DiagramCached': False,
-                          'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
-
-class And_Gate(_element):
-    @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        self.arguments = {'ModelID': 'And Gate', 'Identifier': '', 'IsBroken': False,
-                          'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '最大电流': 0.1, '锁定': 1.0},
-                          'Statistics': {}, 'Position': "", 'Rotation': "", 'DiagramCached': False,
-                          'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
-
-class Nor_Gate(_element):
-    @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        self.arguments = {'ModelID': 'Nor Gate', 'Identifier': '', 'IsBroken': False,
+        self.arguments = {'ModelID': '', 'Identifier': '', 'IsBroken': False,
                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '最大电流': 0.1, '锁定': 1.0},
                           'Statistics': {}, 'Position': "", 'Rotation': "", 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        self.i_up = _element_Pin(self, 0)
+        self.i_low = _element_Pin(self, 1)
+        self.o = _element_Pin(self, 2)
 
-class Nand_Gate(_element):
-    @_element_Init_HEAD
+# 或门
+class Or_Gate(_3_pin_Gate):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        self.arguments = {'ModelID': 'Nand Gate', 'Identifier': '', 'IsBroken': False,
-                          'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '最大电流': 0.1, '锁定': 1.0},
-                          'Statistics': {}, 'Position': '', 'Rotation': '', 'DiagramCached': False,
-                          'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        super(Or_Gate, self).__init__(x, y, z)
+        self.arguments["ModelID"] = 'Or Gate'
 
-class Xor_Gate(_element):
-    @_element_Init_HEAD
+# 与门
+class And_Gate(_3_pin_Gate):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        self.arguments = {'ModelID': 'Xor Gate', 'Identifier': '', 'IsBroken': False,
-                          'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '最大电流': 0.1, '锁定': 1.0},
-                          'Statistics': {}, 'Position': '', 'Rotation': '', 'DiagramCached': False,
-                          'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        super(And_Gate, self).__init__(x, y, z)
+        self.arguments["ModelID"] = 'And Gate'
+
+# 或非门
+class Nor_Gate(_3_pin_Gate):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super(Nor_Gate, self).__init__(x, y, z)
+        self.arguments["ModelID"] = 'Nor Gate'
+
+# 与非门
+class Nand_Gate(_3_pin_Gate):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super(Nand_Gate, self).__init__(x, y, z)
+        self.arguments["ModelID"] = 'Nand Gate'
+
+# 异或门
+class Xor_Gate(_3_pin_Gate):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super(Xor_Gate, self).__init__(x, y, z)
+        self.arguments["ModelID"] = 'Xor Gate'
 
 # 同或门
-class Xnor_Gate(_element):
-    @_element_Init_HEAD
+class Xnor_Gate(_3_pin_Gate):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        self.arguments = {'ModelID': 'Xnor Gate', 'Identifier': '', 'IsBroken': False,
-                          'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '最大电流': 0.1, '锁定': 1.0},
-                          'Statistics': {}, 'Position': '', 'Rotation': '', 'DiagramCached': False,
-                          'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        super(Xnor_Gate, self).__init__(x, y, z)
+        self.arguments["ModelID"] = 'Xnor Gate'
 
 # 蕴含门
-class Imp_Gate(_element):
-    @_element_Init_HEAD
+class Imp_Gate(_3_pin_Gate):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        self.arguments = {'ModelID': 'Imp Gate', 'Identifier': '', 'IsBroken': False,
-                          'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '最大电流': 0.1, '锁定': 1.0},
-                          'Statistics': {}, 'Position': '', 'Rotation': '', 'DiagramCached': False,
-                          'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        super(Imp_Gate, self).__init__(x, y, z)
+        self.arguments["ModelID"] = 'Imp Gate'
 
 # 蕴含非门
-class Nimp_Gate(_element):
-    @_element_Init_HEAD
+class Nimp_Gate(_3_pin_Gate):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        self.arguments = {'ModelID': 'Nimp Gate', 'Identifier': '', 'IsBroken': False,
-                          'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '最大电流': 0.1, '锁定': 1.0},
-                          'Statistics': {}, 'Position': '', 'Rotation': '', 'DiagramCached': False,
-                          'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        super(Nimp_Gate, self).__init__(x, y, z)
+        self.arguments["ModelID"] = 'Nimp Gate'
 
 # 半加器
 class Half_Adder(_element):
@@ -279,6 +311,10 @@ class Half_Adder(_element):
                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '锁定': 1.0}, 'Statistics': {},
                           'Position': '', 'Rotation': '', 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        self.i_up = _element_Pin(self, 2)
+        self.i_low = _element_Pin(self, 3)
+        self.o_up = _element_Pin(self, 0)
+        self.o_down = _element_Pin(self, 1)
 
 # 全加器
 class Full_Adder(_element):
@@ -288,6 +324,11 @@ class Full_Adder(_element):
                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '锁定': 1.0}, 'Statistics': {},
                           'Position': '', 'Rotation': '', 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Z': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        self.i_up = _element_Pin(self, 2)
+        self.i_mid = _element_Pin(self, 3)
+        self.i_low = _element_Pin(self, 4)
+        self.o_up = _element_Pin(self, 0)
+        self.o_down = _element_Pin(self, 1)
 
 # 二位乘法器
 class Multiplier(_element):
@@ -297,6 +338,14 @@ class Multiplier(_element):
                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '锁定': 1.0}, 'Statistics': {},
                           'Position': '', 'Rotation': '', 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        self.i_up = _element_Pin(self, 4)
+        self.i_upmid = _element_Pin(self, 5)
+        self.i_lowmid = _element_Pin(self, 6)
+        self.i_low = _element_Pin(self,7)
+        self.o_up = _element_Pin(self, 0)
+        self.o_upmid = _element_Pin(self, 1)
+        self.o_lowmid = _element_Pin(self, 2)
+        self.o_down = _element_Pin(self, 3)
 
 # D触发器
 class D_Fiopflop(_element):
@@ -307,6 +356,10 @@ class D_Fiopflop(_element):
                           "Statistics": {}, "Position": "",
                           "Rotation": '', "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
+        self.i_up = _element_Pin(self, 2)
+        self.i_low = _element_Pin(self, 3)
+        self.o_up = _element_Pin(self, 0)
+        self.o_down = _element_Pin(self, 1)
 
 # T触发器
 class T_Fiopflop(_element):
@@ -317,6 +370,10 @@ class T_Fiopflop(_element):
                           "Statistics": {}, "Position": "",
                           "Rotation": '', "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
+        self.i_up = _element_Pin(self, 2)
+        self.i_low = _element_Pin(self, 3)
+        self.o_up = _element_Pin(self, 0)
+        self.o_down = _element_Pin(self, 1)
 
 # JK触发器
 class JK_Fiopflop(_element):
@@ -327,6 +384,11 @@ class JK_Fiopflop(_element):
                           "Statistics": {}, "Position": "",
                           "Rotation": '', "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
+        self.i_up = _element_Pin(self, 2)
+        self.i_mid = _element_Pin(self, 3)
+        self.i_low = _element_Pin(self, 4)
+        self.o_up = _element_Pin(self, 0)
+        self.o_down = _element_Pin(self, 1)
 
 # 计数器
 class Counter(_element):
@@ -337,6 +399,12 @@ class Counter(_element):
                           "Statistics": {}, "Position": "",
                           "Rotation": '', "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
+        self.i_up = _element_Pin(self, 4)
+        self.i_low = _element_Pin(self, 5)
+        self.o_up = _element_Pin(self, 0)
+        self.o_upmid = _element_Pin(self, 1)
+        self.o_lowmid = _element_Pin(self, 2)
+        self.o_low = _element_Pin(self, 3)
 
 # 随机数发生器
 class Random_Generator(_element):
@@ -347,7 +415,14 @@ class Random_Generator(_element):
                           "Statistics": {}, "Position": "",
                           "Rotation": '', "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
+        self.i_up = _element_Pin(self, 4)
+        self.i_low = _element_Pin(self, 5)
+        self.o_up = _element_Pin(self, 0)
+        self.o_upmid = _element_Pin(self, 1)
+        self.o_lowmid = _element_Pin(self, 2)
+        self.o_low = _element_Pin(self, 3)
 
+# 简单开关
 class Simple_Switch(_element):
     @_element_Init_HEAD
     def __init__(self):
@@ -356,10 +431,15 @@ class Simple_Switch(_element):
                           "Statistics": {}, "Position": "",
                           "Rotation": '', "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
+        self.i = _element_Pin(self, 0)
+        self.o = _element_Pin(self, 1)
+
 
 
 # 可以支持传入 self 与 位置（tuple） 来连接导线
-def wire(SourceLabel : Union[_element, tuple], SourcePin : int, TargetLabel, TargetPin : int, color = "蓝"):
+
+# 老版本连接导线函数，不推荐使用
+def old_crt_wire(SourceLabel : Union[_element, tuple], SourcePin : int, TargetLabel, TargetPin : int, color = "蓝"):
     SourcePin, TargetPin = int(SourcePin), int(TargetPin)
     if (type(SourceLabel) == tuple and len(SourceLabel) == 3):
         SourceLabel = _elements_Address[SourceLabel]
@@ -375,3 +455,33 @@ def wire(SourceLabel : Union[_element, tuple], SourcePin : int, TargetLabel, Tar
     _wires.append({"Source": SourceLabel.arguments["Identifier"], "SourcePin": SourcePin,
                    "Target": TargetLabel.arguments["Identifier"], "TargetPin": TargetPin,
                    "ColorName": f"{color}色导线"})
+
+def _check_typeWire(func):
+    def result(SourcePin , TargetPin, color : str = '蓝') -> None:
+        try:
+            if (SourcePin.type() == 'element Pin' and TargetPin.type() == 'element Pin'):
+                if (color not in ["黑", "蓝", "红", "绿", "黄"]):
+                    raise RuntimeError("illegal color")
+
+                func(SourcePin, TargetPin, color)
+        except:
+            raise RuntimeError('Error type of input function argument')
+    return result
+
+# 新版连接导线
+@_check_typeWire
+def crt_wire(SourcePin, TargetPin, color: str = '蓝') -> None:
+    _wires.append({"Source": SourcePin.element_self.arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
+                   "Target": TargetPin.element_self.arguments["Identifier"], "TargetPin": TargetPin.pinLabel,
+                   "ColorName": f"{color}色导线"})
+
+# 删除导线
+@_check_typeWire
+def del_wire(SourcePin, TargetPin, color : str = '蓝') -> None:
+    a_wire = {"Source": SourcePin.element_self.arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
+                   "Target": TargetPin.element_self.arguments["Identifier"], "TargetPin": TargetPin.pinLabel,
+                   "ColorName": f"{color}色导线"}
+    if (a_wire in _wires):
+        _wires.remove(a_wire)
+    else:
+        raise RuntimeError("Unable to delete a nonexistent wire")
