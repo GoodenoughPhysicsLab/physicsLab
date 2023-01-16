@@ -92,7 +92,11 @@ def write_Experiment() -> None:
 
 # 创建原件，本质上仍然是实例化
 def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
-    return eval(name.replace(' ', '_') + f'({round(x, 2)},{round(z, 2)},{round(y, 2)})')
+    x, y, z = round(x, 2), round(y, 2), round(z, 2)
+    if (name != '555 Timer'):
+        return eval(name.replace(' ', '_') + f'({x},{y},{z})')
+    else:
+        return eval('fff_Timer' + f'({x},{y},{z})')
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
@@ -111,7 +115,7 @@ def read_Experiment() -> None:
             num3 = round(float(element['Position'][sign2 + 1::]), 2)
             element['Position'] = f"{num1},{num2},{num3}"  # x, z, y
             # 实例化对象
-            obj = eval(element["ModelID"].replace(' ', '_') + f"({num1},{num3},{num2})")
+            obj = crt_Element(element["ModelID"], num1, num3, num2)
             sign1 = element['Rotation'].find(',')
             sign2 = element['Rotation'].find(',', sign1 + 1)
             x = float(element['Rotation'][:sign1:])
@@ -587,7 +591,49 @@ class Simple_Switch(_element):
     def o(self):
         return _element_Pin(self, 1)
 
+# 555定时器
+class fff_Timer(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {'ModelID': '555 Timer', 'Identifier': '', 'IsBroken': False,
+                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '锁定': 1.0},
+                           'Statistics': {'供电': 10, '放电': 0.0, '阈值': 4,
+                                          '控制': 6.666666666666666, '触发': 4,
+                                          '输出': 0, '重设': 10, '接地': 0},
+                           'Position': '', 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
+    @property
+    def VCC(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def Dis(self):
+        return _element_Pin(self, 1)
+
+    @property
+    def Thr(self):
+        return _element_Pin(self, 2)
+
+    @property
+    def Ctrl(self):
+        return _element_Pin(self, 3)
+
+    @property
+    def Trig(self):
+        return _element_Pin(self, 4)
+
+    @property
+    def Out(self):
+        return _element_Pin(self, 5)
+
+    @property
+    def Reset(self):
+        return _element_Pin(self, 6)
+
+    @property
+    def Ground(self):
+        return _element_Pin(self, 7)
 
 # 可以支持传入 self 与 位置（tuple） 来连接导线
 
