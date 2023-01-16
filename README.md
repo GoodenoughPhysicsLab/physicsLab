@@ -23,8 +23,7 @@ Logic_Input(0, 0, 0.1)
  # 你也可以不写坐标，默认是(0,0,0)，请注意2原件的坐标不允许重叠！  
 o = Or_Gate() # 此时o存储的是orGate的self  
  # wire输入格式 (  
- #    wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝")  
- #    SourceLabel与TargetLabel支持传入self与坐标（用tuple表示）   
+ #    wire(SourcePin, TargetPin : int, color = "蓝")  
  # )  
 wire(o.i_up, o.i_low)  
  # 将程序中生成的原件，导线等等写入存档  
