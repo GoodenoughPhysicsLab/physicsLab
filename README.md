@@ -7,7 +7,8 @@
 
 1.  打开Code文件夹中的physicsLab.py，复制或下载到本地
 2.  打开physicsLab.py，在代码中修改文件路径（推荐）
-3.  如果你的ide无法找到physicsLab,py，你需要sys.path.append('(path of physicsLab.py)')来解决这个问题
+3.  如果你的ide无法找到physicsLab,py，你需要在代码开头写  
+sys.path.append('(path of physicsLab.py)')
 
 #### 使用说明
 
