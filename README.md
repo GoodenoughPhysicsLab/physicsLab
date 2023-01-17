@@ -22,10 +22,10 @@ read_Experiment()
 Logic_Input(0, 0, 0.1)   
  # 你也可以不写坐标，默认是(0,0,0)，请注意2原件的坐标不允许重叠！  
 o = Or_Gate() # 此时o存储的是orGate的self  
- # wire输入格式 (  
- #    wire(SourcePin, TargetPin : int, color = "蓝")  
+ # crt_wire输入格式 (  
+ #    crt_wire(SourcePin, TargetPin, color = "蓝")  
  # )  
-wire(o.i_up, o.i_low)  
+crt_wire(o.i_up, o.i_low)  
  # 将程序中生成的原件，导线等等写入存档  
 write_Experiment()  
  # 然后打开存档见证奇迹  
@@ -34,7 +34,7 @@ write_Experiment()
 #### 优点
 1. 通过read_Experiment()，你无须把所有连接导线的工作交给代码。因为用代码写并不意味着方便。你现在可以手动连接部分导线，并通过保存的形式，让程序在下次也可以轻松读取。这也意味着你不用一口气把控制整个电路的脚本写出来，而是每次写一部分，并把更适合代码的工作交给代码完成。  
 也就是说，写这个脚本的感觉更像在控制台上操作，非常灵活。
-2. 即使是未解锁的原件也可以轻易用脚本生成
+2. 即使是**未解锁的原件**也可以轻易用脚本生成
 
 #### 参与贡献
 
