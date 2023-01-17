@@ -66,7 +66,7 @@ def print_wires():
 # 打开一个指定的sav文件
 def open_Experiment(file: str) -> None:
     file = file.strip()
-    if (file[len(file) - 4: len(file)] != ".sav"):
+    if (not file.endswith('.sav')):
         raise RuntimeError("The open file must be of type sav")
 
     global _ifndef_open_Experiment
@@ -92,11 +92,13 @@ def write_Experiment() -> None:
 
 # 创建原件，本质上仍然是实例化
 def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
+    if not (isinstance(name, str) and isinstance(x, float) and isinstance(y, float) and isinstance(z, float)):
+        raise RuntimeError("Wrong parameter type")
     x, y, z = round(x, 2), round(y, 2), round(z, 2)
     if (name != '555 Timer'):
         return eval(name.replace(' ', '_') + f'({x},{y},{z})')
     else:
-        return eval('fff_Timer' + f'({x},{y},{z})')
+        return eval('NE555' + f'({x},{y},{z})')
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
@@ -105,6 +107,8 @@ def read_Experiment() -> None:
         readmem = json.loads(f.read())
         _local_Elements = json.loads(readmem["Experiment"]["StatusSave"])["Elements"]
         _wires = json.loads(readmem['Experiment']['StatusSave'])['Wires']
+
+        print(_local_Elements)
 
         for element in _local_Elements:
             # 坐标标准化（消除浮点误差）
@@ -138,6 +142,9 @@ def rename_sav(name: str) -> None:
 def get_element(x : int, y : int, z : int = 0):
     if (type(x) != int and type(y) != int and type(z) != int):
         raise RuntimeError('The function argument is invalid')
+    x, y, z = round(x, 2), round(y, 2), round(z, 2)
+    if (x, y, z) not in _elements_Address.keys():
+        raise RuntimeError("Error coordinates that do not exist")
     return _elements_Address[(x, y, z)]
 
 # 删除原件
@@ -163,28 +170,35 @@ def del_element(self) -> None:
 
 # 所有原件的父类，不要实例化
 class _element:
+    # 设置原件的角度
     def set_Rotation(self, xRotation: float = 0, yRotation: float = 0, zRotation: float = 180):
         self._arguments["Rotation"] = f"{round(xRotation, 2)},{round(zRotation, 2)},{round(yRotation, 2)}"
         return self._arguments["Rotation"]
 
+    # 重新设置元件的坐标
     def reset_position(self, x, y, z):
         pass
 
+    # 格式化坐标参数，主要避免浮点误差
     def format_Positon(self) -> tuple:
         if (type(self._position) != tuple or self._position.__len__() != 3):
             raise RuntimeError("Position must be a tuple of length three but gets some other value")
         self._position = (round(self._position[0], 2), round(self._position[1], 2), round(self._position[2], 2))
         return (round(self._position[0], 2), round(self._position[1], 2), round(self._position[2], 2))
 
+    # 获取原件的坐标
     def get_position(self):
         return self._position
 
+    # 获取父类的类型
     def father_type(self) -> str:
         return 'element'
 
+    # 获取子类的类型（也就是ModelID）
     def type(self) -> str:
         return self._arguments['ModelID']
 
+    # 打印参数
     def print_arguments(self) -> None:
         print(self._arguments)
 
@@ -194,13 +208,14 @@ def _element_Init_HEAD(func : Callable) -> Callable:
     def result(self, x : float = 0, y : float = 0, z : float = 0) -> None:
         global _Elements
         self._position = (round(x, 2), round(y, 2), round(z, 2))
+        print(_elements_Address)
         if (self._position in _elements_Address.keys()):
             raise RuntimeError("The position already exists")
         func(self, x, y, z)
-        _Elements.append(self._arguments)
-        _elements_Address[self._position] = self
         self._arguments["Identifier"] = hash(self._position).__str__()
         self._arguments["Position"] = f"{self._position[0]},{self._position[2]},{self._position[1]}"
+        _Elements.append(self._arguments)
+        _elements_Address[self._position] = self
         self.set_Rotation()
     return result
 
@@ -374,7 +389,6 @@ class Half_Adder(_big_element):
 
 # 全加器
 class Full_Adder(_big_element):
-    @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(Full_Adder, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Full Adder'
@@ -401,7 +415,6 @@ class Full_Adder(_big_element):
 
 # 二位乘法器
 class Multiplier(_big_element):
-    @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(Multiplier, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Multiplier'
@@ -440,7 +453,6 @@ class Multiplier(_big_element):
 
 # D触发器
 class D_Fiopflop(_big_element):
-    @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(D_Fiopflop, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'D Fiopflop'
@@ -463,7 +475,6 @@ class D_Fiopflop(_big_element):
 
 # T触发器
 class T_Fiopflop(_big_element):
-    @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(T_Fiopflop, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'T Fiopflop'
@@ -486,7 +497,6 @@ class T_Fiopflop(_big_element):
 
 # JK触发器
 class JK_Fiopflop(_big_element):
-    @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(JK_Fiopflop, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'JK Fiopflop'
@@ -513,7 +523,6 @@ class JK_Fiopflop(_big_element):
 
 # 计数器
 class Counter(_big_element):
-    @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(Counter, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Counter'
@@ -544,7 +553,6 @@ class Counter(_big_element):
 
 # 随机数发生器
 class Random_Generator(_big_element):
-    @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(Random_Generator, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Random Generator'
@@ -592,13 +600,13 @@ class Simple_Switch(_element):
         return _element_Pin(self, 1)
 
 # 555定时器
-class fff_Timer(_element):
+class NE555(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self._arguments = {'ModelID': '555 Timer', 'Identifier': '', 'IsBroken': False,
                            'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '锁定': 1.0},
                            'Statistics': {'供电': 10, '放电': 0.0, '阈值': 4,
-                                          '控制': 6.666666666666666, '触发': 4,
+                                          '控制': 6.6666666666666666, '触发': 4,
                                           '输出': 0, '重设': 10, '接地': 0},
                            'Position': '', 'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
@@ -640,11 +648,11 @@ class fff_Timer(_element):
 # 老版本连接导线函数，不推荐使用
 def old_crt_wire(SourceLabel : Union[_element, tuple], SourcePin : int, TargetLabel, TargetPin : int, color = "蓝"):
     SourcePin, TargetPin = int(SourcePin), int(TargetPin)
-    if (type(SourceLabel) == tuple and len(SourceLabel) == 3):
+    if (isinstance(SourceLabel, tuple) and len(SourceLabel) == 3):
         SourceLabel = _elements_Address[SourceLabel]
     elif (SourceLabel not in _elements_Address.values()):
         raise RuntimeError("SourceLabel must be a Positon or self")
-    if (type(TargetLabel) == tuple and len(TargetLabel) == 3):
+    if (isinstance(TargetLabel, tuple) and len(TargetLabel) == 3):
         TargetLabel = _elements_Address[TargetLabel]
     elif (TargetLabel not in _elements_Address.values()):
         raise RuntimeError("TargetLabel must be a Positon or self")
@@ -655,6 +663,7 @@ def old_crt_wire(SourceLabel : Union[_element, tuple], SourcePin : int, TargetLa
                    "Target": TargetLabel._arguments["Identifier"], "TargetPin": TargetPin,
                    "ColorName": f"{color}色导线"})
 
+# 检查函数参数是否是导线
 def _check_typeWire(func):
     def result(SourcePin , TargetPin, color : str = '蓝') -> None:
         try:
