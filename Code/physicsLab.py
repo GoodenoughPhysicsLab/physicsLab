@@ -95,10 +95,17 @@ def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
     if not (isinstance(name, str) and isinstance(x, float) and isinstance(y, float) and isinstance(z, float)):
         raise RuntimeError("Wrong parameter type")
     x, y, z = round(x, 2), round(y, 2), round(z, 2)
-    if (name != '555 Timer'):
-        return eval(name.replace(' ', '_') + f'({x},{y},{z})')
+    if (name == '555 Timer'):
+        return NE555(x, y, z)
+    elif (name == '8bit Input'):
+        return eight_bit_Input(x, y, z)
+    elif (name == '8bit Display'):
+        return eight_bit_Display(x, y, z)
     else:
-        return eval('NE555' + f'({x},{y},{z})')
+        try:
+            return eval(name.replace(' ', '_') + f'({x},{y},{z})')
+        except SyntaxError:
+            raise RuntimeError(f"{name} original that does not exist")
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
@@ -107,8 +114,6 @@ def read_Experiment() -> None:
         readmem = json.loads(f.read())
         _local_Elements = json.loads(readmem["Experiment"]["StatusSave"])["Elements"]
         _wires = json.loads(readmem['Experiment']['StatusSave'])['Wires']
-
-        print(_local_Elements)
 
         for element in _local_Elements:
             # 坐标标准化（消除浮点误差）
@@ -208,7 +213,6 @@ def _element_Init_HEAD(func : Callable) -> Callable:
     def result(self, x : float = 0, y : float = 0, z : float = 0) -> None:
         global _Elements
         self._position = (round(x, 2), round(y, 2), round(z, 2))
-        print(_elements_Address)
         if (self._position in _elements_Address.keys()):
             raise RuntimeError("The position already exists")
         func(self, x, y, z)
@@ -642,6 +646,94 @@ class NE555(_element):
     @property
     def Ground(self):
         return _element_Pin(self, 7)
+
+# 8位输入器
+class eight_bit_Input(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {'ModelID': '8bit Input', 'Identifier': '', 'IsBroken': False,
+                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '十进制': 0.0, '锁定': 1.0},
+                           'Statistics': {}, 'Position': '', 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def i_up(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def i_upmid(self):
+        return _element_Pin(self, 1)
+
+    @property
+    def i_lowmid(self):
+        return _element_Pin(self, 2)
+
+    @property
+    def i_low(self):
+        return _element_Pin(self, 3)
+
+    @property
+    def o_up(self):
+        return _element_Pin(self, 4)
+
+    @property
+    def o_upmid(self):
+        return _element_Pin(self, 5)
+
+    @property
+    def o_lowmid(self):
+        return _element_Pin(self, 6)
+
+    @property
+    def o_low(self):
+        return _element_Pin(self, 7)
+
+# 8位显示器
+class eight_bit_Display(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {'ModelID': '8bit Display', 'Identifier': '',
+                          'IsBroken': False, 'IsLocked': False,
+                          'Properties': {'高电平': 3.0, '低电平': 0.0, '状态': 0.0, '锁定': 1.0},
+                          'Statistics': {'7': 0.0, '6': 0.0, '5': 0.0, '4': 0.0, '3': 0.0, '2': 0.0, '1': 0.0, '0': 0.0,
+                                         '十进制': 0.0}, 'Position': '',
+                          'Rotation': '', 'DiagramCached': False,
+                          'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def i_up(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def i_upmid(self):
+        return _element_Pin(self, 1)
+
+    @property
+    def i_lowmid(self):
+        return _element_Pin(self, 2)
+
+    @property
+    def i_low(self):
+        return _element_Pin(self, 3)
+
+    @property
+    def o_up(self):
+        return _element_Pin(self, 4)
+
+    @property
+    def o_upmid(self):
+        return _element_Pin(self, 5)
+
+    @property
+    def o_lowmid(self):
+        return _element_Pin(self, 6)
+
+    @property
+    def o_low(self):
+        return _element_Pin(self, 7)
+
+# 学生电源
+# Student Source
 
 # 可以支持传入 self 与 位置（tuple） 来连接导线
 
