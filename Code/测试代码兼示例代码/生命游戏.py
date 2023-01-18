@@ -2,8 +2,6 @@
     这个是xuzhengx曾经的一个精选
     用来当做他的 物实程序化3.py 的示例代码
 '''
-import sys
-sys.path.append("C:/Users/Administrator/AppData/LocalLow/CIVITAS/Quantum Physics/Circuit/python/include")
 from xuzhengxPhysicsLab import *
 
 default_path = r"C:\Users\Administrator\AppData\LocalLow\CIVITAS\Quantum Physics\Circuit"
