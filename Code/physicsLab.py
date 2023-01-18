@@ -123,7 +123,6 @@ def read_Experiment() -> None:
             num2 = round(float(element['Position'][sign1 + 1: sign2:]), 2)
             num3 = round(float(element['Position'][sign2 + 1::]), 2)
             element['Position'] = f"{num1},{num2},{num3}"  # x, z, y
-            position = (num1, num3, num2)
             # 实例化对象
             obj = crt_Element(element["ModelID"], num1, num3, num2)
             sign1 = element['Rotation'].find(',')
@@ -246,7 +245,7 @@ class Logic_Input(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self._arguments = {"ModelID": "Logic Input", "Identifier": "",
-                          "IsBroken": False, "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0},
+                          "IsBroken": False, "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0, "开关": 0},
                           "Statistics": {"电流": 0.0, "电压": 0.0, "功率": 0.0},
                           "Position": "",
                           "Rotation": "", "DiagramCached": False,
