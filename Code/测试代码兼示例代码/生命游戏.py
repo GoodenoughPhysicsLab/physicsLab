@@ -2,7 +2,7 @@
     这个是xuzhengx曾经的一个精选
     用来当做他的 物实程序化3.py 的示例代码
 '''
-from xuzhengxPhysicsLab import *
+from 物实程序化3 import *
 
 default_path = r"C:\Users\Administrator\AppData\LocalLow\CIVITAS\Quantum Physics\Circuit"
 source_file = '08fa0eb3-68d9-450c-8e6d-0670abb54aa9.sav'
