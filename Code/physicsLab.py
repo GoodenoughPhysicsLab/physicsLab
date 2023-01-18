@@ -456,10 +456,10 @@ class Multiplier(_big_element):
         return _element_Pin(self, 3)
 
 # D触发器
-class D_Fiopflop(_big_element):
+class D_Flipflop(_big_element):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        super(D_Fiopflop, self).__init__(x, y, z)
-        self._arguments['ModelID'] = 'D Fiopflop'
+        super(D_Flipflop, self).__init__(x, y, z)
+        self._arguments['ModelID'] = 'D Flipflop'
 
     @property
     def i_up(self):
@@ -478,10 +478,10 @@ class D_Fiopflop(_big_element):
         return _element_Pin(self, 1)
 
 # T触发器
-class T_Fiopflop(_big_element):
+class T_Flipflop(_big_element):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        super(T_Fiopflop, self).__init__(x, y, z)
-        self._arguments['ModelID'] = 'T Fiopflop'
+        super(T_Flipflop, self).__init__(x, y, z)
+        self._arguments['ModelID'] = 'T Flipflop'
 
     @property
     def i_up(self):
@@ -500,10 +500,10 @@ class T_Fiopflop(_big_element):
         return _element_Pin(self, 1)
 
 # JK触发器
-class JK_Fiopflop(_big_element):
+class JK_Flipflop(_big_element):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        super(JK_Fiopflop, self).__init__(x, y, z)
-        self._arguments['ModelID'] = 'JK Fiopflop'
+        super(JK_Flipflop, self).__init__(x, y, z)
+        self._arguments['ModelID'] = 'JK Flipflop'
 
     @property
     def i_up(self):
@@ -588,7 +588,7 @@ class Random_Generator(_big_element):
 # 简单开关
 class Simple_Switch(_element):
     @_element_Init_HEAD
-    def __init__(self):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self._arguments = {"ModelID": "Simple Switch", "Identifier": "", "IsBroken": False,
                           "IsLocked": False, "Properties": {"开关": 0, "锁定": 1.0},
                           "Statistics": {}, "Position": "",
