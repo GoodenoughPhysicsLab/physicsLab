@@ -11,7 +11,7 @@ _StatusSave = {"SimulationSpeed":1.0, "Elements":[], "Wires":[]}
 _Elements = [] # 装原件的_arguments
 _wires = []
 _sav = {"Type": 0, "Experiment": {"ID": None, "Type": 0, "Components": 7, "Subject": None,
-    "StatusSave": "",  # elements and wires: __sav["Experiment"]["StatusSave"] = json.dumps(__StatusSave)
+    "StatusSave": "", # _StatusSave
     "CameraSave": "{\"Mode\":0,\"Distance\":2.7,\"VisionCenter\":\"0.3623461,1.08,-0.4681728\",\"TargetRotation\":\"50,0,0\"}","Version": 2404,
     "CreationDate": 1673100860436,"Paused": False,"Summary": None,"Plots": None},"ID": None,"Summary": {"Type": 0,"ParentID": None,"ParentName": None,
     "ParentCategory": None,"ContentID": None,"Editor": None,"Coauthors": [],"Description": None,"LocalizedDescription": None,"Tags": ["Type-0"],
@@ -113,7 +113,7 @@ def read_Experiment() -> None:
     with open(_savName, encoding='UTF-8') as f:
         readmem = json.loads(f.read())
         _local_Elements = json.loads(readmem["Experiment"]["StatusSave"])["Elements"]
-        _wires = json.loads(readmem['Experiment']['StatusSave'])['Wires']
+        from_unix_to_Identifier = {}
 
         for element in _local_Elements:
             # 坐标标准化（消除浮点误差）
@@ -123,6 +123,7 @@ def read_Experiment() -> None:
             num2 = round(float(element['Position'][sign1 + 1: sign2:]), 2)
             num3 = round(float(element['Position'][sign2 + 1::]), 2)
             element['Position'] = f"{num1},{num2},{num3}"  # x, z, y
+            position = (num1, num3, num2)
             # 实例化对象
             obj = crt_Element(element["ModelID"], num1, num3, num2)
             sign1 = element['Rotation'].find(',')
@@ -131,6 +132,13 @@ def read_Experiment() -> None:
             z = float(element['Rotation'][sign1 + 1: sign2:])
             y = float(element['Rotation'][sign2 + 1::])
             obj.set_Rotation(x, y, z)
+            # 导线
+            Unix_timer = element['Identifier']
+            from_unix_to_Identifier[Unix_timer] = (num1, num3, num2).__hash__()
+        _wires = json.loads(readmem['Experiment']['StatusSave'])['Wires']
+        for wire in _wires:
+            wire['Source'] = from_unix_to_Identifier[wire['Source']]
+            wire['Target'] = from_unix_to_Identifier[wire['Target']]
 
 # 规范化实验中原件的坐标与角度
 def format_Experiment() -> None:
