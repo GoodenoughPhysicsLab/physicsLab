@@ -56,6 +56,8 @@ D触发器：       逻辑输入、逻辑输出：      是门、非门：      
 所有原件高为0.1
 
 '''
+def _myRound(num):
+    return round(num, 3)
 
 def print_Elements():
     print(_Elements)
@@ -94,7 +96,7 @@ def write_Experiment() -> None:
 def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
     if not (isinstance(name, str) and isinstance(x, float) and isinstance(y, float) and isinstance(z, float)):
         raise RuntimeError("Wrong parameter type")
-    x, y, z = round(x, 2), round(y, 2), round(z, 2)
+    x, y, z = _myRound(x), _myRound(y), _myRound(z)
     if (name == '555 Timer'):
         return NE555(x, y, z)
     elif (name == '8bit Input'):
@@ -119,9 +121,9 @@ def read_Experiment() -> None:
             # 坐标标准化（消除浮点误差）
             sign1 = element['Position'].find(',')
             sign2 = element['Position'].find(',', sign1 + 1)
-            num1 = round(float(element['Position'][:sign1:]), 2)
-            num2 = round(float(element['Position'][sign1 + 1: sign2:]), 2)
-            num3 = round(float(element['Position'][sign2 + 1::]), 2)
+            num1 = _myRound(float(element['Position'][:sign1:]))
+            num2 = _myRound(float(element['Position'][sign1 + 1: sign2:]))
+            num3 = _myRound(float(element['Position'][sign2 + 1::]))
             element['Position'] = f"{num1},{num2},{num3}"  # x, z, y
             # 实例化对象
             obj = crt_Element(element["ModelID"], num1, num3, num2)
@@ -131,6 +133,9 @@ def read_Experiment() -> None:
             z = float(element['Rotation'][sign1 + 1: sign2:])
             y = float(element['Rotation'][sign2 + 1::])
             obj.set_Rotation(x, y, z)
+            # 如果obj是逻辑输入
+            if obj.type() == 'Logic Input' and element['Properties']['开关'] == 1:
+                obj.set_highLevel()
             # 导线
             Unix_timer = element['Identifier']
             from_unix_to_Identifier[Unix_timer] = (num1, num3, num2).__hash__()
@@ -154,7 +159,7 @@ def rename_sav(name: str) -> None:
 def get_element(x : int, y : int, z : int = 0):
     if (type(x) != int and type(y) != int and type(z) != int):
         raise RuntimeError('The function argument is invalid')
-    x, y, z = round(x, 2), round(y, 2), round(z, 2)
+    x, y, z = _myRound(x), _myRound(y), _myRound(z)
     if (x, y, z) not in _elements_Address.keys():
         raise RuntimeError("Error coordinates that do not exist")
     return _elements_Address[(x, y, z)]
@@ -184,7 +189,7 @@ def del_element(self) -> None:
 class _element:
     # 设置原件的角度
     def set_Rotation(self, xRotation: float = 0, yRotation: float = 0, zRotation: float = 180):
-        self._arguments["Rotation"] = f"{round(xRotation, 2)},{round(zRotation, 2)},{round(yRotation, 2)}"
+        self._arguments["Rotation"] = f"{_myRound(xRotation)},{_myRound(zRotation)},{_myRound(yRotation)}"
         return self._arguments["Rotation"]
 
     # 重新设置元件的坐标
@@ -195,8 +200,8 @@ class _element:
     def format_Positon(self) -> tuple:
         if (type(self._position) != tuple or self._position.__len__() != 3):
             raise RuntimeError("Position must be a tuple of length three but gets some other value")
-        self._position = (round(self._position[0], 2), round(self._position[1], 2), round(self._position[2], 2))
-        return (round(self._position[0], 2), round(self._position[1], 2), round(self._position[2], 2))
+        self._position = (_myRound(self._position[0]), _myRound(self._position[1]), _myRound(self._position[2]))
+        return (_myRound(self._position[0]), _myRound(self._position[1]), _myRound(self._position[2]))
 
     # 获取原件的坐标
     def get_position(self):
@@ -219,7 +224,7 @@ class _element:
 def _element_Init_HEAD(func : Callable) -> Callable:
     def result(self, x : float = 0, y : float = 0, z : float = 0) -> None:
         global _Elements
-        self._position = (round(x, 2), round(y, 2), round(z, 2))
+        self._position = (_myRound(x), _myRound(y), _myRound(z))
         if (self._position in _elements_Address.keys()):
             raise RuntimeError("The position already exists")
         func(self, x, y, z)
@@ -251,6 +256,9 @@ class Logic_Input(_element):
                           "Rotation": "", "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
                           "DiagramRotation": 0}
+
+    def set_highLevel(self) -> None:
+        self._arguments['Properties']['开关'] = 1.0
 
     @property
     def o(self):
@@ -745,7 +753,7 @@ class eight_bit_Display(_element):
 # 可以支持传入 self 与 位置（tuple） 来连接导线
 
 # 老版本连接导线函数，不推荐使用
-def old_crt_wire(SourceLabel : Union[_element, tuple], SourcePin : int, TargetLabel, TargetPin : int, color = "蓝"):
+def old_crt_wire(SourceLabel : Union[_element, tuple], SourcePin : int, TargetLabel, TargetPin : int, color = "蓝") -> None:
     SourcePin, TargetPin = int(SourcePin), int(TargetPin)
     if (isinstance(SourceLabel, tuple) and len(SourceLabel) == 3):
         SourceLabel = _elements_Address[SourceLabel]
