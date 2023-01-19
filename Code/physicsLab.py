@@ -138,7 +138,7 @@ def read_Experiment() -> None:
                 obj.set_highLevel()
             # 导线
             Unix_timer = element['Identifier']
-            from_unix_to_Identifier[Unix_timer] = (num1, num3, num2).__hash__()
+            from_unix_to_Identifier[Unix_timer] = (num1, num3, num2).__hash__().__str__()
         _wires = json.loads(readmem['Experiment']['StatusSave'])['Wires']
         for wire in _wires:
             wire['Source'] = from_unix_to_Identifier[wire['Source']]
@@ -156,9 +156,7 @@ def rename_sav(name: str) -> None:
     _sav["InternalName"] = name
 
 # 获取对应坐标的self
-def get_element(x : int, y : int, z : int = 0):
-    if (type(x) != int and type(y) != int and type(z) != int):
-        raise RuntimeError('The function argument is invalid')
+def get_element(x : float, y : float, z : float = 0):
     x, y, z = _myRound(x), _myRound(y), _myRound(z)
     if (x, y, z) not in _elements_Address.keys():
         raise RuntimeError("Error coordinates that do not exist")
@@ -193,18 +191,29 @@ class _element:
         return self._arguments["Rotation"]
 
     # 重新设置元件的坐标
-    def reset_position(self, x, y, z):
-        pass
+    def reset_Position(self, x : float, y : float, z : float) -> None:
+        x, y, z = _myRound(x), _myRound(y), _myRound(z)
+        del _elements_Address[self._position]
+        self._position = (x, y, z)
+        self._arguments['Position'] = f"{x},{z},{y}"
+        identifier = self._arguments['Identifier']
+        self._arguments['Identifier'] = self._position.__hash__().__str__()
+        _elements_Address[self._position] = self
+        for wire in _wires:
+            if wire['Source'] == identifier:
+                wire['Source'] = self._arguments['Identifier']
+            if wire['Target'] == identifier:
+                wire['Target'] = self._arguments['Identifier']
 
     # 格式化坐标参数，主要避免浮点误差
-    def format_Positon(self) -> tuple:
+    def format_Position(self) -> tuple:
         if (type(self._position) != tuple or self._position.__len__() != 3):
             raise RuntimeError("Position must be a tuple of length three but gets some other value")
         self._position = (_myRound(self._position[0]), _myRound(self._position[1]), _myRound(self._position[2]))
         return (_myRound(self._position[0]), _myRound(self._position[1]), _myRound(self._position[2]))
 
     # 获取原件的坐标
-    def get_position(self):
+    def get_Position(self):
         return self._position
 
     # 获取父类的类型
