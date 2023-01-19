@@ -3,12 +3,13 @@
 连接导线提供了2种方式，1种是crt(element.o, element2.i)的形式，其中的i与o就是引脚。
 第一种：
 crt_wire(SourcePin, TargetPin, color: str = '蓝') -> None
-引脚的命名规范：
+引脚的命名规范：（适用于逻电）
 1个输入引脚：i
 2个输入引脚：i_up, i_low
 3个输入引脚：i_up, i_mid, i_low
 4个输入引脚：i_up, i_upmid, i_lowmid, i_low
 输出是一样的，仅仅换成了o_xxx罢了。
+模电的命名可能是根据左右引脚来区分的，也就是l_up, r_low之类的
 
 另一种连接引脚的方式是不推荐使用的老函数：
 old_crt_wire(SourceLabel : Union[_element, tuple], SourcePin : int, TargetLabel, TargetPin : int, color = "蓝") -> None
