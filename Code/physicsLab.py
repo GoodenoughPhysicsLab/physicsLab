@@ -26,36 +26,6 @@ _sav = {"Type": 0, "Experiment": {"ID": None, "Type": 0, "Components": 7, "Subje
 _ifndef_open_Experiment = False
 _elements_Address = {} # key为position，value为self
 
-'''
-原件引脚编号：
-
-D触发器：       逻辑输入、逻辑输出：      是门、非门：       比较器
-2    0         0                     0 1              1
-                                                          2
-3    1                                                0
-
-三引脚门电路：   全加器：
-0             2    0
-    2         3
-1             4    1
-
-继电器pin
-0   4
-  1  
-2   3
-
-二位乘法器：
-4  0
-5  1
-6  2
-7  3
-
-原件大小规范：
-大原件长宽为0.2
-小元件长为0.2，宽为0.1
-所有原件高为0.1
-
-'''
 def _myRound(num):
     return round(num, 3)
 
@@ -79,9 +49,12 @@ def open_Experiment(file: str) -> None:
     global _savName
     _savName = FILE_HEAD + file
     with open(_savName, encoding="UTF-8") as f:
-        InternalName = (json.loads(f.read().__str__()))["Summary"]["Subject"]
-        _sav["Summary"]["Subject"] = InternalName
-        _sav["InternalName"] = _sav["Summary"]["Subject"]
+        try:
+            InternalName = (json.loads(f.read().__str__()))["Summary"]["Subject"]
+            _sav["Summary"]["Subject"] = InternalName
+            _sav["InternalName"] = _sav["Summary"]["Subject"]
+        except:
+            raise RuntimeError('Data errors in the file')
 
 # 将编译完成的json写入sav
 def write_Experiment() -> None:
@@ -105,7 +78,7 @@ def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
         return eight_bit_Display(x, y, z)
     else:
         try:
-            return eval(name.replace(' ', '_') + f'({x},{y},{z})')
+            return eval(name.replace(' ', '_').replace('-', '_') + f'({x},{y},{z})')
         except SyntaxError:
             raise RuntimeError(f"{name} original that does not exist")
 
@@ -755,6 +728,201 @@ class eight_bit_Display(_element):
     @property
     def o_low(self):
         return _element_Pin(self, 7)
+
+# 电容
+class Basic_Capacitor(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {'ModelID': 'Basic Capacitor', 'Identifier': '',
+                           'IsBroken': False, 'IsLocked': False, 'Properties': {'耐压': 16.0, '电容': 1e-06, '内阻': 5.0, '锁定': 1.0},
+                           'Statistics': {}, 'Position': '',
+                           'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def l(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def r(self):
+        return _element_Pin(self, 1)
+
+# 一节电池
+class Battery_Source(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {'ModelID': 'Battery Source', 'Identifier': '',
+                           'IsBroken': False, 'IsLocked': False, 'Properties': {'最大功率': 16.2, '电压': 3.0, '内阻': 0.5},
+                           'Statistics': {'电流': 0, '功率': 0, '电压': 0},
+                           'Position': '',
+                           'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def l(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def r(self):
+        return _element_Pin(self, 1)
+
+# 接地
+class Ground_Component(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {'ModelID': 'Ground Component', 'Identifier': '',
+                           'IsBroken': False, 'IsLocked': False, 'Properties': {'锁定': 1.0},
+                           'Statistics': {'电流': 0}, 'Position': '',
+                           'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def i(self):
+        return _element_Pin(self, 0)
+
+# 电阻
+class Resistor(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {'ModelID': 'Resistor', 'Identifier': '', 'IsBroken': False,
+                           'IsLocked': False,
+                           'Properties': {'最大电阻': 1000_0000.0, '最小电阻': 0.1, '电阻': 10, '锁定': 1.0},
+                           'Statistics': {'瞬间功率': 0, '瞬间电流': 0,
+                                          '瞬间电压': 0, '功率': 0,
+                                          '电压': 0, '电流': 0},
+                           'Position': '', 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def l(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def r(self):
+        return _element_Pin(self, 1)
+
+# 运算放大器
+class Operational_Amplifier(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {'ModelID': 'Operational Amplifier', 'Identifier': '',
+                           'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'增益系数': 100_0000.0, '最大电压': 15.0, '最小电压': -15.0, '锁定': 1.0},
+                           'Statistics': {'电压-': 0, '电压+': 0, '输出电压': 0,
+                                          '输出电流': 0, '输出功率': 0},
+                           'Position': '',
+                           'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def i_up(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def i_low(self):
+        return _element_Pin(self, 1)
+
+    @property
+    def o(self):
+        return _element_Pin(self, 2)
+
+# 小电扇
+class Electric_Fan(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {'ModelID': 'Electric Fan', 'Identifier': '',
+                           'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'额定电阻': 1.0, '马达常数': 0.1, '转动惯量': 0.01, '电感': 5e-05, '负荷扭矩': 0.01,
+                                          '反电动势系数': 0.001, '粘性摩擦系数': 0.01, '角速度': 0, '锁定': 1.0},
+                           'Statistics': {'瞬间功率': 0, '瞬间电流': 0,
+                                          '瞬间电压': 0, '功率': 0,
+                                          '电压': 0, '电流': 0,
+                                          '摩擦扭矩': 0, '角速度': 0,
+                                          '反电动势': 0, '转速': 0,
+                                          '输入功率': 0, '输出功率': 0},
+                           'Position': '',
+                           'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def l(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def r(self):
+        return _element_Pin(self, 1)
+
+# 继电器
+class Relay_Component(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {'ModelID': 'Relay Component', 'Identifier': '',
+                           'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'开关': 0.0, '线圈电感': 0.2, '线圈电阻': 20.0,
+                                          '接通电流': 0.02, '额定电流': 1.0, '锁定': 1.0}, 'Statistics': {},
+                           'Position': '', 'Rotation': '',
+                           'DiagramCached': False, 'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
+                           'DiagramRotation': 0}
+
+    @property
+    def l_up(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def l_low(self):
+        return _element_Pin(self, 2)
+
+    @property
+    def mid(self):
+        return _element_Pin(self, 1)
+
+    @property
+    def r_up(self):
+        return _element_Pin(self, 4)
+
+    @property
+    def r_low(self):
+        return _element_Pin(self, 5)
+
+class N_MOSFET(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {'ModelID': 'N-MOSFET', 'Identifier': '', 'IsBroken': False,
+                           'IsLocked': False, 'Properties': {'PNP': 1.0, '放大系数': 0.027, '阈值电压': 1.5, '最大功率': 100.0, '锁定': 1.0},
+                           'Statistics': {'电压GS': 0.0, '电压': 0.0, '电流': 0.0, '功率': 0.0, '状态': 0.0},
+                           'Position': '', 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def D(self):
+        return _element_Pin(self, 2)
+
+    @property
+    def S(self):
+        return _element_Pin(self, 1)
+
+    @property
+    def G(self):
+        return _element_Pin(self, 0)
+
+# 方波发生器
+class Square_Source(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {'ModelID': 'Square Source', 'Identifier': '',
+                           'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'电压': 3.0, '内阻': 0.5, '频率': 20000.0, '偏移': 0.0, '占空比': 0.5},
+                           'Statistics': {'电流': 0.0, '功率': 0.0, '电压': -3.0},
+                           'Position': '', 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def l(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def r(self):
+        return _element_Pin(self, 1)
 
 # 学生电源
 # Student Source
