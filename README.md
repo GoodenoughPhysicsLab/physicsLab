@@ -15,16 +15,15 @@ sys.path.append('(path of physicsLab.py)')
 
 ```diff
  # 打开存档  
-open_Experiment("(Your .sav's path)")  
+open_Experiment("存档的文件名（带后缀）")  
  # 如果你希望程序不覆盖掉存档中已有的实验状态，需要这样写  
 read_Experiment()  
  # 创建一个逻辑输入，坐标为(0, 0, 0.1)  
 Logic_Input(0, 0, 0.1)   
  # 你也可以不写坐标，默认是(0,0,0)，请注意2原件的坐标不允许重叠！  
 o = Or_Gate() # 此时o存储的是orGate的self  
- # crt_wire输入格式 (  
+ # crt_wire输入格式：  
  #    crt_wire(SourcePin, TargetPin, color = "蓝")  
- # )  
 crt_wire(o.i_up, o.i_low)  
  # 将程序中生成的原件，导线等等写入存档  
 write_Experiment()  
@@ -44,7 +43,7 @@ write_Experiment()
 2.  新建 Feat_xxx 分支
 3.  提交代码
 4.  新建 Pull Request
-5.  补充readme
+5.  补充readme、api.txt
 
 #### 特技
 
