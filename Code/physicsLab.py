@@ -766,6 +766,38 @@ class Battery_Source(_element):
     def r(self):
         return _element_Pin(self, 1)
 
+# 学生电源
+class Student_Source(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {'ModelID': 'Student Source', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'交流电压': 3.0, '直流电压': 3.0, '开关': 0.0, '频率': 50.0},
+                           'Statistics': {'瞬间功率': 0.0, '瞬间电压': 0.0, '瞬间电流': 0.0,
+                                          '瞬间电阻': 0.0, '功率': 0.0, '电阻': 0.0, '电流': 0.0,
+                                          '瞬间功率1': 0.0, '瞬间电压1': 0.0, '瞬间电流1': 0.0,
+                                          '瞬间电阻1': 0.0,
+                                          '功率1': 0.0, '电阻1': 0.0, '电流1': 0.0},
+                           'Position': '',
+                           'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
+                           'DiagramRotation': 0}
+
+    @property
+    def l(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def l_mid(self):
+        return _element_Pin(self, 1)
+
+    @property
+    def r_mid(self):
+        return _element_Pin(self, 2)
+
+    @property
+    def r(self):
+        return _element_Pin(self, 3)
+
 # 接地
 class Ground_Component(_element):
     @_element_Init_HEAD
@@ -884,6 +916,7 @@ class Relay_Component(_element):
     def r_low(self):
         return _element_Pin(self, 5)
 
+# n mos
 class N_MOSFET(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
@@ -923,11 +956,6 @@ class Square_Source(_element):
     @property
     def r(self):
         return _element_Pin(self, 1)
-
-# 学生电源
-# Student Source
-
-# 可以支持传入 self 与 位置（tuple） 来连接导线
 
 # 老版本连接导线函数，不推荐使用
 def old_crt_wire(SourceLabel : Union[_element, tuple], SourcePin : int, TargetLabel, TargetPin : int, color = "蓝") -> None:
