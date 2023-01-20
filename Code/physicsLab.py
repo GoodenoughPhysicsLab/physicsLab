@@ -1,10 +1,9 @@
 import json
 from typing import Union, Callable
 
-# define
-FILE_HEAD = "C:/Users/Administrator/AppData/LocalLow/CIVITAS/Quantum Physics/Circuit/"
-# end define
+### define ###
 
+_FILE_HEAD = "C:/Users/Administrator/AppData/LocalLow/CIVITAS/Quantum Physics/Circuit/"
 # _xxx 不是文件向外暴露出的接口，文件外无法访问
 _savName = "" # sav的文件名
 _StatusSave = {"SimulationSpeed":1.0, "Elements":[], "Wires":[]}
@@ -35,6 +34,10 @@ def print_Elements():
 def print_wires():
     print(_wires)
 
+### end define ###
+
+### 文件读写操作 Experiment ###
+
 # 打开一个指定的sav文件
 def open_Experiment(file: str) -> None:
     file = file.strip()
@@ -47,7 +50,7 @@ def open_Experiment(file: str) -> None:
     _ifndef_open_Experiment = True
 
     global _savName
-    _savName = FILE_HEAD + file
+    _savName = _FILE_HEAD + file
     with open(_savName, encoding="UTF-8") as f:
         try:
             InternalName = (json.loads(f.read().__str__()))["Summary"]["Subject"]
@@ -64,23 +67,6 @@ def write_Experiment() -> None:
     _sav["Experiment"]["StatusSave"] = json.dumps(_StatusSave)
     with open(_savName, "w", encoding="UTF-8") as f:
         f.write(json.dumps(_sav))
-
-# 创建原件，本质上仍然是实例化
-def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
-    if not (isinstance(name, str) and isinstance(x, float) and isinstance(y, float) and isinstance(z, float)):
-        raise RuntimeError("Wrong parameter type")
-    x, y, z = _myRound(x), _myRound(y), _myRound(z)
-    if (name == '555 Timer'):
-        return NE555(x, y, z)
-    elif (name == '8bit Input'):
-        return eight_bit_Input(x, y, z)
-    elif (name == '8bit Display'):
-        return eight_bit_Display(x, y, z)
-    else:
-        try:
-            return eval(name.replace(' ', '_').replace('-', '_') + f'({x},{y},{z})')
-        except SyntaxError:
-            raise RuntimeError(f"{name} original that does not exist")
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
@@ -128,6 +114,28 @@ def rename_sav(name: str) -> None:
     _sav["Summary"]["Subject"] = name
     _sav["InternalName"] = name
 
+
+### end Experiment ###
+
+### 操作原件 Element ###
+
+# 创建原件，本质上仍然是实例化
+def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
+    if not (isinstance(name, str) and isinstance(x, float) and isinstance(y, float) and isinstance(z, float)):
+        raise RuntimeError("Wrong parameter type")
+    x, y, z = _myRound(x), _myRound(y), _myRound(z)
+    if (name == '555 Timer'):
+        return NE555(x, y, z)
+    elif (name == '8bit Input'):
+        return eight_bit_Input(x, y, z)
+    elif (name == '8bit Display'):
+        return eight_bit_Display(x, y, z)
+    else:
+        try:
+            return eval(name.replace(' ', '_').replace('-', '_') + f'({x},{y},{z})')
+        except SyntaxError:
+            raise RuntimeError(f"{name} original that does not exist")
+
 # 获取对应坐标的self
 def get_element(x : float, y : float, z : float = 0):
     x, y, z = _myRound(x), _myRound(y), _myRound(z)
@@ -155,6 +163,64 @@ def del_element(self) -> None:
                     return
     except:
         raise RuntimeError('Unable to delete a nonexistent element')
+
+### end Element ###
+
+### 操作导线 wire ###
+
+# 老版本连接导线函数，不推荐使用
+def old_crt_wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝") -> None: # SourceLabel : Union[_element, tuple]
+    SourcePin, TargetPin = int(SourcePin), int(TargetPin)
+    if (isinstance(SourceLabel, tuple) and len(SourceLabel) == 3):
+        SourceLabel = _elements_Address[SourceLabel]
+    elif (SourceLabel not in _elements_Address.values()):
+        raise RuntimeError("SourceLabel must be a Positon or self")
+    if (isinstance(TargetLabel, tuple) and len(TargetLabel) == 3):
+        TargetLabel = _elements_Address[TargetLabel]
+    elif (TargetLabel not in _elements_Address.values()):
+        raise RuntimeError("TargetLabel must be a Positon or self")
+
+    if (color not in ["黑", "蓝", "红", "绿", "黄"]):
+        raise RuntimeError("illegal color")
+    _wires.append({"Source": SourceLabel._arguments["Identifier"], "SourcePin": SourcePin,
+                   "Target": TargetLabel._arguments["Identifier"], "TargetPin": TargetPin,
+                   "ColorName": f"{color}色导线"})
+
+# 检查函数参数是否是导线
+def _check_typeWire(func):
+    def result(SourcePin , TargetPin, color : str = '蓝') -> None:
+        try:
+            if (SourcePin.type() == 'element Pin' and TargetPin.type() == 'element Pin'):
+                if (color not in ["黑", "蓝", "红", "绿", "黄"]):
+                    raise RuntimeError("illegal color")
+
+                func(SourcePin, TargetPin, color)
+        except:
+            raise RuntimeError('Error type of input function argument')
+    return result
+
+# 新版连接导线
+@_check_typeWire
+def crt_wire(SourcePin, TargetPin, color: str = '蓝') -> None:
+    _wires.append({"Source": SourcePin.element_self._arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
+                   "Target": TargetPin.element_self._arguments["Identifier"], "TargetPin": TargetPin.pinLabel,
+                   "ColorName": f"{color}色导线"})
+
+# 删除导线
+@_check_typeWire
+def del_wire(SourcePin, TargetPin, color : str = '蓝') -> None:
+    a_wire = {"Source": SourcePin.element_self._arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
+                   "Target": TargetPin.element_self._arguments["Identifier"], "TargetPin": TargetPin.pinLabel,
+                   "ColorName": f"{color}色导线"}
+    if (a_wire in _wires):
+        _wires.remove(a_wire)
+    else:
+        raise RuntimeError("Unable to delete a nonexistent wire")
+
+### end wire ###
+
+###################
+### 原件类 class ###
 
 # 所有原件的父类，不要实例化
 class _element:
@@ -956,52 +1022,3 @@ class Square_Source(_element):
     @property
     def r(self):
         return _element_Pin(self, 1)
-
-# 老版本连接导线函数，不推荐使用
-def old_crt_wire(SourceLabel : Union[_element, tuple], SourcePin : int, TargetLabel, TargetPin : int, color = "蓝") -> None:
-    SourcePin, TargetPin = int(SourcePin), int(TargetPin)
-    if (isinstance(SourceLabel, tuple) and len(SourceLabel) == 3):
-        SourceLabel = _elements_Address[SourceLabel]
-    elif (SourceLabel not in _elements_Address.values()):
-        raise RuntimeError("SourceLabel must be a Positon or self")
-    if (isinstance(TargetLabel, tuple) and len(TargetLabel) == 3):
-        TargetLabel = _elements_Address[TargetLabel]
-    elif (TargetLabel not in _elements_Address.values()):
-        raise RuntimeError("TargetLabel must be a Positon or self")
-
-    if (color not in ["黑", "蓝", "红", "绿", "黄"]):
-        raise RuntimeError("illegal color")
-    _wires.append({"Source": SourceLabel._arguments["Identifier"], "SourcePin": SourcePin,
-                   "Target": TargetLabel._arguments["Identifier"], "TargetPin": TargetPin,
-                   "ColorName": f"{color}色导线"})
-
-# 检查函数参数是否是导线
-def _check_typeWire(func):
-    def result(SourcePin , TargetPin, color : str = '蓝') -> None:
-        try:
-            if (SourcePin.type() == 'element Pin' and TargetPin.type() == 'element Pin'):
-                if (color not in ["黑", "蓝", "红", "绿", "黄"]):
-                    raise RuntimeError("illegal color")
-
-                func(SourcePin, TargetPin, color)
-        except:
-            raise RuntimeError('Error type of input function argument')
-    return result
-
-# 新版连接导线
-@_check_typeWire
-def crt_wire(SourcePin, TargetPin, color: str = '蓝') -> None:
-    _wires.append({"Source": SourcePin.element_self._arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
-                   "Target": TargetPin.element_self._arguments["Identifier"], "TargetPin": TargetPin.pinLabel,
-                   "ColorName": f"{color}色导线"})
-
-# 删除导线
-@_check_typeWire
-def del_wire(SourcePin, TargetPin, color : str = '蓝') -> None:
-    a_wire = {"Source": SourcePin.element_self._arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
-                   "Target": TargetPin.element_self._arguments["Identifier"], "TargetPin": TargetPin.pinLabel,
-                   "ColorName": f"{color}色导线"}
-    if (a_wire in _wires):
-        _wires.remove(a_wire)
-    else:
-        raise RuntimeError("Unable to delete a nonexistent wire")
