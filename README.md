@@ -13,7 +13,7 @@ sys.path.append('(path of physicsLab.py)')
 ```
 #### 使用说明
 
-```diff
+```python
  # 打开存档  
 open_Experiment("存档的文件名（带后缀）")  
  # 如果你希望程序不覆盖掉存档中已有的实验状态，需要这样写  
