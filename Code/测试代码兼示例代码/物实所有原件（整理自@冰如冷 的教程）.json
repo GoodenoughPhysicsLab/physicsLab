@@ -1,0 +1,1852 @@
+[
+  {
+    "ModelID": "Battery Source",
+    "Identifier": "afb1bc545a3445df9b5e48f3d417d18f",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "最大功率": 4.0500001907348633,
+      "电压": 1.5,
+      "内阻": 0.5
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "功率": 0.0,
+      "电压": 1.5
+    },
+    "Position": "-0.9689472,-0.0002882481,0.9821705",
+    "Rotation": "0.3964787,179.9862,0.0008015562",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Student Source",
+    "Identifier": "fbcd82526be646f0a3280252db9ffac4",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "交流电压": 3.0,
+      "直流电压": 3.0,
+      "开关": 0.0,
+      "频率": 50.0
+    },
+    "Statistics": {
+      "瞬间功率": 0.0,
+      "瞬间电压": 0.0,
+      "瞬间电流": 0.0,
+      "瞬间电阻": 0.0,
+      "功率": 0.0,
+      "电阻": 0.0,
+      "电流": 0.0,
+      "瞬间功率1": 0.0,
+      "瞬间电压1": 0.0,
+      "瞬间电流1": 0.0,
+      "瞬间电阻1": 0.0,
+      "功率1": 0.0,
+      "电阻1": 0.0,
+      "电流1": 0.0
+    },
+    "Position": "-0.7276636,-0.001223326,0.9535342",
+    "Rotation": "-2.36934E-05,179.9932,-2.003248E-05",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Incandescent Lamp",
+    "Identifier": "93e7ef13f0cd472f95d634172a65766a",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "额定电压": 3.0,
+      "额定功率": 0.85
+    },
+    "Statistics": {
+      "瞬间功率": 0.0,
+      "瞬间电流": 0.0,
+      "瞬间电压": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "电流": 0.0,
+      "灯泡温度": 300.0,
+      "电阻": 0.52941375188202955
+    },
+    "Position": "-0.4687792,-0.0002881885,0.9609784",
+    "Rotation": "0.3956695,179.9991,0.0003310881",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Simple Switch",
+    "Identifier": "87a5ebcecd8b473f9fa9d77dff1f2af7",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "开关": 0.0
+    },
+    "Statistics": {},
+    "Position": "-0.2844633,-0.0002886653,0.9585738",
+    "Rotation": "0.3956736,179.9996,0.0003274805",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "SPDT Switch",
+    "Identifier": "e48ea6dfc429489585a6ee379be2d2bd",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "开关": 0.0
+    },
+    "Statistics": {},
+    "Position": "-0.1101717,-0.0002881885,0.9590268",
+    "Rotation": "0.3956899,179.9987,0.0003361808",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "DPDT Switch",
+    "Identifier": "68389f8b30c64e2d99ccae878cf9cd67",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "开关": 0.0
+    },
+    "Statistics": {},
+    "Position": "0.06602187,-0.0002884865,0.956687",
+    "Rotation": "0.3033766,179.9949,0.0003341695",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Slide Rheostat",
+    "Identifier": "b518faac84dc4bcda1fa02e29f25344d",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "额定电阻": 10.0,
+      "滑块位置": 0.0,
+      "电阻1": 9.9999997473787516E-06,
+      "电阻2": 10.0
+    },
+    "Statistics": {
+      "瞬间功率": 0.0,
+      "瞬间电流": 0.0,
+      "瞬间电压": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "电流": 0.0,
+      "瞬间功率1": 0.0,
+      "瞬间电流1": 0.0,
+      "瞬间电压1": 0.0,
+      "功率1": 0.0,
+      "电压1": 0.0,
+      "电流1": 0.0
+    },
+    "Position": "0.3117219,-0.001895726,0.9470332",
+    "Rotation": "-0.003713664,179.9922,-0.0002339142",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Resistor",
+    "Identifier": "ebb7a29b72db42d6918f8210ee675367",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "最大电阻": 1000000.0,
+      "最小电阻": 0.10000000149011612,
+      "电阻": 10.0
+    },
+    "Statistics": {
+      "瞬间功率": 0.0,
+      "瞬间电流": 0.0,
+      "瞬间电压": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "电流": 0.0
+    },
+    "Position": "0.546944,-0.0002881885,0.9533231",
+    "Rotation": "0.3956711,179.9994,0.0003324828",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Buzzer",
+    "Identifier": "bbabd78579aa44fe8c887d2cfa42f918",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "额定电压": 3.0,
+      "额定功率": 0.3
+    },
+    "Statistics": {
+      "瞬间功率": 0.0,
+      "瞬间电流": 0.0,
+      "瞬间电压": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "电流": 0.0
+    },
+    "Position": "0.9015212,-3.820658E-05,0.9520814",
+    "Rotation": "-0.001599407,180.0074,0.0001075269",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Push Switch",
+    "Identifier": "97d6cbf292094e44a7814a580521a789",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "开关": 0.0,
+      "默认开关": 0.0
+    },
+    "Statistics": {
+      "电流": 0.0
+    },
+    "Position": "0.7258323,-0.0002881885,0.9529785",
+    "Rotation": "0.3956678,179.9998,0.0003338248",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Multimeter",
+    "Identifier": "322033b1612245b2a97dfbe64a7e198f",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "状态": 0.0
+    },
+    "Statistics": {
+      "瞬间功率": 0.0,
+      "瞬间电流": 0.0,
+      "瞬间电压": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "电流": 0.0
+    },
+    "Position": "-0.4246264,5.960464E-08,0.7023067",
+    "Rotation": "9.823774E-05,180.0005,-9.255064E-05",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Galvanometer",
+    "Identifier": "127645a3429141f2ad277dd373c257ee",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "量程": 3.0000001061125658E-06
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "刻度": 0.0
+    },
+    "Position": "-0.1925662,-0.0001296401,0.685791",
+    "Rotation": "-0.000201492,179.9978,-7.288701E-05",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Microammeter",
+    "Identifier": "cd6fddcdd2544ed69c3ac380c7544191",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "量程": 0.10000000149011612
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "刻度": 0.0
+    },
+    "Position": "0.01577792,-0.0001294017,0.7139176",
+    "Rotation": "0.0001366151,179.9951,0.0002648308",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Electricity Meter",
+    "Identifier": "be33db04e62d4a5c9a427ca3d7a1763a",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "示数": 0.0,
+      "额定电流": 6.0
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "电压": 0.0,
+      "功率": 0.0
+    },
+    "Position": "0.2432282,0.001224399,0.7244639",
+    "Rotation": "-2.710975E-05,180.0049,-9.945924E-05",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Resistance Box",
+    "Identifier": "e66321f948f34d78b0c8564264d7f7c0",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "最大电阻": 10000.0,
+      "最小电阻": 0.10000000149011612,
+      "电阻": 10.0
+    },
+    "Statistics": {
+      "瞬间功率": 0.0,
+      "瞬间电流": 0.0,
+      "瞬间电压": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "电流": 0.0
+    },
+    "Position": "0.4691413,-0.0006430149,0.6773334",
+    "Rotation": "-1.643518E-05,180.0009,5.046638E-06",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Simple Ammeter",
+    "Identifier": "cb02af74486a462a80f658fca5cc6dd1",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "量程": 0.0074999998323619366,
+      "内阻": 0.0074999998323619366,
+      "名义量程": 3.0
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "刻度": 0.0
+    },
+    "Position": "0.6886634,-0.0001298189,0.7010484",
+    "Rotation": "-0.0001741733,179.9944,-7.034104E-05",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Simple Voltmeter",
+    "Identifier": "01a79b2d9f834332ad2a720db6267b61",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "量程": 0.0010000000474974513,
+      "名义量程": 15.0
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "刻度": 0.0
+    },
+    "Position": "0.8993639,-0.0001298189,0.7007936",
+    "Rotation": "-0.0001912467,179.9977,-6.781774E-05",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Ground Component",
+    "Identifier": "e81d0ce799314f19b6f8ca976be6c9ed",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {},
+    "Statistics": {
+      "电流": 0.0
+    },
+    "Position": "-0.9599481,-0.0002884269,0.4071335",
+    "Rotation": "0.3956944,180.0006,0.0003418212",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Basic Capacitor",
+    "Identifier": "676aae57fc2e4dcd8abd9bebc04f4a05",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "耐压": 16.0,
+      "电容": 1E-06,
+      "内阻": 5.0
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "功率": 0.0,
+      "电压": 0.0
+    },
+    "Position": "-0.7840767,-0.0002883077,0.4025892",
+    "Rotation": "0.39569,179.9979,0.0003434996",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Basic Inductor",
+    "Identifier": "c5f7217709e643079518fdc53e876384",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "额定电流": 1.0,
+      "电感": 0.05000000074505806,
+      "内阻": 1.0
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "功率": 0.0,
+      "电压": 0.0
+    },
+    "Position": "-0.6051283,-0.0002882481,0.4036804",
+    "Rotation": "0.3956713,179.9996,0.0003391627",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Basic Diode",
+    "Identifier": "c3fb1e1e49c14fcebe0268e142657a9b",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "击穿电压": 0.0,
+      "前向压降": 0.6,
+      "额定电流": 1.0,
+      "工作电压": 3.0
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "电压": 0.0,
+      "功率": 0.0
+    },
+    "Position": "-0.4181831,-0.0002883673,0.4076225",
+    "Rotation": "0.3956674,179.994,0.0003369811",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Light-Emitting Diode",
+    "Identifier": "5b15becdd45a46b18fe8e59ccb0bedd0",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "反向耐压": 6.0,
+      "击穿电压": 0.0,
+      "前向压降": 2.1024259,
+      "工作电流": 0.01,
+      "工作电压": 3.0
+    },
+    "Statistics": {
+      "电流1": 0.0,
+      "电压1": 0.0,
+      "功率1": 0.0,
+      "亮度1": 0.0
+    },
+    "Position": "-0.2286561,-0.0002882481,0.406016",
+    "Rotation": "0.3956656,179.9985,0.0003211766",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Transformer",
+    "Identifier": "5b1ad2f87f2a4bf387af25d02609f103",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "输入电压": 3.0,
+      "输出电压": 36.0,
+      "额定功率": 20.0,
+      "耦合系数": 1.0
+    },
+    "Statistics": {
+      "电流1": 0.0,
+      "电压1": 0.0,
+      "功率1": 0.0,
+      "电流2": 0.0,
+      "电压2": 0.0,
+      "功率2": 0.0
+    },
+    "Position": "-0.03367137,-0.0002883673,0.4034705",
+    "Rotation": "0.3957673,179.999,0.0003577934",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Tapped Transformer",
+    "Identifier": "318c8c42dc554d2cb163a25daeb0cd26",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "输入电压": 3.0,
+      "输出电压": 36.0,
+      "额定功率": 20.0,
+      "耦合系数": 1.0
+    },
+    "Statistics": {
+      "电流1": 0.0,
+      "电压1": 0.0,
+      "功率1": 0.0,
+      "电流2": 0.0,
+      "电压2": 0.0
+    },
+    "Position": "0.1538958,-0.0002881885,0.4060449",
+    "Rotation": "0.3957765,179.9991,0.0003712081",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Sinewave Source",
+    "Identifier": "84c9783c2be94919ab3a806ced31b9a3",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "电压": 3.0,
+      "内阻": 0.5,
+      "频率": 50.0,
+      "偏移": 0.0,
+      "占空比": 0.5
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "功率": 0.0,
+      "电压": -2.8755641047804197
+    },
+    "Position": "-0.9626834,-3.880262E-05,0.2562411",
+    "Rotation": "-0.001631511,180.0213,0.0003036145",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Square Source",
+    "Identifier": "bd94bd746694443cad88948c594e152b",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "电压": 3.0,
+      "内阻": 0.5,
+      "频率": 50.0,
+      "偏移": 0.0,
+      "占空比": 0.5
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "功率": 0.0,
+      "电压": -3.0
+    },
+    "Position": "-0.7816026,-3.880262E-05,0.2551096",
+    "Rotation": "-0.001624575,180.0218,0.000298444",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Triangle Source",
+    "Identifier": "a75e01396439462dbebf7a75f5202155",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "电压": 3.0,
+      "内阻": 0.5,
+      "频率": 50.0,
+      "偏移": 0.0,
+      "占空比": 0.5
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "功率": 0.0,
+      "电压": -0.55200281940640883
+    },
+    "Position": "-0.5957363,-3.880262E-05,0.2546403",
+    "Rotation": "-0.001631495,180.015,0.0003067316",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Sawtooth Source",
+    "Identifier": "3bf41b44f0184c5baaad2970b59f0bb3",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "电压": 3.0,
+      "内阻": 0.5,
+      "频率": 50.0,
+      "偏移": 0.0,
+      "占空比": 0.5
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "功率": 0.0,
+      "电压": 1.7760014097032037
+    },
+    "Position": "-0.4121206,-3.880262E-05,0.2578053",
+    "Rotation": "-0.001634157,180.0124,0.0003204641",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Pulse Source",
+    "Identifier": "cda42badef5a468fb6494d328a101273",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "电压": 3.0,
+      "内阻": 0.5,
+      "频率": 50.0,
+      "偏移": 0.0,
+      "占空比": 0.5
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "功率": 0.0,
+      "电压": 0.0
+    },
+    "Position": "-0.2227483,-3.880262E-05,0.2674452",
+    "Rotation": "-0.001629716,180.0082,0.0003119935",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Mutual Inductor",
+    "Identifier": "b41b18a556d447e8a1ab1dd458d3eb65",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "电感1": 4.0,
+      "电感2": 1.0,
+      "耦合系数": 1.0
+    },
+    "Statistics": {
+      "电流1": 0.0,
+      "电压1": 0.0,
+      "功率1": 0.0,
+      "电流2": 0.0,
+      "电压2": 0.0,
+      "功率2": 0.0
+    },
+    "Position": "0.3342683,-0.0002883673,0.402721",
+    "Rotation": "0.3956534,179.9995,0.0003082413",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Rectifier",
+    "Identifier": "3d0fa601efa146da8b000f62d009723b",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "前向压降": 0.800000011920929,
+      "额定电流": 1.0
+    },
+    "Statistics": {
+      "电流": 0.0
+    },
+    "Position": "0.5210512,-0.0002882481,0.399623",
+    "Rotation": "0.3957607,179.9988,0.0003753692",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Transistor",
+    "Identifier": "dd352f992de542f4a0e6b603bda260a8",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "PNP": 1.0,
+      "放大系数": 100.0,
+      "最大功率": 5.0
+    },
+    "Statistics": {
+      "电压BC": 0.0,
+      "电压BE": 0.0,
+      "电压CE": 0.0,
+      "功率": 0.0
+    },
+    "Position": "-0.03436208,-0.0002883077,0.2682705",
+    "Rotation": "359.6043,179.8838,-0.0003759736",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "P-MOSFET",
+    "Identifier": "bfc5be2269764a959338da763b953a8d",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "PNP": 1.0,
+      "放大系数": 0.027,
+      "阈值电压": 1.5,
+      "最大功率": 100.0
+    },
+    "Statistics": {
+      "电压GS": 0.0,
+      "电压": 0.0,
+      "电流": 0.0,
+      "功率": 0.0,
+      "状态": 1.0
+    },
+    "Position": "0.1534269,-3.820658E-05,0.261447",
+    "Rotation": "-0.0005219,180.0092,8.253436E-05",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "N-MOSFET",
+    "Identifier": "1458d0947c574cfdac195c0907e02bfa",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "PNP": 1.0,
+      "放大系数": 0.027,
+      "阈值电压": 1.5,
+      "最大功率": 100.0
+    },
+    "Statistics": {
+      "电压GS": 0.0,
+      "电压": 0.0,
+      "电流": 0.0,
+      "功率": 0.0,
+      "状态": 0.0
+    },
+    "Position": "0.3373788,-3.820658E-05,0.262419",
+    "Rotation": "-0.000523569,180.0095,7.277572E-05",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Comparator",
+    "Identifier": "fb23565e5bfe4de3b68ef6a4ad2371b7",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0
+    },
+    "Statistics": {},
+    "Position": "0.5224686,-3.862381E-05,0.2429014",
+    "Rotation": "-0.0007000472,180.0035,0.0002045634",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Operational Amplifier",
+    "Identifier": "6dae99927f4c4679a6a1fa4f3b662ddc",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "增益系数": 1000000.0,
+      "最大电压": 15.0,
+      "最小电压": -15.0
+    },
+    "Statistics": {
+      "电压-": 0.0,
+      "电压+": 0.0,
+      "输出电压": 0.0,
+      "输出电流": 0.0,
+      "输出功率": 0.0
+    },
+    "Position": "0.7054085,-3.820658E-05,0.2746878",
+    "Rotation": "-0.0005297118,180.0093,7.14476E-05",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Relay Component",
+    "Identifier": "a5b0d049e2ed4238a4994947c04f0e30",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "开关": 0.0,
+      "线圈电感": 0.20000000298023224,
+      "线圈电阻": 20.0,
+      "接通电流": 0.019999999552965164,
+      "额定电流": 1.0
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "通路": 0.0
+    },
+    "Position": "0.7033995,-0.0002884269,0.3999252",
+    "Rotation": "0.3957293,180.001,0.0003304592",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Air Switch",
+    "Identifier": "d21a665157d148dcae00e4cd869b776c",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "开关": 0.0,
+      "额定电流": 10.0
+    },
+    "Statistics": {},
+    "Position": "-0.9670174,-0.002326846,-0.01599808",
+    "Rotation": "-9.568378E-05,179.9363,-0.0001099118",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Fuse Component",
+    "Identifier": "72d26a9c0f5f4252853ff60217b366c4",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "开关": 1.0,
+      "额定电流": 0.30000001192092896,
+      "熔断电流": 0.5
+    },
+    "Statistics": {
+      "瞬间功率": 0.0,
+      "瞬间电流": 0.0,
+      "瞬间电压": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "电流": 0.0
+    },
+    "Position": "-0.7678807,-0.0002883077,0.01868576",
+    "Rotation": "0.3957151,179.9986,0.0003504917",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Logic Input",
+    "Identifier": "8d4b0c3893b643688c99e36290b1ef19",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0
+    },
+    "Statistics": {
+      "电流": 0.0,
+      "电压": 0.0,
+      "功率": 0.0
+    },
+    "Position": "-0.960497,-0.0002881885,-0.1991931",
+    "Rotation": "0.3957001,180.0008,0.0003488034",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Logic Output",
+    "Identifier": "47c6b3e946334f9eb790902c8aa39691",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "状态": 0.0,
+      "高电平": 3.0,
+      "低电平": 0.0
+    },
+    "Statistics": {
+      "状态": 0.0,
+      "电压": 0.0
+    },
+    "Position": "-0.7773399,-0.0002882481,-0.204318",
+    "Rotation": "0.3956776,180.0018,0.0003497441",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "No Gate",
+    "Identifier": "4338a49bb57f4be8a3c7f0bcf8e006ba",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0,
+      "最大电流": 0.10000000149011612
+    },
+    "Statistics": {
+      "状态": 1.0,
+      "输入0": 0.0
+    },
+    "Position": "-0.5956863,-0.0002883077,-0.2023453",
+    "Rotation": "359.6043,180.0005,-0.0003417521",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "And Gate",
+    "Identifier": "29415d55343144318413363b1b555df8",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0,
+      "最大电流": 0.10000000149011612
+    },
+    "Statistics": {
+      "状态": 0.0,
+      "输入0": 0.0,
+      "输入1": 0.0
+    },
+    "Position": "-0.4191768,-0.0002882481,-0.2008587",
+    "Rotation": "359.6043,179.9987,-0.000331117",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Or Gate",
+    "Identifier": "6def42738f174b78b61835f54d755123",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0,
+      "最大电流": 0.10000000149011612
+    },
+    "Statistics": {
+      "状态": 0.0,
+      "输入0": 0.0,
+      "输入1": 0.0
+    },
+    "Position": "-0.2498181,-0.0002882481,-0.1996236",
+    "Rotation": "359.6043,179.9988,-0.0003320505",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Nor Gate",
+    "Identifier": "756d63b818b3494ebab23be7e026b216",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0,
+      "最大电流": 0.10000000149011612
+    },
+    "Statistics": {
+      "状态": 1.0,
+      "输入0": 0.0,
+      "输入1": 0.0
+    },
+    "Position": "-0.07937724,-0.0002882481,-0.1995154",
+    "Rotation": "359.6043,179.9992,-0.0003253579",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Nand Gate",
+    "Identifier": "31695c37780a4720aa6098b3c24c2c3b",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0,
+      "最大电流": 0.10000000149011612
+    },
+    "Statistics": {
+      "状态": 1.0,
+      "输入0": 0.0,
+      "输入1": 0.0
+    },
+    "Position": "0.0890307,-0.0002882481,-0.2001473",
+    "Rotation": "359.6043,179.9986,-0.0003348505",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Full Adder",
+    "Identifier": "cfcfc5150807418388a6cf985949fcb4",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0
+    },
+    "Statistics": {},
+    "Position": "-0.9555853,-3.85046E-05,-0.3986881",
+    "Rotation": "-0.0004972947,180.0175,0.0001637948",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Half Adder",
+    "Identifier": "0f5d6465b71c4e8a926674ee85c1c96c",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0
+    },
+    "Statistics": {},
+    "Position": "-0.7388249,-3.85046E-05,-0.400696",
+    "Rotation": "-0.0005037308,180.0224,0.0001589503",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Multiplier",
+    "Identifier": "e11c537506844b51913f403723dad145",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0
+    },
+    "Statistics": {},
+    "Position": "-0.5304161,-3.8445E-05,-0.4018376",
+    "Rotation": "-0.0004832522,180.011,0.0001698119",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Xor Gate",
+    "Identifier": "70c6d764c6af4ce19bdd25ec871d4172",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0,
+      "最大电流": 0.10000000149011612
+    },
+    "Statistics": {
+      "状态": 0.0,
+      "输入0": 0.0,
+      "输入1": 0.0
+    },
+    "Position": "0.2541985,-0.0002882481,-0.1982457",
+    "Rotation": "359.6043,179.9988,-0.0003277527",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Xnor Gate",
+    "Identifier": "d07cce0793db4da08831284a9500bc99",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0,
+      "最大电流": 0.10000000149011612
+    },
+    "Statistics": {
+      "状态": 1.0,
+      "输入0": 0.0,
+      "输入1": 0.0
+    },
+    "Position": "0.4241118,-0.0002882481,-0.1980733",
+    "Rotation": "359.6043,179.9987,-0.0003225846",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Imp Gate",
+    "Identifier": "b74fe15f25fc47be9ee7107230ab6ee2",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0,
+      "最大电流": 0.10000000149011612
+    },
+    "Statistics": {
+      "状态": 1.0,
+      "输入0": 0.0,
+      "输入1": 0.0
+    },
+    "Position": "0.5940576,-0.0002882481,-0.1986125",
+    "Rotation": "359.6043,179.9989,-0.0003191629",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Nimp Gate",
+    "Identifier": "152ee20140854f36b844fa9d2a54bc3b",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0,
+      "最大电流": 0.10000000149011612
+    },
+    "Statistics": {
+      "状态": 0.0,
+      "输入0": 0.0,
+      "输入1": 0.0
+    },
+    "Position": "0.7646332,-0.0002882481,-0.1945958",
+    "Rotation": "359.6043,180.0001,-0.000325223",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Yes Gate",
+    "Identifier": "cbec96131fe64a99ba208d187dd090ce",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0,
+      "最大电流": 0.10000000149011612
+    },
+    "Statistics": {
+      "状态": 0.0,
+      "输入0": 0.0
+    },
+    "Position": "0.9412183,-0.0002883077,-0.1953606",
+    "Rotation": "359.6043,180.0002,-0.0003344767",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Schmitt Trigger",
+    "Identifier": "e2c3d42342fe4346bb76fcfbabb1c087",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "工作模式": 0.0,
+      "切变速率": 0.5,
+      "高电准位": 5.0,
+      "正向阈值": 3.3333332538604736,
+      "低电准位": 0.0,
+      "负向阈值": 1.6666666269302368
+    },
+    "Statistics": {
+      "输入电压": 0.0,
+      "输出电压": 0.0,
+      "1": 0.0
+    },
+    "Position": "-0.3123303,-3.886223E-05,-0.4016898",
+    "Rotation": "-0.00167412,180.0112,0.0003046103",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "555 Timer",
+    "Identifier": "ea7888859cf643a0b6bf6aeb3a0a50f5",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0
+    },
+    "Statistics": {
+      "供电": 0.0,
+      "放电": 0.0,
+      "阈值": 0.0,
+      "控制": 0.0,
+      "触发": 0.0,
+      "输出": 0.0,
+      "重设": 0.0,
+      "接地": 0.0
+    },
+    "Position": "-0.08244089,-3.8445E-05,-0.3964221",
+    "Rotation": "-0.000470593,180.0024,0.000169563",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Counter",
+    "Identifier": "74559a13817941b8a685537f5b744920",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0
+    },
+    "Statistics": {},
+    "Position": "0.130497,-3.85046E-05,-0.4073391",
+    "Rotation": "-0.0004904244,180.0075,0.0001748966",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "D Flipflop",
+    "Identifier": "7115780ae9e14dc285fbe75f7c8a2404",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0
+    },
+    "Statistics": {},
+    "Position": "0.331062,-3.85046E-05,-0.4036033",
+    "Rotation": "-0.0004973061,180.0068,0.0001626114",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "JK Flipflop",
+    "Identifier": "1210760c3c414d36adfa2bd3ac1c8f1a",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0
+    },
+    "Statistics": {},
+    "Position": "0.5374553,-3.85046E-05,-0.4029719",
+    "Rotation": "-0.000504214,180.0055,0.0001535969",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Random Generator",
+    "Identifier": "7c6230a040cf46aeacdb9870ae4304b5",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0
+    },
+    "Statistics": {},
+    "Position": "0.7497292,-3.85046E-05,-0.4030062",
+    "Rotation": "-0.0004868906,179.9997,0.0001625428",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "T Flipflop",
+    "Identifier": "4fd38b9423f74f50ab42700b4c16f194",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "高电平": 3.0,
+      "低电平": 0.0
+    },
+    "Statistics": {},
+    "Position": "0.9641257,-3.85046E-05,-0.4016004",
+    "Rotation": "-0.0004988167,179.9996,0.0001633867",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Spark Gap",
+    "Identifier": "068dbc6a745a45b3b06b4bc48d1663e1",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "击穿电压": 1000.0,
+      "击穿电阻": 1.0,
+      "维持电流": 0.0010000000474974513
+    },
+    "Statistics": {
+      "瞬间功率": 0.0,
+      "瞬间电流": 0.0,
+      "瞬间电压": 0.0
+    },
+    "Position": "-0.9493792,-0.0002883077,-0.7227726",
+    "Rotation": "359.6043,179.9986,-0.0003441992",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Tesla Coil",
+    "Identifier": "bdf694a90c3c4ee29214da19592ded53",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "击穿电压": 30000.0,
+      "次级电容": 2.5E-11,
+      "次级电阻": 1.0,
+      "电感1": 0.10000000149011612,
+      "电感2": 90.0
+    },
+    "Statistics": {
+      "瞬间功率": 0.0,
+      "瞬间电流": 0.0,
+      "瞬间电压": 0.0
+    },
+    "Position": "-0.7292904,-0.0002880692,-0.7165852",
+    "Rotation": "359.6965,180.0145,-4.811619E-05",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Color Light-Emitting Diode",
+    "Identifier": "7f7d10ef405d410a97093a06869871e7",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "反向耐压": 6.0,
+      "击穿电压": 0.0,
+      "前向压降": 2.1024259,
+      "工作电流": 0.01,
+      "工作电压": 3.0
+    },
+    "Statistics": {
+      "电流1": 0.0,
+      "电压1": 0.0,
+      "功率1": 0.0,
+      "亮度1": 0.0,
+      "电流2": 0.0,
+      "电压2": 0.0,
+      "功率2": 0.0,
+      "亮度2": 0.0,
+      "电流3": 0.0,
+      "电压3": 0.0,
+      "功率3": 0.0,
+      "亮度3": 0.0
+    },
+    "Position": "-0.4714864,-0.0002883673,-0.7157288",
+    "Rotation": "0.2652328,180,0.0002320091",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Dual Light-Emitting Diode",
+    "Identifier": "4ddb1d0b60f64d64b35ef98accaeb07b",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "反向耐压": 6.0,
+      "击穿电压": 0.0,
+      "前向压降": 2.1024259,
+      "工作电流": 0.01,
+      "工作电压": 3.0
+    },
+    "Statistics": {
+      "电流1": 0.0,
+      "电压1": 0.0,
+      "功率1": 0.0,
+      "亮度1": 0.0,
+      "电流2": 0.0,
+      "电压2": 0.0,
+      "功率2": 0.0,
+      "亮度2": 0.0
+    },
+    "Position": "-0.2043107,-0.0002883673,-0.7155223",
+    "Rotation": "0.3956565,179.9993,0.0003290391",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Electric Bell",
+    "Identifier": "6d6cf2f0ee1b4fb39a0c8ec11c208355",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "额定电压": 3.0,
+      "额定功率": 0.3
+    },
+    "Statistics": {
+      "瞬间功率": 0.0,
+      "瞬间电流": 0.0,
+      "瞬间电压": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "电流": 0.0
+    },
+    "Position": "0.0005645474,-0.0002881289,-0.7134816",
+    "Rotation": "0.3959583,179.9939,0.0006650913",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Electric Fan",
+    "Identifier": "ddd92ff104ec4c7f8f259a700277fa59",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "额定电阻": 1.0,
+      "马达常数": 0.1,
+      "转动惯量": 0.01,
+      "电感": 5E-05,
+      "负荷扭矩": 0.01,
+      "反电动势系数": 0.001,
+      "粘性摩擦系数": 0.01,
+      "角速度": 0.0
+    },
+    "Statistics": {
+      "瞬间功率": 0.0,
+      "瞬间电流": 0.0,
+      "瞬间电压": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "电流": 0.0,
+      "摩擦扭矩": 0.0,
+      "角速度": 0.0,
+      "反电动势": 0.0,
+      "转速": 0.0,
+      "输入功率": 0.0,
+      "输出功率": 0.0
+    },
+    "Position": "0.1986473,-3.826618E-05,-0.7183007",
+    "Rotation": "-0.0008127459,180.0106,5.00299E-05",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Musical Box",
+    "Identifier": "74bb49a6155a4a1b97b32d0c4453f86e",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "额定电压": 3.0,
+      "额定功率": 0.3
+    },
+    "Statistics": {
+      "瞬间功率": 0.0,
+      "瞬间电流": 0.0,
+      "瞬间电压": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "电流": 0.0
+    },
+    "Position": "0.3862061,-0.0002883077,-0.7121838",
+    "Rotation": "0.3956614,180.002,0.0003351069",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Resistance Law",
+    "Identifier": "13640f7fc53f4ff19966f430f43f611f",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "电阻率": 1.1E-06,
+      "电阻率2": 4.4E-07,
+      "电阻率3": 1.7E-08,
+      "最大长度": 2.0,
+      "最小长度": 0.1,
+      "长度": 1.0,
+      "最大半径": 0.01,
+      "最小半径": 0.0001,
+      "半径": 0.0005,
+      "电阻": 1.4005634992086791,
+      "电阻2": 0.56022539968347163,
+      "电阻3": 0.021645072260497767
+    },
+    "Statistics": {
+      "瞬间功率": 0.0,
+      "瞬间电流": 0.0,
+      "瞬间电压": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "电流": 0.0,
+      "瞬间功率1": 0.0,
+      "瞬间电流1": 0.0,
+      "瞬间电压1": 0.0,
+      "功率1": 0.0,
+      "电压1": 0.0,
+      "电流1": 0.0,
+      "瞬间功率2": 0.0,
+      "瞬间电流2": 0.0,
+      "瞬间电压2": 0.0,
+      "功率2": 0.0,
+      "电压2": 0.0,
+      "电流2": 0.0,
+      "瞬间功率3": 0.0,
+      "瞬间电流3": 0.0,
+      "瞬间电压3": 0.0,
+      "功率3": 0.0,
+      "电压3": 0.0,
+      "电流3": 0.0
+    },
+    "Position": "0.7054132,-0.0102883,-0.7398612",
+    "Rotation": "0.1978128,180.0009,0.0001587897",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Simple Instrument",
+    "Identifier": "327a118fb02f47688e4020d53cc17a17",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "额定电压": 3.0,
+      "额定功率": 0.3,
+      "音量": 1.0,
+      "音高": 60.0,
+      "节拍": 120.0
+    },
+    "Statistics": {
+      "瞬间功率": 0.0,
+      "瞬间电流": 0.0,
+      "瞬间电压": 0.0,
+      "功率": 0.0,
+      "电压": 0.0,
+      "电流": 0.0
+    },
+    "Position": "-0.959832,-0.0002884865,-0.9201208",
+    "Rotation": "0.3962153,179.9917,0.0006823943",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  },
+  {
+    "ModelID": "Solenoid",
+    "Identifier": "e6f8a1a1cd034cde8dc6b98c1339e7f8",
+    "IsBroken": false,
+    "IsLocked": false,
+    "Properties": {
+      "插入铁芯": 1.0,
+      "内圈状态": 0.0,
+      "切割速度": 1.0,
+      "线圈匝数": 100.0,
+      "线圈位置": 0.0,
+      "内线圈半径": 0.10000000149011612,
+      "磁通量": 0.0
+    },
+    "Statistics": {
+      "电流-内线圈": 0.0,
+      "功率-内线圈": 0.0,
+      "电压-内线圈": 0.0,
+      "磁感应强度": 0.0,
+      "磁通量": 0.0,
+      "电压-外线圈": 0.0
+    },
+    "Position": "-0.6428092,-0.001255274,-0.9370235",
+    "Rotation": "0.06427455,180.1325,-0.003210836",
+    "DiagramCached": false,
+    "DiagramPosition": {
+      "X": 0,
+      "Y": 0,
+      "Magnitude": 0.0
+    },
+    "DiagramRotation": 0
+  }
+]
