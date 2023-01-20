@@ -1,4 +1,4 @@
-[
+var = [
   {
     'ModelID': 'Battery Source',
     'Identifier': '',
