@@ -1,9 +1,10 @@
 import json
+import getpass
 from typing import Union, Callable
 
 ### define ###
 
-_FILE_HEAD = r'C:\Users\Administrator\AppData\LocalLow\CIVITAS\Quantum Physics\Circuit'
+_FILE_HEAD = f'C:\\Users\\{getpass.getuser()}\\AppData\\LocalLow\\CIVITAS\\Quantum Physics\\Circuit'
 # _xxx 不是文件向外暴露出的接口，文件外无法访问
 _savName = "" # sav的文件名
 _StatusSave = {"SimulationSpeed":1.0, "Elements":[], "Wires":[]}
@@ -50,7 +51,7 @@ def open_Experiment(file: str) -> None:
     _ifndef_open_Experiment = True
 
     global _savName
-    _savName = f"{_FILE_HEAD}/{file}"
+    _savName = f"{_FILE_HEAD}\\{file}"
     with open(_savName, encoding="UTF-8") as f:
         try:
             InternalName = (json.loads(f.read().__str__()))["Summary"]["Subject"]
