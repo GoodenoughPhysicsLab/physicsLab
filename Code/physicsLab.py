@@ -26,14 +26,19 @@ _sav = {"Type": 0, "Experiment": {"ID": None, "Type": 0, "Components": 7, "Subje
 _ifndef_open_Experiment = False
 _elements_Address = {} # key为position，value为self
 
-def _myRound(num):
-    return round(num, 3)
+def _myRound(num : Union[int, float]):
+    if isinstance(num, int):
+        return float(num)
+    return round(num, 4)
 
 def print_Elements():
     print(_Elements)
 
 def print_wires():
     print(_wires)
+
+def print_elements_Address():
+    print(_elements_Address)
 
 ### end define ###
 
@@ -68,6 +73,12 @@ def write_Experiment() -> None:
     _sav["Experiment"]["StatusSave"] = json.dumps(_StatusSave)
     with open(_savName, "w", encoding="UTF-8") as f:
         f.write(json.dumps(_sav))
+
+# 获取Identifier
+def get_Identifier(position : tuple):
+    if position == (0, -1, 0):
+        return 1
+    return position.__hash__().__str__()
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
@@ -220,7 +231,39 @@ def del_wire(SourcePin, TargetPin, color : str = '蓝') -> None:
 
 ### end wire ###
 
-###################
+### 模块化电路 ###
+
+class unit_Sum:
+    def __init__(self, x : float = 0, y : float = 0, z : float = 0, bitCount : int = 1):
+        if not (
+                (isinstance(x, float) or isinstance(x, int)) and
+                (isinstance(y, float) or isinstance(y, int)) and
+                (isinstance(z, float) or isinstance(z, int)) and
+                isinstance(bitCount, int) and bitCount > 0
+        ):
+            raise RuntimeError('Error in input parameters')
+        x, y, z = _myRound(x), _myRound(y), _myRound(z)
+        Full_Adder(x, y, z)
+        for count in range(1, bitCount):
+            if count % 8 != 0:
+                y = _myRound(y + 0.2)
+                crt_wire(
+                    Full_Adder(x, y, z).i_low,
+                    get_Element(x, y - 0.2, z).o_low
+                )
+            else:
+                y -= 1.4
+                z = _myRound(z + 0.1)
+                crt_wire(
+                    Full_Adder(x, y, z).i_low,
+                    get_Element(x, y + 1.4, z - 0.1).o_low
+                )
+
+class unit_Sub:
+    pass
+
+### end 模块化电路 ###
+
 ### 原件类 class ###
 
 # 所有原件的父类，不要实例化
@@ -270,11 +313,12 @@ class _element:
         print(self._arguments)
 
 
-# 装饰器
+# __init__ 装饰器
 def _element_Init_HEAD(func : Callable) -> Callable:
     def result(self, x : float = 0, y : float = 0, z : float = 0) -> None:
         global _Elements
-        self._position = (_myRound(x), _myRound(y), _myRound(z))
+        x, y, z = _myRound(x), _myRound(y), _myRound(z)
+        self._position = (x, y, z)
         if (self._position in _elements_Address.keys()):
             raise RuntimeError("The position already exists")
         func(self, x, y, z)
@@ -650,23 +694,53 @@ class Random_Generator(_big_element):
     def o_low(self):
         return _element_Pin(self, 3)
 
-# 简单开关
-class Simple_Switch(_element):
+class _switch_Element(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        self._arguments = {"ModelID": "Simple Switch", "Identifier": "", "IsBroken": False,
+        self._arguments = {"ModelID": "", "Identifier": "", "IsBroken": False,
                           "IsLocked": False, "Properties": {"开关": 0, "锁定": 1.0},
                           "Statistics": {}, "Position": "",
                           "Rotation": '', "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
 
+# 简单开关
+class Simple_Switch(_switch_Element):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super(Simple_Switch, self).__init__(x, y, z)
+        self._arguments['ModelID'] = 'Simple Switch'
+
     @property
-    def i(self):
+    def l(self):
         return _element_Pin(self, 0)
 
     @property
-    def o(self):
+    def r(self):
         return _element_Pin(self, 1)
+
+# 单刀双掷开关
+class SPDT_Switch(_switch_Element):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super(SPDT_Switch, self).__init__(x, y, z)
+        self._arguments['ModelID'] = 'SPDT Switch'
+
+    @property
+    def l(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def mid(self):
+        return _element_Pin(self, 1)
+
+    @property
+    def r(self):
+        return _element_Pin(self, 2)
+
+# 双刀双掷开关
+class DPDT_Switch(_switch_Element):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super(DPDT_Switch, self).__init__(x, y, z)
+        self._arguments['ModelID'] = 'DPDT Switch'
+
 
 # 555定时器
 class NE555(_element):
@@ -1061,3 +1135,5 @@ class Pulse_Source(_source_Element):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(Pulse_Source, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Pulse Source'
+
+### end 原件类 ###
