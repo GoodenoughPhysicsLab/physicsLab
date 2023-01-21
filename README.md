@@ -5,7 +5,7 @@
 
 #### 安装教程
 
-1.  请确保你的电脑有[Python](https://www.python.org)与物理实验室PC版（联系开发者@Jone-Chen）
+1.  请确保你的电脑有[Python](https://www.python.org)与物理实验室PC版（建议联系[开发者Jone-Chen](https://gitee.com/civitasjohn)）
 2.  打开Code文件夹中的physicsLab.py，复制或下载到本地
 3.  如果你的ide无法找到physicsLab,py，你需要在代码开头写  
 ```python
