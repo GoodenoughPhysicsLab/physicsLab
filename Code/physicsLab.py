@@ -138,14 +138,14 @@ def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
             raise RuntimeError(f"{name} original that does not exist")
 
 # 获取对应坐标的self
-def get_element(x : float, y : float, z : float = 0):
+def get_Element(x : float, y : float, z : float = 0):
     x, y, z = _myRound(x), _myRound(y), _myRound(z)
     if (x, y, z) not in _elements_Address.keys():
         raise RuntimeError("Error coordinates that do not exist")
     return _elements_Address[(x, y, z)]
 
 # 删除原件
-def del_element(self) -> None:
+def del_Element(self) -> None:
     try:
         identifier = self._arguments['Identifier']
         if (self.father_type() == 'element'):
@@ -1006,13 +1006,12 @@ class N_MOSFET(_element):
     def G(self):
         return _element_Pin(self, 0)
 
-# 方波发生器
-class Square_Source(_element):
+class _source_Element(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
-        self._arguments = {'ModelID': 'Square Source', 'Identifier': '',
+        self._arguments = {'ModelID': '', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False,
-                           'Properties': {'电压': 3.0, '内阻': 0.5, '频率': 20000.0, '偏移': 0.0, '占空比': 0.5},
+                           'Properties': {'电压': 3.0, '内阻': 0.5, '频率': 20000.0, '偏移': 0.0, '占空比': 0.5, '锁定': 1.0},
                            'Statistics': {'电流': 0.0, '功率': 0.0, '电压': -3.0},
                            'Position': '', 'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
@@ -1024,3 +1023,41 @@ class Square_Source(_element):
     @property
     def r(self):
         return _element_Pin(self, 1)
+
+    @property
+    def i(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def o(self):
+        return _element_Pin(self, 1)
+
+# 正弦波发生器
+class Sinewave_Source(_source_Element):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super(Sinewave_Source, self).__init__(x, y, z)
+        self._arguments['ModelID'] = 'Sinewave Source'
+
+# 方波发生器
+class Square_Source(_source_Element):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super(Square_Source, self).__init__(x, y, z)
+        self._arguments['ModelID'] = 'Square Source'
+
+# 三角波发生器
+class Triangle_Source(_source_Element):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super(Triangle_Source, self).__init__(x, y, z)
+        self._arguments['ModelID'] = 'Triangle Source'
+
+# 锯齿波发生器
+class Sawtooth_Source(_source_Element):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super(Sawtooth_Source, self).__init__(x, y, z)
+        self._arguments['ModelID'] = 'Sawtooth Source'
+
+# 尖峰波发生器
+class Pulse_Source(_source_Element):
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        super(Pulse_Source, self).__init__(x, y, z)
+        self._arguments['ModelID'] = 'Pulse Source'
