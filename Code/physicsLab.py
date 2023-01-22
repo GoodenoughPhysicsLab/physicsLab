@@ -157,6 +157,8 @@ def rename_Experiment(name: str) -> None:
 def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
     if not (isinstance(name, str) and isinstance(x, float) and isinstance(y, float) and isinstance(z, float)):
         raise RuntimeError("Wrong parameter type")
+    if name == '':
+        raise RuntimeError('Name cannot be an empty string')
     x, y, z = _myRound(x), _myRound(y), _myRound(z)
     if (name == '555 Timer'):
         return NE555(x, y, z)
@@ -520,7 +522,7 @@ class Yes_Gate(_2_pin_Gate):
 class No_Gate(_2_pin_Gate):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(No_Gate, self).__init__(x, y, z)
-        self._arguments['MOdelID'] = 'No Gate'
+        self._arguments['ModelID'] = 'No Gate'
 
 # 3引脚门电路
 class _3_pin_Gate(_element):
@@ -862,6 +864,47 @@ class DPDT_Switch(_switch_Element):
         super(DPDT_Switch, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'DPDT Switch'
 
+    @property
+    def l_up(self):
+        return _element_Pin(self, 3)
+
+    @property
+    def mid_up(self):
+        return _element_Pin(self, 4)
+
+    @property
+    def r_up(self):
+        return _element_Pin(self, 5)
+
+    @property
+    def l_low(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def mid_low(self):
+        return _element_Pin(self, 1)
+
+    @property
+    def r_low(self):
+        return _element_Pin(self, 2)
+
+# 按钮开关
+class Push_Switch(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {
+            'ModelID': 'Push Switch', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
+            'Properties': {'开关': 0.0, '默认开关': 0.0, '锁定': 1.0}, 'Statistics': {'电流': 0.0}, 'Position': '',
+            'Rotation': '', 'DiagramCached': False, 'DiagramPosition': {
+                'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def l(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def r(self):
+        return _element_Pin(self, 1)
 
 # 555定时器
 class NE555(_element):
