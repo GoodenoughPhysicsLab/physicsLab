@@ -82,9 +82,11 @@ def open_Experiment(file : str) -> None:
             try:
                 with open(f"{_FILE_HEAD}\\{sav}", encoding='utf-8') as f:
                     f = json.loads(f.read())
-                    if (f.get("Summary").get("Subject") == f.get("InternalName") and
+                    if (#f.get("Summary").get("Subject") == f.get("InternalName") and
                             f.get("InternalName") == file
                     ):
+                        if f.get('InternalName') == '自动保存-电学':
+                            rename_Experiment('自动保存-电学')
                         old_open_Experiment(sav)
                         return
                 is_error = False
@@ -128,6 +130,10 @@ def read_Experiment() -> None:
             # 如果obj是逻辑输入
             if obj.type() == 'Logic Input' and element['Properties'].get('开关') == 1:
                 obj.set_highLevel()
+            # 如果obj是8位输入器
+            if obj.type() == '8bit Input':
+                obj._arguments['Statistics'] = element['Statistics']
+                obj._arguments['Properties']['十进制'] = element['Properties']['十进制']
             # 导线
         _wires = json.loads(readmem['Experiment']['StatusSave'])['Wires']
 
@@ -960,6 +966,12 @@ class eight_bit_Input(_element):
                            'Statistics': {}, 'Position': '', 'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
+    def set_num(self, num : int):
+        if 0 <= num <= 255:
+            self._arguments['Properties']['十进制'] = num
+        else:
+            raise RuntimeError('The number range entered is incorrect')
+
     @property
     def i_up(self):
         return _element_Pin(self, 0)
@@ -1318,5 +1330,32 @@ class Fuse_Component(_element):
     @property
     def r(self):
         return _element_Pin(self, 1)
+
+# 滑动变阻器
+class Slide_Rheostat(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {'ModelID': 'Slide Rheostat', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'额定电阻': 10.0, '滑块位置': 0.0, '电阻1': 10, '电阻2': 10.0, '锁定': 1.0},
+                           'Statistics': {'瞬间功率': 0.0, '瞬间电流': 0.0, '瞬间电压': 0.0, '功率': 0.0, '电压': 0.0, '电流': 0.0,
+                                          '瞬间功率1': 0.0, '瞬间电流1': 0.0, '瞬间电压1': 0.0, '功率1': 0.0, '电压1': 0.0, '电流1': 0.0},
+                           'Position': '', 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def l_low(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def r_low(self):
+        return _element_Pin(self, 1)
+
+    @property
+    def l_up(self):
+        return _element_Pin(self, 2)
+
+    @property
+    def r_up(self):
+        return _element_Pin(self, 3)
 
 ### end 原件类 ###
