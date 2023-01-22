@@ -2,6 +2,7 @@ import json
 import getpass
 import random
 import string
+from os import walk
 from typing import Union, Callable
 
 ### define ###
@@ -46,11 +47,11 @@ def print_elements_Address():
 
 ### 文件读写操作 Experiment ###
 
-# 打开一个指定的sav文件
-def open_Experiment(file: str) -> None:
+# 输入sav文件名并读取（旧函数，不建议使用）
+def old_open_Experiment(file: str) -> None:
     file = file.strip()
     if (not file.endswith('.sav')):
-        raise RuntimeError("The open file must be of type sav")
+        raise RuntimeError("The input parameters are incorrect")
 
     global _ifndef_open_Experiment
     if (_ifndef_open_Experiment):
@@ -66,6 +67,32 @@ def open_Experiment(file: str) -> None:
             _sav["InternalName"] = _sav["Summary"]["Subject"]
         except:
             raise RuntimeError('Data errors in the file')
+
+# 打开一个指定的sav文件（支持输入本地实验的名字或sav文件名）
+def open_Experiment(file : str) -> None:
+    file = file.strip()
+    if file.endswith('.sav'):
+        old_open_Experiment(file)
+    else:
+        savs = [i for i in walk(_FILE_HEAD)][0]
+        savs = savs[savs.__len__() - 1]
+        savs = [sav for sav in savs if sav.endswith('sav')]
+        is_error = True
+        for sav in savs:
+            try:
+                with open(f"{_FILE_HEAD}\\{sav}", encoding='utf-8') as f:
+                    f = json.loads(f.read())
+                    if (f.get("Summary").get("Subject") == f.get("InternalName") and
+                            f.get("InternalName") == file
+                    ):
+                        old_open_Experiment(sav)
+                        return
+                is_error = False
+            except:
+                if is_error:
+                    raise RuntimeError('The input parameters are incorrect')
+
+
 
 # 将编译完成的json写入sav
 def write_Experiment() -> None:
