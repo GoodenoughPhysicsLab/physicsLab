@@ -1,8 +1,8 @@
 import json
 import getpass
-import random
-import string
-from os import walk
+from random import sample
+from string import ascii_letters, digits
+from os import walk, popen, remove
 from typing import Union, Callable
 
 ### define ###
@@ -92,8 +92,6 @@ def open_Experiment(file : str) -> None:
                 if is_error:
                     raise RuntimeError('The input parameters are incorrect')
 
-
-
 # 将编译完成的json写入sav
 def write_Experiment() -> None:
     global _savName, _sav, _StatusSave
@@ -102,10 +100,6 @@ def write_Experiment() -> None:
     _sav["Experiment"]["StatusSave"] = json.dumps(_StatusSave)
     with open(_savName, "w", encoding="UTF-8") as f:
         f.write(json.dumps(_sav))
-
-# 获取Identifier
-def _set_Identifier():
-    return ''.join(random.sample(string.ascii_letters + string.digits, 20))
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
@@ -148,6 +142,13 @@ def rename_Experiment(name: str) -> None:
     _sav["Summary"]["Subject"] = name
     _sav["InternalName"] = name
 
+# 打开一个存档的窗口
+def os_Experiment() -> None:
+    popen(_savName)
+
+def del_Experiment() -> None:
+    remove(_savName)
+    remove(_savName.replace('.sav', '.jpg'))
 
 ### end Experiment ###
 
@@ -445,7 +446,7 @@ def _element_Init_HEAD(func : Callable) -> Callable:
         if (self._position in _elements_Address.keys()):
             raise RuntimeError("The position already exists")
         func(self, x, y, z)
-        self._arguments["Identifier"] = _set_Identifier()
+        self._arguments["Identifier"] = ''.join(sample(ascii_letters + digits, 32))
         self._arguments["Position"] = f"{self._position[0]},{self._position[2]},{self._position[1]}"
         _Elements.append(self._arguments)
         _elements_Address[self._position] = self
@@ -1299,5 +1300,23 @@ class Pulse_Source(_source_Element):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(Pulse_Source, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Pulse Source'
+
+# 保险丝
+class Fuse_Component(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+        self._arguments = {'ModelID': 'Fuse Component', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'开关': 1.0, '额定电流': 0.30000001192092896, '熔断电流': 0.5, '锁定': 1.0},
+                           'Statistics': {'瞬间功率': 0.0, '瞬间电流': 0.0, '瞬间电压': 0.0, '功率': 0.0, '电压': 0.0, '电流': 0.0},
+                           'Position': '', 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def l(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def r(self):
+        return _element_Pin(self, 1)
 
 ### end 原件类 ###
