@@ -1,5 +1,7 @@
 import json
 import getpass
+import random
+import string
 from typing import Union, Callable
 
 ### define ###
@@ -75,10 +77,8 @@ def write_Experiment() -> None:
         f.write(json.dumps(_sav))
 
 # 获取Identifier
-def get_Identifier(position : tuple):
-    if position == (0, -1, 0):
-        return 1
-    return position.__hash__().__str__()
+def _set_Identifier():
+    return ''.join(random.sample(string.ascii_letters + string.digits, 20))
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
@@ -86,7 +86,6 @@ def read_Experiment() -> None:
     with open(_savName, encoding='UTF-8') as f:
         readmem = json.loads(f.read())
         _local_Elements = json.loads(readmem["Experiment"]["StatusSave"])["Elements"]
-        from_unix_to_Identifier = {}
 
         for element in _local_Elements:
             # 坐标标准化（消除浮点误差）
@@ -104,16 +103,12 @@ def read_Experiment() -> None:
             z = float(element['Rotation'][sign1 + 1: sign2:])
             y = float(element['Rotation'][sign2 + 1::])
             obj.set_Rotation(x, y, z)
+            obj._arguments['Identifier'] = element['Identifier']
             # 如果obj是逻辑输入
-            if obj.type() == 'Logic Input' and element['Properties']['开关'] == 1:
+            if obj.type() == 'Logic Input' and element['Properties'].get('开关') == 1:
                 obj.set_highLevel()
             # 导线
-            Unix_timer = element['Identifier']
-            from_unix_to_Identifier[Unix_timer] = (num1, num3, num2).__hash__().__str__()
         _wires = json.loads(readmem['Experiment']['StatusSave'])['Wires']
-        for wire in _wires:
-            wire['Source'] = from_unix_to_Identifier[wire['Source']]
-            wire['Target'] = from_unix_to_Identifier[wire['Target']]
 
 # 规范化实验中原件的坐标与角度
 def format_Experiment() -> None:
@@ -279,21 +274,15 @@ class _element:
         del _elements_Address[self._position]
         self._position = (x, y, z)
         self._arguments['Position'] = f"{x},{z},{y}"
-        identifier = self._arguments['Identifier']
-        self._arguments['Identifier'] = self._position.__hash__().__str__()
         _elements_Address[self._position] = self
-        for wire in _wires:
-            if wire['Source'] == identifier:
-                wire['Source'] = self._arguments['Identifier']
-            if wire['Target'] == identifier:
-                wire['Target'] = self._arguments['Identifier']
+
 
     # 格式化坐标参数，主要避免浮点误差
     def format_Position(self) -> tuple:
         if (type(self._position) != tuple or self._position.__len__() != 3):
             raise RuntimeError("Position must be a tuple of length three but gets some other value")
         self._position = (_myRound(self._position[0]), _myRound(self._position[1]), _myRound(self._position[2]))
-        return (_myRound(self._position[0]), _myRound(self._position[1]), _myRound(self._position[2]))
+        return self._position
 
     # 获取原件的坐标
     @property
@@ -312,7 +301,6 @@ class _element:
     def print_arguments(self) -> None:
         print(self._arguments)
 
-
 # __init__ 装饰器
 def _element_Init_HEAD(func : Callable) -> Callable:
     def result(self, x : float = 0, y : float = 0, z : float = 0) -> None:
@@ -322,7 +310,7 @@ def _element_Init_HEAD(func : Callable) -> Callable:
         if (self._position in _elements_Address.keys()):
             raise RuntimeError("The position already exists")
         func(self, x, y, z)
-        self._arguments["Identifier"] = hash(self._position).__str__()
+        self._arguments["Identifier"] = _set_Identifier()
         self._arguments["Position"] = f"{self._position[0]},{self._position[2]},{self._position[1]}"
         _Elements.append(self._arguments)
         _elements_Address[self._position] = self
