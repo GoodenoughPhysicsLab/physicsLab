@@ -16,7 +16,9 @@ sys.path.append('(path of physicsLab.py)')
 
 ```python
  # 打开存档  
-open_Experiment("存档的文件名（带后缀）")  
+open_Experiment("在物实保存的存档的名字")
+ # 例：open_Experiment('测逝')  
+ # 也支持输入存档的文件名（也就是xxx.sav）
  # 如果你希望程序不覆盖掉存档中已有的实验状态，需要这样写  
 read_Experiment()  
  # 创建一个逻辑输入，坐标为(0, 0, 0.1)  
