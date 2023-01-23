@@ -1,4 +1,5 @@
 import json
+import sys
 import getpass
 from random import sample
 from string import ascii_letters, digits
@@ -82,9 +83,7 @@ def open_Experiment(file : str) -> None:
             try:
                 with open(f"{_FILE_HEAD}\\{sav}", encoding='utf-8') as f:
                     f = json.loads(f.read())
-                    if (#f.get("Summary").get("Subject") == f.get("InternalName") and
-                            f.get("InternalName") == file
-                    ):
+                    if (f.get("InternalName") == file):
                         if f.get('InternalName') == '自动保存-电学':
                             rename_Experiment('自动保存-电学')
                         old_open_Experiment(sav)
@@ -152,9 +151,39 @@ def rename_Experiment(name: str) -> None:
 def os_Experiment() -> None:
     popen(_savName)
 
+# 删除存档
 def del_Experiment() -> None:
     remove(_savName)
-    remove(_savName.replace('.sav', '.jpg'))
+    try:
+        remove(_savName.replace('.sav', '.jpg'))
+    except:
+        sys.exit()
+
+# 创建存档
+def crt_Experiment(name : str) -> None:
+    global _savName, _ifndef_open_Experiment
+    # 该函数与open_Experiment一起，每次只能运行一次
+    if (_ifndef_open_Experiment):
+        raise RuntimeError("This function can only be run once")
+    _ifndef_open_Experiment = True
+    # 检查是否存在重名的存档
+    savs = [i for i in walk(_FILE_HEAD)][0]
+    savs = savs[savs.__len__() - 1]
+    savs = [sav for sav in savs if sav.endswith('sav')]
+    for sav in savs:
+        with open(f"{_FILE_HEAD}\\{sav}", encoding='utf-8') as f:
+            f = json.loads(f.read())
+            if f['InternalName'] == name:
+                raise RuntimeError('Duplicate name archives are forbidden')
+    # 创建存档
+    if not isinstance(name, str):
+        name = str(name)
+    _savName = ''.join(sample(ascii_letters + digits, 34))
+    _savName = f'{_FILE_HEAD}\\{_savName}.sav'
+    with open(_savName, 'w', encoding='utf-8') as f:
+        pass
+    rename_Experiment(name)
+    write_Experiment()
 
 ### end Experiment ###
 
