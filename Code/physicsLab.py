@@ -142,6 +142,16 @@ def format_Experiment() -> None:
 
 # 重命名sav
 def rename_Experiment(name: str) -> None:
+    # 检查是否重名
+    savs = [i for i in walk(_FILE_HEAD)][0]
+    savs = savs[savs.__len__() - 1]
+    savs = [sav for sav in savs if sav.endswith('sav')]
+    for sav in savs:
+        with open(f"{_FILE_HEAD}\\{sav}", encoding='utf-8') as f:
+            f = json.loads(f.read())
+            if f['InternalName'] == name:
+                raise RuntimeError('Duplicate name archives are forbidden')
+    # 重命名存档
     global _sav
     name = str(name)
     _sav["Summary"]["Subject"] = name
