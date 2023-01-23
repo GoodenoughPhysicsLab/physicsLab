@@ -192,6 +192,7 @@ def crt_Experiment(name : str) -> None:
     _savName = f'{_FILE_HEAD}\\{_savName}.sav'
     with open(_savName, 'w', encoding='utf-8') as f:
         pass
+    write_Experiment()
     rename_Experiment(name)
     write_Experiment()
 
@@ -303,6 +304,7 @@ def del_wire(SourcePin, TargetPin, color : str = '蓝') -> None:
 
 ### 模块化电路 ###
 
+# 任意引脚加法电路
 class union_Sum:
     def __init__(self, x : float = 0, y : float = 0, z : float = 0, bitCount : int = 1):
         if not (
@@ -329,9 +331,32 @@ class union_Sum:
                     get_Element(x, y + 1.4, z - 0.1).o_low
                 )
 
+# 任意引脚减法电路
 class union_Sub:
     pass
 
+# 2-4译码器
+class union_2_4_Decoder:
+    def __init__(self, x : float = 0, y : float = 0, z : float = 0):
+        self.x = x
+        self.y = y
+        self.z = z
+        obj1 = Nor_Gate(x, y, z)
+        obj2 = Nimp_Gate(x, y + 0.1, z)
+        obj3 = Nimp_Gate(x, y + 0.2, z)
+        obj4 = And_Gate(x, y + 0.3, z)
+        crt_wire(obj1.i_up, obj2.i_low), crt_wire(obj2.i_low, obj3.i_up), crt_wire(obj3.i_up, obj4.i_up)
+        crt_wire(obj1.i_low, obj2.i_up), crt_wire(obj2.i_up, obj3.i_low), crt_wire(obj3.i_low, obj4.i_low)
+
+    @property
+    def i_up(self):
+        return _element_Pin(get_Element(self.x, self.y + 0.3, self.z), 0)
+
+    @property
+    def i_low(self):
+        return _element_Pin(get_Element(self.x, self.y + 0.3, self.z), 1)
+
+# 4-16译码器
 class union_4_16_Decoder:
     def __init__(self, x : float = 0, y : float = 0, z : float = 0):
         self.x = x
@@ -509,6 +534,7 @@ class _element_Pin:
 
 # _arguments这里是参数的意思
 
+# 逻辑输入
 class Logic_Input(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
@@ -527,6 +553,7 @@ class Logic_Input(_element):
     def o(self):
         return _element_Pin(self, 0)
 
+# 逻辑输出
 class Logic_Output(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
