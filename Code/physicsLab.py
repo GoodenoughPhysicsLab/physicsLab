@@ -82,12 +82,16 @@ def open_Experiment(file : str) -> None:
         for sav in savs:
             try:
                 with open(f"{_FILE_HEAD}\\{sav}", encoding='utf-8') as f:
-                    f = json.loads(f.read())
-                    if (f.get("InternalName") == file):
-                        if f.get('InternalName') == '自动保存-电学':
-                            rename_Experiment('自动保存-电学')
-                        old_open_Experiment(sav)
-                        return
+                    try:
+                        f = json.loads(f.read())
+                    except:
+                        pass
+                    else:
+                        if (f.get("InternalName") == file):
+                            if f.get('InternalName') == '自动保存-电学':
+                                rename_Experiment('自动保存-电学')
+                            old_open_Experiment(sav)
+                            return
                 is_error = False
             except:
                 if is_error:
@@ -101,6 +105,26 @@ def write_Experiment() -> None:
     _sav["Experiment"]["StatusSave"] = json.dumps(_StatusSave)
     with open(_savName, "w", encoding="UTF-8") as f:
         f.write(json.dumps(_sav))
+    # 存档回滚
+    f = ''
+    try:
+        f = open(f'{_savName.replace(".sav", "")}_rollBack_sav.txt')
+    except FileNotFoundError:
+        f = open(f'{_savName.replace(".sav", "")}_rollBack_sav.txt', 'w')
+    finally:
+        f.close()
+    experiments = []
+    with open(f'{_savName.replace(".sav", "")}_rollBack_sav.txt', 'r', encoding='utf-8') as f:
+        f = f.read()
+        if f == '':
+            experiments.append(_sav)
+        else:
+            experiments = json.loads(f)
+            experiments.append(_sav)
+        if experiments.__len__() > 10:
+            experiments.pop(0)
+    with open(f'{_savName.replace(".sav", "")}_rollBack_sav.txt', 'w', encoding='utf-8') as f:
+        f.write(json.dumps(experiments))
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
@@ -148,9 +172,13 @@ def rename_Experiment(name: str) -> None:
     savs = [sav for sav in savs if sav.endswith('sav')]
     for sav in savs:
         with open(f"{_FILE_HEAD}\\{sav}", encoding='utf-8') as f:
-            f = json.loads(f.read())
-            if f['InternalName'] == name:
-                raise RuntimeError('Duplicate name archives are forbidden')
+            try:
+                f = json.loads(f.read())
+            except:
+                pass
+            else:
+                if f['InternalName'] == name:
+                    raise RuntimeError('Duplicate name archives are forbidden')
     # 重命名存档
     global _sav
     name = str(name)
@@ -182,19 +210,42 @@ def crt_Experiment(name : str) -> None:
     savs = [sav for sav in savs if sav.endswith('sav')]
     for sav in savs:
         with open(f"{_FILE_HEAD}\\{sav}", encoding='utf-8') as f:
-            f = json.loads(f.read())
-            if f['InternalName'] == name:
-                raise RuntimeError('Duplicate name archives are forbidden')
+            try:
+                f = json.loads(f.read())
+            except:
+                pass
+            else:
+                if f['InternalName'] == name:
+                    raise RuntimeError('Duplicate name archives are forbidden')
     # 创建存档
     if not isinstance(name, str):
         name = str(name)
     _savName = ''.join(sample(ascii_letters + digits, 34))
     _savName = f'{_FILE_HEAD}\\{_savName}.sav'
-    with open(_savName, 'w', encoding='utf-8') as f:
+    with open(_savName, 'w', encoding='utf-8'):
         pass
-    write_Experiment()
     rename_Experiment(name)
-    write_Experiment()
+
+# 存档回滚
+def rollBack_Experiment(back : int = 1):
+    if not isinstance(back, int) and (back < 1 or back >= 10):
+        raise RuntimeError('back must be an integer between 1 and 10')
+    f = ''
+    try:
+        f = open(f'{_savName.replace(".sav", "")}_rollBack_sav.txt')
+    except FileNotFoundError:
+        f = open(f'{_savName.replace(".sav", "")}_rollBack_sav.txt', 'w')
+    finally:
+        f.close()
+    with open(f'{_savName.replace(".sav", "")}_rollBack_sav.txt', encoding='utf-8') as f:
+        reader = f.read()
+        if reader == '':
+            raise RuntimeError('There is no archive to roll back')
+        f = json.loads(reader)
+        global _Elements, _wires
+        sav = json.loads(f[len(f) - 1 - back]['Experiment']['StatusSave'])
+        _Elements = sav['Elements']
+        _wires = sav['Wires']
 
 ### end Experiment ###
 
