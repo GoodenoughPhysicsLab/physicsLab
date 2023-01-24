@@ -47,7 +47,7 @@ write_Experiment()
 2.  新建 Feat_xxx 分支
 3.  提交代码
 4.  新建 Pull Request
-5.  补充readme、api.txt
+5.  补充readme
 
 #### 特技
 
