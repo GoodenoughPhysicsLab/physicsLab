@@ -46,7 +46,7 @@ def print_elements_Address():
 
 ### end define ###
 
-### 文件读写操作 Experiment ###
+### 操作存档 Experiment ###
 
 # 输入sav文件名并读取（旧函数，不建议使用）
 def old_open_Experiment(file: str) -> None:
@@ -108,13 +108,13 @@ def write_Experiment() -> None:
     # 存档回滚
     f = ''
     try:
-        f = open(f'{_savName.replace(".sav", "")}_rollBack_sav.txt')
+        f = open(f'{_savName[:len(_savName) - 4:]}_rollBack_sav.txt')
     except FileNotFoundError:
-        f = open(f'{_savName.replace(".sav", "")}_rollBack_sav.txt', 'w')
+        f = open(f'{_savName[:len(_savName) - 4:]}_rollBack_sav.txt', 'w')
     finally:
         f.close()
     experiments = []
-    with open(f'{_savName.replace(".sav", "")}_rollBack_sav.txt', 'r', encoding='utf-8') as f:
+    with open(f'{_savName[:len(_savName) - 4:]}_rollBack_sav.txt', 'r', encoding='utf-8') as f:
         f = f.read()
         if f == '':
             experiments.append(_sav)
@@ -123,7 +123,7 @@ def write_Experiment() -> None:
             experiments.append(_sav)
         if experiments.__len__() > 10:
             experiments.pop(0)
-    with open(f'{_savName.replace(".sav", "")}_rollBack_sav.txt', 'w', encoding='utf-8') as f:
+    with open(f'{_savName[:len(_savName) - 4:]}_rollBack_sav.txt', 'w', encoding='utf-8') as f:
         f.write(json.dumps(experiments))
 
 # 读取sav文件已有的原件与导线
@@ -232,12 +232,12 @@ def rollBack_Experiment(back : int = 1):
         raise RuntimeError('back must be an integer between 1 and 10')
     f = ''
     try:
-        f = open(f'{_savName.replace(".sav", "")}_rollBack_sav.txt')
+        f = open(f'{_savName[:len(_savName) - 4:]}_rollBack_sav.txt')
     except FileNotFoundError:
-        f = open(f'{_savName.replace(".sav", "")}_rollBack_sav.txt', 'w')
+        f = open(f'{_savName[:len(_savName) - 4:]}_rollBack_sav.txt', 'w')
     finally:
         f.close()
-    with open(f'{_savName.replace(".sav", "")}_rollBack_sav.txt', encoding='utf-8') as f:
+    with open(f'{_savName[:len(_savName) - 4:]}_rollBack_sav.txt', encoding='utf-8') as f:
         reader = f.read()
         if reader == '':
             raise RuntimeError('There is no archive to roll back')
@@ -521,7 +521,7 @@ class union_4_16_Decoder:
 # 所有原件的父类，不要实例化
 class _element:
     # 设置原件的角度
-    def set_Rotation(self, xRotation: float = 0, yRotation: float = 0, zRotation: float = 180):
+    def reset_Rotation(self, xRotation: float = 0, yRotation: float = 0, zRotation: float = 180):
         self._arguments["Rotation"] = f"{_myRound(xRotation)},{_myRound(zRotation)},{_myRound(yRotation)}"
         return self._arguments["Rotation"]
 
@@ -543,7 +543,7 @@ class _element:
 
     # 获取原件的坐标
     @property
-    def position(self):
+    def get_Position(self) -> tuple:
         return self._position
 
     # 获取父类的类型
