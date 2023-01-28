@@ -187,7 +187,7 @@ def rename_Experiment(name: str) -> None:
 
 # 打开一个存档的窗口
 def os_Experiment() -> None:
-    popen(_savName)
+    popen(f'notepad {_savName}')
 
 # 删除存档
 def del_Experiment() -> None:
@@ -253,7 +253,11 @@ def rollBack_Experiment(back : int = 1):
 
 # 创建原件，本质上仍然是实例化
 def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
-    if not (isinstance(name, str) and isinstance(x, float) and isinstance(y, float) and isinstance(z, float)):
+    if not (isinstance(name, str)
+            and (isinstance(x, int) or isinstance(x, float))
+            and (isinstance(y, int) or isinstance(y, float))
+            and (isinstance(z, int) or isinstance(z, float))
+    ):
         raise RuntimeError("Wrong parameter type")
     if name == '':
         raise RuntimeError('Name cannot be an empty string')
