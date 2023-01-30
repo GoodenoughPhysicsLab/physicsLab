@@ -598,7 +598,27 @@ class _element_Pin:
 
 # _arguments这里是参数的意思
 
+# 逻辑电路类装饰器
+def _logic_Circuit(cls):
+    # 设置高电平的值
+    def set_HighLeaveValue(self, num : Union[int, float]) -> None:
+        if not isinstance(num, (int, float)):
+            raise RuntimeError('illegal argument')
+        self._arguments['Properties']['高电平'] = num
+    cls.set_HighLeaveValue = set_HighLeaveValue
+
+    # 设置低电平的值
+    def set_LowLeaveValue(self, num : Union[int, float]) -> None:
+        if not isinstance(num, (int, float)):
+            raise RuntimeError('illegal argument')
+        self._arguments['Properties']['低电平'] = num
+    cls.set_LowLeaveValue = set_LowLeaveValue
+
+    # end decorator
+    return cls
+
 # 逻辑输入
+@_logic_Circuit
 class Logic_Input(_element):
     @_element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
@@ -618,6 +638,7 @@ class Logic_Input(_element):
         return _element_Pin(self, 0)
 
 # 逻辑输出
+@_logic_Circuit
 class Logic_Output(_element):
     @_element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
@@ -632,6 +653,8 @@ class Logic_Output(_element):
     def i(self):
             return _element_Pin(self, 0)
 
+# 2引脚门电路
+@_logic_Circuit
 class _2_pin_Gate(_element):
     @_element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
@@ -662,6 +685,7 @@ class No_Gate(_2_pin_Gate):
         self._arguments['ModelID'] = 'No Gate'
 
 # 3引脚门电路
+@_logic_Circuit
 class _3_pin_Gate(_element):
     @_element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
@@ -730,6 +754,7 @@ class Nimp_Gate(_3_pin_Gate):
         super(Nimp_Gate, self).__init__(x, y, z)
         self._arguments["ModelID"] = 'Nimp Gate'
 
+@_logic_Circuit
 class _big_element(_element):
     @_element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
@@ -954,6 +979,100 @@ class Random_Generator(_big_element):
     def o_low(self):
         return _element_Pin(self, 3)
 
+# 8位输入器
+@_logic_Circuit
+class eight_bit_Input(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
+        self._arguments = {'ModelID': '8bit Input', 'Identifier': '', 'IsBroken': False,
+                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '十进制': 0.0, '锁定': 1.0},
+                           'Statistics': {}, 'Position': '', 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    def set_num(self, num : int):
+        if 0 <= num <= 255:
+            self._arguments['Properties']['十进制'] = num
+        else:
+            raise RuntimeError('The number range entered is incorrect')
+
+    @property
+    def i_up(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def i_upmid(self):
+        return _element_Pin(self, 1)
+
+    @property
+    def i_lowmid(self):
+        return _element_Pin(self, 2)
+
+    @property
+    def i_low(self):
+        return _element_Pin(self, 3)
+
+    @property
+    def o_up(self):
+        return _element_Pin(self, 4)
+
+    @property
+    def o_upmid(self):
+        return _element_Pin(self, 5)
+
+    @property
+    def o_lowmid(self):
+        return _element_Pin(self, 6)
+
+    @property
+    def o_low(self):
+        return _element_Pin(self, 7)
+
+# 8位显示器
+@_logic_Circuit
+class eight_bit_Display(_element):
+    @_element_Init_HEAD
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
+        self._arguments = {'ModelID': '8bit Display', 'Identifier': '',
+                          'IsBroken': False, 'IsLocked': False,
+                          'Properties': {'高电平': 3.0, '低电平': 0.0, '状态': 0.0, '锁定': 1.0},
+                          'Statistics': {'7': 0.0, '6': 0.0, '5': 0.0, '4': 0.0, '3': 0.0, '2': 0.0, '1': 0.0, '0': 0.0,
+                                         '十进制': 0.0}, 'Position': '',
+                          'Rotation': '', 'DiagramCached': False,
+                          'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def i_up(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def i_upmid(self):
+        return _element_Pin(self, 1)
+
+    @property
+    def i_lowmid(self):
+        return _element_Pin(self, 2)
+
+    @property
+    def i_low(self):
+        return _element_Pin(self, 3)
+
+    @property
+    def o_up(self):
+        return _element_Pin(self, 4)
+
+    @property
+    def o_upmid(self):
+        return _element_Pin(self, 5)
+
+    @property
+    def o_lowmid(self):
+        return _element_Pin(self, 6)
+
+    @property
+    def o_low(self):
+        return _element_Pin(self, 7)
+
+# 开关基类
 class _switch_Element(_element):
     @_element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
@@ -1081,97 +1200,6 @@ class NE555(_element):
 
     @property
     def Ground(self):
-        return _element_Pin(self, 7)
-
-# 8位输入器
-class eight_bit_Input(_element):
-    @_element_Init_HEAD
-    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
-        self._arguments = {'ModelID': '8bit Input', 'Identifier': '', 'IsBroken': False,
-                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '十进制': 0.0, '锁定': 1.0},
-                           'Statistics': {}, 'Position': '', 'Rotation': '', 'DiagramCached': False,
-                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
-
-    def set_num(self, num : int):
-        if 0 <= num <= 255:
-            self._arguments['Properties']['十进制'] = num
-        else:
-            raise RuntimeError('The number range entered is incorrect')
-
-    @property
-    def i_up(self):
-        return _element_Pin(self, 0)
-
-    @property
-    def i_upmid(self):
-        return _element_Pin(self, 1)
-
-    @property
-    def i_lowmid(self):
-        return _element_Pin(self, 2)
-
-    @property
-    def i_low(self):
-        return _element_Pin(self, 3)
-
-    @property
-    def o_up(self):
-        return _element_Pin(self, 4)
-
-    @property
-    def o_upmid(self):
-        return _element_Pin(self, 5)
-
-    @property
-    def o_lowmid(self):
-        return _element_Pin(self, 6)
-
-    @property
-    def o_low(self):
-        return _element_Pin(self, 7)
-
-# 8位显示器
-class eight_bit_Display(_element):
-    @_element_Init_HEAD
-    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
-        self._arguments = {'ModelID': '8bit Display', 'Identifier': '',
-                          'IsBroken': False, 'IsLocked': False,
-                          'Properties': {'高电平': 3.0, '低电平': 0.0, '状态': 0.0, '锁定': 1.0},
-                          'Statistics': {'7': 0.0, '6': 0.0, '5': 0.0, '4': 0.0, '3': 0.0, '2': 0.0, '1': 0.0, '0': 0.0,
-                                         '十进制': 0.0}, 'Position': '',
-                          'Rotation': '', 'DiagramCached': False,
-                          'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
-
-    @property
-    def i_up(self):
-        return _element_Pin(self, 0)
-
-    @property
-    def i_upmid(self):
-        return _element_Pin(self, 1)
-
-    @property
-    def i_lowmid(self):
-        return _element_Pin(self, 2)
-
-    @property
-    def i_low(self):
-        return _element_Pin(self, 3)
-
-    @property
-    def o_up(self):
-        return _element_Pin(self, 4)
-
-    @property
-    def o_upmid(self):
-        return _element_Pin(self, 5)
-
-    @property
-    def o_lowmid(self):
-        return _element_Pin(self, 6)
-
-    @property
-    def o_low(self):
         return _element_Pin(self, 7)
 
 # 电容
