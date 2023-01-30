@@ -1348,14 +1348,10 @@ class Electric_Fan:
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'额定电阻': 1.0, '马达常数': 0.1, '转动惯量': 0.01, '电感': 5e-05, '负荷扭矩': 0.01,
                                           '反电动势系数': 0.001, '粘性摩擦系数': 0.01, '角速度': 0, '锁定': 1.0},
-                           'Statistics': {'瞬间功率': 0, '瞬间电流': 0,
-                                          '瞬间电压': 0, '功率': 0,
-                                          '电压': 0, '电流': 0,
-                                          '摩擦扭矩': 0, '角速度': 0,
-                                          '反电动势': 0, '转速': 0,
-                                          '输入功率': 0, '输出功率': 0},
-                           'Position': '',
-                           'Rotation': '', 'DiagramCached': False,
+                           'Statistics': {'瞬间功率': 0, '瞬间电流': 0, '瞬间电压': 0, '功率': 0,
+                                          '电压': 0, '电流': 0, '摩擦扭矩': 0, '角速度': 0,
+                                          '反电动势': 0, '转速': 0, '输入功率': 0, '输出功率': 0},
+                           'Position': '', 'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 继电器
@@ -1363,8 +1359,7 @@ class Electric_Fan:
 class Relay_Component:
     @_element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
-        self._arguments = {'ModelID': 'Relay Component', 'Identifier': '',
-                           'IsBroken': False, 'IsLocked': False,
+        self._arguments = {'ModelID': 'Relay Component', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
                            'Properties': {'开关': 0.0, '线圈电感': 0.2, '线圈电阻': 20.0,
                                           '接通电流': 0.02, '额定电流': 1.0, '锁定': 1.0}, 'Statistics': {},
                            'Position': '', 'Rotation': '',
