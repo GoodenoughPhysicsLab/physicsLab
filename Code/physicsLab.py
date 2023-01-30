@@ -254,10 +254,8 @@ def rollBack_Experiment(back : int = 1):
 
 # 创建原件，本质上仍然是实例化
 def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
-    if not (isinstance(name, str)
-            and (isinstance(x, int) or isinstance(x, float))
-            and (isinstance(y, int) or isinstance(y, float))
-            and (isinstance(z, int) or isinstance(z, float))
+    if not (isinstance(name, str) and isinstance(x, (int, float)) and
+            isinstance(y, (int, float)) and isinstance(z, (int, float))
     ):
         raise RuntimeError("Wrong parameter type")
     if name == '':
@@ -276,7 +274,9 @@ def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
             raise RuntimeError(f"{name} original that does not exist")
 
 # 获取对应坐标的self
-def get_Element(x : float, y : float, z : float = 0):
+def get_Element(x : Union[int, float], y : Union[int, float], z : Union[int, float] = 0):
+    if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
+        raise RuntimeError('illegal argument')
     x, y, z = _myRound(x), _myRound(y), _myRound(z)
     if (x, y, z) not in _elements_Address.keys():
         raise RuntimeError("Error coordinates that do not exist")
@@ -327,9 +327,9 @@ def old_crt_wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, col
 
 # 检查函数参数是否是导线
 def _check_typeWire(func):
-    def result(SourcePin , TargetPin, color : str = '蓝') -> None:
+    def result(SourcePin : _element_Pin, TargetPin : _element_Pin, color : str = '蓝') -> None:
         try:
-            if (SourcePin.type() == 'element Pin' and TargetPin.type() == 'element Pin'):
+            if isinstance(SourcePin, _element_Pin) and isinstance(TargetPin, _element_Pin):
                 if (color not in ["黑", "蓝", "红", "绿", "黄"]):
                     raise RuntimeError("illegal color")
 
@@ -362,12 +362,10 @@ def del_wire(SourcePin, TargetPin, color : str = '蓝') -> None:
 
 # 任意引脚加法电路
 class union_Sum:
-    def __init__(self, x : float = 0, y : float = 0, z : float = 0, bitCount : int = 1):
+    def __init__(self, x : Union[int, Union[int, float]] = 0, y : Union[int, float] = 0, z : Union[int, float] = 0, bitCount : int = 1):
         if not (
-                (isinstance(x, float) or isinstance(x, int)) and
-                (isinstance(y, float) or isinstance(y, int)) and
-                (isinstance(z, float) or isinstance(z, int)) and
-                isinstance(bitCount, int) and bitCount > 0
+                isinstance(x, (float, int)) and isinstance(y, (float, int)) and
+                isinstance(z, (float, int)) and isinstance(bitCount, int) and bitCount > 0
         ):
             raise RuntimeError('Error in input parameters')
         x, y, z = _myRound(x), _myRound(y), _myRound(z)
@@ -393,7 +391,9 @@ class union_Sub:
 
 # 2-4译码器
 class union_2_4_Decoder:
-    def __init__(self, x : float = 0, y : float = 0, z : float = 0):
+    def __init__(self, x : Union[int, float] = 0, y : Union[int, float] = 0, z : Union[int, float] = 0):
+        if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
+            raise RuntimeError('illegal argument')
         self.x = x
         self.y = y
         self.z = z
@@ -414,7 +414,9 @@ class union_2_4_Decoder:
 
 # 4-16译码器
 class union_4_16_Decoder:
-    def __init__(self, x : float = 0, y : float = 0, z : float = 0):
+    def __init__(self, x : Union[int, float] = 0, y : Union[int, float] = 0, z : Union[int, float] = 0):
+        if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
+            raise RuntimeError('illegal argument')
         self.x = x
         self.y = y
         self.z = z
@@ -526,12 +528,16 @@ class union_4_16_Decoder:
 # 所有原件的父类，不要实例化
 class _element:
     # 设置原件的角度
-    def set_Rotation(self, xRotation: float = 0, yRotation: float = 0, zRotation: float = 180):
+    def set_Rotation(self, xRotation: Union[int, float] = 0, yRotation: Union[int, float] = 0, zRotation: Union[int, float] = 180):
+        if not (isinstance(xRotation, (int, float)) and isinstance(yRotation, (int, float)) and isinstance(zRotation, (int, float))):
+            raise RuntimeError('illegal argument')
         self._arguments["Rotation"] = f"{_myRound(xRotation)},{_myRound(zRotation)},{_myRound(yRotation)}"
         return self._arguments["Rotation"]
 
     # 重新设置元件的坐标
-    def set_Position(self, x : float, y : float, z : float) -> None:
+    def set_Position(self, x : Union[int, float], y : Union[int, float], z : Union[int, float]) -> None:
+        if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
+            raise RuntimeError('illegal argument')
         x, y, z = _myRound(x), _myRound(y), _myRound(z)
         del _elements_Address[self._position]
         self._position = (x, y, z)
@@ -565,7 +571,9 @@ class _element:
 
 # __init__ 装饰器
 def _element_Init_HEAD(func : Callable) -> Callable:
-    def result(self, x : float = 0, y : float = 0, z : float = 0) -> None:
+    def result(self, x : Union[int, float] = 0, y : Union[int, float] = 0, z : Union[int, float] = 0) -> None:
+        if not isinstance(x, (float, int)) and isinstance(y, (float, int)) and isinstance(z, (float, int)):
+            raise RuntimeError('illegal argument')
         global _Elements
         x, y, z = _myRound(x), _myRound(y), _myRound(z)
         self._position = (x, y, z)
@@ -593,7 +601,7 @@ class _element_Pin:
 # 逻辑输入
 class Logic_Input(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {"ModelID": "Logic Input", "Identifier": "",
                           "IsBroken": False, "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0, "开关": 0},
                           "Statistics": {"电流": 0.0, "电压": 0.0, "功率": 0.0},
@@ -612,7 +620,7 @@ class Logic_Input(_element):
 # 逻辑输出
 class Logic_Output(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Logic Output', 'Identifier': "",
                           'IsBroken': False, 'IsLocked': False,
                           'Properties': {'状态': 0.0, '高电平': 3.0, '低电平': 0.0, '锁定': 1.0}, 'Statistics': {},
@@ -626,7 +634,7 @@ class Logic_Output(_element):
 
 class _2_pin_Gate(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': '', 'Identifier': "", 'IsBroken': False,
                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '最大电流': 0.1, '锁定': 1.0},
                           'Statistics': {}, 'Position': "",
@@ -643,20 +651,20 @@ class _2_pin_Gate(_element):
 
 # 是门
 class Yes_Gate(_2_pin_Gate):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Yes_Gate, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Yes Gate'
 
 # 非门
 class No_Gate(_2_pin_Gate):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(No_Gate, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'No Gate'
 
 # 3引脚门电路
 class _3_pin_Gate(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': '', 'Identifier': '', 'IsBroken': False,
                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '最大电流': 0.1, '锁定': 1.0},
                           'Statistics': {}, 'Position': "", 'Rotation': "", 'DiagramCached': False,
@@ -676,55 +684,55 @@ class _3_pin_Gate(_element):
 
 # 或门
 class Or_Gate(_3_pin_Gate):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Or_Gate, self).__init__(x, y, z)
         self._arguments["ModelID"] = 'Or Gate'
 
 # 与门
 class And_Gate(_3_pin_Gate):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(And_Gate, self).__init__(x, y, z)
         self._arguments["ModelID"] = 'And Gate'
 
 # 或非门
 class Nor_Gate(_3_pin_Gate):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Nor_Gate, self).__init__(x, y, z)
         self._arguments["ModelID"] = 'Nor Gate'
 
 # 与非门
 class Nand_Gate(_3_pin_Gate):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Nand_Gate, self).__init__(x, y, z)
         self._arguments["ModelID"] = 'Nand Gate'
 
 # 异或门
 class Xor_Gate(_3_pin_Gate):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Xor_Gate, self).__init__(x, y, z)
         self._arguments["ModelID"] = 'Xor Gate'
 
 # 同或门
 class Xnor_Gate(_3_pin_Gate):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Xnor_Gate, self).__init__(x, y, z)
         self._arguments["ModelID"] = 'Xnor Gate'
 
 # 蕴含门
 class Imp_Gate(_3_pin_Gate):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Imp_Gate, self).__init__(x, y, z)
         self._arguments["ModelID"] = 'Imp Gate'
 
 # 蕴含非门
 class Nimp_Gate(_3_pin_Gate):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Nimp_Gate, self).__init__(x, y, z)
         self._arguments["ModelID"] = 'Nimp Gate'
 
 class _big_element(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': '', 'Identifier': '', 'IsBroken': False,
                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '锁定': 1.0}, 'Statistics': {},
                           'Position': '', 'Rotation': '', 'DiagramCached': False,
@@ -732,7 +740,7 @@ class _big_element(_element):
 
 # 半加器
 class Half_Adder(_big_element):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Half_Adder, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Half Adder'
 
@@ -754,7 +762,7 @@ class Half_Adder(_big_element):
 
 # 全加器
 class Full_Adder(_big_element):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Full_Adder, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Full Adder'
 
@@ -780,7 +788,7 @@ class Full_Adder(_big_element):
 
 # 二位乘法器
 class Multiplier(_big_element):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Multiplier, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Multiplier'
 
@@ -818,7 +826,7 @@ class Multiplier(_big_element):
 
 # D触发器
 class D_Flipflop(_big_element):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(D_Flipflop, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'D Flipflop'
 
@@ -840,7 +848,7 @@ class D_Flipflop(_big_element):
 
 # T触发器
 class T_Flipflop(_big_element):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(T_Flipflop, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'T Flipflop'
 
@@ -862,7 +870,7 @@ class T_Flipflop(_big_element):
 
 # JK触发器
 class JK_Flipflop(_big_element):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(JK_Flipflop, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'JK Flipflop'
 
@@ -888,7 +896,7 @@ class JK_Flipflop(_big_element):
 
 # 计数器
 class Counter(_big_element):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Counter, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Counter'
 
@@ -918,7 +926,7 @@ class Counter(_big_element):
 
 # 随机数发生器
 class Random_Generator(_big_element):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Random_Generator, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Random Generator'
 
@@ -948,7 +956,7 @@ class Random_Generator(_big_element):
 
 class _switch_Element(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {"ModelID": "", "Identifier": "", "IsBroken": False,
                           "IsLocked": False, "Properties": {"开关": 0, "锁定": 1.0},
                           "Statistics": {}, "Position": "",
@@ -969,13 +977,13 @@ class _two_pin_ArtificialCircuit:
 
 # 简单开关
 class Simple_Switch(_switch_Element, _two_pin_ArtificialCircuit):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Simple_Switch, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Simple Switch'
 
 # 单刀双掷开关
 class SPDT_Switch(_switch_Element):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(SPDT_Switch, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'SPDT Switch'
 
@@ -993,7 +1001,7 @@ class SPDT_Switch(_switch_Element):
 
 # 双刀双掷开关
 class DPDT_Switch(_switch_Element):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(DPDT_Switch, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'DPDT Switch'
 
@@ -1024,7 +1032,7 @@ class DPDT_Switch(_switch_Element):
 # 按钮开关
 class Push_Switch(_element, _two_pin_ArtificialCircuit):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {
             'ModelID': 'Push Switch', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
             'Properties': {'开关': 0.0, '默认开关': 0.0, '锁定': 1.0}, 'Statistics': {'电流': 0.0}, 'Position': '',
@@ -1034,7 +1042,7 @@ class Push_Switch(_element, _two_pin_ArtificialCircuit):
 # 555定时器
 class NE555(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': '555 Timer', 'Identifier': '', 'IsBroken': False,
                            'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '锁定': 1.0},
                            'Statistics': {'供电': 10, '放电': 0.0, '阈值': 4,
@@ -1078,7 +1086,7 @@ class NE555(_element):
 # 8位输入器
 class eight_bit_Input(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': '8bit Input', 'Identifier': '', 'IsBroken': False,
                            'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '十进制': 0.0, '锁定': 1.0},
                            'Statistics': {}, 'Position': '', 'Rotation': '', 'DiagramCached': False,
@@ -1125,7 +1133,7 @@ class eight_bit_Input(_element):
 # 8位显示器
 class eight_bit_Display(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': '8bit Display', 'Identifier': '',
                           'IsBroken': False, 'IsLocked': False,
                           'Properties': {'高电平': 3.0, '低电平': 0.0, '状态': 0.0, '锁定': 1.0},
@@ -1169,7 +1177,7 @@ class eight_bit_Display(_element):
 # 电容
 class Basic_Capacitor(_element, _two_pin_ArtificialCircuit):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Basic Capacitor', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False, 'Properties': {'耐压': 16.0, '电容': 1e-06, '内阻': 5.0, '锁定': 1.0},
                            'Statistics': {}, 'Position': '',
@@ -1179,7 +1187,7 @@ class Basic_Capacitor(_element, _two_pin_ArtificialCircuit):
 # 一节电池
 class Battery_Source(_element, _two_pin_ArtificialCircuit):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Battery Source', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False, 'Properties': {'最大功率': 16.2, '电压': 3.0, '内阻': 0.5},
                            'Statistics': {'电流': 0, '功率': 0, '电压': 0},
@@ -1190,7 +1198,7 @@ class Battery_Source(_element, _two_pin_ArtificialCircuit):
 # 学生电源
 class Student_Source(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Student Source', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
                            'Properties': {'交流电压': 3.0, '直流电压': 3.0, '开关': 0.0, '频率': 50.0},
                            'Statistics': {'瞬间功率': 0.0, '瞬间电压': 0.0, '瞬间电流': 0.0,
@@ -1222,7 +1230,7 @@ class Student_Source(_element):
 # 接地
 class Ground_Component(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Ground Component', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False, 'Properties': {'锁定': 1.0},
                            'Statistics': {'电流': 0}, 'Position': '',
@@ -1236,7 +1244,7 @@ class Ground_Component(_element):
 # 电阻
 class Resistor(_element, _two_pin_ArtificialCircuit):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Resistor', 'Identifier': '', 'IsBroken': False,
                            'IsLocked': False,
                            'Properties': {'最大电阻': 1000_0000.0, '最小电阻': 0.1, '电阻': 10, '锁定': 1.0},
@@ -1249,7 +1257,7 @@ class Resistor(_element, _two_pin_ArtificialCircuit):
 # 运算放大器
 class Operational_Amplifier(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Operational Amplifier', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'增益系数': 100_0000.0, '最大电压': 15.0, '最小电压': -15.0, '锁定': 1.0},
@@ -1274,7 +1282,7 @@ class Operational_Amplifier(_element):
 # 小电扇
 class Electric_Fan(_element, _two_pin_ArtificialCircuit):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Electric Fan', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'额定电阻': 1.0, '马达常数': 0.1, '转动惯量': 0.01, '电感': 5e-05, '负荷扭矩': 0.01,
@@ -1292,7 +1300,7 @@ class Electric_Fan(_element, _two_pin_ArtificialCircuit):
 # 继电器
 class Relay_Component(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Relay Component', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'开关': 0.0, '线圈电感': 0.2, '线圈电阻': 20.0,
@@ -1324,7 +1332,7 @@ class Relay_Component(_element):
 # n mos
 class N_MOSFET(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'N-MOSFET', 'Identifier': '', 'IsBroken': False,
                            'IsLocked': False, 'Properties': {'PNP': 1.0, '放大系数': 0.027, '阈值电压': 1.5, '最大功率': 100.0, '锁定': 1.0},
                            'Statistics': {'电压GS': 0.0, '电压': 0.0, '电流': 0.0, '功率': 0.0, '状态': 0.0},
@@ -1345,7 +1353,7 @@ class N_MOSFET(_element):
 
 class _source_element(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': '', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'电压': 3.0, '内阻': 0.5, '频率': 20000.0, '偏移': 0.0, '占空比': 0.5, '锁定': 1.0},
@@ -1365,38 +1373,38 @@ class _source_element(_element):
 
 # 正弦波发生器
 class Sinewave_Source(_source_element):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Sinewave_Source, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Sinewave Source'
 
 # 方波发生器
 class Square_Source(_source_element):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Square_Source, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Square Source'
 
 # 三角波发生器
 class Triangle_Source(_source_element):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Triangle_Source, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Triangle Source'
 
 # 锯齿波发生器
 class Sawtooth_Source(_source_element):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Sawtooth_Source, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Sawtooth Source'
 
 # 尖峰波发生器
 class Pulse_Source(_source_element):
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         super(Pulse_Source, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Pulse Source'
 
 # 保险丝
 class Fuse_Component(_element, _two_pin_ArtificialCircuit):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Fuse Component', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
                            'Properties': {'开关': 1.0, '额定电流': 0.30000001192092896, '熔断电流': 0.5, '锁定': 1.0},
                            'Statistics': {'瞬间功率': 0.0, '瞬间电流': 0.0, '瞬间电压': 0.0, '功率': 0.0, '电压': 0.0, '电流': 0.0},
@@ -1406,7 +1414,7 @@ class Fuse_Component(_element, _two_pin_ArtificialCircuit):
 # 滑动变阻器
 class Slide_Rheostat(_element):
     @_element_Init_HEAD
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Slide Rheostat', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
                            'Properties': {'额定电阻': 10.0, '滑块位置': 0.0, '电阻1': 10, '电阻2': 10.0, '锁定': 1.0},
                            'Statistics': {'瞬间功率': 0.0, '瞬间电流': 0.0, '瞬间电压': 0.0, '功率': 0.0, '电压': 0.0, '电流': 0.0,
