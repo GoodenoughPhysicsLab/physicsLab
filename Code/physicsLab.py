@@ -125,6 +125,7 @@ def write_Experiment() -> None:
             experiments.pop(0)
     with open(f'{_savName[:len(_savName) - 4:]}_rollBack_sav.txt', 'w', encoding='utf-8') as f:
         f.write(json.dumps(experiments))
+load_Experiment = write_Experiment
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
@@ -166,6 +167,7 @@ def format_Experiment() -> None:
 
 # 重命名sav
 def rename_Experiment(name: str) -> None:
+    global _sav
     # 检查是否重名
     savs = [i for i in walk(_FILE_HEAD)][0]
     savs = savs[savs.__len__() - 1]
@@ -180,7 +182,6 @@ def rename_Experiment(name: str) -> None:
                 if f['InternalName'] == name:
                     raise RuntimeError('Duplicate name archives are forbidden')
     # 重命名存档
-    global _sav
     name = str(name)
     _sav["Summary"]["Subject"] = name
     _sav["InternalName"] = name
@@ -525,12 +526,12 @@ class union_4_16_Decoder:
 # 所有原件的父类，不要实例化
 class _element:
     # 设置原件的角度
-    def reset_Rotation(self, xRotation: float = 0, yRotation: float = 0, zRotation: float = 180):
+    def set_Rotation(self, xRotation: float = 0, yRotation: float = 0, zRotation: float = 180):
         self._arguments["Rotation"] = f"{_myRound(xRotation)},{_myRound(zRotation)},{_myRound(yRotation)}"
         return self._arguments["Rotation"]
 
     # 重新设置元件的坐标
-    def reset_Position(self, x : float, y : float, z : float) -> None:
+    def set_Position(self, x : float, y : float, z : float) -> None:
         x, y, z = _myRound(x), _myRound(y), _myRound(z)
         del _elements_Address[self._position]
         self._position = (x, y, z)
@@ -1378,7 +1379,7 @@ class N_MOSFET(_element):
     def G(self):
         return _element_Pin(self, 0)
 
-class _source_Element(_element):
+class _source_element(_element):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self._arguments = {'ModelID': '', 'Identifier': '',
@@ -1405,31 +1406,31 @@ class _source_Element(_element):
         return _element_Pin(self, 1)
 
 # 正弦波发生器
-class Sinewave_Source(_source_Element):
+class Sinewave_Source(_source_element):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(Sinewave_Source, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Sinewave Source'
 
 # 方波发生器
-class Square_Source(_source_Element):
+class Square_Source(_source_element):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(Square_Source, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Square Source'
 
 # 三角波发生器
-class Triangle_Source(_source_Element):
+class Triangle_Source(_source_element):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(Triangle_Source, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Triangle Source'
 
 # 锯齿波发生器
-class Sawtooth_Source(_source_Element):
+class Sawtooth_Source(_source_element):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(Sawtooth_Source, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Sawtooth Source'
 
 # 尖峰波发生器
-class Pulse_Source(_source_Element):
+class Pulse_Source(_source_element):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(Pulse_Source, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Pulse Source'
