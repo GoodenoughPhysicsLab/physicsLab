@@ -327,7 +327,7 @@ def old_crt_wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, col
 
 # 检查函数参数是否是导线
 def _check_typeWire(func):
-    def result(SourcePin : _element_Pin, TargetPin : _element_Pin, color : str = '蓝') -> None:
+    def result(SourcePin, TargetPin, color : str = '蓝') -> None:
         try:
             if isinstance(SourcePin, _element_Pin) and isinstance(TargetPin, _element_Pin):
                 if (color not in ["黑", "蓝", "红", "绿", "黄"]):
