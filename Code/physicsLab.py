@@ -1,6 +1,6 @@
 import json
 import sys
-import getpass
+from getpass import getuser
 from random import sample
 from string import ascii_letters, digits
 from os import walk, popen, remove
@@ -8,7 +8,7 @@ from typing import Union, Callable
 
 ### define ###
 
-_FILE_HEAD = f'C:\\Users\\{getpass.getuser()}\\AppData\\LocalLow\\CIVITAS\\Quantum Physics\\Circuit'
+_FILE_HEAD = f'C:\\Users\\{getuser()}\\AppData\\LocalLow\\CIVITAS\\Quantum Physics\\Circuit'
 # _xxx 不是文件向外暴露出的接口，文件外无法访问
 _savName = "" # sav的文件名
 _StatusSave = {"SimulationSpeed":1.0, "Elements":[], "Wires":[]}
@@ -955,19 +955,23 @@ class _switch_Element(_element):
                           "Rotation": '', "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
 
+# 双引脚模拟电路原件封装引脚类
+class _two_pin_ArtificialCircuit:
+    @property
+    def red(self):
+        return _element_Pin(self, 0)
+    l = red
+
+    @property
+    def black(self):
+        return _element_Pin(self, 1)
+    r = black
+
 # 简单开关
-class Simple_Switch(_switch_Element):
+class Simple_Switch(_switch_Element, _two_pin_ArtificialCircuit):
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         super(Simple_Switch, self).__init__(x, y, z)
         self._arguments['ModelID'] = 'Simple Switch'
-
-    @property
-    def l(self):
-        return _element_Pin(self, 0)
-
-    @property
-    def r(self):
-        return _element_Pin(self, 1)
 
 # 单刀双掷开关
 class SPDT_Switch(_switch_Element):
@@ -1018,7 +1022,7 @@ class DPDT_Switch(_switch_Element):
         return _element_Pin(self, 2)
 
 # 按钮开关
-class Push_Switch(_element):
+class Push_Switch(_element, _two_pin_ArtificialCircuit):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self._arguments = {
@@ -1026,14 +1030,6 @@ class Push_Switch(_element):
             'Properties': {'开关': 0.0, '默认开关': 0.0, '锁定': 1.0}, 'Statistics': {'电流': 0.0}, 'Position': '',
             'Rotation': '', 'DiagramCached': False, 'DiagramPosition': {
                 'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
-
-    @property
-    def l(self):
-        return _element_Pin(self, 0)
-
-    @property
-    def r(self):
-        return _element_Pin(self, 1)
 
 # 555定时器
 class NE555(_element):
@@ -1171,7 +1167,7 @@ class eight_bit_Display(_element):
         return _element_Pin(self, 7)
 
 # 电容
-class Basic_Capacitor(_element):
+class Basic_Capacitor(_element, _two_pin_ArtificialCircuit):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self._arguments = {'ModelID': 'Basic Capacitor', 'Identifier': '',
@@ -1180,16 +1176,8 @@ class Basic_Capacitor(_element):
                            'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
-    @property
-    def l(self):
-        return _element_Pin(self, 0)
-
-    @property
-    def r(self):
-        return _element_Pin(self, 1)
-
 # 一节电池
-class Battery_Source(_element):
+class Battery_Source(_element, _two_pin_ArtificialCircuit):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self._arguments = {'ModelID': 'Battery Source', 'Identifier': '',
@@ -1198,14 +1186,6 @@ class Battery_Source(_element):
                            'Position': '',
                            'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
-
-    @property
-    def l(self):
-        return _element_Pin(self, 0)
-
-    @property
-    def r(self):
-        return _element_Pin(self, 1)
 
 # 学生电源
 class Student_Source(_element):
@@ -1254,7 +1234,7 @@ class Ground_Component(_element):
         return _element_Pin(self, 0)
 
 # 电阻
-class Resistor(_element):
+class Resistor(_element, _two_pin_ArtificialCircuit):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self._arguments = {'ModelID': 'Resistor', 'Identifier': '', 'IsBroken': False,
@@ -1265,14 +1245,6 @@ class Resistor(_element):
                                           '电压': 0, '电流': 0},
                            'Position': '', 'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
-
-    @property
-    def l(self):
-        return _element_Pin(self, 0)
-
-    @property
-    def r(self):
-        return _element_Pin(self, 1)
 
 # 运算放大器
 class Operational_Amplifier(_element):
@@ -1300,7 +1272,7 @@ class Operational_Amplifier(_element):
         return _element_Pin(self, 2)
 
 # 小电扇
-class Electric_Fan(_element):
+class Electric_Fan(_element, _two_pin_ArtificialCircuit):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self._arguments = {'ModelID': 'Electric Fan', 'Identifier': '',
@@ -1316,14 +1288,6 @@ class Electric_Fan(_element):
                            'Position': '',
                            'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
-
-    @property
-    def l(self):
-        return _element_Pin(self, 0)
-
-    @property
-    def r(self):
-        return _element_Pin(self, 1)
 
 # 继电器
 class Relay_Component(_element):
@@ -1392,18 +1356,12 @@ class _source_element(_element):
     @property
     def l(self):
         return _element_Pin(self, 0)
+    i = l
 
     @property
     def r(self):
         return _element_Pin(self, 1)
-
-    @property
-    def i(self):
-        return _element_Pin(self, 0)
-
-    @property
-    def o(self):
-        return _element_Pin(self, 1)
+    o = r
 
 # 正弦波发生器
 class Sinewave_Source(_source_element):
@@ -1436,7 +1394,7 @@ class Pulse_Source(_source_element):
         self._arguments['ModelID'] = 'Pulse Source'
 
 # 保险丝
-class Fuse_Component(_element):
+class Fuse_Component(_element, _two_pin_ArtificialCircuit):
     @_element_Init_HEAD
     def __init__(self, x: float = 0, y: float = 0, z: float = 0):
         self._arguments = {'ModelID': 'Fuse Component', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
@@ -1444,14 +1402,6 @@ class Fuse_Component(_element):
                            'Statistics': {'瞬间功率': 0.0, '瞬间电流': 0.0, '瞬间电压': 0.0, '功率': 0.0, '电压': 0.0, '电流': 0.0},
                            'Position': '', 'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
-
-    @property
-    def l(self):
-        return _element_Pin(self, 0)
-
-    @property
-    def r(self):
-        return _element_Pin(self, 1)
 
 # 滑动变阻器
 class Slide_Rheostat(_element):
