@@ -546,10 +546,9 @@ def _element_Method(cls):
         _elements_Address[self._position] = self
     cls.set_Position = set_Position
 
-
     # 格式化坐标参数，主要避免浮点误差
     def format_Position(self) -> tuple:
-        if (type(self._position) != tuple or self._position.__len__() != 3):
+        if not isinstance(self._position, tuple) or self._position.__len__() != 3:
             raise RuntimeError("Position must be a tuple of length three but gets some other value")
         self._position = (_myRound(self._position[0]), _myRound(self._position[1]), _myRound(self._position[2]))
         return self._position
@@ -585,7 +584,7 @@ def _element_Init_HEAD(func : Callable) -> Callable:
         global _Elements
         x, y, z = _myRound(x), _myRound(y), _myRound(z)
         self._position = (x, y, z)
-        if (self._position in _elements_Address.keys()):
+        if self._position in _elements_Address.keys():
             raise RuntimeError("The position already exists")
         func(self, x, y, z)
         self._arguments["Identifier"] = ''.join(sample(ascii_letters + digits, 32))
@@ -603,8 +602,6 @@ class _element_Pin:
 
     def type(self) -> str:
         return 'element Pin'
-
-# _arguments这里是参数的意思
 
 # 逻辑电路类装饰器
 def _logic_Circuit_Method(cls):
@@ -624,6 +621,22 @@ def _logic_Circuit_Method(cls):
 
     # end decorator
     return cls
+
+# 双引脚模拟电路原件的引脚
+def _two_pin_ArtificialCircuit_Pin(cls):
+    @property
+    def red(self):
+        return _element_Pin(self, 0)
+    cls.red, cls.l = red, red
+
+    @property
+    def black(self):
+        return _element_Pin(self, 1)
+    cls.black, cls.r = black, black
+
+    return cls
+
+# _arguments是参数的意思
 
 # 逻辑输入
 @_element_Method
@@ -1097,20 +1110,6 @@ class _switch_Element:
                           "Statistics": {}, "Position": "",
                           "Rotation": '', "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
-
-# 双引脚模拟电路原件的引脚
-def _two_pin_ArtificialCircuit_Pin(cls):
-    @property
-    def red(self):
-        return _element_Pin(self, 0)
-    cls.red, cls.l = red, red
-
-    @property
-    def black(self):
-        return _element_Pin(self, 1)
-    cls.black, cls.r = black, black
-
-    return cls
 
 # 简单开关
 @_two_pin_ArtificialCircuit_Pin
