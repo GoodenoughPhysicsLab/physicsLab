@@ -364,7 +364,7 @@ def del_wire(SourcePin, TargetPin, color : str = '蓝') -> None:
 # 原件装饰器
 def _element_Method(cls):
     # 设置原件的角度
-    def set_Rotation(self, xRotation: Union[int, float] = 0, yRotation: Union[int, float] = 0, zRotation: Union[int, float] = 180):
+    def set_Rotation(self, xRotation: Union[int, float] = 0, yRotation: Union[int, float] = 0, zRotation: Union[int, float] = 180) -> None:
         if not (isinstance(xRotation, (int, float)) and isinstance(yRotation, (int, float)) and isinstance(zRotation, (int, float))):
             raise RuntimeError('illegal argument')
         self._arguments["Rotation"] = f"{_myRound(xRotation)},{_myRound(zRotation)},{_myRound(yRotation)}"
