@@ -22,6 +22,7 @@ python 3.7, PyCharm
 ## 使用说明
 
 ```python
+from physicsLab import *
  # 打开存档  
 open_Experiment("在物实保存的存档的名字")
  # 例：open_Experiment('测逝')  
