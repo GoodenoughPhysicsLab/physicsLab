@@ -15,7 +15,7 @@ sys.path.append('(path of physicsLab.py)')
 当然，你也可以通过IDE来解决这个问题
 
 ## 开发环境
-python 3.7, PyCharm  
+python 3.7, PyCharm, win7  
 目测对其他版本支持应该也很好
 3.6及以上应该没问题
 
