@@ -7,7 +7,7 @@
 
 1.  请确保你的电脑有[Python](https://www.python.org)与[物理实验室PC版](https://www.turtlesim.com/)（也可以联系[开发者Jone-Chen](https://gitee.com/civitasjohn)）
 2.  打开physicsLab，克隆到本地（以后可能会上传到pip）
-3.  如果你的ide无法找到physicsLab,py，你可以在代码开头写  
+3.  如果你的ide无法找到physicsLab.py，你可以在代码开头写  
 ```python
 import sys
 sys.path.append('(path of physicsLab.py)')
