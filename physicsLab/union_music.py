@@ -18,6 +18,7 @@ The format of music array compat netlogo music list(ml) which was used by Li Wei
 
 
 # 设置简单乐器的音高（复制粘贴自csdn并作了部分修改）
+# 这个代码太烂了，但输入方式更丰富一些，先留着吧
 def set_Tonality(tonality: str):
     if not isinstance(tonality, str):
         raise RuntimeError('The entered data type is incorrect')
@@ -136,26 +137,6 @@ def set_Tonality(tonality: str):
     if tonality == '0':
         return 1
     raise RuntimeError('Input data error')
-Simple_Instrument.set_Tonality = set_Tonality
-
-# 实际上设置音高是很有规律的，我决定从新写
-'''
-输入格式：
-    中音区： 
-        '1' -> do,
-        '1#' or '2b' -> do#,
-        '2' -> ri 
-        ... 
-        7 -> xi
-    低1个八度： '.1', '.1#', '.2' ...
-    低2个八度： '..1', '..1#', '..2' ...
-    升1个八度： '1.', '1#.', '2' ...
-    以此类推即可
-'''
-def myset_Tonality(tonality : str):
-    if not isinstance(tonality, str):
-        raise RuntimeError('The entered data type is incorrect')
-    pass
 
 class union_music:
     def __init__(self, musicArray: Union[list, tuple]):
