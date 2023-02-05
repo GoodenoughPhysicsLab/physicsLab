@@ -6,6 +6,7 @@ from random import sample
 from string import ascii_letters, digits
 from os import walk, popen, remove
 from typing import Union, Callable
+from utf_8 import utf8_coding
 
 ### define ###
 
@@ -71,6 +72,7 @@ def old_open_Experiment(file: str) -> None:
             raise RuntimeError('Data errors in the file')
 
 # 打开一个指定的sav文件（支持输入本地实验的名字或sav文件名）
+@utf8_coding
 def open_Experiment(file : str) -> None:
     file = file.strip()
     if file.endswith('.sav'):
@@ -201,6 +203,7 @@ def del_Experiment() -> None:
         sys.exit()
 
 # 创建存档
+@utf8_coding
 def crt_Experiment(name : str) -> None:
     global _savName, _ifndef_open_Experiment
     # 该函数与open_Experiment一起，每次只能运行一次
