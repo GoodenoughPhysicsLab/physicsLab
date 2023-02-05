@@ -1361,4 +1361,59 @@ class Simple_Instrument:
     def o(self):
         return _element_Pin(self, 1)
 
+    # 设置音高
+    '''
+    输入格式：
+        中音区： 
+            '1' -> do,
+            '1#' or '2b' -> do#,
+            '2' -> ri 
+            ... 
+            7 -> xi
+        低1个八度： '.1', '.1#', '.2' ...
+        低2个八度： '..1', '..1#', '..2' ...
+        升1个八度： '1.', '1#.', '2' ...
+        以此类推即可
+    '''
+    def set_Tonality(self, tonality: Union[int, str]) -> None:
+        if isinstance(tonality, int):
+            if 0 < tonality < 8:
+                raise RuntimeError('Input data error')
+            tonality = str(tonality)
+        elif isinstance(tonality, str):
+            tonality.strip()
+            for char in tonality:
+                if char not in digits[1:8] and char not in '.#b':
+                    raise RuntimeError('Input data error')
+        else:
+            raise RuntimeError('The entered data type is incorrect')
+
+        pitch, pitchIndex = None, None
+        for char in tonality:
+            if char in digits[1:8]:
+                pitch = [60, 62, 64, 65, 67, 69, 71][int(char) - 1]
+                pitchIndex = tonality.find(char)
+        if pitch == None:
+            raise RuntimeError('Input data error')
+        for charIndex in range(tonality.__len__()):
+            char = tonality[charIndex]
+            if char == '.':
+                if charIndex < pitchIndex:
+                    pitch -= 12
+                else:
+                    pitch += 12
+            elif char in digits:
+                continue
+            elif char == '#':
+                if charIndex != pitchIndex + 1:
+                    raise RuntimeError('Input data error')
+                pitch += 1
+            elif char == 'b':
+                if charIndex != pitchIndex + 1:
+                    raise RuntimeError('Input data error')
+                pitch -= 1
+            else:
+                raise RuntimeError('Input data error')
+        self._arguments['Properties']['音高'] = pitch
+
 ### end 原件类 ###
