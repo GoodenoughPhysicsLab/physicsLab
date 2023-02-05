@@ -126,6 +126,7 @@ def write_Experiment() -> None:
             experiments.pop(0)
     with open(f'{_savName[:len(_savName) - 4:]}_rollBack_sav.txt', 'w', encoding='utf-8') as f:
         f.write(json.dumps(experiments))
+    print(f'\nCompile successfully! {len(_Elements)} elements, {len(_wires)} wires.')
 load_Experiment = write_Experiment
 
 # 读取sav文件已有的原件与导线
@@ -162,10 +163,6 @@ def read_Experiment() -> None:
             # 导线
         _wires = json.loads(readmem['Experiment']['StatusSave'])['Wires']
 
-# 规范化实验中原件的坐标与角度
-def format_Experiment() -> None:
-    pass
-
 # 重命名sav
 def rename_Experiment(name: str) -> None:
     global _sav
@@ -190,6 +187,10 @@ def rename_Experiment(name: str) -> None:
 # 打开一个存档的窗口
 def os_Experiment() -> None:
     popen(f'notepad {_savName}')
+
+# 给物实的json增加缩进、换行
+def format_Experiment() -> None:
+    pass
 
 # 删除存档
 def del_Experiment() -> None:
@@ -303,6 +304,10 @@ def del_Element(self) -> None:
                     return
     except:
         raise RuntimeError('Unable to delete a nonexistent element')
+
+# 整理物实原件的角度、位置
+def format_Element() -> None:
+    pass
 
 ### end Element ###
 
@@ -1335,5 +1340,25 @@ class Slide_Rheostat:
     @property
     def r_up(self):
         return _element_Pin(self, 3)
+
+# 简单乐器（更多功能的源代码在union_music）
+@_element_Method
+class Simple_Instrument:
+    @_element_Init_HEAD
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
+        self._arguments = {'ModelID': 'Simple Instrument', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'额定电压': 3.0, '额定功率': 0.3, '音量': 1.0, '音高': 60.0, '节拍': 80.0, '锁定': 1.0,
+                                          '乐器': 1.0},
+                           'Statistics': {'瞬间功率': 0, '瞬间电流': 0, '瞬间电压': 0, '功率': 0, '电压': 0, '电流': 0},
+                           'Position': '', 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def i(self):
+        return _element_Pin(self, 0)
+
+    @property
+    def o(self):
+        return _element_Pin(self, 1)
 
 ### end 原件类 ###
