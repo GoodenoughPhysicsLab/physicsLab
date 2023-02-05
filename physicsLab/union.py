@@ -1,3 +1,4 @@
+#coding=utf-8
 from physicsLab.physicsLab import *
 
 def _myRound(num : Union[int, float]):
