@@ -8,7 +8,7 @@ def utf8_coding(func):
         if not s.startswith('#coding=utf-8'):
             with open(sys.argv[0], 'w', encoding='utf-8') as f:
                 if s.startswith('\n'):
-                    f.write(f'#coding=utf-8\n{s[1:]}')
+                    f.write(f'#coding=utf-8{s}')
                 else:
                     f.write(f'#coding=utf-8\n{s}')
         func(string)
