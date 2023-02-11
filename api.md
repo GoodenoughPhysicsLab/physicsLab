@@ -38,16 +38,18 @@ del_Experiment()
 ## 原件
 所有的原件都被写成了一个类（不过我还在施工，无法支持全部原件）  
 你可以调用  
-```diff
-crt_Element(name: str, x : Union[int, float] = 0, y : Union[int, float] = 0, z : Union[int, float] = 0)
+```python
+crt_Element(name: str, x = 0, y = 0, z = 0)
 ```
 name可以支持紫兰斋在存档里写的ModelID，也可以支持类的名字  
 
-或者你也可以用类的声明方式：  
+实际上，physicsLab支持的每一个原件背后都是一个类，因此你也可以用类的实例化来创建原件：  
 ```python
-Logic_Input() # 创建一个逻辑输入
+Logic_Input()  # 创建一个逻辑输入
+Logic_Output() # 创建一个逻辑输出
+b = Or_Gate()  # 创建一个或门，b保存的是Or_Gate的self
+# 千万要注意的是：两个原件的坐标不能重叠！
 ```
-以上2种方法会返回创建出来的原件的self  
 
 以后把所有原件的ModelID与类的名字搬过来  
 （如果你着急想看某个原件对应的名字的话，可以直接在源码中看，注释写得很详细了）  
@@ -85,7 +87,7 @@ crt_wire(a.o, a.i_up)
 
 另一种连接引脚的方式是不推荐使用的老函数：  
 ```diff
-old_crt_wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝") -> None
+old_crt_wire(SourceLabel, SourcePin: int, TargetLabel, TargetPin: int, color = "蓝") -> None
 ```
 连接导线的方式是更偏于物实存档的原始方案，即用数字来表示某个引脚  
 下面呈现部分原件引脚图（第一种其实就是对这个老函数更方便的封装）：  
