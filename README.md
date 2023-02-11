@@ -12,7 +12,7 @@
 3.  如果你的ide无法找到physicsLab.py，你可以在代码开头写  
 ```python
 import sys
-sys.path.append('(path of physicsLab.py)')
+sys.path.append('physicsLab的路径')
 ```
 当然，你也可以通过IDE来解决这个问题
 
