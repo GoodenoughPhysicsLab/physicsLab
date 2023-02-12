@@ -1,5 +1,6 @@
 #coding=utf-8
 import json
+import re
 import sys
 from random import sample
 from string import ascii_letters, digits
@@ -55,11 +56,11 @@ def open_Experiment(file : str) -> None:
     else:
         savs = [i for i in walk(FILE_HEAD)][0]
         savs = savs[savs.__len__() - 1]
-        savs = [sav for sav in savs if sav.endswith('sav')]
+        savs = [aSav for aSav in savs if aSav.endswith('sav')]
         is_error = True
-        for sav in savs:
+        for aSav in savs:
             try:
-                with open(f"{FILE_HEAD}\\{sav}", encoding='utf-8') as f:
+                with open(f"{FILE_HEAD}\\{aSav}", encoding='utf-8') as f:
                     try:
                         f = json.loads(f.read())
                     except:
@@ -68,7 +69,7 @@ def open_Experiment(file : str) -> None:
                         if (f.get("InternalName") == file):
                             if f.get('InternalName') == '自动保存-电学':
                                 rename_Experiment('自动保存-电学')
-                            old_open_Experiment(sav)
+                            old_open_Experiment(aSav)
                             return
                 is_error = False
             except:
@@ -86,7 +87,7 @@ def crt_Experiment(name : str) -> None:
     # 检查是否存在重名的存档
     savs = [i for i in walk(FILE_HEAD)][0]
     savs = savs[savs.__len__() - 1]
-    savs = [sav for sav in savs if sav.endswith('sav')]
+    savs = [aSav for aSav in savs if aSav.endswith('sav')]
     for sav in savs:
         with open(f"{FILE_HEAD}\\{sav}", encoding='utf-8') as f:
             try:
@@ -112,7 +113,51 @@ def write_Experiment() -> None:
     StatusSave["Wires"] = wires
     sav["Experiment"]["StatusSave"] = json.dumps(StatusSave)
     with open(savName, "w", encoding="UTF-8") as f:
-        f.write(json.dumps(sav))
+        # format_Experiment (bug)
+        writen = list(json.dumps(sav).replace(' ', ''))
+        # isString = False
+        # isValue = False
+        # stack = []
+        # tab = '  '
+        # charIndex = 0
+        # stackLenMem = None
+        # while charIndex < len(writen):
+        #     char = writen[charIndex]
+        #     if char == ':':
+        #         isValue = True
+        #     elif char == ',':
+        #         isValue = False
+        #         if not isString:
+        #             writen.insert(charIndex + 1, '\n' + tab * len(stack))
+        #     elif char == '\"' and isValue:
+        #         isString = not isString
+        #         if isString:
+        #             stack.append('\"')
+        #         else:
+        #             stack.pop()
+        #     elif char == '{':
+        #         if not isString:
+        #             writen.insert(charIndex, '\n' + tab * len(stack))
+        #             charIndex += 1
+        #             stack.append(char)
+        #             writen.insert(charIndex + 1, '\n' + tab * len(stack))
+        #         else:
+        #             if stackLenMem is None:
+        #                 stackLenMem = len(stack)
+        #                 writen.insert(charIndex, '\n' + tab * len(stack))
+        #             charIndex += 1
+        #     elif char == '}':
+        #         if not isString:
+        #             stack.pop()
+        #             writen.insert(charIndex, '\n' + tab * len(stack))
+        #             charIndex += 1
+        #         else:
+        #             if len(stack) == stackLenMem:
+        #                 stackLenMem = None
+        #                 writen.insert(charIndex, '\n' + tab * len(stack))
+        #                 charIndex += 1
+        #     charIndex += 1
+        f.write(''.join(writen))#[1:])
     # 存档回滚
     f = None
     try:
@@ -176,9 +221,9 @@ def rename_Experiment(name: str) -> None:
     # 检查是否重名
     savs = [i for i in walk(FILE_HEAD)][0]
     savs = savs[savs.__len__() - 1]
-    savs = [sav for sav in savs if sav.endswith('sav')]
-    for sav in savs:
-        with open(f"{FILE_HEAD}\\{sav}", encoding='utf-8') as f:
+    savs = [aSav for aSav in savs if aSav.endswith('sav')]
+    for aSav in savs:
+        with open(f"{FILE_HEAD}\\{aSav}", encoding='utf-8') as f:
             try:
                 f = json.loads(f.read())
             except:
@@ -195,10 +240,6 @@ def rename_Experiment(name: str) -> None:
 def show_Experiment() -> None:
     popen(f'notepad {savName}')
 os_Experiment = show_Experiment
-
-# 对物实的json增加缩进、换行
-def format_Experiment() -> None:
-    pass
 
 # 删除存档
 def del_Experiment() -> None:
@@ -234,4 +275,6 @@ def rollBack_Experiment(back : int = 1):
 def introduce_Experiment(introduction : str) -> None:
     if not isinstance(introduction, str):
         raise RuntimeError
-    sav['Description'] = None # thinking
+    introduction = introduction.replace('\n', ' \n')
+    regex = re.compile('[^\n]+')
+    sav['Summary']['Description'] = regex.findall(introduction)
