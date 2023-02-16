@@ -108,6 +108,8 @@ def crt_Experiment(name : str) -> None:
 
 # 将编译完成的json写入sav
 def write_Experiment() -> None:
+    def _format_ElementJson():
+        pass
     global savName, sav, StatusSave
     StatusSave["Elements"] = Elements
     StatusSave["Wires"] = wires
@@ -136,81 +138,6 @@ def write_Experiment() -> None:
         f.write(json.dumps(experiments))
     print(f'\nCompile successfully! {len(Elements)} elements, {len(wires)} wires.')
 load_Experiment = write_Experiment
-
-# # 将编译完成的json写入sav
-# def write_Experiment() -> None:
-#     global savName, sav, StatusSave
-#     StatusSave["Elements"] = Elements
-#     StatusSave["Wires"] = wires
-#     sav["Experiment"]["StatusSave"] = json.dumps(StatusSave)
-#     with open(savName, "w", encoding="UTF-8") as f:
-#         # format_Experiment (bug)
-#         writen = list(json.dumps(sav).replace(' ', ''))
-#         # isString = False
-#         # isValue = False
-#         # stack = []
-#         # tab = '  '
-#         # charIndex = 0
-#         # stackLenMem = None
-#         # while charIndex < len(writen):
-#         #     char = writen[charIndex]
-#         #     if char == ':':
-#         #         isValue = True
-#         #     elif char == ',':
-#         #         isValue = False
-#         #         if not isString:
-#         #             writen.insert(charIndex + 1, '\n' + tab * len(stack))
-#         #     elif char == '\"' and isValue:
-#         #         isString = not isString
-#         #         if isString:
-#         #             stack.append('\"')
-#         #         else:
-#         #             stack.pop()
-#         #     elif char == '{':
-#         #         if not isString:
-#         #             writen.insert(charIndex, '\n' + tab * len(stack))
-#         #             charIndex += 1
-#         #             stack.append(char)
-#         #             writen.insert(charIndex + 1, '\n' + tab * len(stack))
-#         #         else:
-#         #             if stackLenMem is None:
-#         #                 stackLenMem = len(stack)
-#         #                 writen.insert(charIndex, '\n' + tab * len(stack))
-#         #             charIndex += 1
-#         #     elif char == '}':
-#         #         if not isString:
-#         #             stack.pop()
-#         #             writen.insert(charIndex, '\n' + tab * len(stack))
-#         #             charIndex += 1
-#         #         else:
-#         #             if len(stack) == stackLenMem:
-#         #                 stackLenMem = None
-#         #                 writen.insert(charIndex, '\n' + tab * len(stack))
-#         #                 charIndex += 1
-#         #     charIndex += 1
-#         f.write(''.join(writen))#[1:])
-#     # 存档回滚
-#     f = None
-#     try:
-#         f = open(f'{savName[:len(savName) - 4:]}_rollBack_sav.txt')
-#     except FileNotFoundError:
-#         f = open(f'{savName[:len(savName) - 4:]}_rollBack_sav.txt', 'w')
-#     finally:
-#         f.close()
-#     experiments = []
-#     with open(f'{savName[:len(savName) - 4:]}_rollBack_sav.txt', 'r', encoding='utf-8') as f:
-#         f = f.read()
-#         if f == '':
-#             experiments.append(sav)
-#         else:
-#             experiments = json.loads(f)
-#             experiments.append(sav)
-#         if experiments.__len__() > 10:
-#             experiments.pop(0)
-#     with open(f'{savName[:len(savName) - 4:]}_rollBack_sav.txt', 'w', encoding='utf-8') as f:
-#         f.write(json.dumps(experiments))
-#     print(f'\nCompile successfully! {len(Elements)} elements, {len(wires)} wires.')
-# load_Experiment = write_Experiment
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
@@ -302,10 +229,15 @@ def rollBack_Experiment(back : int = 1):
         Elements = sav['Elements']
         wires = sav['Wires']
 
-# 输入实验介绍
-def introduce_Experiment(introduction : str) -> None:
-    if not isinstance(introduction, str):
-        raise RuntimeError
+# 发布实验时输入实验介绍
+def introduce_Experiment(introduction: str) -> None:
+    if not isinstance(introduction, str) or introduction is None:
+        raise TypeError
     introduction = introduction.replace('\n', ' \n')
-    regex = re.compile('[^\n]+')
-    sav['Summary']['Description'] = regex.findall(introduction)
+    sav['Summary']['Description'] = [s[:len(s) - 1] for s in re.compile('[^\n]+').findall(introduction)]
+
+# 发布实验时输入实验标题
+def title_Experiment(title: str) -> None:
+    if isinstance(title, str) or title is None:
+        raise TypeError
+    sav['Summary']['Subject'] = title
