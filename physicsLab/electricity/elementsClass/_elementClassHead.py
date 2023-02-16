@@ -8,15 +8,15 @@ from electricity._elementPin import *
 # 原件装饰器
 def element_Method(cls):
     # 设置原件的角度
-    def set_Rotation(self, xRotation: Union[int, float] = 0, yRotation: Union[int, float] = 0, zRotation: Union[int, float] = 180) -> None:
+    def set_Rotation(self, xRotation: Union[int, float] = 0, yRotation: Union[int, float] = 0, zRotation: Union[int, float] = 180):
         if not (isinstance(xRotation, (int, float)) and isinstance(yRotation, (int, float)) and isinstance(zRotation, (int, float))):
             raise RuntimeError('illegal argument')
         self._arguments["Rotation"] = f"{myRound(xRotation)},{myRound(zRotation)},{myRound(yRotation)}"
-        return self._arguments["Rotation"]
+        return self
     cls.set_Rotation = set_Rotation
 
     # 重新设置元件的坐标
-    def set_Position(self, x : Union[int, float], y : Union[int, float], z : Union[int, float]) -> None:
+    def set_Position(self, x : Union[int, float], y : Union[int, float], z : Union[int, float]):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
         x, y, z = myRound(x), myRound(y), myRound(z)
@@ -24,6 +24,7 @@ def element_Method(cls):
         self._position = (x, y, z)
         self._arguments['Position'] = f"{x},{z},{y}"
         elements_Address[self._position] = self
+        return self
     cls.set_Position = set_Position
 
     # 格式化坐标参数，主要避免浮点误差
@@ -57,6 +58,7 @@ def element_Method(cls):
     return cls
 
 # __init__ 装饰器
+_index = 0
 def element_Init_HEAD(func : Callable) -> Callable:
     def result(self, x : Union[int, float] = 0, y : Union[int, float] = 0, z : Union[int, float] = 0) -> None:
         if not isinstance(x, (float, int)) and isinstance(y, (float, int)) and isinstance(z, (float, int)):
@@ -72,6 +74,11 @@ def element_Init_HEAD(func : Callable) -> Callable:
         Elements.append(self._arguments)
         elements_Address[self._position] = self
         self.set_Rotation()
+        # 通过元件生成顺序来索引元件
+        global _index
+        self._index = _index
+        elements_Index[self._index] = self
+        _index += 1
     return result
 
 # 逻辑电路类装饰器
@@ -90,7 +97,6 @@ def logic_Circuit_Method(cls):
         self._arguments['Properties']['低电平'] = num
     cls.set_LowLeaveValue = set_LowLeaveValue
 
-    # end decorator
     return cls
 
 # 双引脚模拟电路原件的引脚
