@@ -13,7 +13,6 @@ from electricity.element import crt_Element
 ### define ###
 
 _ifndef_open_Experiment = False
-_elements_Address = {} # key为position，value为self
 
 def print_Elements():
     print(Elements)
@@ -22,7 +21,7 @@ def print_wires():
     print(wires)
 
 def print_elements_Address():
-    print(_elements_Address)
+    print(elements_Address)
 
 ### end define ###
 
@@ -41,7 +40,7 @@ def old_open_Experiment(file: str) -> None:
     savName = f"{FILE_HEAD}\\{file}"
     with open(savName, encoding="UTF-8") as f:
         try:
-            InternalName = (json.loads(f.read().__str__()))["Summary"]["Subject"]
+            InternalName = (json.loads(f.read().replace('\n', '')))["Summary"]["Subject"]
             sav["Summary"]["Subject"] = InternalName
             sav["InternalName"] = sav["Summary"]["Subject"]
         except:
@@ -57,24 +56,17 @@ def open_Experiment(file : str) -> None:
         savs = [i for i in walk(FILE_HEAD)][0]
         savs = savs[savs.__len__() - 1]
         savs = [aSav for aSav in savs if aSav.endswith('sav')]
-        is_error = True
         for aSav in savs:
-            try:
-                with open(f"{FILE_HEAD}\\{aSav}", encoding='utf-8') as f:
-                    try:
-                        f = json.loads(f.read())
-                    except:
-                        pass
-                    else:
-                        if (f.get("InternalName") == file):
-                            if f.get('InternalName') == '自动保存-电学':
-                                rename_Experiment('自动保存-电学')
-                            old_open_Experiment(aSav)
-                            return
-                is_error = False
-            except:
-                if is_error:
-                    raise RuntimeError('The input parameters are incorrect')
+            with open(f"{FILE_HEAD}\\{aSav}", encoding='utf-8') as f:
+                try:
+                    f = json.loads(f.read().replace('\n', ''))
+                except:
+                    pass
+                else:
+                    if (f.get("InternalName") == file):
+                        old_open_Experiment(aSav)
+                        return
+        raise FileNotFoundError(f'No such experiment: {file}')
 
 # 创建存档
 @utf8_coding
@@ -88,10 +80,10 @@ def crt_Experiment(name : str) -> None:
     savs = [i for i in walk(FILE_HEAD)][0]
     savs = savs[savs.__len__() - 1]
     savs = [aSav for aSav in savs if aSav.endswith('sav')]
-    for sav in savs:
-        with open(f"{FILE_HEAD}\\{sav}", encoding='utf-8') as f:
+    for aSav in savs:
+        with open(f"{FILE_HEAD}\\{aSav}", encoding='utf-8') as f:
             try:
-                f = json.loads(f.read())
+                f = json.loads(f.read().replace('\n', ''))
             except:
                 pass
             else:
@@ -108,14 +100,48 @@ def crt_Experiment(name : str) -> None:
 
 # 将编译完成的json写入sav
 def write_Experiment() -> None:
-    def _format_ElementJson():
-        pass
+    def _format_StatusSave(stringJson: str) -> str:
+        stringJson = stringJson.replace('{\\\"ModelID', '\n      {\\\"ModelID') # format element json
+        stringJson = stringJson.replace('DiagramRotation\\\": 0}]', 'DiagramRotation\\\": 0}\n    ]') # format end element json
+        stringJson = stringJson.replace('{\\\"Source', '\n      {\\\"Source')
+        stringJson = stringJson.replace('}]}\", \"CameraSave', '}\n    ]}\", \"CameraSave')
+        return stringJson
+    def _format_Experiment(stringJson: str) -> str:
+        charIndex = 0
+        listStringJson = list(stringJson)
+        tab = 0
+        tabString = '  '
+        isString = False
+        while charIndex < listStringJson.__len__():
+            char = listStringJson[charIndex]
+            if char == ',':
+                if not isString:
+                    listStringJson[charIndex] = ',\n' + (tabString * tab)[1:]
+            elif char == '\"':
+                isString = not isString
+            elif char == '{':
+                if not isString:
+                    listStringJson[charIndex] = '\n' + tabString * tab + '{\n' + tabString * (tab + 1)
+                    tab += 1
+            elif char == '}':
+                if not isString:
+                    tab -= 1
+                    listStringJson[charIndex] = '\n' + tabString * tab + '}'
+            elif char == '\\':
+                charIndex += 1
+            charIndex += 1
+        return ''.join(listStringJson)[1:]
+
     global savName, sav, StatusSave
     StatusSave["Elements"] = Elements
     StatusSave["Wires"] = wires
     sav["Experiment"]["StatusSave"] = json.dumps(StatusSave)
     with open(savName, "w", encoding="UTF-8") as f:
-        f.write(json.dumps(sav))
+        f.write(
+            _format_Experiment(
+                _format_StatusSave(json.dumps(sav))
+            )
+        )
     # 存档回滚
     f = ''
     try:
