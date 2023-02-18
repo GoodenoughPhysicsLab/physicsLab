@@ -121,7 +121,7 @@ def write_Experiment() -> None:
                 isString = not isString
             elif char == '{':
                 if not isString:
-                    listStringJson[charIndex] = '\n' + tabString * tab + '{\n' + tabString * (tab + 1)
+                    listStringJson[charIndex] = '{\n' + tabString * (tab + 1)
                     tab += 1
             elif char == '}':
                 if not isString:
@@ -130,7 +130,7 @@ def write_Experiment() -> None:
             elif char == '\\':
                 charIndex += 1
             charIndex += 1
-        return ''.join(listStringJson)[1:]
+        return ''.join(listStringJson)
 
     global savName, sav, StatusSave
     StatusSave["Elements"] = Elements
@@ -169,8 +169,11 @@ load_Experiment = write_Experiment
 def read_Experiment() -> None:
     global wires
     with open(savName, encoding='UTF-8') as f:
-        readmem = json.loads(f.read())
+        readmem = json.loads(f.read().replace('\n', ''))
+        # 元件
         _local_Elements = json.loads(readmem["Experiment"]["StatusSave"])["Elements"]
+        # 导线
+        wires = json.loads(readmem['Experiment']['StatusSave'])['Wires']
 
         for element in _local_Elements:
             # 坐标标准化（消除浮点误差）
@@ -196,8 +199,6 @@ def read_Experiment() -> None:
             if obj.type() == '8bit Input':
                 obj._arguments['Statistics'] = element['Statistics']
                 obj._arguments['Properties']['十进制'] = element['Properties']['十进制']
-            # 导线
-        wires = json.loads(readmem['Experiment']['StatusSave'])['Wires']
 
 # 重命名sav
 def rename_Experiment(name: str) -> None:
