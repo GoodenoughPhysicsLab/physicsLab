@@ -2,8 +2,6 @@
 from electricity import *
 from math import sqrt, ceil
 
-from physicsLab import *
-
 '''
 How do you play music in physics Lab AR?
 Music extension might make it easier than before!
@@ -29,7 +27,7 @@ The format of music array compat netlogo music list(ml) which was used by Li Wei
 class union_music:
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, musicArray: Union[list, tuple] = ()):
         tick = Nimp_Gate(x, y + 0.1, z)
-        crt_wire(Logic_Input(x, y, z).o, tick.i_up), crt_wire(tick.o, tick.i_low)
-        crt_wire(tick.o, Counter(x + 0.2, y, z).i_up)
+        crt_Wire(Logic_Input(x, y, z).o, tick.i_up), crt_Wire(tick.o, tick.i_low)
+        crt_Wire(tick.o, Counter(x + 0.2, y, z).i_up)
         side = ceil(sqrt(musicArray.__len__()))
         pass
