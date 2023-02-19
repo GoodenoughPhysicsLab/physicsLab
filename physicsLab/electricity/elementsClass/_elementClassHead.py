@@ -1,5 +1,5 @@
 #coding=utf-8
-from random import sample
+import random
 from string import ascii_letters, digits
 from typing import Callable, Union
 import _fileGlobals as fileGlobals
@@ -68,7 +68,7 @@ def element_Init_HEAD(func : Callable) -> Callable:
         if self._position in fileGlobals.elements_Address.keys():
             raise RuntimeError("The position already exists")
         func(self, x, y, z)
-        self._arguments["Identifier"] = ''.join(sample(ascii_letters + digits, 32))
+        self._arguments["Identifier"] = ''.join(random.choice(ascii_letters + digits) for i in range(32))
         self._arguments["Position"] = f"{self._position[0]},{self._position[2]},{self._position[1]}"
         fileGlobals.Elements.append(self._arguments)
         fileGlobals.elements_Address[self._position] = self
