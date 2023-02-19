@@ -132,8 +132,6 @@ def write_Experiment() -> None:
             charIndex += 1
         return ''.join(listStringJson)
 
-    _ifndef_open_Experiment = False
-
     global savName, sav, StatusSave
     StatusSave["Elements"] = Elements
     StatusSave["Wires"] = wires
