@@ -89,6 +89,7 @@ def count_Elements() -> int:
     return len(Elements)
 
 def clear_Elements() -> None:
-    global Elements
     Elements.clear()
     wires.clear()
+    elements_Index.clear()
+    elements_Address.clear()
