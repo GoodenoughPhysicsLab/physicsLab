@@ -35,14 +35,14 @@ def _check_typeWire(func):
 
 # 新版连接导线
 @_check_typeWire
-def crt_wire(SourcePin, TargetPin, color: str = '蓝') -> None:
+def crt_Wire(SourcePin, TargetPin, color: str = '蓝') -> None:
     wires.append({"Source": SourcePin.element_self._arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
                    "Target": TargetPin.element_self._arguments["Identifier"], "TargetPin": TargetPin.pinLabel,
                    "ColorName": f"{color}色导线"})
 
 # 删除导线
 @_check_typeWire
-def del_wire(SourcePin, TargetPin, color : str = '蓝') -> None:
+def del_Wire(SourcePin, TargetPin, color : str = '蓝') -> None:
     a_wire = {"Source": SourcePin.element_self._arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
                    "Target": TargetPin.element_self._arguments["Identifier"], "TargetPin": TargetPin.pinLabel,
                    "ColorName": f"{color}色导线"}
@@ -50,3 +50,6 @@ def del_wire(SourcePin, TargetPin, color : str = '蓝') -> None:
         wires.remove(a_wire)
     else:
         raise RuntimeError("Unable to delete a nonexistent wire")
+    
+def clear_Wires() -> None:
+    wires.clear()
