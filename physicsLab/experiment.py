@@ -2,7 +2,7 @@
 import json
 import re
 import sys
-from random import sample
+import random
 from string import ascii_letters, digits
 from os import walk, popen, remove
 
@@ -93,7 +93,7 @@ def crt_Experiment(name : str) -> None:
     # 创建存档
     if not isinstance(name, str):
         name = str(name)
-    fileGlobals.savName = ''.join(sample(ascii_letters + digits, 34))
+    fileGlobals.savName = ''.join(random.choice(ascii_letters + digits) for i in range(34))
     fileGlobals.savName = f'{fileGlobals.FILE_HEAD}\\{fileGlobals.savName}.sav'
     with open(fileGlobals.savName, 'w', encoding='utf-8'):
         pass
