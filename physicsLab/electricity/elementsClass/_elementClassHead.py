@@ -1,8 +1,8 @@
 #coding=utf-8
 from random import sample
 from string import ascii_letters, digits
-from typing import Callable
-from _fileGlobals import *
+from typing import Callable, Union
+import _fileGlobals as fileGlobals
 from electricity._elementPin import *
 
 # 原件装饰器
@@ -11,7 +11,7 @@ def element_Method(cls):
     def set_Rotation(self, xRotation: Union[int, float] = 0, yRotation: Union[int, float] = 0, zRotation: Union[int, float] = 180):
         if not (isinstance(xRotation, (int, float)) and isinstance(yRotation, (int, float)) and isinstance(zRotation, (int, float))):
             raise RuntimeError('illegal argument')
-        self._arguments["Rotation"] = f"{myRound(xRotation)},{myRound(zRotation)},{myRound(yRotation)}"
+        self._arguments["Rotation"] = f"{fileGlobals.myRound(xRotation)},{fileGlobals.myRound(zRotation)},{fileGlobals.myRound(yRotation)}"
         return self
     cls.set_Rotation = set_Rotation
 
@@ -19,11 +19,11 @@ def element_Method(cls):
     def set_Position(self, x : Union[int, float], y : Union[int, float], z : Union[int, float]):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
-        x, y, z = myRound(x), myRound(y), myRound(z)
-        del elements_Address[self._position]
+        x, y, z = fileGlobals.myRound(x), fileGlobals.myRound(y), fileGlobals.myRound(z)
+        del fileGlobals.elements_Address[self._position]
         self._position = (x, y, z)
         self._arguments['Position'] = f"{x},{z},{y}"
-        elements_Address[self._position] = self
+        fileGlobals.elements_Address[self._position] = self
         return self
     cls.set_Position = set_Position
 
@@ -31,7 +31,7 @@ def element_Method(cls):
     def format_Position(self) -> tuple:
         if not isinstance(self._position, tuple) or self._position.__len__() != 3:
             raise RuntimeError("Position must be a tuple of length three but gets some other value")
-        self._position = (myRound(self._position[0]), myRound(self._position[1]), myRound(self._position[2]))
+        self._position = (fileGlobals.myRound(self._position[0]), fileGlobals.myRound(self._position[1]), fileGlobals.myRound(self._position[2]))
         return self._position
     cls.format_Position = format_Position
 
@@ -63,21 +63,20 @@ def element_Init_HEAD(func : Callable) -> Callable:
     def result(self, x : Union[int, float] = 0, y : Union[int, float] = 0, z : Union[int, float] = 0) -> None:
         if not isinstance(x, (float, int)) and isinstance(y, (float, int)) and isinstance(z, (float, int)):
             raise RuntimeError('illegal argument')
-        global Elements
-        x, y, z = myRound(x), myRound(y), myRound(z)
+        x, y, z = fileGlobals.myRound(x), fileGlobals.myRound(y), fileGlobals.myRound(z)
         self._position = (x, y, z)
-        if self._position in elements_Address.keys():
+        if self._position in fileGlobals.elements_Address.keys():
             raise RuntimeError("The position already exists")
         func(self, x, y, z)
         self._arguments["Identifier"] = ''.join(sample(ascii_letters + digits, 32))
         self._arguments["Position"] = f"{self._position[0]},{self._position[2]},{self._position[1]}"
-        Elements.append(self._arguments)
-        elements_Address[self._position] = self
+        fileGlobals.Elements.append(self._arguments)
+        fileGlobals.elements_Address[self._position] = self
         self.set_Rotation()
         # 通过元件生成顺序来索引元件
         global _index
         self._index = _index
-        elements_Index[self._index] = self
+        fileGlobals.elements_Index[self._index] = self
         _index += 1
     return result
 
