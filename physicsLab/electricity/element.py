@@ -81,5 +81,14 @@ def del_Element(self) -> None:
         raise RuntimeError('Unable to delete a nonexistent element')
 
 # 整理物实原件的角度、位置
-def format_Element() -> None:
+def format_Elements() -> None:
     pass
+
+def count_Elements() -> int:
+    global Elements
+    return len(Elements)
+
+def clear_Elements() -> None:
+    global Elements
+    Elements.clear()
+    wires.clear()
