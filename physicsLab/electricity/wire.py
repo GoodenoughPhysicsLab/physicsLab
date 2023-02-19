@@ -50,6 +50,11 @@ def del_Wire(SourcePin, TargetPin, color : str = '蓝') -> None:
         wires.remove(a_wire)
     else:
         raise RuntimeError("Unable to delete a nonexistent wire")
-    
+
+# 删除所有导线
 def clear_Wires() -> None:
     wires.clear()
+
+# 获取当前导线数
+def count_Wires() -> int:
+    return len(wires)
