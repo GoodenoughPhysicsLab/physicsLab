@@ -1,5 +1,4 @@
 #coding=utf-8
-from _fileGlobals import *
 from electricity.elementsClass import *
 
 # 创建原件，本质上仍然是实例化
@@ -10,7 +9,7 @@ def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
         raise RuntimeError("Wrong parameter type")
     if name == '':
         raise RuntimeError('Name cannot be an empty string')
-    x, y, z = myRound(x), myRound(y), myRound(z)
+    x, y, z = fileGlobals.myRound(x), fileGlobals.myRound(y), fileGlobals.myRound(z)
     if (name == '555 Timer'):
         return NE555(x, y, z)
     elif (name == '8bit Input'):
@@ -38,14 +37,13 @@ def get_Element(*args):
     if all(isinstance(value, (int, float)) for value in args):
         # 如果输入参数为坐标
         if args.__len__() == 3:
-            global elements_Address
             x, y, z = args[0], args[1], args[2]
             if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
                 raise RuntimeError('illegal argument')
-            x, y, z = myRound(x), myRound(y), myRound(z)
-            if (x, y, z) not in elements_Address.keys():
+            x, y, z = fileGlobals.myRound(x), fileGlobals.myRound(y), fileGlobals.myRound(z)
+            if (x, y, z) not in fileGlobals.elements_Address.keys():
                 raise RuntimeError("Error coordinates that do not exist")
-            return elements_Address[(x, y, z)]
+            return fileGlobals.elements_Address[(x, y, z)]
         # 如果输入参数为self._index
         elif args.__len__() == 1:
             global elements_Index
@@ -64,16 +62,16 @@ def del_Element(self) -> None:
     try:
         identifier = self._arguments['Identifier']
         if (self.father_type() == 'element'):
-            for element in Elements:
+            for element in fileGlobals.Elements:
                 if (identifier == element['Identifier']):
                     # 删除原件
-                    Elements.remove(element)
+                    fileGlobals.Elements.remove(element)
                     # 删除导线
                     i = 0
-                    while (i < wires.__len__()):
-                        wire = wires[i]
+                    while (i < fileGlobals.Wires.__len__()):
+                        wire = fileGlobals.Wires[i]
                         if (wire['Source'] == identifier or wire['Target'] == identifier):
-                            wires.pop(i)
+                            fileGlobals.Wires.pop(i)
                         else:
                             i += 1
                     return
@@ -85,11 +83,10 @@ def format_Elements() -> None:
     pass
 
 def count_Elements() -> int:
-    global Elements
-    return len(Elements)
+    return len(fileGlobals.Elements)
 
 def clear_Elements() -> None:
-    Elements.clear()
-    wires.clear()
-    elements_Index.clear()
-    elements_Address.clear()
+    fileGlobals.Elements.clear()
+    fileGlobals.Wires.clear()
+    fileGlobals.elements_Index.clear()
+    fileGlobals.elements_Address.clear()
