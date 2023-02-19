@@ -132,6 +132,8 @@ def write_Experiment() -> None:
             charIndex += 1
         return ''.join(listStringJson)
 
+    _ifndef_open_Experiment = False
+
     global savName, sav, StatusSave
     StatusSave["Elements"] = Elements
     StatusSave["Wires"] = wires
@@ -163,7 +165,6 @@ def write_Experiment() -> None:
     with open(f'{savName[:len(savName) - 4:]}_rollBack_sav.txt', 'w', encoding='utf-8') as f:
         f.write(json.dumps(experiments))
     print(f'\nCompile successfully! {len(Elements)} elements, {len(wires)} wires.')
-load_Experiment = write_Experiment
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
@@ -211,7 +212,7 @@ def rename_Experiment(name: str) -> None:
     for aSav in savs:
         with open(f"{FILE_HEAD}\\{aSav}", encoding='utf-8') as f:
             try:
-                f = json.loads(f.read())
+                f = json.loads(f.read().replace('\n', ''))
             except:
                 pass
             else:
@@ -248,7 +249,7 @@ def rollBack_Experiment(back : int = 1):
     finally:
         f.close()
     with open(f'{savName[:len(savName) - 4:]}_rollBack_sav.txt', encoding='utf-8') as f:
-        reader = f.read()
+        reader = f.read().replace('\n', '')
         if reader == '':
             raise RuntimeError('There is no archive to roll back')
         f = json.loads(reader)
