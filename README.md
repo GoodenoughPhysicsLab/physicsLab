@@ -37,7 +37,7 @@ Logic_Input(0, 0, 0.1)
 o = Or_Gate() # 此时o存储的是orGate的self  
  # crt_wire输入格式：  
  #    crt_wire(SourcePin, TargetPin, color = "蓝")  
-crt_wire(o.i_up, o.i_low)  
+crt_Wire(o.i_up, o.i_low)  
  # 将程序中生成的原件，导线等等写入存档  
 write_Experiment()  
  # 然后用物实打开存档见证奇迹  
