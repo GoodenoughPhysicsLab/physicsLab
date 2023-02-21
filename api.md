@@ -58,7 +58,7 @@ b = Or_Gate()  # 创建一个或门，b保存的是Or_Gate的self
 ```python
 get_Element(x, y, z)
 ```
-返回值是这个坐标对应原件的self，若不存在抛出RuntimeError  
+返回值是这个坐标对应原件的self，若不存在抛出Error  
 
 我们也可以删除原件：
 ```python
@@ -70,12 +70,12 @@ del_Element(self) -> None
 连接导线提供了2种方式  
 第一种：  
 ```diff
-crt_wire(SourcePin, TargetPin, color: str = '蓝') -> None
+crt_Wire(SourcePin, TargetPin, color: str = '蓝') -> None
 ```
 所有原件都定义得有自己的引脚名称，这里举个例子：  
 ```diff
 a = Or_Gate(0.1, 0.1, 0)
-crt_wire(a.o, a.i_up)
+crt_Wire(a.o, a.i_up)
 ```
 引脚的命名规范：（适用于逻电）  
 1个输入引脚：i  
@@ -91,7 +91,7 @@ old_crt_wire(SourceLabel, SourcePin: int, TargetLabel, TargetPin: int, color = "
 ```
 连接导线的方式是更偏于物实存档的原始方案，即用数字来表示某个引脚  
 下面呈现部分原件引脚图（第一种其实就是对这个老函数更方便的封装）：  
-（显示有问题，建议打开“编辑”浏览）
+```diff
 D触发器：          
 2    0                  
                              
@@ -129,12 +129,13 @@ D触发器：
 6  2  
 7  3  
 很明显比第一种更麻烦  
+```
   
 除了创建导线外，也可以删除导线：  
 ```diff
-del_wire(element.o, element2.i)
+del_Wire(element.o, element2.i)
 ```
-使用方法与crt_wire一模一样  
+使用方法与crt_Wire一模一样  
   
 （这篇readme应该介绍了大部分常用功能）
 
