@@ -4,10 +4,8 @@ from electricity.elementsClass._elementClassHead import *
 # _arguments是参数的意思
 
 # 逻辑输入
-
-@element_Method
 @logic_Circuit_Method
-class Logic_Input:
+class Logic_Input(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {"ModelID": "Logic Input", "Identifier": "",
@@ -26,9 +24,8 @@ class Logic_Input:
         return element_Pin(self, 0)
 
 # 逻辑输出
-@element_Method
 @logic_Circuit_Method
-class Logic_Output:
+class Logic_Output(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Logic Output', 'Identifier': "",
@@ -43,15 +40,13 @@ class Logic_Output:
             return element_Pin(self, 0)
 
 # 2引脚门电路
-@element_Method
 @logic_Circuit_Method
-class _2_pin_Gate:
+class _2_pin_Gate(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': '', 'Identifier': "", 'IsBroken': False,
                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '最大电流': 0.1, '锁定': 1.0},
-                          'Statistics': {}, 'Position': "",
-                          'Rotation': '', 'DiagramCached': False,
+                          'Statistics': {}, 'Position': "", 'Rotation': '', 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
     @property
@@ -75,9 +70,8 @@ class No_Gate(_2_pin_Gate):
         self._arguments['ModelID'] = 'No Gate'
 
 # 3引脚门电路
-@element_Method
 @logic_Circuit_Method
-class _3_pin_Gate:
+class _3_pin_Gate(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': '', 'Identifier': '', 'IsBroken': False,
@@ -145,9 +139,9 @@ class Nimp_Gate(_3_pin_Gate):
         super(Nimp_Gate, self).__init__(x, y, z)
         self._arguments["ModelID"] = 'Nimp Gate'
 
-@element_Method
+# 2体积元件父类
 @logic_Circuit_Method
-class _big_element:
+class _big_element(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': '', 'Identifier': '', 'IsBroken': False,
@@ -372,9 +366,8 @@ class Random_Generator(_big_element):
         return element_Pin(self, 3)
 
 # 8位输入器
-@element_Method
 @logic_Circuit_Method
-class eight_bit_Input:
+class eight_bit_Input(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': '8bit Input', 'Identifier': '', 'IsBroken': False,
@@ -421,9 +414,8 @@ class eight_bit_Input:
         return element_Pin(self, 7)
 
 # 8位显示器
-@element_Method
 @logic_Circuit_Method
-class eight_bit_Display:
+class eight_bit_Display(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': '8bit Display', 'Identifier': '',
