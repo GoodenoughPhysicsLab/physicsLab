@@ -2,8 +2,8 @@
 from electricity.elementsClass._elementClassHead import *
 
 # 开关基类
-@element_Method
-class _switch_Element:
+
+class _switch_Element(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {"ModelID": "", "Identifier": "", "IsBroken": False,
@@ -68,9 +68,8 @@ class DPDT_Switch(_switch_Element):
         return element_Pin(self, 2)
 
 # 按钮开关
-@element_Method
 @two_pin_ArtificialCircuit_Pin
-class Push_Switch:
+class Push_Switch(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {
@@ -81,9 +80,8 @@ class Push_Switch:
 
 
 # 一节电池
-@element_Method
 @two_pin_ArtificialCircuit_Pin
-class Battery_Source:
+class Battery_Source(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Battery Source', 'Identifier': '',
@@ -94,8 +92,7 @@ class Battery_Source:
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 学生电源
-@element_Method
-class Student_Source:
+class Student_Source(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Student Source', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
@@ -125,10 +122,10 @@ class Student_Source:
     @property
     def r(self):
         return element_Pin(self, 3)
+
 # 电阻
-@element_Method
 @two_pin_ArtificialCircuit_Pin
-class Resistor:
+class Resistor(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Resistor', 'Identifier': '', 'IsBroken': False,
@@ -141,9 +138,8 @@ class Resistor:
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 保险丝
-@element_Method
 @two_pin_ArtificialCircuit_Pin
-class Fuse_Component:
+class Fuse_Component(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Fuse Component', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
@@ -153,8 +149,7 @@ class Fuse_Component:
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 滑动变阻器
-@element_Method
-class Slide_Rheostat:
+class Slide_Rheostat(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Slide Rheostat', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
