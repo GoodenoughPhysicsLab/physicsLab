@@ -45,6 +45,10 @@ def element_Method(cls):
         return 'element'
     cls.father_type = father_type
 
+    def get_Index(self) -> int:
+        return self._index
+    cls.get_Index = get_Index
+
     # 获取子类的类型（也就是ModelID）
     def type(self) -> str:
         return self._arguments['ModelID']
@@ -56,6 +60,59 @@ def element_Method(cls):
     cls.print_arguments = print_arguments
 
     return cls
+
+# 所有元件的父类
+class elementObject:
+    # 用来避免IDE报太多错的函数，无实际作用
+    def __define(self):
+        self._arguments = {'ModelID': '', 'Identifier': "", 'IsBroken': False, 'IsLocked': False, 'Properties': {},
+                           'Statistics': {}, 'Position': "", 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {}, 'DiagramRotation': 0}
+        self._index = None
+
+    # 设置原件的角度
+    def set_Rotation(self, xRotation: Union[int, float] = 0, yRotation: Union[int, float] = 0, zRotation: Union[int, float] = 180):
+        if not (isinstance(xRotation, (int, float)) and isinstance(yRotation, (int, float)) and isinstance(zRotation, (int, float))):
+            raise RuntimeError('illegal argument')
+        self._arguments["Rotation"] = f"{fileGlobals.myRound(xRotation)},{fileGlobals.myRound(zRotation)},{fileGlobals.myRound(yRotation)}"
+        return self
+
+    # 重新设置元件的坐标
+    def set_Position(self, x : Union[int, float], y : Union[int, float], z : Union[int, float]):
+        if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
+            raise RuntimeError('illegal argument')
+        x, y, z = fileGlobals.myRound(x), fileGlobals.myRound(y), fileGlobals.myRound(z)
+        del fileGlobals.elements_Address[self._position]
+        self._position = (x, y, z)
+        self._arguments['Position'] = f"{x},{z},{y}"
+        fileGlobals.elements_Address[self._position] = self
+        return self
+
+    # 格式化坐标参数，主要避免浮点误差
+    def format_Position(self) -> tuple:
+        if not isinstance(self._position, tuple) or self._position.__len__() != 3:
+            raise RuntimeError("Position must be a tuple of length three but gets some other value")
+        self._position = (fileGlobals.myRound(self._position[0]), fileGlobals.myRound(self._position[1]), fileGlobals.myRound(self._position[2]))
+        return self._position
+
+    # 获取原件的坐标
+    def get_Position(self) -> tuple:
+        return self._position
+
+    # 获取父类的类型
+    def father_type(self) -> str:
+        return 'element'
+
+    def get_Index(self) -> int:
+        return self._index
+
+    # 获取子类的类型（也就是ModelID）
+    def type(self) -> str:
+        return self._arguments['ModelID']
+
+    # 打印参数
+    def print_arguments(self) -> None:
+        print(self._arguments)
 
 # __init__ 装饰器
 _index = 0
