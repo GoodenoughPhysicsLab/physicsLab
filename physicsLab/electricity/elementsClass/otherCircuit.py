@@ -2,9 +2,8 @@
 from electricity.elementsClass._elementClassHead import *
 
 # 小电扇
-@element_Method
 @two_pin_ArtificialCircuit_Pin
-class Electric_Fan:
+class Electric_Fan(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Electric Fan', 'Identifier': '',
@@ -18,8 +17,7 @@ class Electric_Fan:
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 简单乐器（更多功能的源代码在union_music）
-@element_Method
-class Simple_Instrument:
+class Simple_Instrument(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Simple Instrument', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
@@ -41,6 +39,7 @@ class Simple_Instrument:
     '''
     输入格式：
         中音区： 
+            (funcInput -> 音调)
             '1' -> do,
             '1#' or '2b' -> do#,
             '2' -> ri 
