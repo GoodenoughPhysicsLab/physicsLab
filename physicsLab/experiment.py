@@ -264,7 +264,10 @@ def introduce_Experiment(introduction: str) -> None:
     if not isinstance(introduction, str) or introduction is None:
         raise TypeError
     introduction = introduction.replace('\n', ' \n')
-    fileGlobals.sav['Summary']['Description'] = [s[:len(s) - 1] for s in re.compile('[^\n]+').findall(introduction)]
+    fileGlobals.sav['Summary']['Description'] = [
+        s[:len(s) - 1] if s.endswith(' ') else s
+        for s in re.compile('[^\n]+').findall(introduction)
+    ]
 
 # 发布实验时输入实验标题
 def title_Experiment(title: str) -> None:
