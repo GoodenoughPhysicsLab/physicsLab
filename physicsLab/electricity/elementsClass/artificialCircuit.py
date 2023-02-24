@@ -2,8 +2,7 @@
 from electricity.elementsClass._elementClassHead import *
 
 # 555定时器
-@element_Method
-class NE555:
+class NE555(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': '555 Timer', 'Identifier': '', 'IsBroken': False,
@@ -47,9 +46,8 @@ class NE555:
         return element_Pin(self, 7)
 
 # 电容
-@element_Method
 @two_pin_ArtificialCircuit_Pin
-class Basic_Capacitor:
+class Basic_Capacitor(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Basic Capacitor', 'Identifier': '',
@@ -59,8 +57,7 @@ class Basic_Capacitor:
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 接地
-@element_Method
-class Ground_Component:
+class Ground_Component(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Ground Component', 'Identifier': '',
@@ -74,8 +71,7 @@ class Ground_Component:
         return element_Pin(self, 0)
 
 # 运算放大器
-@element_Method
-class Operational_Amplifier:
+class Operational_Amplifier(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Operational Amplifier', 'Identifier': '',
@@ -100,8 +96,7 @@ class Operational_Amplifier:
         return element_Pin(self, 2)
 
 # 继电器
-@element_Method
-class Relay_Component:
+class Relay_Component(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'Relay Component', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
@@ -132,8 +127,7 @@ class Relay_Component:
         return element_Pin(self, 5)
 
 # n mos
-@element_Method
-class N_MOSFET:
+class N_MOSFET(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': 'N-MOSFET', 'Identifier': '', 'IsBroken': False,
@@ -155,8 +149,7 @@ class N_MOSFET:
         return element_Pin(self, 0)
 
 # 波形发生器基类
-@element_Method
-class _source_element:
+class _source_element(elementObject):
     @element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
         self._arguments = {'ModelID': '', 'Identifier': '',
