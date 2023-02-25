@@ -1,6 +1,5 @@
 #coding=utf-8
 import json
-import re
 import sys
 import random
 from string import ascii_letters, digits
@@ -236,11 +235,7 @@ def rollBack_Experiment(back : int = 1):
 def introduce_Experiment(introduction: str) -> None:
     if not isinstance(introduction, str) or introduction is None:
         raise TypeError
-    introduction = introduction.replace('\n', ' \n')
-    fileGlobals.sav['Summary']['Description'] = [
-        s[:len(s) - 1] if s.endswith(' ') else s
-        for s in re.compile('[^\n]+').findall(introduction)
-    ]
+    fileGlobals.sav['Summary']['Description'] = introduction.split('\n')
 
 # 发布实验时输入实验标题
 def title_Experiment(title: str) -> None:
