@@ -105,45 +105,18 @@ def write_Experiment() -> None:
         stringJson = stringJson.replace('{\\\"ModelID', '\n      {\\\"ModelID') # format element json
         stringJson = stringJson.replace('DiagramRotation\\\": 0}]', 'DiagramRotation\\\": 0}\n    ]') # format end element json
         stringJson = stringJson.replace('{\\\"Source', '\n      {\\\"Source')
-        stringJson = stringJson.replace('}]}\", \"CameraSave', '}\n    ]}\", \"CameraSave')
+        stringJson = stringJson.replace("色导线\\\"}]}", "色导线\\\"}\n    ]}")
         return stringJson
-    def _format_Experiment(stringJson: str) -> str:
-        charIndex = 0
-        listStringJson = list(stringJson)
-        tab = 0
-        tabString = '  '
-        isString = False
-        while charIndex < listStringJson.__len__():
-            char = listStringJson[charIndex]
-            if char == ',':
-                if not isString:
-                    listStringJson[charIndex] = ',\n' + (tabString * tab)[1:]
-            elif char == '\"':
-                isString = not isString
-            elif char == '{':
-                if not isString:
-                    listStringJson[charIndex] = '{\n' + tabString * (tab + 1)
-                    tab += 1
-            elif char == '}':
-                if not isString:
-                    tab -= 1
-                    listStringJson[charIndex] = '\n' + tabString * tab + '}'
-            elif char == '\\':
-                charIndex += 1
-            charIndex += 1
-        return ''.join(listStringJson)
 
     global _ifndef_open_Experiment
     _ifndef_open_Experiment = False
 
     fileGlobals.StatusSave["Elements"] = fileGlobals.Elements
     fileGlobals.StatusSave["Wires"] = fileGlobals.Wires
-    fileGlobals.sav["Experiment"]["StatusSave"] = json.dumps(fileGlobals.StatusSave)
+    fileGlobals.sav["Experiment"]["StatusSave"] = json.dumps(fileGlobals.StatusSave, ensure_ascii=False)
     with open(fileGlobals.savName, "w", encoding="UTF-8") as f:
         f.write(
-            _format_Experiment(
-                _format_StatusSave(json.dumps(fileGlobals.sav))
-            )
+                _format_StatusSave(json.dumps(fileGlobals.sav, indent=2, ensure_ascii=False))
         )
     # 存档回滚
     f = ''
@@ -164,7 +137,7 @@ def write_Experiment() -> None:
         if experiments.__len__() > 10:
             experiments.pop(0)
     with open(f'{fileGlobals.savName[:len(fileGlobals.savName) - 4:]}_rollBack_sav.txt', 'w', encoding='utf-8') as f:
-        f.write(json.dumps(experiments))
+        f.write(json.dumps(experiments, indent=2, ensure_ascii=False))
     print(f'\nCompile successfully! {fileGlobals.Elements.__len__()} elements, {fileGlobals.Wires.__len__()} wires.')
     # clear_Experiment
     # 为write之后可以再次crt或open_Experiment而开发
