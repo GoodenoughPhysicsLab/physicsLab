@@ -1,7 +1,6 @@
 #coding=utf-8
 from electricity import *
-from math import sqrt, ceil
-
+import math as _math
 '''
 How do you play music in physics Lab AR?
 Music extension might make it easier than before!
@@ -29,5 +28,5 @@ class union_music:
         tick = Nimp_Gate(x, y + 0.1, z)
         crt_Wire(Logic_Input(x, y, z).o, tick.i_up), crt_Wire(tick.o, tick.i_low)
         crt_Wire(tick.o, Counter(x + 0.2, y, z).i_up)
-        side = ceil(sqrt(musicArray.__len__()))
+        side = _math.ceil(_math.sqrt(musicArray.__len__()))
         pass

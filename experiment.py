@@ -3,7 +3,7 @@ import json
 import sys
 import random
 from string import ascii_letters, digits
-from os import walk, popen, remove
+import os as _os
 
 from _utf_8 import utf8_coding
 import _fileGlobals as fileGlobals
@@ -52,7 +52,7 @@ def open_Experiment(file : str) -> None:
     if file.endswith('.sav'):
         old_open_Experiment(file)
     else:
-        savs = [i for i in walk(fileGlobals.FILE_HEAD)][0]
+        savs = [i for i in _os.walk(fileGlobals.FILE_HEAD)][0]
         savs = savs[savs.__len__() - 1]
         savs = [aSav for aSav in savs if aSav.endswith('sav')]
         for aSav in savs:
@@ -77,7 +77,7 @@ def crt_Experiment(name : str) -> None:
         raise RuntimeError("This function can only be run once")
     _ifndef_open_Experiment = True
     # 检查是否存在重名的存档
-    savs = [i for i in walk(fileGlobals.FILE_HEAD)][0]
+    savs = [i for i in _os.walk(fileGlobals.FILE_HEAD)][0]
     savs = savs[savs.__len__() - 1]
     savs = [aSav for aSav in savs if aSav.endswith('sav')]
     for aSav in savs:
@@ -180,7 +180,7 @@ def read_Experiment() -> None:
 # 重命名sav
 def rename_Experiment(name: str) -> None:
     # 检查是否重名
-    savs = [i for i in walk(fileGlobals.FILE_HEAD)][0]
+    savs = [i for i in _os.walk(fileGlobals.FILE_HEAD)][0]
     savs = savs[savs.__len__() - 1]
     savs = [aSav for aSav in savs if aSav.endswith('sav')]
     for aSav in savs:
@@ -199,15 +199,15 @@ def rename_Experiment(name: str) -> None:
 
 # 打开一个存档的窗口
 def show_Experiment() -> None:
-    popen(f'notepad {fileGlobals.savName}')
+    _os.popen(f'notepad {fileGlobals.savName}')
 os_Experiment = show_Experiment
 
 # 删除存档
 def del_Experiment() -> None:
-    remove(fileGlobals.savName)
-    remove(f"{fileGlobals.savName.replace('.sav', '_rollBack_sav.txt')}")
+    _os.remove(fileGlobals.savName)
+    _os.remove(f"{fileGlobals.savName.replace('.sav', '_rollBack_sav.txt')}")
     try:
-        remove(fileGlobals.savName.replace('.sav', '.jpg'))
+        _os.remove(fileGlobals.savName.replace('.sav', '.jpg'))
     except:
         sys.exit()
 

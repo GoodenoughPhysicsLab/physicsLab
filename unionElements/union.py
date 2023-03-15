@@ -1,7 +1,7 @@
 #coding=utf-8
 # 模块化电路
 from electricity import *
-import _fileGlobals as fileGlobals
+import _fileGlobals
 
 # 任意引脚加法电路
 class union_Sum:
@@ -11,18 +11,18 @@ class union_Sum:
                 isinstance(z, (float, int)) and isinstance(bitCount, int) and bitCount > 0
         ):
             raise RuntimeError('Error in input parameters')
-        x, y, z = fileGlobals.myRound(x), fileGlobals.myRound(y), fileGlobals.myRound(z)
+        x, y, z = _fileGlobals.myRound(x), _fileGlobals.myRound(y), _fileGlobals.myRound(z)
         Full_Adder(x, y, z)
         for count in range(1, bitCount):
             if count % 8 != 0:
-                y = fileGlobals.myRound(y + 0.2)
+                y = _fileGlobals.myRound(y + 0.2)
                 crt_Wire(
                     Full_Adder(x, y, z).i_low,
                     get_Element(x, y - 0.2, z).o_low
                 )
             else:
                 y -= 1.4
-                z = fileGlobals.myRound(z + 0.1)
+                z = _fileGlobals.myRound(z + 0.1)
                 crt_Wire(
                     Full_Adder(x, y, z).i_low,
                     get_Element(x, y + 1.4, z - 0.1).o_low

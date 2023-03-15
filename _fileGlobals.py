@@ -1,7 +1,7 @@
-from getpass import getuser
+from getpass import getuser as _getuser
 from typing import Union
 
-FILE_HEAD = f'C:\\Users\\{getuser()}\\AppData\\LocalLow\\CIVITAS\\Quantum Physics\\Circuit'
+FILE_HEAD = f'C:\\Users\\{_getuser()}\\AppData\\LocalLow\\CIVITAS\\Quantum Physics\\Circuit'
 # _xxx 不是文件向外暴露出的接口，文件外无法访问
 savName = ""  # sav的文件名
 StatusSave = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
