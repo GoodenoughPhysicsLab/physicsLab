@@ -1,6 +1,6 @@
-# physicsLab 物实程序化
+﻿# physicsLab 物实程序化
 
-![输入图片说明](others/image.png)
+![输入图片说明](cover.png)
 
 ## 介绍
 在物理实验室做实验的时候，我们可能会苦恼于元件不够整齐且无法浮空等等问题。这些都可以通过改存档来轻易实现！然而，手动改存档局限性很大，于是我封装了一些常用功能，让你用Python也能够轻易地做实验，**你甚至不需用知道存档在电脑的哪里**！
@@ -23,7 +23,7 @@ python 3.7, PyCharm, win7
 
 ## 使用说明
 
-```python
+```Python
 from physicsLab import *
  # 打开存档  
 open_Experiment("在物实保存的存档的名字")
@@ -41,7 +41,7 @@ crt_Wire(o.i_up, o.i_low)
  # 将程序中生成的原件，导线等等写入存档  
 write_Experiment()  
  # 然后用物实打开存档见证奇迹  
- # （更详细的内容请查看api.md）
+ # （更详细的内容请查看[api.md](api.md)）
 ```
 请注意：Python采用GBK编码，而物实用的是utf-8，尽管尽量确保编码格式正确，但中文仍有可能出现问题，因此建议多用英文。  
 
@@ -62,6 +62,10 @@ write_Experiment()
 2. 在物理实验室连接导线只需要点击两下，但用程序连接导线需要指定什么原件的什么引脚，相对麻烦。
 3. 在物理实验室选择原件只需要点击一下，但用程序选择原件需要确定它的位置。（如果有更好的索引原件的方式，欢迎提出）
 4. 作者在接下来很长一段时间内将因为学业没有精力继续维护该仓库，但这并不代表弃坑。
+
+## 其他
+更多内容请在[other physicsLab](https://gitee.com/script2000/temporary-warehouse/tree/master/other%20physicsLab)查看
+
 
 ## 参与贡献
 1.  Fork 本仓库
