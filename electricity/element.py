@@ -82,9 +82,11 @@ def del_Element(self) -> None:
 def format_Elements() -> None:
     pass
 
+# 原件的数量
 def count_Elements() -> int:
     return len(fileGlobals.Elements)
 
+# 清空原件
 def clear_Elements() -> None:
     fileGlobals.Elements.clear()
     fileGlobals.Wires.clear()
