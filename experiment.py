@@ -5,8 +5,8 @@ import random as _random
 import string as _string
 import os as _os
 
-from physicsLab._utf_8 import utf8_coding as _utf8_coding
-import physicsLab._fileGlobals as _fileGlobals
+from _utf_8 import utf8_coding as _utf8_coding
+import _fileGlobals as _fileGlobals
 from electricity.element import crt_Element
 
 ### define ###
