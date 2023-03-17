@@ -79,7 +79,10 @@ def element_Init_HEAD(func : Callable) -> Callable:
         global _index
         self._index = _index
         _fileGlobals.elements_Index[self._index] = self
+        # 元件index索引加1
         _index += 1
+        # 是否为元件坐标系
+        self.isElementPosition = False
     return result
 
 # 逻辑电路类装饰器
