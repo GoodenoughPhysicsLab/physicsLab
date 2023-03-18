@@ -1,6 +1,6 @@
 ﻿# physicsLab 物实程序化
 
-![输入图片说明](https://gitee.com/script2000/temporary-warehouse/blob/master/other%20physicsLab/cover.png)
+![输入图片说明](cover.png)
 
 ## 介绍
 在物理实验室做实验的时候，我们可能会苦恼于元件不够整齐且无法浮空等等问题。这些都可以通过改存档来轻易实现！然而，手动改存档局限性很大，于是我封装了一些常用功能，让你用Python也能够轻易地做实验，**你甚至不需用知道存档在电脑的哪里**！
