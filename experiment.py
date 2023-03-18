@@ -8,6 +8,7 @@ import os as _os
 from _utf_8 import utf8_coding as _utf8_coding
 import _fileGlobals as _fileGlobals
 from electricity.element import crt_Element
+import electricity._elementPosition as _elementPosition
 
 ### define ###
 
@@ -209,7 +210,7 @@ def del_Experiment() -> None:
         _sys.exit()
 
 # 存档回滚
-def rollBack_Experiment(back : int = 1):
+def rollBack_Experiment(back: int = 1):
     if not isinstance(back, int) and (back < 1 or back >= 10):
         raise RuntimeError('back must be an integer between 1 and 10')
     f = ''

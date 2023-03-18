@@ -3,7 +3,8 @@ import random as _random
 import string as _string
 from typing import Callable, Union
 import _fileGlobals
-from electricity.elementPin import *
+import electricity._elementPin as _elementPin
+import electricity._elementPosition as _elementPosition
 
 # 所有元件的父类
 class elementObject:
@@ -22,7 +23,7 @@ class elementObject:
         return self
 
     # 重新设置元件的坐标
-    def set_Position(self, x : Union[int, float], y : Union[int, float], z : Union[int, float]):
+    def set_Position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float]):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
         x, y, z = _fileGlobals.myRound(x), _fileGlobals.myRound(y), _fileGlobals.myRound(z)
@@ -61,58 +62,43 @@ class elementObject:
 
 # __init__ 装饰器
 _index = 1
-def element_Init_HEAD(func : Callable) -> Callable:
-    def result(self, x : Union[int, float] = 0, y : Union[int, float] = 0, z : Union[int, float] = 0) -> None:
-        if not isinstance(x, (float, int)) and isinstance(y, (float, int)) and isinstance(z, (float, int)):
-            raise RuntimeError('illegal argument')
-        x, y, z = _fileGlobals.myRound(x), _fileGlobals.myRound(y), _fileGlobals.myRound(z)
-        self._position = (x, y, z)
-        if self._position in _fileGlobals.elements_Address.keys():
-            raise RuntimeError("The position already exists")
-        func(self, x, y, z)
-        self._arguments["Identifier"] = ''.join(_random.choice(_string.ascii_letters + _string.digits) for i in range(32))
-        self._arguments["Position"] = f"{self._position[0]},{self._position[2]},{self._position[1]}"
-        _fileGlobals.Elements.append(self._arguments)
-        _fileGlobals.elements_Address[self._position] = self
-        self.set_Rotation()
-        # 通过元件生成顺序来索引元件
-        global _index
-        self._index = _index
-        _fileGlobals.elements_Index[self._index] = self
-        # 元件index索引加1
-        _index += 1
-        # 是否为元件坐标系
-        self.isElementPosition = False
-    return result
-
-# 逻辑电路类装饰器
-def logic_Circuit_Method(cls):
-    # 设置高电平的值
-    def set_HighLeaveValue(self, num: Union[int, float]) -> None:
-        if not isinstance(num, (int, float)):
-            raise RuntimeError('illegal argument')
-        self._arguments['Properties']['高电平'] = num
-    cls.set_HighLeaveValue = set_HighLeaveValue
-
-    # 设置低电平的值
-    def set_LowLeaveValue(self, num : Union[int, float]) -> None:
-        if not isinstance(num, (int, float)):
-            raise RuntimeError('illegal argument')
-        self._arguments['Properties']['低电平'] = num
-    cls.set_LowLeaveValue = set_LowLeaveValue
-
-    return cls
+def element_Init_HEAD(isBigElement = False) -> Callable:
+    def resultdec(func : Callable) -> Callable:
+        def result(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ: bool = None) -> None:
+            if not isinstance(x, (float, int)) and isinstance(y, (float, int)) and isinstance(z, (float, int)):
+                raise TypeError('illegal argument')
+            x, y, z = _fileGlobals.myRound(x), _fileGlobals.myRound(y), _fileGlobals.myRound(z)
+            # 元件坐标系
+            if elementXYZ == True or (_elementPosition.elementXYZ == True and elementXYZ is None):
+                x, y, z = _elementPosition.translate(x, y, z, bool(isBigElement))
+            self._position = (x, y, z)
+            if self._position in _fileGlobals.elements_Address.keys():
+                raise RuntimeError("The position already exists")
+            func(self, x, y, z)
+            self._arguments["Identifier"] = ''.join(_random.choice(_string.ascii_letters + _string.digits) for _ in range(32))
+            self._arguments["Position"] = f"{self._position[0]},{self._position[2]},{self._position[1]}"
+            _fileGlobals.Elements.append(self._arguments)
+            _fileGlobals.elements_Address[self._position] = self
+            self.set_Rotation()
+            # 通过元件生成顺序来索引元件
+            global _index
+            self._index = _index
+            _fileGlobals.elements_Index[self._index] = self
+            # 元件index索引加1
+            _index += 1
+        return result
+    return resultdec
 
 # 双引脚模拟电路原件的引脚
 def two_pin_ArtificialCircuit_Pin(cls):
     @property
     def red(self):
-        return element_Pin(self, 0)
+        return _elementPin.element_Pin(self, 0)
     cls.red, cls.l = red, red
 
     @property
     def black(self):
-        return element_Pin(self, 1)
+        return _elementPin.element_Pin(self, 1)
     cls.black, cls.r = black, black
 
     return cls

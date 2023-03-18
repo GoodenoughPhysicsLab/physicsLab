@@ -5,5 +5,5 @@ from electricity.element import *
 from electricity.wire import *
 # 元件类
 from electricity.elementsClass import *
-# 元件引脚
-from electricity.elementPin import *
+# 元件坐标系
+from electricity._elementPosition import set_elementXYZ

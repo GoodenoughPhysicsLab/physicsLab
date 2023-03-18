@@ -1,11 +1,14 @@
 #coding=utf-8
-from electricity.elementsClass._elementClassHead import *
+from string import digits as _digits
+import electricity.elementsClass._elementClassHead as _elementClassHead
+from typing import Union
+import electricity._elementPin as _elementPin
 
 # 小电扇
-@two_pin_ArtificialCircuit_Pin
-class Electric_Fan(elementObject):
-    @element_Init_HEAD
-    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
+@_elementClassHead.two_pin_ArtificialCircuit_Pin
+class Electric_Fan(_elementClassHead.elementObject):
+    @_elementClassHead.element_Init_HEAD()
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Electric Fan', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'额定电阻': 1.0, '马达常数': 0.1, '转动惯量': 0.01, '电感': 5e-05, '负荷扭矩': 0.01,
@@ -17,9 +20,9 @@ class Electric_Fan(elementObject):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 简单乐器（更多功能的源代码在union_music）
-class Simple_Instrument(elementObject):
-    @element_Init_HEAD
-    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0):
+class Simple_Instrument(_elementClassHead.elementObject):
+    @_elementClassHead.element_Init_HEAD()
+    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Simple Instrument', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
                            'Properties': {'额定电压': 3.0, '额定功率': 0.3, '音量': 1.0, '音高': 60.0, '节拍': 70.0, '锁定': 1.0,
                                           '乐器': 1.0},
@@ -29,11 +32,11 @@ class Simple_Instrument(elementObject):
 
     @property
     def i(self):
-        return element_Pin(self, 0)
+        return _elementPin.element_Pin(self, 0)
 
     @property
     def o(self):
-        return element_Pin(self, 1)
+        return _elementPin.element_Pin(self, 1)
 
     # 设置音高
     '''
@@ -58,14 +61,14 @@ class Simple_Instrument(elementObject):
         elif isinstance(tonality, str):
             tonality.strip()
             for char in tonality:
-                if char not in digits[1:8] and char not in '.#b':
+                if char not in _digits[1:8] and char not in '.#b':
                     raise RuntimeError('Input data error')
         else:
             raise RuntimeError('The entered data type is incorrect')
 
         pitch, pitchIndex = None, None
         for char in tonality:
-            if char in digits[1:8]:
+            if char in _digits[1:8]:
                 pitch = [60, 62, 64, 65, 67, 69, 71][int(char) - 1]
                 pitchIndex = tonality.find(char)
         if pitch == None:
@@ -77,7 +80,7 @@ class Simple_Instrument(elementObject):
                     pitch -= 12
                 else:
                     pitch += 12
-            elif char in digits:
+            elif char in _digits:
                 continue
             elif char == '#':
                 if charIndex != pitchIndex + 1:

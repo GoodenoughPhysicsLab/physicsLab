@@ -1,6 +1,6 @@
 #coding=utf-8
 import _fileGlobals
-from electricity.elementPin import *
+import electricity._elementPin as _elementPin
 
 # 老版本连接导线函数，不推荐使用
 def old_crt_wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝") -> None: # SourceLabel : Union[_element, tuple]
@@ -24,7 +24,7 @@ def old_crt_wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, col
 def _check_typeWire(func):
     def result(SourcePin, TargetPin, color : str = '蓝') -> None:
         try:
-            if isinstance(SourcePin, element_Pin) and isinstance(TargetPin, element_Pin):
+            if isinstance(SourcePin, _elementPin.element_Pin) and isinstance(TargetPin, _elementPin.element_Pin):
                 if (color not in ["黑", "蓝", "红", "绿", "黄"]):
                     raise RuntimeError("illegal color")
 
