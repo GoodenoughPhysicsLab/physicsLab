@@ -7,9 +7,8 @@
 # x, z轴不用修正
 # y轴的修正为 +0.045
 
-import elementsClass as ecls
-
-# 装饰器
-def xyz(elementSelf: ecls.elementObject):
-    if elementSelf.isElementPosition == True:
-        return 
+# 装饰所有有坐标的类，函数
+def dec_xyz(func):
+    def result(*args, **kwargs):
+        pass
+    return result

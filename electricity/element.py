@@ -24,25 +24,36 @@ def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
             raise RuntimeError(f"{name} original that does not exist")
 
 # 获取对应坐标的self
-def get_Element(*args):
-    if all(isinstance(value, (int, float)) for value in args):
+def get_Element(*args, **kwargs):
+    # 通过坐标索引元件
+    def position_Element(x: Union[int, float], y: Union[int, float], z: Union[int, float]):
+        if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
+            raise RuntimeError('illegal argument')
+        x, y, z = _fileGlobals.myRound(x), _fileGlobals.myRound(y), _fileGlobals.myRound(z)
+        if (x, y, z) not in _fileGlobals.elements_Address.keys():
+            raise RuntimeError("Error coordinates that do not exist")
+        return _fileGlobals.elements_Address[(x, y, z)]
+    # 通过index（元件生成顺序）索引元件
+    def index_Element(index: int):
+        if 0 < index <= len(_fileGlobals.elements_Index):
+            return _fileGlobals.elements_Index[index]
+        else:
+            raise RuntimeError
+
+    # 如果输入参数为 x=, y=, z=
+    if list(kwargs.keys()) == ['x', 'y', 'z']:
+        return position_Element(kwargs['x'], kwargs['y'], kwargs['z'])
+    # 如果输入参数为 index=
+    elif list(kwargs.keys()) == ['index']:
+        return index_Element(kwargs['index'])
+    # 如果输入的参数在args
+    elif all(isinstance(value, (int, float)) for value in args):
         # 如果输入参数为坐标
         if args.__len__() == 3:
-            x, y, z = args[0], args[1], args[2]
-            if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
-                raise RuntimeError('illegal argument')
-            x, y, z = _fileGlobals.myRound(x), _fileGlobals.myRound(y), _fileGlobals.myRound(z)
-            if (x, y, z) not in _fileGlobals.elements_Address.keys():
-                raise RuntimeError("Error coordinates that do not exist")
-            return _fileGlobals.elements_Address[(x, y, z)]
+            return position_Element(args[0], args[1], args[2])
         # 如果输入参数为self._index
         elif args.__len__() == 1:
-            global elements_Index
-            search = args[0]
-            if 0 <= search < len(elements_Index):
-                return elements_Index[search]
-            else:
-                raise RuntimeError
+            return index_Element(args[0])
         else:
             raise TypeError
     else:

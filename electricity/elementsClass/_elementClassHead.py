@@ -60,7 +60,7 @@ class elementObject:
         print(self._arguments)
 
 # __init__ 装饰器
-_index = 0
+_index = 1
 def element_Init_HEAD(func : Callable) -> Callable:
     def result(self, x : Union[int, float] = 0, y : Union[int, float] = 0, z : Union[int, float] = 0) -> None:
         if not isinstance(x, (float, int)) and isinstance(y, (float, int)) and isinstance(z, (float, int)):
