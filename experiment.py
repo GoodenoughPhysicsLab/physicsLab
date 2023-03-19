@@ -8,7 +8,7 @@ import os as _os
 from ._utf_8 import utf8_coding as _utf8_coding
 import physicsLab._fileGlobals as _fileGlobals
 from physicsLab.electricity.element import crt_Element
-import physicsLab.electricity._elementPosition as _elementPosition
+import physicsLab.electricity._elementXYZ as _elementXYZ
 
 ### define ###
 

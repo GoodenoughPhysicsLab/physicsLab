@@ -1,7 +1,7 @@
 #coding=utf-8
 import physicsLab._fileGlobals as _fileGlobals
 from physicsLab.electricity.elementsClass import *
-import physicsLab.electricity._elementPosition as _elementPosition
+import physicsLab.electricity._elementXYZ as _elementXYZ
 
 # 创建原件，本质上仍然是实例化
 def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
