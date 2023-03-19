@@ -8,17 +8,10 @@
 ## 安装教程
 
 1.  请确保你的电脑有[Python](https://www.python.org)与[物理实验室PC版](https://www.turtlesim.com/)（也可以联系[开发者Jone-Chen](https://gitee.com/civitasjohn)）
-2.  打开physicsLab，克隆到本地  
-你也可以通过pip安装，在cmd或shell输入：
+2.  在cmd或shell输入：
 ```diff
 pip install physicsLab
 ```
-3.  如果你的ide无法找到physicsLab，你可以在代码开头写  
-```python
-import sys
-sys.path.append('physicsLab的路径')
-```
-当然，你也可以通过IDE来解决这个问题
 
 ## 开发环境
 python 3.7, PyCharm, win7  
