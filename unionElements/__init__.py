@@ -1,2 +1,4 @@
-from unionElements.union import *
-from unionElements.union_music import *
+# 模块化逻辑电路
+from physicsLab.unionElements.unionLogic import *
+# 模块化音乐电路
+from physicsLab.unionElements.union_music import *
