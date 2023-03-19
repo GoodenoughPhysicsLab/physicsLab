@@ -1,6 +1,6 @@
 #coding=utf-8
 import physicsLab._fileGlobals as _fileGlobals
-from electricity.elementsClass import *
+from .elementsClass import *
 import electricity._elementPosition as _elementPosition
 
 # 创建原件，本质上仍然是实例化
