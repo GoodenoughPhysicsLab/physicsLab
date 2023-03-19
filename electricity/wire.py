@@ -1,5 +1,5 @@
 #coding=utf-8
-import _fileGlobals
+import physicsLab._fileGlobals as _fileGlobals
 import electricity._elementPin as _elementPin
 
 # 老版本连接导线函数，不推荐使用

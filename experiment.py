@@ -6,7 +6,7 @@ import string as _string
 import os as _os
 
 from _utf_8 import utf8_coding as _utf8_coding
-import _fileGlobals as _fileGlobals
+import physicsLab._fileGlobals as _fileGlobals
 from electricity.element import crt_Element
 import electricity._elementPosition as _elementPosition
 

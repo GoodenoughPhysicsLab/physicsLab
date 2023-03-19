@@ -1,5 +1,5 @@
 #coding=utf-8
-import _fileGlobals
+import physicsLab._fileGlobals as _fileGlobals
 from electricity.elementsClass import *
 import electricity._elementPosition as _elementPosition
 

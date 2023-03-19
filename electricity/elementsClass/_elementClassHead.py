@@ -2,7 +2,7 @@
 import random as _random
 import string as _string
 from typing import Callable, Union
-import _fileGlobals
+import physicsLab._fileGlobals as _fileGlobals
 import electricity._elementPin as _elementPin
 import electricity._elementPosition as _elementPosition
 
