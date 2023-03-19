@@ -3,8 +3,8 @@ import random as _random
 import string as _string
 from typing import Callable, Union
 import physicsLab._fileGlobals as _fileGlobals
-import electricity.elementPin as _elementPin
-import electricity._elementPosition as _elementPosition
+import physicsLab.electricity.elementPin as _elementPin
+import physicsLab.electricity._elementPosition as _elementPosition
 
 # 所有元件的父类
 class elementObject:
