@@ -1,8 +1,8 @@
 # 基础电路
-from electricity.elementsClass.basicCircuit import *
+from physicsLab.electricity.elementsClass.basicCircuit import *
 # 逻辑电路
-from electricity.elementsClass.logicCircuit import *
+from physicsLab.electricity.elementsClass.logicCircuit import *
 # 模拟电路
-from electricity.elementsClass.artificialCircuit import *
+from physicsLab.electricity.elementsClass.artificialCircuit import *
 # 其他电路
-from electricity.elementsClass.otherCircuit import *
+from physicsLab.electricity.elementsClass.otherCircuit import *
