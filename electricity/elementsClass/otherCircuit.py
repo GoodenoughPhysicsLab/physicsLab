@@ -2,7 +2,7 @@
 from string import digits as _digits
 import electricity.elementsClass._elementClassHead as _elementClassHead
 from typing import Union
-import electricity._elementPin as _elementPin
+import electricity.elementPin as _elementPin
 
 # 小电扇
 @_elementClassHead.two_pin_ArtificialCircuit_Pin

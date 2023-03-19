@@ -1,5 +1,6 @@
 #coding=utf-8
-from electricity import *
+import physicsLab.electricity as eletricity
+from typing import Union
 import math as _math
 '''
 How do you play music in physics Lab AR?
@@ -25,8 +26,8 @@ The format of music array compat netlogo music list(ml) which was used by Li Wei
 '''
 class union_music:
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, musicArray: Union[list, tuple] = ()):
-        tick = Nimp_Gate(x, y + 0.1, z)
-        crt_Wire(Logic_Input(x, y, z).o, tick.i_up), crt_Wire(tick.o, tick.i_low)
-        crt_Wire(tick.o, Counter(x + 0.2, y, z).i_up)
+        tick = eletricity.Nimp_Gate(x, y + 0.1, z)
+        eletricity.crt_Wire(eletricity.Logic_Input(x, y, z).o, tick.i_up), eletricity.crt_Wire(tick.o, tick.i_low)
+        eletricity.crt_Wire(tick.o, eletricity.Counter(x + 0.2, y, z).i_up)
         side = _math.ceil(_math.sqrt(musicArray.__len__()))
         pass

@@ -1,7 +1,7 @@
 #coding=utf-8
 import electricity.elementsClass._elementClassHead as _elementClassHead
 from typing import Union
-import electricity._elementPin as _elementPin
+import electricity.elementPin as _elementPin
 
 # 开关基类
 
