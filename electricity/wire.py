@@ -1,6 +1,6 @@
 #coding=utf-8
 import physicsLab._fileGlobals as _fileGlobals
-import electricity.elementPin as _elementPin
+import physicsLab.electricity.elementPin as _elementPin
 
 # 老版本连接导线函数，不推荐使用
 def old_crt_wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝") -> None: # SourceLabel : Union[_element, tuple]

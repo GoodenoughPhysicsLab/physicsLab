@@ -1,7 +1,7 @@
 #coding=utf-8
-import electricity.elementsClass._elementClassHead as _elementClassHead
+import physicsLab.electricity.elementsClass._elementClassHead as _elementClassHead
+import physicsLab.electricity.elementPin as _elementPin
 from typing import Union
-import electricity.elementPin as _elementPin
 
 # 逻辑电路类装饰器
 def logic_Circuit_Method(cls):

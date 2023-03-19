@@ -1,8 +1,9 @@
 #coding=utf-8
+import physicsLab.electricity.elementsClass._elementClassHead as _elementClassHead
+import physicsLab.electricity.elementPin as _elementPin
 from string import digits as _digits
-import electricity.elementsClass._elementClassHead as _elementClassHead
 from typing import Union
-import electricity.elementPin as _elementPin
+
 
 # 小电扇
 @_elementClassHead.two_pin_ArtificialCircuit_Pin
