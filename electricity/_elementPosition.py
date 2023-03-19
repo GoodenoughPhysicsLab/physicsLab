@@ -25,6 +25,15 @@ def translate(x: Union[int, float], y: Union[int, float], z: Union[int, float], 
         y += 0.045
     return x, y, z
 
+# 将物实支持的坐标系转换为元件坐标系
+def change(x: Union[int, float], y: Union[int, float], z: Union[int, float], isBigElement = False):
+    x /= 0.15
+    y /= 0.075
+    z /= 0.1
+    if isBigElement:
+        y -= 0.045
+    return x, y, z
+
 def set_elementXYZ(boolen: bool):
     global elementXYZ
     elementXYZ = bool(boolen)

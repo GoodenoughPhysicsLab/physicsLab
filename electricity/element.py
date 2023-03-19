@@ -1,6 +1,7 @@
 #coding=utf-8
 import _fileGlobals
 from electricity.elementsClass import *
+import electricity._elementPosition as _elementPosition
 
 # 创建原件，本质上仍然是实例化
 def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
