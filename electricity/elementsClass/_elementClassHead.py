@@ -68,15 +68,16 @@ def element_Init_HEAD(isBigElement = False) -> Callable:
             if not isinstance(x, (float, int)) and isinstance(y, (float, int)) and isinstance(z, (float, int)):
                 raise TypeError('illegal argument')
             x, y, z = _fileGlobals.myRound(x), _fileGlobals.myRound(y), _fileGlobals.myRound(z)
+            self._position = (x, y, z)
             # 元件坐标系
             if elementXYZ == True or (_elementPosition.elementXYZ == True and elementXYZ is None):
-                x, y, z = _elementPosition.translate(x, y, z, bool(isBigElement))
-            self._position = (x, y, z)
+                x, y, z = _elementPosition.xyzTranslate(x, y, z, bool(isBigElement))
+            # 该坐标是否已存在
             if self._position in _fileGlobals.elements_Address.keys():
                 raise RuntimeError("The position already exists")
             func(self, x, y, z)
             self._arguments["Identifier"] = ''.join(_random.choice(_string.ascii_letters + _string.digits) for _ in range(32))
-            self._arguments["Position"] = f"{self._position[0]},{self._position[2]},{self._position[1]}"
+            self._arguments["Position"] = f"{x},{z},{y}"
             _fileGlobals.Elements.append(self._arguments)
             _fileGlobals.elements_Address[self._position] = self
             self.set_Rotation()

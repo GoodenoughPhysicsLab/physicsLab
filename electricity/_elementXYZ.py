@@ -17,7 +17,7 @@ elementXYZ = False
 ### end define ###
 
 # 将元件坐标系转换为物实支持的坐标系
-def translate(x: Union[int, float], y: Union[int, float], z: Union[int, float], isBigElement = False):
+def xyzTranslate(x: Union[int, float], y: Union[int, float], z: Union[int, float], isBigElement = False):
     x *= 0.15
     y *= 0.075
     z *= 0.1
@@ -26,7 +26,7 @@ def translate(x: Union[int, float], y: Union[int, float], z: Union[int, float], 
     return x, y, z
 
 # 将物实支持的坐标系转换为元件坐标系
-def change(x: Union[int, float], y: Union[int, float], z: Union[int, float], isBigElement = False):
+def translateXYZ(x: Union[int, float], y: Union[int, float], z: Union[int, float], isBigElement = False):
     x /= 0.15
     y /= 0.075
     z /= 0.1
