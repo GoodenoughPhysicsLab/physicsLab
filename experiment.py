@@ -137,7 +137,7 @@ def write_Experiment() -> None:
             experiments.pop(0)
     with open(f'{_fileGlobals.savName[:len(_fileGlobals.savName) - 4:]}_rollBack_sav.txt', 'w', encoding='utf-8') as f:
         f.write(_json.dumps(experiments, indent=2, ensure_ascii=False))
-    print(f'\033[0;32;40mSuccessfully compiled! {_fileGlobals.Elements.__len__()} elements, {_fileGlobals.Wires.__len__()} wires.\033[0m')
+    print(f'\033[32mSuccessfully compiled! {_fileGlobals.Elements.__len__()} elements, {_fileGlobals.Wires.__len__()} wires.\033[39m')
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
