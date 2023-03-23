@@ -1,14 +1,13 @@
 #coding=utf-8
-import json as _json
+import os as _os
 import sys as _sys
+import json as _json
 import random as _random
 import string as _string
-import os as _os
 
 from ._utf_8 import utf8_coding as _utf8_coding
 import physicsLab._fileGlobals as _fileGlobals
 from physicsLab.electricity.element import crt_Element
-import physicsLab.electricity._elementXYZ as _elementXYZ
 
 ### define ###
 
@@ -138,7 +137,7 @@ def write_Experiment() -> None:
             experiments.pop(0)
     with open(f'{_fileGlobals.savName[:len(_fileGlobals.savName) - 4:]}_rollBack_sav.txt', 'w', encoding='utf-8') as f:
         f.write(_json.dumps(experiments, indent=2, ensure_ascii=False))
-    print(f'\nCompile successfully! {_fileGlobals.Elements.__len__()} elements, {_fileGlobals.Wires.__len__()} wires.')
+    print(f'\033[0;32;40mSuccessfully compiled! {_fileGlobals.Elements.__len__()} elements, {_fileGlobals.Wires.__len__()} wires.\033[0m')
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
