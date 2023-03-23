@@ -15,9 +15,11 @@ from typing import Union
 ### define ###
 elementXYZ = False
 # 物实坐标系x, y, z单位1
-_xUnit = 0.15
-_yUnit = 0.075
+_xUnit = 0.16
+_yUnit = 0.08
 _zUnit = 0.1
+# big_element坐标修正
+_xAmend = 0.04
 ### end define ###
 
 # 将元件坐标系转换为物实支持的坐标系
@@ -26,7 +28,7 @@ def xyzTranslate(x: Union[int, float], y: Union[int, float], z: Union[int, float
     y *= _yUnit
     z *= _zUnit
     if isBigElement:
-        y += 0.045
+        y += _xAmend
     return x, y, z
 
 # 将物实支持的坐标系转换为元件坐标系
@@ -35,7 +37,7 @@ def translateXYZ(x: Union[int, float], y: Union[int, float], z: Union[int, float
     y /= _yUnit
     z /= _zUnit
     if isBigElement:
-        y -= 0.045
+        y -= _xAmend
     return x, y, z
 
 def set_elementXYZ(boolen: bool):
