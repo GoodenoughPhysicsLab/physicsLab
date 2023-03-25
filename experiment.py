@@ -5,7 +5,6 @@ import json as _json
 import random as _random
 import string as _string
 
-from ._utf_8 import utf8_coding as _utf8_coding
 import physicsLab._fileGlobals as _fileGlobals
 from physicsLab.electricity.element import crt_Element
 
@@ -43,6 +42,25 @@ def old_open_Experiment(file: str) -> None:
             _fileGlobals.sav["InternalName"] = _fileGlobals.sav["Summary"]["Subject"]
         except:
             raise RuntimeError('Data errors in the file')
+
+# 将import了physicsLab的文件的第一行添加上 #coding=utf-8
+def _utf8_coding(func):
+    def result(string: str) -> None:
+        try: # 在cmd或者shell上无法执行该功能
+            import sys
+            s = ''
+            with open(sys.argv[0], encoding='utf-8') as f:
+                s = f.read()
+            if not s.replace('\n', '').startswith('#coding=utf-8'):
+                with open(sys.argv[0], 'w', encoding='utf-8') as f:
+                    if s.startswith('\n'):
+                        f.write(f'#coding=utf-8{s}')
+                    else:
+                        f.write(f'#coding=utf-8\n{s}')
+        except FileNotFoundError:
+            pass
+        func(string)
+    return result
 
 # 打开一个指定的sav文件（支持输入本地实验的名字或sav文件名）
 @_utf8_coding
