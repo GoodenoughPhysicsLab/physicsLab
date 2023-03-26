@@ -4,17 +4,10 @@ import string as _string
 from typing import Callable, Union
 import physicsLab._fileGlobals as _fileGlobals
 import physicsLab.electricity.elementPin as _elementPin
-import physicsLab.electricity._elementXYZ as _elementPosition
+import physicsLab.electricity.elementXYZ as _elementPosition
 
 # 所有元件的父类
 class elementObject:
-    # 用来避免IDE报太多错的函数，无实际作用
-    def __define(self):
-        self._arguments = {'ModelID': '', 'Identifier': "", 'IsBroken': False, 'IsLocked': False, 'Properties': {},
-                           'Statistics': {}, 'Position': "", 'Rotation': '', 'DiagramCached': False,
-                           'DiagramPosition': {}, 'DiagramRotation': 0}
-        self._index = None
-
     # 设置原件的角度
     def set_Rotation(self, xRotation: Union[int, float] = 0, yRotation: Union[int, float] = 0, zRotation: Union[int, float] = 180):
         if not (isinstance(xRotation, (int, float)) and isinstance(yRotation, (int, float)) and isinstance(zRotation, (int, float))):

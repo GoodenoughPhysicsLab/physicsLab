@@ -8,4 +8,4 @@ from physicsLab.electricity.elementsClass import *
 # 元件引脚类
 from physicsLab.electricity.elementPin import *
 # 元件坐标系
-from physicsLab.electricity._elementXYZ import set_elementXYZ
+from physicsLab.electricity.elementXYZ import *

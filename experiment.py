@@ -10,7 +10,10 @@ from physicsLab.electricity.element import crt_Element
 
 ### define ###
 
+# 是否已经有存档被打开或创建
 _ifndef_open_Experiment = False
+# 打印write_Experiment的信息时是否使用彩色字
+_printColor = True
 
 def print_Elements():
     print(_fileGlobals.Elements)
@@ -58,7 +61,9 @@ def _utf8_coding(func):
                     else:
                         f.write(f'#coding=utf-8\n{s}')
         except FileNotFoundError:
-            pass
+            # 在cmd或IDLE上运行时会关闭打印彩字功能
+            global _printColor
+            _printColor = False
         func(string)
     return result
 
@@ -155,7 +160,10 @@ def write_Experiment() -> None:
             experiments.pop(0)
     with open(f'{_fileGlobals.savName[:len(_fileGlobals.savName) - 4:]}_rollBack_sav.txt', 'w', encoding='utf-8') as f:
         f.write(_json.dumps(experiments, indent=2, ensure_ascii=False))
-    print(f'\033[32mSuccessfully compiled! {_fileGlobals.Elements.__len__()} elements, {_fileGlobals.Wires.__len__()} wires.\033[39m')
+    if _printColor:
+        print(f'\033[32mSuccessfully compiled! {_fileGlobals.Elements.__len__()} elements, {_fileGlobals.Wires.__len__()} wires.\033[39m')
+    else:
+        print(f'Successfully compiled! {_fileGlobals.Elements.__len__()} elements, {_fileGlobals.Wires.__len__()} wires.')
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
