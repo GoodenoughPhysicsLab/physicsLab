@@ -44,6 +44,10 @@ def xyzTranslate(x: Union[int, float], y: Union[int, float], z: Union[int, float
     x *= _xUnit
     y *= _yUnit
     z *= _zUnit
+    # 修改元件坐标系原点
+    x += _xOrigin
+    y += _yOrigin
+    # 修改大体积逻辑电路原件的坐标
     if isBigElement:
         y += _xAmend
     return x, y, z
@@ -53,6 +57,10 @@ def translateXYZ(x: Union[int, float], y: Union[int, float], z: Union[int, float
     x /= _xUnit
     y /= _yUnit
     z /= _zUnit
+    # 修改元件坐标系原点
+    x -= _xOrigin
+    y -= _yOrigin
+    # 修改大体积逻辑电路原件的坐标
     if isBigElement:
         y -= _xAmend
     return x, y, z
