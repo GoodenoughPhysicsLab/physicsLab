@@ -5,8 +5,9 @@ import json as _json
 import random as _random
 import string as _string
 
-import physicsLab._fileGlobals as _fileGlobals
+import physicsLab.errors as errors
 import physicsLab._colorUtils as _colorUtils
+import physicsLab._fileGlobals as _fileGlobals
 from physicsLab.electricity.element import crt_Element
 
 ### define ###
@@ -38,12 +39,9 @@ def old_open_Experiment(file: str) -> None:
 
     _fileGlobals.savName = f"{_fileGlobals.FILE_HEAD}\\{file}"
     with open(_fileGlobals.savName, encoding="UTF-8") as f:
-        try:
-            InternalName = (_json.loads(f.read().replace('\n', '')))["Summary"]["Subject"]
-            _fileGlobals.sav["Summary"]["Subject"] = InternalName
-            _fileGlobals.sav["InternalName"] = _fileGlobals.sav["Summary"]["Subject"]
-        except:
-            raise RuntimeError('Data errors in the file')
+        InternalName = (_json.loads(f.read().replace('\n', '')))["Summary"]["Subject"]
+        _fileGlobals.sav["Summary"]["Subject"] = InternalName
+        _fileGlobals.sav["InternalName"] = _fileGlobals.sav["Summary"]["Subject"]
 
 # 将import了physicsLab的文件的第一行添加上 #coding=utf-8
 def _utf8_coding(func):
@@ -80,13 +78,13 @@ def open_Experiment(file : str) -> None:
             with open(f"{_fileGlobals.FILE_HEAD}\\{aSav}", encoding='utf-8') as f:
                 try:
                     f = _json.loads(f.read().replace('\n', ''))
-                except:
+                except _json.decoder.JSONDecodeError:
                     pass
                 else:
                     if (f.get("InternalName") == file):
                         old_open_Experiment(aSav)
                         return
-        raise FileNotFoundError(f'No such experiment: {file}')
+        raise errors.openExperimentError(f'No such experiment "{file}"')
 
 # 创建存档
 @_utf8_coding
@@ -113,7 +111,7 @@ def crt_Experiment(name : str) -> None:
     # 创建存档
     if not isinstance(name, str):
         name = str(name)
-    _fileGlobals.savName = ''.join(_random.choice(_string.ascii_letters + _string.digits) for i in range(34))
+    _fileGlobals.savName = ''.join(_random.choice(_string.ascii_letters + _string.digits) for _ in range(34))
     _fileGlobals.savName = f'{_fileGlobals.FILE_HEAD}\\{_fileGlobals.savName}.sav'
     with open(_fileGlobals.savName, 'w', encoding='utf-8'):
         pass
@@ -160,7 +158,8 @@ def write_Experiment() -> None:
         f.write(_json.dumps(experiments, indent=2, ensure_ascii=False))
     # 编译成功，打印信息
     _colorUtils.printf(
-        f"Successfully compiled! {_fileGlobals.Elements.__len__()} elements, {_fileGlobals.Wires.__len__()} wires."
+        f"Successfully compiled! {_fileGlobals.Elements.__len__()} elements, {_fileGlobals.Wires.__len__()} wires.",
+        _colorUtils.GREEN
     )
 
 # 读取sav文件已有的原件与导线

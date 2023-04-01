@@ -9,3 +9,5 @@ from physicsLab.unionElements import *
 from physicsLab.astrophysics import *
 # 电与磁实验
 from physicsLab.electromagnetism import *
+# 自定义异常类
+from physicsLab.errors import *
