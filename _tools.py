@@ -7,7 +7,10 @@ def roundData(num: Union[int, float]):
     return round(num, 4)
 
 # Éú³ÉËæ»ú×Ö·û´®
-def randString() -> str:
+def randString(strLength: int) -> str:
+    if not isinstance(strLength, int):
+        raise TypeError
+
     from string import ascii_letters as _ascii_letters, digits as _digits
     from random import choice as _choice
-    return ''.join(_choice(_ascii_letters + _digits) for _ in range(34))
+    return ''.join(_choice(_ascii_letters + _digits) for _ in range(strLength))

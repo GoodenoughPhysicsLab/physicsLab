@@ -1,4 +1,5 @@
 #coding=utf-8
+import physicsLab._tools as _tool
 import physicsLab._fileGlobals as _fileGlobals
 from physicsLab.electricity.elementsClass import *
 import physicsLab.electricity.elementXYZ as _elementXYZ
@@ -11,7 +12,7 @@ def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
         raise RuntimeError("Wrong parameter type")
     if name == '':
         raise RuntimeError('Name cannot be an empty string')
-    x, y, z = _fileGlobals.roundData(x), _fileGlobals.roundData(y), _fileGlobals.roundData(z)
+    x, y, z = _tool.roundData(x), _tool.roundData(y), _tool.roundData(z)
     if (name == '555 Timer'):
         return NE555(x, y, z)
     elif (name == '8bit Input'):
@@ -30,7 +31,7 @@ def get_Element(*args, **kwargs):
     def position_Element(x: Union[int, float], y: Union[int, float], z: Union[int, float]):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
-        x, y, z = _fileGlobals.roundData(x), _fileGlobals.roundData(y), _fileGlobals.roundData(z)
+        x, y, z = _tool.roundData(x), _tool.roundData(y), _tool.roundData(z)
         if (x, y, z) not in _fileGlobals.elements_Address.keys():
             raise RuntimeError("Error coordinates that do not exist")
         return _fileGlobals.elements_Address[(x, y, z)]

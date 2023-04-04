@@ -1,7 +1,7 @@
 #coding=utf-8
-import physicsLab.electricity.elementsClass._elementClassHead as _elementClassHead
-import physicsLab.electricity.elementPin as _elementPin
 from typing import Union
+import physicsLab.electricity.elementPin as _elementPin
+import physicsLab.electricity.elementsClass._elementClassHead as _elementClassHead
 
 # 开关基类
 

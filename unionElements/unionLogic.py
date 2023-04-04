@@ -1,8 +1,8 @@
 #coding=utf-8
 # 模块化电路
 from typing import Union
+import physicsLab._tools as _tool
 import physicsLab.electricity as eletricity
-import physicsLab._fileGlobals as _fileGlobals
 
 # 任意引脚加法电路
 class union_Sum:
@@ -12,18 +12,18 @@ class union_Sum:
                 isinstance(z, (float, int)) and isinstance(bitCount, int) and bitCount > 0
         ):
             raise RuntimeError('Error in input parameters')
-        x, y, z = _fileGlobals.roundData(x), _fileGlobals.roundData(y), _fileGlobals.roundData(z)
+        x, y, z = _tool.roundData(x), _tool.roundData(y), _tool.roundData(z)
         eletricity.Full_Adder(x, y, z)
         for count in range(1, bitCount):
             if count % 8 != 0:
-                y = _fileGlobals.roundData(y + 0.2)
+                y = _tool.roundData(y + 0.2)
                 eletricity.crt_Wire(
                     eletricity.Full_Adder(x, y, z).i_low,
                     eletricity.get_Element(x, y - 0.2, z).o_low
                 )
             else:
                 y -= 1.4
-                z = _fileGlobals.roundData(z + 0.1)
+                z = _tool.roundData(z + 0.1)
                 eletricity.crt_Wire(
                     eletricity.Full_Adder(x, y, z).i_low,
                     eletricity.get_Element(x, y + 1.4, z - 0.1).o_low

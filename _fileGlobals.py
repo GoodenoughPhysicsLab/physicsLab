@@ -101,8 +101,3 @@ def fileGlobals_init() -> None:
 
     elements_Address = {}  # key: self._position，value: self
     elements_Index = {}  # key: self.index, value: self
-
-def roundData(num: Union[int, float]):
-    if isinstance(num, int):
-        return float(num)
-    return round(num, 4)
