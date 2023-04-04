@@ -1,12 +1,13 @@
+#coding=utf-8
 from typing import Union
 
-# ËÄÉáÎåÈëphysicsLabÖÐµÄÊý¾Ý
+# å››èˆäº”å…¥physicsLabä¸­çš„æ•°æ®
 def roundData(num: Union[int, float]):
     if isinstance(num, int):
         return float(num)
     return round(num, 4)
 
-# Éú³ÉËæ»ú×Ö·û´®
+# ç”Ÿæˆéšæœºå­—ç¬¦ä¸²
 def randString(strLength: int) -> str:
     if not isinstance(strLength, int):
         raise TypeError

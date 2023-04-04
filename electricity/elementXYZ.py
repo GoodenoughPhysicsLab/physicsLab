@@ -1,20 +1,21 @@
-# Ôª¼ş×ø±êÏµ
-# Ò»¸ö·ÇÃÅµÄ³¤Îª0.15£¬¿íÎª0.075
-# Ò»¸ö·ÇÃÅµÄ³¤¿í»á³ÉÎªÔª¼ş×ø±êÏµµÄx, yµÄµ¥Î»³¤¶È
-# zÖáµÄµ¥Î»³¤¶ÈÊÇÔ­×ø±êÏµµÄ0.1
+#coding=utf-8
+# å…ƒä»¶åæ ‡ç³»
+# ä¸€ä¸ªéé—¨çš„é•¿ä¸º0.15ï¼Œå®½ä¸º0.075
+# ä¸€ä¸ªéé—¨çš„é•¿å®½ä¼šæˆä¸ºå…ƒä»¶åæ ‡ç³»çš„x, yçš„å•ä½é•¿åº¦
+# zè½´çš„å•ä½é•¿åº¦æ˜¯åŸåæ ‡ç³»çš„0.1
 #
-# Ïñ¶şÎ»³Ë·¨Æ÷ÕâÖÖÔª¼şµÄÎ»ÖÃ±ØĞë¾­¹ıĞŞÕı²ÅÄÜÊ¹Ôª¼şÕûÆëÅÅÁĞ
-# x, zÖá²»ÓÃĞŞÕı
-# yÖáµÄĞŞÕıÎª +0.045
+# åƒäºŒä½ä¹˜æ³•å™¨è¿™ç§å…ƒä»¶çš„ä½ç½®å¿…é¡»ç»è¿‡ä¿®æ­£æ‰èƒ½ä½¿å…ƒä»¶æ•´é½æ’åˆ—
+# x, zè½´ä¸ç”¨ä¿®æ­£
+# yè½´çš„ä¿®æ­£ä¸º +0.045
 
-# _elementClassHeadÀïµÄelement_Init_HEADÓĞ²¿·Ö´¦ÀíÔª¼ş×ø±êÏµµÄ´úÂë
-# crt_ExperimentÒ²ÓĞ²¿·Ö´úÂë
+# _elementClassHeadé‡Œçš„element_Init_HEADæœ‰éƒ¨åˆ†å¤„ç†å…ƒä»¶åæ ‡ç³»çš„ä»£ç 
+# crt_Experimentä¹Ÿæœ‰éƒ¨åˆ†ä»£ç 
 
 from typing import Union
 
 ### define ###
 
-# ÊÇ·ñ½«È«¾ÖÉèÖÃÎªÔª¼ş×ø±êÏµ
+# æ˜¯å¦å°†å…¨å±€è®¾ç½®ä¸ºå…ƒä»¶åæ ‡ç³»
 _elementXYZ = False
 
 @property
@@ -28,44 +29,44 @@ def set_elementXYZ(boolen: bool) -> None:
     global _elementXYZ
     _elementXYZ = bool(boolen)
 
-# ÎïÊµ×ø±êÏµx, y, zµ¥Î»1
+# ç‰©å®åæ ‡ç³»x, y, zå•ä½1
 _xUnit = 0.16
 _yUnit = 0.08
 _zUnit = 0.1
-# big_element×ø±êĞŞÕı
+# big_elementåæ ‡ä¿®æ­£
 _xAmend = 0.04
 
-# Ôª¼ş×ø±êÏµÔ­µã
+# å…ƒä»¶åæ ‡ç³»åŸç‚¹
 _xOrigin, _yOrigin, _zOrigin = 0, 0, 0
 ### end define ###
 
-# ½«Ôª¼ş×ø±êÏµ×ª»»ÎªÎïÊµÖ§³ÖµÄ×ø±êÏµ
+# å°†å…ƒä»¶åæ ‡ç³»è½¬æ¢ä¸ºç‰©å®æ”¯æŒçš„åæ ‡ç³»
 def xyzTranslate(x: Union[int, float], y: Union[int, float], z: Union[int, float], isBigElement = False):
     x *= _xUnit
     y *= _yUnit
     z *= _zUnit
-    # ĞŞ¸ÄÔª¼ş×ø±êÏµÔ­µã
+    # ä¿®æ”¹å…ƒä»¶åæ ‡ç³»åŸç‚¹
     x += _xOrigin
     y += _yOrigin
-    # ĞŞ¸Ä´óÌå»ıÂß¼­µçÂ·Ô­¼şµÄ×ø±ê
+    # ä¿®æ”¹å¤§ä½“ç§¯é€»è¾‘ç”µè·¯åŸä»¶çš„åæ ‡
     if isBigElement:
         y += _xAmend
     return x, y, z
 
-# ½«ÎïÊµÖ§³ÖµÄ×ø±êÏµ×ª»»ÎªÔª¼ş×ø±êÏµ
+# å°†ç‰©å®æ”¯æŒçš„åæ ‡ç³»è½¬æ¢ä¸ºå…ƒä»¶åæ ‡ç³»
 def translateXYZ(x: Union[int, float], y: Union[int, float], z: Union[int, float], isBigElement = False):
     x /= _xUnit
     y /= _yUnit
     z /= _zUnit
-    # ĞŞ¸ÄÔª¼ş×ø±êÏµÔ­µã
+    # ä¿®æ”¹å…ƒä»¶åæ ‡ç³»åŸç‚¹
     x -= _xOrigin
     y -= _yOrigin
-    # ĞŞ¸Ä´óÌå»ıÂß¼­µçÂ·Ô­¼şµÄ×ø±ê
+    # ä¿®æ”¹å¤§ä½“ç§¯é€»è¾‘ç”µè·¯åŸä»¶çš„åæ ‡
     if isBigElement:
         y -= _xAmend
     return x, y, z
 
-# ÉèÖÃÔª¼ş×ø±êÏµÔ­µãO£¬ÊäÈëÖµÎªÎïÊµ×ø±êÏµ
+# è®¾ç½®å…ƒä»¶åæ ‡ç³»åŸç‚¹Oï¼Œè¾“å…¥å€¼ä¸ºç‰©å®åæ ‡ç³»
 def set_O(x: Union[int, float], y: Union[int, float], z: Union[int, float]) -> None:
     if (isinstance(x, (int, float)) and
         isinstance(y, (int, float)) and
