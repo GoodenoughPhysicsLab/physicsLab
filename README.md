@@ -1,6 +1,6 @@
 ﻿# physicsLab 物实程序化
 
-![输入图片说明](cover.png)
+<img src=https://gitee.com/script2000/temporary-warehouse/blob/master/other%20physicsLab/cover.png>
 
 ## 介绍
 在物理实验室做实验的时候，我们可能会苦恼于元件不够整齐且无法浮空等等问题。这些都可以通过改存档来轻易实现！然而，手动改存档局限性很大，于是我封装了一些常用功能，让你用Python也能够轻易地做实验，**你甚至不需用知道存档在电脑的哪里**！
@@ -39,7 +39,7 @@ crt_Wire(o.i_up, o.i_low)
 write_Experiment()  
  # 然后用物实打开存档见证奇迹  
 ```
-更详细的内容请查看[functions.md](physicsLab/functions.md)  
+更详细的内容在[functions.md](physicsLab/functions.md)中查看。  
 请注意：Python采用GBK编码，而物实用的是utf-8，尽管尽量确保编码格式正确，但中文仍有可能出现问题，因此建议多用英文。  
 
 ## 优点
