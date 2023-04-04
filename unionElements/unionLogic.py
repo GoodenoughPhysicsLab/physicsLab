@@ -12,18 +12,18 @@ class union_Sum:
                 isinstance(z, (float, int)) and isinstance(bitCount, int) and bitCount > 0
         ):
             raise RuntimeError('Error in input parameters')
-        x, y, z = _fileGlobals.myRound(x), _fileGlobals.myRound(y), _fileGlobals.myRound(z)
+        x, y, z = _fileGlobals.roundData(x), _fileGlobals.roundData(y), _fileGlobals.roundData(z)
         eletricity.Full_Adder(x, y, z)
         for count in range(1, bitCount):
             if count % 8 != 0:
-                y = _fileGlobals.myRound(y + 0.2)
+                y = _fileGlobals.roundData(y + 0.2)
                 eletricity.crt_Wire(
                     eletricity.Full_Adder(x, y, z).i_low,
                     eletricity.get_Element(x, y - 0.2, z).o_low
                 )
             else:
                 y -= 1.4
-                z = _fileGlobals.myRound(z + 0.1)
+                z = _fileGlobals.roundData(z + 0.1)
                 eletricity.crt_Wire(
                     eletricity.Full_Adder(x, y, z).i_low,
                     eletricity.get_Element(x, y + 1.4, z - 0.1).o_low

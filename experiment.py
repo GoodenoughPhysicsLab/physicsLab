@@ -2,9 +2,8 @@
 import os as _os
 import sys as _sys
 import json as _json
-import random as _random
-import string as _string
 
+import physicsLab._tool as _tool
 import physicsLab.errors as errors
 import physicsLab._colorUtils as _colorUtils
 import physicsLab._fileGlobals as _fileGlobals
@@ -111,7 +110,7 @@ def crt_Experiment(name : str) -> None:
     # 创建存档
     if not isinstance(name, str):
         name = str(name)
-    _fileGlobals.savName = ''.join(_random.choice(_string.ascii_letters + _string.digits) for _ in range(34))
+    _fileGlobals.savName = _tool.randString()
     _fileGlobals.savName = f'{_fileGlobals.FILE_HEAD}\\{_fileGlobals.savName}.sav'
     with open(_fileGlobals.savName, 'w', encoding='utf-8'):
         pass
@@ -176,9 +175,9 @@ def read_Experiment() -> None:
             # 坐标标准化（消除浮点误差）
             sign1 = element['Position'].find(',')
             sign2 = element['Position'].find(',', sign1 + 1)
-            num1 = _fileGlobals.myRound(float(element['Position'][:sign1:]))
-            num2 = _fileGlobals.myRound(float(element['Position'][sign1 + 1: sign2:]))
-            num3 = _fileGlobals.myRound(float(element['Position'][sign2 + 1::]))
+            num1 = _fileGlobals.roundData(float(element['Position'][:sign1:]))
+            num2 = _fileGlobals.roundData(float(element['Position'][sign1 + 1: sign2:]))
+            num3 = _fileGlobals.roundData(float(element['Position'][sign2 + 1::]))
             element['Position'] = f"{num1},{num2},{num3}"  # x, z, y
             # 实例化对象
             obj = crt_Element(element["ModelID"], num1, num3, num2)
