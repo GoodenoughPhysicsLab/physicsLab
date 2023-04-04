@@ -1,12 +1,13 @@
 #coding=utf-8
 from typing import Union
+from ..elementXYZ import amend_big_Element
 import physicsLab.electricity.elementPin as _elementPin
 import physicsLab.electricity.elementsClass._elementClassHead as _elementClassHead
 
 
 # 555定时器
 class NE555(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD()
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': '555 Timer', 'Identifier': '', 'IsBroken': False,
                            'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '锁定': 1.0},
@@ -15,6 +16,7 @@ class NE555(_elementClassHead.elementObject):
                                           '输出': 0, '重设': 10, '接地': 0},
                            'Position': '', 'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        self.x, self.y, self.z = amend_big_Element(self.x, self.y, self.z)
 
     @property
     def VCC(self):
@@ -51,7 +53,7 @@ class NE555(_elementClassHead.elementObject):
 # 电容
 @_elementClassHead.two_pin_ArtificialCircuit_Pin
 class Basic_Capacitor(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD()
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Basic Capacitor', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False, 'Properties': {'耐压': 16.0, '电容': 1e-06, '内阻': 5.0, '锁定': 1.0},
@@ -61,7 +63,7 @@ class Basic_Capacitor(_elementClassHead.elementObject):
 
 # 接地
 class Ground_Component(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD()
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Ground Component', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False, 'Properties': {'锁定': 1.0},
@@ -75,7 +77,7 @@ class Ground_Component(_elementClassHead.elementObject):
 
 # 运算放大器
 class Operational_Amplifier(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD()
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Operational Amplifier', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False,
@@ -100,7 +102,7 @@ class Operational_Amplifier(_elementClassHead.elementObject):
 
 # 继电器
 class Relay_Component(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD()
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Relay Component', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
                            'Properties': {'开关': 0.0, '线圈电感': 0.2, '线圈电阻': 20.0,
@@ -131,7 +133,7 @@ class Relay_Component(_elementClassHead.elementObject):
 
 # n mos
 class N_MOSFET(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD()
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'N-MOSFET', 'Identifier': '', 'IsBroken': False,
                            'IsLocked': False, 'Properties': {'PNP': 1.0, '放大系数': 0.027, '阈值电压': 1.5, '最大功率': 100.0, '锁定': 1.0},
@@ -153,7 +155,7 @@ class N_MOSFET(_elementClassHead.elementObject):
 
 # 波形发生器基类
 class _source_element(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD()
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': '', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False,

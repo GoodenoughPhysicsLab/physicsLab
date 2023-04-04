@@ -1,5 +1,6 @@
 #coding=utf-8
 from typing import Union
+from ..elementXYZ import amend_big_Element
 import physicsLab.electricity.elementPin as _elementPin
 import physicsLab.electricity.elementsClass._elementClassHead as _elementClassHead
 
@@ -26,7 +27,7 @@ def logic_Circuit_Method(cls):
 # 逻辑输入
 @logic_Circuit_Method
 class Logic_Input(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD()
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {"ModelID": "Logic Input", "Identifier": "",
                           "IsBroken": False, "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0, "开关": 0},
@@ -46,7 +47,7 @@ class Logic_Input(_elementClassHead.elementObject):
 # 逻辑输出
 @logic_Circuit_Method
 class Logic_Output(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD()
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Logic Output', 'Identifier': "",
                           'IsBroken': False, 'IsLocked': False,
@@ -62,7 +63,7 @@ class Logic_Output(_elementClassHead.elementObject):
 # 2引脚门电路
 @logic_Circuit_Method
 class _2_pin_Gate(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD()
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': '', 'Identifier': "", 'IsBroken': False,
                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '最大电流': 0.1, '锁定': 1.0},
@@ -92,7 +93,7 @@ class No_Gate(_2_pin_Gate):
 # 3引脚门电路
 @logic_Circuit_Method
 class _3_pin_Gate(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD()
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': '', 'Identifier': '', 'IsBroken': False,
                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '最大电流': 0.1, '锁定': 1.0},
@@ -162,12 +163,13 @@ class Nimp_Gate(_3_pin_Gate):
 # 2体积元件父类
 @logic_Circuit_Method
 class _big_element(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD(True)
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': '', 'Identifier': '', 'IsBroken': False,
                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '锁定': 1.0}, 'Statistics': {},
                           'Position': '', 'Rotation': '', 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        self.x, self.y, self.z = amend_big_Element(self.x, self.y, self.z)
 
 # 半加器
 class Half_Adder(_big_element):
@@ -388,7 +390,7 @@ class Random_Generator(_big_element):
 # 8位输入器
 @logic_Circuit_Method
 class eight_bit_Input(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD()
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': '8bit Input', 'Identifier': '', 'IsBroken': False,
                            'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '十进制': 0.0, '锁定': 1.0},
@@ -436,7 +438,7 @@ class eight_bit_Input(_elementClassHead.elementObject):
 # 8位显示器
 @logic_Circuit_Method
 class eight_bit_Display(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD()
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': '8bit Display', 'Identifier': '',
                           'IsBroken': False, 'IsLocked': False,

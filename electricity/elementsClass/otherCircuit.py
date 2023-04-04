@@ -7,7 +7,7 @@ import physicsLab.electricity.elementsClass._elementClassHead as _elementClassHe
 # 小电扇
 @_elementClassHead.two_pin_ArtificialCircuit_Pin
 class Electric_Fan(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD()
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Electric Fan', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False,
@@ -21,7 +21,7 @@ class Electric_Fan(_elementClassHead.elementObject):
 
 # 简单乐器（更多功能的源代码在union_music）
 class Simple_Instrument(_elementClassHead.elementObject):
-    @_elementClassHead.element_Init_HEAD()
+    @_elementClassHead.element_Init_HEAD
     def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Simple Instrument', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
                            'Properties': {'额定电压': 3.0, '额定功率': 0.3, '音量': 1.0, '音高': 60.0, '节拍': 70.0, '锁定': 1.0,
