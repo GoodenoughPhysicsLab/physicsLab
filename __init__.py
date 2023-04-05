@@ -11,3 +11,9 @@ from physicsLab.astrophysics import *
 from physicsLab.electromagnetism import *
 # 自定义异常类
 from physicsLab.errors import *
+
+'''
+__all__ = [
+    
+]
+'''

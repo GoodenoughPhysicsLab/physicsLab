@@ -80,13 +80,13 @@ def element_Init_HEAD(func: Callable) -> Callable:
         self._position = (x, y, z)
         # 元件坐标系
         if elementXYZ == True or (_elementXYZ.elementXYZ == True and elementXYZ is None):
-            self.x, self.y, self.z = _elementXYZ.xyzTranslate(x, y, z)
+            x, y, z = _elementXYZ.xyzTranslate(x, y, z)
         # 该坐标是否已存在
         if self._position in _fileGlobals.elements_Address.keys():
             raise RuntimeError("The position already exists")
-        func(self, self.x, self.y, self.z)
+        func(self, x, y, z)
         self._arguments["Identifier"] = _tool.randString(32)
-        self._arguments["Position"] = f"{self.x},{self.z},{self.y}"
+        self._arguments["Position"] = f"{x},{z},{y}"
         _fileGlobals.Elements.append(self._arguments)
         _fileGlobals.elements_Address[self._position] = self
         self.set_Rotation()

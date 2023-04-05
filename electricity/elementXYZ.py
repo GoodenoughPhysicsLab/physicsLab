@@ -30,7 +30,7 @@ _xUnit = 0.16
 _yUnit = 0.08
 _zUnit = 0.1
 # big_element坐标修正
-yAmend = 0.04
+_yAmend = 0.04
 
 # 元件坐标系原点
 _xOrigin, _yOrigin, _zOrigin = 0, 0, 0
@@ -72,4 +72,4 @@ def set_O(x: Union[int, float], y: Union[int, float], z: Union[int, float]) -> N
         raise TypeError
 
 def amend_big_Element(x: Union[int, float], y: Union[int, float], z: Union[int, float]):
-    return x, y + yAmend, z
+    return x, y + _yAmend, z
