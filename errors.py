@@ -8,3 +8,6 @@ def warning(msg: str) -> None:
 # 打开实验异常
 class openExperimentError(Exception):
     pass
+
+class wireColorError(Exception):
+    pass

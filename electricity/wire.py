@@ -1,4 +1,5 @@
 #coding=utf-8
+import physicsLab.errors as errors
 import physicsLab._fileGlobals as _fileGlobals
 import physicsLab.electricity.elementPin as _elementPin
 
@@ -24,13 +25,16 @@ def old_crt_wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, col
 def _check_typeWire(func):
     def result(SourcePin, TargetPin, color : str = '蓝') -> None:
         try:
-            if isinstance(SourcePin, _elementPin.element_Pin) and isinstance(TargetPin, _elementPin.element_Pin):
+            if (
+                    isinstance(SourcePin, _elementPin.element_Pin) and
+                    isinstance(TargetPin, _elementPin.element_Pin)
+            ):
                 if (color not in ["黑", "蓝", "红", "绿", "黄"]):
-                    raise RuntimeError("illegal color")
+                    raise errors.wireColorError("illegal color")
 
                 func(SourcePin, TargetPin, color)
         except:
-            raise RuntimeError('Error type of input function argument')
+            raise TypeError('Error type of input function argument')
     return result
 
 # 新版连接导线
