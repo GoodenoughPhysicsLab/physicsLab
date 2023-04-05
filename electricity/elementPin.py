@@ -1,5 +1,4 @@
 #coding=utf-8
-import physicsLab
 from physicsLab.electricity.wire import crt_Wire
 
 # 电学元件引脚类

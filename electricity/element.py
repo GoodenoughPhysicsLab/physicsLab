@@ -5,13 +5,16 @@ from physicsLab.electricity.elementsClass import *
 import physicsLab.electricity.elementXYZ as _elementXYZ
 
 # 创建原件，本质上仍然是实例化
-def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0):
+def crt_Element(name: str, x : float = 0, y : float = 0, z : float = 0, elementXYZ = None):
     if not (isinstance(name, str) and isinstance(x, (int, float)) and
             isinstance(y, (int, float)) and isinstance(z, (int, float))
     ):
         raise RuntimeError("Wrong parameter type")
     if name == '':
         raise RuntimeError('Name cannot be an empty string')
+        # 元件坐标系
+    if elementXYZ == True or (_elementXYZ.elementXYZ == True and elementXYZ is None):
+        x, y, z = _elementXYZ.xyzTranslate(x, y, z)
     x, y, z = _tool.roundData(x), _tool.roundData(y), _tool.roundData(z)
     if (name == '555 Timer'):
         return NE555(x, y, z)
