@@ -1,3 +1,4 @@
+#coding=utf-8
 from getpass import getuser as _getuser
 from typing import Union
 
