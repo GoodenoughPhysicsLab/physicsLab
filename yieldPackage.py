@@ -8,7 +8,9 @@ if __name__ == '__main__':
         os.system('D:')
         os.system('cd D:\\program physicsLab\\hub')
         os.system('py setup.py sdist bdist_wheel')
-        # os.system('twine upload dist/*')
+        # os.system('twine upload hub/dist/*')
+        # ¸üÐÂpython°ü
+        # pip install --upgrade xxx
 
     string = input('push?(y/n)')
     if string == 'y':
