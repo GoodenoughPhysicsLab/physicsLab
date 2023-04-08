@@ -1,3 +1,4 @@
+#coding=utf-8
 import os
 import git
 
@@ -9,7 +10,7 @@ if __name__ == '__main__':
         os.system('cd D:\\program physicsLab\\hub')
         os.system('py setup.py sdist bdist_wheel')
         # os.system('twine upload hub/dist/*')
-        # ¸üÐÂpython°ü
+        # æ›´æ–°pythonåŒ…
         # pip install --upgrade xxx
 
     string = input('push?(y/n)')
