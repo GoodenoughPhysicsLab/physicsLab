@@ -1,7 +1,7 @@
 #coding=utf-8
 import setuptools  # 导入setuptools打包工具
 
-with open("/hub/README.md", "r", encoding="utf-8") as fh:
+with open("D:/program physicsLab/hub/README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
