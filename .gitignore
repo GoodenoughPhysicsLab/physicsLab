@@ -1,10 +1,8 @@
 __pycache__
 .idea
-setup.py
 myTest.txt
 myTest.py
 pyproject.toml
 bad apple.py
-yieldPackage.py
 物实贴图计划.py
 test_physicsLab.py
