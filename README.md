@@ -61,8 +61,9 @@ write_Experiment()
 4. 作者在接下来很长一段时间内将因为学业没有精力继续维护该仓库，但这并不代表弃坑。
 
 ## 其他
-更多内容请在[other physicsLab](https://gitee.com/script2000/temporary-warehouse/tree/master/other%20physicsLab)查看
-
+1. 更多内容请在[other physicsLab](https://gitee.com/script2000/temporary-warehouse/tree/master/other%20physicsLab)查看
+2. github: https://github.com/GoodenoughPhysicsLab/physicsLab
+3. gitee: https://gitee.com/script2000/physicsLab
 
 ## 参与贡献
 1.  Fork 本仓库
