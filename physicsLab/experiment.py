@@ -168,8 +168,7 @@ def read_Experiment() -> None:
         # 元件
         _local_Elements = _json.loads(readmem["Experiment"]["StatusSave"])["Elements"]
         # 导线
-        for aWire in _json.loads(readmem['Experiment']['StatusSave'])['Wires']:
-            _fileGlobals.Wires.append(aWire)
+        _fileGlobals.Wires = _json.loads(readmem['Experiment']['StatusSave'])['Wires']
 
         for element in _local_Elements:
             # 坐标标准化（消除浮点误差）
