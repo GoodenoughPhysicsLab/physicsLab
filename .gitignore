@@ -1,11 +1,13 @@
 __pycache__
-.idea
-myTest.txt
+/venv/
+/.idea/
+*.txt
 myTest.py
 pyproject.toml
 bad apple.py
 物实贴图计划.py
 test_physicsLab.py
-physicsLab.egg-info
-build
-dist
+/physicsLab.egg-info/
+/build/
+/dist/
+/physicsLab projects/

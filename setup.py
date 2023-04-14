@@ -1,12 +1,12 @@
 #coding=utf-8
 import setuptools  # 导入setuptools打包工具
 
-with open("D:/program physicsLab/hub/README.md", "r", encoding="utf-8") as fh:
+with open("D:/program physicsLab/README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="physicsLab",  # 用自己的名替换其中的YOUR_USERNAME_
-    version="1.1.9",  # 包版本号，便于维护版本
+    version="1.1.10",  # 包版本号，便于维护版本
     author="Goodenough",  # 作者，可以写自己的姓名
     author_email="2381642961@qq.com",  # 作者联系方式，可写自己的邮箱地址
     description="Doing experiments in the physics lab AR by python",  # 包的简述

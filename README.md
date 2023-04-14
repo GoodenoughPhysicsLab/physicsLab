@@ -64,7 +64,10 @@ write_Experiment()
 1. 更多内容请在[other physicsLab](https://gitee.com/script2000/temporary-warehouse/tree/master/other%20physicsLab)查看
 2. github: https://github.com/GoodenoughPhysicsLab/physicsLab
 3. gitee: https://gitee.com/script2000/physicsLab
+<<<<<<< HEAD
 
+=======
+>>>>>>> dev
 
 ## 参与贡献
 1.  Fork 本仓库
