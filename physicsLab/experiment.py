@@ -11,9 +11,6 @@ from physicsLab.electricity.element import crt_Element
 
 ### define ###
 
-# 是否已经有存档被打开或创建
-_ifndef_open_Experiment = False
-
 def print_Elements():
     print(_fileGlobals.Elements)
 
@@ -31,16 +28,14 @@ def old_open_Experiment(file: str) -> None:
     if (not file.endswith('.sav')):
         raise RuntimeError("The input parameters are incorrect")
 
-    global _ifndef_open_Experiment
-    if (_ifndef_open_Experiment):
-        raise RuntimeError("This function can only be run once")
-    _ifndef_open_Experiment = True
-
     _fileGlobals.savName = f"{_fileGlobals.FILE_HEAD}\\{file}"
     with open(_fileGlobals.savName, encoding="UTF-8") as f:
-        InternalName = (_json.loads(f.read().replace('\n', '')))["Summary"]["Subject"]
-        _fileGlobals.sav["Summary"]["Subject"] = InternalName
-        _fileGlobals.sav["InternalName"] = _fileGlobals.sav["Summary"]["Subject"]
+        InternalName = (_json.loads(f.read().replace('\n', '')))["InternalName"]
+        _fileGlobals.sav["InternalName"] = InternalName
+        try: # 当Summary为None时触发TypeError
+            _fileGlobals.sav["Summary"]["Subject"] = InternalName
+        except TypeError:
+            pass
 
 # 将import了physicsLab的文件的第一行添加上 #coding=utf-8
 def _utf8_coding(func):
@@ -89,11 +84,6 @@ def open_Experiment(file : str) -> None:
 @_utf8_coding
 def crt_Experiment(name : str) -> None:
     _fileGlobals.fileGlobals_init()
-    global _ifndef_open_Experiment
-    # 该函数与open_Experiment一起，每次只能运行一次
-    if (_ifndef_open_Experiment):
-        raise RuntimeError("This function can only be run once")
-    _ifndef_open_Experiment = True
     # 检查是否存在重名的存档
     savs = [i for i in _os.walk(_fileGlobals.FILE_HEAD)][0]
     savs = savs[savs.__len__() - 1]
