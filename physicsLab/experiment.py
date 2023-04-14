@@ -44,7 +44,7 @@ def old_open_Experiment(file: str) -> None:
 
 # 将import了physicsLab的文件的第一行添加上 #coding=utf-8
 def _utf8_coding(func):
-    def result(string: str) -> None:
+    def result(string: str, *args, **kwargs) -> None:
         try: # 在cmd或者shell上无法执行该功能
             import sys
             s = ''
@@ -59,7 +59,7 @@ def _utf8_coding(func):
         except FileNotFoundError:
             # 在cmd或IDLE上运行时会关闭打印彩字功能
             _colorUtils.printColor = False
-        func(string)
+        func(string, *args, **kwargs)
     return result
 
 # 打开一个指定的sav文件（支持输入本地实验的名字或sav文件名）
