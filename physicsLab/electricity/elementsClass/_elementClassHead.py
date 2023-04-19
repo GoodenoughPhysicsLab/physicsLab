@@ -81,20 +81,21 @@ def element_Init_HEAD(func: Callable) -> Callable:
         # 元件坐标系
         if elementXYZ == True or (_elementXYZ.elementXYZ == True and elementXYZ is None):
             x, y, z = _elementXYZ.xyzTranslate(x, y, z)
-        # 该坐标是否已存在
-        if self._position in _fileGlobals.elements_Address.keys():
-            raise RuntimeError("The position already exists")
         func(self, x, y, z)
         self._arguments["Identifier"] = _tools.randString(32)
         self._arguments["Position"] = f"{x},{z},{y}"
         _fileGlobals.Elements.append(self._arguments)
 
-        elementDict: dict ={
+        # 该坐标是否已存在，则存入列表
+        elementDict: dict = {
             'self': [self],
-            'elementXYZ': _elementXYZ.elementXYZ, # 是否为元件坐标系
-            'originPosition': tuple(_elementXYZ.get_OriginPosition()) # 坐标原点
+            'elementXYZ': _elementXYZ.elementXYZ,  # 是否为元件坐标系
+            'originPosition': tuple(_elementXYZ.get_OriginPosition())  # 坐标原点
         }
-        _fileGlobals.elements_Address[self._position] = elementDict
+        if self._position in _fileGlobals.elements_Address.keys():
+            _fileGlobals.elements_Address[self._position]['self'].append(self)
+        else:
+            _fileGlobals.elements_Address[self._position] = elementDict
         self.set_Rotation()
         # 通过元件生成顺序来索引元件
         global _index

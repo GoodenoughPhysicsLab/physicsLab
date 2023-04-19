@@ -14,7 +14,7 @@ pip install physicsLab
 ```
 
 ## 开发环境
-python 3.7, PyCharm, win7  
+python 3.7.8, win7  
 目测对其他版本支持应该也很好
 3.6及以上应该没问题
 
@@ -39,7 +39,7 @@ crt_Wire(o.i_up, o.i_low)
 write_Experiment()  
  # 然后用物实打开存档见证奇迹  
 ```
-更详细的内容请查看[functions.md](physicsLab/functions.md)  
+更详细的内容请查看[functions.md](functions.md)  
 请注意：Python采用GBK编码，而物实用的是utf-8，尽管尽量确保编码格式正确，但中文仍有可能出现问题，因此建议多用英文。  
 
 ## 优点

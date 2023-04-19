@@ -10,8 +10,9 @@ Elements = []  # 装原件的_arguments
 Wires = []
 sav = {}
 
-elements_Address = {}  # key: self._position，value: self
-elements_Index = {}  # key: self.index, value: self
+elements_Address = {}  # key: self._position，value: dict([self], ...)
+elements_Index = {}  # key: self.index, value: dict([self], ...)
+
 
 def fileGlobals_init() -> None:
     global sav, savName, StatusSave, Elements, Wires, elements_Index, elements_Address

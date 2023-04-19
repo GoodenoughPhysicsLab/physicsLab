@@ -41,6 +41,20 @@ os_Experiment()
 del_Experiment()
 ```
 
+### 更优雅的语法
+你可以用with语句打开一个存档，且读写存档等重复工作无须手动重复编写
+```python
+with experiment(
+    'physics Lab save name',
+    read=True # 读取存档
+):
+    # do something
+    # 该方式会自动打开存档
+    # 若打开失败会自动创建存档
+    # 执行完代码之后会自动写入存档
+    pass
+```
+
 ## 原件
 ### 创建元件
 所有的原件都被写成了一个类（不过我还在施工，无法支持全部原件）  
@@ -148,6 +162,8 @@ get_Element(index=1)
 get_Element(0, 0, 0) # 依然是坐标索引，对应xyz
 get_Element(1) # 依然是index索引
 ```
+当原件的坐标重叠时，此时会返回一个含所有坐标重叠的原件的list  
+
 元件的```index```会从1开始，每生成一个元件就会加1
 ```Python
 No_Gate() # index = 1

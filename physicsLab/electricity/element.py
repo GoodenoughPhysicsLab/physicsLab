@@ -39,7 +39,7 @@ def get_Element(*args, **kwargs):
     # 通过坐标索引元件
     def position_Element(x: _tools.number, y: _tools.number, z: _tools.number):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
-            raise RuntimeError('illegal argument')
+            raise TypeError('illegal argument')
         x, y, z = _tools.roundData(x), _tools.roundData(y), _tools.roundData(z)
         if (x, y, z) not in _fileGlobals.elements_Address.keys():
             raise RuntimeError("Error coordinates that do not exist")

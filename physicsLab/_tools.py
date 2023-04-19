@@ -5,8 +5,8 @@ import typing
 number = typing.Union
 # 四舍五入physicsLab中的数据
 def roundData(num: number):
-    if isinstance(num, int):
-        return float(num)
+    # if isinstance(num, int):
+    #     return float(num)
     return round(num, 4)
 
 # 生成随机字符串

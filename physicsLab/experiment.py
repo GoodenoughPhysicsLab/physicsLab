@@ -24,13 +24,19 @@ def print_elements_Address():
 
 # 实验（存档）类，主要与'with'关键字搭配使用
 class experiment:
-    def __init__(self, file: str) -> None:
+    def __init__(
+            self,
+            file: str,
+            read: bool = False # 是否读取存档原有状态
+    ) -> None:
         if not (
             isinstance(file, str)
+            and isinstance(read, bool)
         ):
             raise TypeError
 
         self.file = file
+        self.read = read
 
     # 上下文管理器，搭配with使用
     def __enter__(self):
@@ -38,6 +44,8 @@ class experiment:
             open_Experiment(self.file)
         except errors.openExperimentError: # 如果存档不存在
             crt_Experiment(self.file)
+        if self.read:
+            read_Experiment()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         write_Experiment()
