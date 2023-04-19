@@ -88,12 +88,18 @@ def element_Init_HEAD(func: Callable) -> Callable:
         self._arguments["Identifier"] = _tools.randString(32)
         self._arguments["Position"] = f"{x},{z},{y}"
         _fileGlobals.Elements.append(self._arguments)
-        _fileGlobals.elements_Address[self._position] = self
+
+        elementDict: dict ={
+            'self': self,
+            'elementXYZ': _elementXYZ.elementXYZ, # 是否为元件坐标系
+            'originPosition': tuple(_elementXYZ.get_OriginPosition()) # 坐标原点
+        }
+        _fileGlobals.elements_Address[self._position] = elementDict
         self.set_Rotation()
         # 通过元件生成顺序来索引元件
         global _index
         self._index = _index
-        _fileGlobals.elements_Index[self._index] = self
+        _fileGlobals.elements_Index[self._index] = elementDict
         # 元件index索引加1
         _index += 1
     return result

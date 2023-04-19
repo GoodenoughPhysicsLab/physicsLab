@@ -71,5 +71,10 @@ def set_O(x: _tools.number, y: _tools.number, z: _tools.number) -> None:
     else:
         raise TypeError
 
+# 修正bigElement的坐标
 def amend_big_Element(x: _tools.number, y: _tools.number, z: _tools.number):
     return x, y + _yAmend, z
+
+# 获取坐标原点
+def get_OriginPosition():
+    return _xOrigin, _yOrigin, _zOrigin
