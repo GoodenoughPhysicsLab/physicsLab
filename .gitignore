@@ -5,9 +5,9 @@ __pycache__
 myTest.py
 pyproject.toml
 bad apple.py
-物实贴图计划.py
 test_physicsLab.py
 /physicsLab.egg-info/
 /build/
 /dist/
 /physicsLab projects/
+/.vscode/

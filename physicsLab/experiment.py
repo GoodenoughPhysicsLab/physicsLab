@@ -22,6 +22,25 @@ def print_elements_Address():
 
 ### end define ###
 
+# 实验（存档）类，主要与'with'关键字搭配使用
+class experiment:
+    def __init__(self, file: str) -> None:
+        if not (
+            isinstance(file, str)
+        ):
+            raise TypeError
+
+        self.file = file
+    # 上下文管理方法，搭配with使用
+    def __enter__(self):
+        try:
+            open_Experiment(self.file)
+        except errors.openExperimentError: # 如果存档不存在
+            crt_Experiment(self.file)
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        write_Experiment()
+
 # 输入sav文件名并读取（旧函数，不建议使用）
 def old_open_Experiment(file: str) -> None:
     file = file.strip()
@@ -39,7 +58,7 @@ def old_open_Experiment(file: str) -> None:
 
 # 将import了physicsLab的文件的第一行添加上 #coding=utf-8
 def _utf8_coding(func):
-    def result(string: str, *args, **kwargs) -> None:
+    def result(*args, **kwargs) -> None:
         try: # 在cmd或者shell上无法执行该功能
             import sys
             s = ''
@@ -54,7 +73,7 @@ def _utf8_coding(func):
         except FileNotFoundError:
             # 在cmd或IDLE上运行时会关闭打印彩字功能
             _colorUtils.printColor = False
-        func(string, *args, **kwargs)
+        func(*args, **kwargs)
     return result
 
 # 打开一个指定的sav文件（支持输入本地实验的名字或sav文件名）
