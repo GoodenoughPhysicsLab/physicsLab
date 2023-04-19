@@ -43,11 +43,13 @@ def get_Element(*args, **kwargs):
         x, y, z = _tools.roundData(x), _tools.roundData(y), _tools.roundData(z)
         if (x, y, z) not in _fileGlobals.elements_Address.keys():
             raise RuntimeError("Error coordinates that do not exist")
-        return _fileGlobals.elements_Address[(x, y, z)]['self']
+        result: list = _fileGlobals.elements_Address[(x, y, z)]['self']
+        return result[0] if len(result) == 1 else result
     # 通过index（元件生成顺序）索引元件
     def index_Element(index: int):
         if 0 < index <= len(_fileGlobals.elements_Index):
-            return _fileGlobals.elements_Index[index]['self']
+            result: list = _fileGlobals.elements_Index[index]['self']
+            return result[0] if len(result) == 1 else result
         else:
             raise RuntimeError
 

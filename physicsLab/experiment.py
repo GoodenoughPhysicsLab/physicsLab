@@ -189,7 +189,7 @@ def read_Experiment() -> None:
             num3 = _tools.roundData(float(element['Position'][sign2 + 1::]))
             element['Position'] = f"{num1},{num2},{num3}"  # x, z, y
             # 实例化对象
-            obj = crt_Element(element["ModelID"], num1, num3, num2)
+            obj = crt_Element(element["ModelID"], num1, num3, num2, elementXYZ=False)
             sign1 = element['Rotation'].find(',')
             sign2 = element['Rotation'].find(',', sign1 + 1)
             x = float(element['Rotation'][:sign1:])

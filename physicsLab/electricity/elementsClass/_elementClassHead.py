@@ -90,7 +90,7 @@ def element_Init_HEAD(func: Callable) -> Callable:
         _fileGlobals.Elements.append(self._arguments)
 
         elementDict: dict ={
-            'self': self,
+            'self': [self],
             'elementXYZ': _elementXYZ.elementXYZ, # 是否为元件坐标系
             'originPosition': tuple(_elementXYZ.get_OriginPosition()) # 坐标原点
         }
