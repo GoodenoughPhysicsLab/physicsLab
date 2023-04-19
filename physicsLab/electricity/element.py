@@ -11,9 +11,9 @@ def crt_Element(name: str,
                 z: _tools.number = 0,
                 elementXYZ: bool = None):
     if not (isinstance(name, str)
-            and isinstance(x, _tools.number)
-            and isinstance(y, _tools.number)
-            and isinstance(z, _tools.number)
+            and isinstance(x, (int, float))
+            and isinstance(y, (int, float))
+            and isinstance(z, (int, float))
     ):
         raise RuntimeError("Wrong parameter type")
     if name == '':
