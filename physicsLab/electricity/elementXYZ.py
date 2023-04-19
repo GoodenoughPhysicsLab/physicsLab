@@ -12,12 +12,12 @@
 
 # _elementClassHead里的element_Init_HEAD有部分处理元件坐标系的代码，并调用了该文件
 
-from typing import Union
+import physicsLab._tools as _tools
 
 ### define ###
 
 # 是否将全局设置为元件坐标系
-elementXYZ = False
+elementXYZ: bool = False
 
 def set_elementXYZ(boolen: bool) -> None:
     if not isinstance(boolen, bool):
@@ -26,9 +26,9 @@ def set_elementXYZ(boolen: bool) -> None:
     elementXYZ = boolen
 
 # 物实坐标系x, y, z单位1
-_xUnit = 0.16
-_yUnit = 0.08
-_zUnit = 0.1
+_xUnit: _tools.number = 0.16
+_yUnit: _tools.number = 0.08
+_zUnit: _tools.number = 0.1
 # big_element坐标修正
 _yAmend = 0.04
 
@@ -37,7 +37,7 @@ _xOrigin, _yOrigin, _zOrigin = 0, 0, 0
 ### end define ###
 
 # 将元件坐标系转换为物实支持的坐标系
-def xyzTranslate(x: Union[int, float], y: Union[int, float], z: Union[int, float]):
+def xyzTranslate(x: _tools.number, y: _tools.number, z: _tools.number):
     x *= _xUnit
     y *= _yUnit
     z *= _zUnit
@@ -48,7 +48,7 @@ def xyzTranslate(x: Union[int, float], y: Union[int, float], z: Union[int, float
     return x, y, z
 
 # 将物实支持的坐标系转换为元件坐标系
-def translateXYZ(x: Union[int, float], y: Union[int, float], z: Union[int, float]):
+def translateXYZ(x: _tools.number, y: _tools.number, z: _tools.number):
     x /= _xUnit
     y /= _yUnit
     z /= _zUnit
@@ -61,7 +61,7 @@ def translateXYZ(x: Union[int, float], y: Union[int, float], z: Union[int, float
     return x, y, z
 
 # 设置元件坐标系原点O，输入值为物实坐标系
-def set_O(x: Union[int, float], y: Union[int, float], z: Union[int, float]) -> None:
+def set_O(x: _tools.number, y: _tools.number, z: _tools.number) -> None:
     if (isinstance(x, (int, float)) and
         isinstance(y, (int, float)) and
         isinstance(z, (int, float))
@@ -71,5 +71,5 @@ def set_O(x: Union[int, float], y: Union[int, float], z: Union[int, float]) -> N
     else:
         raise TypeError
 
-def amend_big_Element(x: Union[int, float], y: Union[int, float], z: Union[int, float]):
+def amend_big_Element(x: _tools.number, y: _tools.number, z: _tools.number):
     return x, y + _yAmend, z

@@ -3,7 +3,7 @@ import os as _os
 import sys as _sys
 import json as _json
 
-import physicsLab._tools as _tool
+import physicsLab._tools as _tools
 import physicsLab.errors as errors
 import physicsLab._colorUtils as _colorUtils
 import physicsLab._fileGlobals as _fileGlobals
@@ -31,7 +31,8 @@ class experiment:
             raise TypeError
 
         self.file = file
-    # 上下文管理方法，搭配with使用
+
+    # 上下文管理器，搭配with使用
     def __enter__(self):
         try:
             open_Experiment(self.file)
@@ -119,7 +120,7 @@ def crt_Experiment(name : str) -> None:
     # 创建存档
     if not isinstance(name, str):
         name = str(name)
-    _fileGlobals.savName = _tool.randString(34)
+    _fileGlobals.savName = _tools.randString(34)
     _fileGlobals.savName = f'{_fileGlobals.FILE_HEAD}\\{_fileGlobals.savName}.sav'
     with open(_fileGlobals.savName, 'w', encoding='utf-8'):
         pass
@@ -183,9 +184,9 @@ def read_Experiment() -> None:
             # 坐标标准化（消除浮点误差）
             sign1 = element['Position'].find(',')
             sign2 = element['Position'].find(',', sign1 + 1)
-            num1 = _tool.roundData(float(element['Position'][:sign1:]))
-            num2 = _tool.roundData(float(element['Position'][sign1 + 1: sign2:]))
-            num3 = _tool.roundData(float(element['Position'][sign2 + 1::]))
+            num1 = _tools.roundData(float(element['Position'][:sign1:]))
+            num2 = _tools.roundData(float(element['Position'][sign1 + 1: sign2:]))
+            num3 = _tools.roundData(float(element['Position'][sign2 + 1::]))
             element['Position'] = f"{num1},{num2},{num3}"  # x, z, y
             # 实例化对象
             obj = crt_Element(element["ModelID"], num1, num3, num2)

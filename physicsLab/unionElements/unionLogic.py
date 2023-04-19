@@ -1,29 +1,28 @@
 #coding=utf-8
 # 模块化电路
-from typing import Union
-import physicsLab._tools as _tool
+import physicsLab._tools as _tools
 import physicsLab.electricity as eletricity
 
 # 任意引脚加法电路
 class union_Sum:
-    def __init__(self, x : Union[int, Union[int, float]] = 0, y : Union[int, float] = 0, z : Union[int, float] = 0, bitCount : int = 1):
+    def __init__(self, x : _tools.number = 0, y : _tools.number = 0, z : _tools.number = 0, bitCount : int = 1):
         if not (
                 isinstance(x, (float, int)) and isinstance(y, (float, int)) and
                 isinstance(z, (float, int)) and isinstance(bitCount, int) and bitCount > 0
         ):
             raise RuntimeError('Error in input parameters')
-        x, y, z = _tool.roundData(x), _tool.roundData(y), _tool.roundData(z)
+        x, y, z = _tools.roundData(x), _tools.roundData(y), _tools.roundData(z)
         eletricity.Full_Adder(x, y, z)
         for count in range(1, bitCount):
             if count % 8 != 0:
-                y = _tool.roundData(y + 0.2)
+                y = _tools.roundData(y + 0.2)
                 eletricity.crt_Wire(
                     eletricity.Full_Adder(x, y, z).i_low,
                     eletricity.get_Element(x, y - 0.2, z).o_low
                 )
             else:
                 y -= 1.4
-                z = _tool.roundData(z + 0.1)
+                z = _tools.roundData(z + 0.1)
                 eletricity.crt_Wire(
                     eletricity.Full_Adder(x, y, z).i_low,
                     eletricity.get_Element(x, y + 1.4, z - 0.1).o_low
@@ -35,7 +34,7 @@ class union_Sub:
 
 # 2-4译码器
 class union_2_4_Decoder:
-    def __init__(self, x : Union[int, float] = 0, y : Union[int, float] = 0, z : Union[int, float] = 0):
+    def __init__(self, x : _tools.number = 0, y : _tools.number = 0, z : _tools.number = 0):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
         self.x = x
@@ -58,7 +57,7 @@ class union_2_4_Decoder:
 
 # 4-16译码器
 class union_4_16_Decoder:
-    def __init__(self, x : Union[int, float] = 0, y : Union[int, float] = 0, z : Union[int, float] = 0):
+    def __init__(self, x : _tools.number = 0, y : _tools.number = 0, z : _tools.number = 0):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
         self.x = x

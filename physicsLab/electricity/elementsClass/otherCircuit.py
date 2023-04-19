@@ -1,5 +1,5 @@
 #coding=utf-8
-from typing import Union
+import physicsLab._tools as _tools
 from string import digits as _digits
 import physicsLab.electricity.elementPin as _elementPin
 import physicsLab.electricity.elementsClass._elementClassHead as _elementClassHead
@@ -8,7 +8,7 @@ import physicsLab.electricity.elementsClass._elementClassHead as _elementClassHe
 @_elementClassHead.two_pin_ArtificialCircuit_Pin
 class Electric_Fan(_elementClassHead.elementObject):
     @_elementClassHead.element_Init_HEAD
-    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
+    def __init__(self, x: _tools.number = 0, y: _tools.number = 0, z: _tools.number = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Electric Fan', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'额定电阻': 1.0, '马达常数': 0.1, '转动惯量': 0.01, '电感': 5e-05, '负荷扭矩': 0.01,
@@ -22,7 +22,7 @@ class Electric_Fan(_elementClassHead.elementObject):
 # 简单乐器（更多功能的源代码在union_music）
 class Simple_Instrument(_elementClassHead.elementObject):
     @_elementClassHead.element_Init_HEAD
-    def __init__(self, x: Union[int, float] = 0, y: Union[int, float] = 0, z: Union[int, float] = 0, elementXYZ = None):
+    def __init__(self, x: _tools.number = 0, y: _tools.number = 0, z: _tools.number = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Simple Instrument', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
                            'Properties': {'额定电压': 3.0, '额定功率': 0.3, '音量': 1.0, '音高': 60.0, '节拍': 70.0, '锁定': 1.0,
                                           '乐器': 1.0},
@@ -53,7 +53,7 @@ class Simple_Instrument(_elementClassHead.elementObject):
         升1个八度： '1.', '1#.', '2' ...
         以此类推即可
     '''
-    def set_Tonality(self, tonality: Union[int, str]) -> None:
+    def set_Tonality(self, tonality: _tools.number) -> None:
         if isinstance(tonality, int):
             if 0 < tonality < 8:
                 raise RuntimeError('Input data error')
