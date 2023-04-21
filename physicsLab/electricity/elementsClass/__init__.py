@@ -1,8 +1,9 @@
-# »ù´¡µçÂ·
+#coding=utf-8
+# ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·
 from physicsLab.electricity.elementsClass.basicCircuit import *
-# Âß¼­µçÂ·
+# ï¿½ß¼ï¿½ï¿½ï¿½Â·
 from physicsLab.electricity.elementsClass.logicCircuit import *
-# Ä£ÄâµçÂ·
+# Ä£ï¿½ï¿½ï¿½Â·
 from physicsLab.electricity.elementsClass.artificialCircuit import *
-# ÆäËûµçÂ·
+# ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â·
 from physicsLab.electricity.elementsClass.otherCircuit import *

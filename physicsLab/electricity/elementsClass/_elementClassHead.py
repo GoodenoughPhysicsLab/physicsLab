@@ -9,8 +9,8 @@ import physicsLab.electricity.elementXYZ as _elementXYZ
 # 所有元件的父类
 class elementObject:
     # 设置原件的角度
-    def set_Rotation(self, xRotation: _tools.number = 0, yRotation: _tools.number = 0,
-                     zRotation: _tools.number = 180):
+    def set_Rotation(self, xRotation: _tools.numType = 0, yRotation: _tools.numType = 0,
+                     zRotation: _tools.numType = 180):
         if not (isinstance(xRotation, (int, float)) and isinstance(yRotation, (int, float)) and isinstance(zRotation, (
         int, float))):
             raise RuntimeError('illegal argument')
@@ -19,7 +19,7 @@ class elementObject:
         return self
 
     # 重新设置元件的坐标
-    def set_Position(self, x: _tools.number, y: _tools.number, z: _tools.number):
+    def set_Position(self, x: _tools.numType, y: _tools.numType, z: _tools.numType):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
         x, y, z = _tools.roundData(x), _tools.roundData(y), _tools.roundData(z)
@@ -65,9 +65,9 @@ _index = 1
 def element_Init_HEAD(func: Callable) -> Callable:
     def result(
             self,
-            x: _tools.number = 0,
-            y: _tools.number = 0,
-            z: _tools.number = 0,
+            x: _tools.numType = 0,
+            y: _tools.numType = 0,
+            z: _tools.numType = 0,
             elementXYZ: bool = None
     ) -> None:
         if not (

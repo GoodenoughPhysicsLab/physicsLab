@@ -26,9 +26,9 @@ def set_elementXYZ(boolen: bool) -> None:
     elementXYZ = boolen
 
 # 物实坐标系x, y, z单位1
-_xUnit: _tools.number = 0.16
-_yUnit: _tools.number = 0.08
-_zUnit: _tools.number = 0.1
+_xUnit: _tools.numType = 0.16
+_yUnit: _tools.numType = 0.08
+_zUnit: _tools.numType = 0.1
 # big_element坐标修正
 _yAmend = 0.04
 
@@ -37,7 +37,7 @@ _xOrigin, _yOrigin, _zOrigin = 0, 0, 0
 ### end define ###
 
 # 将元件坐标系转换为物实支持的坐标系
-def xyzTranslate(x: _tools.number, y: _tools.number, z: _tools.number):
+def xyzTranslate(x: _tools.numType, y: _tools.numType, z: _tools.numType):
     x *= _xUnit
     y *= _yUnit
     z *= _zUnit
@@ -48,7 +48,7 @@ def xyzTranslate(x: _tools.number, y: _tools.number, z: _tools.number):
     return x, y, z
 
 # 将物实支持的坐标系转换为元件坐标系
-def translateXYZ(x: _tools.number, y: _tools.number, z: _tools.number):
+def translateXYZ(x: _tools.numType, y: _tools.numType, z: _tools.numType):
     x /= _xUnit
     y /= _yUnit
     z /= _zUnit
@@ -61,7 +61,7 @@ def translateXYZ(x: _tools.number, y: _tools.number, z: _tools.number):
     return x, y, z
 
 # 设置元件坐标系原点O，输入值为物实坐标系
-def set_O(x: _tools.number, y: _tools.number, z: _tools.number) -> None:
+def set_O(x: _tools.numType, y: _tools.numType, z: _tools.numType) -> None:
     if (isinstance(x, (int, float)) and
         isinstance(y, (int, float)) and
         isinstance(z, (int, float))
@@ -72,7 +72,7 @@ def set_O(x: _tools.number, y: _tools.number, z: _tools.number) -> None:
         raise TypeError
 
 # 修正bigElement的坐标
-def amend_big_Element(x: _tools.number, y: _tools.number, z: _tools.number):
+def amend_big_Element(x: _tools.numType, y: _tools.numType, z: _tools.numType):
     return x, y + _yAmend, z
 
 # 获取坐标原点

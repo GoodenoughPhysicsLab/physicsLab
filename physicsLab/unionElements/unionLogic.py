@@ -5,7 +5,7 @@ import physicsLab.electricity as eletricity
 
 # 任意引脚加法电路
 class union_Sum:
-    def __init__(self, x : _tools.number = 0, y : _tools.number = 0, z : _tools.number = 0, bitCount : int = 1):
+    def __init__(self, x : _tools.numType = 0, y : _tools.numType = 0, z : _tools.numType = 0, bitCount : int = 1):
         if not (
                 isinstance(x, (float, int)) and isinstance(y, (float, int)) and
                 isinstance(z, (float, int)) and isinstance(bitCount, int) and bitCount > 0
@@ -34,7 +34,7 @@ class union_Sub:
 
 # 2-4译码器
 class union_2_4_Decoder:
-    def __init__(self, x : _tools.number = 0, y : _tools.number = 0, z : _tools.number = 0):
+    def __init__(self, x : _tools.numType = 0, y : _tools.numType = 0, z : _tools.numType = 0):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
         self.x = x
@@ -57,7 +57,7 @@ class union_2_4_Decoder:
 
 # 4-16译码器
 class union_4_16_Decoder:
-    def __init__(self, x : _tools.number = 0, y : _tools.number = 0, z : _tools.number = 0):
+    def __init__(self, x : _tools.numType = 0, y : _tools.numType = 0, z : _tools.numType = 0):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
         self.x = x

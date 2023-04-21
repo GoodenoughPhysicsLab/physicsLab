@@ -28,9 +28,9 @@ The format of music array compat netlogo music list(ml) which was used by Li Wei
 class union_music:
     def __init__(
             self,
-            x: _tools.number = 0,
-            y: _tools.number = 0,
-            z: _tools.number = 0,
+            x: _tools.numType = 0,
+            y: _tools.numType = 0,
+            z: _tools.numType = 0,
             musicArray: _Union[list, tuple] = ()
     ):
         tick = eletricity.Nimp_Gate(x, y + 0.1, z)

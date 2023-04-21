@@ -6,9 +6,9 @@ import physicsLab.electricity.elementXYZ as _elementXYZ
 
 # 创建原件，本质上仍然是实例化
 def crt_Element(name: str,
-                x: _tools.number = 0,
-                y: _tools.number = 0,
-                z: _tools.number = 0,
+                x: _tools.numType = 0,
+                y: _tools.numType = 0,
+                z: _tools.numType = 0,
                 elementXYZ: bool = None):
     if not (isinstance(name, str)
             and isinstance(x, (int, float))
@@ -37,7 +37,7 @@ def crt_Element(name: str,
 # 获取对应坐标的self
 def get_Element(*args, **kwargs):
     # 通过坐标索引元件
-    def position_Element(x: _tools.number, y: _tools.number, z: _tools.number):
+    def position_Element(x: _tools.numType, y: _tools.numType, z: _tools.numType):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise TypeError('illegal argument')
         x, y, z = _tools.roundData(x), _tools.roundData(y), _tools.roundData(z)

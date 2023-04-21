@@ -2,10 +2,10 @@
 import typing
 
 # type hint
-number = typing.Union
+numType = typing.Union[int, float]
 
 # 四舍五入physicsLab中的数据
-def roundData(num: number):
+def roundData(num: numType):
     # if isinstance(num, int):
     #     return float(num)
     return round(num, 4)
