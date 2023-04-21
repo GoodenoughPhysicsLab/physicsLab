@@ -117,5 +117,12 @@ class MyTestCase(unittest.TestCase):
             Or_Gate()
             self.assertEqual(len(get_Element(0, 0, 0)), 2)
 
+    def test_del_Element(self):
+        with experiment('测逝'):
+            Logic_Input()
+            Or_Gate()
+            del_Element(get_Element(2))
+            self.assertEqual(count_Elements(), 1)
+
 if __name__ == '__main__':
     unittest.main()

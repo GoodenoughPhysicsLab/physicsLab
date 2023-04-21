@@ -1,21 +1,22 @@
 #coding=utf-8
 from getpass import getuser as _getuser
-from typing import Union
 
 FILE_HEAD = f'C:\\Users\\{_getuser()}\\AppData\\LocalLow\\CIVITAS\\Quantum Physics\\Circuit'
 # _xxx 不是文件向外暴露出的接口，文件外无法访问
-savName = ""  # sav的文件名
-StatusSave = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
-Elements = []  # 装原件的_arguments
-Wires = []
-sav = {}
+savName: str = ""  # sav的文件名
+StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
+Elements: list = []  # 装原件的_arguments
+Wires: list = []
+sav: dict = {}
 
-elements_Address = {}  # key: self._position，value: dict([self], ...)
-elements_Index = {}  # key: self.index, value: dict([self], ...)
+# 通过坐标索引元件
+elements_Position: dict = {}  # key: self._position，value: dict([self], ...)
+# 通过index（元件生成顺序）索引元件
+elements_Index: list = [] # List[self]
 
 
 def fileGlobals_init() -> None:
-    global sav, savName, StatusSave, Elements, Wires, elements_Index, elements_Address
+    global sav, savName, StatusSave, Elements, Wires, elements_Index, elements_Position
     savName = ""  # sav的文件名
     StatusSave = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
     Elements = []  # 装原件的_arguments
@@ -101,5 +102,5 @@ def fileGlobals_init() -> None:
         }
     }
 
-    elements_Address = {}  # key: self._position，value: self
-    elements_Index = {}  # key: self.index, value: self
+    elements_Position = {}
+    elements_Index = []

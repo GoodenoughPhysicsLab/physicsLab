@@ -25,10 +25,10 @@ class elementObject:
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
         x, y, z = _tools.roundData(x), _tools.roundData(y), _tools.roundData(z)
-        del _fileGlobals.elements_Address[self._position]
+        del _fileGlobals.elements_Position[self._position]
         self._position = (x, y, z)
         self._arguments['Position'] = f"{x},{z},{y}"
-        _fileGlobals.elements_Address[self._position] = self
+        _fileGlobals.elements_Position[self._position] = self
         return self
 
     # 格式化坐标参数，主要避免浮点误差
@@ -98,20 +98,20 @@ def element_Init_HEAD(func: _Callable) -> _Callable:
         _fileGlobals.Elements.append(self._arguments)
 
         # 该坐标是否已存在，则存入列表
-        elementDict: dict = {
-            'self': [self],
-            'elementXYZ': _elementXYZ.elementXYZ,  # 是否为元件坐标系
-            'originPosition': tuple(_elementXYZ.get_OriginPosition())  # 坐标原点
-        }
-        if self._position in _fileGlobals.elements_Address.keys():
-            _fileGlobals.elements_Address[self._position]['self'].append(self)
+        if self._position in _fileGlobals.elements_Position.keys():
+            _fileGlobals.elements_Position[self._position]['self'].append(self)
         else:
-            _fileGlobals.elements_Address[self._position] = elementDict
+            elementDict: dict = {
+                'self': [self],
+                'elementXYZ': _elementXYZ.elementXYZ,  # 是否为元件坐标系
+                'originPosition': tuple(_elementXYZ.get_OriginPosition())  # 坐标原点
+            }
+            _fileGlobals.elements_Position[self._position] = elementDict
         self.set_Rotation()
         # 通过元件生成顺序来索引元件
         global _index
         self._index = _index
-        _fileGlobals.elements_Index[self._index] = elementDict
+        _fileGlobals.elements_Index.append(self)
         # 元件index索引加1
         _index += 1
     return result

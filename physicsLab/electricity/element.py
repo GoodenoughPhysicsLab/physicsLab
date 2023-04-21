@@ -44,15 +44,14 @@ def get_Element(*args, **kwargs):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise TypeError('illegal argument')
         x, y, z = _tools.roundData(x), _tools.roundData(y), _tools.roundData(z)
-        if (x, y, z) not in _fileGlobals.elements_Address.keys():
+        if (x, y, z) not in _fileGlobals.elements_Position.keys():
             raise RuntimeError("Error coordinates that do not exist")
-        result: list = _fileGlobals.elements_Address[(x, y, z)]['self']
+        result: list = _fileGlobals.elements_Position[(x, y, z)]['self']
         return result[0] if len(result) == 1 else result
     # 通过index（元件生成顺序）索引元件
     def index_Element(index: int):
         if 0 < index <= len(_fileGlobals.elements_Index):
-            result: list = _fileGlobals.elements_Index[index]['self']
-            return result[0] if len(result) == 1 else result
+            return _fileGlobals.elements_Index[index - 1]
         else:
             raise RuntimeError
 
@@ -79,14 +78,14 @@ def get_Element(*args, **kwargs):
 def del_Element(self) -> None:
     try:
         identifier = self._arguments['Identifier']
-        if (self.father_type() == 'element'):
+        if self.father_type() == 'element':
             for element in _fileGlobals.Elements:
-                if (identifier == element['Identifier']):
+                if identifier == element['Identifier']:
                     # 删除原件
                     _fileGlobals.Elements.remove(element)
                     # 删除导线
                     i = 0
-                    while (i < _fileGlobals.Wires.__len__()):
+                    while i < _fileGlobals.Wires.__len__():
                         wire = _fileGlobals.Wires[i]
                         if (wire['Source'] == identifier or wire['Target'] == identifier):
                             _fileGlobals.Wires.pop(i)
@@ -109,4 +108,4 @@ def clear_Elements() -> None:
     _fileGlobals.Elements.clear()
     _fileGlobals.Wires.clear()
     _fileGlobals.elements_Index.clear()
-    _fileGlobals.elements_Address.clear()
+    _fileGlobals.elements_Position.clear()

@@ -18,7 +18,7 @@ def print_wires():
     print(_fileGlobals.Wires)
 
 def print_elements_Address():
-    print(_fileGlobals.elements_Address)
+    print(_fileGlobals.elements_Position)
 
 ### end define ###
 

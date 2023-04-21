@@ -7,12 +7,12 @@ import physicsLab.electricity.elementPin as _elementPin
 def old_crt_wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝") -> None: # SourceLabel : Union[_element, tuple]
     SourcePin, TargetPin = int(SourcePin), int(TargetPin)
     if (isinstance(SourceLabel, tuple) and len(SourceLabel) == 3):
-        SourceLabel = _fileGlobals.elements_Address[SourceLabel]
-    elif (SourceLabel not in _fileGlobals.elements_Address.values()):
+        SourceLabel = _fileGlobals.elements_Position[SourceLabel]
+    elif (SourceLabel not in _fileGlobals.elements_Position.values()):
         raise RuntimeError("SourceLabel must be a Positon or self")
     if (isinstance(TargetLabel, tuple) and len(TargetLabel) == 3):
-        TargetLabel = _fileGlobals.elements_Address[TargetLabel]
-    elif (TargetLabel not in _fileGlobals.elements_Address.values()):
+        TargetLabel = _fileGlobals.elements_Position[TargetLabel]
+    elif (TargetLabel not in _fileGlobals.elements_Position.values()):
         raise RuntimeError("TargetLabel must be a Positon or self")
 
     if (color not in ["黑", "蓝", "红", "绿", "黄"]):
