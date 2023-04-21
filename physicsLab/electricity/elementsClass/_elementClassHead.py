@@ -1,10 +1,12 @@
 # coding=utf-8
 import physicsLab._tools as _tools
-from typing import Callable, Union
+from typing import Callable as _Callable
 import physicsLab._fileGlobals as _fileGlobals
 import physicsLab.electricity.elementPin as _elementPin
 import physicsLab.electricity.elementXYZ as _elementXYZ
 
+# 是否为big_Element
+is_big_Element: bool = False
 
 # 所有元件的父类
 class elementObject:
@@ -62,7 +64,7 @@ class elementObject:
 _index = 1
 
 
-def element_Init_HEAD(func: Callable) -> Callable:
+def element_Init_HEAD(func: _Callable) -> _Callable:
     def result(
             self,
             x: _tools.numType = 0,
@@ -76,13 +78,22 @@ def element_Init_HEAD(func: Callable) -> Callable:
                 isinstance(z, (float, int))
         ):
             raise TypeError('illegal argument')
-        x, y, z = _tools.roundData(x), _tools.roundData(y), _tools.roundData(z)
+        # 初始化全局变量
+        global is_big_Element
+        is_big_Element = False
+
+        x, y, z = _tools.roundData(x, y, z)
         self._position = (x, y, z)
         # 元件坐标系
         if elementXYZ == True or (_elementXYZ.elementXYZ == True and elementXYZ is None):
             x, y, z = _elementXYZ.xyzTranslate(x, y, z)
         func(self, x, y, z)
+        # 若是big_Element，则修正坐标
+        if is_big_Element:
+            x, y, z = _elementXYZ.amend_big_Element(x, y, z)
+
         self._arguments["Identifier"] = _tools.randString(32)
+        # x, z, y 物实采用欧拉坐标系
         self._arguments["Position"] = f"{x},{z},{y}"
         _fileGlobals.Elements.append(self._arguments)
 

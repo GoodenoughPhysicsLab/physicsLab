@@ -1,14 +1,20 @@
 #coding=utf-8
-import typing
+import typing as _typing
 
 # type hint
-numType = typing.Union[int, float]
+numType = _typing.Union[int, float]
 
 # 四舍五入physicsLab中的数据
-def roundData(num: numType):
-    # if isinstance(num, int):
-    #     return float(num)
-    return round(num, 4)
+# 支持传入多个数据
+def roundData(*num):
+    if not any(
+        isinstance(i, (int, float)) for i in num
+     ):
+        raise TypeError
+    
+    if len(num) == 1:
+        return round(num[0], 4)
+    return (round(i, 4) for i in num)
 
 # 生成随机字符串
 def randString(strLength: int) -> str:

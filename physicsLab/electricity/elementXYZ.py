@@ -30,10 +30,11 @@ _xUnit: _tools.numType = 0.16
 _yUnit: _tools.numType = 0.08
 _zUnit: _tools.numType = 0.1
 # big_element坐标修正
-_yAmend = 0.04
+_yAmend = 0.045
 
 # 元件坐标系原点
 _xOrigin, _yOrigin, _zOrigin = 0, 0, 0
+
 ### end define ###
 
 # 将元件坐标系转换为物实支持的坐标系
@@ -72,7 +73,11 @@ def set_O(x: _tools.numType, y: _tools.numType, z: _tools.numType) -> None:
         raise TypeError
 
 # 修正bigElement的坐标
-def amend_big_Element(x: _tools.numType, y: _tools.numType, z: _tools.numType):
+def amend_big_Element(
+        x: _tools.numType,
+        y: _tools.numType, 
+        z: _tools.numType
+    ):
     return x, y + _yAmend, z
 
 # 获取坐标原点

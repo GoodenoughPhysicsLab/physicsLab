@@ -169,7 +169,7 @@ class _big_element(_elementClassHead.elementObject):
                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '锁定': 1.0}, 'Statistics': {},
                           'Position': '', 'Rotation': '', 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
-        x, y, z = amend_big_Element(x, y, z)
+        _elementClassHead.is_big_Element = True
 
 # 半加器
 class Half_Adder(_big_element):
