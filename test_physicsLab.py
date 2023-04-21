@@ -8,8 +8,9 @@ class MyTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         tracer = VizTracer()
-        cls.tracer = tracer
         tracer.start()
+
+        cls.tracer = tracer
 
     @classmethod
     def tearDownClass(cls):
