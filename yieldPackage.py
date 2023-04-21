@@ -3,7 +3,6 @@ import os
 import git
 
 if __name__ == '__main__':
-
     string = input('upgrade package to pypi?(y/n)')
     if string == 'y':
         os.system('D:')
