@@ -3,6 +3,7 @@ import typing
 
 # type hint
 number = typing.Union
+
 # 四舍五入physicsLab中的数据
 def roundData(num: number):
     # if isinstance(num, int):
