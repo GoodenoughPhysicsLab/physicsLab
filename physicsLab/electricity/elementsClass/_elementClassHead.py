@@ -85,7 +85,7 @@ def element_Init_HEAD(func: _Callable) -> _Callable:
         x, y, z = _tools.roundData(x, y, z)
         self._position = (x, y, z)
         # 元件坐标系
-        if elementXYZ == True or (_elementXYZ.elementXYZ == True and elementXYZ is None):
+        if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
             x, y, z = _elementXYZ.xyzTranslate(x, y, z)
         func(self, x, y, z)
         # 若是big_Element，则修正坐标
@@ -103,7 +103,7 @@ def element_Init_HEAD(func: _Callable) -> _Callable:
         else:
             elementDict: dict = {
                 'self': [self],
-                'elementXYZ': _elementXYZ.elementXYZ,  # 是否为元件坐标系
+                'elementXYZ': _elementXYZ.is_elementXYZ,  # 是否为元件坐标系
                 'originPosition': tuple(_elementXYZ.get_OriginPosition())  # 坐标原点
             }
             _fileGlobals.elements_Position[self._position] = elementDict

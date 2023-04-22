@@ -149,6 +149,11 @@ b = Or_Gate()  # 创建一个或门，b保存的是Or_Gate的self
         <td>Full_Adder</td>
         <td>Full Adder</td>
     </tr>
+    <tr>
+        <td>二位乘法器</td>
+        <td>Multiplier</td>
+        <td>Multiplier</td>
+    </tr>
 </table>
 未完待续……  
 （如果你着急想看某个原件对应的名字的话，可以直接在源代码的```eletricity\elementClass```中查看所有的元件类）  
@@ -188,6 +193,10 @@ set_elementXYZ(True)
 ```Python
 And_Gate(0, 0, 0.1) # 这个或门的坐标为物实坐标系
 Or_Gate(0, 1, 0, elementXYZ=True) # 这个或门的坐标为元件坐标系，其他元件也一样
+```
+你也可以使用该函数获取是否为元件坐标系：
+```python
+get_elementXYZ() # return a bool
 ```
 
 ## 导线

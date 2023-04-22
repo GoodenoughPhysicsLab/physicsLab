@@ -16,14 +16,18 @@ import physicsLab._tools as _tools
 
 ### define ###
 
-# 是否将全局设置为元件坐标系
-elementXYZ: bool = False
+_elementXYZ: bool = False
 
+# 是否将全局设置为元件坐标系
 def set_elementXYZ(boolen: bool) -> None:
     if not isinstance(boolen, bool):
         raise TypeError
-    global elementXYZ
-    elementXYZ = boolen
+    global _elementXYZ
+    _elementXYZ = boolen
+
+# 获取是否为元件坐标系
+def is_elementXYZ() -> bool:
+    return _elementXYZ
 
 # 物实坐标系x, y, z单位1
 _xUnit: _tools.numType = 0.16

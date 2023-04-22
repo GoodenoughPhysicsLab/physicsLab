@@ -22,7 +22,7 @@ def crt_Element(
     if name == '':
         raise RuntimeError('Name cannot be an empty string')
         # 元件坐标系
-    if elementXYZ == True or (_elementXYZ.elementXYZ == True and elementXYZ is None):
+    if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
         x, y, z = _elementXYZ.xyzTranslate(x, y, z)
     x, y, z = _tools.roundData(x, y, z)
     if (name == '555 Timer'):
