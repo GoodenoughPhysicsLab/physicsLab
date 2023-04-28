@@ -5,7 +5,7 @@ import physicsLab.electricity.elementsClass._elementClassHead as _elementClassHe
 
 # 开关基类
 
-class _switch_Element(_elementClassHead.elementObject):
+class _switch_Element(_elementClassHead.elementBase):
     @_elementClassHead.element_Init_HEAD
     def __init__(self, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ = None):
         self._arguments = {"ModelID": "", "Identifier": "", "IsBroken": False,
@@ -71,7 +71,7 @@ class DPDT_Switch(_switch_Element):
 
 # 按钮开关
 @_elementClassHead.two_pin_ArtificialCircuit_Pin
-class Push_Switch(_elementClassHead.elementObject):
+class Push_Switch(_elementClassHead.elementBase):
     @_elementClassHead.element_Init_HEAD
     def __init__(self, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ = None):
         self._arguments = {
@@ -83,7 +83,7 @@ class Push_Switch(_elementClassHead.elementObject):
 
 # 一节电池
 @_elementClassHead.two_pin_ArtificialCircuit_Pin
-class Battery_Source(_elementClassHead.elementObject):
+class Battery_Source(_elementClassHead.elementBase):
     @_elementClassHead.element_Init_HEAD
     def __init__(self, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Battery Source', 'Identifier': '',
@@ -94,7 +94,7 @@ class Battery_Source(_elementClassHead.elementObject):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 学生电源
-class Student_Source(_elementClassHead.elementObject):
+class Student_Source(_elementClassHead.elementBase):
     @_elementClassHead.element_Init_HEAD
     def __init__(self, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Student Source', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
@@ -127,7 +127,7 @@ class Student_Source(_elementClassHead.elementObject):
 
 # 电阻
 @_elementClassHead.two_pin_ArtificialCircuit_Pin
-class Resistor(_elementClassHead.elementObject):
+class Resistor(_elementClassHead.elementBase):
     @_elementClassHead.element_Init_HEAD
     def __init__(self, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Resistor', 'Identifier': '', 'IsBroken': False,
@@ -141,7 +141,7 @@ class Resistor(_elementClassHead.elementObject):
 
 # 保险丝
 @_elementClassHead.two_pin_ArtificialCircuit_Pin
-class Fuse_Component(_elementClassHead.elementObject):
+class Fuse_Component(_elementClassHead.elementBase):
     @_elementClassHead.element_Init_HEAD
     def __init__(self, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Fuse Component', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
@@ -151,7 +151,7 @@ class Fuse_Component(_elementClassHead.elementObject):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 滑动变阻器
-class Slide_Rheostat(_elementClassHead.elementObject):
+class Slide_Rheostat(_elementClassHead.elementBase):
     @_elementClassHead.element_Init_HEAD
     def __init__(self, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Slide Rheostat', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,

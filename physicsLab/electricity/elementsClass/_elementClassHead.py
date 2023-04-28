@@ -9,7 +9,7 @@ import physicsLab.electricity.elementXYZ as _elementXYZ
 is_big_Element: bool = False
 
 # 所有元件的父类
-class elementObject:
+class elementBase:
     # 设置原件的角度
     def set_Rotation(self, xRotation: _tools.numType = 0, yRotation: _tools.numType = 0,
                      zRotation: _tools.numType = 180):

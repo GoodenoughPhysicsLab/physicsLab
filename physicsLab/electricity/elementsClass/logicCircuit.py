@@ -1,32 +1,26 @@
 #coding=utf-8
 import physicsLab._tools as _tools
-from ..elementXYZ import amend_big_Element
 import physicsLab.electricity.elementPin as _elementPin
 import physicsLab.electricity.elementsClass._elementClassHead as _elementClassHead
 
-# 逻辑电路类装饰器
-def logic_Circuit_Method(cls):
+class _logicBase(_elementClassHead.elementBase):
     # 设置高电平的值
     def set_HighLeaveValue(self, num: _tools.numType) -> None:
         if not isinstance(num, (int, float)):
             raise RuntimeError('illegal argument')
         self._arguments['Properties']['高电平'] = num
-    cls.set_HighLeaveValue = set_HighLeaveValue
 
     # 设置低电平的值
-    def set_LowLeaveValue(self, num : _tools.numType) -> None:
+    def set_LowLeaveValue(self, num: _tools.numType) -> None:
         if not isinstance(num, (int, float)):
             raise RuntimeError('illegal argument')
         self._arguments['Properties']['低电平'] = num
-    cls.set_LowLeaveValue = set_LowLeaveValue
 
-    return cls
 
 # _arguments是参数的意思
 
 # 逻辑输入
-@logic_Circuit_Method
-class Logic_Input(_elementClassHead.elementObject):
+class Logic_Input(_logicBase):
     @_elementClassHead.element_Init_HEAD
     def __init__(self, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ = None):
         self._arguments = {"ModelID": "Logic Input", "Identifier": "",
@@ -45,8 +39,7 @@ class Logic_Input(_elementClassHead.elementObject):
         return _elementPin.element_Pin(self, 0)
 
 # 逻辑输出
-@logic_Circuit_Method
-class Logic_Output(_elementClassHead.elementObject):
+class Logic_Output(_logicBase):
     @_elementClassHead.element_Init_HEAD
     def __init__(self, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Logic Output', 'Identifier': "",
@@ -61,8 +54,7 @@ class Logic_Output(_elementClassHead.elementObject):
             return _elementPin.element_Pin(self, 0)
 
 # 2引脚门电路
-@logic_Circuit_Method
-class _2_pin_Gate(_elementClassHead.elementObject):
+class _2_pin_Gate(_logicBase):
     @_elementClassHead.element_Init_HEAD
     def __init__(self, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': '', 'Identifier': "", 'IsBroken': False,
@@ -91,8 +83,7 @@ class No_Gate(_2_pin_Gate):
         self._arguments['ModelID'] = 'No Gate'
 
 # 3引脚门电路
-@logic_Circuit_Method
-class _3_pin_Gate(_elementClassHead.elementObject):
+class _3_pin_Gate(_logicBase):
     @_elementClassHead.element_Init_HEAD
     def __init__(self, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': '', 'Identifier': '', 'IsBroken': False,
@@ -161,8 +152,7 @@ class Nimp_Gate(_3_pin_Gate):
         self._arguments["ModelID"] = 'Nimp Gate'
 
 # 2体积元件父类
-@logic_Circuit_Method
-class _big_element(_elementClassHead.elementObject):
+class _big_element(_logicBase):
     @_elementClassHead.element_Init_HEAD
     def __init__(self, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': '', 'Identifier': '', 'IsBroken': False,
@@ -388,8 +378,7 @@ class Random_Generator(_big_element):
         return _elementPin.element_Pin(self, 3)
 
 # 8位输入器
-@logic_Circuit_Method
-class eight_bit_Input(_elementClassHead.elementObject):
+class eight_bit_Input(_logicBase):
     @_elementClassHead.element_Init_HEAD
     def __init__(self, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': '8bit Input', 'Identifier': '', 'IsBroken': False,
@@ -436,8 +425,7 @@ class eight_bit_Input(_elementClassHead.elementObject):
         return _elementPin.element_Pin(self, 7)
 
 # 8位显示器
-@logic_Circuit_Method
-class eight_bit_Display(_elementClassHead.elementObject):
+class eight_bit_Display(_logicBase):
     @_elementClassHead.element_Init_HEAD
     def __init__(self, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': '8bit Display', 'Identifier': '',

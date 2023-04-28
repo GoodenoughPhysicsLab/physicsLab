@@ -176,9 +176,12 @@ Or_Gate(0, 0, 0.1) # index = 2
 ```
 返回值是这个坐标对应原件的self，若不存在抛出Error  
 
+### 删除元件
 我们也可以删除原件：
 ```python
-del_Element(self) -> None
+from physicsLab import *
+a = Logic_Input()
+del_Element(a) # input: element's self, output: None
 ```
 因为传入参数为self，所以必要时也需要用get_Element。
 
@@ -187,16 +190,35 @@ del_Element(self) -> None
 元件坐标系的x, y单位长度为1个是门的长、宽，z的单位长度为物实坐标系的0.1  
 此函数将x, y, z的大小设置为原件坐标系
 ```Python
+from physicsLab import *
 set_elementXYZ(True)
 ```
 当你只希望某个元件是元件坐标系，而其他元件不受影响时，physicsLab也提供了对应的机制
 ```Python
+from physicsLab import *
 And_Gate(0, 0, 0.1) # 这个或门的坐标为物实坐标系
 Or_Gate(0, 1, 0, elementXYZ=True) # 这个或门的坐标为元件坐标系，其他元件也一样
 ```
 你也可以使用该函数获取是否为元件坐标系：
 ```python
-get_elementXYZ() # return a bool
+from physicsLab import *
+is_elementXYZ() # return a bool
+```
+
+### Methods
+所有的元件都有一些方法来操作
+```python
+from physicsLab import *
+a = Logic_Input()
+
+a.set_highLevel() # 将逻辑输入设置为输出为1
+a.get_Position()
+a.type()
+a.father_type()
+a.get_Index()
+a.set_HighLeaveValue(3)
+a.set_LowLeaveValue(0)
+a.print_arguments()
 ```
 
 ## 导线
@@ -207,6 +229,7 @@ crt_Wire(SourcePin, TargetPin, color: str = '蓝') -> None
 ```
 所有原件都定义得有自己的引脚名称，这里举个例子：  
 ```python
+from physicsLab import *
 a = Or_Gate(0.1, 0.1, 0)
 crt_Wire(a.o, a.i_up)
 ```
