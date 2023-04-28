@@ -10,5 +10,6 @@ bad apple.py
 /dist/
 /physicsLab projects/
 /.vscode/
+/.vs/
 *.code-workspace
 *.json

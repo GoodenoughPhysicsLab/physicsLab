@@ -8,6 +8,7 @@ import physicsLab.errors as errors
 import physicsLab._colorUtils as _colorUtils
 import physicsLab._fileGlobals as _fileGlobals
 from physicsLab.electricity.element import crt_Element
+import physicsLab.electricity.elementXYZ as _elementXYZ
 
 ### define ###
 
@@ -27,8 +28,9 @@ class experiment:
     def __init__(
             self,
             file: str,
-            read: bool = False # 是否读取存档原有状态
-    ) -> None:
+            read: bool = False, # 是否读取存档原有状态
+            elementXYZ: bool = False
+    ):
         if not (
             isinstance(file, str)
             and isinstance(read, bool)
@@ -37,6 +39,7 @@ class experiment:
 
         self.file = file
         self.read = read
+        self.elementXYZ = elementXYZ
 
     # 上下文管理器，搭配with使用
     def __enter__(self):
@@ -44,8 +47,11 @@ class experiment:
             open_Experiment(self.file)
         except errors.openExperimentError: # 如果存档不存在
             crt_Experiment(self.file)
+
         if self.read:
             read_Experiment()
+        if self.elementXYZ:
+            _elementXYZ.set_elementXYZ(True)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         write_Experiment()

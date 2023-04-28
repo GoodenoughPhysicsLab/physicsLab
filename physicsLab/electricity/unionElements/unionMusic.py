@@ -2,7 +2,7 @@
 import math as _math
 from typing import Union as _Union
 import physicsLab._tools as _tools
-import physicsLab.electricity as eletricity
+import physicsLab.electricity as _eletricity
 '''
 How do you play music in physics Lab AR?
 Music extension might make it easier than before!
@@ -33,8 +33,8 @@ class union_music:
             z: _tools.numType = 0,
             musicArray: _Union[list, tuple] = ()
     ):
-        tick = eletricity.Nimp_Gate(x, y + 0.1, z)
-        eletricity.crt_Wire(eletricity.Logic_Input(x, y, z).o, tick.i_up), eletricity.crt_Wire(tick.o, tick.i_low)
-        eletricity.crt_Wire(tick.o, eletricity.Counter(x + 0.2, y, z).i_up)
+        tick = _eletricity.Nimp_Gate(x, y + 0.1, z)
+        _eletricity.crt_Wire(_eletricity.Logic_Input(x, y, z).o, tick.i_up), _eletricity.crt_Wire(tick.o, tick.i_low)
+        _eletricity.crt_Wire(tick.o, _eletricity.Counter(x + 0.2, y, z).i_up)
         side = _math.ceil(_math.sqrt(musicArray.__len__()))
         pass
