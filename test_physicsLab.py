@@ -33,6 +33,9 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(count_Elements(), 1)
         write_Experiment()
         crt_Wire(a.o, a.i)
+        crt_Element('Logic Input')
+        self.assertEqual(count_Elements(), 2)
+        get_Element(0, 0, 0)
         write_Experiment()
 
     def test_read_Experiment(self):

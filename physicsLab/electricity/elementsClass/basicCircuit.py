@@ -28,15 +28,15 @@ class SPDT_Switch(_switch_Element):
         self._arguments['ModelID'] = 'SPDT Switch'
 
     @property
-    def l(self):
+    def l(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 0)
 
     @property
-    def mid(self):
+    def mid(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 1)
 
     @property
-    def r(self):
+    def r(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 2)
 
 # 双刀双掷开关
@@ -46,27 +46,27 @@ class DPDT_Switch(_switch_Element):
         self._arguments['ModelID'] = 'DPDT Switch'
 
     @property
-    def l_up(self):
+    def l_up(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 3)
 
     @property
-    def mid_up(self):
+    def mid_up(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 4)
 
     @property
-    def r_up(self):
+    def r_up(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 5)
 
     @property
-    def l_low(self):
+    def l_low(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 0)
 
     @property
-    def mid_low(self):
+    def mid_low(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 1)
 
     @property
-    def r_low(self):
+    def r_low(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 2)
 
 # 按钮开关
@@ -110,19 +110,19 @@ class Student_Source(_elementClassHead.elementBase):
                            'DiagramRotation': 0}
 
     @property
-    def l(self):
+    def l(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 0)
 
     @property
-    def l_mid(self):
+    def l_mid(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 1)
 
     @property
-    def r_mid(self):
+    def r_mid(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 2)
 
     @property
-    def r(self):
+    def r(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 3)
 
 # 电阻
@@ -162,17 +162,17 @@ class Slide_Rheostat(_elementClassHead.elementBase):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
     @property
-    def l_low(self):
+    def l_low(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 0)
 
     @property
-    def r_low(self):
+    def r_low(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 1)
 
     @property
-    def l_up(self):
+    def l_up(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 2)
 
     @property
-    def r_up(self):
+    def r_up(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 3)

@@ -31,11 +31,11 @@ class Simple_Instrument(_elementClassHead.elementBase):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
     @property
-    def i(self):
+    def i(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 0)
 
     @property
-    def o(self):
+    def o(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 1)
 
     # 设置音高

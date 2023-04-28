@@ -1,8 +1,8 @@
 #coding=utf-8
 import physicsLab._tools as _tools
 import physicsLab._fileGlobals as _fileGlobals
-from physicsLab.electricity.elementsClass import *
 import physicsLab.electricity.elementXYZ as _elementXYZ
+import physicsLab.electricity.elementsClass as _elementsClass
 
 # 创建原件，本质上仍然是实例化
 def crt_Element(
@@ -26,19 +26,19 @@ def crt_Element(
         x, y, z = _elementXYZ.xyzTranslate(x, y, z)
     x, y, z = _tools.roundData(x, y, z)
     if (name == '555 Timer'):
-        return NE555(x, y, z)
+        return _elementsClass.NE555(x, y, z)
     elif (name == '8bit Input'):
-        return eight_bit_Input(x, y, z)
+        return _elementsClass.eight_bit_Input(x, y, z)
     elif (name == '8bit Display'):
-        return eight_bit_Display(x, y, z)
+        return _elementsClass.eight_bit_Display(x, y, z)
     else:
         try:
-            return eval(name.replace(' ', '_').replace('-', '_') + f'({x},{y},{z})')
+            return eval(f"_elementsClass.{name.replace(' ', '_').replace('-', '_')}({x},{y},{z})")
         except SyntaxError:
             raise RuntimeError(f"{name} original that does not exist")
 
 # 获取对应坐标的self
-def get_Element(*args, **kwargs):
+def get_Element(*args, **kwargs) -> _elementsClass.elementBase:
     # 通过坐标索引元件
     def position_Element(x: _tools.numType, y: _tools.numType, z: _tools.numType):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):

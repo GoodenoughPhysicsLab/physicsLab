@@ -19,35 +19,35 @@ class NE555(_elementClassHead.elementBase):
         _elementClassHead.is_big_Element = True
 
     @property
-    def VCC(self):
+    def VCC(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 0)
 
     @property
-    def Dis(self):
+    def Dis(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 1)
 
     @property
-    def Thr(self):
+    def Thr(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 2)
 
     @property
-    def Ctrl(self):
+    def Ctrl(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 3)
 
     @property
-    def Trig(self):
+    def Trig(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 4)
 
     @property
-    def Out(self):
+    def Out(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 5)
 
     @property
-    def Reset(self):
+    def Reset(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 6)
 
     @property
-    def Ground(self):
+    def Ground(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 7)
 
 # 电容
@@ -72,7 +72,7 @@ class Ground_Component(_elementClassHead.elementBase):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
     @property
-    def i(self):
+    def i(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 0)
 
 # 运算放大器
@@ -89,15 +89,15 @@ class Operational_Amplifier(_elementClassHead.elementBase):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
     @property
-    def i_up(self):
+    def i_up(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 0)
 
     @property
-    def i_low(self):
+    def i_low(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 1)
 
     @property
-    def o(self):
+    def o(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 2)
 
 # 继电器
@@ -112,23 +112,23 @@ class Relay_Component(_elementClassHead.elementBase):
                            'DiagramRotation': 0}
 
     @property
-    def l_up(self):
+    def l_up(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 0)
 
     @property
-    def l_low(self):
+    def l_low(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 2)
 
     @property
-    def mid(self):
+    def mid(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 1)
 
     @property
-    def r_up(self):
+    def r_up(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 4)
 
     @property
-    def r_low(self):
+    def r_low(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 5)
 
 # n mos
@@ -142,15 +142,15 @@ class N_MOSFET(_elementClassHead.elementBase):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
     @property
-    def D(self):
+    def D(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 2)
 
     @property
-    def S(self):
+    def S(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 1)
 
     @property
-    def G(self):
+    def G(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 0)
 
 # 波形发生器基类
@@ -165,12 +165,12 @@ class _source_element(_elementClassHead.elementBase):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
     @property
-    def l(self):
+    def l(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 0)
     i = l
 
     @property
-    def r(self):
+    def r(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 1)
     o = r
 
