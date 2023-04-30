@@ -25,7 +25,6 @@ def check_TypeUnionPin(func: Callable):
         if len(sourcePin.elementPins) != len(targetPin.elementPins):
             errors.warning("The number of input and output pins is not equal")
 
-        print(sourcePin, targetPin)
         func(sourcePin, targetPin, color)
     return result
 
