@@ -88,14 +88,6 @@ def amend_big_Element(
 def get_OriginPosition():
     return _xOrigin, _yOrigin, _zOrigin
 
-'''
-# x, y, z是否经元件坐标系转换
-def setup_elementXYZ(x, y, z, func_elementXYZ):
-    if func_elementXYZ == True or (is_elementXYZ() == True and func_elementXYZ is None):
-        x, y, z = xyzTranslate(x, y, z)
-        return
-'''
-
 # 输入"x" 返回_xUnit
 # 输入"y", "z" 返回_yUnit, _zUnit
 def get_xyzUnit(*args):

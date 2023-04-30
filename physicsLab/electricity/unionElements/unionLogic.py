@@ -262,8 +262,71 @@ class inputs(_unionClassHead.unionBase):
         )
 
     @property
-    def outputData(self) -> unionPin:
+    def data_Output(self) -> unionPin:
         return unionPin(element.o for element in self.__elements)
+
+# 多个逻辑输入（暂不支持m * n矩阵排列元件的方式）
+class outputs(_unionClassHead.unionBase):
+    def __init__(
+            self,
+            x: _tools.numType = 0,
+            y: _tools.numType = 0,
+            z: _tools.numType = 0,
+            bitLength: int = None,
+            elementXYZ: bool = None,  # x, y, z是否为元件坐标系
+            unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
+            fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
+            foldMaxNum: int = 8  # 达到foldMaxNum个元件数时即在z轴自动折叠
+    ) -> None:
+        # 搭配_unionHeading_fold使用
+        def func1():
+            zcor = z
+            for i in range(bitLength):
+                self.__elements.append(
+                    electricity.Logic_Output(x + i % foldMaxNum, y, zcor, True)
+                )
+                if i == foldMaxNum - 1:
+                    zcor += 1
+
+        def func2():
+            for i in range(bitLength):
+                self.__elements.append(
+                    _elementsClass.Logic_Output(x + i, y, z, True)
+                )
+
+        def func3():
+            zcor = z
+            for i in range(bitLength):
+                self.__elements.append(
+                    electricity.Logic_Output(x, y + i % foldMaxNum, zcor, True)
+                )
+                if i == foldMaxNum - 1:
+                    zcor += 1
+
+        def func4():
+            for i in range(bitLength):
+                self.__elements.append(
+                    _elementsClass.Logic_Output(x, y + i, z, True)
+                )
+
+        # main
+        x, y, z = _unionClassHead.union_Init_HEAD(
+            x, y, z,
+            bitLength,
+            elementXYZ,
+            unionHeading,
+            fold,
+            foldMaxNum
+        )
+
+        self.__elements: _typing.List[_elementsClass.Logic_Output] = []
+        _unionHeading_fold(
+            func1, func2, func3, func4, unionHeading, fold
+        )
+
+    @property
+    def data_Output(self) -> unionPin:
+        return unionPin(element.i for element in self.__elements)
 
 # D触发器流水灯
 class d_WaterLamp(_unionClassHead.unionBase):
@@ -337,11 +400,11 @@ class d_WaterLamp(_unionClassHead.unionBase):
         link_D_Flipflop(self.__elements)
 
     @property
-    def inputData(self) -> unionPin:
+    def data_Input(self) -> unionPin:
         return unionPin(self.__elements[0].i_low)
 
     @property
-    def outputData(self) -> unionPin:
+    def data_Output(self) -> unionPin:
         return unionPin(
             self.__elements[0].i_low,
             *(element.o_up for element in self.__elements[1:])
