@@ -27,7 +27,7 @@ if __name__ == "__main__":
             commitStr = input("input commit massage: ")
             if commitStr is not None:
                 break
-        repo.commit(commitStr)
+        repo.commit("-m", commitStr)
 
         repo.push("gitee", "master")
         repo.push("github", "master")
