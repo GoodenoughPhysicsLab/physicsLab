@@ -10,7 +10,7 @@ class element_Pin:
         self.pinLabel: int = pinLabel
 
     # 重载减法运算符作为连接导线的语法
-    def __sub__(self, obj):
+    def __sub__(self, obj: "element_Pin"):
         crt_Wire(self, obj)
         return obj
 

@@ -263,7 +263,7 @@ class inputs(_unionClassHead.unionBase):
 
     @property
     def data_Output(self) -> unionPin:
-        return unionPin(element.o for element in self.__elements)
+        return unionPin(*(element.o for element in self.__elements))
 
 # 多个逻辑输入（暂不支持m * n矩阵排列元件的方式）
 class outputs(_unionClassHead.unionBase):
@@ -325,8 +325,8 @@ class outputs(_unionClassHead.unionBase):
         )
 
     @property
-    def data_Output(self) -> unionPin:
-        return unionPin(element.i for element in self.__elements)
+    def data_Input(self) -> unionPin:
+        return unionPin(*(element.i for element in self.__elements))
 
 # D触发器流水灯
 class d_WaterLamp(_unionClassHead.unionBase):
@@ -406,6 +406,6 @@ class d_WaterLamp(_unionClassHead.unionBase):
     @property
     def data_Output(self) -> unionPin:
         return unionPin(
-            self.__elements[0].i_low,
+            self.__elements[0].o_low,
             *(element.o_up for element in self.__elements[1:])
         )

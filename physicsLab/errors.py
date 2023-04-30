@@ -11,3 +11,7 @@ class openExperimentError(Exception):
 
 class wireColorError(Exception):
     pass
+
+class wireNotFoundError(Exception):
+    def __str__(self):
+        return "Unable to delete a nonexistent wire"

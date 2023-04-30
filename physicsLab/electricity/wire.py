@@ -23,37 +23,45 @@ def old_crt_wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, col
 
 # 检查函数参数是否是导线
 def _check_typeWire(func):
-    def result(SourcePin, TargetPin, color : str = '蓝') -> None:
-        try:
-            if (
-                    isinstance(SourcePin, _elementPin.element_Pin) and
-                    isinstance(TargetPin, _elementPin.element_Pin)
-            ):
-                if (color not in ["黑", "蓝", "红", "绿", "黄"]):
-                    raise errors.wireColorError("illegal color")
+    def result(SourcePin: "_elementPin.element_Pin", TargetPin: "_elementPin.element_Pin", color: str = '蓝') -> None:
+        if (
+                isinstance(SourcePin, _elementPin.element_Pin) and
+                isinstance(TargetPin, _elementPin.element_Pin)
+        ):
+            if (color not in ["黑", "蓝", "红", "绿", "黄"]):
+                raise errors.wireColorError("illegal color")
 
-                func(SourcePin, TargetPin, color)
-        except:
-            raise TypeError('Error type of input function argument')
+            func(SourcePin, TargetPin, color)
+
     return result
 
 # 新版连接导线
 @_check_typeWire
-def crt_Wire(SourcePin, TargetPin, color: str = '蓝') -> None:
+def crt_Wire(SourcePin: "_elementPin.element_Pin", TargetPin: "_elementPin.element_Pin", color: str = '蓝') -> None:
     _fileGlobals.Wires.append({"Source": SourcePin.element_self._arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
                    "Target": TargetPin.element_self._arguments["Identifier"], "TargetPin": TargetPin.pinLabel,
                    "ColorName": f"{color}色导线"})
 
 # 删除导线
 @_check_typeWire
-def del_Wire(SourcePin, TargetPin, color : str = '蓝') -> None:
-    a_wire = {"Source": SourcePin.element_self._arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
-                   "Target": TargetPin.element_self._arguments["Identifier"], "TargetPin": TargetPin.pinLabel,
-                   "ColorName": f"{color}色导线"}
-    if (a_wire in _fileGlobals.Wires):
+def del_Wire(SourcePin: "_elementPin.element_Pin", TargetPin: "_elementPin.element_Pin", color: str = '蓝') -> None:
+    a_wire = {
+        "Source": SourcePin.element_self._arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
+        "Target": TargetPin.element_self._arguments["Identifier"], "TargetPin": TargetPin.pinLabel,
+        "ColorName": f"{color}色导线"
+    }
+    if a_wire in _fileGlobals.Wires:
         _fileGlobals.Wires.remove(a_wire)
     else:
-        raise RuntimeError("Unable to delete a nonexistent wire")
+        a_wire = {
+            "Source": TargetPin.element_self._arguments["Identifier"], "SourcePin": TargetPin.pinLabel,
+            "Target": SourcePin.element_self._arguments["Identifier"], "TargetPin": SourcePin.pinLabel,
+            "ColorName": f"{color}色导线"
+        }
+        if a_wire in _fileGlobals.Wires:
+            _fileGlobals.Wires.remove(a_wire)
+        else:
+            raise errors.wireColorError
 
 # 删除所有导线
 def clear_Wires() -> None:

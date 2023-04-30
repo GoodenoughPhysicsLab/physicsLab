@@ -225,7 +225,13 @@ a.print_arguments()
 连接导线提供了2种方式  
 第一种：  
 ```Python
-crt_Wire(SourcePin, TargetPin, color: str = '蓝') -> None
+from physicsLab import *
+element = Logic_Input()
+element2 = Logic_Output()
+
+crt_Wire(element.o, element2.i, color='红') 
+# color暂时只支持中文的 "黑", "蓝", "红", "绿", "黄"
+# 不传入color参数的话，color默认为蓝色
 ```
 所有原件都定义得有自己的引脚名称，这里举个例子：  
 ```python
@@ -240,6 +246,7 @@ crt_Wire(a.o, a.i_up)
 4个输入引脚：i_up, i_upmid, i_lowmid, i_low  
 输出是一样的，仅仅换成了o_xxx罢了。  
 模电的命名可能是根据左右引脚来区分的，也就是l_up, r_low之类的，也可能是根据物实的引脚名  
+如果以后有时间的话，也会打个表  
 
 另一种连接引脚的方式是不推荐使用的老函数：  
 ```Python
@@ -289,11 +296,17 @@ D触发器：
   
 除了创建导线外，也可以删除导线：  
 ```Python
+from physicsLab import *
+element = Logic_Input()
+element2 = Logic_Output()
+
 del_Wire(element.o, element2.i)
 ```
 使用方法与crt_Wire一模一样  
   
 （这篇readme应该介绍了大部分常用功能）
+
+## 模块化电路
 
 # 物实程序化3  
 我也曾试过物实程序化3，发现爆了文件错误  
