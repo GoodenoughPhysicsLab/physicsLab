@@ -10,7 +10,7 @@ class unionPin:
             self,
             *elementPins,
     ):
-        self.elementPins: _typing.Tuple[elementPin] = tuple(elementPins)
+        self.elementPins: _typing.Tuple[elementPin.element_Pin] = tuple(elementPins)
 
     # 通过unionPin[num]来索引单个bit
     def __getitem__(self, item):
