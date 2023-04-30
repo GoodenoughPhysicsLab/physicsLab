@@ -3,6 +3,7 @@
 import typing as _typing
 import physicsLab._tools as _tools
 import physicsLab.electricity as electricity
+import physicsLab.electricity.elementXYZ as _elementXYZ
 import physicsLab.electricity.elementsClass as _elementsClass
 from physicsLab.electricity.unionElements.unionPin import unionPin
 import physicsLab.electricity.unionElements._unionClassHead as _unionClassHead
@@ -219,7 +220,7 @@ class inputs(_unionClassHead.unionBase):
             zcor = z
             for i in range(bitLength):
                 self.__elements.append(
-                    electricity.Logic_Input(x + i % foldMaxNum, y, zcor, elementXYZ)
+                    electricity.Logic_Input(x + i % foldMaxNum, y, zcor, True)
                 )
                 if i == foldMaxNum - 1:
                     zcor += 1
@@ -227,14 +228,14 @@ class inputs(_unionClassHead.unionBase):
         def func2():
             for i in range(bitLength):
                 self.__elements.append(
-                    _elementsClass.Logic_Input(x + i, y, z, elementXYZ)
+                    _elementsClass.Logic_Input(x + i, y, z, True)
                 )
 
         def func3():
             zcor = z
             for i in range(bitLength):
                 self.__elements.append(
-                    electricity.Logic_Input(x, y + i % foldMaxNum, zcor, elementXYZ)
+                    electricity.Logic_Input(x, y + i % foldMaxNum, zcor, True)
                 )
                 if i == foldMaxNum - 1:
                     zcor += 1
@@ -242,7 +243,7 @@ class inputs(_unionClassHead.unionBase):
         def func4():
             for i in range(bitLength):
                 self.__elements.append(
-                    _elementsClass.Logic_Input(x, y + i, z, elementXYZ)
+                    _elementsClass.Logic_Input(x, y + i, z, True)
                 )
 
         # main
@@ -293,7 +294,7 @@ class d_WaterLamp(_unionClassHead.unionBase):
             zcor = z
             for i in range(bitLength):
                 self.__elements.append(
-                    electricity.D_Flipflop(x + i % foldMaxNum, y, zcor, elementXYZ)
+                    electricity.D_Flipflop(x + i % foldMaxNum, y, zcor, True)
                 )
                 if i == foldMaxNum - 1:
                     zcor += 1
@@ -301,14 +302,14 @@ class d_WaterLamp(_unionClassHead.unionBase):
         def func2():
             for increase in range(bitLength):
                 self.__elements.append(
-                    electricity.D_Flipflop(x + increase, y, z, elementXYZ)
+                    electricity.D_Flipflop(x + increase, y, z, True)
                 )
 
         def func3():
             zcor = z
             for i in range(bitLength):
                 self.__elements.append(
-                    electricity.D_Flipflop(x, y + (i % foldMaxNum) * 2, zcor, elementXYZ)
+                    electricity.D_Flipflop(x, y + (i % foldMaxNum) * 2, zcor, True)
                 )
                 if i == foldMaxNum - 1:
                     zcor += 1
@@ -316,7 +317,7 @@ class d_WaterLamp(_unionClassHead.unionBase):
         def func4():
             for increase in range(bitLength):
                 self.__elements.append(
-                    electricity.D_Flipflop(x, y + increase * 2, z, elementXYZ)
+                    electricity.D_Flipflop(x, y + increase * 2, z, True)
                 )
 
         # main

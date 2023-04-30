@@ -35,4 +35,8 @@ def union_Init_HEAD(
     if not isinstance(bitLength, int):
         raise TypeError("bitLength must get a integer")
 
+    # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
+    if not (elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None)):
+        x, y, z = _elementXYZ.translateXYZ(x, y, z)
+
     return _tools.roundData(x, y, z)

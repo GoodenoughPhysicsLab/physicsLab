@@ -95,3 +95,17 @@ def setup_elementXYZ(x, y, z, func_elementXYZ):
         x, y, z = xyzTranslate(x, y, z)
         return
 '''
+
+# 输入"x" 返回_xUnit
+# 输入"y", "z" 返回_yUnit, _zUnit
+def get_xyzUnit(*args):
+    if any(i not in ("x", "y", "z") for i in args):
+        raise TypeError
+    index = {
+        "x": _xUnit,
+        "y": _yUnit,
+        "z": _zUnit
+    }
+    if len(args) == 1:
+        return index[args[0]]
+    return (index[string] for string in args)

@@ -104,3 +104,8 @@ def fileGlobals_init() -> None:
 
     elements_Position = {}
     elements_Index = []
+
+# 获取sav
+def get_Sav() -> dict:
+    import copy
+    return copy.deepcopy(sav)

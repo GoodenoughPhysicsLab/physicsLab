@@ -10,6 +10,8 @@ from physicsLab.electromagnetism import *
 # 自定义异常类
 from physicsLab.errors import *
 
+from physicsLab._fileGlobals import get_Sav
+
 '''
 __all__ = [
     
