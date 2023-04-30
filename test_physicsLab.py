@@ -128,5 +128,18 @@ class MyTestCase(unittest.TestCase):
             del_Element(get_Element(2))
             self.assertEqual(count_Elements(), 1)
 
+    # 测逝模块化电路连接导线
+    def test_wires(self):
+        with experiment('测逝', elementXYZ=True):
+            a = inputs(0, 0, 0, 8)
+            b = outputs(0.6, 0, 0, 8, elementXYZ=False)
+            Logic_Output(0.6, 0, 0.1, elementXYZ=False)
+            c = d_WaterLamp(1, 0, 0, bitLength=8)
+            crt_Wires(b.data_Input, c.data_Output)
+            self.assertEqual(25, count_Elements())
+            self.assertEqual(23, count_Wires())
+            del_Wires(c.data_Output, b.data_Input)
+            self.assertEqual(15, count_Wires())
+
 if __name__ == '__main__':
     unittest.main()
