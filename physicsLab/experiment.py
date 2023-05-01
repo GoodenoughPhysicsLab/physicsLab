@@ -193,6 +193,8 @@ def read_Experiment() -> None:
         _local_Elements = _json.loads(readmem["Experiment"]["StatusSave"])["Elements"]
         # 导线
         _fileGlobals.Wires = _json.loads(readmem['Experiment']['StatusSave'])['Wires']
+        # 实验介绍
+        _fileGlobals.sav['Summary']["Description"] = readmem["Summary"]["Description"]
 
         for element in _local_Elements:
             # 坐标标准化（消除浮点误差）

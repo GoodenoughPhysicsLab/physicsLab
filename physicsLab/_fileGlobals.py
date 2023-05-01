@@ -45,7 +45,7 @@ def fileGlobals_init() -> None:
             "ContentID": None,
             "Editor": None,
             "Coauthors": [],
-            "Description": None,
+            "Description": None, # 实验介绍
             "LocalizedDescription": None,
             "Tags": [
                 "Type-0"
