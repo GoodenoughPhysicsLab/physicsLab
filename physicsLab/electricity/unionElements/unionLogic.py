@@ -219,7 +219,7 @@ class inputs(_unionClassHead.unionBase):
         def func1():
             zcor = z
             for i in range(bitLength):
-                self.__elements.append(
+                self._elements.append(
                     electricity.Logic_Input(x + i % foldMaxNum, y, zcor, True)
                 )
                 if i == foldMaxNum - 1:
@@ -227,14 +227,14 @@ class inputs(_unionClassHead.unionBase):
 
         def func2():
             for i in range(bitLength):
-                self.__elements.append(
+                self._elements.append(
                     _elementsClass.Logic_Input(x + i, y, z, True)
                 )
 
         def func3():
             zcor = z
             for i in range(bitLength):
-                self.__elements.append(
+                self._elements.append(
                     electricity.Logic_Input(x, y + i % foldMaxNum, zcor, True)
                 )
                 if i == foldMaxNum - 1:
@@ -242,7 +242,7 @@ class inputs(_unionClassHead.unionBase):
 
         def func4():
             for i in range(bitLength):
-                self.__elements.append(
+                self._elements.append(
                     _elementsClass.Logic_Input(x, y + i, z, True)
                 )
 
@@ -256,14 +256,14 @@ class inputs(_unionClassHead.unionBase):
             foldMaxNum
         )
 
-        self.__elements: _typing.List[_elementsClass.Logic_Input] = []
+        self._elements: _typing.List[_elementsClass.Logic_Input] = []
         _unionHeading_fold(
             func1, func2, func3, func4, unionHeading, fold
         )
 
     @property
     def data_Output(self) -> unionPin:
-        return unionPin(*(element.o for element in self.__elements))
+        return unionPin(*(element.o for element in self._elements))
 
 # 多个逻辑输入（暂不支持m * n矩阵排列元件的方式）
 class outputs(_unionClassHead.unionBase):
@@ -282,7 +282,7 @@ class outputs(_unionClassHead.unionBase):
         def func1():
             zcor = z
             for i in range(bitLength):
-                self.__elements.append(
+                self._elements.append(
                     electricity.Logic_Output(x + i % foldMaxNum, y, zcor, True)
                 )
                 if i == foldMaxNum - 1:
@@ -290,14 +290,14 @@ class outputs(_unionClassHead.unionBase):
 
         def func2():
             for i in range(bitLength):
-                self.__elements.append(
+                self._elements.append(
                     _elementsClass.Logic_Output(x + i, y, z, True)
                 )
 
         def func3():
             zcor = z
             for i in range(bitLength):
-                self.__elements.append(
+                self._elements.append(
                     electricity.Logic_Output(x, y + i % foldMaxNum, zcor, True)
                 )
                 if i == foldMaxNum - 1:
@@ -305,7 +305,7 @@ class outputs(_unionClassHead.unionBase):
 
         def func4():
             for i in range(bitLength):
-                self.__elements.append(
+                self._elements.append(
                     _elementsClass.Logic_Output(x, y + i, z, True)
                 )
 
@@ -319,14 +319,14 @@ class outputs(_unionClassHead.unionBase):
             foldMaxNum
         )
 
-        self.__elements: _typing.List[_elementsClass.Logic_Output] = []
+        self._elements: _typing.List[_elementsClass.Logic_Output] = []
         _unionHeading_fold(
             func1, func2, func3, func4, unionHeading, fold
         )
 
     @property
     def data_Input(self) -> unionPin:
-        return unionPin(*(element.i for element in self.__elements))
+        return unionPin(*(element.i for element in self._elements))
 
 # D触发器流水灯
 class d_WaterLamp(_unionClassHead.unionBase):
@@ -356,7 +356,7 @@ class d_WaterLamp(_unionClassHead.unionBase):
         def func1():
             zcor = z
             for i in range(bitLength):
-                self.__elements.append(
+                self._elements.append(
                     electricity.D_Flipflop(x + i % foldMaxNum, y, zcor, True)
                 )
                 if i == foldMaxNum - 1:
@@ -364,14 +364,14 @@ class d_WaterLamp(_unionClassHead.unionBase):
 
         def func2():
             for increase in range(bitLength):
-                self.__elements.append(
+                self._elements.append(
                     electricity.D_Flipflop(x + increase, y, z, True)
                 )
 
         def func3():
             zcor = z
             for i in range(bitLength):
-                self.__elements.append(
+                self._elements.append(
                     electricity.D_Flipflop(x, y + (i % foldMaxNum) * 2, zcor, True)
                 )
                 if i == foldMaxNum - 1:
@@ -379,7 +379,7 @@ class d_WaterLamp(_unionClassHead.unionBase):
 
         def func4():
             for increase in range(bitLength):
-                self.__elements.append(
+                self._elements.append(
                     electricity.D_Flipflop(x, y + increase * 2, z, True)
                 )
 
@@ -393,19 +393,19 @@ class d_WaterLamp(_unionClassHead.unionBase):
             foldMaxNum
         )
 
-        self.__elements: _typing.List[_elementsClass.D_Flipflop] = []
+        self._elements: _typing.List[_elementsClass.D_Flipflop] = []
         _unionHeading_fold(
             func1, func2, func3, func4, unionHeading, fold
         )
-        link_D_Flipflop(self.__elements)
+        link_D_Flipflop(self._elements)
 
     @property
     def data_Input(self) -> unionPin:
-        return unionPin(self.__elements[0].i_low)
+        return unionPin(self._elements[0].i_low)
 
     @property
     def data_Output(self) -> unionPin:
         return unionPin(
-            self.__elements[0].o_low,
-            *(element.o_up for element in self.__elements[1:])
+            self._elements[0].o_low,
+            *(element.o_up for element in self._elements[1:])
         )

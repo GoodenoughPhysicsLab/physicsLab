@@ -24,7 +24,7 @@ class Simple_Instrument(_elementClassHead.elementBase):
     @_elementClassHead.element_Init_HEAD
     def __init__(self, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Simple Instrument', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
-                           'Properties': {'额定电压': 3.0, '额定功率': 0.3, '音量': 1.0, '音高': 60.0, '节拍': 70.0, '锁定': 1.0,
+                           'Properties': {'额定电压': 3.0, '额定功率': 0.3, '音量': 1.0, '音高': 60.0, '节拍': 80.0, '锁定': 1.0,
                                           '乐器': 1.0},
                            'Statistics': {'瞬间功率': 0, '瞬间电流': 0, '瞬间电压': 0, '功率': 0, '电压': 0, '电流': 0},
                            'Position': '', 'Rotation': '', 'DiagramCached': False,
@@ -53,7 +53,7 @@ class Simple_Instrument(_elementClassHead.elementBase):
         升1个八度： '1.', '1#.', '2' ...
         以此类推即可
     '''
-    def set_Tonality(self, tonality: _tools.numType) -> None:
+    def set_Tonality(self, tonality: _tools.numType) -> "Simple_Instrument":
         if isinstance(tonality, int):
             if 0 < tonality < 8:
                 raise RuntimeError('Input data error')
@@ -93,3 +93,12 @@ class Simple_Instrument(_elementClassHead.elementBase):
             else:
                 raise RuntimeError('Input data error')
         self._arguments['Properties']['音高'] = pitch
+        return self
+
+    # 另一种输入音符的格式： C5, D6 ...
+    # 应该不用过多介绍了吧（
+    def note(self, aNote):
+        if not isinstance(aNote, str):
+            raise TypeError
+        aNote.strip().lower()
+        pass

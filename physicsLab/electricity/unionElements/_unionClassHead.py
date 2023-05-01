@@ -1,11 +1,14 @@
 #coding=utf-8
 import physicsLab._tools as _tools
 import physicsLab.electricity.elementXYZ as _elementXYZ
+import physicsLab.electricity.elementsClass as _elementsClass
 # Union class的基类
 class unionBase:
     # 获取以模块化电路生成顺序为item的原件的self
-    def __getitem__(self, item):
-        return self.__elements[item]
+    def __getitem__(self, item: int) -> "_elementsClass.elementBase":
+        if not isinstance(item, int):
+            raise TypeError
+        return self._elements[item]
     # 设置坐标
     def set_Position(self, x, y, z):
         pass
@@ -32,7 +35,7 @@ def union_Init_HEAD(
         isinstance(foldMaxNum, int)
     ):
         raise TypeError
-    if not isinstance(bitLength, int):
+    if not isinstance(bitLength, int) or bitLength < 1:
         raise TypeError("bitLength must get a integer")
 
     # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系

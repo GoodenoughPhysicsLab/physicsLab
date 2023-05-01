@@ -39,6 +39,17 @@ crt_Wire(o.i_up, o.i_low)
 write_Experiment()  
  # 然后用物实打开存档见证奇迹  
 ```
+如今有了更优雅的方式：
+```python
+from physicsLab import *
+
+with experiment('测逝', read=True, elementXYZ=True):
+    Logic_Input(0, 0, 1)
+    o = Or_Gate()
+    o.i_up - o.i_low # 连接导线
+```
+上面两段代码产生的结果是一样的  
+  
 更详细的内容请查看[functions.md](functions.md)  
 请注意：Python采用GBK编码，而物实用的是utf-8，尽管尽量确保编码格式正确，但中文仍有可能出现问题，因此建议多用英文。  
 
