@@ -13,11 +13,15 @@ class elementBase:
     # 设置原件的角度
     def set_Rotation(self, xRotation: _tools.numType = 0, yRotation: _tools.numType = 0,
                      zRotation: _tools.numType = 180):
-        if not (isinstance(xRotation, (int, float)) and isinstance(yRotation, (int, float)) and isinstance(zRotation, (
-        int, float))):
+        if not (
+                isinstance(xRotation, (int, float)) and
+                isinstance(yRotation, (int, float)) and
+                isinstance(zRotation, (int, float))
+        ):
             raise RuntimeError('illegal argument')
-        self._arguments[
-            "Rotation"] = f"{_tools.roundData(xRotation)},{_tools.roundData(zRotation)},{_tools.roundData(yRotation)}"
+
+        self._arguments["Rotation"] = \
+            f"{_tools.roundData(xRotation)},{_tools.roundData(zRotation)},{_tools.roundData(yRotation)}"
         return self
 
     # 重新设置元件的坐标

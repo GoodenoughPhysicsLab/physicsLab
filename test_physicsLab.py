@@ -131,8 +131,8 @@ class MyTestCase(unittest.TestCase):
     # 测逝模块化电路连接导线
     def test_wires(self):
         with experiment('测逝', elementXYZ=True):
-            a = inputs(0, 0, 0, 8)
-            b = outputs(0.6, 0, 0, 8, elementXYZ=False)
+            a = union_Inputs(0, 0, 0, 8)
+            b = union_Outputs(0.6, 0, 0, 8, elementXYZ=False)
             Logic_Output(0.6, 0, 0.1, elementXYZ=False)
             c = d_WaterLamp(1, 0, 0, bitLength=8)
             crt_Wires(b.data_Input, c.data_Output)

@@ -29,7 +29,7 @@ def _check_typeWire(func):
                 isinstance(TargetPin, _elementPin.element_Pin)
         ):
             if (color not in ["黑", "蓝", "红", "绿", "黄"]):
-                raise errors.wireColorError("illegal color")
+                raise errors.wireColorError
 
             func(SourcePin, TargetPin, color)
 
@@ -61,7 +61,7 @@ def del_Wire(SourcePin: "_elementPin.element_Pin", TargetPin: "_elementPin.eleme
         if a_wire in _fileGlobals.Wires:
             _fileGlobals.Wires.remove(a_wire)
         else:
-            raise errors.wireColorError
+            raise errors.wireNotFoundError
 
 # 删除所有导线
 def clear_Wires() -> None:

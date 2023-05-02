@@ -2,39 +2,54 @@
 import math as _math
 from typing import Union as _Union
 import physicsLab._tools as _tools
-import physicsLab.electricity as _eletricity
-'''
-How do you play music in physics Lab AR?
-Music extension might make it easier than before!
+import physicsLab.electricity as electricity
+import physicsLab.electricity.elementXYZ as _elementXYZ
+import physicsLab.electricity.elementsClass as _elementsClass
+from physicsLab.electricity.unionElements.unionLogic import d_WaterLamp
+import physicsLab.electricity.unionElements._unionClassHead as _unionClassHead
 
-    How to use it?
->>> music(a_list_or_a_tuple)
->>> write_Experiment()
-Then, enjoy your music at physics Lab AR!
-
-    What is the format of the music array?
-The format of music array compat netlogo music list(ml) which was used by Li Weijia at Turtle Lab.
-（但在兼容李维嘉的ml乐谱之前，我可能会先做一套自己设计的精简版btlist）
-'''
 
 # 只支持钢琴的初代版本
-'''
-输入格式：
-[
-    [一些音符，每次会同时演奏这些音符],
-    [一些音符，每次会同时演奏这些音符]
-] # 元组也可以
-'''
-class union_music:
+
+class music_Block(_unionClassHead.unionBase):
     def __init__(
             self,
             x: _tools.numType = 0,
             y: _tools.numType = 0,
             z: _tools.numType = 0,
-            musicArray: _Union[list, tuple] = ()
+            elementXYZ = None,
+            musicArray: _Union[tuple, list, str] = ()
     ):
-        tick = _eletricity.Nimp_Gate(x, y + 0.1, z)
-        _eletricity.crt_Wire(_eletricity.Logic_Input(x, y, z).o, tick.i_up), _eletricity.crt_Wire(tick.o, tick.i_low)
-        _eletricity.crt_Wire(tick.o, _eletricity.Counter(x + 0.2, y, z).i_up)
-        side = _math.ceil(_math.sqrt(musicArray.__len__()))
-        pass
+        if not (
+            isinstance(x, (int, float)) or
+            isinstance(y, (int, float)) or
+            isinstance(z, (int, float)) or
+            isinstance(musicArray, (tuple, list, str))
+        ):
+            raise TypeError
+
+        isnt_elementXYZ = False
+        if not (elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None)):
+            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+            isnt_elementXYZ = True
+            _elementXYZ.set_elementXYZ(True)
+
+        # 计算音乐矩阵的宽
+        side = None
+        if len(musicArray) > 1:
+            side = _math.ceil(_math.sqrt(musicArray.__len__()))
+        else:
+            side = 2
+
+        tick = _elementsClass.Nimp_Gate(x + 1, y, z)
+        _elementsClass.Logic_Input(x, y, z).o - tick.i_up
+        tick.o - tick.i_low
+        tick.o - _elementsClass.Counter(x, y + 1, z).i_up
+
+        xPlayer = d_WaterLamp(x + 1, y + 1, z, unionHeading=True, bitLength=side)
+        d_WaterLamp(x, y + 3, z, bitLength=side)
+        xPlayer[0].o_low - _elementsClass.Yes_Gate(x + 1, y + 2, z + 1).i
+
+
+        if isnt_elementXYZ:
+            _elementXYZ.set_elementXYZ(False)

@@ -14,3 +14,4 @@ bad apple.py
 *.code-workspace
 *.json
 *.mid
+/wiki/

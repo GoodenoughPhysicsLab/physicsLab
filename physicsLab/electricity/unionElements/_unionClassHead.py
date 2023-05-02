@@ -1,5 +1,6 @@
 #coding=utf-8
 import physicsLab._tools as _tools
+import physicsLab.errors as _errors
 import physicsLab.electricity.elementXYZ as _elementXYZ
 import physicsLab.electricity.elementsClass as _elementsClass
 # Union class的基类
@@ -36,7 +37,7 @@ def union_Init_HEAD(
     ):
         raise TypeError
     if not isinstance(bitLength, int) or bitLength < 1:
-        raise TypeError("bitLength must get a integer")
+        raise _errors.bitLengthError("bitLength must get a integer")
 
     # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
     if not (elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None)):

@@ -2,36 +2,121 @@
 # 模块化电路
 import typing as _typing
 import physicsLab._tools as _tools
+import physicsLab.errors as _errors
 import physicsLab.electricity as electricity
 import physicsLab.electricity.elementXYZ as _elementXYZ
 import physicsLab.electricity.elementsClass as _elementsClass
-from physicsLab.electricity.unionElements.unionPin import unionPin
+from physicsLab.electricity.unionElements.union_Pin import union_Pin
 import physicsLab.electricity.unionElements._unionClassHead as _unionClassHead
+
+# unionHeading与fold的判断的代码
+def _unionHeading_fold(
+        func1: _typing.Callable,
+        func2: _typing.Callable,
+        func3: _typing.Callable,
+        func4: _typing.Callable,
+        unionHeading: bool,
+        fold: bool
+):
+    if unionHeading: # 生成元件为横方向
+        if fold: # z轴折叠
+            func1()
+        else:
+            func2()
+    else: # 竖方向
+        if fold:
+            func3()
+        else:
+            func4()
 
 # 任意引脚加法电路
 class union_Sum:
-    def __init__(self, x : _tools.numType = 0, y : _tools.numType = 0, z : _tools.numType = 0, bitCount : int = 1):
-        if not (
-                isinstance(x, (float, int)) and isinstance(y, (float, int)) and
-                isinstance(z, (float, int)) and isinstance(bitCount, int) and bitCount > 0
-        ):
-            raise RuntimeError('Error in input parameters')
-        x, y, z = _tools.roundData(x), _tools.roundData(y), _tools.roundData(z)
-        electricity.Full_Adder(x, y, z)
-        for count in range(1, bitCount):
-            if count % 8 != 0:
-                y = _tools.roundData(y + 0.2)
-                electricity.crt_Wire(
-                    electricity.Full_Adder(x, y, z).i_low,
-                    electricity.get_Element(x, y - 0.2, z).o_low
+    def __init__(
+            self,
+            x: _tools.numType = 0,
+            y: _tools.numType = 0,
+            z: _tools.numType = 0,
+            bitLength: int = None,
+            elementXYZ: bool = None,  # x, y, z是否为元件坐标系
+            unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
+            fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
+            foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
+    ) -> None:
+        # D触流水灯导线连接方式
+        def link_union_Sum(elements: _typing.List[_elementsClass.D_Flipflop]) -> None:
+            for i in range(elements.__len__() - 1):
+                elements[i].o_low - elements[i + 1].i_low
+
+        def func1():
+            zcor = z
+            for i in range(bitLength):
+                self._elements.append(
+                    electricity.Full_Adder(x + i % foldMaxNum, y, zcor, True)
                 )
-            else:
-                y -= 1.4
-                z = _tools.roundData(z + 0.1)
-                electricity.crt_Wire(
-                    electricity.Full_Adder(x, y, z).i_low,
-                    electricity.get_Element(x, y + 1.4, z - 0.1).o_low
+                if i == foldMaxNum - 1:
+                    zcor += 1
+
+        def func2():
+            for increase in range(bitLength):
+                self._elements.append(
+                    electricity.Full_Adder(x + increase, y, z, True)
                 )
+
+        def func3():
+            zcor = z
+            for i in range(bitLength):
+                self._elements.append(
+                    electricity.Full_Adder(x, y + (i % foldMaxNum) * 2, zcor, True)
+                )
+                if i == foldMaxNum - 1:
+                    zcor += 1
+
+        def func4():
+            for increase in range(bitLength):
+                self._elements.append(
+                    electricity.Full_Adder(x, y + increase * 2, z, True)
+                )
+
+        # main
+        # if bitLength < 2:
+        #     raise _errors.bitLengthError
+
+        x, y, z = _unionClassHead.union_Init_HEAD(
+            x, y, z,
+            bitLength,
+            elementXYZ,
+            unionHeading,
+            fold,
+            foldMaxNum
+        )
+
+        self._elements: _typing.List[_elementsClass.Full_Adder] = []
+        _unionHeading_fold(
+            func1, func2, func3, func4, unionHeading, fold
+        )
+        link_union_Sum(self._elements)
+
+    @property
+    def data_Input1(self) -> union_Pin:
+        return union_Pin(
+            self,
+            *(element.i_mid for element in self._elements)
+        )
+
+    @property
+    def data_Input2(self) -> union_Pin:
+        return union_Pin(
+            self,
+            *(element.i_up for element in self._elements)
+        )
+
+    @property
+    def data_Output(self) -> union_Pin:
+        return union_Pin(
+            self,
+            *(element.o_up for element in self._elements),
+            self._elements[-1].o_low
+        )
 
 # 任意引脚减法电路
 class union_Sub:
@@ -91,7 +176,7 @@ class union_4_16_Decoder:
     # 输入译码器的数据
     @property
     def inputData(self):
-        return unionPin(
+        return union_Pin(
             electricity.element_Pin(electricity.get_Element(self.x + 0.15, self.y + 0.3, self.z), 0),
             electricity.element_Pin(electricity.get_Element(self.x + 0.15, self.y + 0.3, self.z), 1),
             electricity.element_Pin(electricity.get_Element(self.x, self.y + 0.3, self.z), 0),
@@ -182,28 +267,8 @@ class union_4_16_Decoder:
     def o15(self):
         return electricity.get_Element(self.x + 0.3, self.y + 0.25, self.z).o_upmid
 
-# unionHeading与fold的判断的代码
-def _unionHeading_fold(
-        func1: _typing.Callable,
-        func2: _typing.Callable,
-        func3: _typing.Callable,
-        func4: _typing.Callable,
-        unionHeading: bool,
-        fold: bool
-):
-    if unionHeading: # 生成元件为横方向
-        if fold: # z轴折叠
-            func1()
-        else:
-            func2()
-    else: # 竖方向
-        if fold:
-            func3()
-        else:
-            func4()
-
 # 多个逻辑输入（暂不支持m * n矩阵排列元件的方式）
-class inputs(_unionClassHead.unionBase):
+class union_Inputs(_unionClassHead.unionBase):
     def __init__(
             self,
             x: _tools.numType = 0,
@@ -262,11 +327,14 @@ class inputs(_unionClassHead.unionBase):
         )
 
     @property
-    def data_Output(self) -> unionPin:
-        return unionPin(*(element.o for element in self._elements))
+    def data_Output(self) -> union_Pin:
+        return union_Pin(
+            self,
+            *(element.o for element in self._elements)
+        )
 
 # 多个逻辑输入（暂不支持m * n矩阵排列元件的方式）
-class outputs(_unionClassHead.unionBase):
+class union_Outputs(_unionClassHead.unionBase):
     def __init__(
             self,
             x: _tools.numType = 0,
@@ -325,8 +393,11 @@ class outputs(_unionClassHead.unionBase):
         )
 
     @property
-    def data_Input(self) -> unionPin:
-        return unionPin(*(element.i for element in self._elements))
+    def data_Input(self) -> union_Pin:
+        return union_Pin(
+            self,
+            *(element.i for element in self._elements)
+        )
 
 # D触发器流水灯
 class d_WaterLamp(_unionClassHead.unionBase):
@@ -384,6 +455,9 @@ class d_WaterLamp(_unionClassHead.unionBase):
                 )
 
         # main
+        if bitLength < 2:
+            raise _errors.bitLengthError
+
         x, y, z = _unionClassHead.union_Init_HEAD(
             x, y, z,
             bitLength,
@@ -400,12 +474,16 @@ class d_WaterLamp(_unionClassHead.unionBase):
         link_D_Flipflop(self._elements)
 
     @property
-    def data_Input(self) -> unionPin:
-        return unionPin(self._elements[0].i_low)
+    def data_Input(self) -> union_Pin:
+        return union_Pin(
+            self,
+            self._elements[0].i_low
+        )
 
     @property
-    def data_Output(self) -> unionPin:
-        return unionPin(
+    def data_Output(self) -> union_Pin:
+        return union_Pin(
+            self,
             self._elements[0].o_low,
             *(element.o_up for element in self._elements[1:])
         )

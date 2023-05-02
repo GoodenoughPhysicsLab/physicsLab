@@ -3,15 +3,20 @@
 import physicsLab._colorUtils as _colorUtils
 
 def warning(msg: str) -> None:
-    _colorUtils.printf(msg, _colorUtils.YELLOW)
+    _colorUtils.printf("Warning: " + msg, _colorUtils.YELLOW)
 
 # 打开实验异常
 class openExperimentError(Exception):
     pass
 
 class wireColorError(Exception):
-    pass
+    def __str__(self):
+        return "illegal wire color"
 
 class wireNotFoundError(Exception):
     def __str__(self):
         return "Unable to delete a nonexistent wire"
+
+class bitLengthError(Exception):
+    def __str__(self):
+        return "illegal bitLength number"
