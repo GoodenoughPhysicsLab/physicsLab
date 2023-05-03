@@ -32,6 +32,7 @@ if __name__ == "__main__":
         repo.push("gitee", "master")
         repo.push("github", "master")
         repo.checkout("dev")
+        repo.merge("master")
 
         tracer.stop()
         tracer.save()
