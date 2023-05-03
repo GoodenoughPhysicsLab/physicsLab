@@ -82,6 +82,8 @@ def element_Init_HEAD(func: _Callable) -> _Callable:
                 isinstance(z, (float, int))
         ):
             raise TypeError('illegal argument')
+        _fileGlobals.check_ExperimentType(0)
+
         # 初始化全局变量
         global is_big_Element
         is_big_Element = False

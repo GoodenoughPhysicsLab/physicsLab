@@ -3,20 +3,20 @@ import unittest
 from physicsLab import *
 from viztracer import VizTracer
 
-class MyTestCase(unittest.TestCase):
+class myTestCase(unittest.TestCase):
     # init unittest class
-    @classmethod
-    def setUpClass(cls):
-        tracer = VizTracer()
-        tracer.start()
-
-        cls.tracer = tracer
-
-    @classmethod
-    def tearDownClass(cls):
-        tracer = cls.tracer
-        tracer.stop()
-        tracer.save() # also takes output_file as an optional argument
+    # @classmethod
+    # def setUpClass(cls):
+    #     tracer = VizTracer()
+    #     tracer.start()
+    #
+    #     cls.tracer = tracer
+    #
+    # @classmethod
+    # def tearDownClass(cls):
+    #     tracer = cls.tracer
+    #     tracer.stop()
+    #     tracer.save() # also takes output_file as an optional argument
 
     
     #-#-#-#-#
@@ -51,6 +51,13 @@ class MyTestCase(unittest.TestCase):
         open_Experiment('测逝')
         read_Experiment()
         self.assertEqual(count_Elements(), 1)
+
+    def test_crt_Experiment(self):
+        try:
+            crt_Experiment("test")
+            crt_Experiment("test")
+        except experimentExistError:
+            pass
 
     def test_union_Sum(self):
         open_Experiment('测逝')
@@ -111,9 +118,11 @@ class MyTestCase(unittest.TestCase):
 
     def test_open_many_Experiment(self):
         open_Experiment('测逝')
-        open_Experiment('test')
-        Logic_Input()
+        with experiment('test'):
+            Logic_Input()
         write_Experiment()
+        self.assertEqual(1, count_Elements())
+        del_Experiment()
 
     def test_with_and_coverPosition(self):
         with experiment('测逝'):
@@ -140,6 +149,49 @@ class MyTestCase(unittest.TestCase):
             self.assertEqual(23, count_Wires())
             del_Wires(c.data_Output, b.data_Input)
             self.assertEqual(15, count_Wires())
+
+    # 测逝模块化加法电路
+    def test_union_Sum(self):
+        with experiment('测逝', elementXYZ=True):
+            a = union_Inputs(-1, 0, 0, 8)
+            b = union_Inputs(-2, 0, 0, 8)
+            c = union_Sum(0, 0, 0, 8)
+            d = union_Outputs(1, 0, 0, 8)
+            a.data_Output - c.data_Input1
+            b.data_Output - c.data_Input2
+            c.data_Output - d.data_Input
+
+    # 测试打开实验类型与文件不吻合
+    def test_experimentType(self):
+        crt_Experiment("__test__测逝电与磁", type="电与磁实验")
+        try:
+            Logic_Input()
+        except experimentTypeError:
+            pass
+        write_Experiment()
+        del_Experiment()
+
+    def test_experimentType2(self):
+        try:
+            with experiment(file='电与磁', elementXYZ=True):
+                Logic_Input()
+
+            with experiment("电与磁测逝", type="电与磁实验", elementXYZ=True):
+                pass
+        except experimentTypeError:
+            pass
+
+    def test_experimentType3(self):
+        with experiment("__tset__", type=0, delete=True):
+            Logic_Input()
+        with experiment("__test__", type=3, delete=True):
+            pass
+        with experiment("__test__", type=4, delete=True):
+            pass
+        with experiment("__test__", type="天体物理实验", delete=True):
+            pass
+        with experiment("__test__", type="电与磁实验", delete=True):
+            pass
 
 if __name__ == '__main__':
     unittest.main()

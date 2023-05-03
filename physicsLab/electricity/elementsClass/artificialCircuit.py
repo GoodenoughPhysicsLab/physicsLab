@@ -1,6 +1,5 @@
 #coding=utf-8
 import physicsLab._tools as _tools
-from ..elementXYZ import amend_big_Element
 import physicsLab.electricity.elementPin as _elementPin
 import physicsLab.electricity.elementsClass._elementClassHead as _elementClassHead
 

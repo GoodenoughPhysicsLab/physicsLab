@@ -18,6 +18,8 @@ def crt_Element(
             and isinstance(z, (int, float))
     ):
         raise RuntimeError("Wrong parameter type")
+    _fileGlobals.check_ExperimentType(0)
+
     name = name.strip()
     if name == '':
         raise RuntimeError('Name cannot be an empty string')
@@ -55,6 +57,8 @@ def get_Element(*args, **kwargs) -> _elementsClass.elementBase:
         else:
             raise RuntimeError
 
+    _fileGlobals.check_ExperimentType(0)
+
     # 如果输入参数为 x=, y=, z=
     if list(kwargs.keys()) == ['x', 'y', 'z']:
         return position_Element(kwargs['x'], kwargs['y'], kwargs['z'])
@@ -76,9 +80,11 @@ def get_Element(*args, **kwargs) -> _elementsClass.elementBase:
 
 # 删除原件
 def del_Element(self) -> None:
+    _fileGlobals.check_ExperimentType(0)
+
     try:
         identifier = self._arguments['Identifier']
-        if self.father_type() == 'element':
+        if isinstance(self, _elementsClass.elementBase):
             for element in _fileGlobals.Elements:
                 if identifier == element['Identifier']:
                     # 删除原件
@@ -87,17 +93,13 @@ def del_Element(self) -> None:
                     i = 0
                     while i < _fileGlobals.Wires.__len__():
                         wire = _fileGlobals.Wires[i]
-                        if (wire['Source'] == identifier or wire['Target'] == identifier):
+                        if wire['Source'] == identifier or wire['Target'] == identifier:
                             _fileGlobals.Wires.pop(i)
                         else:
                             i += 1
                     return
     except:
         raise RuntimeError('Unable to delete a nonexistent element')
-
-# 整理物实原件的角度、位置
-def format_Elements() -> None:
-    pass
 
 # 原件的数量
 def count_Elements() -> int:

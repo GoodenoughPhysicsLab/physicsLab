@@ -1,27 +1,12 @@
 #coding=utf-8
 import os as _os
-import sys as _sys
 import json as _json
+from typing import Union as _Union
 
 import physicsLab._tools as _tools
 import physicsLab.errors as errors
 import physicsLab._colorUtils as _colorUtils
 import physicsLab._fileGlobals as _fileGlobals
-from physicsLab.electricity.element import crt_Element
-import physicsLab.electricity.elementXYZ as _elementXYZ
-
-### define ###
-
-def print_Elements():
-    print(_fileGlobals.Elements)
-
-def print_wires():
-    print(_fileGlobals.Wires)
-
-def print_elements_Address():
-    print(_fileGlobals.elements_Position)
-
-### end define ###
 
 # 实验（存档）类，主要与'with'关键字搭配使用
 class experiment:
@@ -29,32 +14,48 @@ class experiment:
             self,
             file: str,
             read: bool = False, # 是否读取存档原有状态
-            elementXYZ: bool = False
+            delete: bool = False, #是否删除实验
+            elementXYZ: bool = False,
+            type: _Union[int, str] = None
     ):
         if not (
-            isinstance(file, str)
-            and isinstance(read, bool)
+            isinstance(file, str) and
+            isinstance(read, bool) and
+            isinstance(delete, bool) and
+            isinstance(elementXYZ, bool) and
+            (
+                isinstance(type, (int ,str)) or
+                type is None
+            )
         ):
             raise TypeError
 
         self.file = file
         self.read = read
+        self.delete = delete
         self.elementXYZ = elementXYZ
+        self.type = type
 
     # 上下文管理器，搭配with使用
     def __enter__(self):
         try:
             open_Experiment(self.file)
         except errors.openExperimentError: # 如果存档不存在
-            crt_Experiment(self.file)
+            crt_Experiment(self.file, self.type)
+        except TypeError:
+            raise TypeError
 
         if self.read:
             read_Experiment()
         if self.elementXYZ:
+            _fileGlobals.check_ExperimentType(0)
+            import physicsLab.electricity.elementXYZ as _elementXYZ
             _elementXYZ.set_elementXYZ(True)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         write_Experiment()
+        if self.delete:
+            del_Experiment()
 
 # 输入sav文件名并读取（旧函数，不建议使用）
 def old_open_Experiment(file: str) -> None:
@@ -94,7 +95,6 @@ def _utf8_coding(func):
 # 打开一个指定的sav文件（支持输入本地实验的名字或sav文件名）
 @_utf8_coding
 def open_Experiment(file : str) -> None:
-    _fileGlobals.fileGlobals_init()
     file = file.strip()
     if file.endswith('.sav'):
         old_open_Experiment(file)
@@ -106,18 +106,21 @@ def open_Experiment(file : str) -> None:
             with open(f"{_fileGlobals.FILE_HEAD}\\{aSav}", encoding='utf-8') as f:
                 try:
                     f = _json.loads(f.read().replace('\n', ''))
-                except _json.decoder.JSONDecodeError:
+                except _json.decoder.JSONDecodeError: # 文件不是物实存档
                     pass
                 else:
-                    if (f.get("InternalName") == file):
+                    if f["InternalName"]== file:
+                        # 初始化package全局变量
+                        _fileGlobals.fileGlobals_init(f["Type"])
+
                         old_open_Experiment(aSav)
                         return
         raise errors.openExperimentError(f'No such experiment "{file}"')
 
 # 创建存档
 @_utf8_coding
-def crt_Experiment(name : str) -> None:
-    _fileGlobals.fileGlobals_init()
+def crt_Experiment(name : str, type: str = None) -> None:
+    _fileGlobals.fileGlobals_init(type)
     # 检查是否存在重名的存档
     savs = [i for i in _os.walk(_fileGlobals.FILE_HEAD)][0]
     savs = savs[savs.__len__() - 1]
@@ -130,7 +133,7 @@ def crt_Experiment(name : str) -> None:
                 pass
             else:
                 if f['InternalName'] == name:
-                    raise RuntimeError('Duplicate name archives are forbidden')
+                    raise errors.experimentExistError
     # 创建存档
     if not isinstance(name, str):
         name = str(name)
@@ -148,9 +151,6 @@ def write_Experiment() -> None:
         stringJson = stringJson.replace('{\\\"Source', '\n      {\\\"Source')
         stringJson = stringJson.replace("色导线\\\"}]}", "色导线\\\"}\n    ]}")
         return stringJson
-
-    global _ifndef_open_Experiment
-    _ifndef_open_Experiment = False
 
     _fileGlobals.StatusSave["Elements"] = _fileGlobals.Elements
     _fileGlobals.StatusSave["Wires"] = _fileGlobals.Wires
@@ -204,8 +204,20 @@ def read_Experiment() -> None:
             num2 = _tools.roundData(float(element['Position'][sign1 + 1: sign2:]))
             num3 = _tools.roundData(float(element['Position'][sign2 + 1::]))
             element['Position'] = f"{num1},{num2},{num3}"  # x, z, y
+            obj = None
             # 实例化对象
-            obj = crt_Element(element["ModelID"], num1, num3, num2, elementXYZ=False)
+            if _fileGlobals.get_experimentType() == 0:
+                from physicsLab.electricity.element import crt_Element
+                obj = crt_Element(element["ModelID"], num1, num3, num2, elementXYZ=False)
+            elif _fileGlobals.get_experimentType() == 3:
+                from physicsLab.astrophysics.element import crt_Element
+                obj = crt_Element(element["ModelID"], num1, num3, num2)
+            elif _fileGlobals.get_experimentType() == 4:
+                from physicsLab.electromagnetism.element import crt_Element
+                obj = crt_Element(element["ModelID"], num1, num3, num2)
+            else:
+                raise errors.openExperimentError
+
             sign1 = element['Rotation'].find(',')
             sign2 = element['Rotation'].find(',', sign1 + 1)
             x = float(element['Rotation'][:sign1:])
@@ -248,12 +260,16 @@ os_Experiment = show_Experiment
 
 # 删除存档
 def del_Experiment() -> None:
-    _os.remove(_fileGlobals.savName)
-    _os.remove(f"{_fileGlobals.savName.replace('.sav', '_rollBack_sav.txt')}")
     try:
+        _os.remove(_fileGlobals.savName)
+        _os.remove(f"{_fileGlobals.savName.replace('.sav', '_rollBack_sav.txt')}")
+    except FileNotFoundError:
+        raise errors.experimentExistError
+    try: # 用存档生成的实验无法删除对应图片是很正常的吧
         _os.remove(_fileGlobals.savName.replace('.sav', '.jpg'))
-    except:
-        _sys.exit()
+    except FileNotFoundError:
+        pass
+    _colorUtils.printf("Successfully delete experiment!", _colorUtils.BLUE)
 
 # 存档回滚
 def rollBack_Experiment(back: int = 1):

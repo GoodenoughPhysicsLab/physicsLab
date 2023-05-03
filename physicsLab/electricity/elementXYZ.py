@@ -13,10 +13,19 @@
 # _elementClassHead里的element_Init_HEAD有部分处理元件坐标系的代码，并调用了该文件
 
 import physicsLab._tools as _tools
+import physicsLab._fileGlobals as _fileGlobals
+from typing import Callable as _Callable
 
 ### define ###
 
 _elementXYZ: bool = False
+
+# 所有元件坐标系的函数都会有的操作：
+def _dec_EelementXYZ(func: _Callable) -> _Callable:
+    def result(*args, **kwargs):
+        _fileGlobals.check_ExperimentType(0)
+        func(*args, **kwargs)
+    return result
 
 # 是否将全局设置为元件坐标系
 def set_elementXYZ(boolen: bool) -> None:

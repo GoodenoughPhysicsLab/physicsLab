@@ -1,6 +1,7 @@
 #coding=utf-8
 import physicsLab._tools as _tools
 import physicsLab.errors as _errors
+import physicsLab._fileGlobals as _fileGlobals
 import physicsLab.electricity.elementXYZ as _elementXYZ
 import physicsLab.electricity.elementsClass as _elementsClass
 # Union class的基类
@@ -25,6 +26,7 @@ def union_Init_HEAD(
         fold: bool,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
         foldMaxNum: int  # 达到foldMaxNum个元件数时即在z轴自动折叠
 ):
+    _fileGlobals.check_ExperimentType(0)
         # input type check
     if foldMaxNum <= 0 or not(
         isinstance(x, (int, float)) or

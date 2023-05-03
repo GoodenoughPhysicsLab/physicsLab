@@ -30,6 +30,7 @@ def _check_typeWire(func):
         ):
             if (color not in ["黑", "蓝", "红", "绿", "黄"]):
                 raise errors.wireColorError
+            _fileGlobals.check_ExperimentType(0)
 
             func(SourcePin, TargetPin, color)
 

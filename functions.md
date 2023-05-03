@@ -14,8 +14,19 @@ open_Experiment('blabla') # 通过在物实保存的本地实验的名字打开�
 如果你想要创建一个实验：
 ```python
 crt_Experiment('存档的名字')
+crt_Experiment("xxx", type=4)
 ```
 请注意，这个函数和```open_Experiment()```一起，只有被最新打开的存档会被操作  
+```type```参数用于指定创建存档的类型，type支持的参数如下：  
+```diff
+type = 0 # 电学实验
+type = 3 # 天体物理实验
+type = 4 # 电与磁实验
+type = "天体物理实验"
+type = "电与磁实验"
+```
+```type```可以什么都不传，此时默认为电学实验
+
 
 ### 读取存档的内容
 打开的文件不会读取原实验的状态，如果你不希望原实验的状态被覆盖，需要调用该函数：  
@@ -46,7 +57,8 @@ del_Experiment()
 ```python
 with experiment(
     'physics Lab save name',
-    read=True # 读取存档
+    read=True, # 读取存档
+    type=0 # 指定创建存档的类型（只在创建存档时有效）
 ):
     # do something
     # 该方式会自动打开存档

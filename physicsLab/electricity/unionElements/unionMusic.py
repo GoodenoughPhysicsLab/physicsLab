@@ -2,7 +2,6 @@
 import math as _math
 from typing import Union as _Union
 import physicsLab._tools as _tools
-import physicsLab.electricity as electricity
 import physicsLab.electricity.elementXYZ as _elementXYZ
 import physicsLab.electricity.elementsClass as _elementsClass
 from physicsLab.electricity.unionElements.unionLogic import d_WaterLamp
