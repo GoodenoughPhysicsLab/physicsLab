@@ -93,7 +93,7 @@ class myTestCase(unittest.TestCase):
     def test_errors(self):
         try:
             open_Experiment('blabla')
-        except errors.openExperimentError:
+        except openExperimentError:
             pass
         else:
             raise RuntimeError
@@ -192,6 +192,27 @@ class myTestCase(unittest.TestCase):
             pass
         with experiment("__test__", type="电与磁实验", delete=True):
             pass
+
+    def test_electromagnetism(self):
+        with experiment("电与磁测逝", type=4):
+            Negative_Charge(-0.1, 0, 0)
+            Positive_Charge(0.1, 0, 0)
+            self.assertEqual(count_Elements(), 2)
+            try:
+                count_Wires()
+            except experimentTypeError:
+                pass
+            else:
+                raise RuntimeError
+
+    def test_union_Sub(self):
+        with experiment("测逝", elementXYZ=True):
+            a = union_Sub(bitLength=8, fold=True)
+            crt_Wires(union_Inputs(-3, 0, 0, 8).data_Output, a.minuend)
+            crt_Wires(union_Inputs(-2, 0, 0, 8).data_Output, a.subtrahend)
+            crt_Wires(union_Outputs(2, 0, 0, 9).data_Input, a.outputs)
+            self.assertEqual(count_Elements(), 42)
+            self.assertEqual(count_Wires(), 41)
 
 if __name__ == '__main__':
     unittest.main()

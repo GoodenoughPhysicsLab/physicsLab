@@ -3,24 +3,6 @@ import physicsLab.errors as errors
 import physicsLab._fileGlobals as _fileGlobals
 import physicsLab.electricity.elementPin as _elementPin
 
-# 老版本连接导线函数，不推荐使用
-def old_crt_wire(SourceLabel, SourcePin : int, TargetLabel, TargetPin : int, color = "蓝") -> None: # SourceLabel : Union[_element, tuple]
-    SourcePin, TargetPin = int(SourcePin), int(TargetPin)
-    if (isinstance(SourceLabel, tuple) and len(SourceLabel) == 3):
-        SourceLabel = _fileGlobals.elements_Position[SourceLabel]
-    elif (SourceLabel not in _fileGlobals.elements_Position.values()):
-        raise RuntimeError("SourceLabel must be a Positon or self")
-    if (isinstance(TargetLabel, tuple) and len(TargetLabel) == 3):
-        TargetLabel = _fileGlobals.elements_Position[TargetLabel]
-    elif (TargetLabel not in _fileGlobals.elements_Position.values()):
-        raise RuntimeError("TargetLabel must be a Positon or self")
-
-    if (color not in ["黑", "蓝", "红", "绿", "黄"]):
-        raise RuntimeError("illegal color")
-    _fileGlobals.Wires.append({"Source": SourceLabel._arguments["Identifier"], "SourcePin": SourcePin,
-                   "Target": TargetLabel._arguments["Identifier"], "TargetPin": TargetPin,
-                   "ColorName": f"{color}色导线"})
-
 # 检查函数参数是否是导线
 def _check_typeWire(func):
     def result(SourcePin: "_elementPin.element_Pin", TargetPin: "_elementPin.element_Pin", color: str = '蓝') -> None:
@@ -66,8 +48,14 @@ def del_Wire(SourcePin: "_elementPin.element_Pin", TargetPin: "_elementPin.eleme
 
 # 删除所有导线
 def clear_Wires() -> None:
+    _fileGlobals.check_ExperimentType(0)
     _fileGlobals.Wires.clear()
 
 # 获取当前导线数
 def count_Wires() -> int:
+    _fileGlobals.check_ExperimentType(0)
     return len(_fileGlobals.Wires)
+
+# 打印导线的json
+def print_Wires() -> None:
+    print(_fileGlobals.Wires)

@@ -29,7 +29,7 @@ def _unionHeading_fold(
             func4()
 
 # 任意引脚加法电路
-class union_Sum:
+class union_Sum(_unionClassHead.unionBase):
     def __init__(
             self,
             x: _tools.numType = 0,
@@ -41,8 +41,7 @@ class union_Sum:
             fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
             foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
     ) -> None:
-        # D触流水灯导线连接方式
-        def link_union_Sum(elements: _typing.List[_elementsClass.D_Flipflop]) -> None:
+        def link_union_Sum(elements: _typing.List[_elementsClass.Full_Adder]) -> None:
             for i in range(elements.__len__() - 1):
                 elements[i].o_low - elements[i + 1].i_low
 
@@ -118,8 +117,115 @@ class union_Sum:
         )
 
 # 任意引脚减法电路
-class union_Sub:
-    pass
+class union_Sub(_unionClassHead.unionBase):
+    def __init__(
+            self,
+            x: _tools.numType = 0,
+            y: _tools.numType = 0,
+            z: _tools.numType = 0,
+            bitLength: int = None,
+            elementXYZ: bool = None,  # x, y, z是否为元件坐标系
+            unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
+            fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
+            foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
+    ) -> None:
+        def link_union_Sub(
+                fullAdders: _typing.List[_elementsClass.Full_Adder],
+                noGates: _typing.List[_elementsClass.No_Gate]
+        ) -> None:
+            self._elements[0].o - fullAdders[0].i_low
+            for i in range(fullAdders.__len__() - 1):
+                fullAdders[i].o_low - fullAdders[i + 1].i_low
+                noGates[i].o - fullAdders[i].i_mid
+            noGates[-1].o - fullAdders[-1].i_mid
+
+        def func1():
+            zcor = z
+            for i in range(bitLength):
+                self._fullAdders.append(
+                    electricity.Full_Adder(x + i % foldMaxNum, y - 2, zcor, True)
+                )
+                self._noGates.append(
+                    electricity.No_Gate(x + i % foldMaxNum, y, zcor, True)
+                )
+                if i == foldMaxNum - 1:
+                    zcor += 1
+
+        def func2():
+            for increase in range(bitLength):
+                self._fullAdders.append(
+                    electricity.Full_Adder(x + increase, y - 2, z, True)
+                )
+                self._noGates.append(
+                    electricity.No_Gate(x + increase, y, z, True)
+                )
+
+        def func3():
+            zcor = z
+            for i in range(bitLength):
+                self._fullAdders.append(
+                    electricity.Full_Adder(x + 1, y + (i % foldMaxNum) * 2, zcor, True)
+                )
+                self._noGates.append(
+                    electricity.No_Gate(x, y + (i % foldMaxNum) * 2 + 1, zcor, True)
+                )
+                if i == foldMaxNum - 1:
+                    zcor += 1
+
+        def func4():
+            for increase in range(bitLength):
+                self._fullAdders.append(
+                    electricity.Full_Adder(x + 1, y + increase * 2, z, True)
+                )
+                self._noGates.append(
+                    electricity.No_Gate(x, y + increase * 2 + 1, z, True)
+                )
+
+        x, y, z = _unionClassHead.union_Init_HEAD(
+            x, y, z,
+            bitLength,
+            elementXYZ,
+            unionHeading,
+            fold,
+            foldMaxNum
+        )
+
+        self._elements: _typing.List[_typing.Union[_elementsClass.Full_Adder, _elementsClass.No_Gate]] = [
+            _elementsClass.No_Gate(x, y, z, True)
+        ]
+
+        self._noGates: _typing.List[_elementsClass.No_Gate] = []
+        self._fullAdders: _typing.List[_elementsClass.Full_Adder] = []
+
+        _unionHeading_fold(
+            func1, func2, func3, func4, unionHeading, fold
+        )
+        link_union_Sub(self._fullAdders, self._noGates)
+        self._elements.extend(self._fullAdders + self._noGates)
+
+    # 被减数
+    @property
+    def minuend(self) -> union_Pin:
+        return union_Pin(
+            self,
+            *(e.i_up for e in self._fullAdders)
+        )
+
+    # 减数
+    @property
+    def subtrahend(self):
+        return union_Pin(
+            self,
+            *(e.i for e in self._noGates)
+        )
+
+    @property
+    def outputs(self):
+        return union_Pin(
+            self,
+            *(e.o_up for e in self._fullAdders),
+            self._fullAdders[-1].o_low
+        )
 
 # 2-4译码器
 class union_2_4_Decoder:

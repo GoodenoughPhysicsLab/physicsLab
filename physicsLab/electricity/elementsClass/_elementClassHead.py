@@ -8,7 +8,7 @@ import physicsLab.electricity.elementXYZ as _elementXYZ
 # 是否为big_Element
 is_big_Element: bool = False
 
-# 所有元件的父类
+# 所有电学元件的父类
 class elementBase:
     # 设置原件的角度
     def set_Rotation(self, xRotation: _tools.numType = 0, yRotation: _tools.numType = 0,
@@ -39,8 +39,7 @@ class elementBase:
     def format_Position(self) -> tuple:
         if not isinstance(self._position, tuple) or self._position.__len__() != 3:
             raise RuntimeError("Position must be a tuple of length three but gets some other value")
-        self._position = (_tools.roundData(self._position[0]), _tools.roundData(self._position[1]),
-                          _tools.roundData(self._position[2]))
+        self._position = _tools.roundData(self._position[0], self._position[1], self._position[2])
         return self._position
 
     # 获取原件的坐标
@@ -66,7 +65,6 @@ class elementBase:
 
 # __init__ 装饰器
 _index = 1
-
 
 def element_Init_HEAD(func: _Callable) -> _Callable:
     def result(

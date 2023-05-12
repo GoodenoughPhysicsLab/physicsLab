@@ -7,7 +7,7 @@ numType = _typing.Union[int, float]
 
 # 四舍五入physicsLab中的数据
 # 支持传入多个数据
-def roundData(*num):
+def roundData(*num) -> _typing.Union[int, float, tuple]:
     if not any(
         isinstance(i, (int, float)) for i in num
      ):
@@ -15,7 +15,7 @@ def roundData(*num):
     
     if len(num) == 1:
         return round(num[0], 4)
-    return (round(i, 4) for i in num)
+    return tuple(round(i, 4) for i in num)
 
 # 生成随机字符串
 def randString(strLength: int) -> str:

@@ -18,7 +18,7 @@ def crt_Element(
             and isinstance(z, (int, float))
     ):
         raise RuntimeError("Wrong parameter type")
-    _fileGlobals.check_ExperimentType(0)
+#    _fileGlobals.check_ExperimentType(0)
 
     name = name.strip()
     if name == '':
@@ -57,7 +57,7 @@ def get_Element(*args, **kwargs) -> _elementsClass.elementBase:
         else:
             raise RuntimeError
 
-    _fileGlobals.check_ExperimentType(0)
+#    _fileGlobals.check_ExperimentType(0)
 
     # 如果输入参数为 x=, y=, z=
     if list(kwargs.keys()) == ['x', 'y', 'z']:
@@ -80,7 +80,7 @@ def get_Element(*args, **kwargs) -> _elementsClass.elementBase:
 
 # 删除原件
 def del_Element(self) -> None:
-    _fileGlobals.check_ExperimentType(0)
+#    _fileGlobals.check_ExperimentType(0)
 
     try:
         identifier = self._arguments['Identifier']

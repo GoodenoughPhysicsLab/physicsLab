@@ -180,10 +180,16 @@ def write_Experiment() -> None:
     with open(f'{_fileGlobals.savName[:len(_fileGlobals.savName) - 4:]}_rollBack_sav.txt', 'w', encoding='utf-8') as f:
         f.write(_json.dumps(experiments, indent=2, ensure_ascii=False))
     # 编译成功，打印信息
-    _colorUtils.printf(
-        f"Successfully compiled! {_fileGlobals.Elements.__len__()} elements, {_fileGlobals.Wires.__len__()} wires.",
-        _colorUtils.GREEN
-    )
+    if _fileGlobals.get_experimentType() == 0:
+        _colorUtils.printf(
+            f"Successfully compiled! {_fileGlobals.Elements.__len__()} elements, {_fileGlobals.Wires.__len__()} wires.",
+            _colorUtils.GREEN
+        )
+    else:
+        _colorUtils.printf(
+            f"Successfully compiled! {_fileGlobals.Elements.__len__()} elements.",
+            _colorUtils.GREEN
+        )
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
@@ -204,16 +210,13 @@ def read_Experiment() -> None:
             num2 = _tools.roundData(float(element['Position'][sign1 + 1: sign2:]))
             num3 = _tools.roundData(float(element['Position'][sign2 + 1::]))
             element['Position'] = f"{num1},{num2},{num3}"  # x, z, y
-            obj = None
             # 实例化对象
+            obj = None
+            from physicsLab.element import crt_Element
+
             if _fileGlobals.get_experimentType() == 0:
-                from physicsLab.electricity.element import crt_Element
                 obj = crt_Element(element["ModelID"], num1, num3, num2, elementXYZ=False)
-            elif _fileGlobals.get_experimentType() == 3:
-                from physicsLab.astrophysics.element import crt_Element
-                obj = crt_Element(element["ModelID"], num1, num3, num2)
-            elif _fileGlobals.get_experimentType() == 4:
-                from physicsLab.electromagnetism.element import crt_Element
+            elif _fileGlobals.get_experimentType() == 3 or _fileGlobals.get_experimentType() == 4:
                 obj = crt_Element(element["ModelID"], num1, num3, num2)
             else:
                 raise errors.openExperimentError

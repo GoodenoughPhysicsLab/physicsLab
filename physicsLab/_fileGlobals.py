@@ -113,7 +113,9 @@ _electromagnetism = {
         'Coauthors': [],
         'Description': None,
         'LocalizedDescription': None,
-        'Tags': ['Type-4'],
+        'Tags': [
+            'Type-4'
+        ],
         'ModelID': None,
         'ModelName': None,
         'ModelTags': [],

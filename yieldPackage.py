@@ -1,7 +1,6 @@
 #coding=utf-8
 import os
 import git
-import viztracer as vt # 研究git包用的
 
 if __name__ == "__main__":
     string = input("upgrade package to pypi?(y/n)")
@@ -15,9 +14,6 @@ if __name__ == "__main__":
 
     string = input("push file to hub?(y/n)")
     if string == "y":
-        tracer = vt.VizTracer()
-        tracer.start()
-
         repo = git.Git("D:\\program physicsLab")
         repo.checkout("master")
         repo.merge("--squash", "dev")
@@ -31,8 +27,7 @@ if __name__ == "__main__":
 
         repo.push("gitee", "master")
         repo.push("github", "master")
-        repo.checkout("dev")
-        repo.merge("master")
 
-        tracer.stop()
-        tracer.save()
+        repo.branch("-d", "dev")
+        repo.branch("dev")
+        repo.checkout("dev")

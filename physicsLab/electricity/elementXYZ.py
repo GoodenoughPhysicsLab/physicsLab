@@ -41,7 +41,7 @@ def is_elementXYZ() -> bool:
 # 物实坐标系x, y, z单位1
 _xUnit: _tools.numType = 0.16
 _yUnit: _tools.numType = 0.08
-_zUnit: _tools.numType = 0.1
+_zUnit: _tools.numType = 0.05
 # big_element坐标修正
 _yAmend = 0.045
 

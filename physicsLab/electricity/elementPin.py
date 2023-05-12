@@ -1,16 +1,15 @@
 #coding=utf-8
 from physicsLab.electricity.wire import crt_Wire
-import physicsLab.electricity.elementsClass._elementClassHead as _elementClassHead
 
 # 电学元件引脚类
 class element_Pin:
     __slots__ = ("element_self", "pinLabel")
-    def __init__(self, input_self: _elementClassHead.elementBase, pinLabel: int):
-        self.element_self: _elementClassHead.elementBase = input_self
+    def __init__(self, input_self, pinLabel: int):
+        self.element_self = input_self
         self.pinLabel: int = pinLabel
 
     # 重载减法运算符作为连接导线的语法
-    def __sub__(self, obj: "element_Pin"):
+    def __sub__(self, obj: "element_Pin") -> "element_Pin":
         crt_Wire(self, obj)
         return obj
 
