@@ -5,7 +5,7 @@ import physicsLab._tools as _tools
 import physicsLab.errors as _errors
 import physicsLab.electricity as electricity
 import physicsLab.electricity.elementsClass as _elementsClass
-from physicsLab.electricity.unionElements.union_Pin import union_Pin
+from physicsLab.electricity.unionElements.unionPin import union_Pin
 import physicsLab.electricity.unionElements._unionClassHead as _unionClassHead
 
 # unionHeading与fold的判断的代码

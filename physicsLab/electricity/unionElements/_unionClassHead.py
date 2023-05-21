@@ -7,7 +7,7 @@ import physicsLab.electricity.elementsClass as _elementsClass
 # Union class的基类
 class unionBase:
     # 获取以模块化电路生成顺序为item的原件的self
-    def __getitem__(self, item: int) -> "_elementsClass.elementBase":
+    def __getitem__(self, item: int) -> "_elementsClass.electricityBase":
         if not isinstance(item, int):
             raise TypeError
         return self._elements[item]

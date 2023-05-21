@@ -40,7 +40,7 @@ def crt_Element(
             raise RuntimeError(f"{name} original that does not exist")
 
 # 获取对应坐标的self
-def get_Element(*args, **kwargs) -> _elementsClass.elementBase:
+def get_Element(*args, **kwargs) -> _elementsClass.electricityBase:
     # 通过坐标索引元件
     def position_Element(x: _tools.numType, y: _tools.numType, z: _tools.numType):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
@@ -84,7 +84,7 @@ def del_Element(self) -> None:
 
     try:
         identifier = self._arguments['Identifier']
-        if isinstance(self, _elementsClass.elementBase):
+        if isinstance(self, _elementsClass.electricityBase):
             for element in _fileGlobals.Elements:
                 if identifier == element['Identifier']:
                     # 删除原件

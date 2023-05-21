@@ -214,5 +214,14 @@ class myTestCase(unittest.TestCase):
             self.assertEqual(count_Elements(), 42)
             self.assertEqual(count_Wires(), 41)
 
+    # 测试简单乐器设置音高的三种方法
+    def test_Simple_Instrument(self):
+        with experiment("测逝", elementXYZ=True):
+            a = Simple_Instrument(pitch=48)
+            a = Simple_Instrument().set_Tonality(48)
+            a = Simple_Instrument().set_Tonality("C3")
+            Logic_Input(-1, 0, 0).o - a.i
+            a.o - Ground_Component(1, 0, 0).i
+
 if __name__ == '__main__':
     unittest.main()

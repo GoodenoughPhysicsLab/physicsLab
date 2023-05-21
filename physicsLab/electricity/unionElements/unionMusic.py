@@ -7,10 +7,8 @@ import physicsLab.electricity.elementsClass as _elementsClass
 from physicsLab.electricity.unionElements.unionLogic import d_WaterLamp
 import physicsLab.electricity.unionElements._unionClassHead as _unionClassHead
 
-
-# 只支持钢琴的初代版本
-
-class music_Block(_unionClassHead.unionBase):
+# unionMusic音轨
+class track(_unionClassHead.unionBase):
     def __init__(
             self,
             x: _tools.numType = 0,

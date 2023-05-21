@@ -28,6 +28,6 @@ if __name__ == "__main__":
         repo.push("gitee", "master")
         repo.push("github", "master")
 
-        repo.branch("-d", "dev")
+        repo.branch("-D", "dev")
         repo.branch("dev")
         repo.checkout("dev")

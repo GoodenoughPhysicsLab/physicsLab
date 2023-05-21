@@ -3,7 +3,7 @@ import physicsLab._tools as _tools
 import physicsLab.electricity.elementPin as _elementPin
 import physicsLab.electricity.elementsClass._elementClassHead as _elementClassHead
 
-class _logicBase(_elementClassHead.elementBase):
+class _logicBase(_elementClassHead.electricityBase):
     # 设置高电平的值
     def set_HighLeaveValue(self, num: _tools.numType) -> None:
         if not isinstance(num, (int, float)):

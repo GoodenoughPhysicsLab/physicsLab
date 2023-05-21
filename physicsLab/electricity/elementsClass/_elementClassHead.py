@@ -9,7 +9,7 @@ import physicsLab.electricity.elementXYZ as _elementXYZ
 is_big_Element: bool = False
 
 # 所有电学元件的父类
-class elementBase:
+class electricityBase:
     # 设置原件的角度
     def set_Rotation(self, xRotation: _tools.numType = 0, yRotation: _tools.numType = 0,
                      zRotation: _tools.numType = 180):
@@ -72,7 +72,9 @@ def element_Init_HEAD(func: _Callable) -> _Callable:
             x: _tools.numType = 0,
             y: _tools.numType = 0,
             z: _tools.numType = 0,
-            elementXYZ: bool = None
+            elementXYZ: bool = None,
+            *args,
+            **kwargs
     ) -> None:
         if not (
                 isinstance(x, (float, int)) and
@@ -91,7 +93,7 @@ def element_Init_HEAD(func: _Callable) -> _Callable:
         # 元件坐标系
         if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
             x, y, z = _elementXYZ.xyzTranslate(x, y, z)
-        func(self, x, y, z)
+        func(self, x, y, z, *args, **kwargs)
         # 若是big_Element，则修正坐标
         if is_big_Element:
             x, y, z = _elementXYZ.amend_big_Element(x, y, z)

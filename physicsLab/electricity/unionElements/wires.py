@@ -3,7 +3,7 @@ from typing import Union, Callable
 import physicsLab.errors as errors
 import physicsLab.electricity.elementPin as _elementPin
 from physicsLab.electricity.wire import crt_Wire, del_Wire
-import physicsLab.electricity.unionElements.union_Pin as _unionPin
+import physicsLab.electricity.unionElements.unionPin as _unionPin
 
 def check_TypeUnionPin(func: Callable):
     def result(

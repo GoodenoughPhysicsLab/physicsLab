@@ -15,3 +15,4 @@ bad apple.py
 *.json
 *.mid
 /wiki/
+*.coverage

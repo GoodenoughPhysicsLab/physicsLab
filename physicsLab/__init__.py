@@ -4,7 +4,7 @@ from physicsLab.experiment import *
 # 电学实验
 from physicsLab.electricity import *
 # 天体物理实验
-import physicsLab.astrophysics as astrophysics
+from physicsLab.astrophysics import *
 # 电与磁实验
 from physicsLab.electromagnetism.elementsClass import *
 # 操作元件
