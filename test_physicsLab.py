@@ -18,9 +18,6 @@ class myTestCase(unittest.TestCase):
     #     tracer.stop()
     #     tracer.save() # also takes output_file as an optional argument
 
-    
-    #-#-#-#-#
-
     def test_experiment1(self):
         open_Experiment('测逝')
         a = Yes_Gate()
@@ -55,9 +52,12 @@ class myTestCase(unittest.TestCase):
     def test_crt_Experiment(self):
         try:
             crt_Experiment("test")
+            write_Experiment()
             crt_Experiment("test")
         except experimentExistError:
             pass
+        else:
+            raise RuntimeError
 
     def test_union_Sum(self):
         open_Experiment('测逝')
@@ -163,7 +163,7 @@ class myTestCase(unittest.TestCase):
 
     # 测试打开实验类型与文件不吻合
     def test_experimentType(self):
-        crt_Experiment("__test__测逝电与磁", type="电与磁实验")
+        crt_Experiment("__test__测逝电与磁")
         try:
             Logic_Input()
         except experimentTypeError:

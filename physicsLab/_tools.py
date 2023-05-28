@@ -1,13 +1,15 @@
 #coding=utf-8
-import typing as _typing
+from typing import *
 import unittest as _unittest
+from os import walk
+from physicsLab._fileGlobals import FILE_HEAD
 
 # type hint
-numType = _typing.Union[int, float]
+numType = Union[int, float]
 
 # 四舍五入physicsLab中的数据
 # 支持传入多个数据
-def roundData(*num) -> _typing.Union[int, float, tuple]:
+def roundData(*num) -> Union[int, float, tuple]:
     if not any(
         isinstance(i, (int, float)) for i in num
      ):
@@ -26,9 +28,15 @@ def randString(strLength: int) -> str:
     from random import choice as _choice
     return ''.join(_choice(_ascii_letters + _digits) for _ in range(strLength))
 
+# 索取所有物实存档
+def getAllSav() -> List:
+    savs = [i for i in walk(FILE_HEAD)][0]
+    savs = savs[savs.__len__() - 1]
+    return [aSav for aSav in savs if aSav.endswith('sav')]
+
 # 设置只读属性，未测试，开发中
 class const:
-    def __init__(self, val: _typing.Any) -> None:
+    def __init__(self, val: Any) -> None:
         self.val = val
 
     def __get__(self, instance, owner):

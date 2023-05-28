@@ -1,4 +1,5 @@
 #coding=utf-8
+import json.decoder
 import os as _os
 import json as _json
 from typing import Union as _Union
@@ -94,14 +95,12 @@ def _utf8_coding(func):
 
 # 打开一个指定的sav文件（支持输入本地实验的名字或sav文件名）
 @_utf8_coding
-def open_Experiment(file : str) -> None:
-    file = file.strip()
-    if file.endswith('.sav'):
-        old_open_Experiment(file)
+def open_Experiment(fileName : str) -> None:
+    fileName = fileName.strip()
+    if fileName.endswith('.sav'):
+        old_open_Experiment(fileName)
     else:
-        savs = [i for i in _os.walk(_fileGlobals.FILE_HEAD)][0]
-        savs = savs[savs.__len__() - 1]
-        savs = [aSav for aSav in savs if aSav.endswith('sav')]
+        savs = _tools.getAllSav()
         for aSav in savs:
             with open(f"{_fileGlobals.FILE_HEAD}\\{aSav}", encoding='utf-8') as f:
                 try:
@@ -109,39 +108,34 @@ def open_Experiment(file : str) -> None:
                 except _json.decoder.JSONDecodeError: # 文件不是物实存档
                     pass
                 else:
-                    if f["InternalName"]== file:
+                    if f["InternalName"]== fileName:
                         # 初始化package全局变量
                         _fileGlobals.fileGlobals_init(f["Type"])
 
                         old_open_Experiment(aSav)
                         return
-        raise errors.openExperimentError(f'No such experiment "{file}"')
+        raise errors.openExperimentError(f'No such experiment "{fileName}"')
 
 # 创建存档
 @_utf8_coding
-def crt_Experiment(name : str, type: str = None) -> None:
-    _fileGlobals.fileGlobals_init(type)
-    # 检查是否存在重名的存档
-    savs = [i for i in _os.walk(_fileGlobals.FILE_HEAD)][0]
-    savs = savs[savs.__len__() - 1]
-    savs = [aSav for aSav in savs if aSav.endswith('sav')]
+def crt_Experiment(fileName : str, experimentType: str = None) -> None:
+    _fileGlobals.fileGlobals_init(experimentType)
+    savs = _tools.getAllSav()
     for aSav in savs:
-        with open(f"{_fileGlobals.FILE_HEAD}\\{aSav}", encoding='utf-8') as f:
+        with open(f"{_fileGlobals.FILE_HEAD}\\{aSav}", 'r', encoding='utf-8') as f:
             try:
                 f = _json.loads(f.read().replace('\n', ''))
-            except:
-                pass
+            except json.decoder.JSONDecodeError:
+                continue
             else:
-                if f['InternalName'] == name:
+                if f['InternalName'] == fileName:
                     raise errors.experimentExistError
     # 创建存档
-    if not isinstance(name, str):
-        name = str(name)
+    if not isinstance(fileName, str):
+        fileName = str(fileName)
     _fileGlobals.savName = _tools.randString(34)
     _fileGlobals.savName = f'{_fileGlobals.FILE_HEAD}\\{_fileGlobals.savName}.sav'
-    with open(_fileGlobals.savName, 'w', encoding='utf-8'):
-        pass
-    rename_Experiment(name)
+    rename_Experiment(fileName)
 
 # 将编译完成的json写入sav
 def write_Experiment() -> None:
@@ -159,26 +153,6 @@ def write_Experiment() -> None:
         f.write(
                 _format_StatusSave(_json.dumps(_fileGlobals.sav, indent=2, ensure_ascii=False))
         )
-    # 存档回滚
-    f = ''
-    try:
-        f = open(f'{_fileGlobals.savName[:len(_fileGlobals.savName) - 4:]}_rollBack_sav.txt')
-    except FileNotFoundError:
-        f = open(f'{_fileGlobals.savName[:len(_fileGlobals.savName) - 4:]}_rollBack_sav.txt', 'w')
-    finally:
-        f.close()
-    experiments = []
-    with open(f'{_fileGlobals.savName[:len(_fileGlobals.savName) - 4:]}_rollBack_sav.txt', 'r', encoding='utf-8') as f:
-        f = f.read()
-        if f == '':
-            experiments.append(_fileGlobals.sav)
-        else:
-            experiments = _json.loads(f)
-            experiments.append(_fileGlobals.sav)
-        if experiments.__len__() > 10:
-            experiments.pop(0)
-    with open(f'{_fileGlobals.savName[:len(_fileGlobals.savName) - 4:]}_rollBack_sav.txt', 'w', encoding='utf-8') as f:
-        f.write(_json.dumps(experiments, indent=2, ensure_ascii=False))
     # 编译成功，打印信息
     if _fileGlobals.get_experimentType() == 0:
         _colorUtils.printf(
@@ -265,43 +239,32 @@ os_Experiment = show_Experiment
 def del_Experiment() -> None:
     try:
         _os.remove(_fileGlobals.savName)
-        _os.remove(f"{_fileGlobals.savName.replace('.sav', '_rollBack_sav.txt')}")
     except FileNotFoundError:
         raise errors.experimentExistError
-    try: # 用存档生成的实验无法删除对应图片是很正常的吧
+    try: # 用存档生成的实验无图片，因此可能删除失败
         _os.remove(_fileGlobals.savName.replace('.sav', '.jpg'))
     except FileNotFoundError:
         pass
     _colorUtils.printf("Successfully delete experiment!", _colorUtils.BLUE)
 
-# 存档回滚
-def rollBack_Experiment(back: int = 1):
-    if not isinstance(back, int) and (back < 1 or back >= 10):
-        raise RuntimeError('back must be an integer between 1 and 10')
-    f = ''
-    try:
-        f = open(f'{_fileGlobals.savName[:len(_fileGlobals.savName) - 4:]}_rollBack_sav.txt')
-    except FileNotFoundError:
-        f = open(f'{_fileGlobals.savName[:len(_fileGlobals.savName) - 4:]}_rollBack_sav.txt', 'w')
-    finally:
-        f.close()
-    with open(f'{_fileGlobals.savName[:len(_fileGlobals.savName) - 4:]}_rollBack_sav.txt', encoding='utf-8') as f:
-        reader = f.read().replace('\n', '')
-        if reader == '':
-            raise RuntimeError('There is no archive to roll back')
-        f = _json.loads(reader)
-        _fileGlobals.sav = _json.loads(f[len(f) - 1 - back]['Experiment']['StatusSave'])
-        _fileGlobals.Elements = _fileGlobals.sav['Elements']
-        _fileGlobals.Wires = _fileGlobals.sav['Wires']
+# 发布实验
+def yield_Experiment(title: str = None, introduction: str = None) -> None:
+    # 发布实验时输入实验介绍
+    def introduce_Experiment(introduction: str) -> None:
+        if not isinstance(introduction, str):
+            raise TypeError
+        if introduction is not None:
+            _fileGlobals.sav['Summary']['Description'] = introduction.split('\n')
 
-# 发布实验时输入实验介绍
-def introduce_Experiment(introduction: str) -> None:
-    if not isinstance(introduction, str) or introduction is None:
-        raise TypeError
-    _fileGlobals.sav['Summary']['Description'] = introduction.split('\n')
+    # 发布实验时输入实验标题
+    def title_Experiment(title: str) -> None:
+        if isinstance(title, str):
+            raise TypeError
+        if title is not None:
+            _fileGlobals.sav['Summary']['Subject'] = title
 
-# 发布实验时输入实验标题
-def title_Experiment(title: str) -> None:
-    if isinstance(title, str) or title is None:
+    if not (isinstance(title, str) and isinstance(introduction, str)):
         raise TypeError
-    _fileGlobals.sav['Summary']['Subject'] = title
+
+    introduce_Experiment(introduction)
+    title_Experiment(title)
