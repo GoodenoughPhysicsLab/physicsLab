@@ -1,4 +1,4 @@
-__pycache__
+__pycache__/
 /venv/
 /.idea/
 *.txt
@@ -8,7 +8,7 @@ bad apple.py
 /physicsLab.egg-info/
 /build/
 /dist/
-/physicsLab projects/
+/physicsLab_projects/
 /.vscode/
 /.vs/
 *.code-workspace
@@ -16,3 +16,5 @@ bad apple.py
 *.mid
 /wiki/
 *.coverage
+*.lnk
+test2.py
