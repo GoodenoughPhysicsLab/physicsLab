@@ -12,3 +12,5 @@ from physicsLab.electricity.elementsClass.otherCircuit import *
 from physicsLab.electricity.elementXYZ import *
 # 模块化电路
 from physicsLab.electricity.unionElements import *
+import physicsLab.electricity.unionElements.unionLogic as union
+import physicsLab.electricity.unionElements.unionMusic as music

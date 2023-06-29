@@ -1,14 +1,15 @@
-# ÓÃÓÚ´æ·Å×Ô¶¨Òå´íÎóÀà
-# ÓÉÓÚÓĞÊ±ÔÚpackageÍâĞèÒªÒì³£´¦Àí£¬¹Ê²»ÎªÎÄ¼şË½ÓĞ±äÁ¿
+#coding=utf-8
+# ç”¨äºå­˜æ”¾è‡ªå®šä¹‰é”™è¯¯ç±»
+# ç”±äºæœ‰æ—¶åœ¨packageå¤–éœ€è¦å¼‚å¸¸å¤„ç†ï¼Œæ•…ä¸ä¸ºæ–‡ä»¶ç§æœ‰å˜é‡
 import physicsLab._colorUtils as _colorUtils
 
 def warning(msg: str) -> None:
     _colorUtils.printf("Warning: " + msg, _colorUtils.YELLOW)
 
-# ´ò¿ªÊµÑéÒì³£
+# æ‰“å¼€å®éªŒå¼‚å¸¸
 class openExperimentError(Exception):
     def __str__(self):
-        return "open a experiment but find nothing."
+        return "open a experiment but find nothing(must open a experiment)."
 
 class wireColorError(Exception):
     def __str__(self):
@@ -22,12 +23,24 @@ class bitLengthError(Exception):
     def __str__(self):
         return "illegal bitLength number"
 
-# ´´½¨ÊµÑéÒÑ´æÔÚ
+# åˆ›å»ºå®éªŒå·²å­˜åœ¨
 class experimentExistError(Exception):
     def __str__(self):
         return 'Duplicate name archives are forbidden'
 
-# ´ò¿ªµÄÊµÑéÓëµ÷ÓÃµÄÔª¼ş²»·û
+class crtExperimentFailError(Exception):
+    def __str__(self):
+        return "Failed to create experiment, the experiment already exists"
+
+# æ‰“å¼€çš„å®éªŒä¸è°ƒç”¨çš„å…ƒä»¶ä¸ç¬¦
 class experimentTypeError(Exception):
     def __str__(self):
         return "The type of experiment does not match the element"
+
+class getElementError(Exception):
+    def __str__(self):
+        return "Index out of range"
+
+class instantiateError(Exception):
+    def __str__(self):
+        return "This class cannot be instantiated"

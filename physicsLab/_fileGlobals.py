@@ -1,7 +1,8 @@
 #coding=utf-8
+import os
 from typing import Union
-from getpass import getuser as _getuser
 import physicsLab.errors as errors
+from weakref import WeakValueDictionary
 
 #define
 # 电学实验的sav模板
@@ -169,8 +170,14 @@ _electromagnetism = {
     }
 }
 
-FILE_HEAD = f'C:\\Users\\{_getuser()}\\AppData\\LocalLow\\CIVITAS\\Quantum Physics\\Circuit'
-# _xxx 不是文件向外暴露出的接口，文件外无法访问
+from sys import platform
+FILE_HEAD = os.path.abspath(os.sep) # 获取根目录
+if platform == "win32":
+    from getpass import getuser
+    FILE_HEAD = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Circuit"
+elif platform == "linux": # Android
+    FILE_HEAD = "/storage/emulated/0/physicsLabSav"
+
 savName: str = ""  # sav的文件名
 StatusSave: dict = {} # 存放实验元件，导线（如果是电学实验的话）
 Elements: list = []  # 装原件的_arguments

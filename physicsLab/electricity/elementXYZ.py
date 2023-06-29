@@ -41,7 +41,7 @@ def is_elementXYZ() -> bool:
 # 物实坐标系x, y, z单位1
 _xUnit: _tools.numType = 0.16
 _yUnit: _tools.numType = 0.08
-_zUnit: _tools.numType = 0.05
+_zUnit: _tools.numType = 0.1
 # big_element坐标修正
 _yAmend = 0.045
 
@@ -62,7 +62,7 @@ def xyzTranslate(x: _tools.numType, y: _tools.numType, z: _tools.numType):
     return x, y, z
 
 # 将物实支持的坐标系转换为元件坐标系
-def translateXYZ(x: _tools.numType, y: _tools.numType, z: _tools.numType):
+def translateXYZ(x: _tools.numType, y: _tools.numType, z: _tools.numType, bigElement: bool = False):
     x /= _xUnit
     y /= _yUnit
     z /= _zUnit
@@ -71,7 +71,9 @@ def translateXYZ(x: _tools.numType, y: _tools.numType, z: _tools.numType):
     y -= _yOrigin
     z -= _zOrigin
     # 修改大体积逻辑电路原件的坐标
+    if bigElement:
         # 暂不支持相关功能
+        pass
     return x, y, z
 
 # 设置元件坐标系原点O，输入值为物实坐标系

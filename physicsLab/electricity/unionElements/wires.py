@@ -12,9 +12,9 @@ def check_TypeUnionPin(func: Callable):
         color="蓝"
     ) -> None:
         if isinstance(sourcePin, _elementPin.element_Pin):
-            sourcePin = _unionPin.union_Pin(sourcePin)
+            sourcePin = _unionPin.union_Pin(sourcePin.element_self, sourcePin)
         if isinstance(targetPin, _elementPin.element_Pin):
-            targetPin = _unionPin.union_Pin(targetPin)
+            targetPin = _unionPin.union_Pin(targetPin.element_self, targetPin)
 
         if not (
                 isinstance(sourcePin, _unionPin.union_Pin) or

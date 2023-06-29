@@ -1,5 +1,6 @@
 #coding=utf-8
 import physicsLab._tools as _tools
+import physicsLab.errors as errors
 import physicsLab._fileGlobals as _fileGlobals
 import physicsLab.electricity.elementXYZ as _elementXYZ
 import physicsLab.electricity.elementsClass as _elementsClass
@@ -45,17 +46,17 @@ def get_Element(*args, **kwargs) -> _elementsClass.electricityBase:
     def position_Element(x: _tools.numType, y: _tools.numType, z: _tools.numType):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise TypeError('illegal argument')
-        x, y, z = _tools.roundData(x), _tools.roundData(y), _tools.roundData(z)
-        if (x, y, z) not in _fileGlobals.elements_Position.keys():
-            raise RuntimeError("Error coordinates that do not exist")
-        result: list = _fileGlobals.elements_Position[(x, y, z)]['self']
+        position = _tools.roundData(x, y, z)
+        if position not in _fileGlobals.elements_Position.keys():
+            raise RuntimeError(f"{position} do not exist")
+        result: list = _fileGlobals.elements_Position[position]['self']
         return result[0] if len(result) == 1 else result
     # 通过index（元件生成顺序）索引元件
     def index_Element(index: int):
         if 0 < index <= len(_fileGlobals.elements_Index):
             return _fileGlobals.elements_Index[index - 1]
         else:
-            raise RuntimeError
+            raise errors.getElementError
 
 #    _fileGlobals.check_ExperimentType(0)
 
@@ -111,3 +112,10 @@ def clear_Elements() -> None:
     _fileGlobals.Wires.clear()
     _fileGlobals.elements_Index.clear()
     _fileGlobals.elements_Position.clear()
+
+def print_Elements() -> None:
+    print(_fileGlobals.Elements)
+
+# 元件基类
+class elementBase:
+    pass

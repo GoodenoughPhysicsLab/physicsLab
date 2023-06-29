@@ -1,12 +1,26 @@
 #coding=utf-8
 import physicsLab._tools as _tools
-import physicsLab.errors as _errors
+import physicsLab.errors as errors
 import physicsLab._fileGlobals as _fileGlobals
 import physicsLab.electricity.elementXYZ as _elementXYZ
 import physicsLab.electricity.elementsClass as _elementsClass
-# Union class的基类
+
+class unionMeta(type):
+    def __new__(metaCls, name: str, base: tuple, attrs: dict):
+        cls = metaCls.__new__(metaCls, name, base, attrs)
+        # obj = cls.__new__()
+        # obj.__init__()
+        pass
+        return type.__new__(name, base, attrs)
+
+# Union class的基类 MixIn Class
 class unionBase:
+    # 此类无法被实例化
+    def __init__(self, *args, **kwargs):
+        raise errors.instantiateError
+
     # 获取以模块化电路生成顺序为item的原件的self
+    # 一定有self._elements
     def __getitem__(self, item: int) -> "_elementsClass.electricityBase":
         if not isinstance(item, int):
             raise TypeError
@@ -39,7 +53,7 @@ def union_Init_HEAD(
     ):
         raise TypeError
     if not isinstance(bitLength, int) or bitLength < 1:
-        raise _errors.bitLengthError("bitLength must get a integer")
+        raise errors.bitLengthError("bitLength must get a integer")
 
     # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
     if not (elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None)):

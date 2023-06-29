@@ -1,15 +1,72 @@
 # coding=utf-8
 import physicsLab._tools as _tools
-from typing import Callable as _Callable
+import physicsLab.errors as errors
 import physicsLab._fileGlobals as _fileGlobals
 import physicsLab.electricity.elementPin as _elementPin
 import physicsLab.electricity.elementXYZ as _elementXYZ
 
-# 是否为big_Element
-is_big_Element: bool = False
+# electricity class's metaClass
+class eletricityMeta(type):
+    # element index
+    __index = 1
+
+    def __call__(
+            cls,
+            x: _tools.numType = 0,
+            y: _tools.numType = 0,
+            z: _tools.numType = 0,
+            elementXYZ: bool = None,
+            *args, **kwargs
+    ):
+        self = cls.__new__(cls)
+        if not (
+                isinstance(x, (float, int)) and
+                isinstance(y, (float, int)) and
+                isinstance(z, (float, int))
+        ):
+            raise TypeError('illegal argument')
+        _fileGlobals.check_ExperimentType(0)
+
+        x, y, z = _tools.roundData(x, y, z)
+        self._position = (x, y, z)
+        # 元件坐标系
+        if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
+            x, y, z = _elementXYZ.xyzTranslate(x, y, z)
+        self.__init__(x, y, z, *args, **kwargs)
+        # 若是big_Element，则修正坐标
+        if isinstance(self, is_big_element):
+            x, y, z = _elementXYZ.amend_big_Element(x, y, z)
+
+        self._arguments["Identifier"] = _tools.randString(32)
+        # x, z, y 物实采用欧拉坐标系
+        self._arguments["Position"] = f"{x},{z},{y}"
+        _fileGlobals.Elements.append(self._arguments)
+
+        # 该坐标是否已存在，则存入列表
+        if self._position in _fileGlobals.elements_Position.keys():
+            _fileGlobals.elements_Position[self._position]['self'].append(self)
+        else:
+            elementDict: dict = {
+                'self': [self],
+                'elementXYZ': _elementXYZ.is_elementXYZ,  # 是否为元件坐标系
+                'originPosition': tuple(_elementXYZ.get_OriginPosition())  # 坐标原点
+            }
+            _fileGlobals.elements_Position[self._position] = elementDict
+        self.set_Rotation()
+        # 通过元件生成顺序来索引元件
+        self._index = eletricityMeta.__index
+        _fileGlobals.elements_Index.append(self)
+        # 元件index索引加1
+        eletricityMeta.__index += 1
+        return self
+
 
 # 所有电学元件的父类
-class electricityBase:
+class electricityBase(metaclass=eletricityMeta):
+    # 类无法被实例化
+    def __init__(self, *args, **kwargs):
+        raise errors.instantiateError
+
     # 设置原件的角度
     def set_Rotation(self, xRotation: _tools.numType = 0, yRotation: _tools.numType = 0,
                      zRotation: _tools.numType = 180):
@@ -62,67 +119,6 @@ class electricityBase:
     def print_arguments(self) -> None:
         print(self._arguments)
 
-
-# __init__ 装饰器
-_index = 1
-
-def element_Init_HEAD(func: _Callable) -> _Callable:
-    def result(
-            self,
-            x: _tools.numType = 0,
-            y: _tools.numType = 0,
-            z: _tools.numType = 0,
-            elementXYZ: bool = None,
-            *args,
-            **kwargs
-    ) -> None:
-        if not (
-                isinstance(x, (float, int)) and
-                isinstance(y, (float, int)) and
-                isinstance(z, (float, int))
-        ):
-            raise TypeError('illegal argument')
-        _fileGlobals.check_ExperimentType(0)
-
-        # 初始化全局变量
-        global is_big_Element
-        is_big_Element = False
-
-        x, y, z = _tools.roundData(x, y, z)
-        self._position = (x, y, z)
-        # 元件坐标系
-        if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
-            x, y, z = _elementXYZ.xyzTranslate(x, y, z)
-        func(self, x, y, z, *args, **kwargs)
-        # 若是big_Element，则修正坐标
-        if is_big_Element:
-            x, y, z = _elementXYZ.amend_big_Element(x, y, z)
-
-        self._arguments["Identifier"] = _tools.randString(32)
-        # x, z, y 物实采用欧拉坐标系
-        self._arguments["Position"] = f"{x},{z},{y}"
-        _fileGlobals.Elements.append(self._arguments)
-
-        # 该坐标是否已存在，则存入列表
-        if self._position in _fileGlobals.elements_Position.keys():
-            _fileGlobals.elements_Position[self._position]['self'].append(self)
-        else:
-            elementDict: dict = {
-                'self': [self],
-                'elementXYZ': _elementXYZ.is_elementXYZ,  # 是否为元件坐标系
-                'originPosition': tuple(_elementXYZ.get_OriginPosition())  # 坐标原点
-            }
-            _fileGlobals.elements_Position[self._position] = elementDict
-        self.set_Rotation()
-        # 通过元件生成顺序来索引元件
-        global _index
-        self._index = _index
-        _fileGlobals.elements_Index.append(self)
-        # 元件index索引加1
-        _index += 1
-    return result
-
-
 # 双引脚模拟电路原件的引脚
 def two_pin_ArtificialCircuit_Pin(cls):
     @property
@@ -138,3 +134,7 @@ def two_pin_ArtificialCircuit_Pin(cls):
     cls.black, cls.r = black, black
 
     return cls
+
+# 仅用于判断是否为2体积元件
+class is_big_element:
+    pass

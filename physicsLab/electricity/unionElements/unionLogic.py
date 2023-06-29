@@ -28,8 +28,25 @@ def _unionHeading_fold(
         else:
             func4()
 
+# 用metaClass检查是否有self._elements
+class _union_LogicMeta(type):
+    pass
+
+# 模块化电路逻辑电路基类
+class union_LogicBase(_unionClassHead.unionBase):
+    # 设置高电平的值
+    def set_HighLeaveValue(self, num: _tools.numType) -> "union_LogicBase":
+        for element in self._elements:
+            element.set_HighLeaveValue(num)
+        return self
+
+    def set_LowLeaveValue(self, num: _tools.numType) -> "union_LogicBase":
+        for element in self._elements:
+            element.set_LowLeaveValue(num)
+        return self
+
 # 任意引脚加法电路
-class union_Sum(_unionClassHead.unionBase):
+class sum(union_LogicBase):
     def __init__(
             self,
             x: _tools.numType = 0,
@@ -77,7 +94,7 @@ class union_Sum(_unionClassHead.unionBase):
 
         # main
         # if bitLength < 2:
-        #     raise _errors.bitLengthError
+        #     raise errors.bitLengthError
 
         x, y, z = _unionClassHead.union_Init_HEAD(
             x, y, z,
@@ -117,7 +134,7 @@ class union_Sum(_unionClassHead.unionBase):
         )
 
 # 任意引脚减法电路
-class union_Sub(_unionClassHead.unionBase):
+class sub(union_LogicBase):
     def __init__(
             self,
             x: _tools.numType = 0,
@@ -228,7 +245,7 @@ class union_Sub(_unionClassHead.unionBase):
         )
 
 # 2-4译码器
-class union_2_4_Decoder:
+class _two_four_Decoder:
     def __init__(self, x : _tools.numType = 0, y : _tools.numType = 0, z : _tools.numType = 0):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
@@ -251,7 +268,7 @@ class union_2_4_Decoder:
         return electricity.element_Pin(electricity.get_Element(self.x, self.y + 0.3, self.z), 1)
 
 # 4-16译码器
-class union_4_16_Decoder:
+class _four_sixteen_Decoder:
     def __init__(self, x : _tools.numType = 0, y : _tools.numType = 0, z : _tools.numType = 0):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
@@ -373,7 +390,7 @@ class union_4_16_Decoder:
         return electricity.get_Element(self.x + 0.3, self.y + 0.25, self.z).o_upmid
 
 # 多个逻辑输入（暂不支持m * n矩阵排列元件的方式）
-class union_Inputs(_unionClassHead.unionBase):
+class inputs(union_LogicBase):
     def __init__(
             self,
             x: _tools.numType = 0,
@@ -439,7 +456,7 @@ class union_Inputs(_unionClassHead.unionBase):
         )
 
 # 多个逻辑输入（暂不支持m * n矩阵排列元件的方式）
-class union_Outputs(_unionClassHead.unionBase):
+class outputs(union_LogicBase):
     def __init__(
             self,
             x: _tools.numType = 0,
@@ -505,7 +522,7 @@ class union_Outputs(_unionClassHead.unionBase):
         )
 
 # D触发器流水灯
-class d_WaterLamp(_unionClassHead.unionBase):
+class d_WaterLamp(union_LogicBase):
     def __init__(
             self,
             x: _tools.numType = 0,
@@ -515,7 +532,8 @@ class d_WaterLamp(_unionClassHead.unionBase):
             elementXYZ: bool = None, # x, y, z是否为元件坐标系
             unionHeading: bool = False, # False: 生成的元件为竖直方向，否则为横方向
             fold: bool = False, # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
-            foldMaxNum: int = 4 # 达到foldMaxNum个元件数时即在z轴自动折叠
+            foldMaxNum: int = 4, # 达到foldMaxNum个元件数时即在z轴自动折叠
+            is_loop: bool = True # 是否使流水灯循环
     ) -> None:
         # D触流水灯导线连接方式
         def link_D_Flipflop(elements: _typing.List[_elementsClass.D_Flipflop]) -> None:
@@ -527,7 +545,14 @@ class d_WaterLamp(_unionClassHead.unionBase):
             for i in range(1, len(elements) - 1):
                 elements[i].o_up - elements[i + 1].i_up
             # 流水灯循环导线
-            elements[-1].o_low - elements[0].i_up
+            if is_loop:
+                elements[-1].o_low - elements[0].i_up
+            else:
+                firstElement = elements[0]
+                orGate = _elementsClass.Or_Gate(*firstElement.get_Position(), True)
+                orGate.i_up - orGate.o
+                orGate.o - firstElement.i_up
+                orGate.i_low - firstElement.i_low
 
         def func1():
             zcor = z
@@ -572,6 +597,9 @@ class d_WaterLamp(_unionClassHead.unionBase):
             foldMaxNum
         )
 
+        if not isinstance(is_loop, bool):
+            raise TypeError
+
         self._elements: _typing.List[_elementsClass.D_Flipflop] = []
         _unionHeading_fold(
             func1, func2, func3, func4, unionHeading, fold
@@ -591,4 +619,13 @@ class d_WaterLamp(_unionClassHead.unionBase):
             self,
             self._elements[0].o_low,
             *(element.o_up for element in self._elements[1:])
+        )
+
+    # 与data_Output相反的引脚
+    @property
+    def neg_data_Output(self) -> union_Pin:
+        return union_Pin(
+            self,
+            self._elements[0].o_up,
+            *(element.o_low for element in self._elements[1:])
         )

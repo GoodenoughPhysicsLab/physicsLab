@@ -18,3 +18,4 @@ bad apple.py
 *.coverage
 *.lnk
 test2.py
+*.png

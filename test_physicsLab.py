@@ -1,7 +1,7 @@
 #coding=utf-8
 import unittest
 from physicsLab import *
-from viztracer import VizTracer
+#from viztracer import VizTracer
 
 class myTestCase(unittest.TestCase):
     # init unittest class
@@ -51,17 +51,19 @@ class myTestCase(unittest.TestCase):
 
     def test_crt_Experiment(self):
         try:
-            crt_Experiment("test")
+            crt_Experiment("__test__")
             write_Experiment()
-            crt_Experiment("test")
-        except experimentExistError:
-            pass
+            crt_Experiment("__test__")
+        except crtExperimentFailError:
+            open_Experiment("__test__")
+            del_Experiment()
         else:
+            del_Experiment()
             raise RuntimeError
 
     def test_union_Sum(self):
         open_Experiment('测逝')
-        union_Sum(0, -1, 0, 64)
+        union.sum(0, -1, 0, 64)
         self.assertEqual(count_Elements(), 64)
         self.assertEqual(count_Wires(), 63)
         write_Experiment()
@@ -140,10 +142,10 @@ class myTestCase(unittest.TestCase):
     # 测逝模块化电路连接导线
     def test_wires(self):
         with experiment('测逝', elementXYZ=True):
-            a = union_Inputs(0, 0, 0, 8)
-            b = union_Outputs(0.6, 0, 0, 8, elementXYZ=False)
+            a = union.inputs(0, 0, 0, 8)
+            b = union.outputs(0.6, 0, 0, 8, elementXYZ=False)
             Logic_Output(0.6, 0, 0.1, elementXYZ=False)
-            c = d_WaterLamp(1, 0, 0, bitLength=8)
+            c = union.d_WaterLamp(1, 0, 0, bitLength=8)
             crt_Wires(b.data_Input, c.data_Output)
             self.assertEqual(25, count_Elements())
             self.assertEqual(23, count_Wires())
@@ -153,10 +155,10 @@ class myTestCase(unittest.TestCase):
     # 测逝模块化加法电路
     def test_union_Sum(self):
         with experiment('测逝', elementXYZ=True):
-            a = union_Inputs(-1, 0, 0, 8)
-            b = union_Inputs(-2, 0, 0, 8)
-            c = union_Sum(0, 0, 0, 8)
-            d = union_Outputs(1, 0, 0, 8)
+            a = union.inputs(-1, 0, 0, 8)
+            b = union.inputs(-2, 0, 0, 8)
+            c = union.sum(0, 0, 0, 8)
+            d = union.outputs(1, 0, 0, 8)
             a.data_Output - c.data_Input1
             b.data_Output - c.data_Input2
             c.data_Output - d.data_Input
@@ -207,10 +209,10 @@ class myTestCase(unittest.TestCase):
 
     def test_union_Sub(self):
         with experiment("测逝", elementXYZ=True):
-            a = union_Sub(bitLength=8, fold=True)
-            crt_Wires(union_Inputs(-3, 0, 0, 8).data_Output, a.minuend)
-            crt_Wires(union_Inputs(-2, 0, 0, 8).data_Output, a.subtrahend)
-            crt_Wires(union_Outputs(2, 0, 0, 9).data_Input, a.outputs)
+            a = union.sub(bitLength=8, fold=True)
+            crt_Wires(union.inputs(-3, 0, 0, 8).data_Output, a.minuend)
+            crt_Wires(union.inputs(-2, 0, 0, 8).data_Output, a.subtrahend)
+            crt_Wires(union.outputs(2, 0, 0, 9).data_Input, a.outputs)
             self.assertEqual(count_Elements(), 42)
             self.assertEqual(count_Wires(), 41)
 
@@ -219,9 +221,21 @@ class myTestCase(unittest.TestCase):
         with experiment("测逝", elementXYZ=True):
             a = Simple_Instrument(pitch=48)
             a = Simple_Instrument().set_Tonality(48)
+            a = Simple_Instrument(pitch="C3")
             a = Simple_Instrument().set_Tonality("C3")
             Logic_Input(-1, 0, 0).o - a.i
             a.o - Ground_Component(1, 0, 0).i
+
+    def test_getElementError(self):
+        with experiment("测逝"):
+            Logic_Input()
+            try:
+                get_Element(2)
+            except getElementError:
+                pass
+            else:
+                raise RuntimeError
+
 
 if __name__ == '__main__':
     unittest.main()

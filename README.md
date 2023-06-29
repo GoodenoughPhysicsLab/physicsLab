@@ -50,7 +50,7 @@ with experiment('测逝', read=True, elementXYZ=True):
 ```
 上面两段代码产生的结果是一样的  
   
-更详细的内容请查看[functions.md](https://gitee.com/script2000/physicsLab/wikis/functions)  
+更详细的内容请在[wiki](https://gitee.com/script2000/physicsLab/wikis/functions)中查看  
 请注意：Python采用GBK编码，而物实用的是utf-8，尽管尽量确保编码格式正确，但中文仍有可能出现问题，因此建议多用英文。  
 
 ## 优点
@@ -78,7 +78,6 @@ with experiment('测逝', read=True, elementXYZ=True):
 
 ## 参与贡献
 1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
+2.  新建分支
 3.  提交代码
 4.  新建 Pull Request
-5.  补充readme

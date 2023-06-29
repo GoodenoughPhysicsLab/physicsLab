@@ -4,7 +4,7 @@ from physicsLab.electricity.wire import crt_Wire
 # 电学元件引脚类
 class element_Pin:
     __slots__ = ("element_self", "pinLabel")
-    def __init__(self, input_self, pinLabel: int):
+    def __init__(self, input_self, pinLabel: int) -> None:
         self.element_self = input_self
         self.pinLabel: int = pinLabel
 
