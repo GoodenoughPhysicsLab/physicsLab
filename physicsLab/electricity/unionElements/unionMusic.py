@@ -7,24 +7,27 @@ from typing import Union as Union, List, Tuple
 from physicsLab.element import get_Element
 import physicsLab.electricity.elementXYZ as _elementXYZ
 import physicsLab.electricity.elementsClass as _elementsClass
-from physicsLab.electricity.unionElements.unionLogic import d_WaterLamp
+from physicsLab.electricity.unionElements.unionLogic import D_WaterLamp
 import physicsLab.electricity.unionElements._unionClassHead as _unionClassHead
 
-# 音符
-noteType = List[Union[None, "Note"]]
+noteType = List[Union[None, "Note"]] # 音符类型
+chordType = Union[Tuple["Note"], List["Note"]] # 和弦类型
+
+# 音符类
 class Note:
-    def __init__(
-            self,
-            time: int, # 在音轨中播放的时间
-            playTime: int = 1,  # 音符发出声音的时长 暂时不支持相关机制
-            instrument: Union[int, str] = 0, # 演奏的乐器，暂时只支持传入数字
-            pitch: Union[int, str] = 60, # 音高/音调
-            volume: numType = 1.0 # 音量/响度
-    ):
-        # type check, 未完工
+    def __init__(self,
+                 time: int, # 在音轨中播放的时间
+                 playTime: int = 1,  # 音符发出声音的时长 暂时不支持相关机制
+                 instrument: Union[int, str] = 0, # 演奏的乐器，暂时只支持传入数字
+                 pitch: Union[int, str] = 60, # 音高/音调
+                 volume: numType = 1.0 # 音量/响度
+    ) -> None:
         if not (
                 isinstance(time, int) or
-                isinstance(playTime, int)
+                isinstance(playTime, int) or
+                isinstance(instrument, (int, str)) or
+                isinstance(pitch, (int, str)) or
+                isinstance(volume, float)
         ):
             raise TypeError
         self.instrument = instrument
@@ -37,27 +40,43 @@ class Note:
         return f"<union.Note Object=> time:{self.time}, playTime:{self.playTime}, instrument: {self.instrument}, " \
                f"pitch: {self.pitch}, volume: {self.volume}>"
 
+# 循环类，用于创建一段循环的音乐片段
 class Loop:
-    def __init__(self):
-        pass
+    def __init__(self, notes: Union[chordType, "Loop"], loopTime: int = 2) -> None:
+        if not(
+            isinstance(notes, (Loop, tuple, list)) or
+            isinstance(loopTime, int)
+        ) or any(not isinstance(a_note, Note) for a_note in notes) or loopTime < 2:
+            raise TypeError
+
+        if isinstance(notes, Loop):
+            raise RuntimeError("Sorry, this is not supported for the moment")
+
+        self.notes = tuple(*notes)
+        self.loopTime = loopTime
+        self.cases = []
+
+    # loop-case: 每次主循环执行完一遍后会依次播放case中的音符
+    def case(self, *notes) -> "Loop":
+        self.cases.append(deepcopy(notes))
+        return self
 
 # 音轨
 class Track:
-    def __init__(
-            self,
-            notes: Union[List[Note], Tuple[Note]],
-            # 设置整个音轨的默认参数 Track global variable
-            instrument: int = 0, # 演奏的乐器，暂时只支持传入数字
-            pitch: int = 60, # 音高/音调
-            bpm: int = 100, # 节奏
-            volume: float = 1.0 # 音量/响度
+    def __init__(self,
+                 notes: Union[List[Union[Note, Loop]], Tuple[Union[Note, Loop]]],
+                 # 设置整个音轨的默认参数 Track global variable
+                 instrument: int = 0, # 演奏的乐器，暂时只支持传入数字
+                 pitch: int = 60, # 音高/音调
+                 bpm: int = 100, # 节奏
+                 volume: float = 1.0 # 音量/响度
     ) -> None:
         if not (
                 isinstance(instrument, int) or
                 isinstance(pitch, int) or
                 isinstance(bpm, int) or
                 0 < volume < 1 or
-                isinstance(notes, (list, tuple)) and all(isinstance(val, Note) for val in notes)
+                isinstance(notes, (list, tuple, Loop)) and all(isinstance(val, Note) for val in notes)
         ):
             raise TypeError
 
@@ -125,10 +144,11 @@ class Piece:
         return self
 
 # 将piece的数据生成为物实的电路
-class Player(_unionClassHead.unionBase):
-    def __init__(
-            self, musicArray: Union[Piece, List[Piece], Tuple[Piece]],
-            x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None
+class Player(_unionClassHead.UnionBase):
+    def __init__(self,
+                 musicArray: Union[Piece, List[Piece], Tuple[Piece]],
+                 x: numType = 0, y: numType = 0, z: numType = 0,
+                 elementXYZ = None
     ):
         if not (
                 isinstance(x, (int, float)) or
@@ -161,12 +181,12 @@ class Player(_unionClassHead.unionBase):
         tick.o - tick.i_low
         tick.o - counter.i_up
 
-        xPlayer = d_WaterLamp(x + 1, y + 1, z, unionHeading=True, bitLength=side, elementXYZ=True)
-        yPlayer = d_WaterLamp(x, y + 3, z, bitLength=side, elementXYZ=True, is_loop=False).set_HighLeaveValue(1.5)
+        xPlayer = D_WaterLamp(x + 1, y + 1, z, unionHeading=True, bitLength=side, elementXYZ=True)
+        yPlayer = D_WaterLamp(x, y + 3, z, bitLength=side, elementXYZ=True, is_loop=False).set_HighLeaveValue(1.5)
 
         yesGate = _elementsClass.Yes_Gate(x + 1, y + 2, z + 1, True)
         xPlayer[0].o_low - yesGate.i
-        crt_Wires(counter.o_lowmid, xPlayer.data_Input)
+        crt_Wires(counter.o_upmid, xPlayer.data_Input)
         crt_Wires(xPlayer.data_Output[0], yPlayer.data_Input)
 
         # main

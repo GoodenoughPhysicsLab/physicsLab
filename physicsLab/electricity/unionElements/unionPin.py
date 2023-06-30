@@ -7,7 +7,7 @@ import physicsLab.electricity.unionElements._unionClassHead as _unionClassHead
 # 模块化电路的“引脚”，输入输出都是数据
 class union_Pin:
     __slots__ = ("union_self", "elementPins")
-    def __init__(self, union_self: _unionClassHead.unionBase, *elementPins):
+    def __init__(self, union_self: _unionClassHead.UnionBase, *elementPins):
         self.union_self = union_self
         self.elementPins: _typing.Tuple[elementPin.element_Pin] = tuple(elementPins)
 

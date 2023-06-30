@@ -63,7 +63,7 @@ class myTestCase(unittest.TestCase):
 
     def test_union_Sum(self):
         open_Experiment('测逝')
-        union.sum(0, -1, 0, 64)
+        union.Sum(0, -1, 0, 64)
         self.assertEqual(count_Elements(), 64)
         self.assertEqual(count_Wires(), 63)
         write_Experiment()
@@ -142,10 +142,10 @@ class myTestCase(unittest.TestCase):
     # 测逝模块化电路连接导线
     def test_wires(self):
         with experiment('测逝', elementXYZ=True):
-            a = union.inputs(0, 0, 0, 8)
-            b = union.outputs(0.6, 0, 0, 8, elementXYZ=False)
+            a = union.Inputs(0, 0, 0, 8)
+            b = union.Outputs(0.6, 0, 0, 8, elementXYZ=False)
             Logic_Output(0.6, 0, 0.1, elementXYZ=False)
-            c = union.d_WaterLamp(1, 0, 0, bitLength=8)
+            c = union.D_WaterLamp(1, 0, 0, bitLength=8)
             crt_Wires(b.data_Input, c.data_Output)
             self.assertEqual(25, count_Elements())
             self.assertEqual(23, count_Wires())
@@ -155,10 +155,10 @@ class myTestCase(unittest.TestCase):
     # 测逝模块化加法电路
     def test_union_Sum(self):
         with experiment('测逝', elementXYZ=True):
-            a = union.inputs(-1, 0, 0, 8)
-            b = union.inputs(-2, 0, 0, 8)
-            c = union.sum(0, 0, 0, 8)
-            d = union.outputs(1, 0, 0, 8)
+            a = union.Inputs(-1, 0, 0, 8)
+            b = union.Inputs(-2, 0, 0, 8)
+            c = union.Sum(0, 0, 0, 8)
+            d = union.Outputs(1, 0, 0, 8)
             a.data_Output - c.data_Input1
             b.data_Output - c.data_Input2
             c.data_Output - d.data_Input
@@ -209,10 +209,10 @@ class myTestCase(unittest.TestCase):
 
     def test_union_Sub(self):
         with experiment("测逝", elementXYZ=True):
-            a = union.sub(bitLength=8, fold=True)
-            crt_Wires(union.inputs(-3, 0, 0, 8).data_Output, a.minuend)
-            crt_Wires(union.inputs(-2, 0, 0, 8).data_Output, a.subtrahend)
-            crt_Wires(union.outputs(2, 0, 0, 9).data_Input, a.outputs)
+            a = union.Sub(bitLength=8, fold=True)
+            crt_Wires(union.Inputs(-3, 0, 0, 8).data_Output, a.minuend)
+            crt_Wires(union.Inputs(-2, 0, 0, 8).data_Output, a.subtrahend)
+            crt_Wires(union.Outputs(2, 0, 0, 9).data_Input, a.outputs)
             self.assertEqual(count_Elements(), 42)
             self.assertEqual(count_Wires(), 41)
 

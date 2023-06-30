@@ -33,20 +33,20 @@ class _union_LogicMeta(type):
     pass
 
 # 模块化电路逻辑电路基类
-class union_LogicBase(_unionClassHead.unionBase):
+class Union_LogicBase(_unionClassHead.UnionBase):
     # 设置高电平的值
-    def set_HighLeaveValue(self, num: _tools.numType) -> "union_LogicBase":
+    def set_HighLeaveValue(self, num: _tools.numType) -> "Union_LogicBase":
         for element in self._elements:
             element.set_HighLeaveValue(num)
         return self
 
-    def set_LowLeaveValue(self, num: _tools.numType) -> "union_LogicBase":
+    def set_LowLeaveValue(self, num: _tools.numType) -> "Union_LogicBase":
         for element in self._elements:
             element.set_LowLeaveValue(num)
         return self
 
 # 任意引脚加法电路
-class sum(union_LogicBase):
+class Sum(Union_LogicBase):
     def __init__(
             self,
             x: _tools.numType = 0,
@@ -134,7 +134,7 @@ class sum(union_LogicBase):
         )
 
 # 任意引脚减法电路
-class sub(union_LogicBase):
+class Sub(Union_LogicBase):
     def __init__(
             self,
             x: _tools.numType = 0,
@@ -390,7 +390,7 @@ class _four_sixteen_Decoder:
         return electricity.get_Element(self.x + 0.3, self.y + 0.25, self.z).o_upmid
 
 # 多个逻辑输入（暂不支持m * n矩阵排列元件的方式）
-class inputs(union_LogicBase):
+class Inputs(Union_LogicBase):
     def __init__(
             self,
             x: _tools.numType = 0,
@@ -456,7 +456,7 @@ class inputs(union_LogicBase):
         )
 
 # 多个逻辑输入（暂不支持m * n矩阵排列元件的方式）
-class outputs(union_LogicBase):
+class Outputs(Union_LogicBase):
     def __init__(
             self,
             x: _tools.numType = 0,
@@ -522,7 +522,7 @@ class outputs(union_LogicBase):
         )
 
 # D触发器流水灯
-class d_WaterLamp(union_LogicBase):
+class D_WaterLamp(Union_LogicBase):
     def __init__(
             self,
             x: _tools.numType = 0,

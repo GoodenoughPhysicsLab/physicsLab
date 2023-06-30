@@ -5,7 +5,7 @@ import physicsLab._fileGlobals as _fileGlobals
 import physicsLab.electricity.elementXYZ as _elementXYZ
 import physicsLab.electricity.elementsClass as _elementsClass
 
-class unionMeta(type):
+class UnionMeta(type):
     def __new__(metaCls, name: str, base: tuple, attrs: dict):
         cls = metaCls.__new__(metaCls, name, base, attrs)
         # obj = cls.__new__()
@@ -14,7 +14,7 @@ class unionMeta(type):
         return type.__new__(name, base, attrs)
 
 # Union class的基类 MixIn Class
-class unionBase:
+class UnionBase:
     # 此类无法被实例化
     def __init__(self, *args, **kwargs):
         raise errors.instantiateError
