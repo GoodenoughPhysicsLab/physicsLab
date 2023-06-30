@@ -11,14 +11,17 @@ class openExperimentError(Exception):
     def __str__(self):
         return "open a experiment but find nothing(must open a experiment)."
 
+# 导线颜色类型异常
 class wireColorError(Exception):
     def __str__(self):
         return "illegal wire color."
 
+# 未找到导线异常
 class wireNotFoundError(Exception):
     def __str__(self):
         return "Unable to delete a nonexistent wire"
 
+# 用于模块化元件的bitLength参数
 class bitLengthError(Exception):
     def __str__(self):
         return "illegal bitLength number"
@@ -37,10 +40,12 @@ class experimentTypeError(Exception):
     def __str__(self):
         return "The type of experiment does not match the element"
 
+# 用于get_Element 获取元件引用失败
 class getElementError(Exception):
     def __str__(self):
         return "Index out of range"
 
+# 类实例化异常 基类无法被实例化
 class instantiateError(Exception):
     def __str__(self):
         return "This class cannot be instantiated"
