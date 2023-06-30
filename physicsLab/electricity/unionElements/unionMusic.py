@@ -11,12 +11,12 @@ from physicsLab.electricity.unionElements.unionLogic import d_WaterLamp
 import physicsLab.electricity.unionElements._unionClassHead as _unionClassHead
 
 # 音符
-noteType = List[Union[None, "note"]]
-class note:
+noteType = List[Union[None, "Note"]]
+class Note:
     def __init__(
             self,
             time: int, # 在音轨中播放的时间
-            playTime: int,  # 音符发出声音的时长
+            playTime: int = 1,  # 音符发出声音的时长 暂时不支持相关机制
             instrument: Union[int, str] = 0, # 演奏的乐器，暂时只支持传入数字
             pitch: Union[int, str] = 60, # 音高/音调
             volume: numType = 1.0 # 音量/响度
@@ -34,15 +34,19 @@ class note:
         self.playTime = playTime
 
     def __str__(self) -> str:
-        return f"<union.note Object=> time:{self.time}, playTime:{self.playTime}, instrument: {self.instrument}, " \
+        return f"<union.Note Object=> time:{self.time}, playTime:{self.playTime}, instrument: {self.instrument}, " \
                f"pitch: {self.pitch}, volume: {self.volume}>"
 
+class Loop:
+    def __init__(self):
+        pass
+
 # 音轨
-class track:
+class Track:
     def __init__(
             self,
-            notes: Union[List[note], Tuple[note]],
-            # 设置整个音轨的默认参数 track global variable
+            notes: Union[List[Note], Tuple[Note]],
+            # 设置整个音轨的默认参数 Track global variable
             instrument: int = 0, # 演奏的乐器，暂时只支持传入数字
             pitch: int = 60, # 音高/音调
             bpm: int = 100, # 节奏
@@ -53,7 +57,7 @@ class track:
                 isinstance(pitch, int) or
                 isinstance(bpm, int) or
                 0 < volume < 1 or
-                isinstance(notes, (list, tuple)) and all(isinstance(val, note) for val in notes)
+                isinstance(notes, (list, tuple)) and all(isinstance(val, Note) for val in notes)
         ):
             raise TypeError
 
@@ -63,8 +67,8 @@ class track:
         self.volume = volume
         self.notes: noteType = []
         for a_note in notes:
-            tick = 0
-            while tick != a_note.time:
+            tick = 1
+            while tick < a_note.time:
                 tick += 1
                 self.notes.append(None)
             self.notes.append(deepcopy(a_note))
@@ -73,7 +77,7 @@ class track:
         return len(self.notes)
 
     def __str__(self):
-        return f"track: {self.notes}"
+        return f"Track: {self.notes}"
     # iterator
     def __iter__(self):
         self.__iter = iter(self.notes)
@@ -84,9 +88,9 @@ class track:
             yield a_note
 
 # 乐曲类
-class piece:
-    def __init__(self, *tracks: track):
-        if not all(isinstance(a_track, track) for a_track in tracks):
+class Piece:
+    def __init__(self, *tracks: Track):
+        if not all(isinstance(a_track, Track) for a_track in tracks):
             raise TypeError
 
         self.notes: noteType = []
@@ -111,10 +115,19 @@ class piece:
         for a_note in self.__iter:
             yield a_note
 
+    # 在物实生成对应的电路
+    def play(self, x:numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None) -> None:
+        Player(self, x, y, z, elementXYZ)
+
+    # 在电脑上自动播放改midi
+    def sound(self) -> "Piece":
+        pass
+        return self
+
 # 将piece的数据生成为物实的电路
-class player(_unionClassHead.unionBase):
+class Player(_unionClassHead.unionBase):
     def __init__(
-            self, musicArray: Union[piece, List[piece], Tuple[piece]],
+            self, musicArray: Union[Piece, List[Piece], Tuple[Piece]],
             x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None
     ):
         if not (
@@ -122,8 +135,8 @@ class player(_unionClassHead.unionBase):
                 isinstance(y, (int, float)) or
                 isinstance(z, (int, float))
         ) or not(
-                isinstance(musicArray, piece) or
-                all(isinstance(a_piece, piece) for a_piece in musicArray)
+                isinstance(musicArray, Piece) or
+                all(isinstance(a_piece, Piece) for a_piece in musicArray)
         ):
             raise TypeError
 
@@ -133,7 +146,7 @@ class player(_unionClassHead.unionBase):
         if isinstance(musicArray, (tuple, list)):
             if len(musicArray) > 1:
                 raise RuntimeError("Sorry, multiple pieces are not supported for the moment")
-            musicArray: piece = musicArray[0]
+            musicArray: Piece = musicArray[0]
 
         # 计算音乐矩阵的长宽
         side = None

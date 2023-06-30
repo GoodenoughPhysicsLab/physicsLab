@@ -147,10 +147,10 @@ class Simple_Instrument(electricityBase):
 
         inputData = inputs[0]
         if isinstance(inputData, int):
-            if 20 <= inputData <= 128:
+            if 20 < inputData < 128:
                 self._arguments["Properties"]["音高"] = inputData
             else:
-                raise TypeError('Input data type error')
+                raise TypeError('Input number out of range')
         elif isinstance(inputData, str):
             if len(inputs) == 1:
                 majorSet_Tonality(self, inputData)
