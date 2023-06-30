@@ -3,7 +3,6 @@ from copy import deepcopy
 from math import ceil, sqrt
 from .wires import crt_Wires
 from physicsLab._tools import numType
-#from .unionLogic import union_LogicBase
 from typing import Union as Union, List, Tuple
 from physicsLab.element import get_Element
 import physicsLab.electricity.elementXYZ as _elementXYZ
@@ -69,13 +68,6 @@ class track:
                 tick += 1
                 self.notes.append(None)
             self.notes.append(deepcopy(a_note))
-            # self.notes.append(deepcopy(val))
-            # if val.time == 0:
-            #     continue
-            # time = 1
-            # while time != val.time:
-            #     time += 1
-            #     self.notes.append(None)
 
     def __len__(self) -> int:
         return len(self.notes)
