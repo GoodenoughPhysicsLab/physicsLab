@@ -81,26 +81,39 @@ def get_Element(*args, **kwargs) -> _elementsClass.electricityBase:
 
 # 删除原件
 def del_Element(self) -> None:
-#    _fileGlobals.check_ExperimentType(0)
+#    self是物实三大实验支持的所有元件
 
-    try:
-        identifier = self._arguments['Identifier']
-        if isinstance(self, _elementsClass.electricityBase):
-            for element in _fileGlobals.Elements:
-                if identifier == element['Identifier']:
-                    # 删除原件
-                    _fileGlobals.Elements.remove(element)
-                    # 删除导线
-                    i = 0
-                    while i < _fileGlobals.Wires.__len__():
-                        wire = _fileGlobals.Wires[i]
-                        if wire['Source'] == identifier or wire['Target'] == identifier:
-                            _fileGlobals.Wires.pop(i)
-                        else:
-                            i += 1
-                    return
-    except:
-        raise RuntimeError('Unable to delete a nonexistent element')
+    if not isinstance(self, _elementsClass.electricityBase):
+        raise TypeError
+
+    identifier = self._arguments["Identifier"]
+
+    # 删除Elements中的引用
+    for element in _fileGlobals.Elements:
+        if element["Identifier"] == identifier:
+            _fileGlobals.Elements.remove(element)
+            break
+
+
+    i = 0
+    while i < _fileGlobals.Wires.__len__():
+        wire = _fileGlobals.Wires[i]
+        if wire['Source'] == identifier or wire['Target'] == identifier:
+            _fileGlobals.Wires.pop(i)
+        else:
+            i += 1
+
+    # 删除elements_Position中的引用
+    for elements in _fileGlobals.elements_Position.values():
+        if self in elements:
+            elements.remove(self)
+            break
+
+    # 删除elements_Index中的引用
+    for element in _fileGlobals.elements_Index:
+        if element is self:
+            _fileGlobals.elements_Index.remove(self)
+            break
 
 # 原件的数量
 def count_Elements() -> int:

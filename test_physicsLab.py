@@ -135,10 +135,10 @@ class myTestCase(unittest.TestCase):
 
     def test_del_Element(self):
         with experiment('测逝'):
-            Logic_Input()
-            Or_Gate()
+            Logic_Input().o - Or_Gate().o
             del_Element(get_Element(2))
             self.assertEqual(count_Elements(), 1)
+            self.assertEqual(count_Wires(), 0)
 
     # 测逝模块化电路连接导线
     def test_wires(self):

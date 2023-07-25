@@ -185,7 +185,7 @@ Wires: list = []
 sav: dict = {}
 
 # 通过坐标索引元件
-elements_Position: dict = {}  # key: self._position，value: dict([self], ...)
+elements_Position: dict = {}  # key: self._position, value: List[self...]
 # 通过index（元件生成顺序）索引元件
 elements_Index: list = [] # List[self]
 
