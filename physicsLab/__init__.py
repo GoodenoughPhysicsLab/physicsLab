@@ -18,11 +18,14 @@ from physicsLab.astrophysics import *
 # 电与磁实验
 from physicsLab.electromagnetism.elementsClass import *
 # 操作元件
-from physicsLab.element import crt_Element, get_Element, del_Element, count_Elements, clear_Elements, print_Elements
+from physicsLab.element import *
 # 自定义异常类
 from physicsLab.errors import *
 # 获取存档类型与整个存档文件
-from physicsLab._fileGlobals import get_experimentType, get_Sav
+from physicsLab._fileGlobals import *
+# 模块化电路
+import physicsLab.electricity.unionElements.unionLogic as union
+import physicsLab.electricity.unionElements.unionMusic as music
 
 
 __all__ = [
@@ -51,6 +54,7 @@ __all__ = [
     "Or_Gate", "And_Gate", "Nor_Gate", "Nand_Gate", "Xor_Gate", "Xnor_Gate", "Imp_Gate", "Nimp_Gate",
     "Half_Adder", "Full_Adder", "Multiplier", "D_Flipflop", "T_Flipflop", "JK_Flipflop", "Counter",
     "Random_Generator", "eight_bit_Input", "eight_bit_Display", "Electric_Fan", "Simple_Instrument",
+    "P_MOSFET",
 
     # unionElements
     "union", "music",

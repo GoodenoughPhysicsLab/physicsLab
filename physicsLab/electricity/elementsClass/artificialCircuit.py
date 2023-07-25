@@ -145,6 +145,27 @@ class N_MOSFET(electricityBase):
     def G(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 0)
 
+# p mos
+class P_MOSFET(electricityBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ=None):
+        self._arguments = {'ModelID': 'P-MOSFET', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'PNP': 1.0, '放大系数': 0.027, '阈值电压': 1.5, '最大功率': 100.0, '锁定': 1.0},
+                           'Statistics': {'电压GS': 0.0, '电压': 0.0, '电流': 0.0, '功率': 0.0, '状态': 1.0},
+                           'Position': '', 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+
+    @property
+    def G(self) -> _elementPin.element_Pin:
+        return _elementPin.element_Pin(self, 0)
+
+    @property
+    def S(self) -> _elementPin.element_Pin:
+        return _elementPin.element_Pin(self, 2)
+
+    @property
+    def D(self) -> _elementPin.element_Pin:
+        return _elementPin.element_Pin(self, 1)
+
 # 波形发生器基类
 class _source_electricity(electricityBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):

@@ -2,6 +2,6 @@
 # 模块化逻辑电路
 from physicsLab.electricity.unionElements.unionLogic import *
 # 模块化音乐电路
-from physicsLab.electricity.unionElements.unionMusic import Note, Track, Piece
+from physicsLab.electricity.unionElements.unionMusic import *
 # 模块化电路引脚连接
-from physicsLab.electricity.unionElements.wires import crt_Wires, del_Wires
+from physicsLab.electricity.unionElements.wires import *

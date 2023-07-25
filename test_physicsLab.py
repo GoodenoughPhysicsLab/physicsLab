@@ -1,6 +1,7 @@
 #coding=utf-8
 import unittest
 from physicsLab import *
+from physicsLab.union import *
 #from viztracer import VizTracer
 
 class myTestCase(unittest.TestCase):
@@ -235,6 +236,9 @@ class myTestCase(unittest.TestCase):
                 pass
             else:
                 raise RuntimeError
+    
+    def test_from_union(self):
+        Note(2)
 
 
 if __name__ == '__main__':
