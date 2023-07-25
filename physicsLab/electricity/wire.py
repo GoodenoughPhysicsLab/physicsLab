@@ -10,8 +10,13 @@ def _check_typeWire(func):
                 isinstance(SourcePin, _elementPin.element_Pin) and
                 isinstance(TargetPin, _elementPin.element_Pin)
         ):
-            if (color not in ["黑", "蓝", "红", "绿", "黄"]):
+            # 将英文的color转换为中文
+            if color in ("black", "blue", "red", "green", "yellow"):
+                color = {"black": "黑", "blue": "蓝", "red": "红", "green": "绿", "yellow": "黄"}[color]
+
+            if (color not in ("黑", "蓝", "红", "绿", "黄")):
                 raise errors.wireColorError
+
             _fileGlobals.check_ExperimentType(0)
 
             func(SourcePin, TargetPin, color)

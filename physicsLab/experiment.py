@@ -161,12 +161,12 @@ def write_Experiment() -> None:
     if _fileGlobals.get_experimentType() == 0:
         _colorUtils.printf(
             f"Successfully compiled! {_fileGlobals.Elements.__len__()} elements, {_fileGlobals.Wires.__len__()} wires.",
-            _colorUtils.GREEN
+            _colorUtils.COLOR.GREEN
         )
     else:
         _colorUtils.printf(
             f"Successfully compiled! {_fileGlobals.Elements.__len__()} elements.",
-            _colorUtils.GREEN
+            _colorUtils.COLOR.GREEN
         )
 
 # 读取sav文件已有的原件与导线
@@ -246,7 +246,7 @@ def del_Experiment() -> None:
         os.remove(_fileGlobals.savName.replace('.sav', '.jpg'))
     except FileNotFoundError:
         pass
-    _colorUtils.printf("Successfully delete experiment!", _colorUtils.BLUE)
+    _colorUtils.printf("Successfully delete experiment!", _colorUtils.COLOR.BLUE)
 
 # 发布实验
 def yield_Experiment(title: str = None, introduction: str = None) -> None:

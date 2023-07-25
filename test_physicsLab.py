@@ -158,7 +158,7 @@ class myTestCase(unittest.TestCase):
         with experiment('测逝', elementXYZ=True):
             a = union.Inputs(-1, 0, 0, 8)
             b = union.Inputs(-2, 0, 0, 8)
-            c = union.Sum(0, 0, 0, 8)
+            c = union.Sum(8, 0, 0, 0)
             d = union.Outputs(1, 0, 0, 8)
             a.data_Output - c.data_Input1
             b.data_Output - c.data_Input2

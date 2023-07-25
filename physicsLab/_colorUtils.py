@@ -37,6 +37,6 @@ def printf(msg: str, color) -> None:
     if not isinstance(msg, str):
         raise TypeError
     if colorSupport:
-        print(f"{color}{msg}{COLOR.DEFAULT}")
+        print(f"{color.value}{msg}{COLOR.DEFAULT.value}")
     else:
         print(msg)

@@ -4,7 +4,7 @@
 import physicsLab._colorUtils as _colorUtils
 
 def warning(msg: str) -> None:
-    _colorUtils.printf("Warning: " + msg, _colorUtils.YELLOW)
+    _colorUtils.printf("Warning: " + msg, _colorUtils.COLOR.YELLOW)
 
 # 打开实验异常
 class openExperimentError(Exception):
