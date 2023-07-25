@@ -1,7 +1,7 @@
 #coding=utf-8
 # 模块化电路
 import typing as _typing
-import physicsLab._tools as _tools
+from physicsLab._tools import numType
 import physicsLab.errors as _errors
 import physicsLab.electricity as electricity
 import physicsLab.electricity.elementsClass as _elementsClass
@@ -35,12 +35,12 @@ class _union_LogicMeta(type):
 # 模块化电路逻辑电路基类
 class Union_LogicBase(_unionClassHead.UnionBase):
     # 设置高电平的值
-    def set_HighLeaveValue(self, num: _tools.numType) -> "Union_LogicBase":
+    def set_HighLeaveValue(self, num: numType) -> "Union_LogicBase":
         for element in self._elements:
             element.set_HighLeaveValue(num)
         return self
 
-    def set_LowLeaveValue(self, num: _tools.numType) -> "Union_LogicBase":
+    def set_LowLeaveValue(self, num: numType) -> "Union_LogicBase":
         for element in self._elements:
             element.set_LowLeaveValue(num)
         return self
@@ -49,9 +49,9 @@ class Union_LogicBase(_unionClassHead.UnionBase):
 class Sum(Union_LogicBase):
     def __init__(
             self,
-            x: _tools.numType = 0,
-            y: _tools.numType = 0,
-            z: _tools.numType = 0,
+            x: numType = 0,
+            y: numType = 0,
+            z: numType = 0,
             bitLength: int = None,
             elementXYZ: bool = None,  # x, y, z是否为元件坐标系
             unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
@@ -133,13 +133,30 @@ class Sum(Union_LogicBase):
             self._elements[-1].o_low
         )
 
+# 只读非门，若没有则创建一个只读非门，若已存在则不会创建新的元件
+class Const_NoGate:
+    __singleton_NoGate: electricity.No_Gate = None
+    def __new__(cls,
+                x: numType = 0,
+                y: numType = 0,
+                z: numType = 0,
+                elementXYZ: bool = None
+    ):
+        if cls.__singleton_NoGate is None:
+            cls.__singleton_NoGate = electricity.No_Gate(x, y, z, elementXYZ)
+        return object.__new__(cls)
+
+    @property
+    def o(self):
+        return self.__singleton_NoGate.o
+
 # 任意引脚减法电路
 class Sub(Union_LogicBase):
     def __init__(
             self,
-            x: _tools.numType = 0,
-            y: _tools.numType = 0,
-            z: _tools.numType = 0,
+            x: numType = 0,
+            y: numType = 0,
+            z: numType = 0,
             bitLength: int = None,
             elementXYZ: bool = None,  # x, y, z是否为元件坐标系
             unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
@@ -208,7 +225,7 @@ class Sub(Union_LogicBase):
         )
 
         self._elements: _typing.List[_typing.Union[_elementsClass.Full_Adder, _elementsClass.No_Gate]] = [
-            _elementsClass.No_Gate(x, y, z, True)
+            Const_NoGate(x, y, z, True)
         ]
 
         self._noGates: _typing.List[_elementsClass.No_Gate] = []
@@ -246,7 +263,7 @@ class Sub(Union_LogicBase):
 
 # 2-4译码器
 class _two_four_Decoder:
-    def __init__(self, x : _tools.numType = 0, y : _tools.numType = 0, z : _tools.numType = 0):
+    def __init__(self, x : numType = 0, y : numType = 0, z : numType = 0):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
         self.x = x
@@ -269,7 +286,7 @@ class _two_four_Decoder:
 
 # 4-16译码器
 class _four_sixteen_Decoder:
-    def __init__(self, x : _tools.numType = 0, y : _tools.numType = 0, z : _tools.numType = 0):
+    def __init__(self, x : numType = 0, y : numType = 0, z : numType = 0):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
         self.x = x
@@ -393,9 +410,9 @@ class _four_sixteen_Decoder:
 class Inputs(Union_LogicBase):
     def __init__(
             self,
-            x: _tools.numType = 0,
-            y: _tools.numType = 0,
-            z: _tools.numType = 0,
+            x: numType = 0,
+            y: numType = 0,
+            z: numType = 0,
             bitLength: int = None,
             elementXYZ: bool = None,  # x, y, z是否为元件坐标系
             unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
@@ -459,9 +476,9 @@ class Inputs(Union_LogicBase):
 class Outputs(Union_LogicBase):
     def __init__(
             self,
-            x: _tools.numType = 0,
-            y: _tools.numType = 0,
-            z: _tools.numType = 0,
+            x: numType = 0,
+            y: numType = 0,
+            z: numType = 0,
             bitLength: int = None,
             elementXYZ: bool = None,  # x, y, z是否为元件坐标系
             unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
@@ -525,9 +542,9 @@ class Outputs(Union_LogicBase):
 class D_WaterLamp(Union_LogicBase):
     def __init__(
             self,
-            x: _tools.numType = 0,
-            y: _tools.numType = 0,
-            z: _tools.numType = 0,
+            x: numType = 0,
+            y: numType = 0,
+            z: numType = 0,
             bitLength: int = None,
             elementXYZ: bool = None, # x, y, z是否为元件坐标系
             unionHeading: bool = False, # False: 生成的元件为竖直方向，否则为横方向
