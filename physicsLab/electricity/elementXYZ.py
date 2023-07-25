@@ -1,16 +1,8 @@
 #coding=utf-8
 # 元件坐标系
-# 一个非门的长为0.16，宽为0.08
-# 一个非门的长宽会成为元件坐标系的x, y的单位长度
-# z轴的单位长度是原坐标系的0.1
-#
-# 像二位乘法器这种元件的位置必须经过修正才能使元件整齐排列
-# x, z轴不用修正
-# y轴的修正为 +0.04
-# 坐标修正部分的代码在对应的类的文件中
-# 如big_Elements的坐标修正在logicCircuit.py
-
-# _elementClassHead里的element_Init_HEAD有部分处理元件坐标系的代码，并调用了该文件
+# 元件坐标系的单位x为一个是门的长
+# 单位y是一个是门的宽
+# 单位z为物实默认坐标系的0.1
 
 import physicsLab._tools as _tools
 import physicsLab._fileGlobals as _fileGlobals
@@ -20,15 +12,9 @@ from typing import Callable as _Callable
 
 _elementXYZ: bool = False
 
-# 所有元件坐标系的函数都会有的操作：
-def _dec_EelementXYZ(func: _Callable) -> _Callable:
-    def result(*args, **kwargs):
-        _fileGlobals.check_ExperimentType(0)
-        func(*args, **kwargs)
-    return result
-
 # 是否将全局设置为元件坐标系
 def set_elementXYZ(boolen: bool) -> None:
+    _fileGlobals.check_ExperimentType(0)
     if not isinstance(boolen, bool):
         raise TypeError
     global _elementXYZ
@@ -52,6 +38,7 @@ _xOrigin, _yOrigin, _zOrigin = 0, 0, 0
 
 # 将元件坐标系转换为物实支持的坐标系
 def xyzTranslate(x: _tools.numType, y: _tools.numType, z: _tools.numType):
+    _fileGlobals.check_ExperimentType(0)
     x *= _xUnit
     y *= _yUnit
     z *= _zUnit
@@ -63,6 +50,7 @@ def xyzTranslate(x: _tools.numType, y: _tools.numType, z: _tools.numType):
 
 # 将物实支持的坐标系转换为元件坐标系
 def translateXYZ(x: _tools.numType, y: _tools.numType, z: _tools.numType, bigElement: bool = False):
+    _fileGlobals.check_ExperimentType(0)
     x /= _xUnit
     y /= _yUnit
     z /= _zUnit
