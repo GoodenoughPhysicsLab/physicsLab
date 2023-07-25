@@ -104,16 +104,13 @@ class electricityBase(metaclass=eletricityMeta):
     def get_Position(self) -> tuple:
         return self._position
 
-    # 获取父类的类型
-    def father_type(self) -> str:
-        return 'element'
-
     # 获取元件的index（每创建一个元件，index就加1）
     def get_Index(self) -> int:
         return self._index
 
     # 获取子类的类型（也就是ModelID）
-    def type(self) -> str:
+    @property
+    def modelID(self) -> str:
         return self._arguments['ModelID']
 
     # 打印参数
