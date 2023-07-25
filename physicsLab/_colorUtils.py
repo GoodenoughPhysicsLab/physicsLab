@@ -1,15 +1,18 @@
 #coding=utf-8
 import sys
+from enum import Enum, unique
 
-BLACK = '\033[30m'
-RED = '\033[31m'
-GREEN = '\033[32m'
-YELLOW = '\033[33m'
-BLUE = '\033[34m'
-MAGENTA = '\033[35m'
-CYAN = '\033[36m'
-WHITE = '\033[37m'
-DEFAULT = '\033[39m'
+@unique
+class COLOR(Enum):
+    BLACK = '\033[30m'
+    RED = '\033[31m'
+    GREEN = '\033[32m'
+    YELLOW = '\033[33m'
+    BLUE = '\033[34m'
+    MAGENTA = '\033[35m'
+    CYAN = '\033[36m'
+    WHITE = '\033[37m'
+    DEFAULT = '\033[39m'
 
 # 打印write_Experiment的信息时是否使用彩色字
 colorSupport = True
@@ -17,6 +20,9 @@ colorSupport = True
 # 打印颜色字
 def printf(msg: str, color) -> None:
     global colorSupport
+
+    if not isinstance(color, COLOR):
+        raise TypeError
 
     if sys.platform == "win32":
         try:
@@ -31,6 +37,6 @@ def printf(msg: str, color) -> None:
     if not isinstance(msg, str):
         raise TypeError
     if colorSupport:
-        print(f"{color}{msg}{DEFAULT}")
+        print(f"{color}{msg}{COLOR.DEFAULT}")
     else:
         print(msg)

@@ -49,10 +49,10 @@ class Union_LogicBase(_unionClassHead.UnionBase):
 class Sum(Union_LogicBase):
     def __init__(
             self,
+            bitLength: int,
             x: numType = 0,
             y: numType = 0,
             z: numType = 0,
-            bitLength: int = None,
             elementXYZ: bool = None,  # x, y, z是否为元件坐标系
             unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
             fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
@@ -136,28 +136,27 @@ class Sum(Union_LogicBase):
 # 只读非门，若没有则创建一个只读非门，若已存在则不会创建新的元件
 class Const_NoGate:
     __singleton_NoGate: electricity.No_Gate = None
-    def __new__(cls,
+    def __init__(self,
                 x: numType = 0,
                 y: numType = 0,
                 z: numType = 0,
                 elementXYZ: bool = None
     ):
-        if cls.__singleton_NoGate is None:
-            cls.__singleton_NoGate = electricity.No_Gate(x, y, z, elementXYZ)
-        return object.__new__(cls)
+        if Const_NoGate.__singleton_NoGate is None:
+            Const_NoGate.__singleton_NoGate = electricity.No_Gate(x, y, z, elementXYZ)
 
     @property
     def o(self):
-        return self.__singleton_NoGate.o
+        return Const_NoGate.__singleton_NoGate.o
 
 # 任意引脚减法电路
 class Sub(Union_LogicBase):
     def __init__(
             self,
+            bitLength: int, # 减法器的最大计算比特数
             x: numType = 0,
             y: numType = 0,
             z: numType = 0,
-            bitLength: int = None,
             elementXYZ: bool = None,  # x, y, z是否为元件坐标系
             unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
             fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件

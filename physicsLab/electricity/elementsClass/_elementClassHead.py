@@ -1,4 +1,5 @@
 # coding=utf-8
+from typing import *
 import physicsLab._tools as _tools
 import physicsLab.errors as errors
 import physicsLab._fileGlobals as _fileGlobals
@@ -27,8 +28,8 @@ class eletricityMeta(type):
             raise TypeError('illegal argument')
         _fileGlobals.check_ExperimentType(0)
 
-        self.is_elementXYZ = False # 元件坐标系
-        self.is_bigElement = False # 2体积元件
+        self.is_elementXYZ: bool = False # 元件坐标系
+        self.is_bigElement: bool = False # 2体积元件
 
         x, y, z = _tools.roundData(x, y, z)
         self._position = (x, y, z)
@@ -36,7 +37,7 @@ class eletricityMeta(type):
         if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
             x, y, z = _elementXYZ.xyzTranslate(x, y, z)
         if elementXYZ:
-            self.is_bigElement = True
+            self.is_elementXYZ = True
 
         self.__init__(x, y, z, elementXYZ, *args, **kwargs)
         # 若是big_Element，则修正坐标

@@ -126,9 +126,6 @@ def clear_Elements() -> None:
     _fileGlobals.elements_Index.clear()
     _fileGlobals.elements_Position.clear()
 
+# 打印物实存档格式的所有元件
 def print_Elements() -> None:
     print(_fileGlobals.Elements)
-
-# 元件基类
-class elementBase:
-    pass
