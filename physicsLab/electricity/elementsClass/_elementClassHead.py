@@ -36,7 +36,6 @@ class eletricityMeta(type):
         # 元件坐标系
         if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
             x, y, z = _elementXYZ.xyzTranslate(x, y, z)
-        if elementXYZ:
             self.is_elementXYZ = True
 
         self.__init__(x, y, z, elementXYZ, *args, **kwargs)

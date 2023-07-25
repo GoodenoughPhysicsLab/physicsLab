@@ -64,7 +64,7 @@ __all__ = [
     "crt_Wires", "del_Wires",
 
     # elementXYZ.py
-    "set_elementXYZ", "is_elementXYZ", "set_O", "get_OriginPosition", "get_xyzUnit",
+    "set_elementXYZ", "is_elementXYZ", "xyzTranslate", "translateXYZ", "set_O", "get_OriginPosition", "get_xyzUnit",
 
     # electromagnetism
     "Negative_Charge", "Positive_Charge"

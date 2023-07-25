@@ -62,6 +62,11 @@ class myTestCase(unittest.TestCase):
             del_Experiment()
             raise RuntimeError
 
+    def test_crt_wire(self):
+        with experiment("__test__", delete=True):
+            a = Or_Gate()
+            crt_Wire(a.o, a.i_up, "red")
+
     def test_union_Sum(self):
         open_Experiment('测逝')
         union.Sum(0, -1, 0, 64)
