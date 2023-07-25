@@ -7,14 +7,24 @@ class _logicBase(electricityBase):
     # 设置高电平的值
     def set_HighLeaveValue(self, num: numType) -> None:
         if not isinstance(num, (int, float)):
-            raise RuntimeError('illegal argument')
+            raise TypeError('illegal argument')
+        if num < self.get_LowLeaveValue():
+            raise TypeError("illegal range")
         self._arguments['Properties']['高电平'] = num
+
+    def get_HighLeaveValue(self) -> numType:
+        return self._arguments['Properties']['高电平']
 
     # 设置低电平的值
     def set_LowLeaveValue(self, num: numType) -> None:
         if not isinstance(num, (int, float)):
-            raise RuntimeError('illegal argument')
+            raise TypeError('illegal argument')
+        if num > self.get_HighLeaveValue():
+            raise TypeError("illegal range")
         self._arguments['Properties']['低电平'] = num
+
+    def get_LowLeaveValue(self):
+        return self._arguments['Properties']['低电平']
 
 
 # _arguments是参数的意思
