@@ -27,14 +27,20 @@ class eletricityMeta(type):
             raise TypeError('illegal argument')
         _fileGlobals.check_ExperimentType(0)
 
+        self.is_elementXYZ = False # 元件坐标系
+        self.is_bigElement = False # 2体积元件
+
         x, y, z = _tools.roundData(x, y, z)
         self._position = (x, y, z)
         # 元件坐标系
         if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
             x, y, z = _elementXYZ.xyzTranslate(x, y, z)
-        self.__init__(x, y, z, *args, **kwargs)
+        if elementXYZ:
+            self.is_bigElement = True
+
+        self.__init__(x, y, z, elementXYZ, *args, **kwargs)
         # 若是big_Element，则修正坐标
-        if isinstance(self, is_big_element):
+        if self.is_bigElement:
             x, y, z = _elementXYZ.amend_big_Element(x, y, z)
 
         self._arguments["Identifier"] = _tools.randString(32)
@@ -44,14 +50,9 @@ class eletricityMeta(type):
 
         # 该坐标是否已存在，则存入列表
         if self._position in _fileGlobals.elements_Position.keys():
-            _fileGlobals.elements_Position[self._position]['self'].append(self)
+            _fileGlobals.elements_Position[self._position].append(self)
         else:
-            elementDict: dict = {
-                'self': [self],
-                'elementXYZ': _elementXYZ.is_elementXYZ,  # 是否为元件坐标系
-                'originPosition': tuple(_elementXYZ.get_OriginPosition())  # 坐标原点
-            }
-            _fileGlobals.elements_Position[self._position] = elementDict
+            _fileGlobals.elements_Position[self._position] = [self]
         self.set_Rotation()
         # 通过元件生成顺序来索引元件
         self._index = eletricityMeta.__index
@@ -134,7 +135,3 @@ def two_pin_ArtificialCircuit_Pin(cls):
     cls.black, cls.r = black, black
 
     return cls
-
-# 仅用于判断是否为2体积元件
-class is_big_element:
-    pass

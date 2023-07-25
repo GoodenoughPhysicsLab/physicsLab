@@ -1,7 +1,7 @@
 #coding=utf-8
 from physicsLab._tools import numType
 import physicsLab.electricity.elementPin as _elementPin
-from ._elementClassHead import electricityBase, is_big_element
+from ._elementClassHead import electricityBase
 
 class _logicBase(electricityBase):
     # 设置高电平的值
@@ -149,12 +149,13 @@ class Nimp_Gate(_3_pin_Gate):
         self._arguments["ModelID"] = 'Nimp Gate'
 
 # 2体积元件父类
-class _big_element(_logicBase, is_big_element):
+class _big_element(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': '', 'Identifier': '', 'IsBroken': False,
                           'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '锁定': 1.0}, 'Statistics': {},
                           'Position': '', 'Rotation': '', 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        self.is_bigElement = True
 
 # 半加器
 class Half_Adder(_big_element):
@@ -373,12 +374,13 @@ class Random_Generator(_big_element):
         return _elementPin.element_Pin(self, 3)
 
 # 8位输入器
-class eight_bit_Input(_logicBase, is_big_element):
+class eight_bit_Input(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': '8bit Input', 'Identifier': '', 'IsBroken': False,
                            'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '十进制': 0.0, '锁定': 1.0},
                            'Statistics': {}, 'Position': '', 'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        self.is_bigElement = True
 
     def set_num(self, num : int):
         if 0 <= num <= 255:
@@ -419,7 +421,7 @@ class eight_bit_Input(_logicBase, is_big_element):
         return _elementPin.element_Pin(self, 7)
 
 # 8位显示器
-class eight_bit_Display(_logicBase, is_big_element):
+class eight_bit_Display(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': '8bit Display', 'Identifier': '',
                           'IsBroken': False, 'IsLocked': False,
@@ -428,6 +430,7 @@ class eight_bit_Display(_logicBase, is_big_element):
                                          '十进制': 0.0}, 'Position': '',
                           'Rotation': '', 'DiagramCached': False,
                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        self.is_bigElement = True
 
     @property
     def i_up(self) -> _elementPin.element_Pin:

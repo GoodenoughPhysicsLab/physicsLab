@@ -49,7 +49,7 @@ def get_Element(*args, **kwargs) -> _elementsClass.electricityBase:
         position = _tools.roundData(x, y, z)
         if position not in _fileGlobals.elements_Position.keys():
             raise RuntimeError(f"{position} do not exist")
-        result: list = _fileGlobals.elements_Position[position]['self']
+        result: list = _fileGlobals.elements_Position[position]
         return result[0] if len(result) == 1 else result
     # 通过index（元件生成顺序）索引元件
     def index_Element(index: int):

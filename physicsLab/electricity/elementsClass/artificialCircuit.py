@@ -1,11 +1,11 @@
 #coding=utf-8
 from physicsLab._tools import numType
 import physicsLab.electricity.elementPin as _elementPin
-from ._elementClassHead import electricityBase, is_big_element, two_pin_ArtificialCircuit_Pin
+from ._elementClassHead import electricityBase, two_pin_ArtificialCircuit_Pin
 
 
 # 555定时器
-class NE555(electricityBase, is_big_element):
+class NE555(electricityBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': '555 Timer', 'Identifier': '', 'IsBroken': False,
                            'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '锁定': 1.0},
@@ -14,6 +14,7 @@ class NE555(electricityBase, is_big_element):
                                           '输出': 0, '重设': 10, '接地': 0},
                            'Position': '', 'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        self.is_bigElement = True
 
     @property
     def VCC(self) -> _elementPin.element_Pin:

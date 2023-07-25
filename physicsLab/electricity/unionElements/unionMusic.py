@@ -13,6 +13,19 @@ import physicsLab.electricity.unionElements._unionClassHead as _unionClassHead
 noteType = List[Union[None, "Note"]] # 音符类型
 chordType = Union[Tuple["Note"], List["Note"]] # 和弦类型
 
+# midi类，用于提供physicsLab与midi文件之间的桥梁
+class Midi:
+    def __init__(self) -> None:
+        pass
+
+    # 播放midi类存储的信息
+    def sound(self):
+        pass
+
+    # 转换为physicsLab的piece类
+    def translate_to_piece(self) -> "Piece":
+        pass
+
 # 音符类
 class Note:
     def __init__(self,
@@ -112,12 +125,8 @@ class Piece:
         if not all(isinstance(a_track, Track) for a_track in tracks):
             raise TypeError
 
-        self.notes: noteType = []
-
-        if len(tracks) > 1:
-            raise RuntimeError("Sorry, multiple tracks are not supported for the moment")
-
-        self.notes: noteType = tracks[0].notes
+        self.tracks: Track = tracks
+        self.mergeTrack()
 
     def __len__(self):
         return len(self.notes)
@@ -133,15 +142,23 @@ class Piece:
     def __next__(self):
         for a_note in self.__iter:
             yield a_note
+    
+    # 将多个音轨合并为一个音轨（方便物实生成）
+    def mergeTrack(self) -> "Piece":
+        if len(self.tracks) > 1:
+            raise RuntimeError("Sorry, multiple tracks are not supported for the moment")
+        
+        self.notes = self.tracks[0].notes
+        
+        return self
 
     # 在物实生成对应的电路
     def play(self, x:numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None) -> None:
         Player(self, x, y, z, elementXYZ)
 
-    # 在电脑上自动播放改midi
-    def sound(self) -> "Piece":
+    # 转换为Midi类
+    def translate_to_midi(self) -> Midi:
         pass
-        return self
 
 # 将piece的数据生成为物实的电路
 class Player(_unionClassHead.UnionBase):
@@ -214,16 +231,16 @@ class Player(_unionClassHead.UnionBase):
                     ins.i - yPlayer.neg_data_Output[ycor // 2]
 
                 i = 1
-                exit = None
+                exit_sign = None
                 while True:
                     if a_note_item + i >= len(musicArray):
-                        exit = True
+                        exit_sign = True
                         break
                     if musicArray[a_note_item+i] is None:
                         i += 1
                     else:
                         break
-                if exit:
+                if exit_sign:
                     break
                 next_note = musicArray[a_note_item+i]
                 if a_note_item+1 < len(musicArray) and next_note is not None and next_note.time != 0:

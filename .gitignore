@@ -19,3 +19,7 @@ bad apple.py
 *.lnk
 test2.py
 *.png
+*.obj
+*.pdb
+
+
