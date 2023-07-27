@@ -21,10 +21,4 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',  # 对python的最低版本要求
-    ext_modules=[
-        setuptools.Extension(
-            "midi",
-            sources=["./physicsLab/src_c/midiMoudule/midi_sound.c"]
-        )
-    ]
 )

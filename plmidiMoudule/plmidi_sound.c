@@ -4,7 +4,7 @@
 
 // input: [(待确定), ()...]
 static PyObject* 
-midi_sound(PyObject *self, PyObject *args)
+plmidi_sound(PyObject *self, PyObject *args)
 {
     PyObject *musiclist; // must be a python list
     if (!PyArg_ParseTuple(self, "O", &musiclist)) {
@@ -24,23 +24,23 @@ midi_sound(PyObject *self, PyObject *args)
 }
 
 
-static PyMethodDef midi_methods[] = {
-    {"midi_sound", midi_sound, METH_VARARGS, "play midi by using C"},
+static PyMethodDef plmidi_methods[] = {
+    {"midi_sound", plmidi_sound, METH_VARARGS, "play midi by using C"},
     {NULL, NULL, 0, NULL}
 };
 
-static PyModuleDef midi = {
+static PyModuleDef plmidi = {
     PyModuleDef_HEAD_INIT,
     "midi",
     NULL,
     -1,
-    midi_methods
+    plmidi_methods
 };
 
 PyMODINIT_FUNC
-PyInit_midi(void)
+PyInit_plmidi(void)
 {
-    PyObject* m = PyModule_Create(&midi);
+    PyObject* m = PyModule_Create(&plmidi);
     if (!m) {
         return NULL;
     }
