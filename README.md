@@ -63,7 +63,7 @@ with experiment('测逝', read=True):
 ```
 上面两段代码产生的结果是一样的  
   
-更详细的内容请在[wiki](https://gitee.com/script2000/physicsLab/wikis/functions)中查看  
+更详细的内容请在[Doc](./Doc)中查看  
 请注意：Python采用```GBK```编码，而物实用的是```utf-8```，在极少数情况下会出现乱码。
 此时你可以在```Python```代码的第一行添加如下注释：
 ```Python

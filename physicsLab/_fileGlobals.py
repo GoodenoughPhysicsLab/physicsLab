@@ -178,11 +178,12 @@ if platform == "win32":
 elif platform == "linux": # Android
     FILE_HEAD = "/storage/emulated/0/physicsLabSav"
 
-savName: str = ""  # sav的文件名
+SavPath: str = "" # 存档的完整路径，为 f"{FILE_HEAD}/{SavName}"
+SavName: str = ""  # sav的文件名
 StatusSave: dict = {} # 存放实验元件，导线（如果是电学实验的话）
 Elements: list = []  # 装原件的_arguments
 Wires: list = []
-sav: dict = {}
+PlSav: dict = {}
 
 # 通过坐标索引元件
 elements_Position: dict = {}  # key: self._position, value: List[self...]
@@ -204,17 +205,17 @@ def fileGlobals_init(experimentType: Union[int, str]) -> None:
     ):
         raise TypeError
 
-    global sav, savName, StatusSave, Elements, Wires, elements_Index, elements_Position
-    savName = ""  # sav的文件名
+    global PlSav, SavName, StatusSave, Elements, Wires, elements_Index, elements_Position
+    SavName = ""  # sav的文件名
     Elements = []  # 装原件的_arguments
     Wires = []
     # 电学实验
     if experimentType == 0 or experimentType is None:
-        sav = _electricity
+        PlSav = _electricity
         StatusSave = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
     # 电与磁实验
     elif experimentType == 4 or experimentType == "电与磁实验":
-        sav = _electromagnetism
+        PlSav = _electromagnetism
         StatusSave = {"SimulationSpeed": 1.0, "Elements": []}
 
     elements_Position = {}
@@ -233,11 +234,11 @@ def check_ExperimentType(targetType: int, error: bool = True):
 # 获取sav
 def get_Sav() -> dict:
     import copy
-    return copy.deepcopy(sav)
+    return copy.deepcopy(PlSav)
 
 # 获取实验类型
 def get_experimentType() -> int:
     try:
-        return sav["Type"]
+        return PlSav["Type"]
     except KeyError:
         raise errors.openExperimentError

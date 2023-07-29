@@ -62,21 +62,6 @@ class experiment:
         if self.delete:
             del_Experiment()
 
-# 输入sav文件名并读取（旧函数，不建议使用）
-def old_open_Experiment(file: str) -> None:
-    file = file.strip()
-    if (not file.endswith('.sav')):
-        raise RuntimeError("The input parameters are incorrect")
-
-    _fileGlobals.savName = f"{_fileGlobals.FILE_HEAD}/{file}"
-    with open(_fileGlobals.savName, encoding="UTF-8") as f:
-        InternalName = (json.loads(f.read().replace('\n', '')))["InternalName"]
-        _fileGlobals.sav["InternalName"] = InternalName
-        try: # 当Summary为None时触发TypeError
-            _fileGlobals.sav["Summary"]["Subject"] = InternalName
-        except TypeError:
-            pass
-
 # 将import了physicsLab的文件的第一行添加上 #coding=utf-8
 def _utf8_coding(func):
     def result(*args, **kwargs) -> None:
@@ -97,49 +82,61 @@ def _utf8_coding(func):
         func(*args, **kwargs)
     return result
 
+# 检测实验是否存在，输入为存档名，若存在则返回存档对应的文件名，若不存在则返回None
+def exist_Experiment(savName: str) -> Union[str, None]:
+    savs = _tools.getAllSav()
+    for aSav in savs:
+        with open(f"{_fileGlobals.FILE_HEAD}/{aSav}", encoding='utf-8') as f:
+            try:
+                f = json.loads(f.read().replace('\n', ''))
+            except json.decoder.JSONDecodeError: # 文件不是物实存档
+                continue
+            else:
+                if f["InternalName"]== savName:
+                    return aSav
+    return None
+
 # 打开一个指定的sav文件（支持输入本地实验的名字或sav文件名）
 @_utf8_coding
 def open_Experiment(fileName : str) -> None:
+    # 输入sav（存档）的文件名并读取部分实验内容
+    def _open_Experiment(file: str) -> None:        
+        _fileGlobals.SavPath = f"{_fileGlobals.FILE_HEAD}/{file}"
+        with open(_fileGlobals.SavPath, encoding="UTF-8") as f:
+            f = json.loads(f.read().replace('\n', ''))
+            # 初始化package全局变量
+            _fileGlobals.fileGlobals_init(f["Type"])
+
+            _fileGlobals.PlSav["InternalName"] = f["InternalName"]
+            try: # 当Summary为None时触发TypeError
+                _fileGlobals.PlSav["Summary"]["Subject"] = f["InternalName"]
+            except TypeError:
+                pass
+
     fileName = fileName.strip()
     if fileName.endswith('.sav'):
-        old_open_Experiment(fileName)
-    else:
-        savs = _tools.getAllSav()
-        for aSav in savs:
-            with open(f"{_fileGlobals.FILE_HEAD}/{aSav}", encoding='utf-8') as f:
-                try:
-                    f = json.loads(f.read().replace('\n', ''))
-                except json.decoder.JSONDecodeError: # 文件不是物实存档
-                    pass
-                else:
-                    if f["InternalName"]== fileName:
-                        # 初始化package全局变量
-                        _fileGlobals.fileGlobals_init(f["Type"])
+        _open_Experiment(fileName)
+        return
 
-                        old_open_Experiment(aSav)
-                        return
+    _fileGlobals.SavName = exist_Experiment(fileName)
+    if _fileGlobals.SavName is None:
         raise errors.openExperimentError(f'No such experiment "{fileName}"')
 
-# 创建存档
+    _open_Experiment(_fileGlobals.SavName)
+
+# 创建存档，输入为存档名
 @_utf8_coding
-def crt_Experiment(fileName : str, experimentType: str = None) -> None:
+def crt_Experiment(savName : str, experimentType: str = None) -> None:
     _fileGlobals.fileGlobals_init(experimentType)
-    savs = _tools.getAllSav()
-    for aSav in savs:
-        with open(f"{_fileGlobals.FILE_HEAD}/{aSav}", 'r', encoding='utf-8') as f:
-            try:
-                f = json.loads(f.read().replace('\n', ''))
-            except json.decoder.JSONDecodeError:
-                continue
-            else:
-                if f['InternalName'] == fileName:
-                    raise errors.crtExperimentFailError
+    if exist_Experiment(savName) is not None:
+        raise errors.crtExperimentFailError
+    
     # 创建存档
-    if not isinstance(fileName, str):
-        fileName = str(fileName)
-    _fileGlobals.savName = _tools.randString(34)
-    _fileGlobals.savName = f'{_fileGlobals.FILE_HEAD}/{_fileGlobals.savName}.sav'
-    rename_Experiment(fileName)
+    if not isinstance(savName, str):
+        savName = str(savName)
+    _fileGlobals.SavName = _tools.randString(34)
+    _fileGlobals.SavPath = f'{_fileGlobals.FILE_HEAD}/{_fileGlobals.SavName}.sav'
+    rename_Experiment(savName)
 
 # 将编译完成的json写入sav
 def write_Experiment() -> None:
@@ -152,11 +149,11 @@ def write_Experiment() -> None:
 
     _fileGlobals.StatusSave["Elements"] = _fileGlobals.Elements
     _fileGlobals.StatusSave["Wires"] = _fileGlobals.Wires
-    _fileGlobals.sav["Experiment"]["StatusSave"] = \
+    _fileGlobals.PlSav["Experiment"]["StatusSave"] = \
         json.dumps(_fileGlobals.StatusSave, ensure_ascii=False, separators=(',', ': '))
-    with open(_fileGlobals.savName, "w", encoding="UTF-8") as f:
+    with open(_fileGlobals.SavPath, "w", encoding="UTF-8") as f:
         f.write(
-                _format_StatusSave(json.dumps(_fileGlobals.sav, indent=2, ensure_ascii=False, separators=(',', ': ')))
+                _format_StatusSave(json.dumps(_fileGlobals.PlSav, indent=2, ensure_ascii=False, separators=(',', ': ')))
         )
     # 编译成功，打印信息
     if _fileGlobals.get_experimentType() == 0:
@@ -172,14 +169,14 @@ def write_Experiment() -> None:
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
-    with open(_fileGlobals.savName, encoding='UTF-8') as f:
+    with open(_fileGlobals.SavPath, encoding='UTF-8') as f:
         readmem = json.loads(f.read().replace('\n', ''))
         # 元件
         _local_Elements = json.loads(readmem["Experiment"]["StatusSave"])["Elements"]
         # 导线
         _fileGlobals.Wires = json.loads(readmem['Experiment']['StatusSave'])['Wires']
         # 实验介绍
-        _fileGlobals.sav['Summary']["Description"] = readmem["Summary"]["Description"]
+        _fileGlobals.PlSav['Summary']["Description"] = readmem["Summary"]["Description"]
 
         for element in _local_Elements:
             # 坐标标准化（消除浮点误差）
@@ -232,19 +229,19 @@ def rename_Experiment(name: str) -> None:
                     raise RuntimeError('Duplicate name archives are forbidden')
     # 重命名存档
     name = str(name)
-    _fileGlobals.sav["Summary"]["Subject"] = name
-    _fileGlobals.sav["InternalName"] = name
+    _fileGlobals.PlSav["Summary"]["Subject"] = name
+    _fileGlobals.PlSav["InternalName"] = name
 
 # 打开一个存档的窗口
 def show_Experiment() -> None:
-    os.popen(f'notepad {_fileGlobals.savName}')
-os_Experiment = show_Experiment
+    # os.system() 在文件夹有空格的时候会出现错误
+    os.popen(f'notepad {_fileGlobals.SavPath}')
 
 # 删除存档
 def del_Experiment() -> None:
-    os.remove(_fileGlobals.savName)
+    os.remove(_fileGlobals.SavPath)
     try: # 用存档生成的实验无图片，因此可能删除失败
-        os.remove(_fileGlobals.savName.replace('.sav', '.jpg'))
+        os.remove(_fileGlobals.SavPath.replace('.sav', '.jpg'))
     except FileNotFoundError:
         pass
     _colorUtils.printf("Successfully delete experiment!", _colorUtils.COLOR.BLUE)
@@ -254,12 +251,12 @@ def yield_Experiment(title: str = None, introduction: str = None) -> None:
     # 发布实验时输入实验介绍
     def introduce_Experiment(introduction: str) -> None:
         if introduction is not None:
-            _fileGlobals.sav['Summary']['Description'] = introduction.split('\n')
+            _fileGlobals.PlSav['Summary']['Description'] = introduction.split('\n')
 
     # 发布实验时输入实验标题
     def title_Experiment(title: str) -> None:
         if title is not None:
-            _fileGlobals.sav['Summary']['Subject'] = title
+            _fileGlobals.PlSav['Summary']['Subject'] = title
 
     if (not isinstance(title, str) and title is not None) or \
             (not isinstance(introduction, str) and introduction is not None):
