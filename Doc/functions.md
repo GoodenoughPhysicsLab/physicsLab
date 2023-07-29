@@ -56,7 +56,7 @@ write_Experiment()
 ### 用记事本打开存档文件
 你也可以打开存档查看：
 ```Python
-os_Experiment()
+show_Experiment()
 ```
 仅`Windows`上有效
 
