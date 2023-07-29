@@ -6,7 +6,8 @@ with open("D:/program_physicsLab/README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="physicsLab",  # 用自己的名替换其中的YOUR_USERNAME_
-    version="1.3.0",  # 包版本号，便于维护版本
+    version="1.3.0.1",  # 包版本号，便于维护版本
+    license="MIT",
     author="Goodenough",  # 作者，可以写自己的姓名
     author_email="2381642961@qq.com",  # 作者联系方式，可写自己的邮箱地址
     description="Doing experiments in the physics lab AR by python",  # 包的简述
@@ -14,6 +15,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://gitee.com/script2000/physicsLab",  # 自己项目地址，比如github的项目地址
     packages=setuptools.find_packages(),
+    install_requires=["mido"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
