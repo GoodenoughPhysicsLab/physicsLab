@@ -47,16 +47,15 @@ class Union_LogicBase(_unionClassHead.UnionBase):
 
 # 任意引脚加法电路
 class Sum(Union_LogicBase):
-    def __init__(
-            self,
-            bitLength: int,
-            x: numType = 0,
-            y: numType = 0,
-            z: numType = 0,
-            elementXYZ: bool = None,  # x, y, z是否为元件坐标系
-            unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
-            fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
-            foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 bitLength: int = 4,
+                 elementXYZ: bool = None,  # x, y, z是否为元件坐标系
+                 unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
+                 fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
+                 foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
     ) -> None:
         def link_union_Sum(elements: _typing.List[_elementsClass.Full_Adder]) -> None:
             for i in range(elements.__len__() - 1):
@@ -93,8 +92,6 @@ class Sum(Union_LogicBase):
                 )
 
         # main
-        # if bitLength < 2:
-        #     raise errors.bitLengthError
 
         x, y, z = _unionClassHead.union_Init_HEAD(
             x, y, z,
@@ -137,11 +134,11 @@ class Sum(Union_LogicBase):
 class Const_NoGate:
     __singleton_NoGate: electricity.No_Gate = None
     def __init__(self,
-                x: numType = 0,
-                y: numType = 0,
-                z: numType = 0,
-                elementXYZ: bool = None
-    ):
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 elementXYZ: bool = None
+    ) -> None:
         if Const_NoGate.__singleton_NoGate is None:
             Const_NoGate.__singleton_NoGate = electricity.No_Gate(x, y, z, elementXYZ)
 
@@ -151,16 +148,15 @@ class Const_NoGate:
 
 # 任意引脚减法电路
 class Sub(Union_LogicBase):
-    def __init__(
-            self,
-            bitLength: int, # 减法器的最大计算比特数
-            x: numType = 0,
-            y: numType = 0,
-            z: numType = 0,
-            elementXYZ: bool = None,  # x, y, z是否为元件坐标系
-            unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
-            fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
-            foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 bitLength: int = 4, # 减法器的最大计算比特数
+                 elementXYZ: bool = None,  # x, y, z是否为元件坐标系
+                 unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
+                 fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
+                 foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
     ) -> None:
         def link_union_Sub(
                 fullAdders: _typing.List[_elementsClass.Full_Adder],
@@ -407,16 +403,15 @@ class _four_sixteen_Decoder:
 
 # 多个逻辑输入（暂不支持m * n矩阵排列元件的方式）
 class Inputs(Union_LogicBase):
-    def __init__(
-            self,
-            x: numType = 0,
-            y: numType = 0,
-            z: numType = 0,
-            bitLength: int = None,
-            elementXYZ: bool = None,  # x, y, z是否为元件坐标系
-            unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
-            fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
-            foldMaxNum: int = 8  # 达到foldMaxNum个元件数时即在z轴自动折叠
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 bitLength: int = 4,
+                 elementXYZ: bool = None,  # x, y, z是否为元件坐标系
+                 unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
+                 fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
+                 foldMaxNum: int = 8  # 达到foldMaxNum个元件数时即在z轴自动折叠
     ) -> None:
         # 搭配_unionHeading_fold使用
         def func1():
@@ -473,16 +468,15 @@ class Inputs(Union_LogicBase):
 
 # 多个逻辑输入（暂不支持m * n矩阵排列元件的方式）
 class Outputs(Union_LogicBase):
-    def __init__(
-            self,
-            x: numType = 0,
-            y: numType = 0,
-            z: numType = 0,
-            bitLength: int = None,
-            elementXYZ: bool = None,  # x, y, z是否为元件坐标系
-            unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
-            fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
-            foldMaxNum: int = 8  # 达到foldMaxNum个元件数时即在z轴自动折叠
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 bitLength: int = 4,
+                 elementXYZ: bool = None,  # x, y, z是否为元件坐标系
+                 unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
+                 fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
+                 foldMaxNum: int = 8  # 达到foldMaxNum个元件数时即在z轴自动折叠
     ) -> None:
         # 搭配_unionHeading_fold使用
         def func1():
@@ -539,17 +533,16 @@ class Outputs(Union_LogicBase):
 
 # D触发器流水灯
 class D_WaterLamp(Union_LogicBase):
-    def __init__(
-            self,
-            x: numType = 0,
-            y: numType = 0,
-            z: numType = 0,
-            bitLength: int = None,
-            elementXYZ: bool = None, # x, y, z是否为元件坐标系
-            unionHeading: bool = False, # False: 生成的元件为竖直方向，否则为横方向
-            fold: bool = False, # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
-            foldMaxNum: int = 4, # 达到foldMaxNum个元件数时即在z轴自动折叠
-            is_loop: bool = True # 是否使流水灯循环
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 bitLength: int = 4,
+                 elementXYZ: bool = None, # x, y, z是否为元件坐标系
+                 unionHeading: bool = False, # False: 生成的元件为竖直方向，否则为横方向
+                 fold: bool = False, # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
+                 foldMaxNum: int = 4, # 达到foldMaxNum个元件数时即在z轴自动折叠
+                 is_loop: bool = True # 是否使流水灯循环
     ) -> None:
         # D触流水灯导线连接方式
         def link_D_Flipflop(elements: _typing.List[_elementsClass.D_Flipflop]) -> None:
