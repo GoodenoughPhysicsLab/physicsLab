@@ -1,6 +1,6 @@
 #coding=utf-8
+from ..elementPin import element_Pin
 from physicsLab._tools import numType
-import physicsLab.electricity.elementPin as _elementPin
 from ._elementClassHead import electricityBase, two_pin_ArtificialCircuit_Pin
 
 
@@ -17,36 +17,36 @@ class NE555(electricityBase):
         self.is_bigElement = True
 
     @property
-    def VCC(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 0)
+    def VCC(self) -> element_Pin:
+        return element_Pin(self, 0)
 
     @property
-    def Dis(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 1)
+    def Dis(self) -> element_Pin:
+        return element_Pin(self, 1)
 
     @property
-    def Thr(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 2)
+    def Thr(self) -> element_Pin:
+        return element_Pin(self, 2)
 
     @property
-    def Ctrl(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 3)
+    def Ctrl(self) -> element_Pin:
+        return element_Pin(self, 3)
 
     @property
-    def Trig(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 4)
+    def Trig(self) -> element_Pin:
+        return element_Pin(self, 4)
 
     @property
-    def Out(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 5)
+    def Out(self) -> element_Pin:
+        return element_Pin(self, 5)
 
     @property
-    def Reset(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 6)
+    def Reset(self) -> element_Pin:
+        return element_Pin(self, 6)
 
     @property
-    def Ground(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 7)
+    def Ground(self) -> element_Pin:
+        return element_Pin(self, 7)
 
 # 电容
 @two_pin_ArtificialCircuit_Pin
@@ -68,8 +68,8 @@ class Ground_Component(electricityBase):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
     @property
-    def i(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 0)
+    def i(self) -> element_Pin:
+        return element_Pin(self, 0)
 
 # 运算放大器
 class Operational_Amplifier(electricityBase):
@@ -84,16 +84,16 @@ class Operational_Amplifier(electricityBase):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
     @property
-    def i_up(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 0)
+    def i_up(self) -> element_Pin:
+        return element_Pin(self, 0)
 
     @property
-    def i_low(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 1)
+    def i_low(self) -> element_Pin:
+        return element_Pin(self, 1)
 
     @property
-    def o(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 2)
+    def o(self) -> element_Pin:
+        return element_Pin(self, 2)
 
 # 继电器
 class Relay_Component(electricityBase):
@@ -106,24 +106,24 @@ class Relay_Component(electricityBase):
                            'DiagramRotation': 0}
 
     @property
-    def l_up(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 0)
+    def l_up(self) -> element_Pin:
+        return element_Pin(self, 0)
 
     @property
-    def l_low(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 2)
+    def l_low(self) -> element_Pin:
+        return element_Pin(self, 2)
 
     @property
-    def mid(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 1)
+    def mid(self) -> element_Pin:
+        return element_Pin(self, 1)
 
     @property
-    def r_up(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 4)
+    def r_up(self) -> element_Pin:
+        return element_Pin(self, 4)
 
     @property
-    def r_low(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 5)
+    def r_low(self) -> element_Pin:
+        return element_Pin(self, 5)
 
 # n mos
 class N_MOSFET(electricityBase):
@@ -135,16 +135,16 @@ class N_MOSFET(electricityBase):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
     @property
-    def D(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 2)
+    def D(self) -> element_Pin:
+        return element_Pin(self, 2)
 
     @property
-    def S(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 1)
+    def S(self) -> element_Pin:
+        return element_Pin(self, 1)
 
     @property
-    def G(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 0)
+    def G(self) -> element_Pin:
+        return element_Pin(self, 0)
 
 # p mos
 class P_MOSFET(electricityBase):
@@ -156,16 +156,16 @@ class P_MOSFET(electricityBase):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
     @property
-    def G(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 0)
+    def G(self) -> element_Pin:
+        return element_Pin(self, 0)
 
     @property
-    def S(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 2)
+    def S(self) -> element_Pin:
+        return element_Pin(self, 2)
 
     @property
-    def D(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 1)
+    def D(self) -> element_Pin:
+        return element_Pin(self, 1)
 
 # 波形发生器基类
 class _source_electricity(electricityBase):
@@ -178,13 +178,13 @@ class _source_electricity(electricityBase):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
     @property
-    def l(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 0)
+    def l(self) -> element_Pin:
+        return element_Pin(self, 0)
     i = l
 
     @property
-    def r(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 1)
+    def r(self) -> element_Pin:
+        return element_Pin(self, 1)
     o = r
 
 # 正弦波发生器

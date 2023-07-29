@@ -1,8 +1,7 @@
 #coding=utf-8
 from typing import Union
-#from string import digits as _digits
+from ..elementPin import element_Pin
 from physicsLab._tools import numType
-import physicsLab.electricity.elementPin as _elementPin
 from ._elementClassHead import electricityBase, two_pin_ArtificialCircuit_Pin
 
 # 小电扇
@@ -49,12 +48,12 @@ class Simple_Instrument(electricityBase):
         self.set_Tonality(pitch)
 
     @property
-    def i(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 0)
+    def i(self) -> element_Pin:
+        return element_Pin(self, 0)
 
     @property
-    def o(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 1)
+    def o(self) -> element_Pin:
+        return element_Pin(self, 1)
 
     # 设置音高
     def set_Tonality(self, *inputs) -> "Simple_Instrument":

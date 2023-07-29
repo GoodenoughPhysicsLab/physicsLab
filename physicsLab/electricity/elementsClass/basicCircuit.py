@@ -1,6 +1,6 @@
 #coding=utf-8
+from ..elementPin import element_Pin
 from physicsLab._tools import numType
-import physicsLab.electricity.elementPin as _elementPin
 from ._elementClassHead import electricityBase, two_pin_ArtificialCircuit_Pin
 
 # 开关基类
@@ -27,16 +27,16 @@ class SPDT_Switch(_switch_electricity):
         self._arguments['ModelID'] = 'SPDT Switch'
 
     @property
-    def l(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 0)
+    def l(self) -> element_Pin:
+        return element_Pin(self, 0)
 
     @property
-    def mid(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 1)
+    def mid(self) -> element_Pin:
+        return element_Pin(self, 1)
 
     @property
-    def r(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 2)
+    def r(self) -> element_Pin:
+        return element_Pin(self, 2)
 
 # 双刀双掷开关
 class DPDT_Switch(_switch_electricity):
@@ -45,28 +45,28 @@ class DPDT_Switch(_switch_electricity):
         self._arguments['ModelID'] = 'DPDT Switch'
 
     @property
-    def l_up(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 3)
+    def l_up(self) -> element_Pin:
+        return element_Pin(self, 3)
 
     @property
-    def mid_up(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 4)
+    def mid_up(self) -> element_Pin:
+        return element_Pin(self, 4)
 
     @property
-    def r_up(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 5)
+    def r_up(self) -> element_Pin:
+        return element_Pin(self, 5)
 
     @property
-    def l_low(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 0)
+    def l_low(self) -> element_Pin:
+        return element_Pin(self, 0)
 
     @property
-    def mid_low(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 1)
+    def mid_low(self) -> element_Pin:
+        return element_Pin(self, 1)
 
     @property
-    def r_low(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 2)
+    def r_low(self) -> element_Pin:
+        return element_Pin(self, 2)
 
 # 按钮开关
 @two_pin_ArtificialCircuit_Pin
@@ -106,20 +106,20 @@ class Student_Source(electricityBase):
                            'DiagramRotation': 0}
 
     @property
-    def l(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 0)
+    def l(self) -> element_Pin:
+        return element_Pin(self, 0)
 
     @property
-    def l_mid(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 1)
+    def l_mid(self) -> element_Pin:
+        return element_Pin(self, 1)
 
     @property
-    def r_mid(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 2)
+    def r_mid(self) -> element_Pin:
+        return element_Pin(self, 2)
 
     @property
-    def r(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 3)
+    def r(self) -> element_Pin:
+        return element_Pin(self, 3)
 
 # 电阻
 @two_pin_ArtificialCircuit_Pin
@@ -155,17 +155,17 @@ class Slide_Rheostat(electricityBase):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
     @property
-    def l_low(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 0)
+    def l_low(self) -> element_Pin:
+        return element_Pin(self, 0)
 
     @property
-    def r_low(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 1)
+    def r_low(self) -> element_Pin:
+        return element_Pin(self, 1)
 
     @property
-    def l_up(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 2)
+    def l_up(self) -> element_Pin:
+        return element_Pin(self, 2)
 
     @property
-    def r_up(self) -> _elementPin.element_Pin:
-        return _elementPin.element_Pin(self, 3)
+    def r_up(self) -> element_Pin:
+        return element_Pin(self, 3)
