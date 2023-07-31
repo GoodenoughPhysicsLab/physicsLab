@@ -18,10 +18,13 @@
 4. 增加了模块化电路音乐电路与music命名空间
 5. experiment()新增write参数
 
-## coming soon
+## 1.3.0.1
 1.  增加对`P-MOSFET`元件的支持
 2.  增加`from physicsLab.union import *`来省略union命名空间的书写
 3.  增加单个元件判断是否为元件坐标系的方法：`self.is_elementXYZ`
 4.  新增只读非门`Const_NoGate`
 5.  `crt_Wire`支持传入英文color参数
 6.  新增`_fileGlobals`命名空间（不推荐访问）
+
+## coming soon
+1.  实装Midi类（与piece类的转换与导出midi，播放midi）
