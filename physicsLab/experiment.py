@@ -62,26 +62,6 @@ class experiment:
         if self.delete:
             del_Experiment()
 
-# 将import了physicsLab的文件的第一行添加上 #coding=utf-8
-def _utf8_coding(func):
-    def result(*args, **kwargs) -> None:
-        try: # 在cmd或者shell上无法执行该功能
-            import sys
-            s = ''
-            with open(sys.argv[0], encoding='utf-8') as f:
-                s = f.read()
-            if not s.replace('\n', '').startswith('#coding=utf-8'):
-                with open(sys.argv[0], 'w', encoding='utf-8') as f:
-                    if s.startswith('\n'):
-                        f.write(f'#coding=utf-8{s}')
-                    else:
-                        f.write(f'#coding=utf-8\n{s}')
-        except FileNotFoundError:
-            # 在cmd或IDLE上运行时会关闭打印彩字功能
-            _colorUtils.printColor = False
-        func(*args, **kwargs)
-    return result
-
 # 检测实验是否存在，输入为存档名，若存在则返回存档对应的文件名，若不存在则返回None
 def exist_Experiment(savName: str) -> Union[str, None]:
     savs = _tools.getAllSav()
@@ -97,7 +77,6 @@ def exist_Experiment(savName: str) -> Union[str, None]:
     return None
 
 # 打开一个指定的sav文件（支持输入本地实验的名字或sav文件名）
-@_utf8_coding
 def open_Experiment(fileName : str) -> None:
     # 输入sav（存档）的文件名并读取部分实验内容
     def _open_Experiment(file: str) -> None:        
@@ -125,7 +104,6 @@ def open_Experiment(fileName : str) -> None:
     _open_Experiment(_fileGlobals.SavName)
 
 # 创建存档，输入为存档名
-@_utf8_coding
 def crt_Experiment(savName : str, experimentType: str = None) -> None:
     _fileGlobals.fileGlobals_init(experimentType)
     if exist_Experiment(savName) is not None:

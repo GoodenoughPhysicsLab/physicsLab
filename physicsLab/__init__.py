@@ -1,5 +1,23 @@
 #coding=utf-8
 
+try: # 在cmd或者shell上无法执行该功能
+    import sys
+    s = ""
+    with open(sys.argv[0], encoding='utf-8') as f:
+        s = f.read()
+    if not s.replace('\n', '').startswith("#coding=utf-8"):
+        with open(sys.argv[0], 'w', encoding='utf-8') as f:
+            if s.startswith('\n'):
+                f.write(f'#coding=utf-8{s}')
+            else:
+                f.write(f'#coding=utf-8\n{s}')
+    del sys
+except FileNotFoundError:
+    import physicsLab._colorUtils as _colorUtils
+    # 在cmd或IDLE上运行时会关闭打印彩字功能
+    _colorUtils.printColor = False
+    del _colorUtils
+
 # 检测操作系统
 from sys import platform as _platform
 if not (_platform == "win32" or _platform == "linux"): # 在Android上检测操作系统为linux
