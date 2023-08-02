@@ -29,7 +29,8 @@ class eletricityMeta(type):
         _fileGlobals.check_ExperimentType(0)
 
         self.is_elementXYZ: bool = False # 元件坐标系
-        self.is_bigElement: bool = False # 2体积元件
+        if not hasattr(cls, "is_bigElement"):
+            cls.is_bigElement: bool = property(lambda self: False) # 2体积元件
 
         x, y, z = _tools.roundData(x, y, z)
         self._position = (x, y, z)

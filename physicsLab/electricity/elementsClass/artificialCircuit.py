@@ -14,7 +14,10 @@ class NE555(electricityBase):
                                           '输出': 0, '重设': 10, '接地': 0},
                            'Position': '', 'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
-        self.is_bigElement = True
+    
+    @property
+    def is_bigElement(self):
+        return True
 
     @property
     def VCC(self) -> element_Pin:

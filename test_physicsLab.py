@@ -215,7 +215,7 @@ class myTestCase(unittest.TestCase):
 
     def test_union_Sub(self):
         with experiment("测逝", elementXYZ=True):
-            a = union.Sub(bitLength=8, fold=True)
+            a = union.Sub(bitLength=8, fold=False)
             crt_Wires(union.Inputs(-3, 0, 0, 8).data_Output, a.minuend)
             crt_Wires(union.Inputs(-2, 0, 0, 8).data_Output, a.subtrahend)
             crt_Wires(union.Outputs(2, 0, 0, 9).data_Input, a.outputs)
@@ -244,6 +244,16 @@ class myTestCase(unittest.TestCase):
     
     def test_from_union(self):
         Note(2)
+
+    def test_const_is_bigElement(self):
+        with experiment("__test__", delete=True):
+            a = Multiplier()
+            try:
+                a.is_bigElement = False
+            except AttributeError:
+                pass
+            else:
+                raise RuntimeError
 
 
 if __name__ == '__main__':

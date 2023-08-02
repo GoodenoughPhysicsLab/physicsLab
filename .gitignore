@@ -6,7 +6,7 @@ myTest.py
 pyproject.toml
 bad apple.py
 /physicsLab.egg-info/
-/build/
+build/
 /dist/
 /physicsLab_projects/
 /.vscode/
