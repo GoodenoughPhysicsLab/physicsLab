@@ -202,8 +202,13 @@ element = Logic_Input()
 element2 = Logic_Output()
 
 crt_Wire(element.o, element2.i, color='红')
-# color暂时只支持中文的 "黑", "蓝", "红", "绿", "黄"
+# color暂时只支持中文的 "黑", "蓝", "红", "绿", "黄" 与 英文
 # 不传入color参数的话，color默认为蓝色
+```
+
+上面连接导线的代码也等价于：
+```Python
+element.o - element2.i
 ```
 
 所有元件都定义得有自己的引脚名称，这里举个例子：  
@@ -213,16 +218,9 @@ a = Or_Gate(0.1, 0.1, 0)
 crt_Wire(a.o, a.i_up)
 ```
 
-引脚的命名规范：（适用于逻电）  
-1个输入引脚：i  
-2个输入引脚：i_up, i_low  
-3个输入引脚：i_up, i_mid, i_low  
-4个输入引脚：i_up, i_upmid, i_lowmid, i_low  
-输出是一样的，仅仅换成了o_xxx罢了。  
-模电的命名可能是根据左右引脚来区分的，也就是l_up, r_low之类的，也可能是根据物实的引脚名  
-如果以后有时间的话，也会打个表  
+引脚也可以在[所有元件.md](./%E6%89%80%E6%9C%89%E5%85%83%E4%BB%B6.md)中找到
 
-另一种连接引脚的方式是不推荐使用的老函数（已弃用）：  
+另一种连接引脚的方式是不推荐使用的老函数（已移除）：  
 ```Python
 old_crt_wire(SourceLabel, SourcePin: int, TargetLabel, TargetPin: int, color = "蓝") -> None
 ```

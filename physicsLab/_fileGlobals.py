@@ -2,7 +2,6 @@
 import os
 from typing import Union
 import physicsLab.errors as errors
-from weakref import WeakValueDictionary
 
 #define
 # 电学实验的sav模板

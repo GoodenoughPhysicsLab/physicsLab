@@ -26,9 +26,6 @@ class _logicBase(electricityBase):
     def get_LowLeaveValue(self):
         return self._arguments['Properties']['低电平']
 
-
-# _arguments是参数的意思
-
 # 逻辑输入
 class Logic_Input(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
@@ -390,7 +387,6 @@ class eight_bit_Input(_logicBase):
                            'IsLocked': False, 'Properties': {'高电平': 3.0, '低电平': 0.0, '十进制': 0.0, '锁定': 1.0},
                            'Statistics': {}, 'Position': '', 'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
-        self.is_bigElement = True
 
     def set_num(self, num : int):
         if 0 <= num <= 255:

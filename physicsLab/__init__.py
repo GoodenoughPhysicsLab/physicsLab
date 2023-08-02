@@ -1,5 +1,6 @@
 #coding=utf-8
 
+# 在import了physicsLab的程序的第一行加上#coding=utf-8
 try: # 在cmd或者shell上无法执行该功能
     import sys
     s = ""
