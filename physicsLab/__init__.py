@@ -59,6 +59,7 @@ __all__ = [
     # experiment.py
     "experiment", "open_Experiment", "crt_Experiment", "read_Experiment", "write_Experiment",
     "rename_Experiment", "show_Experiment", "del_Experiment", "yield_Experiment", "exist_Experiment",
+    "open_or_crt_Experiment",
 
     # element.py
     "crt_Element", "del_Element", "count_Elements", "get_Element", "clear_Elements", "print_Elements",

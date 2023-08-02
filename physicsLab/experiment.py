@@ -11,14 +11,13 @@ import physicsLab._fileGlobals as _fileGlobals
 
 # 实验（存档）类，主要与'with'关键字搭配使用
 class experiment:
-    def __init__(
-            self,
-            file: str,
-            read: bool = False, # 是否读取存档原有状态
-            delete: bool = False, #是否删除实验
-            write: bool = True,
-            elementXYZ: bool = False,
-            type: Union[int, str] = None
+    def __init__(self,
+                 file: str, # 实验存档名
+                 read: bool = False, # 是否读取存档原有状态
+                 delete: bool = False, # 是否删除实验
+                 write: bool = True, # 是否写入实验
+                 elementXYZ: bool = False, # 元件坐标系
+                 type: Union[int, str] = None # 若创建实验，支持传入指定实验类型
     ):
         if not (
             isinstance(file, str) or
@@ -42,12 +41,7 @@ class experiment:
 
     # 上下文管理器，搭配with使用
     def __enter__(self):
-        try:
-            open_Experiment(self.file)
-        except errors.openExperimentError: # 如果存档不存在
-            crt_Experiment(self.file, self.type)
-        except TypeError:
-            raise TypeError
+        open_or_crt_Experiment(self.file, self.type)
 
         if self.read:
             read_Experiment()
@@ -76,22 +70,22 @@ def exist_Experiment(savName: str) -> Union[str, None]:
                     return aSav
     return None
 
+# 输入sav（存档）的文件名并读取部分实验内容
+def _open_Experiment(file: str) -> None:        
+    _fileGlobals.SavPath = f"{_fileGlobals.FILE_HEAD}/{file}"
+    with open(_fileGlobals.SavPath, encoding="UTF-8") as f:
+        f = json.loads(f.read().replace('\n', ''))
+        # 初始化package全局变量
+        _fileGlobals.fileGlobals_init(f["Type"])
+
+        _fileGlobals.PlSav["InternalName"] = f["InternalName"]
+        try: # 当Summary为None时触发TypeError
+            _fileGlobals.PlSav["Summary"]["Subject"] = f["InternalName"]
+        except TypeError:
+            pass
+
 # 打开一个指定的sav文件（支持输入本地实验的名字或sav文件名）
 def open_Experiment(fileName : str) -> None:
-    # 输入sav（存档）的文件名并读取部分实验内容
-    def _open_Experiment(file: str) -> None:        
-        _fileGlobals.SavPath = f"{_fileGlobals.FILE_HEAD}/{file}"
-        with open(_fileGlobals.SavPath, encoding="UTF-8") as f:
-            f = json.loads(f.read().replace('\n', ''))
-            # 初始化package全局变量
-            _fileGlobals.fileGlobals_init(f["Type"])
-
-            _fileGlobals.PlSav["InternalName"] = f["InternalName"]
-            try: # 当Summary为None时触发TypeError
-                _fileGlobals.PlSav["Summary"]["Subject"] = f["InternalName"]
-            except TypeError:
-                pass
-
     fileName = fileName.strip()
     if fileName.endswith('.sav'):
         _open_Experiment(fileName)
@@ -103,18 +97,34 @@ def open_Experiment(fileName : str) -> None:
 
     _open_Experiment(_fileGlobals.SavName)
 
+# logic of crt_Experiment
+def _crt_Experiment(savName: str) -> None:
+    # 创建存档
+    _fileGlobals.SavName = _tools.randString(34)
+    _fileGlobals.SavPath = f'{_fileGlobals.FILE_HEAD}/{_fileGlobals.SavName}.sav'
+    rename_Experiment(savName)
+
 # 创建存档，输入为存档名
-def crt_Experiment(savName : str, experimentType: str = None) -> None:
+def crt_Experiment(savName: str, experimentType: str = None) -> None:
     _fileGlobals.fileGlobals_init(experimentType)
     if exist_Experiment(savName) is not None:
         raise errors.crtExperimentFailError
     
-    # 创建存档
     if not isinstance(savName, str):
         savName = str(savName)
-    _fileGlobals.SavName = _tools.randString(34)
-    _fileGlobals.SavPath = f'{_fileGlobals.FILE_HEAD}/{_fileGlobals.SavName}.sav'
-    rename_Experiment(savName)
+    _crt_Experiment(savName)
+
+# 先尝试打开实验，若失败则创建实验。只支持输入存档名
+def open_or_crt_Experiment(savName: str, experimentType: str = None) -> None:
+    if not isinstance(savName, str):
+        raise TypeError
+    
+    _fileGlobals.SavName = exist_Experiment(savName)
+    if _fileGlobals.SavName is not None:
+        _open_Experiment(_fileGlobals.SavName)
+    else:
+        _fileGlobals.fileGlobals_init(experimentType)
+        _crt_Experiment(savName)
 
 # 将编译完成的json写入sav
 def write_Experiment() -> None:
@@ -192,19 +202,9 @@ def read_Experiment() -> None:
 
 # 重命名sav
 def rename_Experiment(name: str) -> None:
-    # 检查是否重名
-    savs = [i for i in os.walk(_fileGlobals.FILE_HEAD)][0]
-    savs = savs[savs.__len__() - 1]
-    savs = [aSav for aSav in savs if aSav.endswith('sav')]
-    for aSav in savs:
-        with open(f"{_fileGlobals.FILE_HEAD}/{aSav}", encoding='utf-8') as f:
-            try:
-                f = json.loads(f.read().replace('\n', ''))
-            except:
-                pass
-            else:
-                if f['InternalName'] == name:
-                    raise RuntimeError('Duplicate name archives are forbidden')
+    if exist_Experiment(name) is not None:
+        raise TypeError
+    
     # 重命名存档
     name = str(name)
     _fileGlobals.PlSav["Summary"]["Subject"] = name
