@@ -98,21 +98,21 @@ def open_Experiment(fileName : str) -> None:
     _open_Experiment(_fileGlobals.SavName)
 
 # logic of crt_Experiment
-def _crt_Experiment(savName: str) -> None:
+def _crt_Experiment(savName: str, experimentType) -> None:
+    _fileGlobals.fileGlobals_init(experimentType)
     # 创建存档
     _fileGlobals.SavName = _tools.randString(34)
     _fileGlobals.SavPath = f'{_fileGlobals.FILE_HEAD}/{_fileGlobals.SavName}.sav'
     rename_Experiment(savName)
 
 # 创建存档，输入为存档名
-def crt_Experiment(savName: str, experimentType: str = None) -> None:
-    _fileGlobals.fileGlobals_init(experimentType)
+def crt_Experiment(savName: str, experimentType = None) -> None:
     if exist_Experiment(savName) is not None:
         raise errors.crtExperimentFailError
     
     if not isinstance(savName, str):
         savName = str(savName)
-    _crt_Experiment(savName)
+    _crt_Experiment(savName, experimentType)
 
 # 先尝试打开实验，若失败则创建实验。只支持输入存档名
 def open_or_crt_Experiment(savName: str, experimentType: str = None) -> None:
@@ -123,8 +123,7 @@ def open_or_crt_Experiment(savName: str, experimentType: str = None) -> None:
     if _fileGlobals.SavName is not None:
         _open_Experiment(_fileGlobals.SavName)
     else:
-        _fileGlobals.fileGlobals_init(experimentType)
-        _crt_Experiment(savName)
+        _crt_Experiment(savName, experimentType)
 
 # 将编译完成的json写入sav
 def write_Experiment() -> None:
