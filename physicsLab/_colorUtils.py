@@ -12,13 +12,13 @@ class COLOR(Enum):
     MAGENTA = '\033[35m'
     CYAN = '\033[36m'
     WHITE = '\033[37m'
-    DEFAULT = '\033[39m'
+    _DEFAULT = '\033[39m'
 
 # 打印write_Experiment的信息时是否使用彩色字
 colorSupport = True
 
 # 打印颜色字
-def printf(msg: str, color) -> None:
+def printf(msg: str, color: COLOR) -> None:
     global colorSupport
 
     if not isinstance(color, COLOR):
@@ -37,6 +37,6 @@ def printf(msg: str, color) -> None:
     if not isinstance(msg, str):
         raise TypeError
     if colorSupport:
-        print(f"{color.value}{msg}{COLOR.DEFAULT.value}")
+        print(f"{color.value}{msg}{COLOR._DEFAULT.value}")
     else:
         print(msg)

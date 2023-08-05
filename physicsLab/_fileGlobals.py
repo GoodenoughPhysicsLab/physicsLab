@@ -170,7 +170,7 @@ _electromagnetism = {
 }
 
 from sys import platform
-FILE_HEAD = os.path.abspath(os.sep) # 获取根目录
+FILE_HEAD = None # os.path.abspath(os.sep) # 获取根目录
 if platform == "win32":
     from getpass import getuser
     FILE_HEAD = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Circuit"

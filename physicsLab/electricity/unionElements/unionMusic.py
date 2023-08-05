@@ -1,30 +1,223 @@
 #coding=utf-8
-from copy import deepcopy
-from math import ceil, sqrt
-from .wires import crt_Wires
-from physicsLab._tools import numType
-from typing import Union as Union, List, Tuple
-from physicsLab.element import get_Element
+import json
+
+import mido
+import physicsLab.errors as errors
+import physicsLab._colorUtils as colorUtils
 import physicsLab.electricity.elementXYZ as _elementXYZ
 import physicsLab.electricity.elementsClass as _elementsClass
-from physicsLab.electricity.unionElements.unionLogic import D_WaterLamp
-import physicsLab.electricity.unionElements._unionClassHead as _unionClassHead
 
-noteType = List[Union[None, "Note"]] # 音符类型
+from typing import *
+from copy import deepcopy
+from math import ceil, sqrt
+from os import path as _path
+from enum import Enum, unique
+
+from .wires import crt_Wires
+from ...element import get_Element
+from .unionLogic import D_WaterLamp
+from physicsLab._tools import numType
+from mido import MidiFile, MidiTrack, Message, MetaMessage
+
+# type
+noteType = List[Optional["Note"]] # 音符类型
 chordType = Union[Tuple["Note"], List["Note"]] # 和弦类型
 
+# const
+NOTE_ON = "note_on"
+NOTE_OFF = "note_off"
+PROGRAM_CHANGE = "program_change"
+SET_TEMPO = "set_tempo"
+END_OF_TRACK = "end_of_track"
+
 # midi类，用于提供physicsLab与midi文件之间的桥梁
+''' 重要midi事件及作用:
+    note_on        -> message: 播放音符
+    note_off       -> message: 停止播放音符
+    program_change -> message: 改变某个音轨对应的音色
+    set_tempo  -> metaMessage: 改变midi播放速度
+    end_of_track->metaMessage: midi音轨结束
+'''
 class Midi:
-    def __init__(self) -> None:
-        pass
+    # 仅被Midi.sound方法调用
+    # 你也许需要这样写：e.g. player=music.Midi.PLAYER.os
+    @unique
+    class PLAYER(Enum):
+        plmidi = 0
+        pygame = 1
+        os = 2
+    PLAYER = PLAYER
+
+    def __init__(self, midifile: Optional[str] = None) -> None:
+        ''' self.messages的参数格式:
+            [
+                (type: {{note_on or note_off}}, channel, note, velocity, time),
+                (type: {{program_change}}, channel, program, time),
+                (type: {{set_tempo}}, tempo, time)
+            ]
+            time: 间隔这么多时间之后执行该type
+            note: midi音高 (音调)
+            velocity: midi音符的响度
+            channel: midi通道
+            program: midi音色
+            tempo: 播放速度
+        '''
+        self.midifile: Optional[str] = midifile
+        self.messages: Optional[mido.MidiTrack] = None
+        if midifile is None:
+            return
+        self.messages = self.__get_midi_messages()
+
+    # 使用mido打开一个midi文件并获取其tracks
+    def __get_midi_messages(self) -> mido.MidiTrack:
+        _midifile = mido.MidiFile(self.midifile, clip=True)
+        res = mido.MidiTrack()
+        for msg in mido.merge_tracks(_midifile.tracks):
+            if msg.type in (NOTE_ON, NOTE_OFF, PROGRAM_CHANGE, SET_TEMPO):
+                res.append(msg)
+            elif msg.time != 0:
+                res.append(mido.MetaMessage("copyright", text="useless", time=msg.time))
+                pass
+        return res
 
     # 播放midi类存储的信息
-    def sound(self):
-        pass
+    def sound(self, player: Optional[PLAYER] = None) -> Optional["Midi"]:
+        # 使用plmidi播放midi
+        def sound_by_plmidi() -> bool:
+            try:
+                from plmidi import sound
+            except ImportError:
+                return False
+            else:
+                if self.midifile is None:
+                    errors.warning("can not sound because self.midifile is None")
+                    return False
+                
+                sound([(NOTE_ON, 10, 60, 0, 0)])
+                return True
+
+        # 使用pygame播放midi
+        def sound_by_pygame() -> bool:
+            try:
+                from pygame import mixer, time
+            except ImportError:
+                return False
+            else:
+                if self.midifile is None:
+                    errors.warning("can not sound because self.midifile is None")
+                    return False
+                # 代码参考自musicpy的play函数
+                mixer.init()
+                mixer.music.load(self.midifile)
+                mixer.music.play()
+                while mixer.music.get_busy():
+                    time.delay(10)
+                return True
+        
+        # 使用系统调用播放midi
+        def sound_by_os() -> bool:
+            from os import path, system
+
+            if self.midifile is None:
+                errors.warning("can not sound because self.midifile is None")
+                return False
+            
+            if path.exists(self.midifile):
+                system(self.midifile)
+            elif path.exists("pltemp.mid"):
+                system("pltemp.mid")
+            else:
+                return False
+            return True
+
+        if not isinstance(player, Midi.PLAYER) and player is not None:
+            raise TypeError        
+
+        # main
+        if player is not None:
+            if not (sound_by_plmidi, sound_by_pygame, sound_by_os)[player.value]():
+                errors.warning("can not use this way to sound midi.")
+            return
+        
+        if sound_by_plmidi():
+            colorUtils.printf("sound by using plmidi", colorUtils.COLOR.CYAN)
+        elif sound_by_pygame():
+            colorUtils.printf("sound by using pygame", colorUtils.COLOR.CYAN)
+        elif sound_by_os():
+            colorUtils.printf("sound by using os", colorUtils.COLOR.CYAN)
+        else:
+            errors.warning("can not use sound methods")
+        
+        return self
 
     # 转换为physicsLab的piece类
+    # TODO 转换时忽略note_off，因为物实目前只适合给一个默认值
+    # 但超长音符应该考虑下适当调整物实简单乐器播放时长
     def translate_to_piece(self) -> "Piece":
         pass
+
+    ''' *.plm.py文件:
+        plm即为 physicsLab music file
+        为了修改方便, 默认使用 str(mido.MidiTrack) 的方式导出
+        而且是个Py文件, 大家想要自己修改也是很方便的
+    '''
+    def read_plm(self, plmpath: str = "temp.plm.py") -> "Midi":
+        def _read_plm(plmpath):
+            context = None
+            with open(plmpath, encoding="utf-8") as f:
+                context = f.read()
+            
+            import re
+            # 正则匹配内容: MidiTrack([Message(...), ...])
+            re_context = re.search(r"MidiTrack\(\[[^\]]+\]\)", context, re.M)
+            if re_context is None:
+                raise SyntaxError(f"error context in {plmpath}")
+            self.messages = eval(re_context.group())
+
+        if not _path.exists(plmpath):
+            raise FileNotFoundError    
+
+        _read_plm(plmpath)
+        return self
+
+    # 导出一个 .plm.py 文件
+    def write_plm(self, path: str="temp.plm.py") -> "Midi":
+        if self.messages is None:
+            errors.warning("can not use write_plm because self.messages is None")
+            return self
+        
+        if not path.endswith(".plm.py"):
+            path += ".plm.py"
+
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(f"from mido import MidiFile, MidiTrack, MetaMessage, Message\n"
+                    f"fmidi = MidiFile()\n"
+                    f"track = {str(self.messages)}\n"
+                    f"fmidi.tracks.append(track)\n"
+                    f"fmidi.save(\"temp.mid\")\n"
+                    f"#from physicsLab.union import Midi\n"
+                    f"#Midi(\"temp.mid\").sound()")
+        
+        return self
+    
+    # 以 .mid 的形式导出, read_midi已经在Midi的__init__中实现
+    # update: 是否将Midi.midifile更新
+    def write_midi(self, midipath: str = "temp.mid", update: bool = False) -> "Midi":
+        if self.messages  is None:
+            errors.warning("can not use write_plm because self.messages is None")
+            return self
+        if not isinstance(midipath, str):
+            raise TypeError
+        if not midipath.endswith(".mid"):
+            midipath += ".mid"
+
+        mid = mido.MidiFile()
+        mid.tracks.append(self.messages)
+        mid.save(midipath)
+
+        if update:
+            self.midifile = midipath
+        return self
 
 # 音符类
 class Note:
@@ -50,8 +243,8 @@ class Note:
         self.playTime = playTime
 
     def __str__(self) -> str:
-        return f"<union.Note Object=> time:{self.time}, playTime:{self.playTime}, instrument: {self.instrument}, " \
-               f"pitch: {self.pitch}, volume: {self.volume}>"
+        return f"music.Note(time={self.time}, playTime={self.playTime}, instrument={self.instrument}, " \
+               f"pitch={self.pitch}, volume={self.volume})"
 
 # 循环类，用于创建一段循环的音乐片段
 class Loop:
@@ -73,6 +266,12 @@ class Loop:
     def case(self, *notes) -> "Loop":
         self.cases.append(deepcopy(notes))
         return self
+    
+    def __iter__(self):
+        pass
+
+    def __next__(self):
+        pass
 
 # 音轨
 class Track:
@@ -161,7 +360,7 @@ class Piece:
         pass
 
 # 将piece的数据生成为物实的电路
-class Player(_unionClassHead.UnionBase):
+class Player:
     def __init__(self,
                  musicArray: Union[Piece, List[Piece], Tuple[Piece]],
                  x: numType = 0, y: numType = 0, z: numType = 0,

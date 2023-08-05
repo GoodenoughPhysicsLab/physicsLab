@@ -1,25 +1,22 @@
 __pycache__/
-/venv/
-/.idea/
-*.txt
-myTest.py
+/venv
+/.idea
 pyproject.toml
-bad apple.py
-/physicsLab.egg-info/
+/physicsLab.egg-info
 build/
-/dist/
-/physicsLab_projects/
-/.vscode/
-/.vs/
+dist/
+/physicsLab_projects
+/.vscode
+*.txt
 *.code-workspace
 *.json
 *.mid
-/wiki/
 *.coverage
 *.lnk
-test2.py
 *.png
 *.obj
 *.pdb
 *.cfg
-
+*.plm.py
+# my python test file
+*.test.py

@@ -11,20 +11,43 @@
 
 1.  请确保你的电脑有[Python](https://www.python.org)（大于等于3.6）与[物理实验室PC版](https://www.turtlesim.com/)（也可以联系[开发者Jone-Chen](https://gitee.com/civitasjohn)）
 2.  在cmd或shell输入：
-```diff
+```shell
 pip install physicsLab
 ```
-3.  如果你等不及使用一些新功能的话，测试版通常在gitee可以找到
+3.  有一个并非必需的功能：播放midi。你可以输入下面命令的任意一条：
+```shell
+pip install plmidi
+pip install pygame
+```
+之所以没有做安装physicsLab的时候自动安装这两个库，是因为安卓的qpython在下载含c的库的时候存在问题
+4.  如果你等不及使用一些新功能的话，测试版通常在gitee可以找到
+
+### 新手解惑: 为什么我明明安装了physicsLab, python却告诉我无法找到？
+pip安装的包会被放在site-package文件夹下  
+这大概率是因为pip安装的包所对应的site-package与你使用的python对应的site-package不一样导致的  
+解决方案：找到ide调用的python对应的site-package，然后把physicsLab与physicsLab.egg-info复制过去  
+同时我推荐去学一下python的虚拟环境`venv`，有效解决此问题  
+  
+如果此方法失效了，虽然这一定不是这个方法的问题，但你还可以在python的开头写上这两行代码来解决这个问题：  
+```python
+import sys
+sys.path.append("your physicsLab's path") # 将字符串替换为你想添加的路径
+```
+这个方法很丑陋但很简单好用，可以帮你快速解决问题，毕竟能跑起来就很不错了   
+其原理是python会在sys.path这个列表里面的路径去寻找python package，若未找到则会报错。因此该方法的原理就是把python找不到的路径加进去，python就找到了   
+注：每次运行的时候加入的path都是临时的，因此该方法必须让python在每次运行的时候都执行一遍   
+
 
 ## 开发环境
-python 3.7.8, win7  
+Windows7: python 3.7.8  &&  python 3.8.10  
+Android: qpython(app) 3.11.4  
 目测对其他版本支持应该也很好  
 python3.6及以上应该没问题
 
 ## 使用说明
 *目前```physicsLab```在```windows```上的支持最好，在```Android```上仅支持手动导入/导出存档（默认在```physicsLabSav```文件夹中）。**暂不支持其他操作系统***  
 
-下面给出一个简单的例子：
+下面给出一个简单的例子（该例子仅用于讲解，你大概率无法运行）：
 ```Python
 from physicsLab import *
 
@@ -64,7 +87,7 @@ with experiment('测逝', read=True):
 上面两段代码产生的结果是一样的  
   
 更详细的内容请在[Doc](./Doc)中查看  
-请注意：Python采用```GBK```编码，而物实用的是```utf-8```，在极少数情况下会出现乱码。
+请注意：Python采用```GBK```编码，`physicsLab`使用`utf-8`编码，若不做任何处理可能会在python运行时报编码错误。
 此时你可以在```Python```代码的第一行添加如下注释：
 ```Python
 #coding=utf-8
@@ -79,7 +102,7 @@ with experiment('测逝', read=True):
   如此灵活的功能使得physicsLab即使是在python shell上也能出色的完成工作！
 2.  封装了物实里的大量原件，即使是***未解锁的原件***也可以轻易用脚本生成，甚至一些常用的电路也被封装好了！
 3.  物理实验室存档的位置有点隐蔽，但用该脚本生成实验时，你无须亲自寻找这个文件在哪里。
-4.  所有调用的库皆为Python的内置库，不存在第三方依赖。
+4.  绝大多数调用的库皆为Python的内置库，几乎不受第三方依赖的影响。
 5.  相比于手动做实验，代码复用率更高，许多逻辑电路已经被封装，只需简单的一行调用即可生成。
 6.  程序有利于大型实验的创作
 7.  最重要的一点：改存档做出来的实验往往有十分惊艳的效果！

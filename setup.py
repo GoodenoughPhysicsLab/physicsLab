@@ -22,5 +22,5 @@ setuptools.setup(
         "Natural Language :: Chinese (Simplified)",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6',  # 对python的最低版本要求
+    python_requires='>=3.6'  # 对python的最低版本要求
 )
