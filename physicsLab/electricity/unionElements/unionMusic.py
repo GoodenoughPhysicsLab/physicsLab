@@ -17,7 +17,6 @@ from .wires import crt_Wires
 from ...element import get_Element
 from .unionLogic import D_WaterLamp
 from physicsLab._tools import numType
-from mido import MidiFile, MidiTrack, Message, MetaMessage
 
 # type
 noteType = List[Optional["Note"]] # 音符类型
@@ -28,7 +27,7 @@ NOTE_ON = "note_on"
 NOTE_OFF = "note_off"
 PROGRAM_CHANGE = "program_change"
 SET_TEMPO = "set_tempo"
-END_OF_TRACK = "end_of_track"
+TEXT = "text"
 
 # midi类，用于提供physicsLab与midi文件之间的桥梁
 ''' 重要midi事件及作用:
@@ -36,7 +35,7 @@ END_OF_TRACK = "end_of_track"
     note_off       -> message: 停止播放音符
     program_change -> message: 改变某个音轨对应的音色
     set_tempo  -> metaMessage: 改变midi播放速度
-    end_of_track->metaMessage: midi音轨结束
+    text       -> metaMessage: 占位符
 '''
 class Midi:
     # 仅被Midi.sound方法调用
@@ -71,13 +70,19 @@ class Midi:
     # 使用mido打开一个midi文件并获取其tracks
     def __get_midi_messages(self) -> mido.MidiTrack:
         _midifile = mido.MidiFile(self.midifile, clip=True)
+        tabsign: bool = False
         res = mido.MidiTrack()
         for msg in mido.merge_tracks(_midifile.tracks):
             if msg.type in (NOTE_ON, NOTE_OFF, PROGRAM_CHANGE, SET_TEMPO):
                 res.append(msg)
+                tabsign = False
+
             elif msg.time != 0:
-                res.append(mido.MetaMessage("copyright", text="useless", time=msg.time))
-                pass
+                if not tabsign:
+                    res.append(mido.MetaMessage("text", text="", time=msg.time))
+                    tabsign = True
+                    continue
+                res[-1].time += msg.time # type: ignore
         return res
 
     # 播放midi类存储的信息
@@ -168,6 +173,7 @@ class Midi:
                 context = f.read()
             
             import re
+            from mido import MidiFile, MidiTrack, Message, MetaMessage
             # 正则匹配内容: MidiTrack([Message(...), ...])
             re_context = re.search(r"MidiTrack\(\[[^\]]+\]\)", context, re.M)
             if re_context is None:
@@ -195,8 +201,8 @@ class Midi:
                     f"track = {str(self.messages)}\n"
                     f"fmidi.tracks.append(track)\n"
                     f"fmidi.save(\"temp.mid\")\n"
-                    f"#from physicsLab.union import Midi\n"
-                    f"#Midi(\"temp.mid\").sound()")
+                    f"from physicsLab.union import Midi\n"
+                    f"Midi(\"temp.mid\").sound()")
         
         return self
     
