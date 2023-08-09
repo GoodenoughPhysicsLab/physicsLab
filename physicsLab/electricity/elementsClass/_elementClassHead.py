@@ -16,7 +16,7 @@ class eletricityMeta(type):
             x: _tools.numType = 0,
             y: _tools.numType = 0,
             z: _tools.numType = 0,
-            elementXYZ: bool = None,
+            elementXYZ: Optional[bool] = None,
             *args, **kwargs
     ):
         self = cls.__new__(cls)
@@ -28,9 +28,9 @@ class eletricityMeta(type):
             raise TypeError('illegal argument')
         _fileGlobals.check_ExperimentType(0)
 
-        self.is_elementXYZ: bool = False # 元件坐标系
+        self.is_elementXYZ = False # 元件坐标系
         if not hasattr(cls, "is_bigElement"):
-            cls.is_bigElement: bool = property(lambda self: False) # 2体积元件
+            cls.is_bigElement = property(lambda self: False) # 2体积元件
 
         x, y, z = _tools.roundData(x, y, z)
         self._position = (x, y, z)

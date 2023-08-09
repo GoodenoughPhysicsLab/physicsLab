@@ -12,7 +12,7 @@ position = namedtuple("position", ["x", "y", "z"])
 
 # 四舍五入physicsLab中的数据
 # 支持传入多个数据
-def roundData(*num) -> Union[int, float, tuple]:
+def roundData(*num) -> Union[float, Tuple[float]]:
     if not all(isinstance(val, (int, float)) for val in num):
         raise TypeError
     

@@ -1,5 +1,5 @@
 #coding=utf-8
-from typing import Union
+from typing import Union, Optional
 from ..elementPin import element_Pin
 from physicsLab._tools import numType
 from ._elementClassHead import electricityBase, two_pin_ArtificialCircuit_Pin
@@ -27,7 +27,7 @@ class Simple_Instrument(electricityBase):
             z: numType = 0,
             elementXYZ = None,
             instrument: Union[int, str] = 0, # 演奏的乐器，暂时只支持传入数字
-            pitch: Union[int, str] = 60, # 音高/音调
+            pitch: Union[int, str] = 60, # 音高/音调: 20 ~ 128
             bpm: int = 100, # 节奏
             volume: numType = 1.0 # 音量/响度
     ) -> None:
@@ -56,7 +56,7 @@ class Simple_Instrument(electricityBase):
         return element_Pin(self, 1)
 
     # 设置音高
-    def set_Tonality(self, *inputs) -> "Simple_Instrument":
+    def set_Tonality(self, inputData: Union[int, str], tone: Optional[bool] = None) -> "Simple_Instrument":
         '''
         输入格式：
             中音区：
@@ -120,7 +120,7 @@ class Simple_Instrument(electricityBase):
             注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120
             
         '''
-        def majorSet_Tonality(self, tonality: str = "C3", rising_falling: bool = None) -> "Simple_Instrument":
+        def majorSet_Tonality(self, tonality: str = "C3", rising_falling: Optional[bool] = None) -> "Simple_Instrument":
             if (not isinstance(tonality, str) or
                 len(tonality) != 2 or
                 tonality.upper()[0] not in "ABCDEFG" or
@@ -144,19 +144,14 @@ class Simple_Instrument(electricityBase):
             self._arguments["Properties"]["音高"] = pitch
             return self
 
-        inputData = inputs[0]
+        # main
         if isinstance(inputData, int):
             if 20 < inputData < 128:
                 self._arguments["Properties"]["音高"] = inputData
             else:
                 raise TypeError('Input number out of range')
         elif isinstance(inputData, str):
-            if len(inputs) == 1:
-                majorSet_Tonality(self, inputData)
-            elif len(inputs) == 2:
-                majorSet_Tonality(self, inputData, inputs[1])
-            else:
-                raise TypeError
+            majorSet_Tonality(self, inputData, tone)
         else:
             raise TypeError
 

@@ -322,14 +322,16 @@ del_Wire(element.o, element2.i)
 
 ### 音乐拓展 music extension
 参数的作用之类的都在源码的注释当中，时间原因文档只好简写了
-#### note
-```note```是音符类
+#### Note
+`Note`是音符类
 
-#### track
-```track```是音轨类
+#### Track
+`Track`是音轨类  
+这是一个只用来保存数据的类，想要往里面存储音符必须是`Note`，如果是休止符则用`None`表示  
+初始化时支持传入`list`，但也支持`append`方法
 
-#### piece
-```piece```是乐曲类
+#### Piece
+```Piece```是乐曲类
 
 #### player
 ```player```将```piece```转换为能够在物实播放的电路

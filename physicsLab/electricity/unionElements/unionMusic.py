@@ -28,6 +28,7 @@ NOTE_OFF = "note_off"
 PROGRAM_CHANGE = "program_change"
 SET_TEMPO = "set_tempo"
 TEXT = "text"
+# TODO 将TEXT占位符的time合并到其他事件中
 
 # midi类，用于提供physicsLab与midi文件之间的桥梁
 ''' 重要midi事件及作用:
@@ -166,6 +167,7 @@ class Midi:
         为了修改方便, 默认使用 str(mido.MidiTrack) 的方式导出
         而且是个Py文件, 大家想要自己修改也是很方便的
     '''
+    # TODO 读取plm与Midi时自动更新self.filename
     def read_plm(self, plmpath: str = "temp.plm.py") -> "Midi":
         def _read_plm(plmpath):
             context = None
@@ -208,7 +210,7 @@ class Midi:
     
     # 以 .mid 的形式导出, read_midi已经在Midi的__init__中实现
     # update: 是否将Midi.midifile更新
-    def write_midi(self, midipath: str = "temp.mid", update: bool = False) -> "Midi":
+    def write_midi(self, midipath: str = "temp.mid") -> "Midi":
         if self.messages  is None:
             errors.warning("can not use write_plm because self.messages is None")
             return self
@@ -220,20 +222,21 @@ class Midi:
         mid = mido.MidiFile()
         mid.tracks.append(self.messages)
         mid.save(midipath)
-
-        if update:
-            self.midifile = midipath
+        self.midifile = midipath
+        
         return self
 
 # 音符类
+# TODO 增加更多的设置pitch的方法 -> 参考Simple_Instrument
 class Note:
     def __init__(self,
-                 time: int, # 在音轨中播放的时间
+                 time: int, # 间隔多少时间才播放此Note
                  playTime: int = 1,  # 音符发出声音的时长 暂时不支持相关机制
                  instrument: Union[int, str] = 0, # 演奏的乐器，暂时只支持传入数字
                  pitch: Union[int, str] = 60, # 音高/音调
                  volume: numType = 1.0 # 音量/响度
     ) -> None:
+        # TODO 增加对pitch等等的数字范围的检查
         if not (
                 isinstance(time, int) or
                 isinstance(playTime, int) or
@@ -253,6 +256,7 @@ class Note:
                f"pitch={self.pitch}, volume={self.volume})"
 
 # 循环类，用于创建一段循环的音乐片段
+# TODO: 完善Loop存储的数据结构
 class Loop:
     def __init__(self, notes: Union[chordType, "Loop"], loopTime: int = 2) -> None:
         if not(
@@ -280,9 +284,10 @@ class Loop:
         pass
 
 # 音轨
+# TODO 也许可以继承list
 class Track:
     def __init__(self,
-                 notes: Union[List[Union[Note, Loop]], Tuple[Union[Note, Loop]]],
+                 notes: Optional[List[Note]] = None, # TODO: support Loop
                  # 设置整个音轨的默认参数 Track global variable
                  instrument: int = 0, # 演奏的乐器，暂时只支持传入数字
                  pitch: int = 60, # 音高/音调
@@ -298,6 +303,9 @@ class Track:
         ):
             raise TypeError
 
+        if notes is None:
+            notes = []
+
         self.instrument = instrument
         self.pitch = pitch
         self.bpm = bpm
@@ -309,6 +317,10 @@ class Track:
                 tick += 1
                 self.notes.append(None)
             self.notes.append(deepcopy(a_note))
+
+    def append(self, other: Optional[Note]) -> "Track":
+        self.notes.append(other)
+        return self
 
     def __len__(self) -> int:
         return len(self.notes)
@@ -330,9 +342,12 @@ class Piece:
         if not all(isinstance(a_track, Track) for a_track in tracks):
             raise TypeError
 
-        self.tracks: Track = tracks
-        self.mergeTrack()
+        if len(tracks) != 1:
+            raise RuntimeError("Sorry, multiple tracks are not supported for the moment")
 
+        self.tracks: Tuple[Track] = tracks
+        self.mergeTrack()
+    # TODO 将self.notes进行遍历似乎是很不好的设计，self.tarcks才是
     def __len__(self):
         return len(self.notes)
 
@@ -399,17 +414,31 @@ class Player:
 
         tick = _elementsClass.Nimp_Gate(x + 1, y, z, True)
         counter = _elementsClass.Counter(x, y + 1, z, True)
-        _elementsClass.Logic_Input(x, y, z, True).o - tick.i_up
+        input = _elementsClass.Logic_Input(x, y, z, True)
+        input.o - tick.i_up
         tick.o - tick.i_low
         tick.o - counter.i_up
 
         xPlayer = D_WaterLamp(x + 1, y + 1, z, unionHeading=True, bitLength=side, elementXYZ=True)
-        yPlayer = D_WaterLamp(x, y + 3, z, bitLength=side, elementXYZ=True, is_loop=False).set_HighLeaveValue(1.5)
+        yPlayer = D_WaterLamp(x, y + 3, z, bitLength=side, elementXYZ=True).set_HighLeaveValue(2)
 
-        yesGate = _elementsClass.Yes_Gate(x + 1, y + 2, z + 1, True)
-        xPlayer[0].o_low - yesGate.i
-        crt_Wires(counter.o_upmid, xPlayer.data_Input)
+        yesGate = _elementsClass.Full_Adder(x + 1, y + 2, z + 1, True)
+        yesGate.i_low - yesGate.i_mid
+        xPlayer[0].o_low - yesGate.i_up
+        #crt_Wires(counter.o_upmid, xPlayer.data_Input)
         crt_Wires(xPlayer.data_Output[0], yPlayer.data_Input)
+
+        stop = _elementsClass.And_Gate(x + side, y + 2 * side + 1, z, elementXYZ=True)
+        stop.i_up - yPlayer[-1].o_up
+        stop.i_low - xPlayer[-1].o_up
+        check1 = _elementsClass.No_Gate(x + 2, y, z, True)
+        check2 = _elementsClass.Multiplier(x + 3, y, z, True)
+        check1.o - check2.i_low
+        yesGate.o_low - check2.i_upmid
+        stop.o - yesGate.i_low - check1.i
+        check2.i_lowmid - input.o
+        counter.o_upmid - check2.i_up
+        crt_Wires(check2.o_lowmid, xPlayer.data_Input)
 
         # main
         xcor, ycor, zcor = 0, 0, 0
@@ -429,7 +458,7 @@ class Player:
                     )
                     # 连接x轴的d触的导线
                     if xcor == 0:
-                        yesGate.o - ins.o
+                        yesGate.o_up - ins.o
                     else:
                         ins.o - xPlayer.data_Output[xcor]
                     # 连接y轴的d触的导线

@@ -255,6 +255,16 @@ class myTestCase(unittest.TestCase):
             else:
                 raise RuntimeError
 
+    def test_musicPlayer(self):
+        with experiment("测逝"):
+            l = (0, 2, 4, 5, 7, 9, 11)
+
+            t = music.Track()
+            for i in range(7):
+                for j in l:
+                    t.append(music.Note(1, pitch=12 * i + j + 21))
+            t.notes[-1] = None
+            music.Piece(t).play(-1, -1, 0)
 
 if __name__ == '__main__':
     unittest.main()

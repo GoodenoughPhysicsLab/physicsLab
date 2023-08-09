@@ -18,7 +18,7 @@
 4. 增加了模块化电路音乐电路与music命名空间
 5. experiment()新增write参数
 
-## 1.3.0.1
+## 1.3.0.1 & 1.3.1
 1.  增加对`P-MOSFET`元件的支持
 2.  增加`from physicsLab.union import *`来省略union命名空间的书写
 3.  增加单个元件判断是否为元件坐标系的方法：`self.is_elementXYZ`
@@ -28,3 +28,5 @@
 
 ## coming soon
 1.  实装Midi类（与piece类的转换与导出midi，播放midi）
+2.  Track类增加append方法
+3.  优化了乐器矩阵的基础架构
