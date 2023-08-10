@@ -19,12 +19,17 @@ except FileNotFoundError:
     _colorUtils.printColor = False
     del _colorUtils
 
+# Win: 若存档对应文件夹不存在直接报错
+import physicsLab._fileGlobals as _fileGlobals
+from os import path as _path, makedirs as _makedirs
+if not _path.exists(_fileGlobals.FILE_HEAD):
+    raise WindowsError("The folder does not exist, try launching Physics-Lab-AR and try it out")
+
 # 检测操作系统
 from sys import platform as _platform
 if not (_platform == "win32" or _platform == "linux"): # 在Android上检测操作系统为linux
     raise OSError
 # 创建Android上的physicsLabSav文件夹
-from os import path as _path, makedirs as _makedirs
 if _platform == "linux" and not _path.exists("/storage/emulated/0/physicsLabSav"):
     _makedirs("/storage/emulated/0/physicsLabSav")
 
@@ -41,7 +46,6 @@ from physicsLab.element import *
 # 自定义异常类
 from physicsLab.errors import *
 # 获取存档类型与整个存档文件
-import physicsLab._fileGlobals as _fileGlobals
 from physicsLab._fileGlobals import get_Sav, get_experimentType
 # 模块化电路
 import physicsLab.electricity.unionElements.unionLogic as union
