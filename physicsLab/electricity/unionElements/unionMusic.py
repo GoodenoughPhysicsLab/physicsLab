@@ -283,11 +283,10 @@ class Loop:
     def __next__(self):
         pass
 
-# 音轨
-# TODO 也许可以继承list
-class Track:
+# 乐曲类
+class Piece:
     def __init__(self,
-                 notes: Optional[List[Note]] = None, # TODO: support Loop
+                 notes: Union[List[Note], Tuple[Note], None] = None, # TODO: support Loop
                  # 设置整个音轨的默认参数 Track global variable
                  instrument: int = 0, # 演奏的乐器，暂时只支持传入数字
                  pitch: int = 60, # 音高/音调
@@ -318,96 +317,58 @@ class Track:
                 self.notes.append(None)
             self.notes.append(deepcopy(a_note))
 
-    def append(self, other: Optional[Note]) -> "Track":
+    def append(self, other: Optional[Note]) -> "Piece":
         self.notes.append(other)
         return self
 
     def __len__(self) -> int:
         return len(self.notes)
-
-    def __str__(self):
-        return f"Track: {self.notes}"
-    # iterator
-    def __iter__(self):
-        self.__iter = iter(self.notes)
-        return self.__iter
-
-    def __next__(self):
-        for a_note in self.__iter:
-            yield a_note
-
-# 乐曲类
-class Piece:
-    def __init__(self, *tracks: Track):
-        if not all(isinstance(a_track, Track) for a_track in tracks):
-            raise TypeError
-
-        if len(tracks) != 1:
-            raise RuntimeError("Sorry, multiple tracks are not supported for the moment")
-
-        self.tracks: Tuple[Track] = tracks
-        self.mergeTrack()
-    # TODO 将self.notes进行遍历似乎是很不好的设计，self.tarcks才是
-    def __len__(self):
-        return len(self.notes)
-
-    def __getitem__(self, item):
-        return self.notes[item]
-
-    # iterator
-    def __iter__(self):
-        self.__iter = iter(self.notes)
-        return self.__iter
-
-    def __next__(self):
-        for a_note in self.__iter:
-            yield a_note
     
-    # 将多个音轨合并为一个音轨（方便物实生成）
-    def mergeTrack(self) -> "Piece":
-        if len(self.tracks) > 1:
-            raise RuntimeError("Sorry, multiple tracks are not supported for the moment")
-        
-        self.notes = self.tracks[0].notes
-        
-        return self
+    def __getitem__(self, item: int) -> Optional[Note]:
+        if not isinstance(item, int):
+            raise TypeError
+        return self.notes[item]
+    
+    def __setitem__(self, item: int, value) -> None:
+        if not isinstance(item, int):
+            raise TypeError
+        self.notes[item] = value
 
-    # 在物实生成对应的电路
-    def play(self, x:numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None) -> None:
+    def __str__(self) -> str:
+        return f"Track: {self.notes}"
+
+    def __iter__(self) -> Iterator:
+        self.__iter = iter(self.notes)
+        return self.__iter
+
+    def __next__(self):
+        yield next(self.__iter)
+    
+    def play(self, x: numType, y: numType = 0, z: numType = 0, elementXYZ = None):
         Player(self, x, y, z, elementXYZ)
-
-    # 转换为Midi类
-    def translate_to_midi(self) -> Midi:
-        pass
 
 # 将piece的数据生成为物实的电路
 class Player:
     def __init__(self,
-                 musicArray: Union[Piece, List[Piece], Tuple[Piece]],
+                 musicArray: Piece,
                  x: numType = 0, y: numType = 0, z: numType = 0,
                  elementXYZ = None
     ):
         if not (
                 isinstance(x, (int, float)) or
                 isinstance(y, (int, float)) or
-                isinstance(z, (int, float))
-        ) or not(
-                isinstance(musicArray, Piece) or
-                all(isinstance(a_piece, Piece) for a_piece in musicArray)
+                isinstance(z, (int, float)) or
+                isinstance(musicArray, Piece)
         ):
             raise TypeError
 
         if not (elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
 
-        if isinstance(musicArray, (tuple, list)):
-            if len(musicArray) > 1:
-                raise RuntimeError("Sorry, multiple pieces are not supported for the moment")
-            musicArray: Piece = musicArray[0]
-
         # 给乐器增加休止符
-        if musicArray.notes[-1] is not None:
-            musicArray.notes.append(None)
+        while musicArray.notes[-1] is None:
+            musicArray.notes.pop()
+        musicArray.notes.append(None)
 
         # 计算音乐矩阵的长宽
         side = None
@@ -490,7 +451,7 @@ class Player:
             if xcor == side:
                 xcor = 0
                 ycor += 2
-        # stop( And_Gate )坐标重设
+
         stop = _elementsClass.And_Gate(x + xcor + 2, y + ycor + 3, z, True)
         stop.o - yesGate.i_low - check1.i
         stop.i_up - yPlayer[-1].o_up
