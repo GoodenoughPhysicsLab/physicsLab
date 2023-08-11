@@ -1,19 +1,20 @@
 #coding=utf-8
-# 模块化电路
-import typing as _typing
-from physicsLab._tools import numType
+from typing import *
+
 import physicsLab.errors as _errors
 import physicsLab.electricity as electricity
 import physicsLab.electricity.elementsClass as _elementsClass
-from physicsLab.electricity.unionElements.unionPin import union_Pin
 import physicsLab.electricity.unionElements._unionClassHead as _unionClassHead
+
+from physicsLab._tools import numType
+from physicsLab.electricity.unionElements.unionPin import union_Pin
 
 # unionHeading与fold的判断的代码
 def _unionHeading_fold(
-        func1: _typing.Callable,
-        func2: _typing.Callable,
-        func3: _typing.Callable,
-        func4: _typing.Callable,
+        func1: Callable,
+        func2: Callable,
+        func3: Callable,
+        func4: Callable,
         unionHeading: bool,
         fold: bool
 ):
@@ -57,7 +58,7 @@ class Sum(Union_LogicBase):
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
     ) -> None:
-        def link_union_Sum(elements: _typing.List[_elementsClass.Full_Adder]) -> None:
+        def link_union_Sum(elements: List[_elementsClass.Full_Adder]) -> None:
             for i in range(elements.__len__() - 1):
                 elements[i].o_low - elements[i + 1].i_low
 
@@ -102,7 +103,7 @@ class Sum(Union_LogicBase):
             foldMaxNum
         )
 
-        self._elements: _typing.List[_elementsClass.Full_Adder] = []
+        self._elements: List[_elementsClass.Full_Adder] = []
         _unionHeading_fold(
             func1, func2, func3, func4, unionHeading, fold
         )
@@ -159,8 +160,8 @@ class Sub(Union_LogicBase):
                  foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
     ) -> None:
         def link_union_Sub(
-                fullAdders: _typing.List[_elementsClass.Full_Adder],
-                noGates: _typing.List[_elementsClass.No_Gate]
+                fullAdders: List[_elementsClass.Full_Adder],
+                noGates: List[_elementsClass.No_Gate]
         ) -> None:
             self._elements[0].o - fullAdders[0].i_low
             for i in range(fullAdders.__len__() - 1):
@@ -219,12 +220,12 @@ class Sub(Union_LogicBase):
             foldMaxNum
         )
 
-        self._elements: _typing.List[_typing.Union[_elementsClass.Full_Adder, _elementsClass.No_Gate]] = [
+        self._elements: List[Union[_elementsClass.Full_Adder, _elementsClass.No_Gate]] = [
             Const_NoGate(x, y, z, True)
         ]
 
-        self._noGates: _typing.List[_elementsClass.No_Gate] = []
-        self._fullAdders: _typing.List[_elementsClass.Full_Adder] = []
+        self._noGates: List[_elementsClass.No_Gate] = []
+        self._fullAdders: List[_elementsClass.Full_Adder] = []
 
         _unionHeading_fold(
             func1, func2, func3, func4, unionHeading, fold
@@ -454,7 +455,7 @@ class Inputs(Union_LogicBase):
             foldMaxNum
         )
 
-        self._elements: _typing.List[_elementsClass.Logic_Input] = []
+        self._elements: List[_elementsClass.Logic_Input] = []
         _unionHeading_fold(
             func1, func2, func3, func4, unionHeading, fold
         )
@@ -519,7 +520,7 @@ class Outputs(Union_LogicBase):
             foldMaxNum
         )
 
-        self._elements: _typing.List[_elementsClass.Logic_Output] = []
+        self._elements: List[_elementsClass.Logic_Output] = []
         _unionHeading_fold(
             func1, func2, func3, func4, unionHeading, fold
         )
@@ -545,7 +546,7 @@ class D_WaterLamp(Union_LogicBase):
                  is_loop: bool = True # 是否使流水灯循环
     ) -> None:
         # D触流水灯导线连接方式
-        def link_D_Flipflop(elements: _typing.List[_elementsClass.D_Flipflop]) -> None:
+        def link_D_Flipflop(elements: List[_elementsClass.D_Flipflop]) -> None:
             # 连接clk
             for i in range(len(elements) - 1):
                 elements[i].i_low - elements[i + 1].i_low
@@ -609,7 +610,7 @@ class D_WaterLamp(Union_LogicBase):
         if not isinstance(is_loop, bool):
             raise TypeError
 
-        self._elements: _typing.List[_elementsClass.D_Flipflop] = []
+        self._elements: List[_elementsClass.D_Flipflop] = []
         _unionHeading_fold(
             func1, func2, func3, func4, unionHeading, fold
         )

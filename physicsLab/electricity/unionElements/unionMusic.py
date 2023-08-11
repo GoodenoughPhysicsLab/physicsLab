@@ -405,6 +405,10 @@ class Player:
                 raise RuntimeError("Sorry, multiple pieces are not supported for the moment")
             musicArray: Piece = musicArray[0]
 
+        # 给乐器增加休止符
+        if musicArray.notes[-1] is not None:
+            musicArray.notes.append(None)
+
         # 计算音乐矩阵的长宽
         side = None
         if len(musicArray) >= 2:
@@ -420,22 +424,21 @@ class Player:
         tick.o - counter.i_up
 
         xPlayer = D_WaterLamp(x + 1, y + 1, z, unionHeading=True, bitLength=side, elementXYZ=True)
-        yPlayer = D_WaterLamp(x, y + 3, z, bitLength=side, elementXYZ=True).set_HighLeaveValue(2)
+        yPlayer = None
+        if side * (side - 1) < len(musicArray):
+            yPlayer = D_WaterLamp(x, y + 3, z, bitLength=side, elementXYZ=True).set_HighLeaveValue(2)
+        else:
+            yPlayer = D_WaterLamp(x, y + 3, z, bitLength=side - 1, elementXYZ=True).set_HighLeaveValue(2)
 
         yesGate = _elementsClass.Full_Adder(x + 1, y + 2, z + 1, True)
         yesGate.i_low - yesGate.i_mid
         xPlayer[0].o_low - yesGate.i_up
-        #crt_Wires(counter.o_upmid, xPlayer.data_Input)
         crt_Wires(xPlayer.data_Output[0], yPlayer.data_Input)
 
-        stop = _elementsClass.And_Gate(x + side, y + 2 * side + 1, z, elementXYZ=True)
-        stop.i_up - yPlayer[-1].o_up
-        stop.i_low - xPlayer[-1].o_up
         check1 = _elementsClass.No_Gate(x + 2, y, z, True)
         check2 = _elementsClass.Multiplier(x + 3, y, z, True)
         check1.o - check2.i_low
         yesGate.o_low - check2.i_upmid
-        stop.o - yesGate.i_low - check1.i
         check2.i_lowmid - input.o
         counter.o_upmid - check2.i_up
         crt_Wires(check2.o_lowmid, xPlayer.data_Input)
@@ -487,3 +490,8 @@ class Player:
             if xcor == side:
                 xcor = 0
                 ycor += 2
+        # stop( And_Gate )坐标重设
+        stop = _elementsClass.And_Gate(x + xcor + 2, y + ycor + 3, z, True)
+        stop.o - yesGate.i_low - check1.i
+        stop.i_up - yPlayer[-1].o_up
+        stop.i_low - xPlayer[xcor + 1].o_up

@@ -4,7 +4,7 @@ from physicsLab import *
 from physicsLab.union import *
 #from viztracer import VizTracer
 
-class myTestCase(unittest.TestCase):
+class MyTestCase(unittest.TestCase):
     # init unittest class
     # @classmethod
     # def setUpClass(cls):
@@ -188,6 +188,7 @@ class myTestCase(unittest.TestCase):
                 pass
         except experimentTypeError:
             pass
+        del_Experiment()
 
     def test_experimentType3(self):
         with experiment("__tset__", type=0, delete=True):

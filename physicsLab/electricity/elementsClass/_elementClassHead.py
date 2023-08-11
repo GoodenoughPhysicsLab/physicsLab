@@ -33,7 +33,7 @@ class eletricityMeta(type):
             cls.is_bigElement = property(lambda self: False) # 2体积元件
 
         x, y, z = _tools.roundData(x, y, z)
-        self._position = (x, y, z)
+        self._position = _tools.position(x, y, z)
         # 元件坐标系
         if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
             x, y, z = _elementXYZ.xyzTranslate(x, y, z)
@@ -84,12 +84,18 @@ class electricityBase(metaclass=eletricityMeta):
         return self
 
     # 重新设置元件的坐标
-    def set_Position(self, x: _tools.numType, y: _tools.numType, z: _tools.numType):
+    def set_Position(self, x: _tools.numType, y: _tools.numType, z: _tools.numType, elementXYZ: Optional[bool] = None):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
-        x, y, z = _tools.roundData(x), _tools.roundData(y), _tools.roundData(z)
+        x, y, z = _tools.roundData(x, y, z)
+
+        #元件坐标系
+        if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
+            x, y, z = _elementXYZ.xyzTranslate(x, y, z)
+            self.is_elementXYZ = True
+        
         del _fileGlobals.elements_Position[self._position]
-        self._position = (x, y, z)
+        self._position = _tools.position(x, y, z)
         self._arguments['Position'] = f"{x},{z},{y}"
         _fileGlobals.elements_Position[self._position] = self
         return self
@@ -98,7 +104,7 @@ class electricityBase(metaclass=eletricityMeta):
     def format_Position(self) -> tuple:
         if not isinstance(self._position, tuple) or self._position.__len__() != 3:
             raise RuntimeError("Position must be a tuple of length three but gets some other value")
-        self._position = _tools.roundData(self._position[0], self._position[1], self._position[2])
+        self._position = _tools.roundData(self._position.x, self._position.y, self._position.z)
         return self._position
 
     # 获取原件的坐标

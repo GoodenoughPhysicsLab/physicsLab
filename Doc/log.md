@@ -30,3 +30,4 @@
 1.  实装Midi类（与piece类的转换与导出midi，播放midi）
 2.  Track类增加append方法
 3.  优化了乐器矩阵的基础架构
+4.  `self.set_Position`增加了对元件坐标系的支持
