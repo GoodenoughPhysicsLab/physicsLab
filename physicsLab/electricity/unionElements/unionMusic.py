@@ -315,9 +315,12 @@ class Piece:
             while tick < a_note.time:
                 tick += 1
                 self.notes.append(None)
-            self.notes.append(deepcopy(a_note))
+            self.notes.append(a_note)
 
-    def append(self, other: Optional[Note]) -> "Piece":
+    def append(self, other: Note) -> "Piece":
+        while other.time > 1:
+            self.notes.append(None)
+            other.time -= 1
         self.notes.append(other)
         return self
 
@@ -335,7 +338,7 @@ class Piece:
         self.notes[item] = value
 
     def __str__(self) -> str:
-        return f"Track: {self.notes}"
+        return f"Piece: {self.notes}"
 
     def __iter__(self) -> Iterator:
         self.__iter = iter(self.notes)
@@ -368,6 +371,8 @@ class Player:
         # 给乐器增加休止符
         while musicArray.notes[-1] is None:
             musicArray.notes.pop()
+        while musicArray.notes[0] is None:
+            musicArray.notes.pop(0)
         musicArray.notes.append(None)
 
         # 计算音乐矩阵的长宽
@@ -385,11 +390,7 @@ class Player:
         tick.o - counter.i_up
 
         xPlayer = D_WaterLamp(x + 1, y + 1, z, unionHeading=True, bitLength=side, elementXYZ=True)
-        yPlayer = None
-        if side * (side - 1) < len(musicArray):
-            yPlayer = D_WaterLamp(x, y + 3, z, bitLength=side, elementXYZ=True).set_HighLeaveValue(2)
-        else:
-            yPlayer = D_WaterLamp(x, y + 3, z, bitLength=side - 1, elementXYZ=True).set_HighLeaveValue(2)
+        yPlayer = D_WaterLamp(x, y + 3, z, bitLength=ceil(len(musicArray) / side), elementXYZ=True).set_HighLeaveValue(2)
 
         yesGate = _elementsClass.Full_Adder(x + 1, y + 2, z + 1, True)
         yesGate.i_low - yesGate.i_mid
@@ -454,5 +455,5 @@ class Player:
 
         stop = _elementsClass.And_Gate(x + xcor + 2, y + ycor + 3, z, True)
         stop.o - yesGate.i_low - check1.i
-        stop.i_up - yPlayer[-1].o_up
+        stop.i_up - yPlayer[ycor // 2].o_up
         stop.i_low - xPlayer[xcor + 1].o_up
