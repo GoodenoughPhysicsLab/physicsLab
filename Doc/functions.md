@@ -232,7 +232,7 @@ old_crt_wire(SourceLabel, SourcePin: int, TargetLabel, TargetPin: int, color = "
 ```
 连接导线的方式是更偏于物实存档的原始方案，即用数字来表示某个引脚  
 下面呈现部分元件引脚图（第一种其实就是对这个老函数更方便的封装）：  
-```diff
+```
 D触发器：          
 2    0                  
                              
@@ -316,6 +316,15 @@ del_Wire(element.o, element2.i)
 ### 导线 wires
 #### 连接模块化电路的导线
 调用`crt_Wires()`，参数支持传入元件/模块化电路的引脚
+```Python
+from physicsLab import *
+from physicsLab.union import *
+
+with experiment("测逝"):
+    a = D_WaterLamp(bitLength=8)
+    b = Outputs(bigLength=8)
+    crt_Wires(a.data_Outputs, b.data_Inputs)
+```
 
 #### 删除模块化电路的导线
 调用`del_Wires()`，同上
@@ -323,24 +332,41 @@ del_Wire(element.o, element2.i)
 ### 音乐拓展 music extension
 参数的作用之类的都在源码的注释当中，时间原因文档只好简写了
 #### Note
-`Note`是音符类
-
-#### Track
-`Track`是音轨类  
-这是一个只用来保存数据的类，想要往里面存储音符必须是`Note`，如果是休止符则用`None`表示  
-初始化时支持传入`list`，但也支持`append`方法
+`Note`是音符类  
+其中的`time`参数的含义是***距离播放该音符需要等待多少时间***
 
 #### Piece
 ```Piece```是乐曲类
+这是一个只用来保存数据的类，想要往里面存储音符必须是`Note`，如果是休止符则用`None`表示  
+初始化时支持传入`list`，但也支持`append`方法  
+将Piece类转换为可以在物实播放的电路，除了使用`Player(piece, x, y, z, elementXYZ)`的方法，也可以使用`piece.play(x, y, z, elementXYZ)`的方法，两者是等价的。
 
-#### player
+#### Player
 ```player```将```piece```转换为能够在物实播放的电路
 
-#### midi
-```midi```类是piece与midi文件之间的桥梁，暂未实现
+#### Midi
+`Midi` 类是`Piece`与 *midi文件* 之间的桥梁  
+```Python
+for physicsLab import *
+
+m = music.Midi("temp.mid")
+m.sound() # 播放该midi，此方法会尝试使用plmidi, pygame与系统调用来播放
+m.sound(player=music.Midi.PLAYER.PYGAME) # 指定使用pygame播放midi
+# 共有PLAYER.plmidi, PLAYER.pygame, PLAYER.os三个参数
+
+m.translate_to_piece() # 将Midi类转换为Piece类
+
+# Midi类有一种特殊的存储数据的类型: .plm.py
+# 这个文件导出的音符信息可以方便的进行修改，播放
+m.read_plm("path") # 读取指定path的 .plm.py
+m.write_plm("path") # 导出 .plm.py到指定路径
+
+m.write_midi("path") # 导出midi到指定路径
+# 为啥没有read_midi的方法呢? 因为创建一个Midi类的时候就可以读取Midi
+```
 
 ## 创建其他类型的实验
-创建其他类型的实验主要通过```experiment```或```crt_Experiment```或```open_Experiment```的type参数指定  
+创建其他类型的实验主要通过`experiment`或`crt_Experiment`或```open_Experiment```的type参数指定  
 type支持的参数如下：  
 ```diff
 type = 0 # 电学实验
@@ -349,9 +375,10 @@ type = 4 # 电与磁实验
 type = "天体物理实验"
 type = "电与磁实验"
 ```
-```type```可以什么都不传，此时默认为电学实验
+`type`可以什么都不传，此时默认为电学实验
 
 # 物实程序化3  
 我也曾试过xuzhengx的物实程序化3，发现爆了文件错误  
 与原作者（xuzhegnx）沟通之后了解到：xuzhengx直接把冰如冷的教程拿来索引元件  
-这是个大坑，对感兴趣的同学应该有帮助
+这是个大坑，对感兴趣的同学应该有帮助  
+[点击查看物实程序化3](https://gitee.com/script2000/temp/blob/master/other%20physicsLab/%E7%89%A9%E5%AE%9E%E7%A8%8B%E5%BA%8F%E5%8C%963.py)

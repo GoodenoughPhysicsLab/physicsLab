@@ -263,7 +263,7 @@ class MyTestCase(unittest.TestCase):
             t = music.Piece()
             for i in range(7):
                 for j in l:
-                    t.append(music.Note(2, pitch=12 * i + j + 21))
+                    t.append(music.Note(4, pitch=12 * i + j + 21))
             #t.notes[-1] = None
             t.play(-1, -1, 0)
 

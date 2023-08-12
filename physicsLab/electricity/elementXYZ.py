@@ -4,12 +4,11 @@
 # 单位y是一个是门的宽
 # 单位z为物实默认坐标系的0.1
 
+from typing import *
 import physicsLab._tools as _tools
 import physicsLab._fileGlobals as _fileGlobals
-from typing import Callable as _Callable
 
-### define ###
-
+# 全局是否为elementXYZ
 _elementXYZ: bool = False
 
 # 是否将全局设置为元件坐标系

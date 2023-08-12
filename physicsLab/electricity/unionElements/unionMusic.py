@@ -46,7 +46,6 @@ class Midi:
         plmidi = 0
         pygame = 1
         os = 2
-    PLAYER = PLAYER
 
     def __init__(self, midifile: Optional[str] = None) -> None:
         ''' self.messages的参数格式:
@@ -185,6 +184,7 @@ class Midi:
         if not _path.exists(plmpath):
             raise FileNotFoundError    
 
+        self.midifile = None
         _read_plm(plmpath)
         return self
 
@@ -323,6 +323,10 @@ class Piece:
             other.time -= 1
         self.notes.append(other)
         return self
+    
+    # 将Piece类转换为Midi
+    def translate_to_midi(self):
+        pass
 
     def __len__(self) -> int:
         return len(self.notes)
@@ -430,7 +434,7 @@ class Player:
                     ins.i - yPlayer.neg_data_Output[ycor // 2]
 
                 i = 1
-                exit_sign = None
+                exit_sign = False
                 while True:
                     if a_note_item + i >= len(musicArray):
                         exit_sign = True
