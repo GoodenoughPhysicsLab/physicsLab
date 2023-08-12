@@ -181,29 +181,29 @@ class MyTestCase(unittest.TestCase):
 
     def test_experimentType2(self):
         try:
-            with experiment(file='电与磁', elementXYZ=True):
+            with experiment(file='电与磁', type=experimentType.Electromagnetism, elementXYZ=True):
+                Positive_Charge()
                 Logic_Input()
-
-            with experiment("电与磁测逝", type="电与磁实验", elementXYZ=True):
-                pass
         except experimentTypeError:
             pass
+        else:
+            raise RuntimeError
         del_Experiment()
 
     def test_experimentType3(self):
-        with experiment("__tset__", type=0, delete=True):
+        with experiment("__tset__", type=experimentType.Circuit, delete=True):
             Logic_Input()
-        with experiment("__test__", type=3, delete=True):
+        with experiment("__test__", type=experimentType.Celestial, delete=True):
             pass
-        with experiment("__test__", type=4, delete=True):
+        with experiment("__test__", type=experimentType.Electromagnetism, delete=True):
             pass
-        with experiment("__test__", type="天体物理实验", delete=True):
+        with experiment("__test__", type=experimentType.天体物理实验, delete=True):
             pass
-        with experiment("__test__", type="电与磁实验", delete=True):
+        with experiment("__test__", type=experimentType.电与磁实验, delete=True):
             pass
 
     def test_electromagnetism(self):
-        with experiment("电与磁测逝", type=4):
+        with experiment("电与磁测逝", type=experimentType.Electromagnetism):
             Negative_Charge(-0.1, 0, 0)
             Positive_Charge(0.1, 0, 0)
             self.assertEqual(count_Elements(), 2)

@@ -5,13 +5,15 @@ import physicsLab._fileGlobals as _fileGlobals
 import physicsLab.electricity.elementXYZ as _elementXYZ
 import physicsLab.electricity.elementsClass as _elementsClass
 
+from typing import *
+
 # 创建原件，本质上仍然是实例化
 def crt_Element(
         name: str,
         x: _tools.numType = 0,
         y: _tools.numType = 0,
         z: _tools.numType = 0,
-        elementXYZ: bool = None
+        elementXYZ: Optional[bool] = None
     ):
     if not (isinstance(name, str)
             and isinstance(x, (int, float))
@@ -19,7 +21,6 @@ def crt_Element(
             and isinstance(z, (int, float))
     ):
         raise RuntimeError("Wrong parameter type")
-#    _fileGlobals.check_ExperimentType(0)
 
     name = name.strip()
     if name == '':
@@ -80,7 +81,7 @@ def get_Element(*args, **kwargs) -> _elementsClass.electricityBase:
         raise TypeError
 
 # 删除原件
-def del_Element(self) -> None:
+def del_Element(self: _elementsClass.electricityBase) -> None:
 #    self是物实三大实验支持的所有元件
 
     if not isinstance(self, _elementsClass.electricityBase):

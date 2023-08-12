@@ -1,9 +1,12 @@
 #coding=utf-8
 import os
-from typing import Union
+
+from typing import *
+from enum import Enum
+from sys import platform
+
 import physicsLab.errors as errors
 
-#define
 # 电学实验的sav模板
 _electricity = {
     "Type": 0,
@@ -169,7 +172,6 @@ _electromagnetism = {
     }
 }
 
-from sys import platform
 FILE_HEAD = None # os.path.abspath(os.sep) # 获取根目录
 if platform == "win32":
     from getpass import getuser
@@ -189,31 +191,30 @@ elements_Position: dict = {}  # key: self._position, value: List[self...]
 # 通过index（元件生成顺序）索引元件
 elements_Index: list = [] # List[self]
 
-# 初始化_fileGlobals的变量
-def fileGlobals_init(experimentType: Union[int, str]) -> None:
-    if isinstance(experimentType, str):
-        experimentType.strip()
-    elif not (
-        (
-            isinstance(experimentType, int) and (
-                experimentType == 0 or # 电学实验
-                experimentType == 3 or # 天体物理实验
-                experimentType == 4    # 电与磁实验
-            )
-        ) or experimentType is None
-    ):
-        raise TypeError
+# 所有实验类型及对应的数据
+class experimentType(Enum):
+    电学实验 = 0
+    Circuit = 0
+    天体物理实验 = 3
+    Celestial = 3
+    电与磁实验 = 4
+    Electromagnetism = 4
 
+# 初始化_fileGlobals的变量
+def fileGlobals_init(i_experimentType: Union[int, experimentType] = experimentType.电学实验) -> None:
+    if not isinstance(i_experimentType, (experimentType, int)):
+        raise TypeError
+    
     global PlSav, SavName, StatusSave, Elements, Wires, elements_Index, elements_Position
     SavName = ""  # sav的文件名
     Elements = []  # 装原件的_arguments
     Wires = []
     # 电学实验
-    if experimentType == 0 or experimentType is None:
+    if i_experimentType == 0 or (isinstance(i_experimentType, experimentType) and i_experimentType.value == 0):
         PlSav = _electricity
         StatusSave = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
     # 电与磁实验
-    elif experimentType == 4 or experimentType == "电与磁实验":
+    elif i_experimentType == 4 or (isinstance(i_experimentType, experimentType) and i_experimentType.value == 4):
         PlSav = _electromagnetism
         StatusSave = {"SimulationSpeed": 1.0, "Elements": []}
 
@@ -221,19 +222,18 @@ def fileGlobals_init(experimentType: Union[int, str]) -> None:
     elements_Index = []
 
 # 检查实验类型
-def check_ExperimentType(targetType: int, error: bool = True):
-    if targetType > 4 or targetType < 0:
+def check_ExperimentType(targetType: experimentType, error: bool = True) -> Union[bool, NoReturn]:
+    if not isinstance(targetType, experimentType):
         raise TypeError
 
-    if error and not targetType == get_experimentType():
+    if error and not targetType.value == get_experimentType():
         raise errors.experimentTypeError
     else:
         return targetType == get_experimentType()
 
 # 获取sav
 def get_Sav() -> dict:
-    import copy
-    return copy.deepcopy(PlSav)
+    return PlSav
 
 # 获取实验类型
 def get_experimentType() -> int:

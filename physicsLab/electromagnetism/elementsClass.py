@@ -24,7 +24,7 @@ class _elementBase:
     def set_Position(self, x: _tools.numType, y: _tools.numType, z: _tools.numType):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
-        x, y, z = _tools.roundData(x), _tools.roundData(y), _tools.roundData(z)
+        x, y, z = _tools.roundData(x, y, z)
         del _fileGlobals.elements_Position[self._position]
         self._position = (x, y, z)
         self._arguments['Position'] = f"{x},{z},{y}"
@@ -57,7 +57,7 @@ def _element_Init_HEAD(func: _Callable) -> _Callable:
                 isinstance(z, (float, int))
         ):
             raise TypeError('illegal argument')
-        _fileGlobals.check_ExperimentType(4)
+        _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Electromagnetism)
 
         # 初始化全局变量
         global is_big_Element

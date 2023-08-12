@@ -17,7 +17,7 @@ def _check_typeWire(func):
             if (color not in ("黑", "蓝", "红", "绿", "黄")):
                 raise errors.wireColorError
 
-            _fileGlobals.check_ExperimentType(0)
+            _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
 
             func(SourcePin, TargetPin, color)
 
@@ -53,12 +53,12 @@ def del_Wire(SourcePin: "_elementPin.element_Pin", TargetPin: "_elementPin.eleme
 
 # 删除所有导线
 def clear_Wires() -> None:
-    _fileGlobals.check_ExperimentType(0)
+    _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
     _fileGlobals.Wires.clear()
 
 # 获取当前导线数
 def count_Wires() -> int:
-    _fileGlobals.check_ExperimentType(0)
+    _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
     return len(_fileGlobals.Wires)
 
 # 打印导线的json

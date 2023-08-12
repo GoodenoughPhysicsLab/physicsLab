@@ -46,7 +46,7 @@ from physicsLab.element import *
 # 自定义异常类
 from physicsLab.errors import *
 # 获取存档类型与整个存档文件
-from physicsLab._fileGlobals import get_Sav, get_experimentType
+from physicsLab._fileGlobals import get_Sav, get_experimentType, experimentType
 # 模块化电路
 import physicsLab.electricity.unionElements.unionLogic as union
 import physicsLab.electricity.unionElements.unionMusic as music
@@ -54,7 +54,7 @@ import physicsLab.electricity.unionElements.unionMusic as music
 
 __all__ = [
     # _fileGlobals.py
-    "_fileGlobals", "get_Sav", "get_experimentType",
+    "_fileGlobals", "get_Sav", "get_experimentType", "experimentType",
 
     # errors.py
     "openExperimentError", "wireColorError", "wireNotFoundError", "bitLengthError",

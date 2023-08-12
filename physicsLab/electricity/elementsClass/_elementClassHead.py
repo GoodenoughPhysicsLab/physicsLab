@@ -26,7 +26,7 @@ class eletricityMeta(type):
                 isinstance(z, (float, int))
         ):
             raise TypeError('illegal argument')
-        _fileGlobals.check_ExperimentType(0)
+        _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
 
         self.is_elementXYZ = False # 元件坐标系
         if not hasattr(cls, "is_bigElement"):

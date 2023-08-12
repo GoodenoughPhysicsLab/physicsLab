@@ -13,7 +13,7 @@ _elementXYZ: bool = False
 
 # 是否将全局设置为元件坐标系
 def set_elementXYZ(boolen: bool) -> None:
-    _fileGlobals.check_ExperimentType(0)
+    _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
     if not isinstance(boolen, bool):
         raise TypeError
     global _elementXYZ
@@ -37,7 +37,7 @@ _xOrigin, _yOrigin, _zOrigin = 0, 0, 0
 
 # 将元件坐标系转换为物实支持的坐标系
 def xyzTranslate(x: _tools.numType, y: _tools.numType, z: _tools.numType):
-    _fileGlobals.check_ExperimentType(0)
+    _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
     x *= _xUnit
     y *= _yUnit
     z *= _zUnit
@@ -49,7 +49,7 @@ def xyzTranslate(x: _tools.numType, y: _tools.numType, z: _tools.numType):
 
 # 将物实支持的坐标系转换为元件坐标系
 def translateXYZ(x: _tools.numType, y: _tools.numType, z: _tools.numType, bigElement: bool = False):
-    _fileGlobals.check_ExperimentType(0)
+    _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
     x /= _xUnit
     y /= _yUnit
     z /= _zUnit

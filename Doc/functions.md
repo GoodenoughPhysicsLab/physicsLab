@@ -9,7 +9,7 @@ with experiment(
     'name',
     read=False, # 读取存档，默认为False
     write=True, # 写入实验，默认为True
-    type=0 # 指定创建存档的类型（只在创建存档时有效）
+    type=expermentType.Circuit # 指定创建存档的类型（只在创建存档时有效）
 ):
     # to do something
     # 该方式会自动打开存档
@@ -368,12 +368,13 @@ m.write_midi("path") # 导出midi到指定路径
 ## 创建其他类型的实验
 创建其他类型的实验主要通过`experiment`或`crt_Experiment`或```open_Experiment```的type参数指定  
 type支持的参数如下：  
-```diff
-type = 0 # 电学实验
-type = 3 # 天体物理实验
-type = 4 # 电与磁实验
-type = "天体物理实验"
-type = "电与磁实验"
+```Python
+type = experimentType.Circuit # 电学实验
+type = experimentType.Celestial # 天体物理实验
+type = experimentType.Electromagnetism # 电与磁实验
+type = experimentType.电学实验
+type = experimentType.天体物理实验
+type = experimentType.电与磁实验
 ```
 `type`可以什么都不传，此时默认为电学实验
 

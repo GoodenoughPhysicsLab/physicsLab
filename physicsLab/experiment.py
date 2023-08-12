@@ -17,7 +17,7 @@ class experiment:
                  delete: bool = False, # 是否删除实验
                  write: bool = True, # 是否写入实验
                  elementXYZ: bool = False, # 元件坐标系
-                 type: Union[int, str] = None # 若创建实验，支持传入指定实验类型
+                 type: _fileGlobals.experimentType = _fileGlobals.experimentType.Circuit # 若创建实验，支持传入指定实验类型
     ):
         if not (
             isinstance(file, str) or
@@ -37,16 +37,16 @@ class experiment:
         self.delete = delete
         self.write = write
         self.elementXYZ = elementXYZ
-        self.type = type
+        self.experimentType = type
 
     # 上下文管理器，搭配with使用
     def __enter__(self):
-        open_or_crt_Experiment(self.file, self.type)
+        open_or_crt_Experiment(self.file, self.experimentType)
 
         if self.read:
             read_Experiment()
         if self.elementXYZ:
-            _fileGlobals.check_ExperimentType(0)
+            _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
             import physicsLab.electricity.elementXYZ as _elementXYZ
             _elementXYZ.set_elementXYZ(True)
 
@@ -106,7 +106,7 @@ def _crt_Experiment(savName: str, experimentType) -> None:
     rename_Experiment(savName)
 
 # 创建存档，输入为存档名
-def crt_Experiment(savName: str, experimentType = None) -> None:
+def crt_Experiment(savName: str, experimentType: _fileGlobals.experimentType = _fileGlobals.experimentType.Circuit) -> None:
     if exist_Experiment(savName) is not None:
         raise errors.crtExperimentFailError
     
@@ -115,7 +115,7 @@ def crt_Experiment(savName: str, experimentType = None) -> None:
     _crt_Experiment(savName, experimentType)
 
 # 先尝试打开实验，若失败则创建实验。只支持输入存档名
-def open_or_crt_Experiment(savName: str, experimentType: str = None) -> None:
+def open_or_crt_Experiment(savName: str, experimentType: _fileGlobals.experimentType = _fileGlobals.experimentType.Circuit) -> None:
     if not isinstance(savName, str):
         raise TypeError
     
