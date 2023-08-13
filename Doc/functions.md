@@ -339,7 +339,8 @@ with experiment("测逝"):
 ```Piece```是乐曲类
 这是一个只用来保存数据的类，想要往里面存储音符必须是`Note`，如果是休止符则用`None`表示  
 初始化时支持传入`list`，但也支持`append`方法  
-将Piece类转换为可以在物实播放的电路，除了使用`Player(piece, x, y, z, elementXYZ)`的方法，也可以使用`piece.play(x, y, z, elementXYZ)`的方法，两者是等价的。
+将Piece类转换为可以在物实播放的电路，除了使用`Player(piece, x, y, z, elementXYZ)`的方法，也可以使用`piece.play(x, y, z, elementXYZ)`的方法，两者是等价的。  
+在`midi`中最容易碰到的是播放速度的问题，你可以调用`Piece().set_tempo(num)`来重新设置播放速度，`num`参数的含义是将原有的播放速度乘以num倍。
 
 #### Player
 ```player```将```piece```转换为能够在物实播放的电路

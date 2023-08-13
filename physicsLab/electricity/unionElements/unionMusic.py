@@ -90,15 +90,17 @@ class Midi:
         # 使用plmidi播放midi
         def sound_by_plmidi() -> bool:
             try:
-                from plmidi import sound
+                import plmidi
             except ImportError:
                 return False
             else:
-                if self.midifile is None:
+                colorUtils.printf("sound by using plmidi", colorUtils.COLOR.CYAN)
+                if self.midifile is None or self.messages is None:
                     errors.warning("can not sound because self.midifile is None")
                     return False
-                
-                sound([(NOTE_ON, 10, 60, 0, 0)])
+
+                plmidi.sound(self.messages)
+
                 return True
 
         # 使用pygame播放midi
@@ -108,19 +110,24 @@ class Midi:
             except ImportError:
                 return False
             else:
+                colorUtils.printf("sound by using pygame", colorUtils.COLOR.CYAN)
                 if self.midifile is None:
                     errors.warning("can not sound because self.midifile is None")
                     return False
                 # 代码参考自musicpy的play函数
                 mixer.init()
                 mixer.music.load(self.midifile)
-                mixer.music.play()
-                while mixer.music.get_busy():
-                    time.delay(10)
+                try:
+                    mixer.music.play()
+                    while mixer.music.get_busy():
+                        time.delay(10)
+                except KeyboardInterrupt:
+                    print("\n")
                 return True
         
         # 使用系统调用播放midi
         def sound_by_os() -> bool:
+            colorUtils.printf("sound by using os", colorUtils.COLOR.CYAN)
             from os import path, system
 
             if self.midifile is None:
@@ -145,16 +152,26 @@ class Midi:
             return
         
         if sound_by_plmidi():
-            colorUtils.printf("sound by using plmidi", colorUtils.COLOR.CYAN)
+            pass # needless to do anything
         elif sound_by_pygame():
-            colorUtils.printf("sound by using pygame", colorUtils.COLOR.CYAN)
+            pass
         elif sound_by_os():
-            colorUtils.printf("sound by using os", colorUtils.COLOR.CYAN)
+            pass
         else:
             errors.warning("can not use sound methods")
         
         return self
 
+    # 将time重设为原来的num倍
+    def set_tempo(self, num: numType = 1) -> "Midi":
+        if self.messages is None or not isinstance(num, (int, float)):
+            raise TypeError
+        
+        for msg in self.messages:
+            msg.time *= num
+        
+        return self
+    
     # 转换为physicsLab的piece类
     # TODO 转换时忽略note_off，因为物实目前只适合给一个默认值
     # 但超长音符应该考虑下适当调整物实简单乐器播放时长

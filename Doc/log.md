@@ -31,3 +31,4 @@
 2.  Track类增加append方法
 3.  优化了乐器矩阵的基础架构
 4.  `self.set_Position`增加了对元件坐标系的支持
+5.  增加了`Midi.set_tempo`方法
