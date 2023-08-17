@@ -1,4 +1,4 @@
-#coding=utf-8
+﻿#coding=utf-8
 import json
 
 import mido
@@ -27,8 +27,6 @@ NOTE_ON = "note_on"
 NOTE_OFF = "note_off"
 PROGRAM_CHANGE = "program_change"
 SET_TEMPO = "set_tempo"
-TEXT = "text"
-# TODO 将TEXT占位符的time合并到其他事件中
 
 # midi类，用于提供physicsLab与midi文件之间的桥梁
 ''' 重要midi事件及作用:
@@ -36,7 +34,6 @@ TEXT = "text"
     note_off       -> message: 停止播放音符
     program_change -> message: 改变某个音轨对应的音色
     set_tempo  -> metaMessage: 改变midi播放速度
-    text       -> metaMessage: 占位符
 '''
 class Midi:
     # 仅被Midi.sound方法调用
@@ -70,19 +67,16 @@ class Midi:
     # 使用mido打开一个midi文件并获取其tracks
     def __get_midi_messages(self) -> mido.MidiTrack:
         _midifile = mido.MidiFile(self.midifile, clip=True)
-        tabsign: bool = False
+        wait_time: numType = 0
         res = mido.MidiTrack()
         for msg in mido.merge_tracks(_midifile.tracks):
             if msg.type in (NOTE_ON, NOTE_OFF, PROGRAM_CHANGE, SET_TEMPO):
                 res.append(msg)
-                tabsign = False
+                msg.time += wait_time
+                wait_time = 0
 
             elif msg.time != 0:
-                if not tabsign:
-                    res.append(mido.MetaMessage("text", text="", time=msg.time))
-                    tabsign = True
-                    continue
-                res[-1].time += msg.time # type: ignore
+                wait_time += msg.time
         return res
 
     # 播放midi类存储的信息
@@ -210,7 +204,7 @@ class Midi:
         if self.messages is None:
             errors.warning("can not use write_plm because self.messages is None")
             return self
-        
+
         if not path.endswith(".plm.py"):
             path += ".plm.py"
 
@@ -221,8 +215,8 @@ class Midi:
                     f"fmidi.tracks.append(track)\n"
                     f"fmidi.save(\"temp.mid\")\n"
                     f"from physicsLab.union import Midi\n"
-                    f"Midi(\"temp.mid\").sound()")
-        
+                    f"Midi(\"temp.mid\").sound(player=Midi.PLAYER.pygame)")
+
         return self
     
     # 以 .mid 的形式导出, read_midi已经在Midi的__init__中实现
