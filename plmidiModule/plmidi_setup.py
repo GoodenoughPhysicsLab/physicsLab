@@ -7,7 +7,7 @@ with open("./README.md", encoding="utf-8") as f:
 
 setuptools.setup(
     name="plmidi",
-    version="0.0",
+    version="1.0.1",
     author="Goodenough",
     author_email="2381642961@qq.com",
     description="midi player for Python Package physicsLab",

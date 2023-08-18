@@ -181,14 +181,13 @@ class MyTestCase(unittest.TestCase):
 
     def test_experimentType2(self):
         try:
-            with experiment(file='电与磁', type=experimentType.Electromagnetism, elementXYZ=True):
+            with experiment(file='电与磁', type=experimentType.Electromagnetism, elementXYZ=True, delete=True):
                 Positive_Charge()
                 Logic_Input()
         except experimentTypeError:
             pass
         else:
             raise RuntimeError
-        del_Experiment()
 
     def test_experimentType3(self):
         with experiment("__tset__", type=experimentType.Circuit, delete=True):
