@@ -12,8 +12,10 @@ setuptools.setup(
     author_email="2381642961@qq.com",
     description="midi player for Python Package physicsLab",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     url="https://gitee.com/script2000/physicsLab",
     license="MIT",
+    packages=setuptools.find_packages(),
     python_requires='>=3.6',
     classifiers=[
         "Programming Language :: Python :: 3",
