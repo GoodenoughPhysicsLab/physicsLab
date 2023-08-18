@@ -54,7 +54,10 @@ class experiment:
         if self.write:
             write_Experiment()
         if self.delete:
-            del_Experiment()
+            try:
+                del_Experiment()
+            except FileNotFoundError:
+                pass
 
 # 检测实验是否存在，输入为存档名，若存在则返回存档对应的文件名，若不存在则返回None
 def exist_Experiment(savName: str) -> Union[str, None]:
