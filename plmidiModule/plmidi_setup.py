@@ -7,7 +7,7 @@ with open("./README.md", encoding="utf-8") as f:
 
 setuptools.setup(
     name="plmidi",
-    version="1.0.1",
+    version="1.0.2",
     author="Goodenough",
     author_email="2381642961@qq.com",
     description="midi player for Python Package physicsLab",
@@ -26,7 +26,9 @@ setuptools.setup(
     ext_modules=[
         setuptools.Extension(
             "plmidi",
-            sources=["./plmidi_setup.c"]
+            sources=[
+                "./plmidi_sound.c"
+            ]
         )
     ]
 )

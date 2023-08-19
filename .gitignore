@@ -1,12 +1,17 @@
-__pycache__/
+# Visual Studio
+/.vs
 /venv
+# PyCharm
 /.idea
-pyproject.toml
-*.egg-info
+# Visual Studio Code
+/.vscode
+/physicsLab_projects
+
 build/
 dist/
-/physicsLab_projects
-/.vscode
+__pycache__/
+*.egg-info/
+
 *.txt
 *.code-workspace
 *.json
@@ -17,6 +22,10 @@ dist/
 *.obj
 *.pdb
 *.cfg
+*.pyc
+*.pyd
+
+# special file of physicsLab
+*.mido.py
 *.plm.py
-# my python test file
 *.test.py

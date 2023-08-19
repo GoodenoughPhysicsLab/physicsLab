@@ -2,7 +2,8 @@
 
 #define PY_SSIZE_T_CLEAN  /* Make "s#" use Py_ssize_t rather than int. */
 #include <Python.h>
-#include <signal.h>
+#undef PY_SSIZE_T_CLEAN
+#include <signal.h> /* Press ctrl+C to exit */
 #include <Windows.h>
 #include <mmsystem.h>
 #pragma comment(lib, "winmm.lib")
@@ -11,27 +12,26 @@
 #define GET_ATTR(val, str) \
     PyLong_AsLong(PyObject_GetAttrString(val, str))
 
-static int8_t plmidi_initflag = 0; /* -1: fail, 0: ready to init, 1: success initialized */
+static int8_t plmidi_initflag = 0; // -1: fail, 0: ready to init, 1: success initialized
 
 // plmidiInitError
 PyObject *plmidiExc_InitErr = NULL;
 
 // if Ctrl+C, then exit
-void plmidi_exit(int signal)
+static void plmidi_exit(int signal)
 {
     if (signal == SIGINT) {
-        puts("\n");
         Py_Exit(0);
     }
 }
 
-// Input: [ mido.Message, ... ]
-PyObject * 
-plmidi_sound(PyObject *self, PyObject *args)
+// Input -> piece: mido.MidiTrack, tempo: int
+PyObject* plmidi_sound(PyObject *self, PyObject *args)
 {
     // check inputs and init
     PyObject *piece; // a python list
-    if (!PyArg_ParseTuple(args, "O", &piece)) {
+    long tempo;
+    if (!PyArg_ParseTuple(args, "Ol", &piece, &tempo)) {
         PyErr_SetString(PyExc_TypeError, "input type must be an integer or plmidi setup fail");
         return NULL;
     }
@@ -62,22 +62,12 @@ plmidi_sound(PyObject *self, PyObject *args)
         // sound midi
         if (strcmp(msg_type, "program_change") == 0) {
             midiOutShortMsg(handle, GET_ATTR(msg, "program") << 8 | 0xC0 + GET_ATTR(msg, "channel"));
-        } else if (strcmp(msg_type, "set_tempo") == 0) {
-            PyObject *bytearray = PyObject_CallObject(PyObject_GetAttrString(msg, "bytes"), NULL); // result: a python list with length == 6 (6 bytes)
-            midiOutShortMsg(handle, // bug
-                PyLong_AsLong(PyList_GetItem(bytearray, 0)) |
-                PyLong_AsLong(PyList_GetItem(bytearray, 1)) << 8 |
-                PyLong_AsLong(PyList_GetItem(bytearray, 2)) << 16 |
-                PyLong_AsLong(PyList_GetItem(bytearray, 3)) << 24 |
-                PyLong_AsLong(PyList_GetItem(bytearray, 4)) << 32 |
-                PyLong_AsLong(PyList_GetItem(bytearray, 5)) << 40
-            );
         } else if (strcmp(msg_type, "note_on") == 0) {
             midiOutShortMsg(handle, GET_ATTR(msg, "velocity") << 16 | GET_ATTR(msg, "note") << 8 | 0x90 + GET_ATTR(msg, "channel"));
         } else if (strcmp(msg_type, "note_off") == 0) {
             midiOutShortMsg(handle, GET_ATTR(msg, "velocity") << 16 | GET_ATTR(msg, "note") << 8 | 0x80 + GET_ATTR(msg, "channel"));
         }
-        Sleep(GET_ATTR(msg, "time"));        
+        Sleep(GET_ATTR(msg, "time") * tempo / 500'000); 
     }
 
     midiOutClose(handle);

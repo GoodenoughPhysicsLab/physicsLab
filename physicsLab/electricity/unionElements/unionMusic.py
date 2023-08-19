@@ -46,11 +46,11 @@ class Midi:
 
     def __init__(self, midifile: Optional[str] = None) -> None:
         ''' self.messages的参数格式:
-            [
-                (type: {{note_on or note_off}}, channel, note, velocity, time),
-                (type: {{program_change}}, channel, program, time),
-                (type: {{set_tempo}}, tempo, time)
-            ]
+            mido.MidiTrack([
+                Message -> (type: {{note_on or note_off}}, channel, note, velocity, time),
+                Message ->(type: {{program_change}}, channel, program, time),
+                MetaMessage -> (type: {{set_tempo}}, tempo, time)
+            ])
             time: 间隔这么多时间之后执行该type
             note: midi音高 (音调)
             velocity: midi音符的响度
@@ -60,6 +60,8 @@ class Midi:
         '''
         self.midifile: Optional[str] = midifile
         self.messages: Optional[mido.MidiTrack] = None
+        self.channels: List[Optional[int]] = [None] * 16
+        self.tempo: int = 500_000
         if midifile is None:
             return
         self.messages = self.__get_midi_messages()
@@ -69,14 +71,18 @@ class Midi:
         _midifile = mido.MidiFile(self.midifile, clip=True)
         wait_time: numType = 0
         res = mido.MidiTrack()
-        for msg in mido.merge_tracks(_midifile.tracks):
+        for msg in _midifile.merged_track:
             if msg.type in (NOTE_ON, NOTE_OFF, PROGRAM_CHANGE, SET_TEMPO):
                 res.append(msg)
                 msg.time += wait_time
                 wait_time = 0
-
             elif msg.time != 0:
                 wait_time += msg.time
+
+            if msg.type == PROGRAM_CHANGE:
+                self.channels[msg.channel] = msg.program
+            if msg.type == SET_TEMPO:
+                self.tempo = msg.tempo
         return res
 
     # 播放midi类存储的信息
@@ -93,7 +99,7 @@ class Midi:
                     errors.warning("can not sound because self.midifile is None")
                     return False
 
-                plmidi.sound(self.messages)
+                plmidi.sound(self.messages, self.tempo)
 
                 return True
 
@@ -116,7 +122,7 @@ class Midi:
                     while mixer.music.get_busy():
                         time.delay(10)
                 except KeyboardInterrupt:
-                    print("\n")
+                    pass
                 return True
         
         # 使用系统调用播放midi
@@ -160,12 +166,12 @@ class Midi:
     def set_tempo(self, num: numType = 1) -> "Midi":
         if self.messages is None or not isinstance(num, (int, float)):
             raise TypeError
-        
+
         for msg in self.messages:
             msg.time *= num
-        
+
         return self
-    
+
     # 转换为physicsLab的piece类
     # TODO 转换时忽略note_off，因为物实目前只适合给一个默认值
     # 但超长音符应该考虑下适当调整物实简单乐器播放时长
@@ -174,12 +180,17 @@ class Midi:
 
     ''' *.plm.py文件:
         plm即为 physicsLab music file
+        为了更方便于手动调控物实音乐电路的生成而诞生的文件格式
+        该文件运行之后即可生成对应的物实播放音乐电路
+    '''
+    '''
+        *.mido.py
+        为了更方便的研究Midi而诞生的文件格式
         为了修改方便, 默认使用 str(mido.MidiTrack) 的方式导出
         而且是个Py文件, 大家想要自己修改也是很方便的
     '''
-    # TODO 读取plm与Midi时自动更新self.filename
-    def read_plm(self, plmpath: str = "temp.plm.py") -> "Midi":
-        def _read_plm(plmpath):
+    def read_midopy(self, plmpath: str = "temp.mido.py") -> "Midi":
+        def _read_midopy(plmpath):
             context = None
             with open(plmpath, encoding="utf-8") as f:
                 context = f.read()
@@ -190,23 +201,24 @@ class Midi:
             re_context = re.search(r"MidiTrack\(\[[^\]]+\]\)", context, re.M)
             if re_context is None:
                 raise SyntaxError(f"error context in {plmpath}")
-            self.messages = eval(re_context.group())
+            self.messages = eval(re_context.group()) # 用到mido import出的内容
 
-        if not _path.exists(plmpath):
-            raise FileNotFoundError    
+        from os import path
+        if not path.exists(plmpath):
+            raise FileNotFoundError
 
         self.midifile = None
-        _read_plm(plmpath)
+        _read_midopy(plmpath)
         return self
 
-    # 导出一个 .plm.py 文件
-    def write_plm(self, path: str="temp.plm.py") -> "Midi":
+    # 导出一个 .mido.py 文件
+    def write_midopy(self, path: str="temp.mido.py") -> "Midi":
         if self.messages is None:
             errors.warning("can not use write_plm because self.messages is None")
             return self
 
-        if not path.endswith(".plm.py"):
-            path += ".plm.py"
+        if not path.endswith(".mido.py"):
+            path += ".mido.py"
 
         with open(path, "w", encoding="utf-8") as f:
             f.write(f"from mido import MidiFile, MidiTrack, MetaMessage, Message\n"
@@ -218,7 +230,7 @@ class Midi:
                     f"Midi(\"temp.mid\").sound(player=Midi.PLAYER.pygame)")
 
         return self
-    
+
     # 以 .mid 的形式导出, read_midi已经在Midi的__init__中实现
     # update: 是否将Midi.midifile更新
     def write_midi(self, midipath: str = "temp.mid") -> "Midi":
@@ -235,6 +247,31 @@ class Midi:
         mid.save(midipath)
         self.midifile = midipath
         
+        return self
+
+    # 以.plm.py的格式导出, div_time: midi的time的单位长度与Note的time的单位长度不同，暂时还需要用户手动调整
+    # max_notes: 最大的音符数，因为物实没法承受过多的元件
+    def write_plm(self, filepath = "temp.plm.py", div_time=100, max_notes: Optional[int]=650) -> "Midi":
+        if self.messages is None:
+            raise TypeError("self.messages is not None")
+        
+        if not (isinstance(div_time, (int, float)) or
+                isinstance(max_notes, int)) and max_notes is not None:
+           raise TypeError
+
+        l_notes = []
+        for msg in self.messages:
+            if msg.type == NOTE_ON: # type: ignore -> Message/MetaMessage must have attr type
+                l_notes.append(Note(round(msg.time / div_time), instrument=self.channels[msg.channel], pitch=msg.note)) # type: ignore -> must have
+                if max_notes is not None and len(l_notes) >= max_notes:
+                    break
+
+        with open(filepath, "w") as f:
+            f.write(f"from physicsLab import experiment\n"
+                    f"from physicsLab.union import Note, Piece\n"
+                    f"with experiment(\"temp\"):\n"
+                    f"    Piece({l_notes}).play(-1, -1, 0)".replace("Note(", "\n        Note("))
+
         return self
 
 # 音符类
