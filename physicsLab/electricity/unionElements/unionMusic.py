@@ -258,12 +258,19 @@ class Midi:
                 isinstance(max_notes, int)) and max_notes is not None:
            raise TypeError
 
+        if not filepath.endswith(".plm.py"):
+            filepath += ".plm.py"
+        
+        wait_time: int = 0
         l_notes = []
         for msg in self.messages:
             if msg.type == NOTE_ON: # type: ignore -> Message/MetaMessage must have attr type
-                l_notes.append(Note(round(msg.time / div_time), instrument=self.channels[msg.channel], pitch=msg.note)) # type: ignore -> must have
+                l_notes.append(Note(round((msg.time + wait_time) / div_time), instrument=self.channels[msg.channel], pitch=msg.note)) # type: ignore -> must have
+                wait_time = 0
                 if max_notes is not None and len(l_notes) >= max_notes:
                     break
+            elif msg.time != 0:
+                wait_time += msg.time
 
         with open(filepath, "w") as f:
             f.write(f"from physicsLab import experiment\n"
@@ -489,7 +496,7 @@ class Player:
                     ycor += 2
                 
                 ins = _elementsClass.Simple_Instrument(
-                    1 + x + xcor, 4 + y + ycor, z, pitch=a_note.pitch, elementXYZ=True
+                    1 + x + xcor, 4 + y + ycor, z, pitch=a_note.pitch, instrument=a_note.instrument, elementXYZ=True
                 )
                 # 连接x轴的d触的导线
                 if xcor == 0:
