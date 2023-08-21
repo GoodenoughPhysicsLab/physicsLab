@@ -3,11 +3,11 @@ from typing import *
 
 import physicsLab.errors as _errors
 import physicsLab.electricity as electricity
-import physicsLab.electricity.elementsClass as _elementsClass
-import physicsLab.electricity.unionElements._unionClassHead as _unionClassHead
 
+from ..elementsClass import *
+from .unionPin import union_Pin
 from physicsLab._tools import numType
-from physicsLab.electricity.unionElements.unionPin import union_Pin
+from ._unionClassHead import UnionBase
 
 # unionHeading与fold的判断的代码
 def _unionHeading_fold(
@@ -29,12 +29,8 @@ def _unionHeading_fold(
         else:
             func4()
 
-# 用metaClass检查是否有self._elements
-class _union_LogicMeta(type):
-    pass
-
 # 模块化电路逻辑电路基类
-class Union_LogicBase(_unionClassHead.UnionBase):
+class Union_LogicBase(UnionBase):
     # 设置高电平的值
     def set_HighLeaveValue(self, num: numType) -> "Union_LogicBase":
         for element in self._elements:
@@ -53,12 +49,12 @@ class Sum(Union_LogicBase):
                  y: numType = 0,
                  z: numType = 0,
                  bitLength: int = 4,
-                 elementXYZ: bool = None,  # x, y, z是否为元件坐标系
+                 elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
     ) -> None:
-        def link_union_Sum(elements: List[_elementsClass.Full_Adder]) -> None:
+        def link_union_Sum(elements: List[Full_Adder]) -> None:
             for i in range(elements.__len__() - 1):
                 elements[i].o_low - elements[i + 1].i_low
 
@@ -66,7 +62,7 @@ class Sum(Union_LogicBase):
             zcor = z
             for i in range(bitLength):
                 self._elements.append(
-                    electricity.Full_Adder(x + i % foldMaxNum, y, zcor, True)
+                    Full_Adder(x + i % foldMaxNum, y, zcor, True)
                 )
                 if i == foldMaxNum - 1:
                     zcor += 1
@@ -74,14 +70,14 @@ class Sum(Union_LogicBase):
         def func2():
             for increase in range(bitLength):
                 self._elements.append(
-                    electricity.Full_Adder(x + increase, y, z, True)
+                    Full_Adder(x + increase, y, z, True)
                 )
 
         def func3():
             zcor = z
             for i in range(bitLength):
                 self._elements.append(
-                    electricity.Full_Adder(x, y + (i % foldMaxNum) * 2, zcor, True)
+                    Full_Adder(x, y + (i % foldMaxNum) * 2, zcor, True)
                 )
                 if i == foldMaxNum - 1:
                     zcor += 1
@@ -89,21 +85,11 @@ class Sum(Union_LogicBase):
         def func4():
             for increase in range(bitLength):
                 self._elements.append(
-                    electricity.Full_Adder(x, y + increase * 2, z, True)
+                    Full_Adder(x, y + increase * 2, z, True)
                 )
 
         # main
-
-        x, y, z = _unionClassHead.union_Init_HEAD(
-            x, y, z,
-            bitLength,
-            elementXYZ,
-            unionHeading,
-            fold,
-            foldMaxNum
-        )
-
-        self._elements: List[_elementsClass.Full_Adder] = []
+        self._elements: List[Full_Adder] = []
         _unionHeading_fold(
             func1, func2, func3, func4, unionHeading, fold
         )
@@ -133,15 +119,15 @@ class Sum(Union_LogicBase):
 
 # 只读非门，若没有则创建一个只读非门，若已存在则不会创建新的元件
 class Const_NoGate:
-    __singleton_NoGate: electricity.No_Gate = None
+    __singleton_NoGate: No_Gate = None
     def __init__(self,
                  x: numType = 0,
                  y: numType = 0,
                  z: numType = 0,
-                 elementXYZ: bool = None
+                 elementXYZ: Optional[bool] = None
     ) -> None:
         if Const_NoGate.__singleton_NoGate is None:
-            Const_NoGate.__singleton_NoGate = electricity.No_Gate(x, y, z, elementXYZ)
+            Const_NoGate.__singleton_NoGate = No_Gate(x, y, z, elementXYZ)
 
     @property
     def o(self):
@@ -154,14 +140,14 @@ class Sub(Union_LogicBase):
                  y: numType = 0,
                  z: numType = 0,
                  bitLength: int = 4, # 减法器的最大计算比特数
-                 elementXYZ: bool = None,  # x, y, z是否为元件坐标系
+                 elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
     ) -> None:
         def link_union_Sub(
-                fullAdders: List[_elementsClass.Full_Adder],
-                noGates: List[_elementsClass.No_Gate]
+                fullAdders: List[Full_Adder],
+                noGates: List[No_Gate]
         ) -> None:
             self._elements[0].o - fullAdders[0].i_low
             for i in range(fullAdders.__len__() - 1):
@@ -173,10 +159,10 @@ class Sub(Union_LogicBase):
             zcor = z
             for i in range(bitLength):
                 self._fullAdders.append(
-                    electricity.Full_Adder(x + i % foldMaxNum, y - 2, zcor, True)
+                    Full_Adder(x + i % foldMaxNum, y - 2, zcor, True)
                 )
                 self._noGates.append(
-                    electricity.No_Gate(x + i % foldMaxNum, y, zcor, True)
+                    No_Gate(x + i % foldMaxNum, y, zcor, True)
                 )
                 if i == foldMaxNum - 1:
                     zcor += 1
@@ -184,20 +170,20 @@ class Sub(Union_LogicBase):
         def func2():
             for increase in range(bitLength):
                 self._fullAdders.append(
-                    electricity.Full_Adder(x + increase, y - 2, z, True)
+                    Full_Adder(x + increase, y - 2, z, True)
                 )
                 self._noGates.append(
-                    electricity.No_Gate(x + increase, y, z, True)
+                    No_Gate(x + increase, y, z, True)
                 )
 
         def func3():
             zcor = z
             for i in range(bitLength):
                 self._fullAdders.append(
-                    electricity.Full_Adder(x + 1, y + (i % foldMaxNum) * 2, zcor, True)
+                    Full_Adder(x + 1, y + (i % foldMaxNum) * 2, zcor, True)
                 )
                 self._noGates.append(
-                    electricity.No_Gate(x, y + (i % foldMaxNum) * 2 + 1, zcor, True)
+                    No_Gate(x, y + (i % foldMaxNum) * 2 + 1, zcor, True)
                 )
                 if i == foldMaxNum - 1:
                     zcor += 1
@@ -205,27 +191,18 @@ class Sub(Union_LogicBase):
         def func4():
             for increase in range(bitLength):
                 self._fullAdders.append(
-                    electricity.Full_Adder(x + 1, y + increase * 2, z, True)
+                    Full_Adder(x + 1, y + increase * 2, z, True)
                 )
                 self._noGates.append(
-                    electricity.No_Gate(x, y + increase * 2 + 1, z, True)
+                    No_Gate(x, y + increase * 2 + 1, z, True)
                 )
 
-        x, y, z = _unionClassHead.union_Init_HEAD(
-            x, y, z,
-            bitLength,
-            elementXYZ,
-            unionHeading,
-            fold,
-            foldMaxNum
-        )
-
-        self._elements: List[Union[_elementsClass.Full_Adder, _elementsClass.No_Gate]] = [
+        self._elements: List[Union[Full_Adder, No_Gate, Const_NoGate]] = [
             Const_NoGate(x, y, z, True)
         ]
 
-        self._noGates: List[_elementsClass.No_Gate] = []
-        self._fullAdders: List[_elementsClass.Full_Adder] = []
+        self._noGates: List[No_Gate] = []
+        self._fullAdders: List[Full_Adder] = []
 
         _unionHeading_fold(
             func1, func2, func3, func4, unionHeading, fold
@@ -265,10 +242,10 @@ class _two_four_Decoder:
         self.x = x
         self.y = y
         self.z = z
-        obj1 = electricity.Nor_Gate(x, y, z)
-        obj2 = electricity.Nimp_Gate(x, y + 0.1, z)
-        obj3 = electricity.Nimp_Gate(x, y + 0.2, z)
-        obj4 = electricity.And_Gate(x, y + 0.3, z)
+        obj1 = Nor_Gate(x, y, z)
+        obj2 = Nimp_Gate(x, y + 0.1, z)
+        obj3 = Nimp_Gate(x, y + 0.2, z)
+        obj4 = And_Gate(x, y + 0.3, z)
         electricity.crt_Wire(obj1.i_up, obj2.i_low), electricity.crt_Wire(obj2.i_low, obj3.i_up), electricity.crt_Wire(obj3.i_up, obj4.i_up)
         electricity.crt_Wire(obj1.i_low, obj2.i_up), electricity.crt_Wire(obj2.i_up, obj3.i_low), electricity.crt_Wire(obj3.i_low, obj4.i_low)
 
@@ -288,17 +265,17 @@ class _four_sixteen_Decoder:
         self.x = x
         self.y = y
         self.z = z
-        obj1 = electricity.Nor_Gate(x, y, z); obj2 = electricity.Nimp_Gate(x, y + 0.1, z)
-        obj3 = electricity.Nimp_Gate(x, y + 0.2, z); obj4 = electricity.And_Gate(x, y + 0.3, z)
-        obj5 = electricity.Nor_Gate(x + 0.15, y, z); obj6 = electricity.Nimp_Gate(x + 0.15, y + 0.1, z)
-        obj7 = electricity.Nimp_Gate(x + 0.15, y + 0.2, z); obj8 = electricity.And_Gate(x + 0.15, y + 0.3, z)
+        obj1 = Nor_Gate(x, y, z); obj2 = Nimp_Gate(x, y + 0.1, z)
+        obj3 = Nimp_Gate(x, y + 0.2, z); obj4 = And_Gate(x, y + 0.3, z)
+        obj5 = Nor_Gate(x + 0.15, y, z); obj6 = Nimp_Gate(x + 0.15, y + 0.1, z)
+        obj7 = Nimp_Gate(x + 0.15, y + 0.2, z); obj8 = And_Gate(x + 0.15, y + 0.3, z)
         electricity.crt_Wire(obj1.i_up, obj2.i_low), electricity.crt_Wire(obj2.i_low, obj3.i_up), electricity.crt_Wire(obj3.i_up, obj4.i_up)
         electricity.crt_Wire(obj5.i_up, obj6.i_low), electricity.crt_Wire(obj6.i_low, obj7.i_up), electricity.crt_Wire(obj7.i_up, obj8.i_up)
         electricity.crt_Wire(obj1.i_low, obj2.i_up), electricity.crt_Wire(obj2.i_up, obj3.i_low), electricity.crt_Wire(obj3.i_low, obj4.i_low)
         electricity.crt_Wire(obj5.i_low, obj6.i_up), electricity.crt_Wire(obj6.i_up, obj7.i_low), electricity.crt_Wire(obj7.i_low, obj8.i_low)
         for i in [0.3, 0.45, 0.6, 0.75]:
             for j in [0.05, 0.25]:
-                obj = electricity.Multiplier(x + i, y + j, z)
+                obj = Multiplier(x + i, y + j, z)
                 if j == 0.05:
                     electricity.crt_Wire(obj1.o, obj.i_low)
                     electricity.crt_Wire(obj2.o, obj.i_up)
@@ -409,7 +386,7 @@ class Inputs(Union_LogicBase):
                  y: numType = 0,
                  z: numType = 0,
                  bitLength: int = 4,
-                 elementXYZ: bool = None,  # x, y, z是否为元件坐标系
+                 elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 8  # 达到foldMaxNum个元件数时即在z轴自动折叠
@@ -419,7 +396,7 @@ class Inputs(Union_LogicBase):
             zcor = z
             for i in range(bitLength):
                 self._elements.append(
-                    electricity.Logic_Input(x + i % foldMaxNum, y, zcor, True)
+                    Logic_Input(x + i % foldMaxNum, y, zcor, True)
                 )
                 if i == foldMaxNum - 1:
                     zcor += 1
@@ -427,14 +404,14 @@ class Inputs(Union_LogicBase):
         def func2():
             for i in range(bitLength):
                 self._elements.append(
-                    _elementsClass.Logic_Input(x + i, y, z, True)
+                    Logic_Input(x + i, y, z, True)
                 )
 
         def func3():
             zcor = z
             for i in range(bitLength):
                 self._elements.append(
-                    electricity.Logic_Input(x, y + i % foldMaxNum, zcor, True)
+                    Logic_Input(x, y + i % foldMaxNum, zcor, True)
                 )
                 if i == foldMaxNum - 1:
                     zcor += 1
@@ -442,20 +419,11 @@ class Inputs(Union_LogicBase):
         def func4():
             for i in range(bitLength):
                 self._elements.append(
-                    _elementsClass.Logic_Input(x, y + i, z, True)
+                    Logic_Input(x, y + i, z, True)
                 )
 
         # main
-        x, y, z = _unionClassHead.union_Init_HEAD(
-            x, y, z,
-            bitLength,
-            elementXYZ,
-            unionHeading,
-            fold,
-            foldMaxNum
-        )
-
-        self._elements: List[_elementsClass.Logic_Input] = []
+        self._elements: List[Logic_Input] = []
         _unionHeading_fold(
             func1, func2, func3, func4, unionHeading, fold
         )
@@ -474,7 +442,7 @@ class Outputs(Union_LogicBase):
                  y: numType = 0,
                  z: numType = 0,
                  bitLength: int = 4,
-                 elementXYZ: bool = None,  # x, y, z是否为元件坐标系
+                 elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 8  # 达到foldMaxNum个元件数时即在z轴自动折叠
@@ -484,7 +452,7 @@ class Outputs(Union_LogicBase):
             zcor = z
             for i in range(bitLength):
                 self._elements.append(
-                    electricity.Logic_Output(x + i % foldMaxNum, y, zcor, True)
+                    Logic_Output(x + i % foldMaxNum, y, zcor, True)
                 )
                 if i == foldMaxNum - 1:
                     zcor += 1
@@ -492,14 +460,14 @@ class Outputs(Union_LogicBase):
         def func2():
             for i in range(bitLength):
                 self._elements.append(
-                    _elementsClass.Logic_Output(x + i, y, z, True)
+                    Logic_Output(x + i, y, z, True)
                 )
 
         def func3():
             zcor = z
             for i in range(bitLength):
                 self._elements.append(
-                    electricity.Logic_Output(x, y + i % foldMaxNum, zcor, True)
+                    Logic_Output(x, y + i % foldMaxNum, zcor, True)
                 )
                 if i == foldMaxNum - 1:
                     zcor += 1
@@ -507,20 +475,11 @@ class Outputs(Union_LogicBase):
         def func4():
             for i in range(bitLength):
                 self._elements.append(
-                    _elementsClass.Logic_Output(x, y + i, z, True)
+                    Logic_Output(x, y + i, z, True)
                 )
 
         # main
-        x, y, z = _unionClassHead.union_Init_HEAD(
-            x, y, z,
-            bitLength,
-            elementXYZ,
-            unionHeading,
-            fold,
-            foldMaxNum
-        )
-
-        self._elements: List[_elementsClass.Logic_Output] = []
+        self._elements: List[Logic_Output] = []
         _unionHeading_fold(
             func1, func2, func3, func4, unionHeading, fold
         )
@@ -539,14 +498,14 @@ class D_WaterLamp(Union_LogicBase):
                  y: numType = 0,
                  z: numType = 0,
                  bitLength: int = 4,
-                 elementXYZ: bool = None, # x, y, z是否为元件坐标系
+                 elementXYZ: Optional[bool] = None, # x, y, z是否为元件坐标系
                  unionHeading: bool = False, # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False, # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 4, # 达到foldMaxNum个元件数时即在z轴自动折叠
                  is_loop: bool = True # 是否使流水灯循环
     ) -> None:
         # D触流水灯导线连接方式
-        def link_D_Flipflop(elements: List[_elementsClass.D_Flipflop]) -> None:
+        def link_D_Flipflop(elements: List[D_Flipflop]) -> None:
             # 连接clk
             for i in range(len(elements) - 1):
                 elements[i].i_low - elements[i + 1].i_low
@@ -559,7 +518,7 @@ class D_WaterLamp(Union_LogicBase):
                 elements[-1].o_low - elements[0].i_up
             else:
                 firstElement = elements[0]
-                orGate = _elementsClass.Or_Gate(*firstElement.get_Position(), True)
+                orGate = Or_Gate(*firstElement.get_Position(), True)
                 orGate.i_up - orGate.o
                 orGate.o - firstElement.i_up
                 orGate.i_low - firstElement.i_low
@@ -568,7 +527,7 @@ class D_WaterLamp(Union_LogicBase):
             zcor = z
             for i in range(bitLength):
                 self._elements.append(
-                    electricity.D_Flipflop(x + i % foldMaxNum, y, zcor, True)
+                    D_Flipflop(x + i % foldMaxNum, y, zcor, True)
                 )
                 if i == foldMaxNum - 1:
                     zcor += 1
@@ -576,14 +535,14 @@ class D_WaterLamp(Union_LogicBase):
         def func2():
             for increase in range(bitLength):
                 self._elements.append(
-                    electricity.D_Flipflop(x + increase, y, z, True)
+                    D_Flipflop(x + increase, y, z, True)
                 )
 
         def func3():
             zcor = z
             for i in range(bitLength):
                 self._elements.append(
-                    electricity.D_Flipflop(x, y + (i % foldMaxNum) * 2, zcor, True)
+                    D_Flipflop(x, y + (i % foldMaxNum) * 2, zcor, True)
                 )
                 if i == foldMaxNum - 1:
                     zcor += 1
@@ -591,26 +550,17 @@ class D_WaterLamp(Union_LogicBase):
         def func4():
             for increase in range(bitLength):
                 self._elements.append(
-                    electricity.D_Flipflop(x, y + increase * 2, z, True)
+                    D_Flipflop(x, y + increase * 2, z, True)
                 )
 
         # main
         if bitLength < 2:
             raise _errors.bitLengthError
 
-        x, y, z = _unionClassHead.union_Init_HEAD(
-            x, y, z,
-            bitLength,
-            elementXYZ,
-            unionHeading,
-            fold,
-            foldMaxNum
-        )
-
         if not isinstance(is_loop, bool):
             raise TypeError
 
-        self._elements: List[_elementsClass.D_Flipflop] = []
+        self._elements: List[D_Flipflop] = []
         _unionHeading_fold(
             func1, func2, func3, func4, unionHeading, fold
         )
@@ -639,3 +589,46 @@ class D_WaterLamp(Union_LogicBase):
             self._elements[0].o_up,
             *(element.o_low for element in self._elements[1:])
         )
+
+class Super_AndGate:
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 elementXYZ: Optional[bool] = None,
+                 input_pins: Optional[Union[Tuple[element_Pin], List[element_Pin]]] = None
+    ) -> None:
+        if input_pins is None or \
+            not isinstance(input_pins, (tuple, list)) or \
+            any(not isinstance(v, element_Pin) for v in input_pins) or \
+            len(input_pins) < 2:
+            raise TypeError
+    
+        if len(input_pins) == 2:
+            And_Gate(x, y, z, elementXYZ)
+
+# 基于计数器的时钟
+class Counter_Tick:
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 elementXYZ: Optional[bool] = None,
+                 stop: int = 8 # 重新计数时对应的计数器输出的数字
+    ) -> None:
+        if not isinstance(stop, int) and not 0 < stop < 16:
+            raise TypeError
+
+        c = Counter(x, y, z, elementXYZ)
+        map = {1: "o_low", 2: "o_lowmid", 4: "o_upmid", 8: "o_up"}
+        if stop == 1:
+            c.o_low - c.i_low
+        elif stop == 2:
+            c.o_lowmid - c.i_low
+        elif stop == 4:
+            c.o_upmid - c.i_low
+        elif stop == 8:
+            c.o_up - c.i_low
+        
+        
+        Super_AndGate(x, y, z, elementXYZ, )

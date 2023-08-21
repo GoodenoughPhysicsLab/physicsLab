@@ -27,7 +27,7 @@ setuptools.setup(
         setuptools.Extension(
             "plmidi",
             sources=[
-                "./plmidi_sound.c"
+                "./plmidi_setup.c"
             ]
         )
     ]

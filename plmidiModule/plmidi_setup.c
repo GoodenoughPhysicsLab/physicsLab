@@ -1,7 +1,9 @@
 #include "plmidi_sound.h"
+#include "plmidi_playWindows.h"
 
 static PyMethodDef plmidi_methods[] = {
     {"sound", plmidi_sound, METH_VARARGS, "sound midi by using plmidi"},
+    {"windowsPlayer", windowsPlayer, METH_NOARGS, NULL},
     {NULL, NULL, 0, NULL}
 };
 

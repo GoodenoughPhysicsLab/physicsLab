@@ -357,13 +357,16 @@ m.sound(player=music.Midi.PLAYER.PYGAME) # 指定使用pygame播放midi
 
 m.translate_to_piece() # 将Midi类转换为Piece类
 
-# Midi类有一种特殊的存储数据的类型: .plm.py
+# Midi类有一种特殊的存储数据的类型: .mido.py
 # 这个文件导出的音符信息可以方便的进行修改，播放
-m.read_plm("path") # 读取指定path的 .plm.py
-m.write_plm("path") # 导出 .plm.py到指定路径
+m.read_midopy("path") # 读取指定path的 .mido.py
+m.write_midopy("path") # 导出 .mido.py到指定路径
 
 m.write_midi("path") # 导出midi到指定路径
 # 为啥没有read_midi的方法呢? 因为创建一个Midi类的时候就可以读取Midi
+
+# .plm.py: 生成一种可以运行后可以易于编辑, 且运行后就可以生成在物实对应的电路的文件结构
+m.write_plm() # 将文件以.plm.py的格式导出
 ```
 
 ## 创建其他类型的实验

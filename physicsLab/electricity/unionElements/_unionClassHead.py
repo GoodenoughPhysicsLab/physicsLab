@@ -1,62 +1,65 @@
 #coding=utf-8
-import physicsLab._tools as _tools
+from typing import Optional
+
 import physicsLab.errors as errors
 import physicsLab._fileGlobals as _fileGlobals
 import physicsLab.electricity.elementXYZ as _elementXYZ
 import physicsLab.electricity.elementsClass as _elementsClass
 
+from physicsLab._tools import numType, roundData
+
 class UnionMeta(type):
-    def __new__(metaCls, name: str, base: tuple, attrs: dict):
-        cls = metaCls.__new__(metaCls, name, base, attrs)
-        # obj = cls.__new__()
-        # obj.__init__()
-        pass
-        return type.__new__(name, base, attrs)
+    def __call__(cls,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 bitLength: int = 4,
+                 elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+                 unionHeading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
+                 fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
+                 foldMaxNum: int = 4,  # 达到foldMaxNum个元件数时即在z轴自动折叠
+                 *args, **kwags
+    ):
+        self = cls.__new__(cls)
+        _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
+
+        if foldMaxNum <= 0 or not(
+            isinstance(x, (int, float)) or
+            isinstance(y, (int, float)) or
+            isinstance(z, (int, float)) or
+            isinstance(elementXYZ, bool) or
+            isinstance(unionHeading, bool) or
+            isinstance(fold, bool) or
+            isinstance(foldMaxNum, int)
+        ):
+            raise TypeError
+        if not isinstance(bitLength, int) or bitLength < 1:
+            raise errors.bitLengthError("bitLength must get a integer")
+
+        # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
+        if not (elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None)):
+            x, y, z = _elementXYZ.translateXYZ(x, y, z)        
+        x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
+
+        self.__init__(x, y, z, bitLength, elementXYZ, unionHeading, fold, foldMaxNum, *args, **kwags)
+        if not hasattr(self, "_elements"):
+            raise AttributeError
+        
+        return self
 
 # Union class的基类 MixIn Class
-class UnionBase:
+class UnionBase(metaclass=UnionMeta):
     # 此类无法被实例化
     def __init__(self, *args, **kwargs):
-        raise errors.instantiateError
+        raise errors.instantiateError    
 
     # 获取以模块化电路生成顺序为item的原件的self
     # 一定有self._elements
     def __getitem__(self, item: int) -> "_elementsClass.electricityBase":
         if not isinstance(item, int):
             raise TypeError
-        return self._elements[item]
+        return self._elements[item] # type: ignore -> 子类含有._elements
+    
     # 设置坐标
     def set_Position(self, x, y, z):
         pass
-
-# union class __init__装饰器
-def union_Init_HEAD(
-        x: _tools.numType,
-        y: _tools.numType,
-        z: _tools.numType,
-        bitLength: int,
-        elementXYZ: bool,  # x, y, z是否为元件坐标系
-        unionHeading: bool,  # False: 生成的元件为竖直方向，否则为横方向
-        fold: bool,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
-        foldMaxNum: int  # 达到foldMaxNum个元件数时即在z轴自动折叠
-):
-    _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
-        # input type check
-    if foldMaxNum <= 0 or not(
-        isinstance(x, (int, float)) or
-        isinstance(y, (int, float)) or
-        isinstance(z, (int, float)) or
-        isinstance(elementXYZ, bool) or
-        isinstance(unionHeading, bool) or
-        isinstance(fold, bool) or
-        isinstance(foldMaxNum, int)
-    ):
-        raise TypeError
-    if not isinstance(bitLength, int) or bitLength < 1:
-        raise errors.bitLengthError("bitLength must get a integer")
-
-    # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
-    if not (elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None)):
-        x, y, z = _elementXYZ.translateXYZ(x, y, z)
-
-    return _tools.roundData(x, y, z)

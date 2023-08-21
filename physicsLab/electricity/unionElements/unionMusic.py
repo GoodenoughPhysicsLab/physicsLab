@@ -7,11 +7,10 @@ import physicsLab._colorUtils as colorUtils
 import physicsLab.electricity.elementXYZ as _elementXYZ
 import physicsLab.electricity.elementsClass as _elementsClass
 
-from typing import *
 from copy import deepcopy
 from math import ceil, sqrt
-from os import path as _path
 from enum import Enum, unique
+from typing import Optional, Union, List, Tuple, Iterator
 
 from .wires import crt_Wires
 from ...element import get_Element
@@ -299,8 +298,8 @@ class Note:
         self.time = time
         self.playTime = playTime
 
-    def __str__(self) -> str:
-        return f"music.Note(time={self.time}, playTime={self.playTime}, instrument={self.instrument}, " \
+    def __repr__(self) -> str:
+        return f"Note(time={self.time}, playTime={self.playTime}, instrument={self.instrument}, " \
                f"pitch={self.pitch}, volume={self.volume})"
 
 # 循环类，用于创建一段循环的音乐片段
@@ -359,9 +358,8 @@ class Piece:
         self.volume = volume
         self.notes: noteType = []
         for a_note in notes:
-            tick = 1
-            while tick < a_note.time:
-                tick += 1
+            while a_note.time > 1:
+                a_note.time -= 1
                 self.notes.append(None)
             self.notes.append(a_note)
 
@@ -389,8 +387,8 @@ class Piece:
             raise TypeError
         self.notes[item] = value
 
-    def __str__(self) -> str:
-        return f"Piece: {self.notes}"
+    def __repr__(self) -> str:
+        return f"Piece({self.notes})".replace("No", "\n  No")
 
     def __iter__(self) -> Iterator:
         self.__iter = iter(self.notes)
@@ -426,11 +424,17 @@ class Player:
         while musicArray.notes[0] is None:
             musicArray.notes.pop(0)
         musicArray.notes.append(None)
+        musicArray.notes[0].time = 1
+
+        len_musicArray: int = 0
+        for a_note in musicArray:
+            if a_note is None or a_note.time != 0:
+                len_musicArray += 1
 
         # 计算音乐矩阵的长宽
         side = None
-        if len(musicArray) >= 2:
-            side = ceil(sqrt(len(musicArray)))
+        if len_musicArray >= 2:
+            side = ceil(sqrt(len_musicArray))
         else:
             side = 2
 
@@ -442,12 +446,12 @@ class Player:
         tick.o - counter.i_up
 
         xPlayer = D_WaterLamp(x + 1, y + 1, z, unionHeading=True, bitLength=side, elementXYZ=True)
-        yPlayer = D_WaterLamp(x, y + 3, z, bitLength=ceil(len(musicArray) / side), elementXYZ=True).set_HighLeaveValue(2)
+        yPlayer = D_WaterLamp(x, y + 3, z, bitLength=ceil(len_musicArray / side), elementXYZ=True).set_HighLeaveValue(2)
 
         yesGate = _elementsClass.Full_Adder(x + 1, y + 2, z + 1, True)
         yesGate.i_low - yesGate.i_mid
-        xPlayer[0].o_low - yesGate.i_up
-        crt_Wires(xPlayer.data_Output[0], yPlayer.data_Input)
+        xPlayer[0].o_low - yesGate.i_up # type: ignore
+        crt_Wires(xPlayer.data_Output[0], yPlayer.data_Input) # type: ignore -> yPlayer must has attr data_Input
 
         check1 = _elementsClass.No_Gate(x + 2, y, z, True)
         check2 = _elementsClass.Multiplier(x + 3, y, z, True)
@@ -458,18 +462,26 @@ class Player:
         crt_Wires(check2.o_lowmid, xPlayer.data_Input)
 
         # main
-        xcor, ycor, zcor = 0, 0, 0
-        for a_note_item, a_note in enumerate(musicArray):
+        xcor, ycor, zcor = -1, 0, 0
+        for a_note in musicArray:
             if a_note is not None:
                 # 当time==0时，则为和弦（几个音同时播放）
                 # 此时生成的简单乐器与z轴平行
-                if zcor != 0:
+                if a_note.time == 0:
+                    zcor += 1
                     ins = _elementsClass.Simple_Instrument(
                         1 + x + xcor, 4 + y + ycor, z + zcor, pitch=a_note.pitch, elementXYZ=True
                     )
-                    ins.i - get_Element(x=1 + x + xcor, y=4 + y + ycor, z=z + zcor - 1).i
-                    ins.o - get_Element(x=1 + x + xcor, y=4 + y + ycor, z=z + zcor - 1).o
+                    ins.i - get_Element(x=1 + x + xcor, y=4 + y + ycor, z=z + zcor - 1).i # type: ignore -> result: SimpleInstrument
+                    ins.o - get_Element(x=1 + x + xcor, y=4 + y + ycor, z=z + zcor - 1).o # type: ignore -> result: SimpleInstrument
+                    continue
                 else:
+                    zcor = 0
+                    xcor += 1
+                    if xcor == side:
+                        xcor = 0
+                        ycor += 2
+                    
                     ins = _elementsClass.Simple_Instrument(
                         1 + x + xcor, 4 + y + ycor, z, pitch=a_note.pitch, elementXYZ=True
                     )
@@ -479,33 +491,15 @@ class Player:
                     else:
                         ins.o - xPlayer.data_Output[xcor]
                     # 连接y轴的d触的导线
-                    ins.i - yPlayer.neg_data_Output[ycor // 2]
+                    ins.i - yPlayer.neg_data_Output[ycor // 2] # type: ignore -> yPlayer must has attr neg_data_Output
+            else:
+                zcor = 0
+                xcor += 1
+                if xcor == side:
+                    xcor = 0
+                    ycor += 2
 
-                i = 1
-                exit_sign = False
-                while True:
-                    if a_note_item + i >= len(musicArray):
-                        exit_sign = True
-                        break
-                    if musicArray[a_note_item+i] is None:
-                        i += 1
-                    else:
-                        break
-                if exit_sign:
-                    break
-                next_note = musicArray[a_note_item+i]
-                if a_note_item+1 < len(musicArray) and next_note is not None and next_note.time != 0:
-                    zcor = 0
-                else:
-                    zcor += 1
-                    continue
-
-            xcor += 1
-            if xcor == side:
-                xcor = 0
-                ycor += 2
-
-        stop = _elementsClass.And_Gate(x + xcor + 2, y + ycor + 3, z, True)
+        stop = _elementsClass.And_Gate(x + 1, y + ycor + 3, z, True)
         stop.o - yesGate.i_low - check1.i
-        stop.i_up - yPlayer[ycor // 2].o_up
-        stop.i_low - xPlayer[xcor + 1].o_up
+        stop.i_up - yPlayer[ycor // 2].o_up # type: ignore -> D_Flipflop must has attr o_up
+        stop.i_low - xPlayer[side - 1].o_up # type: ignore -> D_Flipflop must has attr neg_data_Output

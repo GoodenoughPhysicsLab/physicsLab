@@ -255,6 +255,7 @@ class MyTestCase(unittest.TestCase):
             else:
                 raise RuntimeError
 
+    # py -m unittest test_physicsLab.MyTestCase.test_musicPlayer
     def test_musicPlayer(self):
         with experiment("测逝"):
             l = (0, 2, 4, 5, 7, 9, 11)
@@ -262,8 +263,10 @@ class MyTestCase(unittest.TestCase):
             t = music.Piece()
             for i in range(7):
                 for j in l:
-                    t.append(music.Note(4, pitch=12 * i + j + 21))
+                    t.append(music.Note(1, pitch=12 * i + j + 21))
+                    t.append(music.Note(0, pitch=12 * i + j + 23))
             #t.notes[-1] = None
+            #print(t)
             t.play(-1, -1, 0)
 
 if __name__ == '__main__':

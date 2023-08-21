@@ -1,23 +1,24 @@
 # coding=utf-8
 from typing import *
-import physicsLab._tools as _tools
+
 import physicsLab.errors as errors
 import physicsLab._fileGlobals as _fileGlobals
 import physicsLab.electricity.elementPin as _elementPin
 import physicsLab.electricity.elementXYZ as _elementXYZ
+
+from physicsLab._tools import numType, roundData, randString, position
 
 # electricity class's metaClass
 class eletricityMeta(type):
     # element index
     __index = 1
 
-    def __call__(
-            cls,
-            x: _tools.numType = 0,
-            y: _tools.numType = 0,
-            z: _tools.numType = 0,
-            elementXYZ: Optional[bool] = None,
-            *args, **kwargs
+    def __call__(cls,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 elementXYZ: Optional[bool] = None,
+                 *args, **kwargs
     ):
         self = cls.__new__(cls)
         if not (
@@ -32,8 +33,8 @@ class eletricityMeta(type):
         if not hasattr(cls, "is_bigElement"):
             cls.is_bigElement = property(lambda self: False) # 2体积元件
 
-        x, y, z = _tools.roundData(x, y, z)
-        self._position = _tools.position(x, y, z)
+        x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
+        self._position = position(x, y, z) # type: ignore -> define _arguments in metaclass
         # 元件坐标系
         if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
             x, y, z = _elementXYZ.xyzTranslate(x, y, z)
@@ -44,7 +45,7 @@ class eletricityMeta(type):
         if self.is_bigElement:
             x, y, z = _elementXYZ.amend_big_Element(x, y, z)
 
-        self._arguments["Identifier"] = _tools.randString(32)
+        self._arguments["Identifier"] = randString(32)
         # x, z, y 物实采用欧拉坐标系
         self._arguments["Position"] = f"{x},{z},{y}"
         _fileGlobals.Elements.append(self._arguments)
@@ -70,8 +71,8 @@ class electricityBase(metaclass=eletricityMeta):
         raise errors.instantiateError
 
     # 设置原件的角度
-    def set_Rotation(self, xRotation: _tools.numType = 0, yRotation: _tools.numType = 0,
-                     zRotation: _tools.numType = 180):
+    def set_Rotation(self, xRotation: numType = 0, yRotation: numType = 0,
+                     zRotation: numType = 180):
         if not (
                 isinstance(xRotation, (int, float)) and
                 isinstance(yRotation, (int, float)) and
@@ -79,15 +80,14 @@ class electricityBase(metaclass=eletricityMeta):
         ):
             raise RuntimeError('illegal argument')
 
-        self._arguments["Rotation"] = \
-            f"{_tools.roundData(xRotation)},{_tools.roundData(zRotation)},{_tools.roundData(yRotation)}"
+        self._arguments["Rotation"] = f"{roundData(xRotation)},{roundData(zRotation)},{roundData(yRotation)}" # type: ignore -> define _arguments in metaclass
         return self
 
     # 重新设置元件的坐标
-    def set_Position(self, x: _tools.numType, y: _tools.numType, z: _tools.numType, elementXYZ: Optional[bool] = None):
+    def set_Position(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
-        x, y, z = _tools.roundData(x, y, z)
+        x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
 
         #元件坐标系
         if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
@@ -95,8 +95,8 @@ class electricityBase(metaclass=eletricityMeta):
             self.is_elementXYZ = True
         
         del _fileGlobals.elements_Position[self._position]
-        self._position = _tools.position(x, y, z)
-        self._arguments['Position'] = f"{x},{z},{y}"
+        self._position = position(x, y, z) # type: ignore -> define _arguments in metaclass
+        self._arguments['Position'] = f"{x},{z},{y}" # type: ignore -> define _arguments in metaclass
         _fileGlobals.elements_Position[self._position] = self
         return self
 
@@ -104,7 +104,7 @@ class electricityBase(metaclass=eletricityMeta):
     def format_Position(self) -> tuple:
         if not isinstance(self._position, tuple) or self._position.__len__() != 3:
             raise RuntimeError("Position must be a tuple of length three but gets some other value")
-        self._position = _tools.roundData(self._position.x, self._position.y, self._position.z)
+        self._position = position(*roundData(self._position.x, self._position.y, self._position.z)) # type: ignore -> result type: tuple
         return self._position
 
     # 获取原件的坐标
@@ -113,16 +113,16 @@ class electricityBase(metaclass=eletricityMeta):
 
     # 获取元件的index（每创建一个元件，index就加1）
     def get_Index(self) -> int:
-        return self._index
+        return self._index # type: ignore -> define self._index in metaclass
 
     # 获取子类的类型（也就是ModelID）
     @property
     def modelID(self) -> str:
-        return self._arguments['ModelID']
+        return self._arguments['ModelID'] # type: ignore -> define _arguments in metaclass
 
     # 打印参数
     def print_arguments(self) -> None:
-        print(self._arguments)
+        print(self._arguments) # type: ignore
 
 # 双引脚模拟电路原件的引脚
 def two_pin_ArtificialCircuit_Pin(cls):

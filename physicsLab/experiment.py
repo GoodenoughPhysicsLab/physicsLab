@@ -1,7 +1,7 @@
 #coding=utf-8
 import os
 import json
-from typing import Union
+from typing import Union, Optional
 
 import physicsLab._tools as _tools
 import physicsLab.errors as errors
@@ -159,7 +159,7 @@ def write_Experiment() -> None:
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
-    with open(_fileGlobals.SavPath, encoding='UTF-8') as f:
+    with open(_fileGlobals.SavPath, encoding='utf-8') as f:
         readmem = json.loads(f.read().replace('\n', ''))
         # 元件
         _local_Elements = json.loads(readmem["Experiment"]["StatusSave"])["Elements"]
@@ -181,9 +181,9 @@ def read_Experiment() -> None:
             from physicsLab.element import crt_Element
 
             if _fileGlobals.get_experimentType() == 0:
-                obj = crt_Element(element["ModelID"], num1, num3, num2, elementXYZ=False)
+                obj = crt_Element(element["ModelID"], num1, num3, num2, elementXYZ=False) # type: ignore -> num type: int | float
             elif _fileGlobals.get_experimentType() == 3 or _fileGlobals.get_experimentType() == 4:
-                obj = crt_Element(element["ModelID"], num1, num3, num2)
+                obj = crt_Element(element["ModelID"], num1, num3, num2) # type: ignore -> num type: int | float
             else:
                 raise errors.openExperimentError
 
@@ -227,7 +227,7 @@ def del_Experiment() -> None:
     _colorUtils.printf("Successfully delete experiment!", _colorUtils.COLOR.BLUE)
 
 # 发布实验
-def yield_Experiment(title: str = None, introduction: str = None) -> None:
+def yield_Experiment(title: Optional[str] = None, introduction: Optional[str] = None) -> None:
     # 发布实验时输入实验介绍
     def introduce_Experiment(introduction: str) -> None:
         if introduction is not None:
