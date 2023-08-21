@@ -76,7 +76,7 @@ def exist_Experiment(savName: str) -> Union[str, None]:
 # 输入sav（存档）的文件名并读取部分实验内容
 def _open_Experiment(file: str) -> None:        
     _fileGlobals.SavPath = f"{_fileGlobals.FILE_HEAD}/{file}"
-    with open(_fileGlobals.SavPath, encoding="UTF-8") as f:
+    with open(_fileGlobals.SavPath, encoding="utf-8") as f:
         f = json.loads(f.read().replace('\n', ''))
         # 初始化package全局变量
         _fileGlobals.fileGlobals_init(f["Type"])
@@ -141,7 +141,7 @@ def write_Experiment() -> None:
     _fileGlobals.StatusSave["Wires"] = _fileGlobals.Wires
     _fileGlobals.PlSav["Experiment"]["StatusSave"] = \
         json.dumps(_fileGlobals.StatusSave, ensure_ascii=False, separators=(',', ': '))
-    with open(_fileGlobals.SavPath, "w", encoding="UTF-8") as f:
+    with open(_fileGlobals.SavPath, "w", encoding="utf-8") as f:
         f.write(
                 _format_StatusSave(json.dumps(_fileGlobals.PlSav, indent=2, ensure_ascii=False, separators=(',', ': ')))
         )

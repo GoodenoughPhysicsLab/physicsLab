@@ -464,40 +464,40 @@ class Player:
         # main
         xcor, ycor, zcor = -1, 0, 0
         for a_note in musicArray:
-            if a_note is not None:
-                # 当time==0时，则为和弦（几个音同时播放）
-                # 此时生成的简单乐器与z轴平行
-                if a_note.time == 0:
-                    zcor += 1
-                    ins = _elementsClass.Simple_Instrument(
-                        1 + x + xcor, 4 + y + ycor, z + zcor, pitch=a_note.pitch, elementXYZ=True
-                    )
-                    ins.i - get_Element(x=1 + x + xcor, y=4 + y + ycor, z=z + zcor - 1).i # type: ignore -> result: SimpleInstrument
-                    ins.o - get_Element(x=1 + x + xcor, y=4 + y + ycor, z=z + zcor - 1).o # type: ignore -> result: SimpleInstrument
-                    continue
-                else:
-                    zcor = 0
-                    xcor += 1
-                    if xcor == side:
-                        xcor = 0
-                        ycor += 2
-                    
-                    ins = _elementsClass.Simple_Instrument(
-                        1 + x + xcor, 4 + y + ycor, z, pitch=a_note.pitch, elementXYZ=True
-                    )
-                    # 连接x轴的d触的导线
-                    if xcor == 0:
-                        yesGate.o_up - ins.o
-                    else:
-                        ins.o - xPlayer.data_Output[xcor]
-                    # 连接y轴的d触的导线
-                    ins.i - yPlayer.neg_data_Output[ycor // 2] # type: ignore -> yPlayer must has attr neg_data_Output
+            if a_note is None:
+                zcor = 0
+                xcor += 1
+                if xcor == side:
+                    xcor = 0
+                    ycor += 2
+                continue
+
+            # 当time==0时，则为和弦（几个音同时播放）
+            # 此时生成的简单乐器与z轴平行
+            if a_note.time == 0:
+                zcor += 1
+                ins = _elementsClass.Simple_Instrument(
+                    1 + x + xcor, 4 + y + ycor, z + zcor, pitch=a_note.pitch, elementXYZ=True
+                )
+                ins.i - get_Element(x=1 + x + xcor, y=4 + y + ycor, z=z + zcor - 1).i # type: ignore -> result: SimpleInstrument
+                ins.o - get_Element(x=1 + x + xcor, y=4 + y + ycor, z=z + zcor - 1).o # type: ignore -> result: SimpleInstrument
             else:
                 zcor = 0
                 xcor += 1
                 if xcor == side:
                     xcor = 0
                     ycor += 2
+                
+                ins = _elementsClass.Simple_Instrument(
+                    1 + x + xcor, 4 + y + ycor, z, pitch=a_note.pitch, elementXYZ=True
+                )
+                # 连接x轴的d触的导线
+                if xcor == 0:
+                    yesGate.o_up - ins.o
+                else:
+                    ins.o - xPlayer.data_Output[xcor]
+                # 连接y轴的d触的导线
+                ins.i - yPlayer.neg_data_Output[ycor // 2] # type: ignore -> yPlayer must has attr neg_data_Output
 
         stop = _elementsClass.And_Gate(x + 1, y + ycor + 3, z, True)
         stop.o - yesGate.i_low - check1.i
