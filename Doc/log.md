@@ -26,9 +26,12 @@
 5.  `crt_Wire`支持传入英文color参数
 6.  新增`_fileGlobals`命名空间（不推荐访问）
 
-## coming soon
+## 1.3.2
 1.  实装Midi类（与piece类的转换与导出midi，播放midi）
 2.  Track类增加append方法
 3.  优化了乐器矩阵的基础架构
 4.  `self.set_Position`增加了对元件坐标系的支持
 5.  增加了`Midi.set_tempo`方法
+
+## 1.3.3
+1.  完成Midi.write_plm的主要逻辑
