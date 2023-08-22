@@ -5,7 +5,6 @@ from typing import Union, Optional
 
 import physicsLab._tools as _tools
 import physicsLab.errors as errors
-import physicsLab.electricity as electricity
 import physicsLab._colorUtils as _colorUtils
 import physicsLab._fileGlobals as _fileGlobals
 
@@ -194,11 +193,12 @@ def read_Experiment() -> None:
             y = float(element['Rotation'][sign2 + 1::])
             obj.set_Rotation(x, y, z)
             obj._arguments['Identifier'] = element['Identifier']
+            from .electricity import Logic_Input, eight_bit_Input
             # 如果obj是逻辑输入
-            if isinstance(obj, electricity.Logic_Input) and element['Properties'].get('开关') == 1:
+            if isinstance(obj, Logic_Input) and element['Properties'].get('开关') == 1:
                 obj.set_highLevel()
             # 如果obj是8位输入器
-            elif isinstance(obj, electricity.eight_bit_Input):
+            elif isinstance(obj, eight_bit_Input):
                 obj._arguments['Statistics'] = element['Statistics']
                 obj._arguments['Properties']['十进制'] = element['Properties']['十进制']
 
