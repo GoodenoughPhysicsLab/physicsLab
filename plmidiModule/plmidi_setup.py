@@ -2,7 +2,7 @@
 import setuptools
 
 long_description = None
-with open("./README.md", encoding="utf-8") as f:
+with open("./README_zh.md", encoding="utf-8") as f:
     long_description = f.read()
 
 setuptools.setup(

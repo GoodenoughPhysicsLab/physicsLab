@@ -85,7 +85,7 @@ class Midi:
         return res
 
     # 播放midi类存储的信息
-    def sound(self, player: Optional[PLAYER] = None) -> Optional["Midi"]:
+    def sound(self, player: Optional[PLAYER] = None) -> "Midi":
         # 使用plmidi播放midi
         def sound_by_plmidi() -> bool:
             try:
@@ -98,7 +98,7 @@ class Midi:
                     errors.warning("can not sound because self.midifile is None")
                     return False
 
-                plmidi.sound(self.messages, self.tempo)
+                plmidi.sound(self.messages)
 
                 return True
 
@@ -226,7 +226,7 @@ class Midi:
                     f"fmidi.tracks.append(track)\n"
                     f"fmidi.save(\"temp.mid\")\n"
                     f"from physicsLab.union import Midi\n"
-                    f"Midi(\"temp.mid\").sound(player=Midi.PLAYER.pygame)")
+                    f"Midi(\"temp.mid\").sound(player=Midi.PLAYER.os)")
 
         return self
 

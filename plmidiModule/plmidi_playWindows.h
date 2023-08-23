@@ -12,7 +12,7 @@
 
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT uint, WPARAM wparam, LPARAM plaram) {}
 
-PyObject* windowsPlayer(PyObject *self)
+PyObject* windowsPlayer(PyObject *self, PyObject *args)
 {
 	Py_RETURN_NONE;
 }
