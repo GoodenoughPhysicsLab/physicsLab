@@ -127,8 +127,8 @@ def open_or_crt_Experiment(savName: str, experimentType: _fileGlobals.experiment
     else:
         _crt_Experiment(savName, experimentType)
 
-# 将编译完成的json写入sav
-def write_Experiment() -> None:
+# 将编译完成的json写入sav, ln: 是否将存档中字符串格式json换行
+def write_Experiment(ln: bool = False) -> None:
     def _format_StatusSave(stringJson: str) -> str:
         stringJson = stringJson.replace('{\\\"ModelID', '\n      {\\\"ModelID') # format element json
         stringJson = stringJson.replace('DiagramRotation\\\": 0}]', 'DiagramRotation\\\": 0}\n    ]') # format end element json
@@ -141,9 +141,12 @@ def write_Experiment() -> None:
     _fileGlobals.PlSav["Experiment"]["StatusSave"] = \
         json.dumps(_fileGlobals.StatusSave, ensure_ascii=False, separators=(',', ': '))
     with open(_fileGlobals.SavPath, "w", encoding="utf-8") as f:
-        f.write(
-                _format_StatusSave(json.dumps(_fileGlobals.PlSav, indent=2, ensure_ascii=False, separators=(',', ': ')))
-        )
+        if ln:
+            f.write(
+                    _format_StatusSave(json.dumps(_fileGlobals.PlSav, indent=2, ensure_ascii=False, separators=(',', ': ')))
+            )
+        else:
+            f.write(json.dumps(_fileGlobals.PlSav, indent=2, ensure_ascii=False, separators=(',', ': ')))
     # 编译成功，打印信息
     if _fileGlobals.get_experimentType() == 0:
         _colorUtils.printf(
@@ -229,12 +232,12 @@ def del_Experiment() -> None:
 # 发布实验
 def yield_Experiment(title: Optional[str] = None, introduction: Optional[str] = None) -> None:
     # 发布实验时输入实验介绍
-    def introduce_Experiment(introduction: str) -> None:
+    def introduce_Experiment(introduction: Union[str, None]) -> None:
         if introduction is not None:
             _fileGlobals.PlSav['Summary']['Description'] = introduction.split('\n')
 
     # 发布实验时输入实验标题
-    def title_Experiment(title: str) -> None:
+    def title_Experiment(title: Union[str, None]) -> None:
         if title is not None:
             _fileGlobals.PlSav['Summary']['Subject'] = title
 
