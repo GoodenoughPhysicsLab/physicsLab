@@ -23,6 +23,32 @@ static int8_t plmidi_initflag = 0; // -1: fail, 0: ready to init, 1: success ini
 // plmidiInitError
 PyObject *plmidiExc_InitErr = NULL;
 
+// Bytes
+//TODO: load all midi bytes and then midiOutLongMsg
+typedef struct plmidi_Bytes {
+    size_t size;
+    BYTE bytes[1];
+} plmidi_Bytes;
+
+static plmidi_Bytes* new_Bytes(size_t size)
+{
+    plmidi_Bytes *res = (plmidi_Bytes *)malloc(sizeof(BYTE) * size);
+    return res? res: NULL;
+}
+
+static void realloc_Bytes(plmidi_Bytes **self, size_t size)
+{
+    //
+}
+
+static void Bytes_SetItem(plmidi_Bytes **self, size_t item, BYTE byte)
+{
+    if (item >= (*self)->size) {
+        //
+    }
+    (*self)->bytes[item] = byte;
+}
+
 // if Ctrl+C, then exit
 static void plmidi_exit(int signal)
 {
@@ -69,8 +95,8 @@ PyObject* plmidi_sound(PyObject *self, PyObject *args)
      * However, midi message "program_change" still use midiOutShortMsg,
      * I can hardly understand it can not work when I use midiOutLongMsg
      */
-    double tempo = 500'000;
-    for (Py_ssize_t i = 0; i < PyList_Size(piece); i++)
+    DWORD tempo = 500000;
+    for (long i = 0; i < PyList_Size(piece); i++)
     {
         PyObject *msg = PyList_GetItem(piece, i);
         PyObject *bytes = PyObject_CallMethod(msg, "bytes", NULL);
@@ -80,18 +106,7 @@ PyObject* plmidi_sound(PyObject *self, PyObject *args)
         if (strcmp(msg_type, "program_change") == 0) {
             midiOutShortMsg(handle, GET_ATTR(msg, "program") << 8 | 0xC0 + GET_ATTR(msg, "channel"));
         }
-        else if (strcmp(msg_type, "note_on") == 0)
-        {
-            BYTE msg_bytes[] = { GET_BYTES_ITEM(bytes, 0), GET_BYTES_ITEM(bytes, 1), GET_BYTES_ITEM(bytes, 2) };
-
-            midiHeader.lpData = (LPSTR)&msg_bytes;
-            midiHeader.dwBufferLength = sizeof(msg_bytes);
-            if (midiOutPrepareHeader(handle, &midiHeader, sizeof(MIDIHDR)) != MMSYSERR_NOERROR) {
-                PyErr_SetString(plmidiExc_InitErr, NULL);
-            }
-            midiOutLongMsg(handle, &midiHeader, (UINT)sizeof(MIDIHDR));
-        }
-        else if (strcmp(msg_type, "note_off") == 0)
+        else if (strcmp(msg_type, "note_on") == 0 || strcmp(msg_type, "note_off") == 0)
         {
             BYTE msg_bytes[] = { GET_BYTES_ITEM(bytes, 0), GET_BYTES_ITEM(bytes, 1), GET_BYTES_ITEM(bytes, 2) };
 
@@ -103,9 +118,9 @@ PyObject* plmidi_sound(PyObject *self, PyObject *args)
             midiOutLongMsg(handle, &midiHeader, (UINT)sizeof(MIDIHDR));
         }
         else if (strcmp(msg_type, "set_tempo") == 0) {
-            tempo = (double)GET_ATTR(msg, "tempo");
+            tempo = (DWORD)GET_ATTR(msg, "tempo");
         }
-        Sleep(GET_ATTR(msg, "time") * tempo / 500'000);
+        Sleep(GET_ATTR(msg, "time") * tempo / 500000);
     }
 
     midiOutUnprepareHeader(handle, &midiHeader, sizeof(MIDIHDR));
