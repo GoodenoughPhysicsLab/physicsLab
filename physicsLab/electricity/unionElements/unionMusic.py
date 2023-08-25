@@ -148,7 +148,7 @@ class Midi:
         if player is not None:
             if not (sound_by_plmidi, sound_by_pygame, sound_by_os)[player.value]():
                 errors.warning("can not use this way to sound midi.")
-            return
+            return self
         
         if sound_by_plmidi():
             pass # needless to do anything
@@ -447,24 +447,31 @@ class Player:
 
         tick = _elementsClass.Nimp_Gate(x + 1, y, z, True)
         counter = _elementsClass.Counter(x, y + 1, z, True)
-        input = _elementsClass.Logic_Input(x, y, z, True)
-        input.o - tick.i_up
+        l_input = _elementsClass.Logic_Input(x, y, z, True)
+        l_input.o - tick.i_up
         tick.o - tick.i_low
         tick.o - counter.i_up
 
         xPlayer = D_WaterLamp(x + 1, y + 1, z, unionHeading=True, bitLength=side, elementXYZ=True)
         yPlayer = D_WaterLamp(x, y + 3, z, bitLength=ceil(len_musicArray / side), elementXYZ=True).set_HighLeaveValue(2)
 
-        yesGate = _elementsClass.Full_Adder(x + 1, y + 2, z + 1, True)
+        yesGate = _elementsClass.Full_Adder(x + 1, y + 1, z + 1, True)
         yesGate.i_low - yesGate.i_mid
         xPlayer[0].o_low - yesGate.i_up # type: ignore
         crt_Wires(xPlayer.data_Output[0], yPlayer.data_Input) # type: ignore -> yPlayer must has attr data_Input
 
         check1 = _elementsClass.No_Gate(x + 2, y, z, True)
         check2 = _elementsClass.Multiplier(x + 3, y, z, True)
+        # 上升沿触发器
+        no_gate = _elementsClass.No_Gate(x + 1, y, z + 1, True)
+        and_gate = _elementsClass.And_Gate(x + 2, y, z + 1, True)
+        no_gate.o - and_gate.i_low
+        no_gate.i - and_gate.i_up
+
+        l_input.o - no_gate.i
         check1.o - check2.i_low
         yesGate.o_low - check2.i_upmid
-        check2.i_lowmid - input.o
+        check2.i_lowmid - and_gate.o
         counter.o_upmid - check2.i_up
         crt_Wires(check2.o_lowmid, xPlayer.data_Input)
 
