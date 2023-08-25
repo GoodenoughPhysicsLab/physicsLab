@@ -28,4 +28,4 @@ __pycache__/
 # special file of physicsLab
 *.mido.py
 *.plm.py
-*.test.py
+*.test.*
