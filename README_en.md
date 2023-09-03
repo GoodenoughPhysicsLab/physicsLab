@@ -1,6 +1,6 @@
 # PhysicsLab
 
-[中文](./README.md)
+[中文](./README_zh.md)
 
 ![输入图片说明](./cover.jpg)
 
