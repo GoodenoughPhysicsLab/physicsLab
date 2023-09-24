@@ -1,6 +1,4 @@
 ﻿#coding=utf-8
-import json
-
 import mido
 import physicsLab.errors as errors
 import physicsLab._colorUtils as colorUtils
@@ -87,6 +85,7 @@ class Midi:
     # 播放midi类存储的信息
     def sound(self, player: Optional[PLAYER] = None) -> "Midi":
         # 使用plmidi播放midi
+        # plmidi还有很多问题, 暂不推荐使用
         def sound_by_plmidi() -> bool:
             try:
                 import plmidi
@@ -98,7 +97,10 @@ class Midi:
                     errors.warning("can not sound because self.midifile is None")
                     return False
 
-                plmidi.sound(self.messages)
+                try:
+                    plmidi.sound(self.messages)
+                except plmidi.plmidiInitError:
+                    return False
 
                 return True
 
