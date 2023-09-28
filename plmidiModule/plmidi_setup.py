@@ -27,7 +27,10 @@ setuptools.setup(
         setuptools.Extension(
             "plmidi",
             sources=[
-                "./plmidi_setup.c"
+                "./plmidi_setup.cpp"
+            ],
+            extra_compile_args=[
+                "/std:c++20"
             ]
         )
     ]

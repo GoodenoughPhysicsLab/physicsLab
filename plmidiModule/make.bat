@@ -1,5 +1,4 @@
 @REM 删除旧的build
-del /s /q .\build
 rd /s /q .\build
 @REM 注释：运行该批处理文件必须在plmidiMoudule文件夹下
 py plmidi_setup.py build

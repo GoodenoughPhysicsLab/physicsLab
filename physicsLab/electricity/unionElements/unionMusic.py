@@ -98,7 +98,8 @@ class Midi:
                     return False
 
                 try:
-                    plmidi.sound(self.messages)
+                    #plmidi.sound(self.messages)
+                    plmidi.sound_by_midiOutShortMsg(self.messages, self.tempo)
                 except plmidi.plmidiInitError:
                     return False
 

@@ -1,9 +1,13 @@
-#include "plmidi_sound.h"
-#include "plmidi_playWindows.h"
+#if !defined(_MSC_VER) || !defined(_WIN32)
+#   error "This code must be compiled with MSVC on Windows"
+#endif
+
+#include "pybind11/pybind11.h"
+#include "plmidi_sound.hpp"
 
 static PyMethodDef plmidi_methods[] = {
-    {"sound", plmidi_sound, METH_VARARGS, "sound midi by using plmidi"},
-    {"windowsPlayer", windowsPlayer, METH_VARARGS, NULL},
+    {"sound", _plmidi::sound, METH_VARARGS, "sound midi by using plmidi"},
+    {"sound_by_midiOutShortMsg", _plmidi::sound_by_midiOutShortMsg, METH_VARARGS, NULL},
     {NULL, NULL, 0, NULL}
 };
 
@@ -19,15 +23,15 @@ static PyModuleDef plmidi = {
 PyMODINIT_FUNC
 PyInit_plmidi(void)
 {
-    PyObject *module = PyModule_Create(&plmidi);
+    PyObject *py_module = PyModule_Create(&plmidi);
     plmidiExc_InitErr = PyErr_NewException("plmidi.plmidiInitError", NULL, NULL);
     Py_XINCREF(plmidiExc_InitErr);
-    if (PyModule_AddObject(module, "plmidiInitError", plmidiExc_InitErr) < 0) {
+    if (PyModule_AddObject(py_module, "plmidiInitError", plmidiExc_InitErr) < 0) {
         Py_XDECREF(plmidiExc_InitErr);
         Py_CLEAR(plmidiExc_InitErr);
-        Py_DECREF(module);
+        Py_DECREF(py_module);
         return NULL;
     }
 
-    return module? module: NULL;
+    return py_module? py_module: NULL;
 }
