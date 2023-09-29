@@ -5,15 +5,14 @@
 #include <ranges>
 #include <vector>
 #include <string>
-#include <cstring>
-#include <iomanip>
 #include <iostream>
-#define PY_SSIZE_T_CLEAN  /* Make "s#" use Py_ssize_t rather than int. */
-#include <Python.h> //TODO: use "pybind11" to replace Python.h
-#undef PY_SSIZE_T_CLEAN
 #include <signal.h> /* Press ctrl+C to exit */
 #include <Windows.h>
 #include <mmsystem.h>
+
+#include "pybind11/pybind11.h"
+
+namespace py = pybind11;
 
 #define PLMIDI_INIT_NOERROR 1
 #define PLMIDI_DO_NOT_INIT 0
@@ -26,9 +25,6 @@
 
 static int8_t plmidi_initflag = 0; // -1: fail, 0: ready to init, 1: success initialized
 
-// plmidiInitError
-PyObject *plmidiExc_InitErr = NULL;
-
 // if Ctrl+C, then exit
 static void plmidi_exit(int signal)
 {
@@ -39,17 +35,30 @@ static void plmidi_exit(int signal)
 
 namespace _plmidi {
 
+// plmidiInitError
+struct plmidiExc_InitErr : public ::std::exception
+{
+    static constexpr ::std::string err_msg{"module plmidi init fail"};
+    plmidiExc_InitErr() = default;
+    ~plmidiExc_InitErr() = default;
+
+    const char* what() const noexcept override {
+        return err_msg.c_str();
+    }
+};
+
+// developing
 // Input -> piece: mido.MidiTrack
 PyObject* sound(PyObject *self, PyObject *args)
 {
     // check inputs and init
     PyObject *piece; // type: mido.MidiTrack
     if (!PyArg_ParseTuple(args, "O", &piece)) {
-        PyErr_SetString(PyExc_TypeError, NULL);
+        throw py::type_error();
         return NULL;
     }
     if (!PyList_Check(piece)) {
-        PyErr_SetString(PyExc_TypeError, "Input must be a python list");
+        throw py::type_error("Input must be a python list");
         return NULL;
     }
 
@@ -64,7 +73,7 @@ PyObject* sound(PyObject *self, PyObject *args)
         }
     }
     if (plmidi_initflag == PLMIDI_INIT_ERROR) {
-        PyErr_SetString(plmidiExc_InitErr, "init midi player fail");
+        throw plmidiExc_InitErr();
         return NULL;
     }
 
@@ -132,7 +141,7 @@ PyObject* sound(PyObject *self, PyObject *args)
     midiHeader.lpData = (LPSTR)&msg_bytes;
     midiHeader.dwBufferLength = sizeof(msg_bytes);
     if (midiOutPrepareHeader(handle, &midiHeader, sizeof(MIDIHDR)) != MMSYSERR_NOERROR) {
-        PyErr_SetString(plmidiExc_InitErr, NULL);
+        throw plmidiExc_InitErr();
         return NULL;
     }
     midiOutLongMsg(handle, &midiHeader, (UINT)sizeof(MIDIHDR));
@@ -164,16 +173,9 @@ PyObject* sound(PyObject *self, PyObject *args)
 }
 
 // input -> mido.MidiTrack, tempo: int
-PyObject* sound_by_midiOutShortMsg(PyObject *self, PyObject *args)
+// class mido.MidiTrack(list)
+void sound_by_midiOutShortMsg(py::list piece, int tempo)
 {
-    // check inputs and init
-    PyObject *piece; // a python list
-    long tempo;
-    if (!PyArg_ParseTuple(args, "Ol", &piece, &tempo)) {
-        PyErr_SetString(PyExc_TypeError, "input type must be an integer or plmidi setup fail");
-        return NULL;
-    }
-
     // init midi player
     HMIDIOUT handle;
     if (plmidi_initflag == 0) 
@@ -185,34 +187,42 @@ PyObject* sound_by_midiOutShortMsg(PyObject *self, PyObject *args)
         }
     }
     if (plmidi_initflag == -1) {
-        PyErr_SetString(plmidiExc_InitErr, "init midi player fail");
+        throw plmidiExc_InitErr();
     }
 
     // init exit
     signal(SIGINT, plmidi_exit);
 
     // main loop
-    for (Py_ssize_t i = 0; i < PyList_Size(piece); ++i)
+#ifdef PLMIDI_DEBUG
+        py::print("main loop of plmidi player start");
+#endif // PLMIDI_DEBUG
+    for (auto msg : piece) // msg: mido.Message
     {
-        PyObject *msg = PyList_GetItem(piece, i);
-        const char *msg_type = PyUnicode_AsUTF8(PyObject_GetAttrString(msg, "type"));
-
+        ::std::string msg_type = msg.attr("type").cast<::std::string>();
+#ifdef PLMIDI_DEBUG
+        py::print("msg_type: ", msg_type);
+#endif // PLMIDI_DEBUG
         // sound midi
-        if (strcmp(msg_type, "program_change") == 0) {
-            midiOutShortMsg(handle, GET_ATTR(msg, "program") << 8 | 0xC0 + GET_ATTR(msg, "channel"));
-        } else if (strcmp(msg_type, "note_on") == 0) {
-            midiOutShortMsg(handle, GET_ATTR(msg, "velocity") << 16 | GET_ATTR(msg, "note") << 8 | 0x90 + GET_ATTR(msg, "channel"));
-        } else if (strcmp(msg_type, "note_off") == 0) {
-            midiOutShortMsg(handle, GET_ATTR(msg, "velocity") << 16 | GET_ATTR(msg, "note") << 8 | 0x80 + GET_ATTR(msg, "channel"));
+        if ( msg_type.compare("program_change") == 0 ) {
+            midiOutShortMsg(handle, msg.attr("program").cast<int>() << 8 | 0xC0 + msg.attr("channel").cast<int>());
+        } else if ( msg_type.compare("note_on") == 0 ) {
+            midiOutShortMsg(handle, msg.attr("velocity").cast<int>() << 16 | msg.attr("note").cast<int>() << 8 | 0x90 + msg.attr("channel").cast<int>());
+        } else if ( msg_type.compare("note_off") == 0 ) {
+            midiOutShortMsg(handle, msg.attr("velocity").cast<int>() << 16 | msg.attr("note").cast<int>() << 8 | 0x80 + msg.attr("channel").cast<int>());
         }
-        Sleep(GET_ATTR(msg, "time") * tempo / 500'000); 
+#ifdef PLMIDI_DEBUG
+            py::print(msg);
+#endif // PLMIDI_DEBUG
+        Sleep(msg.attr("time").cast<int>() * tempo / 500'000); 
     }
-
+#ifdef PLMIDI_DEBUG
+    py::print("main loop of plmidi player end");
+#endif // PLMIDI_DEBUG
     midiOutClose(handle);
-    Py_RETURN_NONE;
 }
 
-} // namespace plmidi
+} // namespace _plmidi
 
 #undef GET_ATTR
 #undef GET_ITEM

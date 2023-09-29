@@ -149,8 +149,9 @@ class Midi:
 
         # main
         if player is not None:
-            if not (sound_by_plmidi, sound_by_pygame, sound_by_os)[player.value]():
-                errors.warning("can not use this way to sound midi.")
+            f = (sound_by_plmidi, sound_by_pygame, sound_by_os)[player.value]
+            if not f():
+                errors.warning(f"can not use {f.__name__} to sound midi.")
             return self
         
         if sound_by_plmidi():
