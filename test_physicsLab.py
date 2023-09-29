@@ -267,7 +267,7 @@ class MyTestCase(unittest.TestCase):
                     t.append(music.Note(0, pitch=12 * i + j + 23))
             #t.notes[-1] = None
             #print(t)
-            t.play(-1, -1, 0)
+            t.release(-1, -1, 0)
 
 if __name__ == '__main__':
     unittest.main()

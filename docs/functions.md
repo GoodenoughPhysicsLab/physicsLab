@@ -271,7 +271,7 @@ D触发器：
 7  3  
 很明显比第一种更麻烦  
 ```
-在physicsLab 1.2.2之后，该函数被永久弃用（移除）
+在physicsLab 1.2.2之后，该函数被移除
   
 除了创建导线外，也可以删除导线：  
 ```Python
@@ -330,7 +330,9 @@ with experiment("测逝"):
 调用`del_Wires()`，同上
 
 ### 音乐拓展 music extension
-参数的作用之类的都在源码的注释当中，时间原因文档只好简写了
+参数的作用之类的在源码的注释中可以找到
+请注意，`Note`, `Chord`, `Piece`为数据类（只用来存储数据），要转变为物实对应的电路结构需要使用`release()`方法，但通常来说你只需用调用`Piece.release()`或者`Player`
+
 #### Note
 `Note`是音符类  
 其中的`time`参数的含义是***距离播放该音符需要等待多少时间***
@@ -339,16 +341,26 @@ with experiment("测逝"):
 ```Piece```是乐曲类
 这是一个只用来保存数据的类，想要往里面存储音符必须是`Note`，如果是休止符则用`None`表示  
 初始化时支持传入`list`，但也支持`append`方法  
-将Piece类转换为可以在物实播放的电路，除了使用`Player(piece, x, y, z, elementXYZ)`的方法，也可以使用`piece.play(x, y, z, elementXYZ)`的方法，两者是等价的。  
+将Piece类转换为可以在物实播放的电路，除了使用`Player(piece, x, y, z, elementXYZ)`的方法，也可以使用`piece.release(x, y, z, elementXYZ)`的方法，两者是等价的。  
 在`midi`中最容易碰到的是播放速度的问题，你可以调用`Piece().set_tempo(num)`来重新设置播放速度，`num`参数的含义是将原有的播放速度乘以num倍。
+```Python
+from physicsLab import *
+from physicsLab.union import * # from import所有的模块化电路
+
+with experiment("测逝"):
+    p = Piece([Note(time=1)])
+    p.append(Note(time=2))
+
+    p.release()
+```
 
 #### Player
-```player```将```piece```转换为能够在物实播放的电路
+`player`将`piece`转换为能够在物实播放的电路
 
 #### Midi
 `Midi` 类是`Piece`与 *midi文件* 之间的桥梁  
 ```Python
-for physicsLab import *
+from physicsLab import *
 
 m = music.Midi("temp.mid")
 m.sound() # 播放该midi，此方法会尝试使用plmidi, pygame与系统调用来播放

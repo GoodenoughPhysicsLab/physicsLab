@@ -8,7 +8,7 @@ import physicsLab.electricity.elementsClass as _elementsClass
 from copy import deepcopy
 from math import ceil, sqrt
 from enum import Enum, unique
-from typing import Optional, Union, List, Tuple, Iterator
+from typing import Any, Optional, Union, List, Tuple, Iterator
 
 from .wires import crt_Wires
 from ...element import get_Element
@@ -254,7 +254,12 @@ class Midi:
 
     # 以.plm.py的格式导出, div_time: midi的time的单位长度与Note的time的单位长度不同，暂时还需要用户手动调整
     # max_notes: 最大的音符数，因为物实没法承受过多的元件
-    def write_plm(self, filepath = "temp.plm.py", div_time=100, max_notes: Optional[int]=650) -> "Midi":
+    def write_plm(self,
+                  filepath: str = "temp.plm.py",
+                  div_time: numType =100,
+                  max_notes: Optional[int] = 650,
+                  sav_name: str = "temp" # 产生的存档的名字, 也可直接在生成.plm.py中修改
+    ) -> "Midi":
         if self.messages is None:
             raise TypeError("self.messages is not None")
         
@@ -279,8 +284,8 @@ class Midi:
         with open(filepath, "w") as f:
             f.write(f"from physicsLab import experiment\n"
                     f"from physicsLab.union import Note, Piece\n"
-                    f"with experiment(\"temp\"):\n"
-                    f"    Piece({l_notes}).play(-1, -1, 0)".replace("Note(", "\n        Note("))
+                    f"with experiment(\"{sav_name}\"):\n"
+                    f"    Piece({l_notes}).release(-1, -1, 0)".replace("Note(", "\n        Note("))
 
         return self
 
@@ -312,6 +317,19 @@ class Note:
     def __repr__(self) -> str:
         return f"Note(time={self.time}, playTime={self.playTime}, instrument={self.instrument}, " \
                f"pitch={self.pitch}, volume={self.volume})"
+    
+    # 将Note存储的数据转变为物实对应的电路结构
+    def release(self):
+        pass
+
+# 和弦类 TODO
+class Chord:
+    def __init__(self) -> None:
+        pass
+    
+    # 将Chord存储的数据转变为对应的物实的短路
+    def release(self):
+        pass
 
 # 循环类，用于创建一段循环的音乐片段
 # TODO: 完善Loop存储的数据结构
@@ -408,10 +426,11 @@ class Piece:
     def __next__(self):
         yield next(self.__iter)
     
-    def play(self, x: numType, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def release(self, x: numType, y: numType = 0, z: numType = 0, elementXYZ = None):
         Player(self, x, y, z, elementXYZ)
 
 # 将piece的数据生成为物实的电路
+# TODO 使用数据.release来代替将所有的生成电路的逻辑代码都放在Player中
 class Player:
     def __init__(self,
                  musicArray: Piece,
