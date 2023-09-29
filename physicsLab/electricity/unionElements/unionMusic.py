@@ -175,11 +175,13 @@ class Midi:
 
         return self
 
-    # 转换为physicsLab的piece类
+    # 转换为physicsLab的piece类 developing
     # TODO 转换时忽略note_off，因为物实目前只适合给一个默认值
     # 但超长音符应该考虑下适当调整物实简单乐器播放时长
     def translate_to_piece(self) -> "Piece":
-        pass
+        res = Piece()
+
+        return res
 
     ''' *.plm.py文件:
         plm即为 physicsLab music file
@@ -322,10 +324,18 @@ class Note:
     def release(self):
         pass
 
-# 和弦类 TODO
+# 和弦类
 class Chord:
-    def __init__(self) -> None:
-        pass
+    def __init__(self, *args) -> None:
+        self.notes: List[Note] = list(args)
+    
+    # 将新的音符加入到和弦中
+    def append(self, a_note: Note) -> "Chord":
+        if not isinstance(a_note, Note):
+            raise TypeError
+
+        self.notes.append(a_note)
+        return self
     
     # 将Chord存储的数据转变为对应的物实的短路
     def release(self):
@@ -392,6 +402,7 @@ class Piece:
                 self.notes.append(None)
             self.notes.append(a_note)
 
+    # 向Piece类添加数据成员
     def append(self, other: Note) -> "Piece":
         while other.time > 1:
             self.notes.append(None)
@@ -402,6 +413,10 @@ class Piece:
     # 将Piece类转换为Midi
     def translate_to_midi(self):
         pass
+
+    # 将Piece转换为物实对应的电路
+    def release(self, x: numType, y: numType = 0, z: numType = 0, elementXYZ = None):
+        Player(self, x, y, z, elementXYZ)
 
     def __len__(self) -> int:
         return len(self.notes)
@@ -425,9 +440,6 @@ class Piece:
 
     def __next__(self):
         yield next(self.__iter)
-    
-    def release(self, x: numType, y: numType = 0, z: numType = 0, elementXYZ = None):
-        Player(self, x, y, z, elementXYZ)
 
 # 将piece的数据生成为物实的电路
 # TODO 使用数据.release来代替将所有的生成电路的逻辑代码都放在Player中

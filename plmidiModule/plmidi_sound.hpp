@@ -197,7 +197,7 @@ void sound_by_midiOutShortMsg(py::list piece, int tempo)
 #ifdef PLMIDI_DEBUG
         py::print("main loop of plmidi player start");
 #endif // PLMIDI_DEBUG
-    for (auto msg : piece) // msg: mido.Message
+    for (auto& msg : piece) // msg: mido.Message
     {
         ::std::string msg_type = msg.attr("type").cast<::std::string>();
 #ifdef PLMIDI_DEBUG
