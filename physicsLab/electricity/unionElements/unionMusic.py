@@ -94,18 +94,13 @@ class Midi:
             else:
                 colorUtils.printf("sound by using plmidi", colorUtils.COLOR.CYAN)
                 if self.midifile is None or self.messages is None:
-                    errors.warning("can not sound because self.midifile is None")
-                    return False
+                    raise FileNotFoundError("can not sound because self.midifile is None")
 
+                self.write_midi()
                 try:
-                    #plmidi.sound(self.messages)
-                    # 当self.midifile中含非英文字符时, 大概率会出错
-                    plmidi.sound_by_mciSendCommand(self.midifile)
-                except plmidi.OpenMidiFileError:
-                    try:
-                        plmidi.sound_by_midiOutShortMsg(self.messages, self.tempo)
-                    except plmidi.plmidiInitError:
-                        return False
+                    plmidi.sound_by_mciSendCommand("temp.mid")
+                except plmidi.OpenMidiFileError or plmidi.plmidiInitError:
+                    return False
 
                 return True
 
@@ -120,9 +115,11 @@ class Midi:
                 if self.midifile is None:
                     errors.warning("can not sound because self.midifile is None")
                     return False
+
+                self.write_midi()
                 # 代码参考自musicpy的play函数
                 mixer.init()
-                mixer.music.load(self.midifile)
+                mixer.music.load("temp.mid")
                 try:
                     mixer.music.play()
                     while mixer.music.get_busy():

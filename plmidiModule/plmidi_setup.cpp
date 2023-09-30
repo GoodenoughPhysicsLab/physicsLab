@@ -5,7 +5,6 @@
 #include "plmidi_sound.hpp"
 
 PYBIND11_MODULE(plmidi, m) {
-    //m.def("sound", _plmidi::sound);
     m.def("sound_by_midiOutShortMsg", _plmidi::sound_by_midiOutShortMsg);
     m.def("sound_by_mciSendCommand", _plmidi::sound_by_mciSendCommand);
     // plmidiInitError
