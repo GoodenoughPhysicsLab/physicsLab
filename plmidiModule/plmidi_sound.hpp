@@ -9,6 +9,7 @@
 #include <signal.h> /* Press ctrl+C to exit */
 #include <Windows.h>
 #include <mmsystem.h>
+#include <string_view>
 
 #include "pybind11/pybind11.h"
 
@@ -38,12 +39,32 @@ namespace _plmidi {
 // plmidiInitError
 struct plmidiExc_InitErr : public ::std::exception
 {
-    static constexpr ::std::string err_msg{"module plmidi init fail"};
+    const char *err_msg = "module plmidi init fail";
+
     plmidiExc_InitErr() = default;
+    plmidiExc_InitErr(const char *text) {
+        err_msg = text;
+    }
     ~plmidiExc_InitErr() = default;
 
     const char* what() const noexcept override {
-        return err_msg.c_str();
+        return err_msg;
+    }
+};
+
+// plmidiInitError
+struct OpenMidiFileError : public ::std::exception
+{
+    const char *err_msg = "Failed to open MIDI file";
+
+    OpenMidiFileError() = default;
+    OpenMidiFileError(const char *text) {
+        err_msg = text;
+    }
+    ~OpenMidiFileError() = default;
+
+    const char* what() const noexcept override {
+        return err_msg;
     }
 };
 
@@ -220,6 +241,54 @@ void sound_by_midiOutShortMsg(py::list piece, int tempo)
     py::print("main loop of plmidi player end");
 #endif // PLMIDI_DEBUG
     midiOutClose(handle);
+}
+
+void sound_by_mciSendCommand(py::str path)
+{
+    // I don't know why this will fail to play
+    // const char *cpath = path.cast<::std::string>().c_str();
+    ::std::string spath = path.cast<::std::string>();
+    const char *cpath = spath.c_str();
+
+    // init exit
+    signal(SIGINT, plmidi_exit);
+
+    // Open MIDI file
+    MCI_OPEN_PARMS mciOpenParms;
+    mciOpenParms.lpstrDeviceType = "sequencer";
+    mciOpenParms.lpstrElementName = cpath;
+    if (mciSendCommand(0, MCI_OPEN, MCI_OPEN_TYPE | MCI_OPEN_ELEMENT, (DWORD_PTR)&mciOpenParms) != 0) {
+        throw OpenMidiFileError();
+    }
+
+   // Play MIDI file
+    MCI_PLAY_PARMS mciPlayParms;
+    if (mciSendCommand(mciOpenParms.wDeviceID, MCI_PLAY, 0, (DWORD_PTR)&mciPlayParms) != 0) {
+        mciSendCommand(mciOpenParms.wDeviceID, MCI_CLOSE, 0, 0); // Close the device
+        throw plmidiExc_InitErr("Failed to play MIDI file");
+    }
+
+    // Continuously check the status of MIDI playback
+    while (true) {
+        MCI_STATUS_PARMS mciStatusParms;
+        mciStatusParms.dwItem = MCI_STATUS_MODE;
+        if (mciSendCommand(mciOpenParms.wDeviceID, MCI_STATUS, MCI_STATUS_ITEM, (DWORD_PTR)&mciStatusParms) != 0) {
+            py::print("Failed to check MIDI playback status");
+            break;
+        }
+
+        if (mciStatusParms.dwReturn == MCI_MODE_STOP) {
+            // MIDI playback has reached the end
+            break;
+        }
+
+        Sleep(100); // Sleep for a short duration before checking again
+    }
+
+    // Close MIDI device
+    if (mciSendCommand(mciOpenParms.wDeviceID, MCI_CLOSE, 0, 0) != 0) {
+        throw plmidiExc_InitErr("Failed to close MIDI device");
+    }
 }
 
 } // namespace _plmidi

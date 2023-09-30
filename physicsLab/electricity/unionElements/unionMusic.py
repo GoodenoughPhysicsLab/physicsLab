@@ -99,9 +99,13 @@ class Midi:
 
                 try:
                     #plmidi.sound(self.messages)
-                    plmidi.sound_by_midiOutShortMsg(self.messages, self.tempo)
-                except plmidi.plmidiInitError:
-                    return False
+                    # 当self.midifile中含非英文字符时, 大概率会出错
+                    plmidi.sound_by_mciSendCommand(self.midifile)
+                except plmidi.OpenMidiFileError:
+                    try:
+                        plmidi.sound_by_midiOutShortMsg(self.messages, self.tempo)
+                    except plmidi.plmidiInitError:
+                        return False
 
                 return True
 
