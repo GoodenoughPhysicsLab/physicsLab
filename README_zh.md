@@ -22,6 +22,12 @@ pip install pygame
 之所以没有做安装physicsLab的时候自动安装这两个库，是因为安卓的`qpython`在下载含c的库的时候存在问题  
 4.  如果你等不及使用一些新功能的话，测试版通常在gitee可以找到
 
+## 搭建开发环境
+切换至physicsLab根目录，输入以下指令：
+```
+.\cmd\setvenv
+```
+
 ### 新手解惑: 为什么我明明安装了physicsLab, python却告诉我无法找到？
 pip安装的包会被放在site-package文件夹下  
 这大概率是因为pip安装的包所对应的site-package与你使用的python对应的site-package不一样导致的  

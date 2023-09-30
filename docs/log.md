@@ -35,3 +35,7 @@
 
 ## 1.3.3
 1.  完成Midi.write_plm的主要逻辑
+
+## 1.3.4
+1.  进一步完善了Midi类（translate_to_piece）
+2.  优化了plmidi的播放效果（使用pybind11代替了Python.h）
