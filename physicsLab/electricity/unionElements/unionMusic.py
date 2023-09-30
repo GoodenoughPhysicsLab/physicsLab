@@ -176,10 +176,23 @@ class Midi:
         return self
 
     # 转换为physicsLab的piece类 developing
-    # TODO 转换时忽略note_off，因为物实目前只适合给一个默认值
-    # 但超长音符应该考虑下适当调整物实简单乐器播放时长
-    def translate_to_piece(self) -> "Piece":
+    # TODO 但超长音符应该考虑下适当调整物实简单乐器播放时长
+    def translate_to_piece(self, div_time: numType = 100, max_notes: Optional[int] = 650) -> "Piece":
         res = Piece()
+
+        if self.messages is None:
+            raise RuntimeError("Midi.messages is None")
+
+        wait_time: int = 0
+        for msg in self.messages:
+            if msg.type == NOTE_ON: # type: ignore -> Message/MetaMessage must have attr type
+                res.append(Note(round((msg.time + wait_time) / div_time), instrument=self.channels[msg.channel], pitch=msg.note)) # type: ignore -> must have
+                wait_time = 0
+            elif msg.time != 0:
+                wait_time += msg.time
+            
+            if max_notes is not None and res.count_notes() >= max_notes:
+                break
 
         return res
 
@@ -258,12 +271,12 @@ class Midi:
     # max_notes: 最大的音符数，因为物实没法承受过多的元件
     def write_plm(self,
                   filepath: str = "temp.plm.py",
-                  div_time: numType =100,
+                  div_time: numType = 100,
                   max_notes: Optional[int] = 650,
                   sav_name: str = "temp" # 产生的存档的名字, 也可直接在生成.plm.py中修改
     ) -> "Midi":
         if self.messages is None:
-            raise TypeError("self.messages is not None")
+            raise TypeError("Midi.messages is None")
         
         if not (isinstance(div_time, (int, float)) or
                 isinstance(max_notes, int)) and max_notes is not None:
@@ -278,10 +291,11 @@ class Midi:
             if msg.type == NOTE_ON: # type: ignore -> Message/MetaMessage must have attr type
                 l_notes.append(Note(round((msg.time + wait_time) / div_time), instrument=self.channels[msg.channel], pitch=msg.note)) # type: ignore -> must have
                 wait_time = 0
-                if max_notes is not None and len(l_notes) >= max_notes:
-                    break
             elif msg.time != 0:
                 wait_time += msg.time
+            
+            if max_notes is not None and len(l_notes) >= max_notes:
+                break
 
         with open(filepath, "w") as f:
             f.write(f"from physicsLab import experiment\n"
@@ -397,13 +411,13 @@ class Piece:
         self.volume = volume
         self.notes: noteType = []
         for a_note in notes:
-            while a_note.time > 1:
-                a_note.time -= 1
-                self.notes.append(None)
-            self.notes.append(a_note)
+            self.append(a_note)
 
     # 向Piece类添加数据成员
     def append(self, other: Note) -> "Piece":
+        if not isinstance(other, Note):
+            raise TypeError
+
         while other.time > 1:
             self.notes.append(None)
             other.time -= 1
@@ -411,12 +425,20 @@ class Piece:
         return self
     
     # 将Piece类转换为Midi
-    def translate_to_midi(self):
+    def translate_to_midi(self) -> "Midi":
         pass
 
     # 将Piece转换为物实对应的电路
-    def release(self, x: numType, y: numType = 0, z: numType = 0, elementXYZ = None):
-        Player(self, x, y, z, elementXYZ)
+    def release(self, x: numType, y: numType = 0, z: numType = 0, elementXYZ = None) -> "Player":
+        return Player(self, x, y, z, elementXYZ)
+
+    # Piece中所有Notes与Chord的数量    
+    def count_notes(self) -> int:
+        res = 0
+        for note in self.notes:
+            if isinstance(note, (Note, Chord)):
+                res += 1
+        return res
 
     def __len__(self) -> int:
         return len(self.notes)
@@ -425,7 +447,7 @@ class Piece:
         if not isinstance(item, int):
             raise TypeError
         return self.notes[item]
-    
+
     def __setitem__(self, item: int, value) -> None:
         if not isinstance(item, int):
             raise TypeError
