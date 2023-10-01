@@ -39,3 +39,6 @@
 ## 1.3.4
 1.  进一步完善了Midi类（translate_to_piece）
 2.  优化了plmidi的播放效果（使用pybind11代替了Python.h）
+
+## 1.3.5
+1.  改进`Midi.sound`的播放机制,使`plmidi`与`pygame`的播放效果相同
