@@ -336,8 +336,14 @@ class Note:
                f"pitch={self.pitch}, volume={self.volume})"
     
     # 将Note存储的数据转变为物实对应的电路结构
-    def release(self):
-        pass
+    def convert_to_Simple_Instrument(self, x: numType, y: numType, z: numType,
+                        elementXYZ: Optional[bool] = None, # 是否为元件坐标系
+                        instrument: Union[int, str] = 0, # 演奏的乐器，暂时只支持传入数字
+                        pitch: Union[int, str] = 60, # 音高/音调: 20 ~ 128
+                        bpm: int = 100, # 节奏
+                        volume: numType = 1.0 # 音量/响度
+    ) -> _elementsClass.Simple_Instrument:
+        return _elementsClass.Simple_Instrument(x, y, z, elementXYZ, instrument, pitch, bpm, volume)
 
 # 和弦类
 class Chord:
@@ -413,7 +419,7 @@ class Piece:
         self.pitch = pitch
         self.bpm = bpm
         self.volume = volume
-        self.notes: noteType = []
+        self.notes: List[Union[Note, None]] = []
         for a_note in notes:
             self.append(a_note)
 
@@ -551,8 +557,8 @@ class Player:
             # 此时生成的简单乐器与z轴平行
             if a_note.time == 0:
                 zcor += 1
-                ins = _elementsClass.Simple_Instrument(
-                    1 + x + xcor, 4 + y + ycor, z + zcor, pitch=a_note.pitch, elementXYZ=True
+                ins = a_note.convert_to_Simple_Instrument(
+                    1 + x + xcor, 4 + y + ycor, z + zcor, pitch=a_note.pitch, instrument=a_note.instrument, elementXYZ=True
                 )
                 ins.i - get_Element(x=1 + x + xcor, y=4 + y + ycor, z=z + zcor - 1).i # type: ignore -> result: SimpleInstrument
                 ins.o - get_Element(x=1 + x + xcor, y=4 + y + ycor, z=z + zcor - 1).o # type: ignore -> result: SimpleInstrument
@@ -562,8 +568,8 @@ class Player:
                 if xcor == side:
                     xcor = 0
                     ycor += 2
-                
-                ins = _elementsClass.Simple_Instrument(
+
+                ins = a_note.convert_to_Simple_Instrument(
                     1 + x + xcor, 4 + y + ycor, z, pitch=a_note.pitch, instrument=a_note.instrument, elementXYZ=True
                 )
                 # 连接x轴的d触的导线

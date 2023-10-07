@@ -1,4 +1,6 @@
 #coding=utf-8
+from typing import Optional
+
 from ..elementPin import element_Pin
 from physicsLab._tools import numType
 from ._elementClassHead import electricityBase, two_pin_ArtificialCircuit_Pin
@@ -6,7 +8,7 @@ from ._elementClassHead import electricityBase, two_pin_ArtificialCircuit_Pin
 # 开关基类
 
 class _switch_electricity(electricityBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "", "Identifier": "", "IsBroken": False,
                           "IsLocked": False, "Properties": {"开关": 0, "锁定": 1.0},
                           "Statistics": {}, "Position": "",
@@ -16,13 +18,13 @@ class _switch_electricity(electricityBase):
 # 简单开关
 @two_pin_ArtificialCircuit_Pin
 class Simple_Switch(_switch_electricity):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         super(Simple_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Simple Switch"
 
 # 单刀双掷开关
 class SPDT_Switch(_switch_electricity):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         super(SPDT_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "SPDT Switch"
 
@@ -40,7 +42,7 @@ class SPDT_Switch(_switch_electricity):
 
 # 双刀双掷开关
 class DPDT_Switch(_switch_electricity):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         super(DPDT_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "DPDT Switch"
 
@@ -71,7 +73,7 @@ class DPDT_Switch(_switch_electricity):
 # 按钮开关
 @two_pin_ArtificialCircuit_Pin
 class Push_Switch(electricityBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {
             "ModelID": "Push Switch", "Identifier": "", "IsBroken": False, "IsLocked": False,
             "Properties": {"开关": 0.0, "默认开关": 0.0, "锁定": 1.0}, "Statistics": {"电流": 0.0}, "Position": "",
@@ -82,7 +84,7 @@ class Push_Switch(electricityBase):
 # 一节电池
 @two_pin_ArtificialCircuit_Pin
 class Battery_Source(electricityBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Battery Source", "Identifier": "",
                            "IsBroken": False, "IsLocked": False, "Properties": {"最大功率": 16.2, "电压": 3.0, "内阻": 0.5},
                            "Statistics": {"电流": 0, "功率": 0, "电压": 0},
@@ -92,7 +94,7 @@ class Battery_Source(electricityBase):
 
 # 学生电源
 class Student_Source(electricityBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Student Source", "Identifier": "", "IsBroken": False, "IsLocked": False,
                            "Properties": {"交流电压": 3.0, "直流电压": 3.0, "开关": 0.0, "频率": 50.0},
                            "Statistics": {"瞬间功率": 0.0, "瞬间电压": 0.0, "瞬间电流": 0.0,
@@ -124,7 +126,7 @@ class Student_Source(electricityBase):
 # 电阻
 @two_pin_ArtificialCircuit_Pin
 class Resistor(electricityBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Resistor", "Identifier": "", "IsBroken": False,
                            "IsLocked": False,
                            "Properties": {"最大电阻": 1000_0000.0, "最小电阻": 0.1, "电阻": 10, "锁定": 1.0},
@@ -137,7 +139,7 @@ class Resistor(electricityBase):
 # 保险丝
 @two_pin_ArtificialCircuit_Pin
 class Fuse_Component(electricityBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Fuse Component", "Identifier": "", "IsBroken": False, "IsLocked": False,
                            "Properties": {"开关": 1.0, "额定电流": 0.30000001192092896, "熔断电流": 0.5, "锁定": 1.0},
                            "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0, "功率": 0.0, "电压": 0.0, "电流": 0.0},
@@ -146,7 +148,7 @@ class Fuse_Component(electricityBase):
 
 # 滑动变阻器
 class Slide_Rheostat(electricityBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Slide Rheostat", "Identifier": "", "IsBroken": False, "IsLocked": False,
                            "Properties": {"额定电阻": 10.0, "滑块位置": 0.0, "电阻1": 10, "电阻2": 10.0, "锁定": 1.0},
                            "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0, "功率": 0.0, "电压": 0.0, "电流": 0.0,

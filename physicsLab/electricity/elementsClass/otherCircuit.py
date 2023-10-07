@@ -7,7 +7,7 @@ from ._elementClassHead import electricityBase, two_pin_ArtificialCircuit_Pin
 # 小电扇
 @two_pin_ArtificialCircuit_Pin
 class Electric_Fan(electricityBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {'ModelID': 'Electric Fan', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'额定电阻': 1.0, '马达常数': 0.1, '转动惯量': 0.01, '电感': 5e-05, '负荷扭矩': 0.01,
@@ -25,7 +25,7 @@ class Simple_Instrument(electricityBase):
             x: numType = 0,
             y: numType = 0,
             z: numType = 0,
-            elementXYZ = None,
+            elementXYZ: Optional[bool] = None,
             instrument: Union[int, str] = 0, # 演奏的乐器，暂时只支持传入数字
             pitch: Union[int, str] = 60, # 音高/音调: 20 ~ 128
             bpm: int = 100, # 节奏
