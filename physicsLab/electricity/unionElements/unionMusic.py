@@ -179,7 +179,7 @@ class Midi:
     # 转换为physicsLab的piece类 developing
     # TODO 但超长音符应该考虑下适当调整物实简单乐器播放时长
     def translate_to_piece(self, div_time: numType = 100, max_notes: Optional[int] = 650) -> "Piece":
-        res = Piece()
+        res = []
 
         if self.messages is None:
             raise RuntimeError("Midi.messages is None")
@@ -192,10 +192,10 @@ class Midi:
             elif msg.time != 0:
                 wait_time += msg.time
             
-            if max_notes is not None and res.count_notes() >= max_notes:
+            if max_notes is not None and len(res) >= max_notes:
                 break
 
-        return res
+        return Piece(res)
 
     ''' *.plm.py文件:
         plm即为 physicsLab music file
@@ -241,12 +241,12 @@ class Midi:
 
         with open(path, "w", encoding="utf-8") as f:
             f.write(f"from mido import MidiFile, MidiTrack, MetaMessage, Message\n"
-                    f"fmidi = MidiFile()\n"
+                    f"mid = MidiFile()\n"
                     f"track = {str(self.messages)}\n"
-                    f"fmidi.tracks.append(track)\n"
-                    f"fmidi.save(\"temp.mid\")\n"
+                    f"mid.tracks.append(track)\n"
+                    f"mid.save(\"temp.mid\")\n"
                     f"from physicsLab.union import Midi\n"
-                    f"Midi(\"temp.mid\").sound(player=Midi.PLAYER.os)")
+                    f"Midi(\"temp.mid\").sound()")
 
         return self
 
@@ -342,6 +342,9 @@ class Note:
 # 和弦类
 class Chord:
     def __init__(self, *args) -> None:
+        if not all(isinstance(note, Note) for note in args):
+            raise TypeError
+
         self.notes: List[Note] = list(args)
     
     # 将新的音符加入到和弦中
@@ -387,7 +390,7 @@ class Loop:
 # 乐曲类
 class Piece:
     def __init__(self,
-                 notes: Union[List[Note], Tuple[Note], None] = None, # TODO: support Loop
+                 notes: Union[List[Note], None] = None, # TODO: support Loop
                  # 设置整个音轨的默认参数 Track global variable
                  instrument: int = 0, # 演奏的乐器，暂时只支持传入数字
                  pitch: int = 60, # 音高/音调
@@ -399,7 +402,7 @@ class Piece:
                 isinstance(pitch, int) or
                 isinstance(bpm, int) or
                 0 < volume < 1 or
-                isinstance(notes, (list, tuple, Loop)) and all(isinstance(val, Note) for val in notes)
+                isinstance(notes, (list, Loop)) and all(isinstance(val, Note) for val in notes)
         ):
             raise TypeError
 
