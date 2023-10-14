@@ -8,7 +8,7 @@ import physicsLab.electricity.elementsClass as _elementsClass
 from copy import deepcopy
 from math import ceil, sqrt
 from enum import Enum, unique
-from typing import Any, Optional, Union, List, Tuple, Iterator
+from typing import Optional, Union, List, Tuple, Iterator
 
 from .wires import crt_Wires
 from ...element import get_Element
@@ -68,7 +68,7 @@ class Midi:
         _midifile = mido.MidiFile(self.midifile, clip=True)
         wait_time: numType = 0
         res = mido.MidiTrack()
-        for msg in _midifile.merged_track:
+        for msg in _midifile.merged_track: # mido.merge_tracks is too slow!!!
             if msg.type in (NOTE_ON, NOTE_OFF, PROGRAM_CHANGE, SET_TEMPO):
                 res.append(msg)
                 msg.time += wait_time
