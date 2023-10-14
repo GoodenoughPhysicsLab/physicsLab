@@ -1,6 +1,6 @@
 py -m venv venv
 
-py -m pip install build
-py -m pip install twine
-py -m pip install wheel
-py -m pip install mido
+.\venv\Scripts\pip install build
+.\venv\Scripts\pip install twine
+.\venv\Scripts\pip install wheel
+.\venv\Scripts\pip install mido
