@@ -361,7 +361,7 @@ class Chord:
         self.notes.append(a_note)
         return self
     
-    # 将Chord存储的数据转变为对应的物实的短路
+    # 将Chord存储的数据转变为对应的物实的电路
     def release(self):
         pass
 

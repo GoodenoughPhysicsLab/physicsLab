@@ -1,2 +1,3 @@
 # ./cmd/del_pycache.sh
-find ./physicsLab -name "__pycache__" -type d -exec rm -rf {} \; >/dev/null 2>&1
+find ./physicsLab -type d -name "__pycache__" -exec echo "Deleting {}" \;
+find ./physicsLab -type d -name "__pycache__" -exec rm -rf {} \; 2>/dev/null

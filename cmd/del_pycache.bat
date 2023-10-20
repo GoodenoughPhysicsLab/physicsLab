@@ -2,7 +2,7 @@
 @echo off
 for /d /r "physicsLab" %%d in (__pycache__) do (
     if exist "%%d" (
-@REM    echo Deleting %%d
+        echo Deleting %%d
         rd /s /q "%%d"
     )
 )
