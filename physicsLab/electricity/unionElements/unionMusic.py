@@ -481,6 +481,9 @@ class Player:
                  x: numType = 0, y: numType = 0, z: numType = 0,
                  elementXYZ = None
     ):
+        from physicsLab.element import count_Elements
+        self.count_elements_start: int = count_Elements()
+        
         if not (
                 isinstance(x, (int, float)) or
                 isinstance(y, (int, float)) or
@@ -584,3 +587,9 @@ class Player:
         stop.o - yesGate.i_low - check1.i
         stop.i_up - yPlayer[ycor // 2].o_up # type: ignore -> D_Flipflop must has attr o_up
         stop.i_low - xPlayer[side - 1].o_up # type: ignore -> D_Flipflop must has attr neg_data_Output
+    
+        self.count_elements_end: int = count_Elements()
+
+    # 返回Player创建的元件数量
+    def count_elements(self) -> int:
+        return self.count_elements_end - self.count_elements_start
