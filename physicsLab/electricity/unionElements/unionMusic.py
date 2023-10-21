@@ -334,16 +334,6 @@ class Note:
     def __repr__(self) -> str:
         return f"Note(time={self.time}, playTime={self.playTime}, instrument={self.instrument}, " \
                f"pitch={self.pitch}, volume={self.volume})"
-    
-    # 将Note存储的数据转变为物实对应的电路结构
-    def convert_to_Simple_Instrument(self, x: numType, y: numType, z: numType,
-                        elementXYZ: Optional[bool] = None, # 是否为元件坐标系
-                        instrument: Union[int, str] = 0, # 演奏的乐器，暂时只支持传入数字
-                        pitch: Union[int, str] = 60, # 音高/音调: 20 ~ 128
-                        bpm: int = 100, # 节奏
-                        volume: numType = 1.0 # 音量/响度
-    ) -> _elementsClass.Simple_Instrument:
-        return _elementsClass.Simple_Instrument(x, y, z, elementXYZ, instrument, pitch, bpm, volume)
 
 # 和弦类
 class Chord:
@@ -482,7 +472,7 @@ class Player:
                  elementXYZ = None
     ):
         from physicsLab.element import count_Elements
-        self.count_elements_start: int = count_Elements()
+        count_elements_start: int = count_Elements()
         
         if not (
                 isinstance(x, (int, float)) or
@@ -560,9 +550,10 @@ class Player:
             # 此时生成的简单乐器与z轴平行
             if a_note.time == 0:
                 zcor += 1
-                ins = a_note.convert_to_Simple_Instrument(
-                    1 + x + xcor, 4 + y + ycor, z + zcor, pitch=a_note.pitch, instrument=a_note.instrument, elementXYZ=True
-                )
+                ins = _elementsClass.Simple_Instrument(
+                    1 + x + xcor, 4 + y + ycor, z + zcor,
+                    pitch=a_note.pitch, instrument=a_note.instrument, elementXYZ=True, is_ideal_model=True
+                ).set_Rotation(0, 0, 0)
                 ins.i - get_Element(x=1 + x + xcor, y=4 + y + ycor, z=z + zcor - 1).i # type: ignore -> result: SimpleInstrument
                 ins.o - get_Element(x=1 + x + xcor, y=4 + y + ycor, z=z + zcor - 1).o # type: ignore -> result: SimpleInstrument
             else:
@@ -572,24 +563,26 @@ class Player:
                     xcor = 0
                     ycor += 2
 
-                ins = a_note.convert_to_Simple_Instrument(
-                    1 + x + xcor, 4 + y + ycor, z, pitch=a_note.pitch, instrument=a_note.instrument, elementXYZ=True
-                )
+                ins = _elementsClass.Simple_Instrument(
+                    1 + x + xcor, 4 + y + ycor, z,
+                    pitch=a_note.pitch, instrument=a_note.instrument, elementXYZ=True, is_ideal_model=True
+                ).set_Rotation(0, 0, 0)
                 # 连接x轴的d触的导线
                 if xcor == 0:
-                    yesGate.o_up - ins.o
+                    yesGate.o_up - ins.i
                 else:
-                    ins.o - xPlayer.data_Output[xcor]
+                    ins.i - xPlayer.data_Output[xcor]
                 # 连接y轴的d触的导线
-                ins.i - yPlayer.neg_data_Output[ycor // 2] # type: ignore -> yPlayer must has attr neg_data_Output
+                ins.o - yPlayer.neg_data_Output[ycor // 2] # type: ignore -> yPlayer must has attr neg_data_Output
 
         stop = _elementsClass.And_Gate(x + 1, y + ycor + 3, z, True)
         stop.o - yesGate.i_low - check1.i
         stop.i_up - yPlayer[ycor // 2].o_up # type: ignore -> D_Flipflop must has attr o_up
         stop.i_low - xPlayer[side - 1].o_up # type: ignore -> D_Flipflop must has attr neg_data_Output
     
-        self.count_elements_end: int = count_Elements()
+        count_elements_end: int = count_Elements()
+        self._count_elements = count_elements_end - count_elements_start
 
     # 返回Player创建的元件数量
     def count_elements(self) -> int:
-        return self.count_elements_end - self.count_elements_start
+        return self._count_elements
