@@ -199,6 +199,18 @@ a.modelID # 获取元件的ModelID
 a.format_Position() # 舍去坐标的浮点精度（因为物实的浮点运算误差）
 ```
 
+### hook
+`physicsLab v1.3.5`之后（不含）可以定义元件的`hook`
+```Python
+from physicsLab import *
+
+def f():
+    pass
+
+with experiment("test"):
+    set_hook(f) # 初始化元件的hook
+```
+
 ## 导线 wire
 连接导线提供了2种方式  
 第一种：  
@@ -233,45 +245,22 @@ old_crt_wire(SourceLabel, SourcePin: int, TargetLabel, TargetPin: int, color = "
 连接导线的方式是更偏于物实存档的原始方案，即用数字来表示某个引脚  
 下面呈现部分元件引脚图（第一种其实就是对这个老函数更方便的封装）：  
 ```
-D触发器：          
-2    0                  
-                             
-3    1                          
-
-是门、非门： 
-0 1 
-
-比较器:
-1
-    2
-0  
+D触发器：     两引脚门电路：    比较器:     三引脚门电路：     全加器：     继电器：
+2    0         0     1       1            0                2    0      0    4
+                                   2            2          3             1
+3    1                       0            1                4    1      2    3
 
 逻辑输入、逻辑输出：
 0  
-
-三引脚门电路：   
-0             
-    2         
-1             
-
-全加器：  
-2    0  
-3  
-4    1  
-
-继电器pin  
-0   4  
-  1    
-2   3  
   
 二位乘法器：  
 4  0  
 5  1  
 6  2  
 7  3  
-很明显比第一种更麻烦  
 ```
-在physicsLab 1.2.2之后，该函数被移除
+很明显比第一种更麻烦  
+在`physicsLab v1.2.2`之后，该函数被移除
   
 除了创建导线外，也可以删除导线：  
 ```Python
@@ -282,8 +271,6 @@ element2 = Logic_Output()
 del_Wire(element.o, element2.i)
 ```
 使用方法与crt_Wire一模一样  
-  
-（这篇readme应该介绍了大部分常用功能）
 
 ## 模块化电路 union
 
@@ -393,6 +380,10 @@ type = experimentType.天体物理实验
 type = experimentType.电与磁实验
 ```
 `type`可以什么都不传，此时默认为电学实验
+
+## 其他
+### 关闭打印的颜色
+因为`windows`的颜色打印很容易出问题，因此提供了关闭颜色打印的函数：`close_color_print()`  
 
 # 物实程序化3  
 我也曾试过xuzhengx的物实程序化3，发现爆了文件错误  

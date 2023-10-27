@@ -1,24 +1,40 @@
 #coding=utf-8
-from typing import Union, Callable
+from typing import Union, Callable, Tuple
+
 import physicsLab.errors as errors
-import physicsLab.electricity.elementPin as _elementPin
-from physicsLab.electricity.wire import crt_Wire, del_Wire
-import physicsLab.electricity.unionElements.unionPin as _unionPin
+import physicsLab.electricity.unionElements._unionClassHead as _unionClassHead
+
+from physicsLab.electricity.wire import crt_Wire, del_Wire, element_Pin
+
+# 模块化电路的“引脚”，输入输出都是数据
+class union_Pin:
+    __slots__ = ("union_self", "elementPins")
+    def __init__(self, union_self: _unionClassHead.UnionBase, *elementPins):
+        self.union_self = union_self
+        self.elementPins: Tuple[element_Pin] = tuple(elementPins)
+
+    # 通过unionPin[num]来索引单个bit
+    def __getitem__(self, item):
+        return self.elementPins[item]
+
+    def __sub__(self, other: Union[element_Pin, "union_Pin"]):
+        crt_Wires(self, other)
+        return other
 
 def check_TypeUnionPin(func: Callable):
     def result(
-        sourcePin: Union["_unionPin.union_Pin", "_elementPin.element_Pin"],
-        targetPin: Union["_unionPin.union_Pin", "_elementPin.element_Pin"],
+        sourcePin: Union[union_Pin, element_Pin],
+        targetPin: Union[union_Pin, element_Pin],
         color="蓝"
     ) -> None:
-        if isinstance(sourcePin, _elementPin.element_Pin):
-            sourcePin = _unionPin.union_Pin(sourcePin.element_self, sourcePin)
-        if isinstance(targetPin, _elementPin.element_Pin):
-            targetPin = _unionPin.union_Pin(targetPin.element_self, targetPin)
+        if isinstance(sourcePin, element_Pin):
+            sourcePin = union_Pin(sourcePin.element_self, sourcePin)
+        if isinstance(targetPin, element_Pin):
+            targetPin = union_Pin(targetPin.element_self, targetPin)
 
         if not (
-                isinstance(sourcePin, _unionPin.union_Pin) or
-                isinstance(targetPin, _unionPin.union_Pin)
+                isinstance(sourcePin, union_Pin) or
+                isinstance(targetPin, union_Pin)
         ):
             raise TypeError
 
@@ -34,19 +50,19 @@ def check_TypeUnionPin(func: Callable):
 # 为unionPin连接导线，相当于自动对数据进行连接导线
 @check_TypeUnionPin
 def crt_Wires(
-        sourcePin: Union["_unionPin.union_Pin", "_elementPin.element_Pin"],
-        targetPin: Union["_unionPin.union_Pin", "_elementPin.element_Pin"],
+        sourcePin: Union[union_Pin, element_Pin],
+        targetPin: Union[union_Pin, element_Pin],
         color="蓝"
 ) -> None:
-    for i, o in zip(sourcePin.elementPins, targetPin.elementPins):
+    for i, o in zip(sourcePin.elementPins, targetPin.elementPins): # type: ignore
         crt_Wire(i, o, color)
 
 # 删除unionPin的导线
 @check_TypeUnionPin
 def del_Wires(
-        sourcePin: Union["_unionPin.union_Pin", "_elementPin.element_Pin"],
-        targetPin: Union["_unionPin.union_Pin", "_elementPin.element_Pin"],
+        sourcePin: Union[union_Pin, element_Pin],
+        targetPin: Union[union_Pin, element_Pin],
         color="蓝"
 ) -> None:
-    for i, o in zip(sourcePin.elementPins, targetPin.elementPins):
+    for i, o in zip(sourcePin.elementPins, targetPin.elementPins): # type: ignore
         del_Wire(i, o, color)

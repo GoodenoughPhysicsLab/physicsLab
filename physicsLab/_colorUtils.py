@@ -17,22 +17,22 @@ class COLOR(Enum):
 # 打印write_Experiment的信息时是否使用彩色字
 colorSupport = True
 
+if colorSupport and sys.platform == "win32":
+    try:
+        # https://stackoverflow.com/questions/36760127/...
+        # how-to-use-the-new-support-for-ansi-escape-sequences-in-the-windows-10-console
+        from ctypes import windll
+        kernel32 = windll.kernel32
+        kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
+    except ImportError:
+        colorSupport = False
+
 # 打印颜色字
 def printf(msg: str, color: COLOR) -> None:
-    global colorSupport
-
     if not isinstance(color, COLOR):
         raise TypeError
-
-    if sys.platform == "win32":
-        try:
-            # https://stackoverflow.com/questions/36760127/...
-            # how-to-use-the-new-support-for-ansi-escape-sequences-in-the-windows-10-console
-            from ctypes import windll
-            kernel32 = windll.kernel32
-            kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
-        except Exception:  # pragma: no cover
-            colorSupport = False
+    
+    global colorSupport
 
     if not isinstance(msg, str):
         raise TypeError
@@ -40,3 +40,8 @@ def printf(msg: str, color: COLOR) -> None:
         print(f"{color.value}{msg}{COLOR._DEFAULT.value}")
     else:
         print(msg)
+
+# 关闭打印时的color
+def close_color_print():
+    global colorSupport
+    colorSupport = False

@@ -1,7 +1,7 @@
 #coding=utf-8
 from typing import Optional
 
-from ..elementPin import element_Pin
+from ..wire import element_Pin
 from physicsLab._tools import numType
 from ._elementClassHead import electricityBase, two_pin_ArtificialCircuit_Pin
 

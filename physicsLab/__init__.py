@@ -1,24 +1,5 @@
 #coding=utf-8
 
-# 在import了physicsLab的程序的第一行加上#coding=utf-8
-try: # 在cmd或者shell上无法执行该功能
-    import sys
-    s = ""
-    with open(sys.argv[0], encoding='utf-8') as f:
-        s = f.read()
-    if not s.replace('\n', '').startswith("#coding=utf-8"):
-        with open(sys.argv[0], 'w', encoding='utf-8') as f:
-            if s.startswith('\n'):
-                f.write(f'#coding=utf-8{s}')
-            else:
-                f.write(f'#coding=utf-8\n{s}')
-    del sys
-except FileNotFoundError:
-    import physicsLab._colorUtils as _colorUtils
-    # 在cmd或IDLE上运行时会关闭打印彩字功能
-    _colorUtils.printColor = False
-    del _colorUtils
-
 # Win: 若存档对应文件夹不存在直接报错
 import physicsLab._fileGlobals as _fileGlobals
 from os import path as _path, makedirs as _makedirs
@@ -33,6 +14,8 @@ if not (_platform == "win32" or _platform == "linux"): # 在Android上检测操�
 if _platform == "linux" and not _path.exists("/storage/emulated/0/physicsLabSav"):
     _makedirs("/storage/emulated/0/physicsLabSav")
 
+# 颜色打印
+from physicsLab._colorUtils import close_color_print
 # 操作实验
 from physicsLab.experiment import *
 # 电学实验
@@ -51,8 +34,25 @@ from physicsLab._fileGlobals import get_Sav, get_experimentType, experimentType
 import physicsLab.electricity.unionElements.unionLogic as union
 import physicsLab.electricity.unionElements.unionMusic as music
 
+# 在import了physicsLab的程序的第一行加上#coding=utf-8
+try: # 在cmd或者shell上无法执行该功能
+    import sys
+    s = ""
+    with open(sys.argv[0], encoding='utf-8') as f:
+        s = f.read()
+    if not s.replace('\n', '').startswith("#coding=utf-8"):
+        with open(sys.argv[0], 'w', encoding='utf-8') as f:
+            if s.startswith('\n'):
+                f.write(f'#coding=utf-8{s}')
+            else:
+                f.write(f'#coding=utf-8\n{s}')
+    del sys
+except FileNotFoundError:
+    close_color_print()
 
 __all__ = [
+    # _colorUtils.py
+    "close_color_print",
     # _fileGlobals.py
     "_fileGlobals", "get_Sav", "get_experimentType", "experimentType",
 

@@ -1,11 +1,12 @@
 #coding=utf-8
-from typing import *
-
 import physicsLab.errors as _errors
 import physicsLab.electricity as electricity
 
+from typing import List, Callable, Optional, List, Tuple
+from typing_extensions import Self
+
+from .wires import union_Pin
 from ..elementsClass import *
-from .unionPin import union_Pin
 from physicsLab._tools import numType
 from ._unionClassHead import UnionBase
 
@@ -32,15 +33,30 @@ def _unionHeading_fold(
 # 模块化电路逻辑电路基类
 class Union_LogicBase(UnionBase):
     # 设置高电平的值
-    def set_HighLeaveValue(self, num: numType) -> "Union_LogicBase":
+    def set_HighLeaveValue(self, num: numType) -> Self:
         for element in self._elements:
             element.set_HighLeaveValue(num)
         return self
 
-    def set_LowLeaveValue(self, num: numType) -> "Union_LogicBase":
+    def set_LowLeaveValue(self, num: numType) -> Self:
         for element in self._elements:
             element.set_LowLeaveValue(num)
         return self
+
+# 只读非门，若没有则创建一个只读非门，若已存在则不会创建新的元件，该类为单例模式
+class Const_NoGate:
+    __singleton: "Const_NoGate" = None # type: ignore
+    __singleton_NoGate: No_Gate = None # type: ignore
+
+    def __new__(cls, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None) -> Self:
+        if Const_NoGate.__singleton_NoGate is None:
+            Const_NoGate.__singleton = object.__new__(cls)
+            Const_NoGate.__singleton_NoGate = No_Gate(x, y, z, elementXYZ)
+        return Const_NoGate.__singleton
+
+    @property
+    def o(self):
+        return Const_NoGate.__singleton_NoGate.o
 
 # 任意引脚加法电路
 class Sum(Union_LogicBase):
@@ -116,22 +132,6 @@ class Sum(Union_LogicBase):
             *(element.o_up for element in self._elements),
             self._elements[-1].o_low
         )
-
-# 只读非门，若没有则创建一个只读非门，若已存在则不会创建新的元件
-class Const_NoGate:
-    __singleton_NoGate: No_Gate = None
-    def __init__(self,
-                 x: numType = 0,
-                 y: numType = 0,
-                 z: numType = 0,
-                 elementXYZ: Optional[bool] = None
-    ) -> None:
-        if Const_NoGate.__singleton_NoGate is None:
-            Const_NoGate.__singleton_NoGate = No_Gate(x, y, z, elementXYZ)
-
-    @property
-    def o(self):
-        return Const_NoGate.__singleton_NoGate.o
 
 # 任意引脚减法电路
 class Sub(Union_LogicBase):
@@ -235,17 +235,13 @@ class Sub(Union_LogicBase):
         )
 
 # 2-4译码器
-class _two_four_Decoder:
+class Two_four_Decoder(Union_LogicBase):
     def __init__(self, x : numType = 0, y : numType = 0, z : numType = 0):
-        if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
-            raise RuntimeError('illegal argument')
-        self.x = x
-        self.y = y
-        self.z = z
         obj1 = Nor_Gate(x, y, z)
         obj2 = Nimp_Gate(x, y + 0.1, z)
         obj3 = Nimp_Gate(x, y + 0.2, z)
         obj4 = And_Gate(x, y + 0.3, z)
+        self._elements = [obj1, obj2, obj3, obj4]
         electricity.crt_Wire(obj1.i_up, obj2.i_low), electricity.crt_Wire(obj2.i_low, obj3.i_up), electricity.crt_Wire(obj3.i_up, obj4.i_up)
         electricity.crt_Wire(obj1.i_low, obj2.i_up), electricity.crt_Wire(obj2.i_up, obj3.i_low), electricity.crt_Wire(obj3.i_low, obj4.i_low)
 
@@ -258,7 +254,7 @@ class _two_four_Decoder:
         return electricity.element_Pin(electricity.get_Element(self.x, self.y + 0.3, self.z), 1)
 
 # 4-16译码器
-class _four_sixteen_Decoder:
+class Four_sixteen_Decoder:
     def __init__(self, x : numType = 0, y : numType = 0, z : numType = 0):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
@@ -379,7 +375,7 @@ class _four_sixteen_Decoder:
     def o15(self):
         return electricity.get_Element(self.x + 0.3, self.y + 0.25, self.z).o_upmid
 
-# 多个逻辑输入（暂不支持m * n矩阵排列元件的方式）
+# 多个逻辑输入
 class Inputs(Union_LogicBase):
     def __init__(self,
                  x: numType = 0,

@@ -222,6 +222,8 @@ class MyTestCase(unittest.TestCase):
             self.assertEqual(count_Elements(), 42)
             self.assertEqual(count_Wires(), 41)
 
+            union.Sub(-5, 0, 0)
+
     # 测试简单乐器设置音高的三种方法
     def test_Simple_Instrument(self):
         with experiment("测逝", elementXYZ=True):

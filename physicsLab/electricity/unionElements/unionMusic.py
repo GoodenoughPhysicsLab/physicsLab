@@ -429,7 +429,7 @@ class Piece:
         pass
 
     # 将Piece转换为物实对应的电路
-    def release(self, x: numType, y: numType = 0, z: numType = 0, elementXYZ = None) -> "Player":
+    def release(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None) -> "Player":
         return Player(self, x, y, z, elementXYZ)
 
     # Piece中所有Notes与Chord的数量    

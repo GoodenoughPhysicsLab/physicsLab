@@ -1,36 +1,37 @@
 #coding=utf-8
 from typing import Optional
+from typing_extensions import Self
 
-from ..elementPin import element_Pin
+from ..wire import element_Pin
 from physicsLab._tools import numType
 from ._elementClassHead import electricityBase
 
 class _logicBase(electricityBase):
     # 设置高电平的值
-    def set_HighLeaveValue(self, num: numType):
+    def set_HighLeaveValue(self, num: numType) -> Self:
         if not isinstance(num, (int, float)):
             raise TypeError("illegal argument")
         if num < self.get_LowLeaveValue():
             raise TypeError("illegal range")
-        self._arguments["Properties"]["高电平"] = num
+        self._arguments["Properties"]["高电平"] = num # type: ignore -> subclass must has attr _arguments
 
         return self
 
     def get_HighLeaveValue(self) -> numType:
-        return self._arguments["Properties"]["高电平"]
+        return self._arguments["Properties"]["高电平"] # type: ignore -> subclass must has attr _arguments
 
     # 设置低电平的值
-    def set_LowLeaveValue(self, num: numType):
+    def set_LowLeaveValue(self, num: numType) -> Self:
         if not isinstance(num, (int, float)):
             raise TypeError("illegal argument")
         if num > self.get_HighLeaveValue():
             raise TypeError("illegal range")
-        self._arguments["Properties"]["低电平"] = num
+        self._arguments["Properties"]["低电平"] = num # type: ignore -> subclass must has attr _arguments
 
         return self
 
     def get_LowLeaveValue(self):
-        return self._arguments["Properties"]["低电平"]
+        return self._arguments["Properties"]["低电平"] # type: ignore -> subclass must has attr _arguments
 
 # 逻辑输入
 class Logic_Input(_logicBase):

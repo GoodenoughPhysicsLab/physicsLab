@@ -1,6 +1,4 @@
 #coding=utf-8
-# 元件引脚类
-from physicsLab.electricity.elementPin import *
 # 操作导线
 from physicsLab.electricity.wire import *
 # 元件类

@@ -1,10 +1,11 @@
 # coding=utf-8
-from typing import *
-
 import physicsLab.errors as errors
 import physicsLab._fileGlobals as _fileGlobals
-import physicsLab.electricity.elementPin as _elementPin
+import physicsLab.electricity.wire as _elementPin
 import physicsLab.electricity.elementXYZ as _elementXYZ
+
+from typing_extensions import Self
+from typing import Optional, NoReturn
 
 from physicsLab._tools import numType, roundData, randString, position
 
@@ -19,8 +20,8 @@ class eletricityMeta(type):
                  z: numType = 0,
                  elementXYZ: Optional[bool] = None,
                  *args, **kwargs
-    ):
-        self = cls.__new__(cls)
+    ) -> Self:
+        self = cls.__new__(cls) # type: ignore -> create subclass of electricityBase
         if not (
                 isinstance(x, (float, int)) and
                 isinstance(y, (float, int)) and
@@ -67,12 +68,11 @@ class eletricityMeta(type):
 # 所有电学元件的父类
 class electricityBase(metaclass=eletricityMeta):
     # 类无法被实例化
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> NoReturn:
         raise errors.instantiateError
 
     # 设置原件的角度
-    def set_Rotation(self, xRotation: numType = 0, yRotation: numType = 0,
-                     zRotation: numType = 180):
+    def set_Rotation(self, xRotation: numType = 0, yRotation: numType = 0, zRotation: numType = 180) -> Self:
         if not (
                 isinstance(xRotation, (int, float)) and
                 isinstance(yRotation, (int, float)) and
@@ -84,7 +84,7 @@ class electricityBase(metaclass=eletricityMeta):
         return self
 
     # 重新设置元件的坐标
-    def set_Position(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
+    def set_Position(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> Self:
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
         x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
@@ -127,13 +127,13 @@ class electricityBase(metaclass=eletricityMeta):
 # 双引脚模拟电路原件的引脚
 def two_pin_ArtificialCircuit_Pin(cls):
     @property
-    def red(self):
+    def red(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 0)
 
     cls.red, cls.l = red, red
 
     @property
-    def black(self):
+    def black(self) -> _elementPin.element_Pin:
         return _elementPin.element_Pin(self, 1)
 
     cls.black, cls.r = black, black
