@@ -7,10 +7,11 @@
 /.vscode
 /physicsLab_projects
 
-build/
 dist/
-__pycache__/
+build/
+pybind11/
 *.egg-info/
+__pycache__/
 
 *.txt
 *.code-workspace

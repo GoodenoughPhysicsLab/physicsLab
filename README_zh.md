@@ -25,7 +25,7 @@ pip install pygame
 ## 搭建开发环境
 切换至physicsLab根目录，输入以下指令：
 ```
-.\cmd\setvenv
+.\cmd\setup_project.bat
 ```
 
 ### 新手解惑: 为什么我明明安装了physicsLab, python却告诉我无法找到？
