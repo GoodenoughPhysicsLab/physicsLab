@@ -2,17 +2,16 @@
 
 # Win: 若存档对应文件夹不存在直接报错
 import physicsLab._fileGlobals as _fileGlobals
-from os import path as _path, makedirs as _makedirs
-if not _path.exists(_fileGlobals.FILE_HEAD):
-    raise WindowsError("The folder does not exist, try launching Physics-Lab-AR and try it out")
+from os import path as _path, mkdir as _mkdir
 
 # 检测操作系统
 from sys import platform as _platform
-if not (_platform == "win32" or _platform == "linux"): # 在Android上检测操作系统为linux
-    raise OSError
-# 创建Android上的physicsLabSav文件夹
-if _platform == "linux" and not _path.exists("/storage/emulated/0/physicsLabSav"):
-    _makedirs("/storage/emulated/0/physicsLabSav")
+if _platform == "win32":
+    if not _path.exists(_fileGlobals.FILE_HEAD):
+        raise WindowsError("The folder does not exist, try launching Physics-Lab-AR and try it out")
+else:
+    if not _path.exists("physicsLabSav"):
+        _mkdir("physicsLabSav")
 
 # 颜色打印
 from physicsLab._colorUtils import close_color_print

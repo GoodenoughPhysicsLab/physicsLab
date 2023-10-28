@@ -104,7 +104,7 @@ def _crt_Experiment(savName: str, experimentType) -> None:
     _fileGlobals.fileGlobals_init(experimentType)
     # 创建存档
     _fileGlobals.SavName = _tools.randString(34)
-    _fileGlobals.SavPath = f'{_fileGlobals.FILE_HEAD}/{_fileGlobals.SavName}.sav'
+    _fileGlobals.SavPath = f"{_fileGlobals.FILE_HEAD}/{_fileGlobals.SavName}.sav"
     rename_Experiment(savName)
 
 # 创建存档，输入为存档名
@@ -195,7 +195,7 @@ def read_Experiment() -> None:
             z = float(element['Rotation'][sign1 + 1: sign2:])
             y = float(element['Rotation'][sign2 + 1::])
             obj.set_Rotation(x, y, z)
-            obj._arguments['Identifier'] = element['Identifier']
+            obj._arguments['Identifier'] = element['Identifier'] # type: ignore -> class NE555 must has attr _arguments
             from .electricity import Logic_Input, eight_bit_Input
             # 如果obj是逻辑输入
             if isinstance(obj, Logic_Input) and element['Properties'].get('开关') == 1:

@@ -1,9 +1,7 @@
 #coding=utf-8
-import os
-
-from typing import *
 from enum import Enum
 from sys import platform
+from typing import Union, NoReturn
 
 import physicsLab.errors as errors
 
@@ -172,19 +170,18 @@ _electromagnetism = {
     }
 }
 
-FILE_HEAD = None # os.path.abspath(os.sep) # 获取根目录
+FILE_HEAD = "physicsLabSav"
 if platform == "win32":
     from getpass import getuser
     FILE_HEAD = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Circuit"
-elif platform == "linux": # Android
-    FILE_HEAD = "/storage/emulated/0/physicsLabSav"
 
+SavName: str = "" # sav的文件名
 SavPath: str = "" # 存档的完整路径，为 f"{FILE_HEAD}/{SavName}"
-SavName: str = ""  # sav的文件名
-StatusSave: dict = {} # 存放实验元件，导线（如果是电学实验的话）
-Elements: list = []  # 装原件的_arguments
-Wires: list = []
-PlSav: dict = {}
+
+StatusSave: dict = {} # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
+Elements: list = [] # 装原件的_arguments
+Wires: list = [] # 存档对应的导线
+PlSav: dict = {} # 存档的json
 
 # 通过坐标索引元件
 elements_Position: dict = {}  # key: self._position, value: List[self...]
