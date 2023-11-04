@@ -1,11 +1,11 @@
 # Visual Studio
 /.vs
-/venv
 # PyCharm
 /.idea
 # Visual Studio Code
 /.vscode
-/physicsLab_projects
+
+/venv
 
 dist/
 build/
