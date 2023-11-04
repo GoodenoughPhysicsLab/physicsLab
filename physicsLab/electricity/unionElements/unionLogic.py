@@ -245,14 +245,6 @@ class Two_four_Decoder(Union_LogicBase):
         electricity.crt_Wire(obj1.i_up, obj2.i_low), electricity.crt_Wire(obj2.i_low, obj3.i_up), electricity.crt_Wire(obj3.i_up, obj4.i_up)
         electricity.crt_Wire(obj1.i_low, obj2.i_up), electricity.crt_Wire(obj2.i_up, obj3.i_low), electricity.crt_Wire(obj3.i_low, obj4.i_low)
 
-    @property
-    def i_up(self):
-        return electricity.element_Pin(electricity.get_Element(self.x, self.y + 0.3, self.z), 0)
-
-    @property
-    def i_low(self):
-        return electricity.element_Pin(electricity.get_Element(self.x, self.y + 0.3, self.z), 1)
-
 # 4-16译码器
 class Four_sixteen_Decoder:
     def __init__(self, x : numType = 0, y : numType = 0, z : numType = 0):
@@ -294,86 +286,6 @@ class Four_sixteen_Decoder:
     # 输出译码器的数据
     def outputData(self):
         pass
-
-    @property
-    def i_up(self):
-        return electricity.element_Pin(electricity.get_Element(self.x + 0.15, self.y + 0.3, self.z), 0)
-
-    @property
-    def i_upmid(self):
-        return electricity.element_Pin(electricity.get_Element(self.x + 0.15, self.y + 0.3, self.z), 1)
-
-    @property
-    def i_lowmid(self):
-        return electricity.element_Pin(electricity.get_Element(self.x, self.y + 0.3, self.z), 0)
-
-    @property
-    def i_low(self):
-        return electricity.element_Pin(electricity.get_Element(self.x, self.y + 0.3, self.z), 1)
-
-    @property
-    def o0(self):
-        return electricity.get_Element(self.x + 0.3, self.y + 0.05, self.z).o_lowmid
-
-    @property
-    def o1(self):
-        return electricity.get_Element(self.x + 0.3, self.y + 0.05, self.z).o_upmid
-
-    @property
-    def o2(self):
-        return electricity.get_Element(self.x + 0.3, self.y + 0.25, self.z).o_lowmid
-
-    @property
-    def o3(self):
-        return electricity.get_Element(self.x + 0.45, self.y + 0.25, self.z).o_upmid
-
-    @property
-    def o4(self):
-        return electricity.get_Element(self.x + 0.45, self.y + 0.05, self.z).o_lowmid
-
-    @property
-    def o5(self):
-        return electricity.get_Element(self.x + 0.45, self.y + 0.05, self.z).o_upmid
-
-    @property
-    def o6(self):
-        return electricity.get_Element(self.x + 0.45, self.y + 0.25, self.z).o_lowmid
-
-    @property
-    def o7(self):
-        return electricity.get_Element(self.x + 0.45, self.y + 0.25, self.z).o_upmid
-
-    @property
-    def o8(self):
-        return electricity.get_Element(self.x + 0.6, self.y + 0.05, self.z).o_lowmid
-
-    @property
-    def o9(self):
-        return electricity.get_Element(self.x + 0.6, self.y + 0.05, self.z).o_upmid
-
-    @property
-    def o10(self):
-        return electricity.get_Element(self.x + 0.6, self.y + 0.25, self.z).o_lowmid
-
-    @property
-    def o11(self):
-        return electricity.get_Element(self.x + 0.6, self.y + 0.25, self.z).o_upmid
-
-    @property
-    def o12(self):
-        return electricity.get_Element(self.x + 0.3, self.y + 0.05, self.z).o_lowmid
-
-    @property
-    def o13(self):
-        return electricity.get_Element(self.x + 0.3, self.y + 0.05, self.z).o_upmid
-
-    @property
-    def o14(self):
-        return electricity.get_Element(self.x + 0.3, self.y + 0.25, self.z).o_lowmid
-
-    @property
-    def o15(self):
-        return electricity.get_Element(self.x + 0.3, self.y + 0.25, self.z).o_upmid
 
 # 多个逻辑输入
 class Inputs(Union_LogicBase):
@@ -603,7 +515,7 @@ class Super_AndGate:
         if len(input_pins) == 2:
             And_Gate(x, y, z, elementXYZ)
 
-# 基于计数器的时钟
+# 基于计数器实现的脉冲发生器
 class Counter_Tick:
     def __init__(self,
                  x: numType = 0,

@@ -349,7 +349,7 @@ with experiment("测逝"):
 ```Python
 from physicsLab import *
 
-m = music.Midi("temp.mid")
+m = music.Midi("example.mid")
 m.sound() # 播放该midi，此方法会尝试使用plmidi, pygame与系统调用来播放
 m.sound(player=music.Midi.PLAYER.PYGAME) # 指定使用pygame播放midi
 # 共有PLAYER.plmidi, PLAYER.pygame, PLAYER.os三个参数

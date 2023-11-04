@@ -5,7 +5,6 @@ import physicsLab._colorUtils as colorUtils
 import physicsLab.electricity.elementXYZ as _elementXYZ
 import physicsLab.electricity.elementsClass as _elementsClass
 
-from copy import deepcopy
 from math import ceil, sqrt
 from enum import Enum, unique
 from typing import Optional, Union, List, Tuple, Iterator
@@ -41,7 +40,7 @@ class Midi:
         pygame = 1
         os = 2
 
-    def __init__(self, midifile: Optional[str] = None) -> None:
+    def __init__(self, midifile: str) -> None:
         ''' self.messages的参数格式:
             mido.MidiTrack([
                 Message -> (type: {{note_on or note_off}}, channel, note, velocity, time),
@@ -55,13 +54,10 @@ class Midi:
             program: midi音色
             tempo: 播放速度
         '''
-        self.midifile: Optional[str] = midifile
-        self.messages: Optional[mido.MidiTrack] = None
+        self.midifile: str = midifile
+        self.messages: mido.MidiTrack = self.__get_midi_messages()
         self.channels: List[Optional[int]] = [None] * 16
         self.tempo: int = 500_000
-        if midifile is None:
-            return
-        self.messages = self.__get_midi_messages()
 
     # 使用mido打开一个midi文件并获取其tracks
     def __get_midi_messages(self) -> mido.MidiTrack:
@@ -93,8 +89,6 @@ class Midi:
                 return False
             else:
                 colorUtils.printf("sound by using plmidi", colorUtils.COLOR.CYAN)
-                if self.midifile is None or self.messages is None:
-                    raise FileNotFoundError("can not sound because self.midifile is None")
 
                 self.write_midi()
                 try:
@@ -112,9 +106,6 @@ class Midi:
                 return False
             else:
                 colorUtils.printf("sound by using pygame", colorUtils.COLOR.CYAN)
-                if self.midifile is None:
-                    errors.warning("can not sound because self.midifile is None")
-                    return False
 
                 self.write_midi()
                 # 代码参考自musicpy的play函数
@@ -130,12 +121,8 @@ class Midi:
         
         # 使用系统调用播放midi
         def sound_by_os() -> bool:
-            colorUtils.printf("sound by using os", colorUtils.COLOR.CYAN)
             from os import path, system
-
-            if self.midifile is None:
-                errors.warning("can not sound because self.midifile is None")
-                return False
+            colorUtils.printf("sound by using os", colorUtils.COLOR.CYAN)
             
             if path.exists(self.midifile):
                 system(self.midifile)
@@ -168,7 +155,7 @@ class Midi:
 
     # 将time重设为原来的num倍
     def set_tempo(self, num: numType = 1) -> "Midi":
-        if self.messages is None or not isinstance(num, (int, float)):
+        if not isinstance(num, (int, float)):
             raise TypeError
 
         for msg in self.messages:
@@ -180,9 +167,6 @@ class Midi:
     # TODO 但超长音符应该考虑下适当调整物实简单乐器播放时长
     def translate_to_piece(self, div_time: numType = 100, max_notes: Optional[int] = 650) -> "Piece":
         res = []
-
-        if self.messages is None:
-            raise RuntimeError("Midi.messages is None")
 
         wait_time: int = 0
         for msg in self.messages:
@@ -226,16 +210,12 @@ class Midi:
         if not path.exists(plmpath):
             raise FileNotFoundError
 
-        self.midifile = None
+        self.midifile = "temp.mid"
         _read_midopy(plmpath)
         return self
 
     # 导出一个 .mido.py 文件
     def write_midopy(self, path: str="temp.mido.py") -> "Midi":
-        if self.messages is None:
-            errors.warning("can not use write_plm because self.messages is None")
-            return self
-
         if not path.endswith(".mido.py"):
             path += ".mido.py"
 
@@ -253,9 +233,6 @@ class Midi:
     # 以 .mid 的形式导出, read_midi已经在Midi的__init__中实现
     # update: 是否将Midi.midifile更新
     def write_midi(self, midipath: str = "temp.mid") -> "Midi":
-        if self.messages  is None:
-            errors.warning("can not use write_plm because self.messages is None")
-            return self
         if not isinstance(midipath, str):
             raise TypeError
         if not midipath.endswith(".mid"):
@@ -275,10 +252,7 @@ class Midi:
                   div_time: numType = 100,
                   max_notes: Optional[int] = 650,
                   sav_name: str = "temp" # 产生的存档的名字, 也可直接在生成.plm.py中修改
-    ) -> "Midi":
-        if self.messages is None:
-            raise TypeError("Midi.messages is None")
-        
+    ) -> "Midi":        
         if not (isinstance(div_time, (int, float)) or
                 isinstance(max_notes, int)) and max_notes is not None:
            raise TypeError
@@ -358,23 +332,23 @@ class Chord:
 # 循环类，用于创建一段循环的音乐片段
 # TODO: 完善Loop存储的数据结构
 class Loop:
-    def __init__(self, notes: Union[chordType, "Loop"], loopTime: int = 2) -> None:
+    def __init__(self, loop_time: int = 2, *notes: Tuple[Note, "Loop"]) -> None:
         if not(
             isinstance(notes, (Loop, tuple, list)) or
-            isinstance(loopTime, int)
-        ) or any(not isinstance(a_note, Note) for a_note in notes) or loopTime < 2:
+            isinstance(loop_time, int)
+        ) or any(not isinstance(a_note, Note) for a_note in notes) or loop_time < 2:
             raise TypeError
 
         if isinstance(notes, Loop):
             raise RuntimeError("Sorry, this is not supported for the moment")
 
         self.notes = tuple(*notes)
-        self.loopTime = loopTime
+        self.loop_time = loop_time
         self.cases = []
 
     # loop-case: 每次主循环执行完一遍后会依次播放case中的音符
     def case(self, *notes) -> "Loop":
-        self.cases.append(deepcopy(notes))
+        self.cases.append(notes)
         return self
     
     def __iter__(self):
