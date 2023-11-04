@@ -8,7 +8,7 @@ from os import path as _path, mkdir as _mkdir
 from sys import platform as _platform
 if _platform == "win32":
     if not _path.exists(_fileGlobals.FILE_HEAD):
-        raise WindowsError("The folder does not exist, try launching Physics-Lab-AR and try it out")
+        raise RuntimeError("The folder does not exist, try launching Physics-Lab-AR and try it out")
 else:
     if not _path.exists("physicsLabSav"):
         _mkdir("physicsLabSav")
