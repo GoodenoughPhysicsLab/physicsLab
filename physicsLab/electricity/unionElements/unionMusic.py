@@ -55,8 +55,8 @@ class Midi:
             tempo: 播放速度
         '''
         self.midifile: str = midifile
-        self.messages: mido.MidiTrack = self.__get_midi_messages()
         self.channels: List[Optional[int]] = [None] * 16
+        self.messages: mido.MidiTrack = self.__get_midi_messages()
         self.tempo: int = 500_000
 
     # 使用mido打开一个midi文件并获取其tracks
