@@ -55,7 +55,7 @@ class Midi:
             tempo: 播放速度
         '''
         self.midifile: str = midifile
-        self.channels: List[Optional[int]] = [0] * 16
+        self.channels: List[int] = [0] * 16
         self.messages: mido.MidiTrack = self.__get_midi_messages()
         self.tempo: int = 500_000
 
@@ -486,8 +486,14 @@ class Player:
         tick.o - tick.i_low
         tick.o - counter.i_up
 
-        xPlayer = D_WaterLamp(x + 1, y + 1, z, unionHeading=True, bitLength=side, elementXYZ=True)
-        yPlayer = D_WaterLamp(x, y + 3, z, bitLength=ceil(len_musicArray / side), elementXYZ=True).set_HighLeaveValue(2)
+        try:
+            xPlayer = D_WaterLamp(x + 1, y + 1, z, unionHeading=True, bitLength=side, elementXYZ=True)
+            yPlayer = D_WaterLamp(x, y + 3, z, bitLength=ceil(len_musicArray / side), elementXYZ=True)
+        except errors.bitLengthError as e:
+            from physicsLab._colorUtils import printf, COLOR
+            printf("bigLength of D_WaterLamp is too short, try to use argument \"div_time\" in class Midi to solve this problem", COLOR.RED)
+            raise e
+
 
         yesGate = _elementsClass.Full_Adder(x + 1, y + 1, z + 1, True)
         yesGate.i_low - yesGate.i_mid
