@@ -1,6 +1,6 @@
 #coding=utf-8
 from os import walk
-from typing import *
+from typing import Tuple, Union, List
 from collections import namedtuple
 from physicsLab._fileGlobals import FILE_HEAD
 
