@@ -1,6 +1,6 @@
 ﻿# physicsLab 物实程序化
 
-[English](./README_en.md)
+[English](./README.md)
 
 ![输入图片说明](./cover.jpg)
 
