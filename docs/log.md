@@ -48,3 +48,5 @@
 2.  使用了物实`v2.4.7`的特性优化模块化音乐电路，这也意味着旧版本物实不支持`physicsLab`生成的电路
 3.  修复了颜色打印的Bug，增加了`close_color_print()`以关闭颜色打印
 4.  更改了在`Android`上创建存档的行为，同时理论上支持了其他操作系统
+5.  更新了`write_Experiment`的`extra_filepath`
+6.  更新了`Piece.write_midi`, `Piece.traslate_to_midi`

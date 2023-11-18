@@ -8,6 +8,7 @@ import physicsLab.electricity.elementsClass as _elementsClass
 from math import ceil, sqrt
 from enum import Enum, unique
 from typing import Optional, Union, List, Tuple, Iterator
+from typing_extensions import Self
 
 from .wires import crt_Wires
 from ...element import get_Element
@@ -54,10 +55,13 @@ class Midi:
             program: midi音色
             tempo: 播放速度
         '''
+        if not isinstance(midifile, str):
+            raise TypeError
+
         self.midifile: str = midifile
         self.channels: List[int] = [0] * 16
-        self.messages: mido.MidiTrack = self.__get_midi_messages()
         self.tempo: int = 500_000
+        self.messages: mido.MidiTrack = self.__get_midi_messages()
 
     # 使用mido打开一个midi文件并获取其tracks
     def __get_midi_messages(self) -> mido.MidiTrack:
@@ -79,7 +83,7 @@ class Midi:
         return res
 
     # 播放midi类存储的信息
-    def sound(self, player: Optional[PLAYER] = None) -> "Midi":
+    def sound(self, player: Optional[PLAYER] = None) -> Self:
         # 使用plmidi播放midi
         # plmidi还有很多问题, 暂不推荐使用
         def sound_by_plmidi() -> bool:
@@ -126,11 +130,9 @@ class Midi:
             
             if path.exists(self.midifile):
                 system(self.midifile)
-            elif path.exists("pltemp.mid"):
-                system("pltemp.mid")
-            else:
-                return False
-            return True
+                return True
+
+            return False
 
         if not isinstance(player, Midi.PLAYER) and player is not None:
             raise TypeError        
@@ -154,7 +156,7 @@ class Midi:
         return self
 
     # 将time重设为原来的num倍
-    def set_tempo(self, num: numType = 1) -> "Midi":
+    def set_tempo(self, num: numType = 1) -> Self:
         if not isinstance(num, (int, float)):
             raise TypeError
 
@@ -192,7 +194,7 @@ class Midi:
         为了修改方便, 默认使用 str(mido.MidiTrack) 的方式导出
         而且是个Py文件, 大家想要自己修改也是很方便的
     '''
-    def read_midopy(self, plmpath: str = "temp.mido.py") -> "Midi":
+    def read_midopy(self, plmpath: str = "temp.mido.py") -> Self:
         def _read_midopy(plmpath):
             context = None
             with open(plmpath, encoding="utf-8") as f:
@@ -215,7 +217,7 @@ class Midi:
         return self
 
     # 导出一个 .mido.py 文件
-    def write_midopy(self, path: str="temp.mido.py") -> "Midi":
+    def write_midopy(self, path: str="temp.mido.py") -> Self:
         if not path.endswith(".mido.py"):
             path += ".mido.py"
 
@@ -232,7 +234,7 @@ class Midi:
 
     # 以 .mid 的形式导出, read_midi已经在Midi的__init__中实现
     # update: 是否将Midi.midifile更新
-    def write_midi(self, midipath: str = "temp.mid") -> "Midi":
+    def write_midi(self, midipath: str = "temp.mid") -> Self:
         if not isinstance(midipath, str):
             raise TypeError
         if not midipath.endswith(".mid"):
@@ -252,7 +254,7 @@ class Midi:
                   div_time: numType = 100,
                   max_notes: Optional[int] = 650,
                   sav_name: str = "temp" # 产生的存档的名字, 也可直接在生成.plm.py中修改
-    ) -> "Midi":        
+    ) -> Self:        
         if not (isinstance(div_time, (int, float)) or
                 isinstance(max_notes, int)) and max_notes is not None:
            raise TypeError
@@ -286,15 +288,15 @@ class Note:
     def __init__(self,
                  time: int, # 间隔多少时间才播放此Note
                  playTime: int = 1,  # 音符发出声音的时长 暂时不支持相关机制
-                 instrument: Union[int, str] = 0, # 演奏的乐器，暂时只支持传入数字
+                 instrument: int = 0, # 演奏的乐器，暂时只支持传入数字
                  pitch: Union[int, str] = 60, # 音高/音调
-                 volume: numType = 1.0 # 音量/响度
+                 volume: float = 1.0 # 音量/响度
     ) -> None:
         # TODO 增加对pitch等等的数字范围的检查
         if not (
                 isinstance(time, int) or
                 isinstance(playTime, int) or
-                isinstance(instrument, (int, str)) or
+                isinstance(instrument, int) or
                 isinstance(pitch, (int, str)) or
                 isinstance(volume, float)
         ):
@@ -318,7 +320,7 @@ class Chord:
         self.notes: List[Note] = list(args)
     
     # 将新的音符加入到和弦中
-    def append(self, a_note: Note) -> "Chord":
+    def append(self, a_note: Note) -> Self:
         if not isinstance(a_note, Note):
             raise TypeError
 
@@ -347,7 +349,7 @@ class Loop:
         self.cases = []
 
     # loop-case: 每次主循环执行完一遍后会依次播放case中的音符
-    def case(self, *notes) -> "Loop":
+    def case(self, *notes) -> Self:
         self.cases.append(notes)
         return self
     
@@ -388,7 +390,7 @@ class Piece:
             self.append(a_note)
 
     # 向Piece类添加数据成员
-    def append(self, other: Note) -> "Piece":
+    def append(self, other: Note) -> Self:
         if not isinstance(other, Note):
             raise TypeError
 
@@ -398,9 +400,48 @@ class Piece:
         self.notes.append(other)
         return self
     
+    # 将Piece转化为midi文件
+    def write_midi(self,
+                   filepath: str = "temp.mid",
+                   basic_time: int = 100 # 将Note的time变为Midi的time扩大的倍数
+    ) -> Self:
+        track = mido.MidiTrack()
+        mid = mido.MidiFile(tracks=[track])
+        channels: List[int] = [0] * 16
+
+        none_counter: int = 0
+        track.append(mido.MetaMessage("set_tempo", tempo=self.bpm * 5000, time=0)) # 500_000 / 100, 500_000是Midi.tempo的默认数字，100是self.bpm的默认数字
+        for a_note in self.notes:
+            if a_note is None:
+                none_counter += 1
+            else:
+                channel: int = 0
+                try:
+                    channel = channels.index(a_note.instrument)
+                except ValueError:
+                    try:
+                        channel = channels.index(0)
+                    except ValueError:
+                        raise RuntimeError("amount of midi track out of 16")
+                    else:
+                        channels[channel] = a_note.instrument
+
+                track.append(mido.Message("note_off", channel=channel, note=a_note.pitch, velocity=int(a_note.volume * 100), time=basic_time * none_counter)) # time通过音符后的None的数量确定
+                track.append(mido.Message("note_on", channel=channel, note=a_note.pitch, velocity=int(a_note.volume * 100), time=0))
+                none_counter = 0
+        
+        for channel, program in enumerate(channels):
+            track.insert(1, mido.Message("program_change", channel=channel, program=program, time=0))
+
+        with open("temp.test.py", "w") as f:
+            f.write(repr(track))
+        mid.save(filepath)
+        return self
+    
     # 将Piece类转换为Midi
-    def translate_to_midi(self) -> "Midi":
-        pass
+    def translate_to_midi(self, filepath="temp.mid") -> Midi:
+        self.write_midi(filepath)
+        return Midi(filepath)
 
     # 将Piece转换为物实对应的电路
     def release(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None) -> "Player":
@@ -442,9 +483,11 @@ class Piece:
 class Player:
     def __init__(self,
                  musicArray: Piece,
-                 x: numType = 0, y: numType = 0, z: numType = 0,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
                  elementXYZ = None
-    ):
+    ) -> None:
         from physicsLab.element import count_Elements
         count_elements_start: int = count_Elements()
         
