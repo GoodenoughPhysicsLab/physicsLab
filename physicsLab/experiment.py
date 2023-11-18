@@ -11,12 +11,13 @@ import physicsLab._fileGlobals as _fileGlobals
 # 实验（存档）类，主要与'with'关键字搭配使用
 class experiment:
     def __init__(self,
-                 file: str, # 实验存档名
+                 file: str, # 实验名（非存档文件名）
                  read: bool = False, # 是否读取存档原有状态
                  delete: bool = False, # 是否删除实验
                  write: bool = True, # 是否写入实验
                  elementXYZ: bool = False, # 元件坐标系
-                 type: _fileGlobals.experimentType = _fileGlobals.experimentType.Circuit # 若创建实验，支持传入指定实验类型
+                 type: _fileGlobals.experimentType = _fileGlobals.experimentType.Circuit, # 若创建实验，支持传入指定实验类型
+                 extra_filepath: Optional[str] = None # 将存档写入额外的路径
     ):
         if not (
             isinstance(file, str) or
@@ -24,19 +25,20 @@ class experiment:
             isinstance(delete, bool) or
             isinstance(elementXYZ, bool) or
             isinstance(write, bool) or
-            (
-                isinstance(type, (int ,str)) or
-                type is None
-            )
+            isinstance(type, (int, _fileGlobals.experimentType))
+        ) and (
+            not isinstance(extra_filepath, str) and
+            extra_filepath is not None
         ):
             raise TypeError
 
-        self.file = file
-        self.read = read
-        self.delete = delete
-        self.write = write
-        self.elementXYZ = elementXYZ
-        self.experimentType = type
+        self.file: str = file
+        self.read: bool = read
+        self.delete: bool = delete
+        self.write: bool = write
+        self.elementXYZ: bool = elementXYZ
+        self.experimentType: _fileGlobals.experimentType = type
+        self.extra_filepath: Optional[str] = extra_filepath
 
     # 上下文管理器，搭配with使用
     def __enter__(self):
@@ -51,7 +53,7 @@ class experiment:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.write:
-            write_Experiment()
+            write_Experiment(extra_filepath=self.extra_filepath)
         if self.delete:
             try:
                 del_Experiment()
@@ -128,7 +130,7 @@ def open_or_crt_Experiment(savName: str, experimentType: _fileGlobals.experiment
         _crt_Experiment(savName, experimentType)
 
 # 将编译完成的json写入sav, ln: 是否将存档中字符串格式json换行
-def write_Experiment(ln: bool = False) -> None:
+def write_Experiment(extra_filepath: Optional[str] = None, ln: bool = False) -> None:
     def _format_StatusSave(stringJson: str) -> str:
         stringJson = stringJson.replace('{\\\"ModelID', '\n      {\\\"ModelID') # format element json
         stringJson = stringJson.replace('DiagramRotation\\\": 0}]', 'DiagramRotation\\\": 0}\n    ]') # format end element json
@@ -138,15 +140,20 @@ def write_Experiment(ln: bool = False) -> None:
 
     _fileGlobals.StatusSave["Elements"] = _fileGlobals.Elements
     _fileGlobals.StatusSave["Wires"] = _fileGlobals.Wires
-    _fileGlobals.PlSav["Experiment"]["StatusSave"] = \
-        json.dumps(_fileGlobals.StatusSave, ensure_ascii=False, separators=(',', ': '))
+    _fileGlobals.PlSav["Experiment"]["StatusSave"] = json.dumps(_fileGlobals.StatusSave, ensure_ascii=False, separators=(',', ':'))
+
+    context: str = json.dumps(_fileGlobals.PlSav, indent=2, ensure_ascii=False, separators=(',', ':'))
+    if ln:
+        context = _format_StatusSave(context)
+
     with open(_fileGlobals.SavPath, "w", encoding="utf-8") as f:
-        if ln:
-            f.write(
-                    _format_StatusSave(json.dumps(_fileGlobals.PlSav, indent=2, ensure_ascii=False, separators=(',', ': ')))
-            )
-        else:
-            f.write(json.dumps(_fileGlobals.PlSav, indent=2, ensure_ascii=False, separators=(',', ': ')))
+        f.write(context)
+    if extra_filepath is not None:
+        if not extra_filepath.endswith(".sav"):
+            extra_filepath += ".sav"
+        with open(extra_filepath, "w", encoding="utf-8") as f:
+            f.write(context)
+
     # 编译成功，打印信息
     if _fileGlobals.get_experimentType() == 0:
         _colorUtils.printf(
