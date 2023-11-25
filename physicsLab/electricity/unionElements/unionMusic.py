@@ -7,17 +7,12 @@ import physicsLab.electricity.elementsClass as _elementsClass
 
 from math import ceil, sqrt
 from enum import Enum, unique
-from typing import Optional, Union, List, Tuple, Iterator
 from typing_extensions import Self
+from typing import Optional, Union, List, Iterator, Dict
 
 from .wires import crt_Wires
-from ...element import get_Element
 from .unionLogic import D_WaterLamp
-from physicsLab._tools import numType
-
-# type
-noteType = List[Optional["Note"]] # 音符类型
-chordType = Union[Tuple["Note"], List["Note"]] # 和弦类型
+from physicsLab._tools import numType, roundData
 
 # const
 NOTE_ON = "note_on"
@@ -167,18 +162,27 @@ class Midi:
 
     # 转换为physicsLab的piece类 developing
     # TODO 但超长音符应该考虑下适当调整物实简单乐器播放时长
-    def translate_to_piece(self, div_time: numType = 100, max_notes: Optional[int] = 650) -> "Piece":
-        res = []
+    def translate_to_piece(self, div_time: numType = 100, max_notes: Optional[int] = 2000) -> "Piece":
+        res: List[Union[Note, Chord]] = []
 
         wait_time: int = 0
+        len_res: int = 0
         for msg in self.messages:
             if msg.type == NOTE_ON: # type: ignore -> Message/MetaMessage must have attr type
-                res.append(Note(round((msg.time + wait_time) / div_time), instrument=self.channels[msg.channel], pitch=msg.note)) # type: ignore -> must have
+                len_res += 1
+                note_time = round((msg.time + wait_time) / div_time)
+                if note_time != 0 or len(res) == 0:
+                    if note_time == 0:
+                        note_time = 1
+                    res.append(Note(note_time, instrument=self.channels[msg.channel], pitch=msg.note)) # type: ignore -> must have
+                else:
+                    # res[-1] is `Note` or `Chord`
+                    res[-1] = res[-1].append(Note(time=0, instrument=self.channels[msg.channel], pitch=msg.note))
                 wait_time = 0
             elif msg.time != 0:
                 wait_time += msg.time
-            
-            if max_notes is not None and len(res) >= max_notes:
+
+            if max_notes is not None and len_res >= max_notes:
                 break
 
         return Piece(res)
@@ -263,10 +267,13 @@ class Midi:
             filepath += ".plm.py"
         
         wait_time: int = 0
-        l_notes = []
+        l_notes: List[Union[Note, Chord]] = []
         for msg in self.messages:
             if msg.type == NOTE_ON: # type: ignore -> Message/MetaMessage must have attr type
-                l_notes.append(Note(round((msg.time + wait_time) / div_time), instrument=self.channels[msg.channel], pitch=msg.note)) # type: ignore -> must have
+                if msg.time != 0:
+                    l_notes.append(Note(round((msg.time + wait_time) / div_time), instrument=self.channels[msg.channel], pitch=msg.note)) # type: ignore -> must have
+                else:
+                    l_notes[-1] = l_notes[-1].append(Note(time=0, instrument=self.channels[msg.channel], pitch=msg.note))
                 wait_time = 0
             elif msg.time != 0:
                 wait_time += msg.time
@@ -276,7 +283,7 @@ class Midi:
 
         with open(filepath, "w") as f:
             f.write(f"from physicsLab import experiment\n"
-                    f"from physicsLab.union import Note, Piece\n"
+                    f"from physicsLab.union import Note, Piece, Chord\n"
                     f"with experiment(\"{sav_name}\"):\n"
                     f"    Piece({l_notes}).release(-1, -1, 0)".replace("Note(", "\n        Note("))
 
@@ -289,20 +296,20 @@ class Note:
                  time: int, # 间隔多少时间才播放此Note
                  playTime: int = 1,  # 音符发出声音的时长 暂时不支持相关机制
                  instrument: int = 0, # 演奏的乐器，暂时只支持传入数字
-                 pitch: Union[int, str] = 60, # 音高/音调
+                 pitch: int = 60, # 音高/音调
                  volume: float = 1.0 # 音量/响度
     ) -> None:
         # TODO 增加对pitch等等的数字范围的检查
         if not (
-                isinstance(time, int) or
-                isinstance(playTime, int) or
-                isinstance(instrument, int) or
-                isinstance(pitch, (int, str)) or
+                isinstance(time, int) and
+                isinstance(playTime, int) and
+                isinstance(instrument, int) and
+                isinstance(pitch, int) and
                 isinstance(volume, float)
-        ):
+        ) or time < 0:
             raise TypeError
         self.instrument = instrument
-        self.pitch = pitch
+        self.pitch: int = pitch
         self.volume = volume
         self.time = time
         self.playTime = playTime
@@ -310,31 +317,74 @@ class Note:
     def __repr__(self) -> str:
         return f"Note(time={self.time}, playTime={self.playTime}, instrument={self.instrument}, " \
                f"pitch={self.pitch}, volume={self.volume})"
+    
+    def append(self, other: "Note") -> "Chord":
+        return Chord(self, other, time=self.time)
 
 # 和弦类
 class Chord:
-    def __init__(self, *args) -> None:
-        if not all(isinstance(note, Note) for note in args):
+    def __init__(self, *notes: Note, time: int) -> None:
+        if len(notes) < 1 or time < 1:
             raise TypeError
+        
+        self.time = time
+        # {instrument: List[Note], ...}
+        self._notes = list(notes)
+        self.ins_notes: Dict[int, List[Note]] = {}
 
-        self.notes: List[Note] = list(args)
+        for a_note in notes:
+            self.append(a_note)
     
+    def __repr__(self) -> str:
+        return f"Chord({self._notes}, time={self.time})"
+
+    def __len__(self) -> int:
+        return len(self.ins_notes.keys())
+
     # 将新的音符加入到和弦中
     def append(self, a_note: Note) -> Self:
         if not isinstance(a_note, Note):
             raise TypeError
+        
+        if a_note not in self._notes:
+            self._notes.append(a_note)
 
-        self.notes.append(a_note)
+        if a_note.instrument in self.ins_notes.keys():
+            if a_note not in self.ins_notes[a_note.instrument]:
+                self.ins_notes[a_note.instrument].append(a_note)
+        else:
+            self.ins_notes[a_note.instrument] = [a_note]
+
         return self
     
     # 将Chord存储的数据转变为对应的物实的电路
-    def release(self):
-        pass
+    def release(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None) -> _elementsClass.Simple_Instrument:
+        # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
+        if not (elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None)):
+            x, y, z = _elementXYZ.translateXYZ(x, y, z)        
+        x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
+
+        first_ins = None # 第一个音符
+        for delta_z, ins in enumerate(self.ins_notes):
+            notes: List[Note] = self.ins_notes[ins]
+            temp = _elementsClass.Simple_Instrument(
+                x, y, z + delta_z, elementXYZ=True,instrument=ins, pitch=notes[0].pitch, is_ideal_model=True
+            ).set_Rotation(0, 0, 0) # type: ignore
+            if first_ins is None:
+                first_ins = temp
+            else:
+                temp.i - first_ins.i
+                temp.o - first_ins.o
+            
+            for a_note in notes:
+                temp.add_note(a_note.pitch) # type: ignore
+
+        return first_ins # type: ignore -> first_ins 不会是None
 
 # 循环类，用于创建一段循环的音乐片段
 # TODO: 完善Loop存储的数据结构
 class Loop:
-    def __init__(self, loop_time: int = 2, *notes: Tuple[Note, "Loop"]) -> None:
+    def __init__(self, loop_time: int = 2, *notes: Union[Note, "Loop"]) -> None:
         if not(
             isinstance(notes, (Loop, tuple, list)) or
             isinstance(loop_time, int)
@@ -344,7 +394,7 @@ class Loop:
         if isinstance(notes, Loop):
             raise RuntimeError("Sorry, this is not supported for the moment")
 
-        self.notes = tuple(*notes)
+        self.notes = list(notes)
         self.loop_time = loop_time
         self.cases = []
 
@@ -362,7 +412,7 @@ class Loop:
 # 乐曲类
 class Piece:
     def __init__(self,
-                 notes: Union[List[Note], None] = None, # TODO: support Loop
+                 notes: Optional[List[Union[Note, Chord]]] = None, # TODO: support Loop
                  # 设置整个音轨的默认参数 Track global variable
                  instrument: int = 0, # 演奏的乐器，暂时只支持传入数字
                  pitch: int = 60, # 音高/音调
@@ -370,11 +420,14 @@ class Piece:
                  volume: float = 1.0 # 音量/响度
     ) -> None:
         if not (
-                isinstance(instrument, int) or
-                isinstance(pitch, int) or
-                isinstance(bpm, int) or
-                0 < volume < 1 or
-                isinstance(notes, (list, Loop)) and all(isinstance(val, Note) for val in notes)
+                isinstance(instrument, int) and
+                isinstance(pitch, int) and
+                isinstance(bpm, int) and
+                0 < volume <= 1
+        ) or (
+            ( not isinstance(notes, (list, Loop))
+            or not all(isinstance(val, (Note, Chord)) for val in notes) )
+            and notes is not None
         ):
             raise TypeError
 
@@ -385,13 +438,13 @@ class Piece:
         self.pitch = pitch
         self.bpm = bpm
         self.volume = volume
-        self.notes: List[Union[Note, None]] = []
+        self.notes: List[Optional[Union[Note, Chord]]] = []
         for a_note in notes:
             self.append(a_note)
 
     # 向Piece类添加数据成员
-    def append(self, other: Note) -> Self:
-        if not isinstance(other, Note):
+    def append(self, other: Union[Note, Chord]) -> Self:
+        if not isinstance(other, (Note, Chord)):
             raise TypeError
 
         while other.time > 1:
@@ -400,7 +453,7 @@ class Piece:
         self.notes.append(other)
         return self
     
-    # 将Piece转化为midi文件
+    # 将Piece转化为midi文件(暂不支持Chord)
     def write_midi(self,
                    filepath: str = "temp.mid",
                    basic_time: int = 100 # 将Note的time变为Midi的time扩大的倍数
@@ -458,7 +511,7 @@ class Piece:
     def __len__(self) -> int:
         return len(self.notes)
     
-    def __getitem__(self, item: int) -> Optional[Note]:
+    def __getitem__(self, item: int) -> Optional[Union[Note, Chord]]:
         if not isinstance(item, int):
             raise TypeError
         return self.notes[item]
@@ -507,13 +560,8 @@ class Player:
             musicArray.notes.pop()
         while musicArray.notes[0] is None:
             musicArray.notes.pop(0)
-        musicArray.notes.append(None)
-        musicArray.notes[0].time = 1
 
-        len_musicArray: int = 0
-        for a_note in musicArray:
-            if a_note is None or a_note.time != 0:
-                len_musicArray += 1
+        len_musicArray: int = len(musicArray)
 
         # 计算音乐矩阵的长宽
         side = None
@@ -559,10 +607,9 @@ class Player:
         crt_Wires(check2.o_lowmid, xPlayer.data_Input)
 
         # main
-        xcor, ycor, zcor = -1, 0, 0
+        xcor, ycor = -1, 0
         for a_note in musicArray:
             if a_note is None:
-                zcor = 0
                 xcor += 1
                 if xcor == side:
                     xcor = 0
@@ -571,32 +618,24 @@ class Player:
 
             # 当time==0时，则为和弦（几个音同时播放）
             # 此时生成的简单乐器与z轴平行
-            if a_note.time == 0:
-                zcor += 1
-                ins = _elementsClass.Simple_Instrument(
-                    1 + x + xcor, 4 + y + ycor, z + zcor,
-                    pitch=a_note.pitch, instrument=a_note.instrument, elementXYZ=True, is_ideal_model=True
-                ).set_Rotation(0, 0, 0)
-                ins.i - get_Element(x=1 + x + xcor, y=4 + y + ycor, z=z + zcor - 1).i # type: ignore -> result: SimpleInstrument
-                ins.o - get_Element(x=1 + x + xcor, y=4 + y + ycor, z=z + zcor - 1).o # type: ignore -> result: SimpleInstrument
-            else:
-                zcor = 0
-                xcor += 1
-                if xcor == side:
-                    xcor = 0
-                    ycor += 2
-
+            xcor += 1
+            if xcor == side:
+                xcor = 0
+                ycor += 2
+            if isinstance(a_note, Chord):
+                ins = a_note.release(1 + x + xcor,  4 + y + ycor, z, elementXYZ=True)
+            elif isinstance(a_note, Note):
                 ins = _elementsClass.Simple_Instrument(
                     1 + x + xcor, 4 + y + ycor, z,
                     pitch=a_note.pitch, instrument=a_note.instrument, elementXYZ=True, is_ideal_model=True
-                ).set_Rotation(0, 0, 0)
-                # 连接x轴的d触的导线
-                if xcor == 0:
-                    yesGate.o_up - ins.i
-                else:
-                    ins.i - xPlayer.data_Output[xcor]
-                # 连接y轴的d触的导线
-                ins.o - yPlayer.neg_data_Output[ycor // 2] # type: ignore -> yPlayer must has attr neg_data_Output
+                ).set_Rotation(0, 0, 0) # type: ignore
+            # 连接x轴的d触的导线
+            if xcor == 0:
+                yesGate.o_up - ins.i
+            else:
+                ins.i - xPlayer.data_Output[xcor]
+            # 连接y轴的d触的导线
+            ins.o - yPlayer.neg_data_Output[ycor // 2] # type: ignore -> yPlayer must has attr neg_data_Output
 
         stop = _elementsClass.And_Gate(x + 1, y + ycor + 3, z, True)
         stop.o - yesGate.i_low - check1.i

@@ -1,5 +1,7 @@
 #coding=utf-8
-from typing import Union, Optional
+from typing_extensions import Self
+from typing import Union, Optional, List
+
 from ..wire import element_Pin
 from physicsLab._tools import numType
 from ._elementClassHead import electricityBase, two_pin_ArtificialCircuit_Pin
@@ -49,6 +51,7 @@ class Simple_Instrument(electricityBase):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
         self.set_Tonality(pitch)
+        self.notes: List[int] = [self._arguments["Properties"]["音高"]] # 仅用于记录self已有的音符
 
     @property
     def i(self) -> element_Pin:
@@ -57,6 +60,28 @@ class Simple_Instrument(electricityBase):
     @property
     def o(self) -> element_Pin:
         return element_Pin(self, 1)
+
+    # 物实v2.4.7新功能: 简单乐器同时播放多个音符
+    def add_note(self, *pitchs: int) -> Self:
+        if not all(isinstance(a_pitch, int) and 20 <= a_pitch <= 128 for a_pitch in pitchs):
+            raise TypeError
+        
+        for a_pitch in pitchs:
+            if a_pitch not in self.notes:
+                amount: int = int(self._arguments["Properties"]["和弦"])
+                self._arguments["Properties"][f"音高{amount}"] = a_pitch
+                self._arguments["Properties"]["和弦"] += 1
+                self.notes.append(a_pitch)
+        
+        return self
+
+    # 获取简单乐器已有的和弦    
+    def get_chord(self) -> tuple:
+        return tuple(self.notes)
+    
+    # 获取简单乐器的和弦
+    def get_instrument(self) -> int:
+        return self._arguments["Properties"]["乐器"]
 
     # 设置音高
     def set_Tonality(self, inputData: Union[int, str], tone: Optional[bool] = None) -> "Simple_Instrument":

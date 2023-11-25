@@ -1,5 +1,7 @@
 py -m venv venv
 
+.\venv\Scripts\python -m pip install --upgrade pip
+
 .\venv\Scripts\pip install build
 .\venv\Scripts\pip install twine
 .\venv\Scripts\pip install wheel

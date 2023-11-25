@@ -25,7 +25,7 @@ static void plmidi_exit(int signal)
     }
 }
 
-namespace _plmidi {
+namespace plmidi {
 
 // plmidiInitError
 struct plmidiExc_InitErr : public ::std::exception

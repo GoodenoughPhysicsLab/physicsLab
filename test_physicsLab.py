@@ -159,7 +159,7 @@ class MyTestCase(unittest.TestCase):
             self.assertEqual(15, count_Wires())
 
     # 测逝模块化加法电路
-    def test_union_Sum(self):
+    def test_union_Sum2(self):
         with experiment('测逝', elementXYZ=True):
             a = union.Inputs(-1, 0, 0, 8)
             b = union.Inputs(-2, 0, 0, 8)
@@ -270,6 +270,10 @@ class MyTestCase(unittest.TestCase):
             #t.notes[-1] = None
             #print(t)
             t.release(-1, -1, 0)
+    
+    def test_mutiple_notes_in_Simple_Instrument(self):
+        with experiment("测逝"):
+            Simple_Instrument().add_note(67) # type: ignore
 
 if __name__ == '__main__':
     unittest.main()
