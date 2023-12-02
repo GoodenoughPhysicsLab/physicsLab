@@ -10,9 +10,8 @@ from enum import Enum, unique
 from typing_extensions import Self
 from typing import Optional, Union, List, Iterator, Dict
 
-from .wires import crt_Wires
-from .unionLogic import D_WaterLamp
 from physicsLab._tools import numType, roundData
+from physicsLab.electricity.unionElements import crt_Wires, D_WaterLamp
 
 # const
 NOTE_ON = "note_on"
@@ -89,7 +88,6 @@ class Midi:
             else:
                 colorUtils.printf("sound by using plmidi", colorUtils.COLOR.CYAN)
 
-                self.write_midi()
                 try:
                     plmidi.sound_by_mciSendCommand("temp.mid")
                 except plmidi.OpenMidiFileError or plmidi.plmidiInitError:
@@ -106,7 +104,6 @@ class Midi:
             else:
                 colorUtils.printf("sound by using pygame", colorUtils.COLOR.CYAN)
 
-                self.write_midi()
                 # 代码参考自musicpy的play函数
                 mixer.init()
                 mixer.music.load("temp.mid")
@@ -123,8 +120,8 @@ class Midi:
             from os import path, system
             colorUtils.printf("sound by using os", colorUtils.COLOR.CYAN)
             
-            if path.exists(self.midifile):
-                system(self.midifile)
+            if path.exists("temp.mid"):
+                system("temp.mid")
                 return True
 
             return False
@@ -138,7 +135,9 @@ class Midi:
             if not f():
                 errors.warning(f"can not use {f.__name__} to sound midi.")
             return self
-        
+
+        self.write_midi()
+
         if sound_by_plmidi():
             pass # needless to do anything
         elif sound_by_pygame():
@@ -251,8 +250,8 @@ class Midi:
         
         return self
 
-    # 以.plm.py的格式导出, div_time: midi的time的单位长度与Note的time的单位长度不同，暂时还需要用户手动调整
-    # max_notes: 最大的音符数，因为物实没法承受过多的元件
+    # 以.plm.py的格式导出, div_time: midi的time的单位长度与Note的time的单位长度不同，支持用户手动调整
+    # max_notes: 最大的音符数，因为物实没法承受过多的元件（暂不支持Chord）
     def write_plm(self,
                   filepath: str = "temp.plm.py",
                   div_time: numType = 100,

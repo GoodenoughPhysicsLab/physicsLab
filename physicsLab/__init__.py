@@ -31,7 +31,6 @@ from physicsLab.errors import *
 from physicsLab._fileGlobals import get_Sav, get_experimentType, experimentType
 # 模块化电路
 import physicsLab.electricity.unionElements.unionLogic as union
-import physicsLab.electricity.unionElements.unionMusic as music
 
 # 在import了physicsLab的程序的第一行加上#coding=utf-8
 try: # 在cmd或者shell上无法执行该功能

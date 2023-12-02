@@ -245,7 +245,7 @@ class MyTestCase(unittest.TestCase):
                 raise RuntimeError
     
     def test_from_union(self):
-        Note(2)
+        music.Note(2)
 
     def test_const_is_bigElement(self):
         with experiment("__test__", delete=True):
