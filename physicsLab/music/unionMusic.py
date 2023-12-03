@@ -159,9 +159,8 @@ class Midi:
 
         return self
 
-    # 转换为physicsLab的piece类 developing
-    # TODO 但超长音符应该考虑下适当调整物实简单乐器播放时长
-    def translate_to_piece(self, div_time: numType = 100, max_notes: Optional[int] = 2000) -> "Piece":
+    # 返回 [Note(...), Chord(...), ...]
+    def _get_notes_list(self, div_time: numType, max_notes: Optional[int]):
         res: List[Union[Note, Chord]] = []
 
         wait_time: int = 0
@@ -183,8 +182,13 @@ class Midi:
 
             if max_notes is not None and len_res >= max_notes:
                 break
+        
+        return res
 
-        return Piece(res)
+    # 转换为physicsLab的piece类 developing
+    # TODO 但超长音符应该考虑下适当调整物实简单乐器播放时长
+    def translate_to_piece(self, div_time: numType = 100, max_notes: Optional[int] = 1000) -> "Piece":
+        return Piece(self._get_notes_list(div_time, max_notes))
 
     ''' *.plm.py文件:
         plm即为 physicsLab music file
@@ -264,27 +268,17 @@ class Midi:
 
         if not filepath.endswith(".plm.py"):
             filepath += ".plm.py"
-        
-        wait_time: int = 0
-        l_notes: List[Union[Note, Chord]] = []
-        for msg in self.messages:
-            if msg.type == NOTE_ON: # type: ignore -> Message/MetaMessage must have attr type
-                if msg.time != 0:
-                    l_notes.append(Note(round((msg.time + wait_time) / div_time), instrument=self.channels[msg.channel], pitch=msg.note)) # type: ignore -> must have
-                else:
-                    l_notes[-1] = l_notes[-1].append(Note(time=0, instrument=self.channels[msg.channel], pitch=msg.note))
-                wait_time = 0
-            elif msg.time != 0:
-                wait_time += msg.time
-            
-            if max_notes is not None and len(l_notes) >= max_notes:
-                break
+
+        l_notes: List[Union[Note, Chord]] = self._get_notes_list(div_time, max_notes)
+        notes_str = ""
+        for a_note in l_notes:
+            notes_str += "        " + repr(a_note) + ",\n"
 
         with open(filepath, "w") as f:
             f.write(f"from physicsLab import experiment\n"
-                    f"from physicsLab.union import Note, Piece, Chord\n"
+                    f"from physicsLab.music import Note, Piece, Chord\n"
                     f"with experiment(\"{sav_name}\"):\n"
-                    f"    Piece({l_notes}).release(-1, -1, 0)".replace("Note(", "\n        Note("))
+                    f"    Piece([\n{notes_str}    ]).release(-1, -1, 0)")
 
         return self
 
@@ -335,7 +329,10 @@ class Chord:
             self.append(a_note)
     
     def __repr__(self) -> str:
-        return f"Chord({self._notes}, time={self.time})"
+        s: str = ""
+        for a_note in self._notes:
+            s += repr(a_note) + ", "
+        return f"Chord({s}time={self.time})"
 
     def __len__(self) -> int:
         return len(self.ins_notes.keys())
