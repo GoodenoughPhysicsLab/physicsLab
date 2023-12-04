@@ -160,7 +160,7 @@ class Midi:
         return self
 
     # 返回 [Note(...), Chord(...), ...]
-    def _get_notes_list(self, div_time: numType, max_notes: Optional[int]):
+    def _get_notes_list(self, div_time: numType, max_notes: Optional[int]) -> List[Union["Note", "Chord"]]:
         res: List[Union[Note, Chord]] = []
 
         wait_time: int = 0
@@ -187,7 +187,7 @@ class Midi:
 
     # 转换为physicsLab的piece类 developing
     # TODO 但超长音符应该考虑下适当调整物实简单乐器播放时长
-    def translate_to_piece(self, div_time: numType = 100, max_notes: Optional[int] = 1000) -> "Piece":
+    def translate_to_piece(self, div_time: numType = 100, max_notes: Optional[int] = 800) -> "Piece":
         return Piece(self._get_notes_list(div_time, max_notes))
 
     ''' *.plm.py文件:
@@ -255,11 +255,11 @@ class Midi:
         return self
 
     # 以.plm.py的格式导出, div_time: midi的time的单位长度与Note的time的单位长度不同，支持用户手动调整
-    # max_notes: 最大的音符数，因为物实没法承受过多的元件（暂不支持Chord）
+    # max_notes: 最大的音符数，因为物实没法承受过多的元件
     def write_plm(self,
                   filepath: str = "temp.plm.py",
                   div_time: numType = 100,
-                  max_notes: Optional[int] = 650,
+                  max_notes: Optional[int] = 800,
                   sav_name: str = "temp" # 产生的存档的名字, 也可直接在生成.plm.py中修改
     ) -> Self:        
         if not (isinstance(div_time, (int, float)) or
