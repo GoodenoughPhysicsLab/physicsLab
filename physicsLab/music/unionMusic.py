@@ -7,11 +7,10 @@ import physicsLab.electricity.elementsClass as _elementsClass
 
 from math import ceil, sqrt
 from enum import Enum, unique
-from typing_extensions import Self
-from typing import Optional, Union, List, Iterator, Dict
 
 from physicsLab._tools import numType, roundData
 from physicsLab.electricity.unionElements import crt_Wires, D_WaterLamp
+from physicsLab.typing import Optional, Union, List, Iterator, Dict, Self
 
 # const
 NOTE_ON = "note_on"
