@@ -43,7 +43,7 @@
 ## 1.3.5
 1.  改进`Midi.sound`的播放机制,使`plmidi`与`pygame`的播放效果相同
 
-## coming soon
+## 1.3.6
 1.  元件类增加`hook`
 2.  使用了物实`v2.4.7`的特性优化模块化音乐电路，这也意味着旧版本物实不支持`physicsLab`生成的电路
 3.  修复了颜色打印的Bug，增加了`close_color_print()`以关闭颜色打印
