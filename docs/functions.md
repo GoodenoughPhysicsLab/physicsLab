@@ -42,7 +42,7 @@ open_or_crt_Experiment(savName: str, experimentType) -> None
 该函数与`crt_Experiment`传参相同，但`experimentType`参数仅在尝试创建存档时有效
 
 ### 判断存档是否存在
-调用`exist_Experiment()`判断存档是否存在  
+调用`search_Experiment()`判断存档是否存在  
 如果存档已经存档，则会返回存档的文件名  
 如果存档不存在，则返回`None`
 

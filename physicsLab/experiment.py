@@ -61,7 +61,7 @@ class experiment:
                 pass
 
 # 检测实验是否存在，输入为存档名，若存在则返回存档对应的文件名，若不存在则返回None
-def exist_Experiment(savName: str) -> Union[str, None]:
+def search_Experiment(savName: str) -> Union[str, None]:
     savs = _tools.getAllSav()
     for aSav in savs:
         with open(f"{_fileGlobals.FILE_HEAD}/{aSav}", encoding='utf-8') as f:
@@ -95,7 +95,7 @@ def open_Experiment(fileName : str) -> None:
         _open_Experiment(fileName)
         return
 
-    _fileGlobals.SavName = exist_Experiment(fileName)
+    _fileGlobals.SavName = search_Experiment(fileName)
     if _fileGlobals.SavName is None:
         raise errors.openExperimentError(f'No such experiment "{fileName}"')
 
@@ -111,7 +111,7 @@ def _crt_Experiment(savName: str, experimentType) -> None:
 
 # 创建存档，输入为存档名
 def crt_Experiment(savName: str, experimentType: _fileGlobals.experimentType = _fileGlobals.experimentType.Circuit) -> None:
-    if exist_Experiment(savName) is not None:
+    if search_Experiment(savName) is not None:
         raise errors.crtExperimentFailError
     
     if not isinstance(savName, str):
@@ -123,7 +123,7 @@ def open_or_crt_Experiment(savName: str, experimentType: _fileGlobals.experiment
     if not isinstance(savName, str):
         raise TypeError
     
-    _fileGlobals.SavName = exist_Experiment(savName)
+    _fileGlobals.SavName = search_Experiment(savName)
     if _fileGlobals.SavName is not None:
         _open_Experiment(_fileGlobals.SavName)
     else:
@@ -214,7 +214,7 @@ def read_Experiment() -> None:
 
 # 重命名sav
 def rename_Experiment(name: str) -> None:
-    if exist_Experiment(name) is not None:
+    if search_Experiment(name) is not None:
         raise TypeError
     
     # 重命名存档
