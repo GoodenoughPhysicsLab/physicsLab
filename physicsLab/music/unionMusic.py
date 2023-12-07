@@ -10,7 +10,7 @@ from enum import Enum, unique
 
 from physicsLab._tools import numType, roundData
 from physicsLab.electricity.unionElements import crt_Wires, D_WaterLamp
-from physicsLab.typing import Optional, Union, List, Iterator, Dict, Self
+from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self
 
 # const
 NOTE_ON = "note_on"

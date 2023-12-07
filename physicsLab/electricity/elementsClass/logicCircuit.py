@@ -1,10 +1,8 @@
 #coding=utf-8
-from typing import Optional
-from typing_extensions import Self
-
 from ..wire import element_Pin
 from physicsLab._tools import numType
 from ._elementClassHead import electricityBase
+from physicsLab.typehint import Optional, Self
 
 class _logicBase(electricityBase):
     # 设置高电平的值

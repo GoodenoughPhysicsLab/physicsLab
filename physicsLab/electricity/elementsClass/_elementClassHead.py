@@ -4,9 +4,7 @@ import physicsLab._fileGlobals as _fileGlobals
 import physicsLab.electricity.wire as _elementPin
 import physicsLab.electricity.elementXYZ as _elementXYZ
 
-from typing_extensions import Self
-from typing import Optional, NoReturn
-
+from physicsLab.typehint import Optional, NoReturn, Self
 from physicsLab._tools import numType, roundData, randString, position
 
 # electricity class's metaClass

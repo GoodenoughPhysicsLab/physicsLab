@@ -2,13 +2,11 @@
 import physicsLab.errors as _errors
 import physicsLab.electricity as electricity
 
-from typing import List, Callable, Optional, List, Tuple
-from typing_extensions import Self
-
 from .wires import union_Pin
 from ..elementsClass import *
 from physicsLab._tools import numType
 from ._unionClassHead import UnionBase
+from physicsLab.typehint import Optional, Self, Callable, List, Tuple
 
 # unionHeading与fold的判断的代码
 def _unionHeading_fold(

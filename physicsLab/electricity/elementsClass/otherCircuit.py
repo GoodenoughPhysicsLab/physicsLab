@@ -1,9 +1,7 @@
 #coding=utf-8
-from typing_extensions import Self
-from typing import Union, Optional, List
-
 from ..wire import element_Pin
 from physicsLab._tools import numType
+from physicsLab.typehint import Optional, Self, List, Union
 from ._elementClassHead import electricityBase, two_pin_ArtificialCircuit_Pin
 
 # 小电扇
