@@ -1,5 +1,8 @@
+#coding=utf-8
 import typing
-from typing import *
-
-if not hasattr(typing, "Self"):
+try:
+    from typing import Self
+except ImportError:
     from .typing_extensions import Self
+
+from typing import *
