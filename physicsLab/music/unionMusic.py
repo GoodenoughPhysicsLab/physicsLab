@@ -12,12 +12,6 @@ from physicsLab._tools import numType, roundData
 from physicsLab.electricity.unionElements import crt_Wires, D_WaterLamp
 from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self
 
-# const
-NOTE_ON = "note_on"
-NOTE_OFF = "note_off"
-PROGRAM_CHANGE = "program_change"
-SET_TEMPO = "set_tempo"
-
 # midi类，用于提供physicsLab与midi文件之间的桥梁
 ''' 重要midi事件及作用:
     note_on        -> message: 播放音符
@@ -62,16 +56,16 @@ class Midi:
         wait_time: numType = 0
         res = mido.MidiTrack()
         for msg in _midifile.merged_track: # mido.merge_tracks is too slow!!!
-            if msg.type in (NOTE_ON, NOTE_OFF, PROGRAM_CHANGE, SET_TEMPO):
+            if msg.type in ("note_on", "note_off", "program_change", "set_tempo"):
                 res.append(msg)
                 msg.time += wait_time
                 wait_time = 0
             elif msg.time != 0:
                 wait_time += msg.time
 
-            if msg.type == PROGRAM_CHANGE:
+            if msg.type == "program_change":
                 self.channels[msg.channel] = msg.program
-            if msg.type == SET_TEMPO:
+            if msg.type == "set_tempo":
                 self.tempo = msg.tempo
         return res
 
@@ -165,7 +159,7 @@ class Midi:
         wait_time: int = 0
         len_res: int = 0
         for msg in self.messages:
-            if msg.type == NOTE_ON: # type: ignore -> Message/MetaMessage must have attr type
+            if msg.type == "note_on": # type: ignore -> Message/MetaMessage must have attr type
                 len_res += 1
                 note_time = round((msg.time + wait_time) / div_time)
                 if note_time != 0 or len(res) == 0:
@@ -453,6 +447,21 @@ class Piece:
                    filepath: str = "temp.mid",
                    basic_time: int = 100 # 将Note的time变为Midi的time扩大的倍数
     ) -> Self:
+        def write_a_midi_note(a_note: Note):
+            channel: int = 0
+            try:
+                channel = channels.index(a_note.instrument)
+            except ValueError:
+                try:
+                    channel = channels.index(0)
+                except ValueError:
+                    raise RuntimeError("amount of midi track out of 16")
+                else:
+                    channels[channel] = a_note.instrument
+
+            track.append(mido.Message("note_off", channel=channel, note=a_note.pitch, velocity=int(a_note.volume * 100), time=basic_time * none_counter)) # time通过音符后的None的数量确定
+            track.append(mido.Message("note_on", channel=channel, note=a_note.pitch, velocity=int(a_note.volume * 100), time=0))
+
         track = mido.MidiTrack()
         mid = mido.MidiFile(tracks=[track])
         channels: List[int] = [0] * 16
@@ -462,20 +471,13 @@ class Piece:
         for a_note in self.notes:
             if a_note is None:
                 none_counter += 1
-            else:
-                channel: int = 0
-                try:
-                    channel = channels.index(a_note.instrument)
-                except ValueError:
-                    try:
-                        channel = channels.index(0)
-                    except ValueError:
-                        raise RuntimeError("amount of midi track out of 16")
-                    else:
-                        channels[channel] = a_note.instrument
-
-                track.append(mido.Message("note_off", channel=channel, note=a_note.pitch, velocity=int(a_note.volume * 100), time=basic_time * none_counter)) # time通过音符后的None的数量确定
-                track.append(mido.Message("note_on", channel=channel, note=a_note.pitch, velocity=int(a_note.volume * 100), time=0))
+            elif isinstance(a_note, Chord):
+                for note_list in a_note.ins_notes.values():
+                    for _a_note in note_list:
+                        write_a_midi_note(_a_note)
+                        none_counter = 0
+            elif isinstance(a_note, Note):
+                write_a_midi_note(a_note)
                 none_counter = 0
         
         for channel, program in enumerate(channels):
