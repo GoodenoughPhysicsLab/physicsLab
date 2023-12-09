@@ -56,3 +56,6 @@
 ## 1.3.7
 1.  修复了由`typing`导致的问题
 2.  实装了支持`Chord`的`Piece.write_midi`
+
+# coming soon
+1. `traslate_to_midi`增加了对音量的支持

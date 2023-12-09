@@ -162,20 +162,27 @@ class Midi:
             if msg.type == "note_on": # type: ignore -> Message/MetaMessage must have attr type
                 len_res += 1
                 note_time = round((msg.time + wait_time) / div_time)
+
+                velocity = msg.velocity / 100 # 音符的响度
+                if velocity > 1:
+                    velocity = 1
+                elif velocity < 0.05:
+                    velocity = 0.05
+
                 if note_time != 0 or len(res) == 0:
                     if note_time == 0:
                         note_time = 1
-                    res.append(Note(note_time, instrument=self.channels[msg.channel], pitch=msg.note)) # type: ignore -> must have
+                    res.append(Note(note_time, instrument=self.channels[msg.channel], pitch=msg.note, velocity=velocity)) # type: ignore -> must have
                 else:
                     # res[-1] is `Note` or `Chord`
-                    res[-1] = res[-1].append(Note(time=0, instrument=self.channels[msg.channel], pitch=msg.note))
+                    res[-1] = res[-1].append(Note(time=0, instrument=self.channels[msg.channel], pitch=msg.note, velocity=velocity))
                 wait_time = 0
             elif msg.time != 0:
                 wait_time += msg.time
 
             if max_notes is not None and len_res >= max_notes:
                 break
-        
+
         return res
 
     # 转换为physicsLab的piece类 developing
@@ -227,7 +234,7 @@ class Midi:
                     f"track = {str(self.messages)}\n"
                     f"mid.tracks.append(track)\n"
                     f"mid.save(\"temp.mid\")\n"
-                    f"from physicsLab.union import Midi\n"
+                    f"from physicsLab.music import Midi\n"
                     f"Midi(\"temp.mid\").sound()")
 
         return self
@@ -283,7 +290,7 @@ class Note:
                  playTime: int = 1,  # 音符发出声音的时长 暂时不支持相关机制
                  instrument: int = 0, # 演奏的乐器，暂时只支持传入数字
                  pitch: int = 60, # 音高/音调
-                 volume: float = 1.0 # 音量/响度
+                 velocity: Union[int, float] = 0.64 # 音量/响度
     ) -> None:
         # TODO 增加对pitch等等的数字范围的检查
         if not (
@@ -291,18 +298,19 @@ class Note:
                 isinstance(playTime, int) and
                 isinstance(instrument, int) and
                 isinstance(pitch, int) and
-                isinstance(volume, float)
+                isinstance(velocity, (int, float)) and 0 < velocity <= 1
         ) or time < 0:
             raise TypeError
+
         self.instrument = instrument
         self.pitch: int = pitch
-        self.volume = volume
+        self.velocity = velocity
         self.time = time
         self.playTime = playTime
 
     def __repr__(self) -> str:
         return f"Note(time={self.time}, playTime={self.playTime}, instrument={self.instrument}, " \
-               f"pitch={self.pitch}, volume={self.volume})"
+               f"pitch={self.pitch}, velocity={self.velocity})"
     
     def append(self, other: "Note") -> "Chord":
         return Chord(self, other, time=self.time)
@@ -356,8 +364,9 @@ class Chord:
         first_ins = None # 第一个音符
         for delta_z, ins in enumerate(self.ins_notes):
             notes: List[Note] = self.ins_notes[ins]
-            temp = _elementsClass.Simple_Instrument(
-                x, y, z + delta_z, elementXYZ=True,instrument=ins, pitch=notes[0].pitch, is_ideal_model=True
+            temp: _elementsClass.Simple_Instrument = _elementsClass.Simple_Instrument(
+                x, y, z + delta_z, elementXYZ=True,instrument=ins,
+                pitch=notes[0].pitch, is_ideal_model=True, velocity=notes[0].velocity
             ).set_Rotation(0, 0, 0) # type: ignore
             if first_ins is None:
                 first_ins = temp
@@ -459,8 +468,8 @@ class Piece:
                 else:
                     channels[channel] = a_note.instrument
 
-            track.append(mido.Message("note_off", channel=channel, note=a_note.pitch, velocity=int(a_note.volume * 100), time=basic_time * none_counter)) # time通过音符后的None的数量确定
-            track.append(mido.Message("note_on", channel=channel, note=a_note.pitch, velocity=int(a_note.volume * 100), time=0))
+            track.append(mido.Message("note_off", channel=channel, note=a_note.pitch, velocity=int(a_note.velocity * 100), time=basic_time * none_counter)) # time通过音符后的None的数量确定
+            track.append(mido.Message("note_on", channel=channel, note=a_note.pitch, velocity=int(a_note.velocity * 100), time=0))
 
         track = mido.MidiTrack()
         mid = mido.MidiFile(tracks=[track])
@@ -623,8 +632,8 @@ class Player:
                 ins = a_note.release(1 + x + xcor,  4 + y + ycor, z, elementXYZ=True)
             elif isinstance(a_note, Note):
                 ins = _elementsClass.Simple_Instrument(
-                    1 + x + xcor, 4 + y + ycor, z,
-                    pitch=a_note.pitch, instrument=a_note.instrument, elementXYZ=True, is_ideal_model=True
+                    1 + x + xcor, 4 + y + ycor, z, pitch=a_note.pitch,
+                    instrument=a_note.instrument, elementXYZ=True, is_ideal_model=True, velocity=a_note.velocity
                 ).set_Rotation(0, 0, 0) # type: ignore
             # 连接x轴的d触的导线
             if xcor == 0:
