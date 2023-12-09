@@ -9,7 +9,7 @@
 
 ## 安装教程
 
-1.  请确保你的电脑有[Python](https://www.python.org)（大于等于3.6）与[物理实验室PC版](https://www.turtlesim.com/)（也可以联系[开发者Jone-Chen](https://gitee.com/civitasjohn)）
+1.  请确保你的电脑有[Python](https://www.python.org)（大于3.6）与[物理实验室PC版](https://www.turtlesim.com/)（也可以联系[开发者Jone-Chen](https://gitee.com/civitasjohn)）
 2.  在cmd或shell输入：
 ```shell
 pip install physicsLab
