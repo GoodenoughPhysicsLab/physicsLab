@@ -2,9 +2,11 @@
 import physicsLab.errors as errors
 import physicsLab._fileGlobals as _fileGlobals
 
-# 电学元件引脚类
+# 电学元件引脚类, 模电元件引脚无明确的输入输出之分, 因此用这个
 class element_Pin:
     __slots__ = ("element_self", "pinLabel")
+    is_input = False
+    is_output = False
     def __init__(self, input_self, pinLabel: int) -> None:
         self.element_self = input_self
         self.pinLabel: int = pinLabel
@@ -13,6 +15,18 @@ class element_Pin:
     def __sub__(self, obj: "element_Pin") -> "element_Pin":
         crt_Wire(self, obj)
         return obj
+
+# 只用于输入的引脚
+class element_InputPin(element_Pin):
+    is_input = True
+    def __init__(self, input_self, pinLabel: int) -> None:
+        super().__init__(input_self, pinLabel)
+
+# 只用于输出的引脚
+class element_OutputPin(element_Pin):
+    is_output = True
+    def __init__(self, input_self, pinLabel: int) -> None:
+        super().__init__(input_self, pinLabel)
 
 # 检查函数参数是否是导线
 def _check_typeWire(func):
