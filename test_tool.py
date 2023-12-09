@@ -15,9 +15,9 @@ def culculate_time(func: Callable):
 
 def viz(func: Callable):
     def res(*args, **kwargs):
-        import viztracer
+        import viztracer as viz
 
-        tracer = viztracer.VizTracer()
+        tracer = viz.VizTracer()
         tracer.start()
 
         result = func(*args, **kwargs)

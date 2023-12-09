@@ -52,3 +52,7 @@
 6.  更新了`Piece.write_midi`, `Piece.traslate_to_midi`
 7.  更新了简单乐器播放多个音符的机制:`Simple_Instrument.add_note`与获取简单乐器的和弦:`Simple_Instrument.get_chord()`
 8.  实装了`Chord`类，同时禁止了旧有的和弦表示方式
+
+## 1.3.7
+1.  修复了由`typing`导致的问题
+2.  实装了支持`Chord`的`Piece.write_midi`
