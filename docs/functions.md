@@ -364,8 +364,8 @@ m.write_midopy("path") # 导出 .mido.py到指定路径
 m.write_midi("path") # 导出midi到指定路径
 # 为啥没有read_midi的方法呢? 因为创建一个Midi类的时候就可以读取Midi
 
-# .plm.py: 生成一种可以运行后可以易于编辑, 且运行后就可以生成在物实对应的电路的文件结构
-m.write_plm() # 将文件以.plm.py的格式导出
+# .pl.py: 生成一种可以运行后可以易于编辑, 且运行后就可以生成在物实对应的电路的文件结构
+m.write_plpy() # 将文件以.pl.py的格式导出
 ```
 
 ## 创建其他类型的实验

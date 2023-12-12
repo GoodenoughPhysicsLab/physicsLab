@@ -29,5 +29,5 @@ __pycache__/
 # special file of physicsLab
 *.sav
 *.mido.py
-*.plm.py
+*.pl.py
 *.test.*

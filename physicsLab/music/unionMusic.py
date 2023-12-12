@@ -174,8 +174,8 @@ class Midi:
                         note_time = 1
                     res.append(Note(note_time, instrument=self.channels[msg.channel], pitch=msg.note, velocity=velocity)) # type: ignore -> must have
                 else:
-                    # res[-1] is `Note` or `Chord`
-                    res[-1] = res[-1].append(Note(time=0, instrument=self.channels[msg.channel], pitch=msg.note, velocity=velocity))
+                    # res[-1]是`Note`或`Chord`且在赋值之后一定是Chord, 此时Note的time的值不重要(因为和弦的音符是同时播放的)
+                    res[-1] = res[-1].append(Note(time=1, instrument=self.channels[msg.channel], pitch=msg.note, velocity=velocity))
                 wait_time = 0
             elif msg.time != 0:
                 wait_time += msg.time
@@ -190,8 +190,8 @@ class Midi:
     def translate_to_piece(self, div_time: numType = 100, max_notes: Optional[int] = 800) -> "Piece":
         return Piece(self._get_notes_list(div_time, max_notes))
 
-    ''' *.plm.py文件:
-        plm即为 physicsLab music file
+    ''' *.pl.py文件:
+        pl即为 physicsLab file
         为了更方便于手动调控物实音乐电路的生成而诞生的文件格式
         该文件运行之后即可生成对应的物实播放音乐电路
     '''
@@ -201,10 +201,10 @@ class Midi:
         为了修改方便, 默认使用 str(mido.MidiTrack) 的方式导出
         而且是个Py文件, 大家想要自己修改也是很方便的
     '''
-    def read_midopy(self, plmpath: str = "temp.mido.py") -> Self:
-        def _read_midopy(plmpath):
+    def read_midopy(self, plpath: str = "temp.mido.py") -> Self:
+        def _read_midopy(plpath):
             context = None
-            with open(plmpath, encoding="utf-8") as f:
+            with open(plpath, encoding="utf-8") as f:
                 context = f.read()
             
             import re
@@ -212,15 +212,15 @@ class Midi:
             # 正则匹配内容: MidiTrack([Message(...), ...])
             re_context = re.search(r"MidiTrack\(\[[^\]]+\]\)", context, re.M)
             if re_context is None:
-                raise SyntaxError(f"error context in {plmpath}")
+                raise SyntaxError(f"error context in {plpath}")
             self.messages = eval(re_context.group()) # 用到mido import出的内容
 
         from os import path
-        if not path.exists(plmpath):
+        if not path.exists(plpath):
             raise FileNotFoundError
 
         self.midifile = "temp.mid"
-        _read_midopy(plmpath)
+        _read_midopy(plpath)
         return self
 
     # 导出一个 .mido.py 文件
@@ -254,20 +254,20 @@ class Midi:
         
         return self
 
-    # 以.plm.py的格式导出, div_time: midi的time的单位长度与Note的time的单位长度不同，支持用户手动调整
+    # 以.pl.py的格式导出, div_time: midi的time的单位长度与Note的time的单位长度不同，支持用户手动调整
     # max_notes: 最大的音符数，因为物实没法承受过多的元件
-    def write_plm(self,
-                  filepath: str = "temp.plm.py",
+    def write_plpy(self,
+                  filepath: str = "temp.pl.py",
                   div_time: numType = 100,
                   max_notes: Optional[int] = 800,
-                  sav_name: str = "temp" # 产生的存档的名字, 也可直接在生成.plm.py中修改
+                  sav_name: str = "temp" # 产生的存档的名字, 也可直接在生成.pl.py中修改
     ) -> Self:        
         if not (isinstance(div_time, (int, float)) or
                 isinstance(max_notes, int)) and max_notes is not None:
            raise TypeError
 
-        if not filepath.endswith(".plm.py"):
-            filepath += ".plm.py"
+        if not filepath.endswith(".pl.py"):
+            filepath += ".pl.py"
 
         l_notes: List[Union[Note, Chord]] = self._get_notes_list(div_time, max_notes)
         notes_str = ""
@@ -299,7 +299,7 @@ class Note:
                 isinstance(instrument, int) and
                 isinstance(pitch, int) and
                 isinstance(velocity, (int, float)) and 0 < velocity <= 1
-        ) or time < 0:
+        ) or time <= 0:
             raise TypeError
 
         self.instrument = instrument

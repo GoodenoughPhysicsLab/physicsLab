@@ -59,3 +59,5 @@
 
 # coming soon
 1. `traslate_to_midi`增加了对音量的支持
+2. 移除了`Note.time=0`的表示方式
+3. 将`.plm.py`更名为`.pl.py`

@@ -244,8 +244,12 @@ class MyTestCase(unittest.TestCase):
             else:
                 raise RuntimeError
     
-    def test_from_union(self):
+    def test_unionMusic(self):
         music.Note(2)
+        try:
+            music.Note(0)
+        except TypeError:
+            pass
 
     def test_const_is_bigElement(self):
         with experiment("__test__", delete=True):
@@ -265,8 +269,9 @@ class MyTestCase(unittest.TestCase):
             t = music.Piece()
             for i in range(7):
                 for j in l:
-                    t.append(music.Note(1, pitch=12 * i + j + 21))
-                    t.append(music.Note(0, pitch=12 * i + j + 23))
+                    n = music.Note(1, pitch=12 * i + j + 21)
+                    t.append(n)
+                    n.append(music.Note(1, pitch=12 * i + j + 23))
             #t.notes[-1] = None
             #print(t)
             t.release(-1, -1, 0)
