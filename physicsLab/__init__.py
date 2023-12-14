@@ -18,9 +18,9 @@ from physicsLab._colorUtils import close_color_print
 # 操作实验
 from physicsLab.experiment import *
 # 电学实验
-from physicsLab.electricity import *
+from physicsLab.circuit import *
 # 天体物理实验
-from physicsLab.astrophysics import *
+from physicsLab.celestial import *
 # 电与磁实验
 from physicsLab.electromagnetism.elementsClass import *
 # 操作元件
@@ -30,7 +30,7 @@ from physicsLab.errors import *
 # 获取存档类型与整个存档文件
 from physicsLab._fileGlobals import get_Sav, get_experimentType, experimentType
 # 模块化电路
-import physicsLab.electricity.unionElements.unionLogic as union
+import physicsLab.circuit.unionElements.unionLogic as union
 
 # 在import了physicsLab的程序的第一行加上#coding=utf-8
 try: # 在cmd或者shell上无法执行该功能

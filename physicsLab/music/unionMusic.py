@@ -2,14 +2,14 @@
 import mido
 import physicsLab.errors as errors
 import physicsLab._colorUtils as colorUtils
-import physicsLab.electricity.elementXYZ as _elementXYZ
-import physicsLab.electricity.elementsClass as _elementsClass
+import physicsLab.circuit.elements as elements
+import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from math import ceil, sqrt
 from enum import Enum, unique
 
 from physicsLab._tools import numType, roundData
-from physicsLab.electricity.unionElements import crt_Wires, D_WaterLamp
+from physicsLab.circuit.unionElements import crt_Wires, D_WaterLamp
 from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self
 
 # midi类，用于提供physicsLab与midi文件之间的桥梁
@@ -185,8 +185,7 @@ class Midi:
 
         return res
 
-    # 转换为physicsLab的piece类 developing
-    # TODO 但超长音符应该考虑下适当调整物实简单乐器播放时长
+    # 转换为physicsLab的piece类
     def translate_to_piece(self, div_time: numType = 100, max_notes: Optional[int] = 800) -> "Piece":
         return Piece(self._get_notes_list(div_time, max_notes))
 
@@ -292,12 +291,12 @@ class Note:
                  pitch: int = 60, # 音高/音调
                  velocity: Union[int, float] = 0.64 # 音量/响度
     ) -> None:
-        # TODO 增加对pitch等等的数字范围的检查
         if not (
                 isinstance(time, int) and
                 isinstance(playTime, int) and
                 isinstance(instrument, int) and
                 isinstance(pitch, int) and
+                0 <= pitch < 128 and
                 isinstance(velocity, (int, float)) and 0 < velocity <= 1
         ) or time <= 0:
             raise TypeError
@@ -355,7 +354,7 @@ class Chord:
         return self
     
     # 将Chord存储的数据转变为对应的物实的电路
-    def release(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None) -> _elementsClass.Simple_Instrument:
+    def release(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None) -> elements.Simple_Instrument:
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if not (elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)        
@@ -364,7 +363,7 @@ class Chord:
         first_ins = None # 第一个音符
         for delta_z, ins in enumerate(self.ins_notes):
             notes: List[Note] = self.ins_notes[ins]
-            temp: _elementsClass.Simple_Instrument = _elementsClass.Simple_Instrument(
+            temp: elements.Simple_Instrument = elements.Simple_Instrument(
                 x, y, z + delta_z, elementXYZ=True,instrument=ins,
                 pitch=notes[0].pitch, is_ideal_model=True, velocity=notes[0].velocity
             ).set_Rotation(0, 0, 0) # type: ignore
@@ -538,7 +537,6 @@ class Piece:
         yield next(self.__iter)
 
 # 将piece的数据生成为物实的电路
-# TODO 使用数据.release来代替将所有的生成电路的逻辑代码都放在Player中
 class Player:
     def __init__(self,
                  musicArray: Piece,
@@ -576,9 +574,9 @@ class Player:
         else:
             side = 2
 
-        tick = _elementsClass.Nimp_Gate(x + 1, y, z, True)
-        counter = _elementsClass.Counter(x, y + 1, z, True)
-        l_input = _elementsClass.Logic_Input(x, y, z, True)
+        tick = elements.Nimp_Gate(x + 1, y, z, True)
+        counter = elements.Counter(x, y + 1, z, True)
+        l_input = elements.Logic_Input(x, y, z, True)
         l_input.o - tick.i_up
         tick.o - tick.i_low
         tick.o - counter.i_up
@@ -592,16 +590,16 @@ class Player:
             raise e
 
 
-        yesGate = _elementsClass.Full_Adder(x + 1, y + 1, z + 1, True)
+        yesGate = elements.Full_Adder(x + 1, y + 1, z + 1, True)
         yesGate.i_low - yesGate.i_mid
         xPlayer[0].o_low - yesGate.i_up # type: ignore
         crt_Wires(xPlayer.data_Output[0], yPlayer.data_Input) # type: ignore -> yPlayer must has attr data_Input
 
-        check1 = _elementsClass.No_Gate(x + 2, y, z, True)
-        check2 = _elementsClass.Multiplier(x + 3, y, z, True)
+        check1 = elements.No_Gate(x + 2, y, z, True)
+        check2 = elements.Multiplier(x + 3, y, z, True)
         # 上升沿触发器
-        no_gate = _elementsClass.No_Gate(x + 1, y, z + 1, True)
-        and_gate = _elementsClass.And_Gate(x + 2, y, z + 1, True)
+        no_gate = elements.No_Gate(x + 1, y, z + 1, True)
+        and_gate = elements.And_Gate(x + 2, y, z + 1, True)
         no_gate.o - and_gate.i_low
         no_gate.i - and_gate.i_up
 
@@ -631,7 +629,7 @@ class Player:
             if isinstance(a_note, Chord):
                 ins = a_note.release(1 + x + xcor,  4 + y + ycor, z, elementXYZ=True)
             elif isinstance(a_note, Note):
-                ins = _elementsClass.Simple_Instrument(
+                ins = elements.Simple_Instrument(
                     1 + x + xcor, 4 + y + ycor, z, pitch=a_note.pitch,
                     instrument=a_note.instrument, elementXYZ=True, is_ideal_model=True, velocity=a_note.velocity
                 ).set_Rotation(0, 0, 0) # type: ignore
@@ -643,7 +641,7 @@ class Player:
             # 连接y轴的d触的导线
             ins.o - yPlayer.neg_data_Output[ycor // 2] # type: ignore -> yPlayer must has attr neg_data_Output
 
-        stop = _elementsClass.And_Gate(x + 1, y + ycor + 3, z, True)
+        stop = elements.And_Gate(x + 1, y + ycor + 3, z, True)
         stop.o - yesGate.i_low - check1.i
         stop.i_up - yPlayer[ycor // 2].o_up # type: ignore -> D_Flipflop must has attr o_up
         stop.i_low - xPlayer[side - 1].o_up # type: ignore -> D_Flipflop must has attr neg_data_Output

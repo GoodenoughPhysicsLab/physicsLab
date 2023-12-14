@@ -1,8 +1,8 @@
 # coding=utf-8
 import physicsLab.errors as errors
 import physicsLab._fileGlobals as _fileGlobals
-import physicsLab.electricity.wire as _elementPin
-import physicsLab.electricity.elementXYZ as _elementXYZ
+import physicsLab.circuit.wire as _elementPin
+import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.typehint import Optional, NoReturn, Self
 from physicsLab._tools import numType, roundData, randString, position

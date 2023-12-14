@@ -2,9 +2,9 @@
 from typing import Union, Callable, Tuple
 
 import physicsLab.errors as errors
-import physicsLab.electricity.unionElements._unionClassHead as _unionClassHead
+import physicsLab.circuit.unionElements._unionClassHead as _unionClassHead
 
-from physicsLab.electricity.wire import crt_Wire, del_Wire, element_Pin
+from physicsLab.circuit.wire import crt_Wire, del_Wire, element_Pin
 
 # 模块化电路的“引脚”，输入输出都是数据
 class union_Pin:

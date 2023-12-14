@@ -2,10 +2,11 @@
 import physicsLab._tools as _tools
 import physicsLab.errors as errors
 import physicsLab._fileGlobals as _fileGlobals
-import physicsLab.electricity.elementXYZ as _elementXYZ
-import physicsLab.electricity.elementsClass as _elementsClass
+import physicsLab.circuit.elements as elements
+import physicsLab.circuit.elementXYZ as _elementXYZ
 
-from typing import *
+from physicsLab.typehint import *
+from physicsLab.circuit.elements._elementClassHead import electricityBase
 
 # 创建原件，本质上仍然是实例化
 def crt_Element(
@@ -30,19 +31,19 @@ def crt_Element(
         x, y, z = _elementXYZ.xyzTranslate(x, y, z)
     x, y, z = _tools.roundData(x, y, z)
     if (name == '555 Timer'):
-        return _elementsClass.NE555(x, y, z)
+        return elements.NE555(x, y, z)
     elif (name == '8bit Input'):
-        return _elementsClass.eight_bit_Input(x, y, z)
+        return elements.eight_bit_Input(x, y, z)
     elif (name == '8bit Display'):
-        return _elementsClass.eight_bit_Display(x, y, z)
+        return elements.eight_bit_Display(x, y, z)
     else:
         try:
-            return eval(f"_elementsClass.{name.replace(' ', '_').replace('-', '_')}({x},{y},{z})")
+            return eval(f"elements.{name.replace(' ', '_').replace('-', '_')}({x},{y},{z})")
         except SyntaxError:
             raise RuntimeError(f"{name} original that does not exist")
 
 # 获取对应坐标的self
-def get_Element(*args, **kwargs) -> _elementsClass.electricityBase:
+def get_Element(*args, **kwargs) -> elements.electricityBase:
     # 通过坐标索引元件
     def position_Element(x: _tools.numType, y: _tools.numType, z: _tools.numType):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
@@ -81,10 +82,10 @@ def get_Element(*args, **kwargs) -> _elementsClass.electricityBase:
         raise TypeError
 
 # 删除原件
-def del_Element(self: _elementsClass.electricityBase) -> None:
+def del_Element(self: electricityBase) -> None:
 #    self是物实三大实验支持的所有元件
 
-    if not isinstance(self, _elementsClass.electricityBase):
+    if not isinstance(self, electricityBase):
         raise TypeError
 
     identifier = self._arguments["Identifier"]

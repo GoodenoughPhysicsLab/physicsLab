@@ -196,10 +196,6 @@ class MyTestCase(unittest.TestCase):
             pass
         with experiment("__test__", type=experimentType.Electromagnetism, delete=True):
             pass
-        with experiment("__test__", type=experimentType.天体物理实验, delete=True):
-            pass
-        with experiment("__test__", type=experimentType.电与磁实验, delete=True):
-            pass
 
     def test_electromagnetism(self):
         with experiment("电与磁测逝", type=experimentType.Electromagnetism):

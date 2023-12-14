@@ -3,8 +3,8 @@ from typing import Optional
 
 import physicsLab.errors as errors
 import physicsLab._fileGlobals as _fileGlobals
-import physicsLab.electricity.elementXYZ as _elementXYZ
-import physicsLab.electricity.elementsClass as _elementsClass
+import physicsLab.circuit.elements as elements
+import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab._tools import numType, roundData
 
@@ -55,7 +55,7 @@ class UnionBase(metaclass=UnionMeta):
 
     # 获取以模块化电路生成顺序为item的原件的self
     # 一定有self._elements
-    def __getitem__(self, item: int) -> "_elementsClass.electricityBase":
+    def __getitem__(self, item: int) -> "elements.electricityBase":
         if not isinstance(item, int):
             raise TypeError
         return self._elements[item] # type: ignore -> 子类含有._elements

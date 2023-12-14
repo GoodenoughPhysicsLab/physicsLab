@@ -1,12 +1,13 @@
 #coding=utf-8
 import os
 import json
-from typing import Union, Optional
 
 import physicsLab._tools as _tools
 import physicsLab.errors as errors
 import physicsLab._colorUtils as _colorUtils
 import physicsLab._fileGlobals as _fileGlobals
+
+from typing import Union, Optional
 
 # 实验（存档）类，主要与'with'关键字搭配使用
 class experiment:
@@ -48,7 +49,7 @@ class experiment:
             read_Experiment()
         if self.elementXYZ:
             _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
-            import physicsLab.electricity.elementXYZ as _elementXYZ
+            import physicsLab.circuit.elementXYZ as _elementXYZ
             _elementXYZ.set_elementXYZ(True)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -203,7 +204,7 @@ def read_Experiment() -> None:
             y = float(element['Rotation'][sign2 + 1::])
             obj.set_Rotation(x, y, z)
             obj._arguments['Identifier'] = element['Identifier'] # type: ignore -> class NE555 must has attr _arguments
-            from .electricity import Logic_Input, eight_bit_Input
+            from .circuit import Logic_Input, eight_bit_Input
             # 如果obj是逻辑输入
             if isinstance(obj, Logic_Input) and element['Properties'].get('开关') == 1:
                 obj.set_highLevel()

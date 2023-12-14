@@ -1,9 +1,9 @@
 #coding=utf-8
 import physicsLab.errors as _errors
-import physicsLab.electricity as electricity
+import physicsLab.circuit as circuit
 
 from .wires import union_Pin
-from ..elementsClass import *
+from ..elements import *
 from physicsLab._tools import numType
 from ._unionClassHead import UnionBase
 from physicsLab.typehint import Optional, Self, Callable, List, Tuple
@@ -240,8 +240,8 @@ class Two_four_Decoder(Union_LogicBase):
         obj3 = Nimp_Gate(x, y + 0.2, z)
         obj4 = And_Gate(x, y + 0.3, z)
         self._elements = [obj1, obj2, obj3, obj4]
-        electricity.crt_Wire(obj1.i_up, obj2.i_low), electricity.crt_Wire(obj2.i_low, obj3.i_up), electricity.crt_Wire(obj3.i_up, obj4.i_up)
-        electricity.crt_Wire(obj1.i_low, obj2.i_up), electricity.crt_Wire(obj2.i_up, obj3.i_low), electricity.crt_Wire(obj3.i_low, obj4.i_low)
+        circuit.crt_Wire(obj1.i_up, obj2.i_low), circuit.crt_Wire(obj2.i_low, obj3.i_up), circuit.crt_Wire(obj3.i_up, obj4.i_up)
+        circuit.crt_Wire(obj1.i_low, obj2.i_up), circuit.crt_Wire(obj2.i_up, obj3.i_low), circuit.crt_Wire(obj3.i_low, obj4.i_low)
 
 # 4-16译码器
 class Four_sixteen_Decoder:
@@ -255,19 +255,19 @@ class Four_sixteen_Decoder:
         obj3 = Nimp_Gate(x, y + 0.2, z); obj4 = And_Gate(x, y + 0.3, z)
         obj5 = Nor_Gate(x + 0.15, y, z); obj6 = Nimp_Gate(x + 0.15, y + 0.1, z)
         obj7 = Nimp_Gate(x + 0.15, y + 0.2, z); obj8 = And_Gate(x + 0.15, y + 0.3, z)
-        electricity.crt_Wire(obj1.i_up, obj2.i_low), electricity.crt_Wire(obj2.i_low, obj3.i_up), electricity.crt_Wire(obj3.i_up, obj4.i_up)
-        electricity.crt_Wire(obj5.i_up, obj6.i_low), electricity.crt_Wire(obj6.i_low, obj7.i_up), electricity.crt_Wire(obj7.i_up, obj8.i_up)
-        electricity.crt_Wire(obj1.i_low, obj2.i_up), electricity.crt_Wire(obj2.i_up, obj3.i_low), electricity.crt_Wire(obj3.i_low, obj4.i_low)
-        electricity.crt_Wire(obj5.i_low, obj6.i_up), electricity.crt_Wire(obj6.i_up, obj7.i_low), electricity.crt_Wire(obj7.i_low, obj8.i_low)
+        circuit.crt_Wire(obj1.i_up, obj2.i_low), circuit.crt_Wire(obj2.i_low, obj3.i_up), circuit.crt_Wire(obj3.i_up, obj4.i_up)
+        circuit.crt_Wire(obj5.i_up, obj6.i_low), circuit.crt_Wire(obj6.i_low, obj7.i_up), circuit.crt_Wire(obj7.i_up, obj8.i_up)
+        circuit.crt_Wire(obj1.i_low, obj2.i_up), circuit.crt_Wire(obj2.i_up, obj3.i_low), circuit.crt_Wire(obj3.i_low, obj4.i_low)
+        circuit.crt_Wire(obj5.i_low, obj6.i_up), circuit.crt_Wire(obj6.i_up, obj7.i_low), circuit.crt_Wire(obj7.i_low, obj8.i_low)
         for i in [0.3, 0.45, 0.6, 0.75]:
             for j in [0.05, 0.25]:
                 obj = Multiplier(x + i, y + j, z)
                 if j == 0.05:
-                    electricity.crt_Wire(obj1.o, obj.i_low)
-                    electricity.crt_Wire(obj2.o, obj.i_up)
+                    circuit.crt_Wire(obj1.o, obj.i_low)
+                    circuit.crt_Wire(obj2.o, obj.i_up)
                 else:
-                    electricity.crt_Wire(obj3.o, obj.i_low)
-                    electricity.crt_Wire(obj4.o, obj.i_up)
+                    circuit.crt_Wire(obj3.o, obj.i_low)
+                    circuit.crt_Wire(obj4.o, obj.i_up)
                 eval(f'crt_Wire(obj{round((i - 0.3) / 0.15) + 5}.o, obj.i_upmid)')
                 eval(f'crt_Wire(obj{round((i - 0.3) / 0.15) + 5}.o, obj.i_lowmid)')
 
@@ -275,10 +275,10 @@ class Four_sixteen_Decoder:
     @property
     def inputData(self):
         return union_Pin(
-            electricity.element_Pin(electricity.get_Element(self.x + 0.15, self.y + 0.3, self.z), 0),
-            electricity.element_Pin(electricity.get_Element(self.x + 0.15, self.y + 0.3, self.z), 1),
-            electricity.element_Pin(electricity.get_Element(self.x, self.y + 0.3, self.z), 0),
-            electricity.element_Pin(electricity.get_Element(self.x, self.y + 0.3, self.z), 1)
+            circuit.element_Pin(circuit.get_Element(self.x + 0.15, self.y + 0.3, self.z), 0),
+            circuit.element_Pin(circuit.get_Element(self.x + 0.15, self.y + 0.3, self.z), 1),
+            circuit.element_Pin(circuit.get_Element(self.x, self.y + 0.3, self.z), 0),
+            circuit.element_Pin(circuit.get_Element(self.x, self.y + 0.3, self.z), 1)
         )
 
     # 输出译码器的数据

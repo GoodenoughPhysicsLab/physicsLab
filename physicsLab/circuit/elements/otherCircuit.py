@@ -19,7 +19,6 @@ class Electric_Fan(electricityBase):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 简单乐器（更多功能的源代码在union_music）
-#TODO 支持物实最新的和弦表示方法
 class Simple_Instrument(electricityBase):
     def __init__(
             self,
@@ -82,7 +81,7 @@ class Simple_Instrument(electricityBase):
         return self._arguments["Properties"]["乐器"]
 
     # 设置音高
-    def set_Tonality(self, inputData: Union[int, str], tone: Optional[bool] = None) -> "Simple_Instrument":
+    def set_Tonality(self, pitch: Union[int, str], tone: Optional[bool] = None) -> "Simple_Instrument":
         '''
         输入格式：
             中音区：
@@ -171,13 +170,13 @@ class Simple_Instrument(electricityBase):
             return self
 
         # main
-        if isinstance(inputData, int):
-            if 20 < inputData < 128:
-                self._arguments["Properties"]["音高"] = inputData
+        if isinstance(pitch, int):
+            if 0 <= pitch < 128:
+                self._arguments["Properties"]["音高"] = pitch
             else:
                 raise TypeError('Input number out of range')
-        elif isinstance(inputData, str):
-            majorSet_Tonality(self, inputData, tone)
+        elif isinstance(pitch, str):
+            majorSet_Tonality(self, pitch, tone)
         else:
             raise TypeError
 

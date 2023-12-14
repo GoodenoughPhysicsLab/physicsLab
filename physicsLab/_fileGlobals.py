@@ -190,15 +190,15 @@ elements_Index: list = [] # List[self]
 
 # 所有实验类型及对应的数据
 class experimentType(Enum):
-    电学实验 = 0
+    # 电学实验
     Circuit = 0
-    天体物理实验 = 3
+    # 天体物理实验
     Celestial = 3
-    电与磁实验 = 4
+    # 电与磁实验
     Electromagnetism = 4
 
 # 初始化_fileGlobals的变量
-def fileGlobals_init(i_experimentType: Union[int, experimentType] = experimentType.电学实验) -> None:
+def fileGlobals_init(i_experimentType: Union[int, experimentType] = experimentType.Circuit) -> None:
     if not isinstance(i_experimentType, (experimentType, int)):
         raise TypeError
     
