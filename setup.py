@@ -6,7 +6,7 @@ with open("./README_zh.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="physicsLab",
-    version="1.3.7",  # 包版本号，便于维护版本
+    version="1.4.0",  # 包版本号，便于维护版本
     license="MIT",
     author="Goodenough",  # 作者，可以写自己的姓名
     author_email="2381642961@qq.com",  # 作者联系方式，可写自己的邮箱地址
