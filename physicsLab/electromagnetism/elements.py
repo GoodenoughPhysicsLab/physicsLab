@@ -1,7 +1,10 @@
 # coding=utf-8
 import physicsLab._tools as _tools
-from typing import Callable as _Callable
-import physicsLab._fileGlobals as _fileGlobals
+import physicsLab.phy_errors as phy_errors
+
+from typing import Callable, Optional
+from physicsLab.experiment import stack_Experiment
+from physicsLab.experimentType import experimentType
 
 
 # 所有电与磁元件的父类
@@ -25,10 +28,10 @@ class _elementBase:
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
         x, y, z = _tools.roundData(x, y, z)
-        del _fileGlobals.elements_Position[self._position]
+        del stack_Experiment.top().elements_Position[self._position]
         self._position = (x, y, z)
         self._arguments['Position'] = f"{x},{z},{y}"
-        _fileGlobals.elements_Position[self._position] = self
+        stack_Experiment.top().elements_Position[self._position] = self
         return self
 
     # 格式化坐标参数，主要避免浮点误差
@@ -43,13 +46,13 @@ class _elementBase:
 _index = 1
 
 
-def _element_Init_HEAD(func: _Callable) -> _Callable:
+def _element_Init_HEAD(func: Callable) -> Callable:
     def result(
             self,
             x: _tools.numType = 0,
             y: _tools.numType = 0,
             z: _tools.numType = 0,
-            elementXYZ: bool = None
+            elementXYZ: Optional[bool] = None
     ) -> None:
         if not (
                 isinstance(x, (float, int)) and
@@ -57,13 +60,16 @@ def _element_Init_HEAD(func: _Callable) -> _Callable:
                 isinstance(z, (float, int))
         ):
             raise TypeError('illegal argument')
-        _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Electromagnetism)
+        if stack_Experiment.top().ExperimentType != experimentType.Electromagnetism:
+            raise phy_errors.ExperimentTypeError
+        
+        _Expe = stack_Experiment.top()
 
         # 初始化全局变量
         global is_big_Element
         is_big_Element = False
 
-        x, y, z = _tools.roundData(x, y, z)
+        x, y, z = _tools.roundData(x, y, z) # type: ignore
         self._position = (x, y, z)
 
         func(self, x, y, z)
@@ -71,23 +77,23 @@ def _element_Init_HEAD(func: _Callable) -> _Callable:
         self._arguments["Identifier"] = _tools.randString(32)
         # x, z, y 物实采用欧拉坐标系
         self._arguments["Position"] = f"{x},{z},{y}"
-        _fileGlobals.Elements.append(self._arguments)
+        _Expe.Elements.append(self._arguments)
 
         # 该坐标是否已存在，则存入列表
-        if self._position in _fileGlobals.elements_Position.keys():
-            _fileGlobals.elements_Position[self._position]['self'].append(self)
+        if self._position in _Expe.elements_Position.keys():
+            _Expe.elements_Position[self._position]['self'].append(self)
         else:
             elementDict: dict = {
                 'self': [self],
                 'elementXYZ': None,  # 电与磁实验不支持元件坐标系
                 'originPosition': None
             }
-            _fileGlobals.elements_Position[self._position] = elementDict
+            _Expe.elements_Position[self._position] = elementDict
         self.set_Rotation()
         # 通过元件生成顺序来索引元件
         global _index
         self._index = _index
-        _fileGlobals.elements_Index.append(self)
+        _Expe.elements_Index.append(self)
         # 元件index索引加1
         _index += 1
 

@@ -1,23 +1,23 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 # 用于存放自定义错误类
 # 由于有时在package外需要异常处理，故不为文件私有变量
 import physicsLab._colorUtils as _colorUtils
 
 def warning(msg: str) -> None:
-    _colorUtils.printf("Warning: " + msg, _colorUtils.COLOR.YELLOW)
+    _colorUtils.color_print("Warning: " + msg, _colorUtils.COLOR.YELLOW)
 
 # 打开实验异常
-class openExperimentError(Exception):
+class OpenExperimentError(Exception):
     def __str__(self):
         return "open a experiment but find nothing(must open a experiment)."
 
 # 导线颜色类型异常
-class wireColorError(Exception):
+class WireColorError(Exception):
     def __str__(self):
         return "illegal wire color."
 
 # 未找到导线异常
-class wireNotFoundError(Exception):
+class WireNotFoundError(Exception):
     def __str__(self):
         return "Unable to delete a nonexistent wire"
 
@@ -36,7 +36,7 @@ class crtExperimentFailError(Exception):
         return "Failed to create experiment, the experiment already exists"
 
 # 打开的实验与调用的元件不符
-class experimentTypeError(Exception):
+class ExperimentTypeError(Exception):
     def __str__(self):
         return "The type of experiment does not match the element"
 
@@ -49,3 +49,10 @@ class getElementError(Exception):
 class instantiateError(Exception):
     def __str__(self):
         return "This class cannot be instantiated"
+
+class ExperimentError(Exception):
+    def __init__(self, string: str) -> None:
+        self.err_msg: str = string
+
+    def __str__(self) -> str:
+        return self.err_msg

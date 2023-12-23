@@ -1,4 +1,4 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 import setuptools  # 导入setuptools打包工具
 
 with open("./README_zh.md", "r", encoding="utf-8") as fh:

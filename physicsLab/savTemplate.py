@@ -1,5 +1,6 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
 
+# 所有模板都是只读的
 # 电学实验的sav模板
 Circuit = {
     "Type": 0,
@@ -8,7 +9,7 @@ Circuit = {
         "Type": 0,  # 实验类型： 0: 电学实验, 1: 电学电路图模式, 2: 天体彩蛋模式, 3：天体物理, 4: 电与磁实验
         "Components": 7,
         "Subject": None,
-        "StatusSave": "",  # _StatusSave, 存放以字符串形式存储的json
+        "StatusSave": None, # 运行时动态生成
         "CameraSave": "{\"Mode\":0,\"Distance\":2.7,\"VisionCenter\":\"0.3623461,1.08,-0.4681728\",\"TargetRotation\":\"50,0,0\"}",
         "Version": 2404,
         "CreationDate": 1673100860436,
@@ -64,7 +65,7 @@ Circuit = {
         "Settings": {},
         "Multilingual": False
     }, "CreationDate": 0,
-    "InternalName": "",  # file name
+    "InternalName": None,  # 存档名，运行时动态生成
     "Speed": 1.0,
     "SpeedMinimum": 0.0002,
     "SpeedMaximum": 2.0,
@@ -90,7 +91,8 @@ Celestial = {
         "Type": 3,
         "Components": 0,
         "Subject": None,
-        "StatusSave": '{"MainIdentifier":null,"Elements":{},"WorldTime":0.0,"ScalingName":"内太阳系","LengthScale":1.0,"SizeLinear":0.0001,"SizeNonlinear":0.5,"StarPresent":false,"Setting":null}", "CameraSave": "{"Mode":2,"Distance":3.0,"VisionCenter":"0.08286151,1.083,-1.28069","TargetRotation":"90,0,0"}',
+        "StatusSave": None, # 运行时动态生成
+        "CameraSave": "{\"Mode\":2,\"Distance\":2.75,\"VisionCenter\":\"0,1.08,0\",\"TargetRotation\":\"90,0,0\"}",
         "Version": 2407,
         "CreationDate": 1702570435066,
         "Paused": False,
@@ -146,7 +148,7 @@ Celestial = {
         "Multilingual": False
     },
     "CreationDate": 0,
-    "InternalName": "",  # file name
+    "InternalName": None,  # 存档名，运行时动态生成
     "Speed": 1.0,
     "SpeedMinimum": 0.1,
     "SpeedMaximum": 10.0,
@@ -172,7 +174,7 @@ Electromagnetism = {
         "Type": 4,
         "Components": 1,
         "Subject": None,
-        "StatusSave": '{"SimulationSpeed":1.0,"Elements":[]}',
+        "StatusSave": None, # 运行时动态生成
         "CameraSave": '{"Mode":1,"Distance":3.25,"VisionCenter":"0.1673855,0.88,0.05990592","TargetRotation":"90,0,0"}',
         "Version": 2405,
         "CreationDate": 1683039963710,
@@ -229,7 +231,7 @@ Electromagnetism = {
         "Multilingual": False
     },
     "CreationDate": 0,
-    "InternalName": None,
+    "InternalName": None,  # 存档名，运行时动态生成
     "Speed": 1.0,
     "SpeedMinimum": 0.1,
     "SpeedMaximum": 2.0,

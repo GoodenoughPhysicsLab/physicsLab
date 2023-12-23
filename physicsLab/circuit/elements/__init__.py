@@ -1,4 +1,4 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 # 基础电路
 from physicsLab.circuit.elements.basicCircuit import *
 # 逻辑电路

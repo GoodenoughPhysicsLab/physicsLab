@@ -1,4 +1,4 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 # 操作导线
 from physicsLab.circuit.wire import *
 # 元件类

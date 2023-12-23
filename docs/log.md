@@ -57,7 +57,9 @@
 1.  修复了由`typing`导致的问题
 2.  实装了支持`Chord`的`Piece.write_midi`
 
-# coming soon
+# 1.4.0
 1. `traslate_to_midi`增加了对音量的支持
 2. 移除了`Note.time=0`的表示方式
 3. 将`.plm.py`更名为`.pl.py`
+4. 将传统的函数式实验存档读写改为了`class Experiment`的形式
+5. 在一些小的行为上进行了优化, 使编写更加直观

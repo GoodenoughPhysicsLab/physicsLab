@@ -1,257 +1,450 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 import os
+import sys
 import json
+import copy
 
 import physicsLab._tools as _tools
-import physicsLab.errors as errors
+import physicsLab.phy_errors as phy_errors
+import physicsLab.savTemplate as savTemplate
 import physicsLab._colorUtils as _colorUtils
-import physicsLab._fileGlobals as _fileGlobals
 
-from typing import Union, Optional
+from physicsLab.experimentType import experimentType
+from physicsLab.typehint import Union, Optional, List, Self
 
-# 实验（存档）类，主要与'with'关键字搭配使用
+# 最新被操作的存档
+class stack_Experiment:
+    __single_instance: Optional["stack_Experiment"] = None
+    data: List["Experiment"] = []
+
+    def __new__(cls) -> Self:
+        if cls.__single_instance is None:
+            cls.__single_instance = object.__new__(cls)
+        
+        return cls.__single_instance
+
+    @classmethod
+    def push(cls, data: "Experiment") -> None:
+        if not isinstance(data, Experiment):
+            raise TypeError
+
+        cls.data.append(data)
+
+    @classmethod
+    def top(cls) -> "Experiment":
+        if len(cls.data) == 0:
+            raise phy_errors.ExperimentError("experiment stack is empty")
+
+        return cls.data[-1]
+
+    @classmethod
+    def pop(cls) -> "Experiment":
+        res = cls.top()
+        cls.data.pop()
+        return res
+
+# 实验（存档）类
+class Experiment:
+    FILE_HEAD = "physicsLabSav"
+    if sys.platform == "win32":
+        from getpass import getuser
+        FILE_HEAD = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Circuit"
+    
+    def __init__(self, sav_name: Optional[str] = None) -> None:
+        self.is_open_or_crt: bool = False
+        self.is_open: bool = False
+        self.is_crt: bool = False
+
+        self.FileName: Optional[str] = None # 存档的文件名
+        self.SavPath: Optional[str] = None # 存档的完整路径, 为 f"{experiment.FILE_HEAD}/{self.FileName}"
+        self.Elements: list = [] # 装原件的_arguments
+        # 通过坐标索引元件
+        self.elements_Position: dict = {}  # key: self._position, value: List[self...]
+        # 通过index（元件生成顺序）索引元件
+        self.elements_Index: list = [] # List[self]
+
+        if sav_name is not None:
+            self.open(sav_name)
+
+    # 进行与experimentType有关的初始化
+    def __experimentType_init(self, experiment_type: Union[int, experimentType]):
+        if not (
+            isinstance(experiment_type, experimentType)
+            or (
+                isinstance(experiment_type, int) and \
+                experiment_type in \
+                    (experimentType.Circuit.value, experimentType.Celestial.value, experimentType.Electromagnetism.value)
+            )
+        ):
+            raise TypeError
+
+        if isinstance(experiment_type, experimentType):
+            self.ExperimentType: experimentType = experiment_type
+        else:
+            if experiment_type == experimentType.Circuit.value:
+                self.ExperimentType = experimentType.Circuit
+            elif experiment_type == experimentType.Celestial.value:
+                self.ExperimentType = experimentType.Celestial
+            elif experiment_type == experimentType.Electromagnetism.value:
+                self.ExperimentType = experimentType.Electromagnetism
+
+        if self.ExperimentType == experimentType.Circuit:
+            self.PlSav: dict = copy.deepcopy(savTemplate.Circuit)
+            self.Wires: List[dict] = [] # 存档对应的导线
+            # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
+            self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
+
+        elif self.ExperimentType == experimentType.Celestial:
+            self.PlSav: dict = copy.deepcopy(savTemplate.Celestial)
+            self.StatusSave: dict = {"MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
+                                     "ScalingName": "内太阳系", "LengthScale": 1.0, "SizeLinear": 0.0001,
+                                     "SizeNonlinear": 0.5, "StarPresent": False, "Setting": None}
+
+        elif self.ExperimentType == experimentType.Electromagnetism:
+            self.PlSav: dict = copy.deepcopy(savTemplate.Electromagnetism)
+            self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
+
+    # 只能通过sav文件名的方式打开文件
+    def __open(self, _File) -> Self:
+        self.is_crt = True
+
+        self.SavPath = f"{Experiment.FILE_HEAD}/{_File}"
+        with open(self.SavPath, encoding="utf-8") as f:
+            sav_dict = json.loads(f.read().replace('\n', ''))
+
+            self.__experimentType_init(sav_dict["Type"])
+            self.PlSav["InternalName"] = sav_dict["InternalName"]
+            if self.PlSav["Summary"] is not None:
+                self.PlSav["Summary"]["Subject"] = sav_dict["InternalName"]
+
+        return self
+
+    # 打开一个指定的sav文件（支持输入本地实验的名字或sav文件名）
+    def open(self, sav_name : str) -> Self:
+        if self.is_open_or_crt:
+            raise phy_errors.experimentExistError
+        self.is_open_or_crt = True
+        stack_Experiment.push(self)
+
+        sav_name = sav_name.strip()
+        if sav_name.endswith('.sav'):
+            self.FileName = sav_name
+            self.__open(sav_name)
+            return
+
+        self.FileName = search_Experiment(sav_name)
+        if self.FileName is None:
+            stack_Experiment.pop()
+            raise phy_errors.OpenExperimentError(f'No such experiment "{sav_name}"')
+
+        self.__open(self.FileName)
+        return self
+
+    def __crt(self, sav_name: str, experiment_type: experimentType = experimentType.Circuit) -> None:
+        self.is_crt = True
+
+        self.FileName = _tools.randString(34)
+        self.SavPath = f"{Experiment.FILE_HEAD}/{self.FileName}.sav"
+        self.__experimentType_init(experiment_type)
+        self.entitle(sav_name)
+    
+    # 创建存档，输入为存档名
+    def crt(self, sav_name: str, experimentType: experimentType = experimentType.Circuit) -> Self:
+        if self.is_open_or_crt:
+            raise phy_errors.experimentExistError
+        self.is_open_or_crt = True
+
+        if search_Experiment(sav_name) is not None:
+            raise phy_errors.crtExperimentFailError
+        if not isinstance(sav_name, str):
+            raise TypeError
+        
+        stack_Experiment.push(self)
+
+        self.__crt(sav_name, experimentType)
+        return self
+    
+    # 先尝试打开实验, 若失败则创建实验
+    def open_or_crt(self, savName: str, experimentType: experimentType = experimentType.Circuit) -> Self:
+        if self.is_open_or_crt:
+            raise phy_errors.experimentExistError
+        self.is_open_or_crt = True
+
+        if not isinstance(savName, str):
+            raise TypeError
+        stack_Experiment.push(self)
+        
+        self.FileName = search_Experiment(savName)
+        if self.FileName is not None:
+            self.__open(self.FileName)
+        else:
+            self.__crt(savName, experimentType)
+        return self
+    
+    # 读取实验已有状态
+    def read(self):
+        if self.SavPath is None: # 是否已.open()或.crt()
+            raise TypeError
+
+        with open(self.SavPath, encoding='utf-8') as f:
+            temp = json.loads(f.read().replace('\n', ''))
+            # 元件
+            _local_Elements = json.loads(temp["Experiment"]["StatusSave"])["Elements"]
+            # 导线
+            self.Wires = json.loads(temp['Experiment']['StatusSave'])['Wires']
+            # 实验介绍
+            self.PlSav['Summary']["Description"] = temp["Summary"]["Description"]
+
+            for element in _local_Elements:
+                # 坐标标准化（消除浮点误差）
+                sign1 = element['Position'].find(',')
+                sign2 = element['Position'].find(',', sign1 + 1)
+                num1 = _tools.roundData(float(element['Position'][:sign1:]))
+                num2 = _tools.roundData(float(element['Position'][sign1 + 1: sign2:]))
+                num3 = _tools.roundData(float(element['Position'][sign2 + 1::]))
+                element['Position'] = f"{num1},{num2},{num3}"  # x, z, y
+                # 实例化对象
+                obj = None
+                from physicsLab.element import crt_Element
+
+                if self.ExperimentType == experimentType.Circuit:
+                    obj = crt_Element(element["ModelID"], num1, num3, num2, elementXYZ=False) # type: ignore -> num type: int | float
+                else:
+                    obj = crt_Element(element["ModelID"], num1, num3, num2) # type: ignore -> num type: int | float
+
+                sign1 = element['Rotation'].find(',')
+                sign2 = element['Rotation'].find(',', sign1 + 1)
+                x = float(element['Rotation'][:sign1:])
+                z = float(element['Rotation'][sign1 + 1: sign2:])
+                y = float(element['Rotation'][sign2 + 1::])
+                obj.set_Rotation(x, y, z)
+                obj._arguments['Identifier'] = element['Identifier']
+                from .circuit.elements.logicCircuit import Logic_Input, eight_bit_Input
+                # 如果obj是逻辑输入
+                if isinstance(obj, Logic_Input) and element['Properties'].get('开关') == 1:
+                    obj.set_highLevel()
+                # 如果obj是8位输入器
+                elif isinstance(obj, eight_bit_Input):
+                    obj._arguments['Statistics'] = element['Statistics']
+                    obj._arguments['Properties']['十进制'] = element['Properties']['十进制']
+
+    # 以物实存档的格式导出实验
+    def write(self, extra_filepath: Optional[str] = None, ln: bool = False, no_pop: bool = False) -> Self:
+        def _format_StatusSave(stringJson: str) -> str:
+            stringJson = stringJson.replace('{\\\"ModelID', '\n      {\\\"ModelID') # format element json
+            stringJson = stringJson.replace('DiagramRotation\\\": 0}]', 'DiagramRotation\\\": 0}\n    ]') # format end element json
+            stringJson = stringJson.replace('{\\\"Source', '\n      {\\\"Source')
+            stringJson = stringJson.replace(u"色导线\\\"}]}", "色导线\\\"}\n    ]}")
+            return stringJson
+
+        if self.SavPath is None: # 检查是否已经.open()或.crt()
+            raise phy_errors.ExperimentError("write after open or crt")
+        if self.is_open_or_crt == True:
+            self.is_open_or_crt = False
+        else:
+            raise phy_errors.ExperimentError("write after open or crt")
+
+        if not no_pop:
+            stack_Experiment.pop()
+
+        self.StatusSave["Elements"] = self.Elements
+        if self.ExperimentType == experimentType.Circuit:
+            self.StatusSave["Wires"] = self.Wires
+        self.PlSav["Experiment"]["StatusSave"] = json.dumps(self.StatusSave, ensure_ascii=False, separators=(',', ': '))
+
+        context: str = json.dumps(self.PlSav, indent=2, ensure_ascii=False, separators=(',', ': '))
+        if ln:
+            context = _format_StatusSave(context)
+
+        with open(self.SavPath, "w", encoding="utf-8") as f:
+            f.write(context)
+        if extra_filepath is not None:
+            if not extra_filepath.endswith(".sav"):
+                extra_filepath += ".sav"
+            with open(extra_filepath, "w", encoding="utf-8") as f:
+                f.write(context)
+
+        # 编译成功，打印信息
+        if self.ExperimentType == experimentType.Circuit:
+            _colorUtils.color_print(
+                f"Successfully compiled experiment \"{self.PlSav['InternalName']}\"! "
+                f"{self.Elements.__len__()} elements, {self.Wires.__len__()} wires.",
+                color=_colorUtils.COLOR.GREEN
+            )
+        else:
+            _colorUtils.color_print(
+                f"Successfully compiled experiment \"{self.PlSav['InternalName']}\"! "
+                f"{self.Elements.__len__()} elements.",
+                color=_colorUtils.COLOR.GREEN
+            )
+
+        return self
+    
+    # 删除存档
+    def delete(self) -> None:
+        if self.SavPath is None:
+            raise TypeError
+
+        if os.path.exists(self.SavPath) and self.is_crt: # 如果一个实验被创建但还未被写入, 就会触发错误
+            os.remove(self.SavPath)
+        if os.path.exists(self.SavPath.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
+            os.remove(self.SavPath.replace(".sav", ".jpg"))
+
+        stack_Experiment.pop()
+        _colorUtils.color_print("Successfully delete experiment!", _colorUtils.COLOR.BLUE)
+    
+    # 对存档名进行重命名
+    def entitle(self, sav_name: str) -> Self:
+        if not isinstance(sav_name, str):
+            raise TypeError
+
+        self.PlSav["Summary"]["Subject"] = sav_name
+        self.PlSav["InternalName"] = sav_name
+
+        return self
+    
+    # 使用notepad打开改存档
+    def show(self) -> Self:
+        if self.SavPath is None:
+            raise TypeError
+
+        os.popen(f'notepad {self.SavPath}')
+        return self
+    
+    # 生成与发布实验有关的存档内容
+    def publish(self, title: Optional[str] = None, introduction: Optional[str] = None) -> Self:
+        # 发布实验时输入实验介绍
+        def introduce_Experiment(introduction: Union[str, None]) -> None:
+            if introduction is not None:
+                self.PlSav['Summary']['Description'] = introduction.split('\n')
+
+        # 发布实验时输入实验标题
+        def name_Experiment(title: Union[str, None]) -> None:
+            if title is not None:
+                self.PlSav['Summary']['Subject'] = title
+
+        introduce_Experiment(introduction)
+        name_Experiment(title)
+
+        return self
+
+# 仅供with时使用
 class experiment:
     def __init__(self,
-                 file: str, # 实验名（非存档文件名）
+                 sav_name: str, # 实验名(非存档文件名)
                  read: bool = False, # 是否读取存档原有状态
                  delete: bool = False, # 是否删除实验
                  write: bool = True, # 是否写入实验
                  elementXYZ: bool = False, # 元件坐标系
-                 type: _fileGlobals.experimentType = _fileGlobals.experimentType.Circuit, # 若创建实验，支持传入指定实验类型
-                 extra_filepath: Optional[str] = None # 将存档写入额外的路径
+                 experiment_type: experimentType = experimentType.Circuit, # 若创建实验，支持传入指定实验类型
+                 extra_filepath: Optional[str] = None, # 将存档写入额外的路径
+                 force_crt: bool = False # 强制创建一个实验, 若已存在则删除已有实验
     ):
         if not (
-            isinstance(file, str) or
-            isinstance(read, bool) or
-            isinstance(delete, bool) or
-            isinstance(elementXYZ, bool) or
-            isinstance(write, bool) or
-            isinstance(type, (int, _fileGlobals.experimentType))
+            isinstance(sav_name, str) and
+            isinstance(read, bool) and
+            isinstance(delete, bool) and
+            isinstance(elementXYZ, bool) and
+            isinstance(write, bool) and
+            isinstance(experiment_type, experimentType)
         ) and (
             not isinstance(extra_filepath, str) and
             extra_filepath is not None
         ):
             raise TypeError
 
-        self.file: str = file
+        self.savName: str = sav_name
         self.read: bool = read
         self.delete: bool = delete
         self.write: bool = write
         self.elementXYZ: bool = elementXYZ
-        self.experimentType: _fileGlobals.experimentType = type
+        self.experimentType: experimentType = experiment_type
         self.extra_filepath: Optional[str] = extra_filepath
+        self.force_crt = force_crt
 
     # 上下文管理器，搭配with使用
     def __enter__(self):
-        open_or_crt_Experiment(self.file, self.experimentType)
+        if not self.force_crt:
+            self._Experiment: Experiment = Experiment().open_or_crt(self.savName, self.experimentType)
+        else:
+            temp = search_Experiment(self.savName)
+            if temp is not None:
+                Experiment(temp).delete()
+            
+            self._Experiment: Experiment = Experiment().crt(self.savName)
 
         if self.read:
-            read_Experiment()
+            self._Experiment.read()
         if self.elementXYZ:
-            _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
+            if self._Experiment.ExperimentType != experimentType.Circuit:
+                stack_Experiment.pop()
+                raise phy_errors.ExperimentTypeError
             import physicsLab.circuit.elementXYZ as _elementXYZ
             _elementXYZ.set_elementXYZ(True)
 
+        return self._Experiment
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self.write:
-            write_Experiment(extra_filepath=self.extra_filepath)
+            self._Experiment.write(extra_filepath=self.extra_filepath, no_pop=self.delete)
         if self.delete:
-            try:
-                del_Experiment()
-            except FileNotFoundError:
-                pass
+            self._Experiment.delete()
+
+# 索取所有物实存档的文件名
+def getAllSav() -> List:
+    from os import walk
+    savs = [i for i in walk(Experiment.FILE_HEAD)][0]
+    savs = savs[savs.__len__() - 1]
+    return [aSav for aSav in savs if aSav.endswith('sav')]
 
 # 检测实验是否存在，输入为存档名，若存在则返回存档对应的文件名，若不存在则返回None
-def search_Experiment(savName: str) -> Union[str, None]:
-    savs = _tools.getAllSav()
+def search_Experiment(sav_name: str) -> Union[str, None]:
+    savs = getAllSav()
     for aSav in savs:
-        with open(f"{_fileGlobals.FILE_HEAD}/{aSav}", encoding='utf-8') as f:
+        with open(f"{Experiment.FILE_HEAD}/{aSav}", encoding='utf-8') as f:
             try:
                 f = json.loads(f.read().replace('\n', ''))
             except json.decoder.JSONDecodeError: # 文件不是物实存档
                 continue
             else:
-                if f["InternalName"]== savName:
+                if f["InternalName"] == sav_name:
                     return aSav
     return None
 
-# 输入sav（存档）的文件名并读取部分实验内容
-def _open_Experiment(file: str) -> None:        
-    _fileGlobals.SavPath = f"{_fileGlobals.FILE_HEAD}/{file}"
-    with open(_fileGlobals.SavPath, encoding="utf-8") as f:
-        f = json.loads(f.read().replace('\n', ''))
-        # 初始化package全局变量
-        _fileGlobals.fileGlobals_init(f["Type"])
-
-        _fileGlobals.PlSav["InternalName"] = f["InternalName"]
-        try: # 当Summary为None时触发TypeError
-            _fileGlobals.PlSav["Summary"]["Subject"] = f["InternalName"]
-        except TypeError:
-            pass
-
-# 打开一个指定的sav文件（支持输入本地实验的名字或sav文件名）
-def open_Experiment(fileName : str) -> None:
-    fileName = fileName.strip()
-    if fileName.endswith('.sav'):
-        _open_Experiment(fileName)
-        return
-
-    _fileGlobals.SavName = search_Experiment(fileName)
-    if _fileGlobals.SavName is None:
-        raise errors.openExperimentError(f'No such experiment "{fileName}"')
-
-    _open_Experiment(_fileGlobals.SavName)
-
-# logic of crt_Experiment
-def _crt_Experiment(savName: str, experimentType) -> None:
-    _fileGlobals.fileGlobals_init(experimentType)
-    # 创建存档
-    _fileGlobals.SavName = _tools.randString(34)
-    _fileGlobals.SavPath = f"{_fileGlobals.FILE_HEAD}/{_fileGlobals.SavName}.sav"
-    rename_Experiment(savName)
+# 以下为旧式调用方式， 为兼容代码
+# 打开实验
+def open_Experiment(sav_name: str) -> Experiment:
+    return Experiment().open(sav_name)
 
 # 创建存档，输入为存档名
-def crt_Experiment(savName: str, experimentType: _fileGlobals.experimentType = _fileGlobals.experimentType.Circuit) -> None:
-    if search_Experiment(savName) is not None:
-        raise errors.crtExperimentFailError
-    
-    if not isinstance(savName, str):
-        savName = str(savName)
-    _crt_Experiment(savName, experimentType)
+def crt_Experiment(sav_name: str, experimentType: experimentType = experimentType.Circuit) -> Experiment:
+    return Experiment().crt(sav_name, experimentType)
 
 # 先尝试打开实验，若失败则创建实验。只支持输入存档名
-def open_or_crt_Experiment(savName: str, experimentType: _fileGlobals.experimentType = _fileGlobals.experimentType.Circuit) -> None:
-    if not isinstance(savName, str):
-        raise TypeError
-    
-    _fileGlobals.SavName = search_Experiment(savName)
-    if _fileGlobals.SavName is not None:
-        _open_Experiment(_fileGlobals.SavName)
-    else:
-        _crt_Experiment(savName, experimentType)
-
-# 将编译完成的json写入sav, ln: 是否将存档中字符串格式json换行
-def write_Experiment(extra_filepath: Optional[str] = None, ln: bool = False) -> None:
-    def _format_StatusSave(stringJson: str) -> str:
-        stringJson = stringJson.replace('{\\\"ModelID', '\n      {\\\"ModelID') # format element json
-        stringJson = stringJson.replace('DiagramRotation\\\": 0}]', 'DiagramRotation\\\": 0}\n    ]') # format end element json
-        stringJson = stringJson.replace('{\\\"Source', '\n      {\\\"Source')
-        stringJson = stringJson.replace("色导线\\\"}]}", "色导线\\\"}\n    ]}")
-        return stringJson
-
-    _fileGlobals.StatusSave["Elements"] = _fileGlobals.Elements
-    _fileGlobals.StatusSave["Wires"] = _fileGlobals.Wires
-    _fileGlobals.PlSav["Experiment"]["StatusSave"] = json.dumps(_fileGlobals.StatusSave, ensure_ascii=False, separators=(',', ':'))
-
-    context: str = json.dumps(_fileGlobals.PlSav, indent=2, ensure_ascii=False, separators=(',', ':'))
-    if ln:
-        context = _format_StatusSave(context)
-
-    with open(_fileGlobals.SavPath, "w", encoding="utf-8") as f:
-        f.write(context)
-    if extra_filepath is not None:
-        if not extra_filepath.endswith(".sav"):
-            extra_filepath += ".sav"
-        with open(extra_filepath, "w", encoding="utf-8") as f:
-            f.write(context)
-
-    # 编译成功，打印信息
-    if _fileGlobals.get_experimentType() == 0:
-        _colorUtils.printf(
-            f"Successfully compiled! {_fileGlobals.Elements.__len__()} elements, {_fileGlobals.Wires.__len__()} wires.",
-            _colorUtils.COLOR.GREEN
-        )
-    else:
-        _colorUtils.printf(
-            f"Successfully compiled! {_fileGlobals.Elements.__len__()} elements.",
-            _colorUtils.COLOR.GREEN
-        )
+def open_or_crt_Experiment(sav_name: str, experimentType: experimentType = experimentType.Circuit) -> Experiment:
+    return Experiment().open_or_crt(sav_name, experimentType)
 
 # 读取sav文件已有的原件与导线
 def read_Experiment() -> None:
-    with open(_fileGlobals.SavPath, encoding='utf-8') as f:
-        readmem = json.loads(f.read().replace('\n', ''))
-        # 元件
-        _local_Elements = json.loads(readmem["Experiment"]["StatusSave"])["Elements"]
-        # 导线
-        _fileGlobals.Wires = json.loads(readmem['Experiment']['StatusSave'])['Wires']
-        # 实验介绍
-        _fileGlobals.PlSav['Summary']["Description"] = readmem["Summary"]["Description"]
+    stack_Experiment.top().read()
 
-        for element in _local_Elements:
-            # 坐标标准化（消除浮点误差）
-            sign1 = element['Position'].find(',')
-            sign2 = element['Position'].find(',', sign1 + 1)
-            num1 = _tools.roundData(float(element['Position'][:sign1:]))
-            num2 = _tools.roundData(float(element['Position'][sign1 + 1: sign2:]))
-            num3 = _tools.roundData(float(element['Position'][sign2 + 1::]))
-            element['Position'] = f"{num1},{num2},{num3}"  # x, z, y
-            # 实例化对象
-            obj = None
-            from physicsLab.element import crt_Element
-
-            if _fileGlobals.get_experimentType() == 0:
-                obj = crt_Element(element["ModelID"], num1, num3, num2, elementXYZ=False) # type: ignore -> num type: int | float
-            elif _fileGlobals.get_experimentType() == 3 or _fileGlobals.get_experimentType() == 4:
-                obj = crt_Element(element["ModelID"], num1, num3, num2) # type: ignore -> num type: int | float
-            else:
-                raise errors.openExperimentError
-
-            sign1 = element['Rotation'].find(',')
-            sign2 = element['Rotation'].find(',', sign1 + 1)
-            x = float(element['Rotation'][:sign1:])
-            z = float(element['Rotation'][sign1 + 1: sign2:])
-            y = float(element['Rotation'][sign2 + 1::])
-            obj.set_Rotation(x, y, z)
-            obj._arguments['Identifier'] = element['Identifier'] # type: ignore -> class NE555 must has attr _arguments
-            from .circuit import Logic_Input, eight_bit_Input
-            # 如果obj是逻辑输入
-            if isinstance(obj, Logic_Input) and element['Properties'].get('开关') == 1:
-                obj.set_highLevel()
-            # 如果obj是8位输入器
-            elif isinstance(obj, eight_bit_Input):
-                obj._arguments['Statistics'] = element['Statistics']
-                obj._arguments['Properties']['十进制'] = element['Properties']['十进制']
-
-# 重命名sav
-def rename_Experiment(name: str) -> None:
-    if search_Experiment(name) is not None:
-        raise TypeError
-    
-    # 重命名存档
-    name = str(name)
-    _fileGlobals.PlSav["Summary"]["Subject"] = name
-    _fileGlobals.PlSav["InternalName"] = name
-
-# 打开一个存档的窗口
-def show_Experiment() -> None:
-    # os.system() 在文件夹有空格的时候会出现错误
-    os.popen(f'notepad {_fileGlobals.SavPath}')
+# 将编译完成的json写入sav, ln: 是否将存档中字符串格式json换行
+def write_Experiment(extra_filepath: Optional[str] = None, ln: bool = False, no_pop: bool = False) -> None:
+    stack_Experiment.top().write(extra_filepath, ln, no_pop)
 
 # 删除存档
 def del_Experiment() -> None:
-    os.remove(_fileGlobals.SavPath)
-    try: # 用存档生成的实验无图片，因此可能删除失败
-        os.remove(_fileGlobals.SavPath.replace('.sav', '.jpg'))
-    except FileNotFoundError:
-        pass
-    _colorUtils.printf("Successfully delete experiment!", _colorUtils.COLOR.BLUE)
+    stack_Experiment.top().delete()
+
+# 使用notepad打开该存档
+def show_Experiment() -> None:
+    # os.system() 在文件夹有空格的时候会出现错误
+    stack_Experiment.top().show()
+
+# 重命名存档
+def entitle_Experiment(sav_name: str):
+    stack_Experiment.top().entitle(sav_name)
 
 # 发布实验
-def yield_Experiment(title: Optional[str] = None, introduction: Optional[str] = None) -> None:
-    # 发布实验时输入实验介绍
-    def introduce_Experiment(introduction: Union[str, None]) -> None:
-        if introduction is not None:
-            _fileGlobals.PlSav['Summary']['Description'] = introduction.split('\n')
-
-    # 发布实验时输入实验标题
-    def title_Experiment(title: Union[str, None]) -> None:
-        if title is not None:
-            _fileGlobals.PlSav['Summary']['Subject'] = title
-
-    if (not isinstance(title, str) and title is not None) or \
-            (not isinstance(introduction, str) and introduction is not None):
-        raise TypeError
-
-    introduce_Experiment(introduction)
-    title_Experiment(title)
+def publish_Experiment(title: Optional[str] = None, introduction: Optional[str] = None) -> None:
+    stack_Experiment.top().publish(title, introduction)

@@ -1,8 +1,23 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
+from typing import Any
 import unittest
 from physicsLab import *
 from physicsLab.union import *
+from physicsLab.experiment import stack_Experiment
 #from viztracer import VizTracer
+
+class TestError(Exception):
+    def __str__(self) -> str:
+        return "Test Fail"
+
+def my_test_dec(method):
+    def result(*args, **kwarg):
+        method(*args, **kwarg)
+
+        if len(stack_Experiment.data) != 0:
+            print(f"{method} test fail due to len(stack_Experiment) != 0")
+            raise TestError
+    return result
 
 class MyTestCase(unittest.TestCase):
     # init unittest class
@@ -19,8 +34,9 @@ class MyTestCase(unittest.TestCase):
     #     tracer.stop()
     #     tracer.save() # also takes output_file as an optional argument
 
+    @my_test_dec
     def test_experiment1(self):
-        open_Experiment('测逝')
+        open_or_crt_Experiment("__test__")
         a = Yes_Gate()
         self.assertEqual(count_Elements(), 1)
         self.assertEqual(a.get_Position(), (0, 0, 0))
@@ -29,54 +45,56 @@ class MyTestCase(unittest.TestCase):
         clear_Wires()
         self.assertEqual(count_Wires(), 0)
         self.assertEqual(count_Elements(), 1)
-        write_Experiment()
         crt_Wire(a.o, a.i)
         crt_Element('Logic Input')
         self.assertEqual(count_Elements(), 2)
         get_Element(0, 0, 0)
         write_Experiment()
 
+    @my_test_dec
     def test_read_Experiment(self):
-        open_Experiment('测逝')
-        write_Experiment()
+        open_or_crt_Experiment("__test__")
 
-        open_Experiment('测逝')
         self.assertEqual(count_Elements(), 0)
         self.assertEqual(count_Wires(), 0)
         Logic_Input()
         write_Experiment()
 
-        open_Experiment('测逝')
+        open_Experiment("__test__")
         read_Experiment()
         self.assertEqual(count_Elements(), 1)
+        del_Experiment()
 
+    @my_test_dec
     def test_crt_Experiment(self):
         try:
             crt_Experiment("__test__")
             write_Experiment()
-            crt_Experiment("__test__")
+            crt_Experiment("__test__") # will fail
         except crtExperimentFailError:
-            open_Experiment("__test__")
-            del_Experiment()
+            pass
         else:
             del_Experiment()
-            raise RuntimeError
+            raise TestError
 
+    @my_test_dec
     def test_crt_wire(self):
-        with experiment("__test__", delete=True):
+        with experiment("__test__", delete=True, force_crt=True):
             a = Or_Gate()
             crt_Wire(a.o, a.i_up, "red")
 
+    @my_test_dec
     def test_union_Sum(self):
         open_Experiment('测逝')
         union.Sum(0, -1, 0, 64)
         self.assertEqual(count_Elements(), 64)
         self.assertEqual(count_Wires(), 63)
-        write_Experiment()
         clear_Elements()
         self.assertEqual(count_Wires(), 0)
         self.assertEqual(count_Elements(), 0)
+        write_Experiment()
 
+    @my_test_dec
     def test_get_Element(self):
         open_Experiment('测逝')
         Or_Gate(0, 0, 0)
@@ -89,6 +107,7 @@ class MyTestCase(unittest.TestCase):
         write_Experiment()
 
     # 测逝用例未写完
+    @my_test_dec
     def test_set_O(self):
         open_Experiment('测逝')
         set_O(-1, -1, 0)
@@ -98,15 +117,19 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(count_Elements(), 100)
         write_Experiment()
 
+    @my_test_dec
     def test_errors(self):
         try:
-            open_Experiment('blabla')
-        except openExperimentError:
+            with experiment("__test__", delete=True):
+                pass
+            open_Experiment('__test__') # do not exist
+        except OpenExperimentError:
             pass
         else:
-            raise RuntimeError
+            raise TestError
 
     # 测试元件坐标系2
+    @my_test_dec
     def test_aTest(self):
         open_Experiment('测逝')
         set_elementXYZ(True)
@@ -124,30 +147,33 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(count_Elements(), 150)
         write_Experiment()
 
+    @my_test_dec
     def test_open_many_Experiment(self):
-        open_Experiment('测逝')
-        with experiment('test'):
+        open_or_crt_Experiment('_Test')
+        with experiment('__test__', delete=True):
             Logic_Input()
-        write_Experiment()
-        self.assertEqual(1, count_Elements())
+            self.assertEqual(1, count_Elements())
         del_Experiment()
 
+    @my_test_dec
     def test_with_and_coverPosition(self):
-        with experiment('测逝'):
+        with experiment("__test__", delete=True):
             Logic_Input()
             Or_Gate()
             self.assertEqual(len(get_Element(0, 0, 0)), 2)
 
+    @my_test_dec
     def test_del_Element(self):
-        with experiment('测逝'):
+        with experiment("__test__", delete=True):
             Logic_Input().o - Or_Gate().o
             del_Element(get_Element(2))
             self.assertEqual(count_Elements(), 1)
             self.assertEqual(count_Wires(), 0)
 
     # 测逝模块化电路连接导线
+    @my_test_dec
     def test_wires(self):
-        with experiment('测逝', elementXYZ=True):
+        with experiment("__test__", delete=True, elementXYZ=True):
             a = union.Inputs(0, 0, 0, 8)
             b = union.Outputs(0.6, 0, 0, 8, elementXYZ=False)
             Logic_Output(0.6, 0, 0.1, elementXYZ=False)
@@ -159,8 +185,9 @@ class MyTestCase(unittest.TestCase):
             self.assertEqual(15, count_Wires())
 
     # 测逝模块化加法电路
+    @my_test_dec
     def test_union_Sum2(self):
-        with experiment('测逝', elementXYZ=True):
+        with experiment("__test__", delete=True, elementXYZ=True):
             a = union.Inputs(-1, 0, 0, 8)
             b = union.Inputs(-2, 0, 0, 8)
             c = union.Sum(0, 0, 0, 8)
@@ -170,47 +197,58 @@ class MyTestCase(unittest.TestCase):
             c.data_Output - d.data_Input
 
     # 测试打开实验类型与文件不吻合
+    @my_test_dec
     def test_experimentType(self):
-        crt_Experiment("__test__测逝电与磁")
+        temp = search_Experiment("__test__测逝电与磁")
+        if temp is not None:
+            open_Experiment(temp)
+            del_Experiment()
+        crt_Experiment("__test__测逝电与磁", experimentType.Electromagnetism)
         try:
             Logic_Input()
-        except experimentTypeError:
-            pass
-        write_Experiment()
-        del_Experiment()
-
-    def test_experimentType2(self):
-        try:
-            with experiment(file='电与磁', type=experimentType.Electromagnetism, elementXYZ=True, delete=True):
-                Positive_Charge()
-                Logic_Input()
-        except experimentTypeError:
+        except ExperimentTypeError:
             pass
         else:
-            raise RuntimeError
+            raise TestError
+        write_Experiment(no_pop=True)
+        del_Experiment()
 
+    @my_test_dec
+    def test_experimentType2(self):
+        try:
+            with experiment(sav_name='电与磁', experiment_type=experimentType.Electromagnetism, elementXYZ=True, delete=True):
+                Positive_Charge()
+                Logic_Input()
+        except ExperimentTypeError:
+            pass
+        else:
+            raise TestError
+
+    @my_test_dec
     def test_experimentType3(self):
-        with experiment("__tset__", type=experimentType.Circuit, delete=True):
+        with experiment("__test__", experiment_type=experimentType.Circuit, delete=True):
             Logic_Input()
-        with experiment("__test__", type=experimentType.Celestial, delete=True):
+        with experiment("__test__", experiment_type=experimentType.Celestial, delete=True):
             pass
-        with experiment("__test__", type=experimentType.Electromagnetism, delete=True):
+        with experiment("__test__", experiment_type=experimentType.Electromagnetism, delete=True):
             pass
 
+    @my_test_dec
     def test_electromagnetism(self):
-        with experiment("电与磁测逝", type=experimentType.Electromagnetism):
+        with experiment("电与磁测逝", delete=True, experiment_type=experimentType.Electromagnetism):
             Negative_Charge(-0.1, 0, 0)
             Positive_Charge(0.1, 0, 0)
             self.assertEqual(count_Elements(), 2)
             try:
                 count_Wires()
-            except experimentTypeError:
+            except ExperimentTypeError:
                 pass
             else:
-                raise RuntimeError
+                raise TestError
 
+    @my_test_dec
     def test_union_Sub(self):
-        with experiment("测逝", elementXYZ=True):
+        with experiment("__test__", delete=True, elementXYZ=True):
             a = union.Sub(bitLength=8, fold=False)
             crt_Wires(union.Inputs(-3, 0, 0, 8).data_Output, a.minuend)
             crt_Wires(union.Inputs(-2, 0, 0, 8).data_Output, a.subtrahend)
@@ -221,8 +259,9 @@ class MyTestCase(unittest.TestCase):
             union.Sub(-5, 0, 0)
 
     # 测试简单乐器设置音高的三种方法
+    @my_test_dec
     def test_Simple_Instrument(self):
-        with experiment("测逝", elementXYZ=True):
+        with experiment("__test__", delete=True, elementXYZ=True):
             a = Simple_Instrument(pitch=48)
             a = Simple_Instrument().set_Tonality(48)
             a = Simple_Instrument(pitch="C3")
@@ -230,16 +269,18 @@ class MyTestCase(unittest.TestCase):
             Logic_Input(-1, 0, 0).o - a.i
             a.o - Ground_Component(1, 0, 0).i
 
+    @my_test_dec
     def test_getElementError(self):
-        with experiment("测逝"):
+        with experiment("__test__", delete=True):
             Logic_Input()
             try:
                 get_Element(2)
             except getElementError:
                 pass
             else:
-                raise RuntimeError
+                raise TestError
     
+    @my_test_dec
     def test_unionMusic(self):
         music.Note(2)
         try:
@@ -247,19 +288,20 @@ class MyTestCase(unittest.TestCase):
         except TypeError:
             pass
 
+    @my_test_dec
     def test_const_is_bigElement(self):
-        with experiment("__test__", delete=True):
+        with experiment("__test__", force_crt=True, delete=True):
             a = Multiplier()
             try:
                 a.is_bigElement = False
             except AttributeError:
                 pass
             else:
-                raise RuntimeError
+                raise TestError
 
-    # py -m unittest test_physicsLab.MyTestCase.test_musicPlayer
+    @my_test_dec
     def test_musicPlayer(self):
-        with experiment("测逝"):
+        with experiment("__test__", delete=True):
             l = (0, 2, 4, 5, 7, 9, 11)
 
             t = music.Piece()
@@ -272,6 +314,7 @@ class MyTestCase(unittest.TestCase):
             #print(t)
             t.release(-1, -1, 0)
     
+    @my_test_dec
     def test_mutiple_notes_in_Simple_Instrument(self):
         with experiment("测逝"):
             Simple_Instrument().add_note(67) # type: ignore

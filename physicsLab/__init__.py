@@ -1,49 +1,50 @@
-#coding=utf-8
-
-# Win: 若存档对应文件夹不存在直接报错
-import physicsLab._fileGlobals as _fileGlobals
-from os import path as _path, mkdir as _mkdir
-
-# 检测操作系统
-from sys import platform as _platform
-if _platform == "win32":
-    if not _path.exists(_fileGlobals.FILE_HEAD):
-        raise RuntimeError("The folder does not exist, try launching Physics-Lab-AR and try it out")
-else:
-    if not _path.exists("physicsLabSav"):
-        _mkdir("physicsLabSav")
+# -*- coding: utf-8 -*-
 
 # 颜色打印
 from physicsLab._colorUtils import close_color_print
 # 操作实验
 from physicsLab.experiment import *
+# 实验类型
+from physicsLab.experimentType import *
 # 电学实验
 from physicsLab.circuit import *
 # 天体物理实验
 from physicsLab.celestial import *
 # 电与磁实验
-from physicsLab.electromagnetism.elementsClass import *
+from physicsLab.electromagnetism import *
 # 操作元件
 from physicsLab.element import *
-# 自定义异常类
-from physicsLab.errors import *
-# 获取存档类型与整个存档文件
-from physicsLab._fileGlobals import get_Sav, get_experimentType, experimentType
+# `physicsLab`自定义异常类
+from physicsLab.phy_errors import *
 # 模块化电路
 import physicsLab.circuit.unionElements.unionLogic as union
+import physicsLab.music as music
 
-# 在import了physicsLab的程序的第一行加上#coding=utf-8
+# Win: 若存档对应文件夹不存在直接报错
+from os import path as _path, mkdir as _mkdir
+
+# 检测操作系统
+from sys import platform as _platform
+if _platform == "win32":
+    if not _path.exists(Experiment.FILE_HEAD):
+        raise RuntimeError("The folder does not exist, try launching Physics-Lab-AR and try it out")
+else:
+    if not _path.exists("physicsLabSav"):
+        _mkdir("physicsLabSav")
+
+# 在import了physicsLab的程序的第一行加上# -*- coding: utf-8 -*-
 try: # 在cmd或者shell上无法执行该功能
     import sys
     s = ""
     with open(sys.argv[0], encoding='utf-8') as f:
         s = f.read()
-    if not s.replace('\n', '').startswith("#coding=utf-8"):
+    if not s.replace('\n', '').startswith("# -*- coding: utf-8 -*-") and \
+       not s.replace('\n', '').startswith("#coding=utf-8"):
         with open(sys.argv[0], 'w', encoding='utf-8') as f:
             if s.startswith('\n'):
-                f.write(f'#coding=utf-8{s}')
+                f.write(f'# -*- coding: utf-8 -*-{s}')
             else:
-                f.write(f'#coding=utf-8\n{s}')
+                f.write(f'# -*- coding: utf-8 -*-\n{s}')
     del sys
 except FileNotFoundError:
     close_color_print()
@@ -51,23 +52,25 @@ except FileNotFoundError:
 __all__ = [
     # _colorUtils.py
     "close_color_print",
-    # _fileGlobals.py
-    "_fileGlobals", "get_Sav", "get_experimentType", "experimentType",
+
+    # experimentType.py
+    "experimentType",
 
     # errors.py
-    "openExperimentError", "wireColorError", "wireNotFoundError", "bitLengthError",
-    "experimentExistError", "experimentTypeError", "getElementError", "crtExperimentFailError",
+    "OpenExperimentError", "WireColorError", "WireNotFoundError", "bitLengthError",
+    "experimentExistError", "ExperimentTypeError", "getElementError", "crtExperimentFailError",
+    "ExperimentError",
 
     # experiment.py
-    "experiment", "open_Experiment", "crt_Experiment", "read_Experiment", "write_Experiment",
-    "rename_Experiment", "show_Experiment", "del_Experiment", "yield_Experiment", "search_Experiment",
+    "Experiment", "experiment", "open_Experiment", "crt_Experiment", "read_Experiment", "write_Experiment",
+    "entitle_Experiment", "show_Experiment", "del_Experiment", "publish_Experiment", "search_Experiment",
     "open_or_crt_Experiment",
 
     # element.py
-    "crt_Element", "del_Element", "count_Elements", "get_Element", "clear_Elements", "print_Elements",
+    "crt_Element", "del_Element", "count_Elements", "get_Element", "clear_Elements",
 
     # wire.py
-    "crt_Wire", "del_Wire", "count_Wires", "clear_Wires", "print_Wires",
+    "crt_Wire", "del_Wire", "count_Wires", "clear_Wires",
 
     # elementsClass
     "NE555", "Basic_Capacitor", 'Ground_Component', "Operational_Amplifier", "Relay_Component",

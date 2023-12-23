@@ -60,7 +60,7 @@ More detailed content can be found on [Doc](./Doc) view in
 Please note that Python uses ```GBK```encoding, while the practical one is ```utf-8```encoding, which can cause garbled code in rare cases.  
 At this point, you can add the following comments to the first line of the Python code:
 ```Python
-#Coding=utf-8
+# -*- coding: utf-8 -*-
 
 #To do something
 ```

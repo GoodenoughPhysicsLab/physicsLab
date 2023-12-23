@@ -1,19 +1,22 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 # 元件坐标系
 # 元件坐标系的单位x为一个是门的长
 # 单位y是一个是门的宽
 # 单位z为物实默认坐标系的0.1
 
-from typing import *
 import physicsLab._tools as _tools
-import physicsLab._fileGlobals as _fileGlobals
+import physicsLab.phy_errors as phy_errors
+
+from physicsLab.experiment import stack_Experiment
+from physicsLab.experimentType import experimentType
 
 # 全局是否为elementXYZ
 _elementXYZ: bool = False
 
 # 是否将全局设置为元件坐标系
 def set_elementXYZ(boolen: bool) -> None:
-    _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
+    if stack_Experiment.top().ExperimentType != experimentType.Circuit:
+        raise phy_errors.ExperimentTypeError
     if not isinstance(boolen, bool):
         raise TypeError
     global _elementXYZ
@@ -37,7 +40,9 @@ _xOrigin, _yOrigin, _zOrigin = 0, 0, 0
 
 # 将元件坐标系转换为物实支持的坐标系
 def xyzTranslate(x: _tools.numType, y: _tools.numType, z: _tools.numType):
-    _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
+    if stack_Experiment.top().ExperimentType != experimentType.Circuit:
+        raise phy_errors.ExperimentTypeError
+
     x *= _xUnit
     y *= _yUnit
     z *= _zUnit
@@ -49,7 +54,9 @@ def xyzTranslate(x: _tools.numType, y: _tools.numType, z: _tools.numType):
 
 # 将物实支持的坐标系转换为元件坐标系
 def translateXYZ(x: _tools.numType, y: _tools.numType, z: _tools.numType, bigElement: bool = False):
-    _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
+    if stack_Experiment.top().ExperimentType != experimentType.Circuit:
+        raise phy_errors.ExperimentTypeError
+
     x /= _xUnit
     y /= _yUnit
     z /= _zUnit

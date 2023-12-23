@@ -100,7 +100,7 @@ with experiment('测逝', read=True):
 请注意：由于`physicsLab`使用中文注释并出现过编码问题，因此physicsLab有一套确保编码为`utf-8`的机制  
 此时你可以手动在```Python```代码的第一行添加如下注释：
 ```Python
-#coding=utf-8
+# -*- coding: utf-8 -*-
 
 # to do something...
 ```  

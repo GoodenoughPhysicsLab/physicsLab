@@ -1,35 +1,35 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 from typing import Union, Callable, Tuple
 
-import physicsLab.errors as errors
+import physicsLab.phy_errors as phy_errors
 import physicsLab.circuit.unionElements._unionClassHead as _unionClassHead
 
-from physicsLab.circuit.wire import crt_Wire, del_Wire, element_Pin
+from physicsLab.circuit.wire import crt_Wire, del_Wire, Pin
 
 # 模块化电路的“引脚”，输入输出都是数据
 class union_Pin:
     __slots__ = ("union_self", "elementPins")
     def __init__(self, union_self: _unionClassHead.UnionBase, *elementPins):
         self.union_self = union_self
-        self.elementPins: Tuple[element_Pin] = tuple(elementPins)
+        self.elementPins: Tuple[Pin] = tuple(elementPins)
 
     # 通过unionPin[num]来索引单个bit
     def __getitem__(self, item):
         return self.elementPins[item]
 
-    def __sub__(self, other: Union[element_Pin, "union_Pin"]):
+    def __sub__(self, other: Union[Pin, "union_Pin"]):
         crt_Wires(self, other)
         return other
 
 def check_TypeUnionPin(func: Callable):
     def result(
-        sourcePin: Union[union_Pin, element_Pin],
-        targetPin: Union[union_Pin, element_Pin],
+        sourcePin: Union[union_Pin, Pin],
+        targetPin: Union[union_Pin, Pin],
         color="蓝"
     ) -> None:
-        if isinstance(sourcePin, element_Pin):
+        if isinstance(sourcePin, Pin):
             sourcePin = union_Pin(sourcePin.element_self, sourcePin)
-        if isinstance(targetPin, element_Pin):
+        if isinstance(targetPin, Pin):
             targetPin = union_Pin(targetPin.element_self, targetPin)
 
         if not (
@@ -39,7 +39,7 @@ def check_TypeUnionPin(func: Callable):
             raise TypeError
 
         if len(sourcePin.elementPins) != len(targetPin.elementPins):
-            errors.warning(
+            phy_errors.warning(
                 f"The number of {sourcePin.union_self.__class__.__name__}'s output pin "
                 f"are not equal to {targetPin.union_self.__class__.__name__}'s input pin."
             )
@@ -50,8 +50,8 @@ def check_TypeUnionPin(func: Callable):
 # 为unionPin连接导线，相当于自动对数据进行连接导线
 @check_TypeUnionPin
 def crt_Wires(
-        sourcePin: Union[union_Pin, element_Pin],
-        targetPin: Union[union_Pin, element_Pin],
+        sourcePin: Union[union_Pin, Pin],
+        targetPin: Union[union_Pin, Pin],
         color="蓝"
 ) -> None:
     for i, o in zip(sourcePin.elementPins, targetPin.elementPins): # type: ignore
@@ -60,8 +60,8 @@ def crt_Wires(
 # 删除unionPin的导线
 @check_TypeUnionPin
 def del_Wires(
-        sourcePin: Union[union_Pin, element_Pin],
-        targetPin: Union[union_Pin, element_Pin],
+        sourcePin: Union[union_Pin, Pin],
+        targetPin: Union[union_Pin, Pin],
         color="蓝"
 ) -> None:
     for i, o in zip(sourcePin.elementPins, targetPin.elementPins): # type: ignore

@@ -1,5 +1,5 @@
-#coding=utf-8
-import physicsLab.errors as _errors
+# -*- coding: utf-8 -*-
+import physicsLab.phy_errors as _errors
 import physicsLab.circuit as circuit
 
 from .wires import union_Pin
@@ -275,10 +275,10 @@ class Four_sixteen_Decoder:
     @property
     def inputData(self):
         return union_Pin(
-            circuit.element_Pin(circuit.get_Element(self.x + 0.15, self.y + 0.3, self.z), 0),
-            circuit.element_Pin(circuit.get_Element(self.x + 0.15, self.y + 0.3, self.z), 1),
-            circuit.element_Pin(circuit.get_Element(self.x, self.y + 0.3, self.z), 0),
-            circuit.element_Pin(circuit.get_Element(self.x, self.y + 0.3, self.z), 1)
+            circuit.Pin(circuit.get_Element(self.x + 0.15, self.y + 0.3, self.z), 0),
+            circuit.Pin(circuit.get_Element(self.x + 0.15, self.y + 0.3, self.z), 1),
+            circuit.Pin(circuit.get_Element(self.x, self.y + 0.3, self.z), 0),
+            circuit.Pin(circuit.get_Element(self.x, self.y + 0.3, self.z), 1)
         )
 
     # 输出译码器的数据
@@ -502,11 +502,11 @@ class Super_AndGate:
                  y: numType = 0,
                  z: numType = 0,
                  elementXYZ: Optional[bool] = None,
-                 input_pins: Optional[Union[Tuple[element_Pin], List[element_Pin]]] = None
+                 input_pins: Optional[Union[Tuple[Pin], List[Pin]]] = None
     ) -> None:
         if input_pins is None or \
             not isinstance(input_pins, (tuple, list)) or \
-            any(not isinstance(v, element_Pin) for v in input_pins) or \
+            any(not isinstance(v, Pin) for v in input_pins) or \
             len(input_pins) < 2:
             raise TypeError
     

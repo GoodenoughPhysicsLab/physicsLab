@@ -1,12 +1,12 @@
-#coding=utf-8
-from ..wire import element_Pin
+# -*- coding: utf-8 -*-
+from ..wire import Pin
 from physicsLab._tools import numType
 from physicsLab.typehint import Optional, Self, List, Union
-from ._elementClassHead import electricityBase, two_pin_ArtificialCircuit_Pin
+from ._elementBase import CircuitBase, two_pin_ArtificialCircuit_Pin
 
 # 小电扇
 @two_pin_ArtificialCircuit_Pin
-class Electric_Fan(electricityBase):
+class Electric_Fan(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {'ModelID': 'Electric Fan', 'Identifier': '',
                            'IsBroken': False, 'IsLocked': False,
@@ -19,7 +19,7 @@ class Electric_Fan(electricityBase):
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
 # 简单乐器（更多功能的源代码在union_music）
-class Simple_Instrument(electricityBase):
+class Simple_Instrument(CircuitBase):
     def __init__(
             self,
             x: numType = 0,
@@ -51,12 +51,12 @@ class Simple_Instrument(electricityBase):
         self.notes: List[int] = [self._arguments["Properties"]["音高"]] # 仅用于记录self已有的音符
 
     @property
-    def i(self) -> element_Pin:
-        return element_Pin(self, 0)
+    def i(self) -> Pin:
+        return Pin(self, 0)
 
     @property
-    def o(self) -> element_Pin:
-        return element_Pin(self, 1)
+    def o(self) -> Pin:
+        return Pin(self, 1)
 
     # 物实v2.4.7新功能: 简单乐器同时播放多个音符
     def add_note(self, *pitchs: int) -> Self:

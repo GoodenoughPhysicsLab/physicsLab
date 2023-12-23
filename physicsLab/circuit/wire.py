@@ -1,9 +1,11 @@
-#coding=utf-8
-import physicsLab.errors as errors
-import physicsLab._fileGlobals as _fileGlobals
+# -*- coding: utf-8 -*-
+import physicsLab.phy_errors as phy_errors
+
+from physicsLab.experiment import stack_Experiment
+from physicsLab.experimentType import experimentType
 
 # 电学元件引脚类, 模电元件引脚无明确的输入输出之分, 因此用这个
-class element_Pin:
+class Pin:
     __slots__ = ("element_self", "pinLabel")
     is_input = False
     is_output = False
@@ -12,37 +14,38 @@ class element_Pin:
         self.pinLabel: int = pinLabel
 
     # 重载减法运算符作为连接导线的语法
-    def __sub__(self, obj: "element_Pin") -> "element_Pin":
+    def __sub__(self, obj: "Pin") -> "Pin":
         crt_Wire(self, obj)
         return obj
 
 # 只用于输入的引脚
-class element_InputPin(element_Pin):
+class InputPin(Pin):
     is_input = True
     def __init__(self, input_self, pinLabel: int) -> None:
         super().__init__(input_self, pinLabel)
 
 # 只用于输出的引脚
-class element_OutputPin(element_Pin):
+class OutputPin(Pin):
     is_output = True
     def __init__(self, input_self, pinLabel: int) -> None:
         super().__init__(input_self, pinLabel)
 
 # 检查函数参数是否是导线
 def _check_typeWire(func):
-    def result(SourcePin: element_Pin, TargetPin: element_Pin, color: str = '蓝') -> None:
+    def result(SourcePin: Pin, TargetPin: Pin, color: str = '蓝') -> None:
         if (
-                isinstance(SourcePin, element_Pin) and
-                isinstance(TargetPin, element_Pin)
+                isinstance(SourcePin, Pin) and
+                isinstance(TargetPin, Pin)
         ):
             # 将英文的color转换为中文
             if color in ("black", "blue", "red", "green", "yellow"):
                 color = {"black": "黑", "blue": "蓝", "red": "红", "green": "绿", "yellow": "黄"}[color]
 
             if (color not in ("黑", "蓝", "红", "绿", "黄")):
-                raise errors.wireColorError
+                raise phy_errors.WireColorError
 
-            _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
+            if stack_Experiment.top().ExperimentType != experimentType.Circuit:
+                raise phy_errors.ExperimentTypeError
 
             func(SourcePin, TargetPin, color)
 
@@ -50,42 +53,42 @@ def _check_typeWire(func):
 
 # 新版连接导线
 @_check_typeWire
-def crt_Wire(SourcePin: element_Pin, TargetPin: element_Pin, color: str = '蓝') -> None:
-    _fileGlobals.Wires.append({"Source": SourcePin.element_self._arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
+def crt_Wire(SourcePin: Pin, TargetPin: Pin, color: str = '蓝') -> None:
+    stack_Experiment.top().Wires.append({"Source": SourcePin.element_self._arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
                    "Target": TargetPin.element_self._arguments["Identifier"], "TargetPin": TargetPin.pinLabel,
                    "ColorName": f"{color}色导线"})
 
 # 删除导线
 @_check_typeWire
-def del_Wire(SourcePin: element_Pin, TargetPin: element_Pin, color: str = '蓝') -> None:
+def del_Wire(SourcePin: Pin, TargetPin: Pin, color: str = '蓝') -> None:
     a_wire = {
         "Source": SourcePin.element_self._arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
         "Target": TargetPin.element_self._arguments["Identifier"], "TargetPin": TargetPin.pinLabel,
         "ColorName": f"{color}色导线"
     }
-    if a_wire in _fileGlobals.Wires:
-        _fileGlobals.Wires.remove(a_wire)
+    _Expe = stack_Experiment.top()
+
+    if a_wire in _Expe.Wires:
+        _Expe.Wires.remove(a_wire)
     else:
         a_wire = {
             "Source": TargetPin.element_self._arguments["Identifier"], "SourcePin": TargetPin.pinLabel,
             "Target": SourcePin.element_self._arguments["Identifier"], "TargetPin": SourcePin.pinLabel,
             "ColorName": f"{color}色导线"
         }
-        if a_wire in _fileGlobals.Wires:
-            _fileGlobals.Wires.remove(a_wire)
+        if a_wire in _Expe.Wires:
+            _Expe.Wires.remove(a_wire)
         else:
-            raise errors.wireNotFoundError
+            raise phy_errors.WireNotFoundError
 
 # 删除所有导线
 def clear_Wires() -> None:
-    _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
-    _fileGlobals.Wires.clear()
+    if stack_Experiment.top().ExperimentType != experimentType.Circuit:
+        raise phy_errors.ExperimentTypeError
+    stack_Experiment.top().Wires.clear()
 
 # 获取当前导线数
 def count_Wires() -> int:
-    _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
-    return len(_fileGlobals.Wires)
-
-# 打印导线的json
-def print_Wires() -> None:
-    print(_fileGlobals.Wires)
+    if stack_Experiment.top().ExperimentType != experimentType.Circuit:
+        raise phy_errors.ExperimentTypeError
+    return len(stack_Experiment.top().Wires)

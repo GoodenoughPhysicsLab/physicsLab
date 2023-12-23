@@ -1,4 +1,4 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 import sys
 from enum import Enum, unique
 
@@ -28,7 +28,7 @@ if colorSupport and sys.platform == "win32":
         colorSupport = False
 
 # 打印颜色字
-def printf(msg: str, color: COLOR) -> None:
+def color_print(msg: str, color: COLOR) -> None:
     if not isinstance(color, COLOR):
         raise TypeError
     

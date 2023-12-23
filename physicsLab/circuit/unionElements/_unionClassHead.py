@@ -1,12 +1,13 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 from typing import Optional
 
-import physicsLab.errors as errors
-import physicsLab._fileGlobals as _fileGlobals
+import physicsLab.phy_errors as phy_errors
 import physicsLab.circuit.elements as elements
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab._tools import numType, roundData
+from physicsLab.experiment import stack_Experiment
+from physicsLab.experimentType import experimentType
 
 class UnionMeta(type):
     def __call__(cls,
@@ -21,7 +22,8 @@ class UnionMeta(type):
                  *args, **kwags
     ):
         self = cls.__new__(cls)
-        _fileGlobals.check_ExperimentType(_fileGlobals.experimentType.Circuit)
+        if stack_Experiment.top().ExperimentType != experimentType.Circuit:
+            raise phy_errors.ExperimentTypeError
 
         if foldMaxNum <= 0 or not(
             isinstance(x, (int, float)) or
@@ -34,7 +36,7 @@ class UnionMeta(type):
         ):
             raise TypeError
         if not isinstance(bitLength, int) or bitLength < 1:
-            raise errors.bitLengthError("bitLength must get a integer")
+            raise phy_errors.bitLengthError("bitLength must get a integer")
 
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if not (elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None)):
@@ -51,11 +53,11 @@ class UnionMeta(type):
 class UnionBase(metaclass=UnionMeta):
     # 此类无法被实例化
     def __init__(self, *args, **kwargs):
-        raise errors.instantiateError    
+        raise phy_errors.instantiateError    
 
     # 获取以模块化电路生成顺序为item的原件的self
     # 一定有self._elements
-    def __getitem__(self, item: int) -> "elements.electricityBase":
+    def __getitem__(self, item: int) -> "elements.CircuitBase":
         if not isinstance(item, int):
             raise TypeError
         return self._elements[item] # type: ignore -> 子类含有._elements

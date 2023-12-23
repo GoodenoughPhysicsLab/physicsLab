@@ -1,13 +1,12 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 from typing import Optional
 
-from ..wire import element_Pin
+from ..wire import Pin
 from physicsLab._tools import numType
-from ._elementClassHead import electricityBase, two_pin_ArtificialCircuit_Pin
-
+from ._elementBase import CircuitBase, two_pin_ArtificialCircuit_Pin
 
 # 555定时器
-class NE555(electricityBase):
+class NE555(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "555 Timer", "Identifier": "", "IsBroken": False,
                            "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0},
@@ -22,40 +21,40 @@ class NE555(electricityBase):
         return True
 
     @property
-    def VCC(self) -> element_Pin:
-        return element_Pin(self, 0)
+    def VCC(self) -> Pin:
+        return Pin(self, 0)
 
     @property
-    def Dis(self) -> element_Pin:
-        return element_Pin(self, 1)
+    def Dis(self) -> Pin:
+        return Pin(self, 1)
 
     @property
-    def Thr(self) -> element_Pin:
-        return element_Pin(self, 2)
+    def Thr(self) -> Pin:
+        return Pin(self, 2)
 
     @property
-    def Ctrl(self) -> element_Pin:
-        return element_Pin(self, 3)
+    def Ctrl(self) -> Pin:
+        return Pin(self, 3)
 
     @property
-    def Trig(self) -> element_Pin:
-        return element_Pin(self, 4)
+    def Trig(self) -> Pin:
+        return Pin(self, 4)
 
     @property
-    def Out(self) -> element_Pin:
-        return element_Pin(self, 5)
+    def Out(self) -> Pin:
+        return Pin(self, 5)
 
     @property
-    def Reset(self) -> element_Pin:
-        return element_Pin(self, 6)
+    def Reset(self) -> Pin:
+        return Pin(self, 6)
 
     @property
-    def Ground(self) -> element_Pin:
-        return element_Pin(self, 7)
+    def Ground(self) -> Pin:
+        return Pin(self, 7)
 
 # 电容
 @two_pin_ArtificialCircuit_Pin
-class Basic_Capacitor(electricityBase):
+class Basic_Capacitor(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Basic Capacitor", "Identifier": "",
                            "IsBroken": False, "IsLocked": False, "Properties": {"耐压": 16.0, "电容": 1e-06, "内阻": 5.0, "锁定": 1.0},
@@ -64,7 +63,7 @@ class Basic_Capacitor(electricityBase):
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
 # 接地
-class Ground_Component(electricityBase):
+class Ground_Component(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Ground Component", "Identifier": "",
                            "IsBroken": False, "IsLocked": False, "Properties": {"锁定": 1.0},
@@ -73,11 +72,11 @@ class Ground_Component(electricityBase):
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property
-    def i(self) -> element_Pin:
-        return element_Pin(self, 0)
+    def i(self) -> Pin:
+        return Pin(self, 0)
 
 # 运算放大器
-class Operational_Amplifier(electricityBase):
+class Operational_Amplifier(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Operational Amplifier", "Identifier": "",
                            "IsBroken": False, "IsLocked": False,
@@ -89,19 +88,19 @@ class Operational_Amplifier(electricityBase):
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property
-    def i_up(self) -> element_Pin:
-        return element_Pin(self, 0)
+    def i_up(self) -> Pin:
+        return Pin(self, 0)
 
     @property
-    def i_low(self) -> element_Pin:
-        return element_Pin(self, 1)
+    def i_low(self) -> Pin:
+        return Pin(self, 1)
 
     @property
-    def o(self) -> element_Pin:
-        return element_Pin(self, 2)
+    def o(self) -> Pin:
+        return Pin(self, 2)
 
 # 继电器
-class Relay_Component(electricityBase):
+class Relay_Component(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Relay Component", "Identifier": "", "IsBroken": False, "IsLocked": False,
                            "Properties": {"开关": 0.0, "线圈电感": 0.2, "线圈电阻": 20.0,
@@ -111,27 +110,27 @@ class Relay_Component(electricityBase):
                            "DiagramRotation": 0}
 
     @property
-    def l_up(self) -> element_Pin:
-        return element_Pin(self, 0)
+    def l_up(self) -> Pin:
+        return Pin(self, 0)
 
     @property
-    def l_low(self) -> element_Pin:
-        return element_Pin(self, 2)
+    def l_low(self) -> Pin:
+        return Pin(self, 2)
 
     @property
-    def mid(self) -> element_Pin:
-        return element_Pin(self, 1)
+    def mid(self) -> Pin:
+        return Pin(self, 1)
 
     @property
-    def r_up(self) -> element_Pin:
-        return element_Pin(self, 4)
+    def r_up(self) -> Pin:
+        return Pin(self, 4)
 
     @property
-    def r_low(self) -> element_Pin:
-        return element_Pin(self, 5)
+    def r_low(self) -> Pin:
+        return Pin(self, 5)
 
 # n mos
-class N_MOSFET(electricityBase):
+class N_MOSFET(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "N-MOSFET", "Identifier": "", "IsBroken": False,
                            "IsLocked": False, "Properties": {"PNP": 1.0, "放大系数": 0.027, "阈值电压": 1.5, "最大功率": 100.0, "锁定": 1.0},
@@ -140,19 +139,19 @@ class N_MOSFET(electricityBase):
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property
-    def D(self) -> element_Pin:
-        return element_Pin(self, 2)
+    def D(self) -> Pin:
+        return Pin(self, 2)
 
     @property
-    def S(self) -> element_Pin:
-        return element_Pin(self, 1)
+    def S(self) -> Pin:
+        return Pin(self, 1)
 
     @property
-    def G(self) -> element_Pin:
-        return element_Pin(self, 0)
+    def G(self) -> Pin:
+        return Pin(self, 0)
 
 # p mos
-class P_MOSFET(electricityBase):
+class P_MOSFET(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ=None):
         self._arguments = {"ModelID": "P-MOSFET", "Identifier": "", "IsBroken": False, "IsLocked": False,
                            "Properties": {"PNP": 1.0, "放大系数": 0.027, "阈值电压": 1.5, "最大功率": 100.0, "锁定": 1.0},
@@ -161,19 +160,19 @@ class P_MOSFET(electricityBase):
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property
-    def G(self) -> element_Pin:
-        return element_Pin(self, 0)
+    def G(self) -> Pin:
+        return Pin(self, 0)
 
     @property
-    def S(self) -> element_Pin:
-        return element_Pin(self, 2)
+    def S(self) -> Pin:
+        return Pin(self, 2)
 
     @property
-    def D(self) -> element_Pin:
-        return element_Pin(self, 1)
+    def D(self) -> Pin:
+        return Pin(self, 1)
 
 # 波形发生器基类
-class _source_electricity(electricityBase):
+class _source_electricity(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "", "Identifier": "",
                            "IsBroken": False, "IsLocked": False,
@@ -183,13 +182,13 @@ class _source_electricity(electricityBase):
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property
-    def l(self) -> element_Pin:
-        return element_Pin(self, 0)
+    def l(self) -> Pin:
+        return Pin(self, 0)
     i = l
 
     @property
-    def r(self) -> element_Pin:
-        return element_Pin(self, 1)
+    def r(self) -> Pin:
+        return Pin(self, 1)
     o = r
 
 # 正弦波发生器

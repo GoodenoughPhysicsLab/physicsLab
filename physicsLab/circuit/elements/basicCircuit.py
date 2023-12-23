@@ -1,13 +1,12 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 from typing import Optional
 
-from ..wire import element_Pin
+from ..wire import Pin
 from physicsLab._tools import numType
-from ._elementClassHead import electricityBase, two_pin_ArtificialCircuit_Pin
+from ._elementBase import CircuitBase, two_pin_ArtificialCircuit_Pin
 
 # 开关基类
-
-class _switch_electricity(electricityBase):
+class _switch_Base(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "", "Identifier": "", "IsBroken": False,
                           "IsLocked": False, "Properties": {"开关": 0, "锁定": 1.0},
@@ -17,62 +16,62 @@ class _switch_electricity(electricityBase):
 
 # 简单开关
 @two_pin_ArtificialCircuit_Pin
-class Simple_Switch(_switch_electricity):
+class Simple_Switch(_switch_Base):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         super(Simple_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Simple Switch"
 
 # 单刀双掷开关
-class SPDT_Switch(_switch_electricity):
+class SPDT_Switch(_switch_Base):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         super(SPDT_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "SPDT Switch"
 
     @property
-    def l(self) -> element_Pin:
-        return element_Pin(self, 0)
+    def l(self) -> Pin:
+        return Pin(self, 0)
 
     @property
-    def mid(self) -> element_Pin:
-        return element_Pin(self, 1)
+    def mid(self) -> Pin:
+        return Pin(self, 1)
 
     @property
-    def r(self) -> element_Pin:
-        return element_Pin(self, 2)
+    def r(self) -> Pin:
+        return Pin(self, 2)
 
 # 双刀双掷开关
-class DPDT_Switch(_switch_electricity):
+class DPDT_Switch(_switch_Base):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         super(DPDT_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "DPDT Switch"
 
     @property
-    def l_up(self) -> element_Pin:
-        return element_Pin(self, 3)
+    def l_up(self) -> Pin:
+        return Pin(self, 3)
 
     @property
-    def mid_up(self) -> element_Pin:
-        return element_Pin(self, 4)
+    def mid_up(self) -> Pin:
+        return Pin(self, 4)
 
     @property
-    def r_up(self) -> element_Pin:
-        return element_Pin(self, 5)
+    def r_up(self) -> Pin:
+        return Pin(self, 5)
 
     @property
-    def l_low(self) -> element_Pin:
-        return element_Pin(self, 0)
+    def l_low(self) -> Pin:
+        return Pin(self, 0)
 
     @property
-    def mid_low(self) -> element_Pin:
-        return element_Pin(self, 1)
+    def mid_low(self) -> Pin:
+        return Pin(self, 1)
 
     @property
-    def r_low(self) -> element_Pin:
-        return element_Pin(self, 2)
+    def r_low(self) -> Pin:
+        return Pin(self, 2)
 
 # 按钮开关
 @two_pin_ArtificialCircuit_Pin
-class Push_Switch(electricityBase):
+class Push_Switch(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {
             "ModelID": "Push Switch", "Identifier": "", "IsBroken": False, "IsLocked": False,
@@ -83,7 +82,7 @@ class Push_Switch(electricityBase):
 
 # 一节电池
 @two_pin_ArtificialCircuit_Pin
-class Battery_Source(electricityBase):
+class Battery_Source(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Battery Source", "Identifier": "",
                            "IsBroken": False, "IsLocked": False, "Properties": {"最大功率": 16.2, "电压": 3.0, "内阻": 0.5},
@@ -93,7 +92,7 @@ class Battery_Source(electricityBase):
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
 # 学生电源
-class Student_Source(electricityBase):
+class Student_Source(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Student Source", "Identifier": "", "IsBroken": False, "IsLocked": False,
                            "Properties": {"交流电压": 3.0, "直流电压": 3.0, "开关": 0.0, "频率": 50.0},
@@ -108,24 +107,24 @@ class Student_Source(electricityBase):
                            "DiagramRotation": 0}
 
     @property
-    def l(self) -> element_Pin:
-        return element_Pin(self, 0)
+    def l(self) -> Pin:
+        return Pin(self, 0)
 
     @property
-    def l_mid(self) -> element_Pin:
-        return element_Pin(self, 1)
+    def l_mid(self) -> Pin:
+        return Pin(self, 1)
 
     @property
-    def r_mid(self) -> element_Pin:
-        return element_Pin(self, 2)
+    def r_mid(self) -> Pin:
+        return Pin(self, 2)
 
     @property
-    def r(self) -> element_Pin:
-        return element_Pin(self, 3)
+    def r(self) -> Pin:
+        return Pin(self, 3)
 
 # 电阻
 @two_pin_ArtificialCircuit_Pin
-class Resistor(electricityBase):
+class Resistor(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Resistor", "Identifier": "", "IsBroken": False,
                            "IsLocked": False,
@@ -138,7 +137,7 @@ class Resistor(electricityBase):
 
 # 保险丝
 @two_pin_ArtificialCircuit_Pin
-class Fuse_Component(electricityBase):
+class Fuse_Component(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Fuse Component", "Identifier": "", "IsBroken": False, "IsLocked": False,
                            "Properties": {"开关": 1.0, "额定电流": 0.30000001192092896, "熔断电流": 0.5, "锁定": 1.0},
@@ -147,7 +146,7 @@ class Fuse_Component(electricityBase):
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
 # 滑动变阻器
-class Slide_Rheostat(electricityBase):
+class Slide_Rheostat(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Slide Rheostat", "Identifier": "", "IsBroken": False, "IsLocked": False,
                            "Properties": {"额定电阻": 10.0, "滑块位置": 0.0, "电阻1": 10, "电阻2": 10.0, "锁定": 1.0},
@@ -157,17 +156,17 @@ class Slide_Rheostat(electricityBase):
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property
-    def l_low(self) -> element_Pin:
-        return element_Pin(self, 0)
+    def l_low(self) -> Pin:
+        return Pin(self, 0)
 
     @property
-    def r_low(self) -> element_Pin:
-        return element_Pin(self, 1)
+    def r_low(self) -> Pin:
+        return Pin(self, 1)
 
     @property
-    def l_up(self) -> element_Pin:
-        return element_Pin(self, 2)
+    def l_up(self) -> Pin:
+        return Pin(self, 2)
 
     @property
-    def r_up(self) -> element_Pin:
-        return element_Pin(self, 3)
+    def r_up(self) -> Pin:
+        return Pin(self, 3)

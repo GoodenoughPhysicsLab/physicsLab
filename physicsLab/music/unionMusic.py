@@ -1,6 +1,6 @@
-﻿#coding=utf-8
+﻿# -*- coding: utf-8 -*-
 import mido
-import physicsLab.errors as errors
+import physicsLab.phy_errors as phy_errors
 import physicsLab._colorUtils as colorUtils
 import physicsLab.circuit.elements as elements
 import physicsLab.circuit.elementXYZ as _elementXYZ
@@ -79,7 +79,7 @@ class Midi:
             except ImportError:
                 return False
             else:
-                colorUtils.printf("sound by using plmidi", colorUtils.COLOR.CYAN)
+                colorUtils.color_print("sound by using plmidi", colorUtils.COLOR.CYAN)
 
                 try:
                     plmidi.sound_by_mciSendCommand("temp.mid")
@@ -95,7 +95,7 @@ class Midi:
             except ImportError:
                 return False
             else:
-                colorUtils.printf("sound by using pygame", colorUtils.COLOR.CYAN)
+                colorUtils.color_print("sound by using pygame", colorUtils.COLOR.CYAN)
 
                 # 代码参考自musicpy的play函数
                 mixer.init()
@@ -111,7 +111,7 @@ class Midi:
         # 使用系统调用播放midi
         def sound_by_os() -> bool:
             from os import path, system
-            colorUtils.printf("sound by using os", colorUtils.COLOR.CYAN)
+            colorUtils.color_print("sound by using os", colorUtils.COLOR.CYAN)
             
             if path.exists("temp.mid"):
                 system("temp.mid")
@@ -126,7 +126,7 @@ class Midi:
         if player is not None:
             f = (sound_by_plmidi, sound_by_pygame, sound_by_os)[player.value]
             if not f():
-                errors.warning(f"can not use {f.__name__} to sound midi.")
+                phy_errors.warning(f"can not use {f.__name__} to sound midi.")
             return self
 
         self.write_midi()
@@ -138,7 +138,7 @@ class Midi:
         elif sound_by_os():
             pass
         else:
-            errors.warning("can not use sound methods")
+            phy_errors.warning("can not use sound methods")
         
         return self
 
@@ -584,9 +584,9 @@ class Player:
         try:
             xPlayer = D_WaterLamp(x + 1, y + 1, z, unionHeading=True, bitLength=side, elementXYZ=True)
             yPlayer = D_WaterLamp(x, y + 3, z, bitLength=ceil(len_musicArray / side), elementXYZ=True)
-        except errors.bitLengthError as e:
-            from physicsLab._colorUtils import printf, COLOR
-            printf("bigLength of D_WaterLamp is too short, try to use argument \"div_time\" in class Midi to solve this problem", COLOR.RED)
+        except phy_errors.bitLengthError as e:
+            from physicsLab._colorUtils import color_print, COLOR
+            color_print("bigLength of D_WaterLamp is too short, try to use argument \"div_time\" in class Midi to solve this problem", COLOR.RED)
             raise e
 
 

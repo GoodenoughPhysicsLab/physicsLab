@@ -1,8 +1,6 @@
-#coding=utf-8
-from os import walk
+# -*- coding: utf-8 -*-
 from typing import Tuple, Union, List
 from collections import namedtuple
-from physicsLab._fileGlobals import FILE_HEAD
 
 # type hint
 numType = Union[int, float]
@@ -28,9 +26,3 @@ def randString(strLength: int) -> str:
     from string import ascii_letters as _ascii_letters, digits as _digits
     from random import choice as _choice
     return ''.join(_choice(_ascii_letters + _digits) for _ in range(strLength))
-
-# 索取所有物实存档
-def getAllSav() -> List:
-    savs = [i for i in walk(FILE_HEAD)][0]
-    savs = savs[savs.__len__() - 1]
-    return [aSav for aSav in savs if aSav.endswith('sav')]

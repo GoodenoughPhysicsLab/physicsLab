@@ -1,10 +1,10 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 from physicsLab._tools import numType
-from ._elementClassHead import electricityBase
+from ..wire import InputPin, OutputPin
+from ._elementBase import CircuitBase
 from physicsLab.typehint import Optional, Self
-from ..wire import element_Pin, element_InputPin, element_OutputPin
 
-class _logicBase(electricityBase):
+class _logicBase(CircuitBase):
     # 设置高电平的值
     def set_HighLeaveValue(self, num: numType) -> Self:
         if not isinstance(num, (int, float)):
@@ -47,8 +47,8 @@ class Logic_Input(_logicBase):
         return self
 
     @property
-    def o(self) -> element_OutputPin:
-        return element_OutputPin(self, 0)
+    def o(self) -> OutputPin:
+        return OutputPin(self, 0)
 
 # 逻辑输出
 class Logic_Output(_logicBase):
@@ -61,8 +61,8 @@ class Logic_Output(_logicBase):
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property
-    def i(self) -> element_InputPin:
-            return element_InputPin(self, 0)
+    def i(self) -> InputPin:
+            return InputPin(self, 0)
 
 # 2引脚门电路
 class _2_pin_Gate(_logicBase):
@@ -73,12 +73,12 @@ class _2_pin_Gate(_logicBase):
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property
-    def i(self) -> element_InputPin:
-        return element_InputPin(self, 0)
+    def i(self) -> InputPin:
+        return InputPin(self, 0)
 
     @property
-    def o(self) -> element_OutputPin:
-        return element_OutputPin(self, 1)
+    def o(self) -> OutputPin:
+        return OutputPin(self, 1)
 
 # 是门
 class Yes_Gate(_2_pin_Gate):
@@ -101,16 +101,16 @@ class _3_pin_Gate(_logicBase):
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property
-    def i_up(self) -> element_InputPin:
-        return element_InputPin(self, 0)
+    def i_up(self) -> InputPin:
+        return InputPin(self, 0)
 
     @property
-    def i_low(self) -> element_InputPin:
-        return element_InputPin(self, 1)
+    def i_low(self) -> InputPin:
+        return InputPin(self, 1)
 
     @property
-    def o(self) -> element_OutputPin:
-        return element_OutputPin(self, 2)
+    def o(self) -> OutputPin:
+        return OutputPin(self, 2)
 
 # 或门
 class Or_Gate(_3_pin_Gate):
@@ -179,20 +179,20 @@ class Half_Adder(_big_element):
         self._arguments["ModelID"] = "Half Adder"
 
     @property
-    def i_up(self) -> element_InputPin:
-        return element_InputPin(self, 2)
+    def i_up(self) -> InputPin:
+        return InputPin(self, 2)
 
     @property
-    def i_low(self) -> element_InputPin:
-        return element_InputPin(self, 3)
+    def i_low(self) -> InputPin:
+        return InputPin(self, 3)
 
     @property
-    def o_up(self) -> element_OutputPin:
-        return element_OutputPin(self, 0)
+    def o_up(self) -> OutputPin:
+        return OutputPin(self, 0)
 
     @property
-    def o_low(self) -> element_OutputPin:
-        return element_OutputPin(self, 1)
+    def o_low(self) -> OutputPin:
+        return OutputPin(self, 1)
 
 # 全加器
 class Full_Adder(_big_element):
@@ -201,24 +201,24 @@ class Full_Adder(_big_element):
         self._arguments["ModelID"] = "Full Adder"
 
     @property
-    def i_up(self) -> element_InputPin:
-        return element_InputPin(self, 2)
+    def i_up(self) -> InputPin:
+        return InputPin(self, 2)
 
     @property
-    def i_mid(self) -> element_InputPin:
-        return element_InputPin(self, 3)
+    def i_mid(self) -> InputPin:
+        return InputPin(self, 3)
 
     @property
-    def i_low(self) -> element_InputPin:
-        return element_InputPin(self, 4)
+    def i_low(self) -> InputPin:
+        return InputPin(self, 4)
 
     @property
-    def o_up(self) -> element_OutputPin:
-        return element_OutputPin(self, 0)
+    def o_up(self) -> OutputPin:
+        return OutputPin(self, 0)
 
     @property
-    def o_low(self) -> element_OutputPin:
-        return element_OutputPin(self, 1)
+    def o_low(self) -> OutputPin:
+        return OutputPin(self, 1)
 
 # 二位乘法器
 class Multiplier(_big_element):
@@ -227,36 +227,36 @@ class Multiplier(_big_element):
         self._arguments["ModelID"] = "Multiplier"
 
     @property
-    def i_up(self) -> element_InputPin:
-        return element_InputPin(self, 4)
+    def i_up(self) -> InputPin:
+        return InputPin(self, 4)
 
     @property
-    def i_upmid(self) -> element_InputPin:
-        return element_InputPin(self, 5)
+    def i_upmid(self) -> InputPin:
+        return InputPin(self, 5)
 
     @property
-    def i_lowmid(self) -> element_InputPin:
-        return element_InputPin(self, 6)
+    def i_lowmid(self) -> InputPin:
+        return InputPin(self, 6)
 
     @property
-    def i_low(self) -> element_InputPin:
-        return element_InputPin(self, 7)
+    def i_low(self) -> InputPin:
+        return InputPin(self, 7)
 
     @property
-    def o_up(self) -> element_OutputPin:
-        return element_OutputPin(self, 0)
+    def o_up(self) -> OutputPin:
+        return OutputPin(self, 0)
 
     @property
-    def o_upmid(self) -> element_OutputPin:
-        return element_OutputPin(self, 1)
+    def o_upmid(self) -> OutputPin:
+        return OutputPin(self, 1)
 
     @property
-    def o_lowmid(self) -> element_OutputPin:
-        return element_OutputPin(self, 2)
+    def o_lowmid(self) -> OutputPin:
+        return OutputPin(self, 2)
 
     @property
-    def o_low(self) -> element_OutputPin:
-        return element_OutputPin(self, 3)
+    def o_low(self) -> OutputPin:
+        return OutputPin(self, 3)
 
 # D触发器
 class D_Flipflop(_big_element):
@@ -265,20 +265,20 @@ class D_Flipflop(_big_element):
         self._arguments["ModelID"] = "D Flipflop"
 
     @property
-    def i_up(self) -> element_InputPin:
-        return element_InputPin(self, 2)
+    def i_up(self) -> InputPin:
+        return InputPin(self, 2)
 
     @property
-    def i_low(self) -> element_InputPin:
-        return element_InputPin(self, 3)
+    def i_low(self) -> InputPin:
+        return InputPin(self, 3)
 
     @property
-    def o_up(self) -> element_OutputPin:
-        return element_OutputPin(self, 0)
+    def o_up(self) -> OutputPin:
+        return OutputPin(self, 0)
 
     @property
-    def o_low(self) -> element_OutputPin:
-        return element_OutputPin(self, 1)
+    def o_low(self) -> OutputPin:
+        return OutputPin(self, 1)
 
 # T触发器
 class T_Flipflop(_big_element):
@@ -287,20 +287,20 @@ class T_Flipflop(_big_element):
         self._arguments["ModelID"] = "T Flipflop"
 
     @property
-    def i_up(self) -> element_InputPin:
-        return element_InputPin(self, 2)
+    def i_up(self) -> InputPin:
+        return InputPin(self, 2)
 
     @property
-    def i_low(self) -> element_InputPin:
-        return element_InputPin(self, 3)
+    def i_low(self) -> InputPin:
+        return InputPin(self, 3)
 
     @property
-    def o_up(self) -> element_OutputPin:
-        return element_OutputPin(self, 0)
+    def o_up(self) -> OutputPin:
+        return OutputPin(self, 0)
 
     @property
-    def o_low(self) -> element_OutputPin:
-        return element_OutputPin(self, 1)
+    def o_low(self) -> OutputPin:
+        return OutputPin(self, 1)
 
 # JK触发器
 class JK_Flipflop(_big_element):
@@ -309,24 +309,24 @@ class JK_Flipflop(_big_element):
         self._arguments["ModelID"] = "JK Flipflop"
 
     @property
-    def i_up(self) -> element_InputPin:
-        return element_InputPin(self, 2)
+    def i_up(self) -> InputPin:
+        return InputPin(self, 2)
 
     @property
-    def i_mid(self) -> element_InputPin:
-        return element_InputPin(self, 3)
+    def i_mid(self) -> InputPin:
+        return InputPin(self, 3)
 
     @property
-    def i_low(self) -> element_InputPin:
-        return element_InputPin(self, 4)
+    def i_low(self) -> InputPin:
+        return InputPin(self, 4)
 
     @property
-    def o_up(self) -> element_OutputPin:
-        return element_OutputPin(self, 0)
+    def o_up(self) -> OutputPin:
+        return OutputPin(self, 0)
 
     @property
-    def o_low(self) -> element_OutputPin:
-        return element_OutputPin(self, 1)
+    def o_low(self) -> OutputPin:
+        return OutputPin(self, 1)
 
 # 计数器
 class Counter(_big_element):
@@ -335,28 +335,28 @@ class Counter(_big_element):
         self._arguments["ModelID"] = "Counter"
 
     @property
-    def i_up(self) -> element_InputPin:
-        return element_InputPin(self, 4)
+    def i_up(self) -> InputPin:
+        return InputPin(self, 4)
 
     @property
-    def i_low(self) -> element_InputPin:
-        return element_InputPin(self, 5)
+    def i_low(self) -> InputPin:
+        return InputPin(self, 5)
 
     @property
-    def o_up(self) -> element_OutputPin:
-        return element_OutputPin(self, 0)
+    def o_up(self) -> OutputPin:
+        return OutputPin(self, 0)
 
     @property
-    def o_upmid(self) -> element_OutputPin:
-        return element_OutputPin(self, 1)
+    def o_upmid(self) -> OutputPin:
+        return OutputPin(self, 1)
 
     @property
-    def o_lowmid(self) -> element_OutputPin:
-        return element_OutputPin(self, 2)
+    def o_lowmid(self) -> OutputPin:
+        return OutputPin(self, 2)
 
     @property
-    def o_low(self) -> element_OutputPin:
-        return element_OutputPin(self, 3)
+    def o_low(self) -> OutputPin:
+        return OutputPin(self, 3)
 
 # 随机数发生器
 class Random_Generator(_big_element):
@@ -365,28 +365,28 @@ class Random_Generator(_big_element):
         self._arguments["ModelID"] = "Random Generator"
 
     @property
-    def i_up(self) -> element_InputPin:
-        return element_InputPin(self, 4)
+    def i_up(self) -> InputPin:
+        return InputPin(self, 4)
 
     @property
-    def i_low(self) -> element_InputPin:
-        return element_InputPin(self, 5)
+    def i_low(self) -> InputPin:
+        return InputPin(self, 5)
 
     @property
-    def o_up(self) -> element_OutputPin:
-        return element_OutputPin(self, 0)
+    def o_up(self) -> OutputPin:
+        return OutputPin(self, 0)
 
     @property
-    def o_upmid(self) -> element_OutputPin:
-        return element_OutputPin(self, 1)
+    def o_upmid(self) -> OutputPin:
+        return OutputPin(self, 1)
 
     @property
-    def o_lowmid(self) -> element_OutputPin:
-        return element_OutputPin(self, 2)
+    def o_lowmid(self) -> OutputPin:
+        return OutputPin(self, 2)
 
     @property
-    def o_low(self) -> element_OutputPin:
-        return element_OutputPin(self, 3)
+    def o_low(self) -> OutputPin:
+        return OutputPin(self, 3)
 
 # 8位输入器
 class eight_bit_Input(_logicBase):
@@ -407,36 +407,36 @@ class eight_bit_Input(_logicBase):
         return True
 
     @property
-    def i_up(self) -> element_InputPin:
-        return element_InputPin(self, 0)
+    def i_up(self) -> InputPin:
+        return InputPin(self, 0)
 
     @property
-    def i_upmid(self) -> element_InputPin:
-        return element_InputPin(self, 1)
+    def i_upmid(self) -> InputPin:
+        return InputPin(self, 1)
 
     @property
-    def i_lowmid(self) -> element_InputPin:
-        return element_InputPin(self, 2)
+    def i_lowmid(self) -> InputPin:
+        return InputPin(self, 2)
 
     @property
-    def i_low(self) -> element_InputPin:
-        return element_InputPin(self, 3)
+    def i_low(self) -> InputPin:
+        return InputPin(self, 3)
 
     @property
-    def o_up(self) -> element_OutputPin:
-        return element_OutputPin(self, 4)
+    def o_up(self) -> OutputPin:
+        return OutputPin(self, 4)
 
     @property
-    def o_upmid(self) -> element_OutputPin:
-        return element_OutputPin(self, 5)
+    def o_upmid(self) -> OutputPin:
+        return OutputPin(self, 5)
 
     @property
-    def o_lowmid(self) -> element_OutputPin:
-        return element_OutputPin(self, 6)
+    def o_lowmid(self) -> OutputPin:
+        return OutputPin(self, 6)
 
     @property
-    def o_low(self) -> element_OutputPin:
-        return element_OutputPin(self, 7)
+    def o_low(self) -> OutputPin:
+        return OutputPin(self, 7)
 
 # 8位显示器
 class eight_bit_Display(_logicBase):
@@ -454,33 +454,33 @@ class eight_bit_Display(_logicBase):
         return True
 
     @property
-    def i_up(self) -> element_InputPin:
-        return element_InputPin(self, 0)
+    def i_up(self) -> InputPin:
+        return InputPin(self, 0)
 
     @property
-    def i_upmid(self) -> element_InputPin:
-        return element_InputPin(self, 1)
+    def i_upmid(self) -> InputPin:
+        return InputPin(self, 1)
 
     @property
-    def i_lowmid(self) -> element_InputPin:
-        return element_InputPin(self, 2)
+    def i_lowmid(self) -> InputPin:
+        return InputPin(self, 2)
 
     @property
-    def i_low(self) -> element_InputPin:
-        return element_InputPin(self, 3)
+    def i_low(self) -> InputPin:
+        return InputPin(self, 3)
 
     @property
-    def o_up(self) -> element_OutputPin:
-        return element_OutputPin(self, 4)
+    def o_up(self) -> OutputPin:
+        return OutputPin(self, 4)
 
     @property
-    def o_upmid(self) -> element_OutputPin:
-        return element_OutputPin(self, 5)
+    def o_upmid(self) -> OutputPin:
+        return OutputPin(self, 5)
 
     @property
-    def o_lowmid(self) -> element_OutputPin:
-        return element_OutputPin(self, 6)
+    def o_lowmid(self) -> OutputPin:
+        return OutputPin(self, 6)
 
     @property
-    def o_low(self) -> element_OutputPin:
-        return element_OutputPin(self, 7)
+    def o_low(self) -> OutputPin:
+        return OutputPin(self, 7)

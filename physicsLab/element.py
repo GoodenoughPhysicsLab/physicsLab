@@ -1,12 +1,13 @@
-#coding=utf-8
+# -*- coding: utf-8 -*-
 import physicsLab._tools as _tools
-import physicsLab.errors as errors
-import physicsLab._fileGlobals as _fileGlobals
+import physicsLab.phy_errors as phy_errors
 import physicsLab.circuit.elements as elements
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.typehint import *
-from physicsLab.circuit.elements._elementClassHead import electricityBase
+from physicsLab.experiment import stack_Experiment
+from physicsLab.experimentType import experimentType
+from physicsLab.circuit.elements._elementBase import CircuitBase
 
 # 创建原件，本质上仍然是实例化
 def crt_Element(
@@ -29,7 +30,7 @@ def crt_Element(
         # 元件坐标系
     if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
         x, y, z = _elementXYZ.xyzTranslate(x, y, z)
-    x, y, z = _tools.roundData(x, y, z)
+    x, y, z = _tools.roundData(x, y, z) # type: ignore
     if (name == '555 Timer'):
         return elements.NE555(x, y, z)
     elif (name == '8bit Input'):
@@ -43,25 +44,24 @@ def crt_Element(
             raise RuntimeError(f"{name} original that does not exist")
 
 # 获取对应坐标的self
-def get_Element(*args, **kwargs) -> elements.electricityBase:
+def get_Element(*args, **kwargs) -> Union[elements.CircuitBase, List[elements.CircuitBase]]:
     # 通过坐标索引元件
     def position_Element(x: _tools.numType, y: _tools.numType, z: _tools.numType):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise TypeError('illegal argument')
         position = _tools.roundData(x, y, z)
-        if position not in _fileGlobals.elements_Position.keys():
+        if position not in _Expe.elements_Position.keys():
             raise RuntimeError(f"{position} do not exist")
-        result: list = _fileGlobals.elements_Position[position]
+        result: list = _Expe.elements_Position[position]
         return result[0] if len(result) == 1 else result
     # 通过index（元件生成顺序）索引元件
     def index_Element(index: int):
-        if 0 < index <= len(_fileGlobals.elements_Index):
-            return _fileGlobals.elements_Index[index - 1]
+        if 0 < index <= len(_Expe.elements_Index):
+            return _Expe.elements_Index[index - 1]
         else:
-            raise errors.getElementError
+            raise phy_errors.getElementError
 
-#    _fileGlobals.check_ExperimentType(0)
-
+    _Expe = stack_Experiment.top()
     # 如果输入参数为 x=, y=, z=
     if list(kwargs.keys()) == ['x', 'y', 'z']:
         return position_Element(kwargs['x'], kwargs['y'], kwargs['z'])
@@ -82,52 +82,50 @@ def get_Element(*args, **kwargs) -> elements.electricityBase:
         raise TypeError
 
 # 删除原件
-def del_Element(self: electricityBase) -> None:
+def del_Element(self: CircuitBase) -> None:
 #    self是物实三大实验支持的所有元件
 
-    if not isinstance(self, electricityBase):
+    if not isinstance(self, CircuitBase):
         raise TypeError
 
-    identifier = self._arguments["Identifier"]
+    identifier = self._arguments["Identifier"] # type: ignore
 
+    _Expe = stack_Experiment.top()
     # 删除Elements中的引用
-    for element in _fileGlobals.Elements:
+    for element in _Expe.Elements:
         if element["Identifier"] == identifier:
-            _fileGlobals.Elements.remove(element)
+            _Expe.Elements.remove(element)
             break
 
 
     i = 0
-    while i < _fileGlobals.Wires.__len__():
-        wire = _fileGlobals.Wires[i]
+    while i < _Expe.Wires.__len__():
+        wire = _Expe.Wires[i]
         if wire['Source'] == identifier or wire['Target'] == identifier:
-            _fileGlobals.Wires.pop(i)
+            _Expe.Wires.pop(i)
         else:
             i += 1
 
     # 删除elements_Position中的引用
-    for elements in _fileGlobals.elements_Position.values():
+    for elements in _Expe.elements_Position.values():
         if self in elements:
             elements.remove(self)
             break
 
     # 删除elements_Index中的引用
-    for element in _fileGlobals.elements_Index:
+    for element in _Expe.elements_Index:
         if element is self:
-            _fileGlobals.elements_Index.remove(self)
+            _Expe.elements_Index.remove(self)
             break
 
 # 原件的数量
 def count_Elements() -> int:
-    return len(_fileGlobals.Elements)
+    return len(stack_Experiment.top().Elements)
 
 # 清空原件
 def clear_Elements() -> None:
-    _fileGlobals.Elements.clear()
-    _fileGlobals.Wires.clear()
-    _fileGlobals.elements_Index.clear()
-    _fileGlobals.elements_Position.clear()
-
-# 打印物实存档格式的所有元件
-def print_Elements() -> None:
-    print(_fileGlobals.Elements)
+    _Expe = stack_Experiment.top()
+    _Expe.Elements.clear()
+    _Expe.Wires.clear()
+    _Expe.elements_Index.clear()
+    _Expe.elements_Position.clear()
