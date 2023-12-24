@@ -12,6 +12,14 @@ from physicsLab._tools import numType, roundData
 from physicsLab.union import crt_Wires, D_WaterLamp
 from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self
 
+def _format_velocity(velocity: float) -> float:
+    if velocity > 1:
+        velocity = 1
+    elif velocity < 0.05:
+        velocity = 0.05
+
+    return velocity
+
 # midi类，用于提供physicsLab与midi文件之间的桥梁
 ''' 重要midi事件及作用:
     note_on        -> message: 播放音符
@@ -163,11 +171,7 @@ class Midi:
                 len_res += 1
                 note_time = round((msg.time + wait_time) / div_time)
 
-                velocity = msg.velocity / 100 # 音符的响度
-                if velocity > 1:
-                    velocity = 1
-                elif velocity < 0.05:
-                    velocity = 0.05
+                velocity = _format_velocity(msg.velocity / 100) # 音符的响度
 
                 if note_time != 0 or len(res) == 0:
                     if note_time == 0:
@@ -319,15 +323,20 @@ class Chord:
     def __init__(self, *notes: Note, time: int) -> None:
         if len(notes) < 1 or time < 1:
             raise TypeError
-        
+
         self.time = time
         # {instrument: List[Note], ...}
         self._notes = list(notes)
         self.ins_notes: Dict[int, List[Note]] = {}
 
+        sum_of_velocity = 0
+        for a_note in notes:
+            sum_of_velocity += a_note.velocity
+        self.velocity: float = _format_velocity(sum_of_velocity / len(notes)) # 所有音符的音量的平均数
+
         for a_note in notes:
             self.append(a_note)
-    
+
     def __repr__(self) -> str:
         s: str = ""
         for a_note in self._notes:
@@ -350,6 +359,8 @@ class Chord:
                 self.ins_notes[a_note.instrument].append(a_note)
         else:
             self.ins_notes[a_note.instrument] = [a_note]
+        
+        self.velocity = _format_velocity((self.velocity * (len(self._notes) - 1) + a_note.velocity) / len(self._notes))
 
         return self
     
@@ -365,7 +376,7 @@ class Chord:
             notes: List[Note] = self.ins_notes[ins]
             temp: elements.Simple_Instrument = elements.Simple_Instrument(
                 x, y, z + delta_z, elementXYZ=True,instrument=ins,
-                pitch=notes[0].pitch, is_ideal_model=True, velocity=notes[0].velocity
+                pitch=notes[0].pitch, is_ideal_model=True, velocity=self.velocity
             ).set_Rotation(0, 0, 0) # type: ignore
             if first_ins is None:
                 first_ins = temp
