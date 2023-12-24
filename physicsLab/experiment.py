@@ -285,13 +285,16 @@ class Experiment:
         if self.SavPath is None:
             raise TypeError
 
-        if os.path.exists(self.SavPath) and self.is_crt: # 如果一个实验被创建但还未被写入, 就会触发错误
+        if os.path.exists(self.SavPath): # 如果一个实验被创建但还未被写入, 就会触发错误
             os.remove(self.SavPath)
+            _colorUtils.color_print("Successfully delete experiment!", _colorUtils.COLOR.BLUE)
+        else:
+            phy_errors.warning(f"experiment {self.PlSav['InternalName']}({self.FileName}) do not exist.")
+
         if os.path.exists(self.SavPath.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
             os.remove(self.SavPath.replace(".sav", ".jpg"))
 
         stack_Experiment.pop()
-        _colorUtils.color_print("Successfully delete experiment!", _colorUtils.COLOR.BLUE)
     
     # 对存档名进行重命名
     def entitle(self, sav_name: str) -> Self:
