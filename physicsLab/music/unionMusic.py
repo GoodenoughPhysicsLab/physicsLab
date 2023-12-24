@@ -9,7 +9,7 @@ from math import ceil, sqrt
 from enum import Enum, unique
 
 from physicsLab._tools import numType, roundData
-from physicsLab.circuit.unionElements import crt_Wires, D_WaterLamp
+from physicsLab.union import crt_Wires, D_WaterLamp
 from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self
 
 # midi类，用于提供physicsLab与midi文件之间的桥梁

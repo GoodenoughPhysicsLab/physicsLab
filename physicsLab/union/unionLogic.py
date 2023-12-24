@@ -3,9 +3,9 @@ import physicsLab.phy_errors as _errors
 import physicsLab.circuit as circuit
 
 from .wires import union_Pin
-from ..elements import *
 from physicsLab._tools import numType
 from ._unionClassHead import UnionBase
+from physicsLab.circuit.elements import *
 from physicsLab.typehint import Optional, Self, Callable, List, Tuple
 
 # unionHeading与fold的判断的代码

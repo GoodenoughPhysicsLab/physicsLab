@@ -2,14 +2,14 @@
 from typing import Union, Callable, Tuple
 
 import physicsLab.phy_errors as phy_errors
-import physicsLab.circuit.unionElements._unionClassHead as _unionClassHead
 
+from ._unionClassHead import UnionBase
 from physicsLab.circuit.wire import crt_Wire, del_Wire, Pin
 
 # 模块化电路的“引脚”，输入输出都是数据
 class union_Pin:
     __slots__ = ("union_self", "elementPins")
-    def __init__(self, union_self: _unionClassHead.UnionBase, *elementPins):
+    def __init__(self, union_self: UnionBase, *elementPins):
         self.union_self = union_self
         self.elementPins: Tuple[Pin] = tuple(elementPins)
 

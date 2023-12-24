@@ -5,5 +5,3 @@ from physicsLab.circuit.wire import *
 from physicsLab.circuit.elements import *
 # 元件坐标系
 from physicsLab.circuit.elementXYZ import *
-# 模块化电路
-from physicsLab.circuit.unionElements import *

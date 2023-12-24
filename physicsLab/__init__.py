@@ -17,7 +17,8 @@ from physicsLab.element import *
 # `physicsLab`自定义异常类
 from physicsLab.phy_errors import *
 # 模块化电路
-import physicsLab.circuit.unionElements.unionLogic as union
+from .union.wires import *
+import physicsLab.union as union
 import physicsLab.music as music
 
 # Win: 若存档对应文件夹不存在直接报错
