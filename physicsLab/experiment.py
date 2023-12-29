@@ -67,7 +67,7 @@ class Experiment:
             self.open(sav_name)
 
     # 进行与experimentType有关的初始化
-    def __experimentType_init(self, experiment_type: Union[int, experimentType]):
+    def __experimentType_init(self, experiment_type: Union[int, experimentType]) -> None:
         if not (
             isinstance(experiment_type, experimentType)
             or (
@@ -105,7 +105,7 @@ class Experiment:
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
 
     # 只能通过sav文件名的方式打开文件
-    def __open(self, _File) -> Self:
+    def __open(self, _File) -> "Experiment":
         self.is_crt = True
 
         self.SavPath = f"{Experiment.FILE_HEAD}/{_File}"
@@ -120,7 +120,7 @@ class Experiment:
         return self
 
     # 打开一个指定的sav文件（支持输入本地实验的名字或sav文件名）
-    def open(self, sav_name : str) -> Self:
+    def open(self, sav_name : str) -> "Experiment":
         if self.is_open_or_crt:
             raise phy_errors.experimentExistError
         self.is_open_or_crt = True
@@ -149,7 +149,7 @@ class Experiment:
         self.entitle(sav_name)
     
     # 创建存档，输入为存档名
-    def crt(self, sav_name: str, experimentType: experimentType = experimentType.Circuit) -> Self:
+    def crt(self, sav_name: str, experimentType: experimentType = experimentType.Circuit) -> "Experiment":
         if self.is_open_or_crt:
             raise phy_errors.experimentExistError
         self.is_open_or_crt = True
@@ -165,7 +165,7 @@ class Experiment:
         return self
     
     # 先尝试打开实验, 若失败则创建实验
-    def open_or_crt(self, savName: str, experimentType: experimentType = experimentType.Circuit) -> Self:
+    def open_or_crt(self, savName: str, experimentType: experimentType = experimentType.Circuit) -> "Experiment":
         if self.is_open_or_crt:
             raise phy_errors.experimentExistError
         self.is_open_or_crt = True
@@ -229,7 +229,7 @@ class Experiment:
                     obj._arguments['Properties']['十进制'] = element['Properties']['十进制']
 
     # 以物实存档的格式导出实验
-    def write(self, extra_filepath: Optional[str] = None, ln: bool = False, no_pop: bool = False) -> Self:
+    def write(self, extra_filepath: Optional[str] = None, ln: bool = False, no_pop: bool = False) -> "Experiment":
         def _format_StatusSave(stringJson: str) -> str:
             stringJson = stringJson.replace('{\\\"ModelID', '\n      {\\\"ModelID') # format element json
             stringJson = stringJson.replace('DiagramRotation\\\": 0}]', 'DiagramRotation\\\": 0}\n    ]') # format end element json
@@ -297,7 +297,7 @@ class Experiment:
         stack_Experiment.pop()
     
     # 对存档名进行重命名
-    def entitle(self, sav_name: str) -> Self:
+    def entitle(self, sav_name: str) -> "Experiment":
         if not isinstance(sav_name, str):
             raise TypeError
 
@@ -307,7 +307,7 @@ class Experiment:
         return self
     
     # 使用notepad打开改存档
-    def show(self) -> Self:
+    def show(self) -> "Experiment":
         if self.SavPath is None:
             raise TypeError
 
@@ -315,7 +315,7 @@ class Experiment:
         return self
     
     # 生成与发布实验有关的存档内容
-    def publish(self, title: Optional[str] = None, introduction: Optional[str] = None) -> Self:
+    def publish(self, title: Optional[str] = None, introduction: Optional[str] = None) -> "Experiment":
         # 发布实验时输入实验介绍
         def introduce_Experiment(introduction: Union[str, None]) -> None:
             if introduction is not None:

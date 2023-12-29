@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from typing import Any
 import unittest
 from physicsLab import *
 from physicsLab.union import *
