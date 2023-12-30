@@ -106,7 +106,7 @@ class Experiment:
 
     # 只能通过sav文件名的方式打开文件
     def __open(self, _File) -> "Experiment":
-        self.is_crt = True
+        self.is_open = True
 
         self.SavPath = f"{Experiment.FILE_HEAD}/{_File}"
         with open(self.SavPath, encoding="utf-8") as f:

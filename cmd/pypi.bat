@@ -1,6 +1,6 @@
-del /s /q .\build
-del /s /q .\dist
-del /s /q .\physicsLab.egg-info
+rd /s /q .\build
+rd /s /q .\dist
+rd /s /q .\physicsLab.egg-info
 
 py setup.py sdist bdist_wheel
 twine upload dist/*
