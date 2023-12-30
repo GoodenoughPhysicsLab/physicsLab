@@ -77,6 +77,14 @@ class Midi:
                 self.tempo = msg.tempo
         return res
 
+    # 返回Midi的所有message的time的和
+    def __get_midi_duration(self):
+        res = 0
+        for msg in self.messages:
+            res += msg.time
+
+        return res
+
     # 播放midi类存储的信息
     def sound(self, player: Optional[PLAYER] = None) -> Self:
         # 使用plmidi播放midi
@@ -90,7 +98,7 @@ class Midi:
                 colorUtils.color_print("sound by using plmidi", colorUtils.COLOR.CYAN)
 
                 try:
-                    plmidi.sound_by_mciSendCommand("temp.mid")
+                    plmidi.sound_by_mciSendCommand("temp.mid", self.__get_midi_duration())
                 except plmidi.OpenMidiFileError or plmidi.plmidiInitError:
                     return False
 

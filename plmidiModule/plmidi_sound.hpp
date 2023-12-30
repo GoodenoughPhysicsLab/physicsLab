@@ -3,27 +3,30 @@
 #pragma comment(lib, "winmm.lib")
 
 #include <string>
+#include <iostream>
 #include <signal.h> /* Press ctrl+C to exit */
 #include <Windows.h>
 #include <mmsystem.h>
 
+#include "process_bat.hpp"
 #include "pybind11/pybind11.h"
 
 namespace py = pybind11;
 
-#define PLMIDI_INIT_NOERROR 1
-#define PLMIDI_DO_NOT_INIT 0
-#define PLMIDI_INIT_ERROR -1
-
 static int8_t plmidi_initflag = 0; // -1: fail, 0: ready to init, 1: success initialized
+
+namespace plmidi::details {
 
 // if Ctrl+C, then exit
 static void plmidi_exit(int signal)
 {
     if (signal == SIGINT) {
+        py::print("\n");
         Py_Exit(0);
     }
 }
+
+} // namespace plmidi::detils
 
 namespace plmidi {
 
@@ -77,7 +80,7 @@ void sound_by_midiOutShortMsg(py::list piece, int tempo)
     }
 
     // init exit
-    signal(SIGINT, plmidi_exit);
+    signal(SIGINT, details::plmidi_exit);
 
     // main loop
 #ifdef PLMIDI_DEBUG
@@ -108,15 +111,17 @@ void sound_by_midiOutShortMsg(py::list piece, int tempo)
     midiOutClose(handle);
 }
 
-void sound_by_mciSendCommand(py::str path)
+void sound_by_mciSendCommand(py::str path, int midi_duration)
 {
     // I don't know why this will fail to play
     // const char *cpath = path.cast<::std::string>().c_str();
     ::std::string spath = path.cast<::std::string>();
     const char *cpath = spath.c_str();
+    process_bar::MidiProcessBar pb{midi_duration};
+    int pb_status{1};
 
     // init exit
-    signal(SIGINT, plmidi_exit);
+    signal(SIGINT, details::plmidi_exit);
 
     // Open MIDI file
     MCI_OPEN_PARMS mciOpenParms;
@@ -133,6 +138,8 @@ void sound_by_mciSendCommand(py::str path)
         throw plmidiExc_InitErr("Failed to play MIDI file");
     }
 
+    int pb_sign = 0;
+
     // Continuously check the status of MIDI playback
     while (true) {
         MCI_STATUS_PARMS mciStatusParms;
@@ -147,7 +154,15 @@ void sound_by_mciSendCommand(py::str path)
             break;
         }
 
+        pb.print();
         Sleep(100); // Sleep for a short duration before checking again
+        ::std::cout << "\r";
+        if (pb_sign != 25) {
+            ++pb_sign;
+        } else {
+            pb.update();
+            pb_sign = 0;
+        }
     }
 
     // Close MIDI device

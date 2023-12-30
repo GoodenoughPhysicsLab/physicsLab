@@ -25,6 +25,7 @@ __pycache__/
 *.cfg
 *.pyc
 *.pyd
+*.exe
 
 # special file of physicsLab
 *.sav
