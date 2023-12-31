@@ -9,12 +9,12 @@ class TestError(Exception):
     def __str__(self) -> str:
         return "Test Fail"
 
-def my_test_dec(method):
+def my_test_dec(method: Callable):
     def result(*args, **kwarg):
         method(*args, **kwarg)
 
         if len(stack_Experiment.data) != 0:
-            print(f"{method} test fail due to len(stack_Experiment) != 0")
+            print(f"method \"{method.__code__.co_name}\" test fail due to len(stack_Experiment) != 0")
             raise TestError
     return result
 

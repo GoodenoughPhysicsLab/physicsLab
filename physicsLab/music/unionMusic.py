@@ -13,10 +13,8 @@ from physicsLab.union import crt_Wires, D_WaterLamp
 from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self
 
 def _format_velocity(velocity: float) -> float:
-    if velocity > 1:
-        velocity = 1
-    elif velocity < 0.05:
-        velocity = 0.05
+    velocity = min(1, velocity)
+    velocity = max(0.05, velocity)
 
     return velocity
 
