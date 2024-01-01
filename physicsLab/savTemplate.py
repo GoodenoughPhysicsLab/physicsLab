@@ -175,7 +175,7 @@ Electromagnetism = {
         "Components": 1,
         "Subject": None,
         "StatusSave": None, # 运行时动态生成
-        "CameraSave": '{"Mode":1,"Distance":3.25,"VisionCenter":"0.1673855,0.88,0.05990592","TargetRotation":"90,0,0"}',
+        "CameraSave": '{"Mode":0,"Distance":3.25,"VisionCenter":"0.1673855,0.88,0.05990592","TargetRotation":"90,0,0"}',
         "Version": 2405,
         "CreationDate": 1683039963710,
         "Paused": False,
