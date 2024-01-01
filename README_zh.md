@@ -96,7 +96,7 @@ with experiment('测逝', read=True):
 ```
 上面两段代码产生的结果是一样的  
   
-更详细的内容请在[Doc](./Doc)中查看  
+更详细的内容请在[文档](docs)中查看  
 请注意：由于`physicsLab`使用中文注释并出现过编码问题，因此physicsLab有一套确保编码为`utf-8`的机制  
 此时你可以手动在```Python```代码的第一行添加如下注释：
 ```Python
