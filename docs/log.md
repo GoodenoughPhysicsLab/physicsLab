@@ -67,3 +67,7 @@
 # 1.4.1
 1. 优化了`Experiment.delete()`的行为
 2. 优化了`Player`生成音符的音量的效果
+
+# 1.4.2
+1.  新增了`get_Experiment`
+2.  修复了`Experiment.read`的bug

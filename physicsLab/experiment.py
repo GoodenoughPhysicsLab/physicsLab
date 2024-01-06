@@ -57,6 +57,7 @@ class Experiment:
         self.is_open_or_crt: bool = False
         self.is_open: bool = False
         self.is_crt: bool = False
+        self.is_read: bool = False
 
         self.FileName: Optional[str] = None # 存档的文件名
         self.SavPath: Optional[str] = None # 存档的完整路径, 为 f"{experiment.FILE_HEAD}/{self.FileName}"
@@ -114,11 +115,34 @@ class Experiment:
         self.SavPath = f"{Experiment.FILE_HEAD}/{_File}"
         with open(self.SavPath, encoding="utf-8") as f:
             sav_dict = json.loads(f.read().replace('\n', ''))
+            sav_dict["Experiment"]["StatusSave"] = None
+            self.PlSav = sav_dict
 
-            self.__experimentType_init(sav_dict["Type"])
-            self.PlSav["InternalName"] = sav_dict["InternalName"]
-            if self.PlSav["Summary"] is not None:
-                self.PlSav["Summary"]["Subject"] = sav_dict["InternalName"]
+        self.ExperimentType = {
+            experimentType.Circuit.value: experimentType.Circuit,
+            experimentType.Celestial.value: experimentType.Celestial,
+            experimentType.Electromagnetism.value: experimentType.Electromagnetism
+        }[self.PlSav["Type"]]
+
+        if self.ExperimentType == experimentType.Circuit:
+            self.Wires: List[dict] = [] # 存档对应的导线
+            # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
+            self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
+            if self.PlSav["Summary"] is None:
+                self.PlSav["Summary"] = savTemplate.Circuit["Summary"]
+
+        elif self.ExperimentType == experimentType.Celestial:
+            self.StatusSave: dict = {"MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
+                                    "ScalingName": "内太阳系", "LengthScale": 1.0, "SizeLinear": 0.0001,
+                                    "SizeNonlinear": 0.5, "StarPresent": False, "Setting": None}
+            if self.PlSav["Summary"] is None:
+                self.PlSav["Summary"] = savTemplate.Celestial["Summary"]
+
+
+        elif self.ExperimentType == experimentType.Electromagnetism:
+            self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
+            if self.PlSav["Summary"] is None:
+                self.PlSav["Summary"] = savTemplate.Electromagnetism["Summary"]
 
         return self
 
@@ -188,38 +212,50 @@ class Experiment:
     def read(self):
         if self.SavPath is None: # 是否已.open()或.crt()
             raise TypeError
+        if self.is_read:
+            raise phy_errors.ExperimentError("experiment have been read")
+        self.is_read = True
 
         with open(self.SavPath, encoding='utf-8') as f:
-            temp = json.loads(f.read().replace('\n', ''))
+            status_sav = json.loads(json.loads(f.read().replace('\n', ''))["Experiment"]["StatusSave"])
             # 元件
-            _local_Elements = json.loads(temp["Experiment"]["StatusSave"])["Elements"]
+            _local_Elements = status_sav["Elements"]
             # 导线
-            self.Wires = json.loads(temp['Experiment']['StatusSave'])['Wires']
-            # 实验介绍
-            self.PlSav['Summary']["Description"] = temp["Summary"]["Description"]
+            if self.ExperimentType == experimentType.Circuit:
+                self.Wires = status_sav['Wires']
 
             for element in _local_Elements:
-                # 坐标标准化（消除浮点误差）
-                sign1 = element['Position'].find(',')
-                sign2 = element['Position'].find(',', sign1 + 1)
-                num1 = _tools.roundData(float(element['Position'][:sign1:]))
-                num2 = _tools.roundData(float(element['Position'][sign1 + 1: sign2:]))
-                num3 = _tools.roundData(float(element['Position'][sign2 + 1::]))
-                element['Position'] = f"{num1},{num2},{num3}"  # x, z, y
+                # 坐标标准化 (消除浮点误差)
+                position = eval(f"({element['Position']})")
+                x, y, z = position[0], position[2], position[1]
+
                 # 实例化对象
-                obj = None
                 from physicsLab.element import crt_Element
 
                 if self.ExperimentType == experimentType.Circuit:
-                    obj = crt_Element(element["ModelID"], num1, num3, num2, elementXYZ=False) # type: ignore -> num type: int | float
+                    if element["ModelID"] == "Simple Instrument":
+                        from .circuit.elements.otherCircuit import Simple_Instrument
+                        obj = Simple_Instrument(
+                            x, y, z, elementXYZ=False,
+                            instrument=element["Properties"]["乐器"],
+                            pitch=element["Properties"]["音高"],
+                            velocity=element["Properties"]["音量"],
+                            rated_oltage=element["Properties"]["额定电压"],
+                            is_ideal_model=bool(element["Properties"]["理想模式"]),
+                            is_single=int(element["Properties"]["脉冲"])
+                        )
+                        for attr, val in element["Properties"].items():
+                            if attr.startswith("音高"):
+                                obj.add_note(val)
+                    else:
+                        obj = crt_Element(element["ModelID"], x, y, z, elementXYZ=False)
                 else:
-                    obj = crt_Element(element["ModelID"], num1, num3, num2) # type: ignore -> num type: int | float
+                    obj = crt_Element(element["ModelID"], x, y, z) # type: ignore -> num type: int | float
 
-                sign1 = element['Rotation'].find(',')
-                sign2 = element['Rotation'].find(',', sign1 + 1)
-                x = float(element['Rotation'][:sign1:])
-                z = float(element['Rotation'][sign1 + 1: sign2:])
-                y = float(element['Rotation'][sign2 + 1::])
+                rotation = eval(f'({element["Rotation"]})')
+                x = rotation[0]
+                z = rotation[1]
+                y = rotation[2]
                 obj.set_Rotation(x, y, z)
                 obj._arguments['Identifier'] = element['Identifier']
                 from .circuit.elements.logicCircuit import Logic_Input, eight_bit_Input

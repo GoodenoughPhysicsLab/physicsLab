@@ -31,7 +31,8 @@ class Simple_Instrument(CircuitBase):
             bpm: int = 100, # 节奏
             velocity: numType = 1.0, # 音量/响度
             rated_oltage: numType = 3.0, # 额定电压
-            is_ideal_model: bool = False # 是否为理想模式
+            is_ideal_model: bool = False, # 是否为理想模式
+            is_single: bool = True, # 简单乐器是否只响一次
     ) -> None:
         if not (
             (isinstance(instrument, int) and 0 <= instrument <= 128) and
@@ -42,7 +43,7 @@ class Simple_Instrument(CircuitBase):
 
         self._arguments = {'ModelID': 'Simple Instrument', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
                            'Properties': {'额定电压': rated_oltage, '额定功率': 0.3, '音量': velocity, '音高': None, '节拍': bpm, '锁定': 1.0,
-                                          "和弦": 1.0, '乐器': instrument, "理想模式": int(is_ideal_model), "脉冲": 1.0, "电平": 0.0},
+                                          "和弦": 1.0, '乐器': instrument, "理想模式": int(is_ideal_model), "脉冲": int(is_single), "电平": 0.0},
                            'Statistics': {'瞬间功率': 0, '瞬间电流': 0, '瞬间电压': 0, '功率': 0, '电压': 0, '电流': 0},
                            'Position': '', 'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}

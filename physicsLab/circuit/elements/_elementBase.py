@@ -45,7 +45,7 @@ class CircuitMeta(type):
 
         self.__init__(x, y, z, elementXYZ, *args, **kwargs)
         # 若是big_Element，则修正坐标
-        if self.is_bigElement:
+        if self.is_elementXYZ and self.is_bigElement:
             x, y, z = _elementXYZ.amend_big_Element(x, y, z)
 
         self._arguments["Identifier"] = randString(32)

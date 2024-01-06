@@ -6,17 +6,10 @@ import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.typehint import *
 from physicsLab.experiment import stack_Experiment
-from physicsLab.experimentType import experimentType
 from physicsLab.circuit.elements._elementBase import CircuitBase
 
 # 创建原件，本质上仍然是实例化
-def crt_Element(
-        name: str,
-        x: _tools.numType = 0,
-        y: _tools.numType = 0,
-        z: _tools.numType = 0,
-        elementXYZ: Optional[bool] = None
-    ):
+def crt_Element(name: str, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ: Optional[bool] = None) -> CircuitBase:
     if not (isinstance(name, str)
             and isinstance(x, (int, float))
             and isinstance(y, (int, float))
@@ -25,9 +18,7 @@ def crt_Element(
         raise RuntimeError("Wrong parameter type")
 
     name = name.strip()
-    if name == '':
-        raise RuntimeError('Name cannot be an empty string')
-        # 元件坐标系
+    # 元件坐标系
     if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
         x, y, z = _elementXYZ.xyzTranslate(x, y, z)
     x, y, z = _tools.roundData(x, y, z) # type: ignore
@@ -38,10 +29,8 @@ def crt_Element(
     elif (name == '8bit Display'):
         return elements.eight_bit_Display(x, y, z)
     else:
-        try:
-            return eval(f"elements.{name.replace(' ', '_').replace('-', '_')}({x},{y},{z})")
-        except SyntaxError:
-            raise RuntimeError(f"{name} original that does not exist")
+        return eval(f"elements.{name.replace(' ', '_').replace('-', '_')}({x},{y},{z})")
+    
 
 # 获取对应坐标的self
 def get_Element(*args, **kwargs) -> Union[elements.CircuitBase, List[elements.CircuitBase]]:
@@ -54,6 +43,7 @@ def get_Element(*args, **kwargs) -> Union[elements.CircuitBase, List[elements.Ci
             raise RuntimeError(f"{position} do not exist")
         result: list = _Expe.elements_Position[position]
         return result[0] if len(result) == 1 else result
+
     # 通过index（元件生成顺序）索引元件
     def index_Element(index: int):
         if 0 < index <= len(_Expe.elements_Index):
@@ -82,8 +72,9 @@ def get_Element(*args, **kwargs) -> Union[elements.CircuitBase, List[elements.Ci
         raise TypeError
 
 # 删除原件
-def del_Element(self: CircuitBase) -> None:
-#    self是物实三大实验支持的所有元件
+def del_Element(
+        self: CircuitBase # self是物实三大实验支持的所有元件
+) -> None:
 
     if not isinstance(self, CircuitBase):
         raise TypeError
@@ -96,7 +87,6 @@ def del_Element(self: CircuitBase) -> None:
         if element["Identifier"] == identifier:
             _Expe.Elements.remove(element)
             break
-
 
     i = 0
     while i < _Expe.Wires.__len__():
