@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 import setuptools
 
-with open("./README_zh.md", "r", encoding="utf-8") as fh:
-    long_description = fh.read()
-
 setuptools.setup(
     name="physicsLab",
     version="1.4.2",
@@ -11,7 +8,7 @@ setuptools.setup(
     author="Goodenough",
     author_email="2381642961@qq.com",
     description="Python API for physics-lab-AR",
-    long_description=long_description,
+    long_description="click \"[there](https://gitee.com/script2000/physicsLab)\" to show more information",
     long_description_content_type="text/markdown",
     url="https://gitee.com/script2000/physicsLab",
     packages=setuptools.find_packages(),
