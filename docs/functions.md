@@ -72,10 +72,16 @@ show_Experiment()
 del_Experiment()
 ```
 
+### 多存档操作
+获取当前正在操作的存档:
+```Python
+get_Experiment()
+```
+
 ## 元件 element
 ### 创建元件
 物实中所有的元件都被封装为`physicsLab`中对应的类（暂未支持全部元件）  
-物实元件与其相应的类名在[所有元件.md](./%E6%89%80%E6%9C%89%E5%85%83%E4%BB%B6.md)中查看  
+物实元件与其相应的类名在[所有元件.md](elements.md)中查看  
 例：
 ```python
 Logic_Input()  # 创建一个逻辑输入

@@ -20,7 +20,7 @@ class stack_Experiment:
     def __new__(cls) -> Self:
         if cls.__single_instance is None:
             cls.__single_instance = object.__new__(cls)
-        
+
         return cls.__single_instance
 
     @classmethod
@@ -33,7 +33,7 @@ class stack_Experiment:
     @classmethod
     def top(cls) -> "Experiment":
         if len(cls.data) == 0:
-            raise phy_errors.ExperimentError("experiment stack is empty")
+            raise phy_errors.ExperimentError("operate but no experiment(experiment stack is empty)")
 
         return cls.data[-1]
 
@@ -42,6 +42,9 @@ class stack_Experiment:
         res = cls.top()
         cls.data.pop()
         return res
+
+def get_Experiment() -> stack_Experiment:
+    return stack_Experiment.top()
 
 # 实验（存档）类
 class Experiment:

@@ -57,7 +57,7 @@ __all__ = [
     # experimentType.py
     "experimentType",
 
-    # errors.py
+    # phy_errors.py
     "OpenExperimentError", "WireColorError", "WireNotFoundError", "bitLengthError",
     "experimentExistError", "ExperimentTypeError", "getElementError", "crtExperimentFailError",
     "ExperimentError",
@@ -65,7 +65,7 @@ __all__ = [
     # experiment.py
     "Experiment", "experiment", "open_Experiment", "crt_Experiment", "read_Experiment", "write_Experiment",
     "entitle_Experiment", "show_Experiment", "del_Experiment", "publish_Experiment", "search_Experiment",
-    "open_or_crt_Experiment",
+    "open_or_crt_Experiment", "get_Experiment",
 
     # element.py
     "crt_Element", "del_Element", "count_Elements", "get_Element", "clear_Elements",
