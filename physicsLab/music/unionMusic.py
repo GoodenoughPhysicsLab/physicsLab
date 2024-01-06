@@ -177,7 +177,7 @@ class Midi:
                 len_res += 1
                 note_time = round((msg.time + wait_time) / div_time)
 
-                velocity = _format_velocity(msg.velocity / 100) # 音符的响度
+                velocity = _format_velocity(msg.velocity / 128) # 音符的响度
 
                 if note_time != 0 or len(res) == 0:
                     if note_time == 0:
@@ -335,10 +335,7 @@ class Chord:
         self._notes = list(notes)
         self.ins_notes: Dict[int, List[Note]] = {}
 
-        sum_of_velocity = 0
-        for a_note in notes:
-            sum_of_velocity += a_note.velocity
-        self.velocity: float = _format_velocity(sum_of_velocity / len(notes)) # 所有音符的音量的平均数
+        self.velocity: float = max([a_note.velocity for a_note in notes])
 
         for a_note in notes:
             self.append(a_note)
@@ -366,7 +363,7 @@ class Chord:
         else:
             self.ins_notes[a_note.instrument] = [a_note]
         
-        self.velocity = _format_velocity((self.velocity * (len(self._notes) - 1) + a_note.velocity) / len(self._notes))
+        self.velocity = max(self.velocity, a_note.velocity)
 
         return self
     
