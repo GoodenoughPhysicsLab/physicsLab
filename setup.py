@@ -6,11 +6,11 @@ with open("./README_zh.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="physicsLab",
-    version="1.4.1",  # 包版本号，便于维护版本
+    version="1.4.2",  # 包版本号，便于维护版本
     license="MIT",
     author="Goodenough",  # 作者，可以写自己的姓名
     author_email="2381642961@qq.com",  # 作者联系方式，可写自己的邮箱地址
-    description="Doing experiments in the physics-lab-AR by python",  # 包的简述
+    description="python API for physics-lab-AR",  # 包的简述
     long_description=long_description,  # 包的详细介绍，一般在README.md文件内
     long_description_content_type="text/markdown",
     url="https://gitee.com/script2000/physicsLab",  # 项目地址

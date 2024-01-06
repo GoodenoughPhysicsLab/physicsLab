@@ -3,8 +3,6 @@ py -m venv venv
 .\venv\Scripts\python -m pip install --upgrade pip
 
 .\venv\Scripts\pip install build
-@rem .\venv\Scripts\pip install twine
-@rem .\venv\Scripts\pip install wheel
 .\venv\Scripts\pip install mido
 
 .\venv\Scripts\pip install plmidi
