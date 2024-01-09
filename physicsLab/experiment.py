@@ -70,44 +70,6 @@ class Experiment:
         if sav_name is not None:
             self.open(sav_name)
 
-    # 进行与experimentType有关的初始化
-    def __experimentType_init(self, experiment_type: Union[int, experimentType]) -> None:
-        if not (
-            isinstance(experiment_type, experimentType)
-            or (
-                isinstance(experiment_type, int) and \
-                experiment_type in \
-                    (experimentType.Circuit.value, experimentType.Celestial.value, experimentType.Electromagnetism.value)
-            )
-        ):
-            raise TypeError
-
-        if isinstance(experiment_type, experimentType):
-            self.ExperimentType: experimentType = experiment_type
-        else:
-            if experiment_type == experimentType.Circuit.value:
-                self.ExperimentType = experimentType.Circuit
-            elif experiment_type == experimentType.Celestial.value:
-                self.ExperimentType = experimentType.Celestial
-            elif experiment_type == experimentType.Electromagnetism.value:
-                self.ExperimentType = experimentType.Electromagnetism
-
-        if self.ExperimentType == experimentType.Circuit:
-            self.PlSav: dict = copy.deepcopy(savTemplate.Circuit)
-            self.Wires: List[dict] = [] # 存档对应的导线
-            # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
-            self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
-
-        elif self.ExperimentType == experimentType.Celestial:
-            self.PlSav: dict = copy.deepcopy(savTemplate.Celestial)
-            self.StatusSave: dict = {"MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
-                                     "ScalingName": "内太阳系", "LengthScale": 1.0, "SizeLinear": 0.0001,
-                                     "SizeNonlinear": 0.5, "StarPresent": False, "Setting": None}
-
-        elif self.ExperimentType == experimentType.Electromagnetism:
-            self.PlSav: dict = copy.deepcopy(savTemplate.Electromagnetism)
-            self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
-
     # 只能通过sav文件名的方式打开文件
     def __open(self, _File) -> "Experiment":
         self.is_open = True
@@ -169,26 +131,43 @@ class Experiment:
 
     def __crt(self, sav_name: str, experiment_type: experimentType = experimentType.Circuit) -> None:
         self.is_crt = True
+        self.ExperimentType = experiment_type
 
         self.FileName = _tools.randString(34)
         self.SavPath = f"{Experiment.FILE_HEAD}/{self.FileName}.sav"
-        self.__experimentType_init(experiment_type)
+
+        if self.ExperimentType == experimentType.Circuit:
+            self.PlSav: dict = copy.deepcopy(savTemplate.Circuit)
+            self.Wires: List[dict] = [] # 存档对应的导线
+            # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
+            self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
+
+        elif self.ExperimentType == experimentType.Celestial:
+            self.PlSav: dict = copy.deepcopy(savTemplate.Celestial)
+            self.StatusSave: dict = {"MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
+                                     "ScalingName": "内太阳系", "LengthScale": 1.0, "SizeLinear": 0.0001,
+                                     "SizeNonlinear": 0.5, "StarPresent": False, "Setting": None}
+
+        elif self.ExperimentType == experimentType.Electromagnetism:
+            self.PlSav: dict = copy.deepcopy(savTemplate.Electromagnetism)
+            self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
+
         self.entitle(sav_name)
     
     # 创建存档，输入为存档名
-    def crt(self, sav_name: str, experimentType: experimentType = experimentType.Circuit) -> "Experiment":
+    def crt(self, sav_name: str, experiment_type: experimentType = experimentType.Circuit) -> "Experiment":
         if self.is_open_or_crt:
             raise phy_errors.experimentExistError
         self.is_open_or_crt = True
 
         if search_Experiment(sav_name) is not None:
             raise phy_errors.crtExperimentFailError
-        if not isinstance(sav_name, str):
+        if not isinstance(sav_name, str) or not isinstance(experiment_type, experimentType):
             raise TypeError
         
         stack_Experiment.push(self)
 
-        self.__crt(sav_name, experimentType)
+        self.__crt(sav_name, experiment_type)
         return self
     
     # 先尝试打开实验, 若失败则创建实验
@@ -209,12 +188,16 @@ class Experiment:
         return self
     
     # 读取实验已有状态
-    def read(self):
+    def read(self) -> "Experiment":
         if self.SavPath is None: # 是否已.open()或.crt()
             raise TypeError
         if self.is_read:
-            raise phy_errors.ExperimentError("experiment have been read")
+            phy_errors.warning("experiment has been read")
+            return self
         self.is_read = True
+        if self.is_crt:
+            phy_errors.warning("can not read because you create this experiment")
+            return self
 
         with open(self.SavPath, encoding='utf-8') as f:
             status_sav = json.loads(json.loads(f.read().replace('\n', ''))["Experiment"]["StatusSave"])
