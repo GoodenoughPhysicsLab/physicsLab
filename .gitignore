@@ -12,6 +12,7 @@ build/
 pybind11/
 *.egg-info/
 __pycache__/
+physicsLabSav/
 
 *.txt
 *.code-workspace

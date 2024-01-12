@@ -84,18 +84,18 @@ class MyTestCase(unittest.TestCase):
 
     @my_test_dec
     def test_union_Sum(self):
-        open_Experiment('测逝')
+        open_or_crt_Experiment('__test__')
         union.Sum(0, -1, 0, 64)
         self.assertEqual(count_Elements(), 64)
         self.assertEqual(count_Wires(), 63)
         clear_Elements()
         self.assertEqual(count_Wires(), 0)
         self.assertEqual(count_Elements(), 0)
-        write_Experiment()
+        del_Experiment()
 
     @my_test_dec
     def test_get_Element(self):
-        open_Experiment('测逝')
+        open_or_crt_Experiment('__test__')
         Or_Gate(0, 0, 0)
         crt_Wire(
             get_Element(x=0, y=0, z=0).o,
@@ -103,18 +103,18 @@ class MyTestCase(unittest.TestCase):
         )
         crt_Wire(get_Element(0,0,0).i_low, get_Element(index=1).o)
         self.assertEqual(count_Wires(), 2)
-        write_Experiment()
+        del_Experiment()
 
     # 测逝用例未写完
     @my_test_dec
     def test_set_O(self):
-        open_Experiment('测逝')
+        open_or_crt_Experiment('__test__')
         set_O(-1, -1, 0)
         for x in range(10):
             for y in range(10):
                 Yes_Gate(x, y, 0, True)
         self.assertEqual(count_Elements(), 100)
-        write_Experiment()
+        del_Experiment()
 
     @my_test_dec
     def test_errors(self):
@@ -130,7 +130,7 @@ class MyTestCase(unittest.TestCase):
     # 测试元件坐标系2
     @my_test_dec
     def test_aTest(self):
-        open_Experiment('测逝')
+        open_or_crt_Experiment('__test__')
         set_elementXYZ(True)
         set_O(-1, -1, 0)
         for x in range(10):
@@ -144,7 +144,7 @@ class MyTestCase(unittest.TestCase):
         get_Element(2).i - get_Element(3).o - get_Element(4).i
         self.assertEqual(count_Wires(), 3)
         self.assertEqual(count_Elements(), 150)
-        write_Experiment()
+        del_Experiment()
 
     @my_test_dec
     def test_open_many_Experiment(self):
