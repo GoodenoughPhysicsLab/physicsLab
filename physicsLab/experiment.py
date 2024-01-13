@@ -154,18 +154,22 @@ class Experiment:
 
         self.entitle(sav_name)
     
-    # 创建存档，输入为存档名
-    def crt(self, sav_name: str, experiment_type: experimentType = experimentType.Circuit) -> "Experiment":
+    # 创建存档，输入为存档名 sav_name: 存档名; experiment_type: 实验类型; force_crt: 不论实验是否已经存在,强制创建
+    def crt(self, sav_name: str, experiment_type: experimentType = experimentType.Circuit, force_crt: bool=False) -> "Experiment":
         if self.is_open_or_crt:
             raise phy_errors.experimentExistError
         self.is_open_or_crt = True
 
-        if search_Experiment(sav_name) is not None:
+        search = search_Experiment(sav_name)
+        if not force_crt and search is not None:
             raise phy_errors.crtExperimentFailError
         if not isinstance(sav_name, str) or not isinstance(experiment_type, experimentType):
             raise TypeError
         
         stack_Experiment.push(self)
+
+        if force_crt and search is not None:
+            Experiment(search).delete()
 
         self.__crt(sav_name, experiment_type)
         return self
@@ -309,13 +313,17 @@ class Experiment:
 
         if os.path.exists(self.SavPath): # 如果一个实验被创建但还未被写入, 就会触发错误
             os.remove(self.SavPath)
-            _colorUtils.color_print("Successfully delete experiment!", _colorUtils.COLOR.BLUE)
+            _colorUtils.color_print(f"Successfully delete experiment {self.PlSav['InternalName']}({self.FileName}.sav)!", _colorUtils.COLOR.BLUE)
         else:
-            phy_errors.warning(f"experiment {self.PlSav['InternalName']}({self.FileName}) do not exist.")
+            phy_errors.warning(f"experiment {self.PlSav['InternalName']}({self.FileName}.sav) do not exist.")
 
         if os.path.exists(self.SavPath.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
             os.remove(self.SavPath.replace(".sav", ".jpg"))
 
+        stack_Experiment.pop()
+    
+    # 退出实验而不进行任何操作
+    def exit(self) -> None:
         stack_Experiment.pop()
     
     # 对存档名进行重命名
@@ -392,11 +400,7 @@ class experiment:
         if not self.force_crt:
             self._Experiment: Experiment = Experiment().open_or_crt(self.savName, self.experimentType)
         else:
-            temp = search_Experiment(self.savName)
-            if temp is not None:
-                Experiment(temp).delete()
-            
-            self._Experiment: Experiment = Experiment().crt(self.savName)
+            self._Experiment: Experiment = Experiment().crt(self.savName, self.experimentType, self.force_crt)
 
         if self.read:
             self._Experiment.read()
@@ -442,8 +446,8 @@ def open_Experiment(sav_name: str) -> Experiment:
     return Experiment().open(sav_name)
 
 # 创建存档，输入为存档名
-def crt_Experiment(sav_name: str, experimentType: experimentType = experimentType.Circuit) -> Experiment:
-    return Experiment().crt(sav_name, experimentType)
+def crt_Experiment(sav_name: str, experimentType: experimentType = experimentType.Circuit, force_crt: bool=False) -> Experiment:
+    return Experiment().crt(sav_name, experimentType, force_crt)
 
 # 先尝试打开实验，若失败则创建实验。只支持输入存档名
 def open_or_crt_Experiment(sav_name: str, experimentType: experimentType = experimentType.Circuit) -> Experiment:
@@ -473,3 +477,7 @@ def entitle_Experiment(sav_name: str):
 # 发布实验
 def publish_Experiment(title: Optional[str] = None, introduction: Optional[str] = None) -> None:
     stack_Experiment.top().publish(title, introduction)
+
+# 退出实验而不进行任何操作
+def exit_Experiment():
+    stack_Experiment.top().exit()

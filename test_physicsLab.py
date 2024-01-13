@@ -35,7 +35,7 @@ class MyTestCase(unittest.TestCase):
 
     @my_test_dec
     def test_experiment1(self):
-        open_or_crt_Experiment("__test__")
+        crt_Experiment("__test__", force_crt=True)
         a = Yes_Gate()
         self.assertEqual(count_Elements(), 1)
         self.assertEqual(a.get_Position(), (0, 0, 0))
@@ -48,7 +48,7 @@ class MyTestCase(unittest.TestCase):
         crt_Element('Logic Input')
         self.assertEqual(count_Elements(), 2)
         get_Element(0, 0, 0)
-        write_Experiment()
+        exit_Experiment()
 
     @my_test_dec
     def test_read_Experiment(self):
