@@ -21,7 +21,7 @@ namespace plmidi::details {
 static void plmidi_exit(int signal)
 {
     if (signal == SIGINT) {
-        py::print("\n");
+        py::print("\r\n");
         Py_Exit(0);
     }
 }
@@ -111,14 +111,14 @@ void sound_by_midiOutShortMsg(py::list piece, int tempo)
     midiOutClose(handle);
 }
 
-void sound_by_mciSendCommand(py::str path, int midi_duration)
+void sound_by_mciSendCommand(py::str path, float midi_duration)
 {
     // I don't know why this will fail to play
     // const char *cpath = path.cast<::std::string>().c_str();
     ::std::string spath = path.cast<::std::string>();
     const char *cpath = spath.c_str();
+
     process_bar::MidiProcessBar pb{midi_duration};
-    int pb_status{1};
 
     // init exit
     signal(SIGINT, details::plmidi_exit);
@@ -138,8 +138,6 @@ void sound_by_mciSendCommand(py::str path, int midi_duration)
         throw plmidiExc_InitErr("Failed to play MIDI file");
     }
 
-    int pb_sign = 0;
-
     // Continuously check the status of MIDI playback
     while (true) {
         MCI_STATUS_PARMS mciStatusParms;
@@ -156,13 +154,7 @@ void sound_by_mciSendCommand(py::str path, int midi_duration)
 
         pb.print();
         Sleep(100); // Sleep for a short duration before checking again
-        ::std::cout << "\r";
-        if (pb_sign != 25) {
-            ++pb_sign;
-        } else {
-            pb.update();
-            pb_sign = 0;
-        }
+        pb.update();
     }
 
     // Close MIDI device
