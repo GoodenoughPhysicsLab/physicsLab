@@ -22,8 +22,9 @@ pip install physicsLab
 pip install plmidi
 pip install pygame
 ```
+点击跳转至[plmidi](https://github.com/GoodenoughPhysicsLab/plmidi)  
 之所以没有做安装physicsLab的时候自动安装这两个库，是因为安卓的`qpython`在下载含c的库的时候存在问题  
-4.  如果你等不及使用一些新功能的话，测试版通常在gitee可以找到
+1.  如果你等不及使用一些新功能的话，测试版通常在gitee可以找到
 
 ## 搭建开发环境
 切换至physicsLab根目录，输入以下指令：

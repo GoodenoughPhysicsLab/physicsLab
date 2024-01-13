@@ -71,3 +71,6 @@
 # 1.4.2
 1.  新增了`get_Experiment`
 2.  修复了`Experiment.read`的bug
+
+# 1.4.3
+1.  `plmidi`新增播放进度条

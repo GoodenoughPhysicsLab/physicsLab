@@ -15,7 +15,6 @@ __pycache__/
 physicsLabSav/
 
 *.txt
-*.code-workspace
 *.json
 *.mid
 *.coverage
