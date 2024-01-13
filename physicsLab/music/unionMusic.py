@@ -1,4 +1,6 @@
 ﻿# -*- coding: utf-8 -*-
+import time
+
 import mido
 import physicsLab.phy_errors as phy_errors
 import physicsLab._colorUtils as colorUtils
@@ -58,10 +60,10 @@ class Midi:
 
     # 使用mido打开一个midi文件并获取其tracks
     def __get_midi_messages(self) -> mido.MidiTrack:
-        _midifile = mido.MidiFile(self.midifile, clip=True)
+        self._midifile = mido.MidiFile(self.midifile, clip=True)
         wait_time: numType = 0
         res = mido.MidiTrack()
-        for msg in _midifile.merged_track: # mido.merge_tracks is too slow!!!
+        for msg in self._midifile.merged_track:
             if msg.type in ("note_on", "note_off", "program_change", "set_tempo"):
                 res.append(msg)
                 msg.time += wait_time
@@ -75,10 +77,10 @@ class Midi:
                 self.tempo = msg.tempo
         return res
 
-    # 返回Midi的所有message的time的和
+    # 返回Midi的播放时长
     def __get_midi_duration(self):
         res = 0
-        for msg in self.messages:
+        for msg in self._midifile:
             res += msg.time
 
         return res
@@ -86,7 +88,6 @@ class Midi:
     # 播放midi类存储的信息
     def sound(self, player: Optional[PLAYER] = None) -> Self:
         # 使用plmidi播放midi
-        # plmidi还有很多问题, 暂不推荐使用
         def sound_by_plmidi() -> bool:
             try:
                 import plmidi
@@ -137,13 +138,13 @@ class Midi:
             raise TypeError        
 
         # main
+        self.write_midi()
+
         if player is not None:
             f = (sound_by_plmidi, sound_by_pygame, sound_by_os)[player.value]
             if not f():
                 phy_errors.warning(f"can not use {f.__name__} to sound midi.")
             return self
-
-        self.write_midi()
 
         if sound_by_plmidi():
             pass # needless to do anything
