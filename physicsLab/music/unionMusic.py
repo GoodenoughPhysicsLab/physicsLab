@@ -1,6 +1,4 @@
 ﻿# -*- coding: utf-8 -*-
-import time
-
 import mido
 import physicsLab.phy_errors as phy_errors
 import physicsLab._colorUtils as colorUtils
