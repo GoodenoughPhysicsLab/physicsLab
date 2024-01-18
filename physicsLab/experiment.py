@@ -160,16 +160,16 @@ class Experiment:
             raise phy_errors.experimentExistError
         self.is_open_or_crt = True
 
+        if not isinstance(sav_name, str) or not isinstance(experiment_type, experimentType):
+            raise TypeError
+
         search = search_Experiment(sav_name)
         if not force_crt and search is not None:
             raise phy_errors.crtExperimentFailError
-        if not isinstance(sav_name, str) or not isinstance(experiment_type, experimentType):
-            raise TypeError
-        
-        stack_Experiment.push(self)
-
-        if force_crt and search is not None:
+        elif force_crt and search is not None:
             Experiment(search).delete()
+
+        stack_Experiment.push(self)
 
         self.__crt(sav_name, experiment_type)
         return self
@@ -307,7 +307,7 @@ class Experiment:
         return self
     
     # 删除存档
-    def delete(self) -> None:
+    def delete(self, warning_status: bool=False) -> None:
         if self.SavPath is None:
             raise TypeError
 
@@ -315,7 +315,7 @@ class Experiment:
             os.remove(self.SavPath)
             _colorUtils.color_print(f"Successfully delete experiment {self.PlSav['InternalName']}({self.FileName}.sav)!", _colorUtils.COLOR.BLUE)
         else:
-            phy_errors.warning(f"experiment {self.PlSav['InternalName']}({self.FileName}.sav) do not exist.")
+            phy_errors.warning(f"experiment {self.PlSav['InternalName']}({self.FileName}.sav) do not exist.", warning_status)
 
         if os.path.exists(self.SavPath.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
             os.remove(self.SavPath.replace(".sav", ".jpg"))
@@ -371,7 +371,8 @@ class experiment:
                  elementXYZ: bool = False, # 元件坐标系
                  experiment_type: experimentType = experimentType.Circuit, # 若创建实验，支持传入指定实验类型
                  extra_filepath: Optional[str] = None, # 将存档写入额外的路径
-                 force_crt: bool = False # 强制创建一个实验, 若已存在则删除已有实验
+                 force_crt: bool = False, # 强制创建一个实验, 若已存在则删除已有实验
+                 delete_warning_status: bool = False, # 删除实验时无警告
     ):
         if not (
             isinstance(sav_name, str) and
@@ -394,6 +395,7 @@ class experiment:
         self.experimentType: experimentType = experiment_type
         self.extra_filepath: Optional[str] = extra_filepath
         self.force_crt = force_crt
+        self.delete_warning_status = delete_warning_status
 
     # 上下文管理器，搭配with使用
     def __enter__(self):
@@ -417,7 +419,9 @@ class experiment:
         if self.write:
             self._Experiment.write(extra_filepath=self.extra_filepath, no_pop=self.delete)
         if self.delete:
-            self._Experiment.delete()
+            self._Experiment.delete(self.delete_warning_status)
+        else:
+            self._Experiment.exit()
 
 # 索取所有物实存档的文件名
 def getAllSav() -> List:

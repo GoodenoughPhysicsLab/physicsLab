@@ -95,7 +95,7 @@ class Midi:
                 colorUtils.color_print("sound by using plmidi", colorUtils.COLOR.CYAN)
 
                 try:
-                    plmidi.sound_by_mciSendCommand("temp.mid", self.__get_midi_duration())
+                    plmidi.sound("temp.mid")
                 except plmidi.OpenMidiFileError or plmidi.plmidiInitError:
                     return False
 

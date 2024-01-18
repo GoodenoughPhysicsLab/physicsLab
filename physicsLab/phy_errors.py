@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 # 用于存放自定义错误类
 # 由于有时在package外需要异常处理，故不为文件私有变量
+from typing import Optional
+
 import physicsLab._colorUtils as _colorUtils
 
-def warning(msg: str) -> None:
-    _colorUtils.color_print("Warning: " + msg, _colorUtils.COLOR.YELLOW)
+# 抛出警告, 当warning_status==False
+def warning(msg: str, warning_status: Optional[bool]=False) -> None:
+    if warning_status is None:
+        _colorUtils.color_print("Warning: " + msg, _colorUtils.COLOR.YELLOW)
+    elif warning_status:
+        raise WarningError
 
 # 打开实验异常
 class OpenExperimentError(Exception):
@@ -56,3 +62,7 @@ class ExperimentError(Exception):
 
     def __str__(self) -> str:
         return self.err_msg
+
+class WarningError(Exception):
+    def __str__(self) -> str:
+        return "see warning as error"
