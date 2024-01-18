@@ -19,7 +19,7 @@ def my_test_dec(method: Callable):
         method(*args, **kwarg)
 
         if len(stack_Experiment.data) != 0:
-            print(f"method \"{method.__code__.co_name}\" test fail due to len(stack_Experiment) != 0")
+            print(f"method \"{method.__code__.co_name}\"({method.__code__.co_firstlineno}) test fail due to len(stack_Experiment) != 0")
             raise TestError
     return result
 
@@ -82,7 +82,7 @@ class MyTestCase(unittest.TestCase):
 
     @my_test_dec
     def test_crt_wire(self):
-        with experiment("__test__", write=False, force_crt=True):
+        with experiment("__test__", is_exit=True, force_crt=True):
             a = Or_Gate()
             crt_Wire(a.o, a.i_up, "red")
 
@@ -153,21 +153,21 @@ class MyTestCase(unittest.TestCase):
     @my_test_dec
     def test_open_many_Experiment(self):
         crt_Experiment("_Test", force_crt=True)
-        with experiment('__test__', write=False, force_crt=True):
+        with experiment('__test__', is_exit=True, force_crt=True):
             Logic_Input()
             self.assertEqual(1, count_Elements())
         exit_Experiment()
 
     @my_test_dec
     def test_with_and_coverPosition(self):
-        with experiment("__test__", write=False, force_crt=True):
+        with experiment("__test__", is_exit=True, force_crt=True):
             Logic_Input()
             Or_Gate()
             self.assertEqual(len(get_Element(0, 0, 0)), 2)
 
     @my_test_dec
     def test_del_Element(self):
-        with experiment("__test__", write=False, force_crt=True):
+        with experiment("__test__", is_exit=True, force_crt=True):
             Logic_Input().o - Or_Gate().o
             del_Element(get_Element(2))
             self.assertEqual(count_Elements(), 1)
@@ -176,7 +176,7 @@ class MyTestCase(unittest.TestCase):
     # 测逝模块化电路连接导线
     @my_test_dec
     def test_wires(self):
-        with experiment("__test__", write=False, elementXYZ=True, force_crt=True):
+        with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
             a = union.Inputs(0, 0, 0, 8)
             b = union.Outputs(0.6, 0, 0, 8, elementXYZ=False)
             Logic_Output(0.6, 0, 0.1, elementXYZ=False)
@@ -190,7 +190,7 @@ class MyTestCase(unittest.TestCase):
     # 测逝模块化加法电路
     @my_test_dec
     def test_union_Sum2(self):
-        with experiment("__test__", write=False, elementXYZ=True, force_crt=True):
+        with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
             a = union.Inputs(-1, 0, 0, 8)
             b = union.Inputs(-2, 0, 0, 8)
             c = union.Sum(0, 0, 0, 8)
@@ -202,7 +202,7 @@ class MyTestCase(unittest.TestCase):
     # 测试打开实验类型与文件不吻合
     @my_test_dec
     def test_experimentType(self):
-        with experiment("__test__", experiment_type=experimentType.Electromagnetism, write=False, force_crt=True):
+        with experiment("__test__", experiment_type=experimentType.Electromagnetism, is_exit=True, force_crt=True):
             try:
                 Positive_Charge()
                 Logic_Input()
@@ -213,16 +213,16 @@ class MyTestCase(unittest.TestCase):
 
     @my_test_dec
     def test_experimentType3(self):
-        with experiment("__test__", experiment_type=experimentType.Circuit, write=False, force_crt=True):
+        with experiment("__test__", experiment_type=experimentType.Circuit, is_exit=True, force_crt=True):
             Logic_Input()
-        with experiment("__test__", experiment_type=experimentType.Celestial, write=False, force_crt=True):
+        with experiment("__test__", experiment_type=experimentType.Celestial, is_exit=True, force_crt=True):
             pass
-        with experiment("__test__", experiment_type=experimentType.Electromagnetism, write=False, force_crt=True):
+        with experiment("__test__", experiment_type=experimentType.Electromagnetism, is_exit=True, force_crt=True):
             pass
 
     @my_test_dec
     def test_electromagnetism(self):
-        with experiment("__test__", write=False, experiment_type=experimentType.Electromagnetism, force_crt=True):
+        with experiment("__test__", is_exit=True, experiment_type=experimentType.Electromagnetism, force_crt=True):
             Negative_Charge(-0.1, 0, 0)
             Positive_Charge(0.1, 0, 0)
             self.assertEqual(count_Elements(), 2)
@@ -235,7 +235,7 @@ class MyTestCase(unittest.TestCase):
 
     @my_test_dec
     def test_union_Sub(self):
-        with experiment("__test__", write=False, elementXYZ=True, force_crt=True):
+        with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
             a = union.Sub(bitLength=8, fold=False)
             crt_Wires(union.Inputs(-3, 0, 0, 8).data_Output, a.minuend)
             crt_Wires(union.Inputs(-2, 0, 0, 8).data_Output, a.subtrahend)
@@ -248,7 +248,7 @@ class MyTestCase(unittest.TestCase):
     # 测试简单乐器设置音高的三种方法
     @my_test_dec
     def test_Simple_Instrument(self):
-        with experiment("__test__", write=False, elementXYZ=True, force_crt=True):
+        with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
             a = Simple_Instrument(pitch=48)
             a = Simple_Instrument().set_Tonality(48)
             a = Simple_Instrument(pitch="C3")
@@ -258,7 +258,7 @@ class MyTestCase(unittest.TestCase):
 
     @my_test_dec
     def test_getElementError(self):
-        with experiment("__test__", write=False, force_crt=True):
+        with experiment("__test__", is_exit=True, force_crt=True):
             Logic_Input()
             try:
                 get_Element(2)
@@ -277,7 +277,7 @@ class MyTestCase(unittest.TestCase):
 
     @my_test_dec
     def test_const_is_bigElement(self):
-        with experiment("__test__", force_crt=True, write=False):
+        with experiment("__test__", force_crt=True, is_exit=True):
             a = Multiplier()
             try:
                 a.is_bigElement = False
@@ -288,7 +288,7 @@ class MyTestCase(unittest.TestCase):
 
     @my_test_dec
     def test_musicPlayer(self):
-        with experiment("__test__", write=False, force_crt=True):
+        with experiment("__test__", is_exit=True, force_crt=True):
             l = (0, 2, 4, 5, 7, 9, 11)
 
             t = music.Piece()
@@ -303,7 +303,7 @@ class MyTestCase(unittest.TestCase):
     
     @my_test_dec
     def test_mutiple_notes_in_Simple_Instrument(self):
-        with experiment("__test__", force_crt=True, write=False):
+        with experiment("__test__", force_crt=True, is_exit=True):
             Simple_Instrument().add_note(67) # type: ignore
 
 if __name__ == '__main__':

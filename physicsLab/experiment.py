@@ -373,6 +373,7 @@ class experiment:
                  extra_filepath: Optional[str] = None, # 将存档写入额外的路径
                  force_crt: bool = False, # 强制创建一个实验, 若已存在则删除已有实验
                  delete_warning_status: bool = False, # 删除实验时无警告
+                 is_exit: bool = False, # 退出试验
     ):
         if not (
             isinstance(sav_name, str) and
@@ -396,6 +397,7 @@ class experiment:
         self.extra_filepath: Optional[str] = extra_filepath
         self.force_crt = force_crt
         self.delete_warning_status = delete_warning_status
+        self.is_exit = is_exit
 
     # 上下文管理器，搭配with使用
     def __enter__(self):
@@ -416,12 +418,16 @@ class experiment:
         return self._Experiment
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.is_exit:
+            self._Experiment.exit()
+            return
         if self.write:
             self._Experiment.write(extra_filepath=self.extra_filepath, no_pop=self.delete)
+            if not self.delete:
+                return
         if self.delete:
             self._Experiment.delete(self.delete_warning_status)
-        else:
-            self._Experiment.exit()
+            return
 
 # 索取所有物实存档的文件名
 def getAllSav() -> List:
