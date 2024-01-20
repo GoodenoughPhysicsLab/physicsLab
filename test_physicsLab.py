@@ -102,8 +102,8 @@ class MyTestCase(unittest.TestCase):
         crt_Experiment("__test__", force_crt=True)
         Or_Gate(0, 0, 0)
         crt_Wire(
-            get_Element(x=0, y=0, z=0).o,
-            get_Element(1).i_up
+            get_Element(0, 0, 0).o,
+            get_Element(index=1).i_up
         )
         crt_Wire(get_Element(0,0,0).i_low, get_Element(index=1).o)
         self.assertEqual(count_Wires(), 2)
@@ -144,8 +144,8 @@ class MyTestCase(unittest.TestCase):
             for y in [y * 2 + 10 for y in range(5)]:
                 Multiplier(x, y, 0)
 
-        crt_Wire(get_Element(1).o, get_Element(0, 1, 0).i)
-        get_Element(2).i - get_Element(3).o - get_Element(4).i
+        crt_Wire(get_Element(index=1).o, get_Element(0, 1, 0).i)
+        get_Element(index=2).i - get_Element(index=3).o - get_Element(index=4).i
         self.assertEqual(count_Wires(), 3)
         self.assertEqual(count_Elements(), 150)
         exit_Experiment()
@@ -169,7 +169,7 @@ class MyTestCase(unittest.TestCase):
     def test_del_Element(self):
         with experiment("__test__", is_exit=True, force_crt=True):
             Logic_Input().o - Or_Gate().o
-            del_Element(get_Element(2))
+            del_Element(get_Element(index=2))
             self.assertEqual(count_Elements(), 1)
             self.assertEqual(count_Wires(), 0)
 
@@ -261,7 +261,7 @@ class MyTestCase(unittest.TestCase):
         with experiment("__test__", is_exit=True, force_crt=True):
             Logic_Input()
             try:
-                get_Element(2)
+                get_Element(index=2)
             except getElementError:
                 pass
             else:

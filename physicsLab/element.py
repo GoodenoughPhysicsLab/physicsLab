@@ -4,12 +4,14 @@ import physicsLab.phy_errors as phy_errors
 import physicsLab.circuit.elements as elements
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
-from physicsLab.typehint import *
 from physicsLab.experiment import stack_Experiment
+from physicsLab.typehint import numType, Optional, Union, List
 from physicsLab.circuit.elements._elementBase import CircuitBase
 
+NnumType = Optional[numType]
+
 # 创建原件，本质上仍然是实例化
-def crt_Element(name: str, x: _tools.numType = 0, y: _tools.numType = 0, z: _tools.numType = 0, elementXYZ: Optional[bool] = None) -> CircuitBase:
+def crt_Element(name: str, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None) -> CircuitBase:
     if not (isinstance(name, str)
             and isinstance(x, (int, float))
             and isinstance(y, (int, float))
@@ -30,44 +32,36 @@ def crt_Element(name: str, x: _tools.numType = 0, y: _tools.numType = 0, z: _too
         return elements.eight_bit_Display(x, y, z)
     else:
         return eval(f"elements.{name.replace(' ', '_').replace('-', '_')}({x},{y},{z})")
-    
 
 # 获取对应坐标的self
-def get_Element(*args, **kwargs) -> Union[elements.CircuitBase, List[elements.CircuitBase]]:
+def get_Element(x: NnumType=None, y: NnumType=None, z: NnumType=None, /, index: NnumType=None) -> Union[CircuitBase, List[CircuitBase]]:
     # 通过坐标索引元件
-    def position_Element(x: _tools.numType, y: _tools.numType, z: _tools.numType):
+    def position_Element(x: numType, y: numType, z: numType):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise TypeError('illegal argument')
+
         position = _tools.roundData(x, y, z)
         if position not in _Expe.elements_Position.keys():
-            raise RuntimeError(f"{position} do not exist")
+            raise phy_errors.ElementNotExistError(f"{position} do not exist")
+
         result: list = _Expe.elements_Position[position]
         return result[0] if len(result) == 1 else result
 
     # 通过index（元件生成顺序）索引元件
     def index_Element(index: int):
+        if not isinstance(index, int):
+            raise TypeError
+
         if 0 < index <= len(_Expe.elements_Index):
             return _Expe.elements_Index[index - 1]
         else:
             raise phy_errors.getElementError
 
     _Expe = stack_Experiment.top()
-    # 如果输入参数为 x=, y=, z=
-    if list(kwargs.keys()) == ['x', 'y', 'z']:
-        return position_Element(kwargs['x'], kwargs['y'], kwargs['z'])
-    # 如果输入参数为 index=
-    elif list(kwargs.keys()) == ['index']:
-        return index_Element(kwargs['index'])
-    # 如果输入的参数在args
-    elif all(isinstance(value, (int, float)) for value in args):
-        # 如果输入参数为坐标
-        if args.__len__() == 3:
-            return position_Element(args[0], args[1], args[2])
-        # 如果输入参数为self._index
-        elif args.__len__() == 1:
-            return index_Element(args[0])
-        else:
-            raise TypeError
+    if None not in [x, y, z]:
+        return position_Element(x, y, z)
+    elif index is not None:
+        return index_Element(index)
     else:
         raise TypeError
 

@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-import physicsLab.phy_errors as _errors
 import physicsLab.circuit as circuit
+import physicsLab.phy_errors as errors
 
 from .wires import union_Pin
-from physicsLab._tools import numType
 from ._unionClassHead import UnionBase
 from physicsLab.circuit.elements import *
-from physicsLab.typehint import Optional, Self, Callable, List, Tuple
+from physicsLab.typehint import Optional, Self, Callable, List, Tuple, numType
 
 # unionHeading与fold的判断的代码
 def _unionHeading_fold(
@@ -461,7 +460,7 @@ class D_WaterLamp(Union_LogicBase):
 
         # main
         if bitLength < 2:
-            raise _errors.bitLengthError
+            raise errors.bitLengthError
 
         if not isinstance(is_loop, bool):
             raise TypeError

@@ -51,7 +51,7 @@ def _check_typeWire(func):
 
     return result
 
-# 新版连接导线
+# 连接导线
 @_check_typeWire
 def crt_Wire(SourcePin: Pin, TargetPin: Pin, color: str = '蓝') -> None:
     stack_Experiment.top().Wires.append({"Source": SourcePin.element_self._arguments["Identifier"], "SourcePin": SourcePin.pinLabel,

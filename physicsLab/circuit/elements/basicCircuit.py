@@ -2,7 +2,7 @@
 from typing import Optional
 
 from ..wire import Pin
-from physicsLab._tools import numType
+from physicsLab.typehint import numType
 from ._elementBase import CircuitBase, two_pin_ArtificialCircuit_Pin
 
 # 开关基类

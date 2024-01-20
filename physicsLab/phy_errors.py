@@ -66,3 +66,6 @@ class ExperimentError(Exception):
 class WarningError(Exception):
     def __str__(self) -> str:
         return "see warning as error"
+
+class ElementNotExistError(Exception):
+    pass

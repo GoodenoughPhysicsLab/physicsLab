@@ -1,10 +1,10 @@
 # 教程
-大家好啊！虽然我在[functions.md](https://gitee.com/script2000/physicsLab/blob/master/functions.md)介绍了一堆函数，但多少让人找不到主次。因此，我决定写下这个教程，以帮助各位更快速地上手physicsLab
+大家好啊！虽然我在[functions.md](functions.md)介绍了一堆函数，但多少让人找不到主次。因此，我决定写下这个教程，以帮助各位更快速地上手physicsLab
 
 ## 第一个程序
 元件浮空几乎成为了修改存档的代名词，因此，就让我们从创建一个悬空的逻辑输入开始吧：
 ```Python
-from physicsLab import experiment
+from physicsLab import experiment, Logic_Input
 
 with experiment("my experiment's name"):
     Logic_Input(0, 0, 0.1)
@@ -45,6 +45,16 @@ write_Experiment()
 ```
 理论上此时就能正常运行了  
 
+如果你不希望打开一个实验，如果实验不存在则创建实验的话，你可以这样写：
+```python
+from physicsLab import \
+    open_or_crt_Experiment, write_Experiment, Logic_Input
+
+open_or_crt_Experiment("my experiment's name")
+Logic_Input(0, 0, 0.1)
+write_Experiment()
+```
+
 ## 创建元件
 创建元件非常简单：
 ```Python
@@ -64,6 +74,18 @@ crt_Element("NE555", 0.1, 0.2, 0) # 创建元件：555定时器
 `name`参数不仅支持紫兰斋在存档中的`ModelID`对应的字符串，还支持`physicsLab`中类的名字
 
 ## 元件坐标系
+物实已有的坐标表示方法往往稍大于一个元件的尺寸，而元件坐标系可以解决这个问题：
+```Python
+from physicsLab import experiment, Logic_Input
+
+with experiment("my experiment's name"):
+    Logic_Input(0, 0, 1, elementXYZ=True)
+```
+所有元件后面都有一个`elementXYZ`参数，当此参数为True时，该原件一定为元件坐标系  
+你还可以全局设置为元件坐标系，此时`elementXYZ=False`会强行使该原件不为元件坐标系  
+```Python
+set_elementXYZ(True) # 将全局设置为元件坐标系
+```
 
 ## 连接导线
 

@@ -2,16 +2,15 @@
 import physicsLab._tools as _tools
 import physicsLab.phy_errors as phy_errors
 
-from typing import Callable, Optional
 from physicsLab.experiment import stack_Experiment
 from physicsLab.experimentType import experimentType
-
+from physicsLab.typehint import Callable, Optional, numType
 
 # 所有电与磁元件的父类
 class _elementBase:
     # 设置原件的角度
-    def set_Rotation(self, xRotation: _tools.numType = 0, yRotation: _tools.numType = 0,
-                     zRotation: _tools.numType = 180):
+    def set_Rotation(self, xRotation: numType = 0, yRotation: numType = 0,
+                     zRotation: numType = 180):
         if not (
                 isinstance(xRotation, (int, float)) and
                 isinstance(yRotation, (int, float)) and
@@ -24,7 +23,7 @@ class _elementBase:
         return self
 
     # 重新设置元件的坐标
-    def set_Position(self, x: _tools.numType, y: _tools.numType, z: _tools.numType):
+    def set_Position(self, x: numType, y: numType, z: numType):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
             raise RuntimeError('illegal argument')
         x, y, z = _tools.roundData(x, y, z)
@@ -49,9 +48,9 @@ _index = 1
 def _element_Init_HEAD(func: Callable) -> Callable:
     def result(
             self,
-            x: _tools.numType = 0,
-            y: _tools.numType = 0,
-            z: _tools.numType = 0,
+            x: numType = 0,
+            y: numType = 0,
+            z: numType = 0,
             elementXYZ: Optional[bool] = None
     ) -> None:
         if not (
@@ -103,7 +102,7 @@ def _element_Init_HEAD(func: Callable) -> Callable:
 # 负电荷
 class Negative_Charge(_elementBase):
     @_element_Init_HEAD
-    def __init__(self, x: _tools.numType, y: _tools.numType, z: _tools.numType):
+    def __init__(self, x: numType, y: numType, z: numType):
         self._arguments = {'ModelID': 'Negative Charge', 'Identifier': '',
                            'Properties': {'锁定': 1.0, '强度': -1e-07, '质量': 0.1},
                            'Position': '', 'Rotation': '', 'Velocity': '0,0,0',
@@ -112,7 +111,7 @@ class Negative_Charge(_elementBase):
 
 class Positive_Charge(_elementBase):
     @_element_Init_HEAD
-    def __init__(self, x: _tools.numType, y: _tools.numType, z: _tools.numType):
+    def __init__(self, x: numType, y: numType, z: numType):
         self._arguments = {'ModelID': 'Positive Charge', 'Identifier': '',
                            'Properties': {'锁定': 1.0, '强度': 1e-07, '质量': 0.1},
                            'Position': '', 'Rotation': '', 'Velocity': '0,0,0',

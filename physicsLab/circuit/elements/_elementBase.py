@@ -4,9 +4,9 @@ import physicsLab.circuit.wire as _elementPin
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.experimentType import experimentType
-from physicsLab.typehint import Optional, NoReturn, Self
+from physicsLab._tools import roundData, randString, position
 from physicsLab.experiment import Experiment, stack_Experiment
-from physicsLab._tools import numType, roundData, randString, position
+from physicsLab.typehint import Optional, NoReturn, Self, numType
 
 # electricity class's metaClass
 class CircuitMeta(type):

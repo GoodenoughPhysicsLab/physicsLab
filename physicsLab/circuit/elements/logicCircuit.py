@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from physicsLab._tools import numType
+from physicsLab.typehint import numType
 from ..wire import InputPin, OutputPin
 from ._elementBase import CircuitBase
 from physicsLab.typehint import Optional, Self
@@ -15,6 +15,7 @@ class _logicBase(CircuitBase):
 
         return self
 
+    # 获取高电平的值
     def get_HighLeaveValue(self) -> numType:
         return self._arguments["Properties"]["高电平"] # type: ignore -> subclass must has attr _arguments
 
@@ -28,6 +29,7 @@ class _logicBase(CircuitBase):
 
         return self
 
+    # 获取高电平的值
     def get_LowLeaveValue(self):
         return self._arguments["Properties"]["低电平"] # type: ignore -> subclass must has attr _arguments
 
@@ -42,6 +44,7 @@ class Logic_Input(_logicBase):
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
                           "DiagramRotation": 0}
 
+    # 将逻辑输入的状态设置为1
     def set_highLevel(self) -> "Logic_Input":
         self._arguments["Properties"][u"开关"] = 1.0
         return self

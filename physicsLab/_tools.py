@@ -2,9 +2,6 @@
 from typing import Tuple, Union, List
 from collections import namedtuple
 
-# type hint
-numType = Union[int, float]
-
 # class position
 position = namedtuple("position", ["x", "y", "z"])
 

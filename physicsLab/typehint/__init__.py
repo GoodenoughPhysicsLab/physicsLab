@@ -8,3 +8,5 @@ except ImportError:
         from .typing_extensions import Self
 
 from typing import *
+
+numType = Union[int, float]

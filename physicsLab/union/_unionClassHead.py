@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-from typing import Optional
-
 import physicsLab.phy_errors as phy_errors
 import physicsLab.circuit.elements as elements
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
-from physicsLab._tools import numType, roundData
+from physicsLab._tools import roundData
+from physicsLab.typehint import numType, Optional
 from physicsLab.experiment import stack_Experiment
 from physicsLab.experimentType import experimentType
 

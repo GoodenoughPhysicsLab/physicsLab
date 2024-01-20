@@ -4,9 +4,9 @@
 # 单位y是一个是门的宽
 # 单位z为物实默认坐标系的0.1
 
-import physicsLab._tools as _tools
 import physicsLab.phy_errors as phy_errors
 
+from physicsLab.typehint import numType
 from physicsLab.experiment import stack_Experiment
 from physicsLab.experimentType import experimentType
 
@@ -27,9 +27,9 @@ def is_elementXYZ() -> bool:
     return _elementXYZ
 
 # 物实坐标系x, y, z单位1
-_xUnit: _tools.numType = 0.16
-_yUnit: _tools.numType = 0.08
-_zUnit: _tools.numType = 0.1
+_xUnit: numType = 0.16
+_yUnit: numType = 0.08
+_zUnit: numType = 0.1
 # big_element坐标修正
 _yAmend = 0.045
 
@@ -39,7 +39,7 @@ _xOrigin, _yOrigin, _zOrigin = 0, 0, 0
 ### end define ###
 
 # 将元件坐标系转换为物实支持的坐标系
-def xyzTranslate(x: _tools.numType, y: _tools.numType, z: _tools.numType):
+def xyzTranslate(x: numType, y: numType, z: numType):
     if stack_Experiment.top().ExperimentType != experimentType.Circuit:
         raise phy_errors.ExperimentTypeError
 
@@ -53,7 +53,7 @@ def xyzTranslate(x: _tools.numType, y: _tools.numType, z: _tools.numType):
     return x, y, z
 
 # 将物实支持的坐标系转换为元件坐标系
-def translateXYZ(x: _tools.numType, y: _tools.numType, z: _tools.numType, bigElement: bool = False):
+def translateXYZ(x: numType, y: numType, z: numType, bigElement: bool = False):
     if stack_Experiment.top().ExperimentType != experimentType.Circuit:
         raise phy_errors.ExperimentTypeError
 
@@ -71,7 +71,7 @@ def translateXYZ(x: _tools.numType, y: _tools.numType, z: _tools.numType, bigEle
     return x, y, z
 
 # 设置元件坐标系原点O，输入值为物实坐标系
-def set_O(x: _tools.numType, y: _tools.numType, z: _tools.numType) -> None:
+def set_O(x: numType, y: numType, z: numType) -> None:
     if (isinstance(x, (int, float)) and
         isinstance(y, (int, float)) and
         isinstance(z, (int, float))
@@ -83,9 +83,9 @@ def set_O(x: _tools.numType, y: _tools.numType, z: _tools.numType) -> None:
 
 # 修正bigElement的坐标
 def amend_big_Element(
-        x: _tools.numType,
-        y: _tools.numType, 
-        z: _tools.numType
+        x: numType,
+        y: numType, 
+        z: numType
     ):
     return x, y + _yAmend, z
 

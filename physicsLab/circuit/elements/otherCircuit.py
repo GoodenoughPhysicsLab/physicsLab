@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from ..wire import Pin
-from physicsLab._tools import numType
-from physicsLab.typehint import Optional, Self, List, Union
+from physicsLab.typehint import Optional, Self, List, Union, numType
 from ._elementBase import CircuitBase, two_pin_ArtificialCircuit_Pin
 
 # 小电扇

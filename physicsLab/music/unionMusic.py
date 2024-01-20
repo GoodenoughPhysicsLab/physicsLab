@@ -8,9 +8,9 @@ import physicsLab.circuit.elementXYZ as _elementXYZ
 from math import ceil, sqrt
 from enum import Enum, unique
 
-from physicsLab._tools import numType, roundData
+from physicsLab._tools import roundData
 from physicsLab.union import crt_Wires, D_WaterLamp
-from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self
+from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, numType
 
 def _format_velocity(velocity: float) -> float:
     velocity = min(1, velocity)
