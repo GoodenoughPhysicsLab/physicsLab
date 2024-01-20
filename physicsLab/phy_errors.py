@@ -6,7 +6,7 @@ from typing import Optional
 import physicsLab._colorUtils as _colorUtils
 
 # 抛出警告, 当warning_status==False
-def warning(msg: str, warning_status: Optional[bool]=False) -> None:
+def warning(msg: str, warning_status: Optional[bool]=None) -> None:
     if warning_status is None:
         _colorUtils.color_print("Warning: " + msg, _colorUtils.COLOR.YELLOW)
     elif warning_status:
