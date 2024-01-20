@@ -423,8 +423,6 @@ class experiment:
             return
         if self.write:
             self._Experiment.write(extra_filepath=self.extra_filepath, no_pop=self.delete)
-            if not self.delete:
-                return
         if self.delete:
             self._Experiment.delete(self.delete_warning_status)
             return
