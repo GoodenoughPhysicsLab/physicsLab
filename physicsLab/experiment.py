@@ -80,7 +80,9 @@ class Experiment:
             sav_dict["Experiment"]["StatusSave"] = None
             self.PlSav = sav_dict
 
-        self.ExperimentType = {
+        self.CameraSave = json.loads(self.PlSav["Experiment"]["CameraSave"])
+
+        self.ExperimentType: experimentType = {
             experimentType.Circuit.value: experimentType.Circuit,
             experimentType.Celestial.value: experimentType.Celestial,
             experimentType.Electromagnetism.value: experimentType.Electromagnetism
@@ -133,24 +135,27 @@ class Experiment:
         self.is_crt = True
         self.ExperimentType = experiment_type
 
-        self.FileName = _tools.randString(34)
-        self.SavPath = f"{Experiment.FILE_HEAD}/{self.FileName}.sav"
+        self.FileName = f"{_tools.randString(34)}.sav"
+        self.SavPath = f"{Experiment.FILE_HEAD}/{self.FileName}"
 
         if self.ExperimentType == experimentType.Circuit:
             self.PlSav: dict = copy.deepcopy(savTemplate.Circuit)
             self.Wires: List[dict] = [] # 存档对应的导线
             # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
+            self.CameraSave: dict = {"Mode": 0, "Distance": 2.7, "VisionCenter": "0,1.08,-0.45", "TargetRotation": "50,0,0"}
 
         elif self.ExperimentType == experimentType.Celestial:
             self.PlSav: dict = copy.deepcopy(savTemplate.Celestial)
             self.StatusSave: dict = {"MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
                                      "ScalingName": "内太阳系", "LengthScale": 1.0, "SizeLinear": 0.0001,
                                      "SizeNonlinear": 0.5, "StarPresent": False, "Setting": None}
+            self.CameraSave: dict = {"Mode": 2, "Distance": 2.75, "VisionCenter": "0,1.08,0", "TargetRotation": "90,0,0"}
 
         elif self.ExperimentType == experimentType.Electromagnetism:
             self.PlSav: dict = copy.deepcopy(savTemplate.Electromagnetism)
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
+            self.CameraSave: dict = {"Mode": 0, "Distance": 3.25, "VisionCenter": "0,0.88,0", "TargetRotation": "90,0,0"}
 
         self.entitle(sav_name)
     
@@ -272,6 +277,9 @@ class Experiment:
 
         if not no_pop:
             stack_Experiment.pop()
+        
+        if self.PlSav["Experiment"]["CameraSave"] is None:
+            self.PlSav["Experiment"]["CameraSave"] = json.dumps(self.CameraSave)
 
         self.StatusSave["Elements"] = self.Elements
         if self.ExperimentType == experimentType.Circuit:
@@ -313,9 +321,9 @@ class Experiment:
 
         if os.path.exists(self.SavPath): # 如果一个实验被创建但还未被写入, 就会触发错误
             os.remove(self.SavPath)
-            _colorUtils.color_print(f"Successfully delete experiment {self.PlSav['InternalName']}({self.FileName}.sav)!", _colorUtils.COLOR.BLUE)
+            _colorUtils.color_print(f"Successfully delete experiment {self.PlSav['InternalName']}({self.FileName})!", _colorUtils.COLOR.BLUE)
         else:
-            phy_errors.warning(f"experiment {self.PlSav['InternalName']}({self.FileName}.sav) do not exist.", warning_status)
+            phy_errors.warning(f"experiment {self.PlSav['InternalName']}({self.FileName}) do not exist.", warning_status)
 
         if os.path.exists(self.SavPath.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
             os.remove(self.SavPath.replace(".sav", ".jpg"))

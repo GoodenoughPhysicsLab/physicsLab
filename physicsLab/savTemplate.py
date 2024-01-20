@@ -10,7 +10,7 @@ Circuit = {
         "Components": 7,
         "Subject": None,
         "StatusSave": None, # 运行时动态生成
-        "CameraSave": "{\"Mode\":0,\"Distance\":2.7,\"VisionCenter\":\"0.3623461,1.08,-0.4681728\",\"TargetRotation\":\"50,0,0\"}",
+        "CameraSave": None, # 运行时动态生成
         "Version": 2404,
         "CreationDate": 1673100860436,
         "Paused": False,
@@ -92,7 +92,7 @@ Celestial = {
         "Components": 0,
         "Subject": None,
         "StatusSave": None, # 运行时动态生成
-        "CameraSave": "{\"Mode\":2,\"Distance\":2.75,\"VisionCenter\":\"0,1.08,0\",\"TargetRotation\":\"90,0,0\"}",
+        "CameraSave": None, # 运行时动态生成
         "Version": 2407,
         "CreationDate": 1702570435066,
         "Paused": False,
@@ -175,7 +175,7 @@ Electromagnetism = {
         "Components": 1,
         "Subject": None,
         "StatusSave": None, # 运行时动态生成
-        "CameraSave": '{"Mode":0,"Distance":3.25,"VisionCenter":"0.1673855,0.88,0.05990592","TargetRotation":"90,0,0"}',
+        "CameraSave": None, # 运行时动态生成
         "Version": 2405,
         "CreationDate": 1683039963710,
         "Paused": False,

@@ -34,7 +34,7 @@ def crt_Element(name: str, x: numType = 0, y: numType = 0, z: numType = 0, eleme
         return eval(f"elements.{name.replace(' ', '_').replace('-', '_')}({x},{y},{z})")
 
 # 获取对应坐标的self
-def get_Element(x: NnumType=None, y: NnumType=None, z: NnumType=None, /, index: NnumType=None) -> Union[CircuitBase, List[CircuitBase]]:
+def get_Element(x: NnumType=None, y: NnumType=None, z: NnumType=None, *, index: NnumType=None) -> Union[CircuitBase, List[CircuitBase]]:
     # 通过坐标索引元件
     def position_Element(x: numType, y: numType, z: numType):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
