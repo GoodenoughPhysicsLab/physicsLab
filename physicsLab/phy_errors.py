@@ -14,8 +14,12 @@ def warning(msg: str, warning_status: Optional[bool]=None) -> None:
 
 # 打开实验异常
 class OpenExperimentError(Exception):
+    err_str = "open a experiment but find nothing(must open a experiment)."
+    def __init__(self, err_str: Optional[str]=None) -> None:
+        OpenExperimentError.err_str = err_str
+
     def __str__(self):
-        return "open a experiment but find nothing(must open a experiment)."
+        return self.err_str
 
 # 导线颜色类型异常
 class WireColorError(Exception):

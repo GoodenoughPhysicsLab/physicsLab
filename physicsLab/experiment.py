@@ -12,6 +12,8 @@ import physicsLab._colorUtils as _colorUtils
 from physicsLab.experimentType import experimentType
 from physicsLab.typehint import Union, Optional, List, Self
 
+ENCODING = "utf-8"
+
 # 最新被操作的存档
 class stack_Experiment:
     __single_instance: Optional["stack_Experiment"] = None
@@ -75,9 +77,8 @@ class Experiment:
         self.is_open = True
 
         self.SavPath = f"{Experiment.FILE_HEAD}/{_File}"
-        with open(self.SavPath, encoding="utf-8") as f:
+        with open(self.SavPath, encoding=ENCODING) as f:
             sav_dict = json.loads(f.read().replace('\n', ''))
-            sav_dict["Experiment"]["StatusSave"] = None
             self.PlSav = sav_dict
 
         self.CameraSave = json.loads(self.PlSav["Experiment"]["CameraSave"])
@@ -278,8 +279,7 @@ class Experiment:
         if not no_pop:
             stack_Experiment.pop()
         
-        if self.PlSav["Experiment"]["CameraSave"] is None:
-            self.PlSav["Experiment"]["CameraSave"] = json.dumps(self.CameraSave)
+        self.PlSav["Experiment"]["CameraSave"] = json.dumps(self.CameraSave)
 
         self.StatusSave["Elements"] = self.Elements
         if self.ExperimentType == experimentType.Circuit:
@@ -368,6 +368,10 @@ class Experiment:
         name_Experiment(title)
 
         return self
+    
+    # 设置实验者的视角
+    def viewing(self):
+        self.CameraSave
 
 # 仅供with时使用
 class experiment:
@@ -443,17 +447,38 @@ def getAllSav() -> List:
     return [aSav for aSav in savs if aSav.endswith('sav')]
 
 # 检测实验是否存在，输入为存档名，若存在则返回存档对应的文件名，若不存在则返回None
-def search_Experiment(sav_name: str) -> Union[str, None]:
+#TODO 可以不必返回文件名, 而是直接返回存档对应的dict
+def search_Experiment(sav_name: str) -> Optional[str]:
+    def encode_sav(path: str, encoding: str) -> Optional[dict]:
+        with open(path, encoding=encoding) as f:
+            try:
+                d = json.loads(f.read().replace('\n', ''))
+            except json.decoder.JSONDecodeError or UnicodeDecodeError: # 文件不是物实存档
+                return None
+            else:
+                return d
+
     savs = getAllSav()
     for aSav in savs:
-        with open(f"{Experiment.FILE_HEAD}/{aSav}", encoding='utf-8') as f:
-            try:
-                f = json.loads(f.read().replace('\n', ''))
-            except json.decoder.JSONDecodeError: # 文件不是物实存档
-                continue
-            else:
-                if f["InternalName"] == sav_name:
-                    return aSav
+        try:
+            import chardet # check encoding of file
+        except ImportError:
+            for encoding in ("utf-8", "utf-8-sig", "gbk", "ansi"):
+                sav = encode_sav(f"{Experiment.FILE_HEAD}/{aSav}", encoding)
+                if sav is not None:
+                    if sav["InternalName"] == sav_name:
+                        global ENCODING
+                        ENCODING = encoding
+                        return aSav
+                    else:
+                        break
+
+        else:
+            with open(f"{Experiment.FILE_HEAD}/{aSav}", "rb") as f:
+                encoding = chardet.detect(f.read())["encoding"]
+            
+            encode_sav(f"{Experiment.FILE_HEAD}/{aSav}", encoding)
+
     return None
 
 # 以下为旧式调用方式， 为兼容代码
