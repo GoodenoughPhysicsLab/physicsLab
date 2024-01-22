@@ -450,34 +450,25 @@ def getAllSav() -> List:
 #TODO 可以不必返回文件名, 而是直接返回存档对应的dict
 def search_Experiment(sav_name: str) -> Optional[str]:
     def encode_sav(path: str, encoding: str) -> Optional[dict]:
-        with open(path, encoding=encoding) as f:
-            try:
+        try:
+            with open(path, encoding=encoding) as f:
                 d = json.loads(f.read().replace('\n', ''))
-            except json.decoder.JSONDecodeError or UnicodeDecodeError: # 文件不是物实存档
-                return None
-            else:
-                return d
+        except json.decoder.JSONDecodeError or UnicodeDecodeError: # 文件不是物实存档
+            return None
+        else:
+            return d
 
+    global ENCODING
     savs = getAllSav()
     for aSav in savs:
-        try:
-            import chardet # check encoding of file
-        except ImportError:
-            for encoding in ("utf-8", "utf-8-sig", "gbk", "ansi"):
-                sav = encode_sav(f"{Experiment.FILE_HEAD}/{aSav}", encoding)
-                if sav is not None:
-                    if sav["InternalName"] == sav_name:
-                        global ENCODING
-                        ENCODING = encoding
-                        return aSav
-                    else:
-                        break
-
-        else:
-            with open(f"{Experiment.FILE_HEAD}/{aSav}", "rb") as f:
-                encoding = chardet.detect(f.read())["encoding"]
-            
-            encode_sav(f"{Experiment.FILE_HEAD}/{aSav}", encoding)
+        for encoding in ("utf-8", "utf-8-sig", "gbk", "ansi"):
+            sav = encode_sav(f"{Experiment.FILE_HEAD}/{aSav}", encoding)
+            if sav is not None:
+                if sav["InternalName"] == sav_name:
+                    ENCODING = encoding
+                    return aSav
+                else:
+                    break
 
     return None
 
