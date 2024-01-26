@@ -10,9 +10,7 @@ import physicsLab.savTemplate as savTemplate
 import physicsLab._colorUtils as _colorUtils
 
 from physicsLab.experimentType import experimentType
-from physicsLab.typehint import Union, Optional, List, Self
-
-ENCODING = "utf-8"
+from physicsLab.typehint import Union, Optional, List, Self, Dict
 
 # 最新被操作的存档
 class stack_Experiment:
@@ -65,22 +63,15 @@ class Experiment:
         self.SavPath: Optional[str] = None # 存档的完整路径, 为 f"{experiment.FILE_HEAD}/{self.FileName}"
         self.Elements: list = [] # 装原件的_arguments
         # 通过坐标索引元件
-        self.elements_Position: dict = {}  # key: self._position, value: List[self...]
+        self.elements_Position: Dict[tuple, list] = {}  # key: self._position, value: List[self...]
         # 通过index（元件生成顺序）索引元件
         self.elements_Index: list = [] # List[self]
 
         if sav_name is not None:
             self.open(sav_name)
-
-    # 只能通过sav文件名的方式打开文件
-    def __open(self, _File) -> "Experiment":
+    
+    def __open(self) -> None:
         self.is_open = True
-
-        self.SavPath = f"{Experiment.FILE_HEAD}/{_File}"
-        with open(self.SavPath, encoding=ENCODING) as f:
-            sav_dict = json.loads(f.read().replace('\n', ''))
-            self.PlSav = sav_dict
-
         self.CameraSave = json.loads(self.PlSav["Experiment"]["CameraSave"])
 
         self.ExperimentType: experimentType = {
@@ -109,9 +100,7 @@ class Experiment:
             if self.PlSav["Summary"] is None:
                 self.PlSav["Summary"] = savTemplate.Electromagnetism["Summary"]
 
-        return self
-
-    # 打开一个指定的sav文件（支持输入本地实验的名字或sav文件名）
+    # 打开一个指定的sav文件 (支持输入本地实验的名字或sav文件名)
     def open(self, sav_name : str) -> "Experiment":
         if self.is_open_or_crt:
             raise phy_errors.experimentExistError
@@ -121,15 +110,23 @@ class Experiment:
         sav_name = sav_name.strip()
         if sav_name.endswith('.sav'):
             self.FileName = sav_name
-            self.__open(sav_name)
-            return
+            self.SavPath = f"{Experiment.FILE_HEAD}/{sav_name}"
+            if not os.path.exists(self.SavPath):
+                stack_Experiment.pop()
+                raise phy_errors.OpenExperimentError(f'No such experiment "{sav_name}"')
+            self.PlSav = _open_sav(self.SavPath)
+            self.__open()
+            return self
 
         self.FileName = search_Experiment(sav_name)
+        self.SavPath = f"{Experiment.FILE_HEAD}/{self.FileName}"
         if self.FileName is None:
             stack_Experiment.pop()
             raise phy_errors.OpenExperimentError(f'No such experiment "{sav_name}"')
 
-        self.__open(self.FileName)
+        self.PlSav = search_Experiment.sav
+        self.__open()
+
         return self
 
     def __crt(self, sav_name: str, experiment_type: experimentType = experimentType.Circuit) -> None:
@@ -173,7 +170,10 @@ class Experiment:
         if not force_crt and search is not None:
             raise phy_errors.crtExperimentFailError
         elif force_crt and search is not None:
-            Experiment(search).delete()
+            path = f"{Experiment.FILE_HEAD}/{search}"
+            os.remove(path)
+            if os.path.exists(path.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
+                os.remove(path.replace(".sav", ".jpg"))
 
         stack_Experiment.push(self)
 
@@ -192,7 +192,9 @@ class Experiment:
         
         self.FileName = search_Experiment(savName)
         if self.FileName is not None:
-            self.__open(self.FileName)
+            self.SavPath = f"{Experiment.FILE_HEAD}/{self.FileName}"
+            self.PlSav = search_Experiment.sav
+            self.__open()
         else:
             self.__crt(savName, experimentType)
         return self
@@ -209,56 +211,55 @@ class Experiment:
             phy_errors.warning("can not read because you create this experiment")
             return self
 
-        with open(self.SavPath, encoding='utf-8') as f:
-            status_sav = json.loads(json.loads(f.read().replace('\n', ''))["Experiment"]["StatusSave"])
-            # 元件
-            _local_Elements = status_sav["Elements"]
-            # 导线
+        status_sav = json.loads(self.PlSav["Experiment"]["StatusSave"])
+        # 元件
+        _local_Elements = status_sav["Elements"]
+        # 导线
+        if self.ExperimentType == experimentType.Circuit:
+            self.Wires = status_sav['Wires']
+
+        for element in _local_Elements:
+            # 坐标标准化 (消除浮点误差)
+            position = eval(f"({element['Position']})")
+            x, y, z = position[0], position[2], position[1]
+
+            # 实例化对象
+            from physicsLab.element import crt_Element
+
             if self.ExperimentType == experimentType.Circuit:
-                self.Wires = status_sav['Wires']
-
-            for element in _local_Elements:
-                # 坐标标准化 (消除浮点误差)
-                position = eval(f"({element['Position']})")
-                x, y, z = position[0], position[2], position[1]
-
-                # 实例化对象
-                from physicsLab.element import crt_Element
-
-                if self.ExperimentType == experimentType.Circuit:
-                    if element["ModelID"] == "Simple Instrument":
-                        from .circuit.elements.otherCircuit import Simple_Instrument
-                        obj = Simple_Instrument(
-                            x, y, z, elementXYZ=False,
-                            instrument=element["Properties"]["乐器"],
-                            pitch=element["Properties"]["音高"],
-                            velocity=element["Properties"]["音量"],
-                            rated_oltage=element["Properties"]["额定电压"],
-                            is_ideal_model=bool(element["Properties"]["理想模式"]),
-                            is_single=int(element["Properties"]["脉冲"])
-                        )
-                        for attr, val in element["Properties"].items():
-                            if attr.startswith("音高"):
-                                obj.add_note(val)
-                    else:
-                        obj = crt_Element(element["ModelID"], x, y, z, elementXYZ=False)
+                if element["ModelID"] == "Simple Instrument":
+                    from .circuit.elements.otherCircuit import Simple_Instrument
+                    obj = Simple_Instrument(
+                        x, y, z, elementXYZ=False,
+                        instrument=element["Properties"]["乐器"],
+                        pitch=element["Properties"]["音高"],
+                        velocity=element["Properties"]["音量"],
+                        rated_oltage=element["Properties"]["额定电压"],
+                        is_ideal_model=bool(element["Properties"]["理想模式"]),
+                        is_single=int(element["Properties"]["脉冲"])
+                    )
+                    for attr, val in element["Properties"].items():
+                        if attr.startswith("音高"):
+                            obj.add_note(val)
                 else:
-                    obj = crt_Element(element["ModelID"], x, y, z) # type: ignore -> num type: int | float
+                    obj = crt_Element(element["ModelID"], x, y, z, elementXYZ=False)
+            else:
+                obj = crt_Element(element["ModelID"], x, y, z) # type: ignore -> num type: int | float
 
-                rotation = eval(f'({element["Rotation"]})')
-                x = rotation[0]
-                z = rotation[1]
-                y = rotation[2]
-                obj.set_Rotation(x, y, z)
-                obj._arguments['Identifier'] = element['Identifier']
-                from .circuit.elements.logicCircuit import Logic_Input, eight_bit_Input
-                # 如果obj是逻辑输入
-                if isinstance(obj, Logic_Input) and element['Properties'].get('开关') == 1:
-                    obj.set_highLevel()
-                # 如果obj是8位输入器
-                elif isinstance(obj, eight_bit_Input):
-                    obj._arguments['Statistics'] = element['Statistics']
-                    obj._arguments['Properties']['十进制'] = element['Properties']['十进制']
+            rotation = eval(f'({element["Rotation"]})')
+            x = rotation[0]
+            z = rotation[1]
+            y = rotation[2]
+            obj.set_Rotation(x, y, z)
+            obj._arguments['Identifier'] = element['Identifier']
+            from .circuit.elements.logicCircuit import Logic_Input, eight_bit_Input
+            # 如果obj是逻辑输入
+            if isinstance(obj, Logic_Input) and element['Properties'].get('开关') == 1:
+                obj.set_highLevel()
+            # 如果obj是8位输入器
+            elif isinstance(obj, eight_bit_Input):
+                obj._arguments['Statistics'] = element['Statistics']
+                obj._arguments['Properties']['十进制'] = element['Properties']['十进制']
 
     # 以物实存档的格式导出实验
     def write(self, extra_filepath: Optional[str] = None, ln: bool = False, no_pop: bool = False) -> "Experiment":
@@ -446,29 +447,40 @@ def getAllSav() -> List:
     savs = savs[savs.__len__() - 1]
     return [aSav for aSav in savs if aSav.endswith('sav')]
 
-# 检测实验是否存在，输入为存档名，若存在则返回存档对应的文件名，若不存在则返回None
-#TODO 可以不必返回文件名, 而是直接返回存档对应的dict
-def search_Experiment(sav_name: str) -> Optional[str]:
+# 打开一个存档, 返回存档对应的dict
+def _open_sav(sav_name) -> dict:
     def encode_sav(path: str, encoding: str) -> Optional[dict]:
         try:
             with open(path, encoding=encoding) as f:
                 d = json.loads(f.read().replace('\n', ''))
-        except json.decoder.JSONDecodeError or UnicodeDecodeError: # 文件不是物实存档
+        except (json.decoder.JSONDecodeError, UnicodeDecodeError): # 文件不是物实存档
             return None
         else:
             return d
 
-    global ENCODING
-    savs = getAllSav()
-    for aSav in savs:
-        for encoding in ("utf-8", "utf-8-sig", "gbk", "ansi"):
-            sav = encode_sav(f"{Experiment.FILE_HEAD}/{aSav}", encoding)
-            if sav is not None:
-                if sav["InternalName"] == sav_name:
-                    ENCODING = encoding
-                    return aSav
-                else:
-                    break
+    res = encode_sav(f"{Experiment.FILE_HEAD}/{sav_name}", "utf-8")
+    if res is not None:
+        return res
+
+    try:
+        import chardet
+    except ImportError:
+        for encoding in ("utf-8-sig", "gbk"):
+            res = encode_sav(f"{Experiment.FILE_HEAD}/{sav_name}", encoding)
+            if res is not None:
+                return res
+    else:
+        with open(f"{Experiment.FILE_HEAD}/{sav_name}", "rb") as f:
+            encoding = chardet.detect(f.read())["encoding"]
+        return encode_sav(f"{Experiment.FILE_HEAD}/{sav_name}", encoding)
+
+# 检测实验是否存在，输入为存档名，若存在则返回存档对应的文件名，若不存在则返回None
+def search_Experiment(sav_name: str) -> Optional[str]:
+    for aSav in getAllSav():
+        sav = _open_sav(aSav)
+        if sav["InternalName"] == sav_name:
+            search_Experiment.sav = sav
+            return aSav
 
     return None
 

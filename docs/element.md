@@ -46,6 +46,32 @@ with experiment("example"):
     Or_Gate(0, 0, 0.1) # index = 2
 ``` 
 
+> <font color=red>Note:</font>  
+> `get_Element`用来索引的坐标为创建元件时对应的坐标, 与是否为元件坐标系无关
+
+用一个简单的例子来说明:
+```Python
+with experiment("example"):
+   Logic_Input(1, 0, 0, elementXYZ=True)
+   Logic_Output(1, 0, 0)
+   print(get_Element(1, 0, 0))
+
+with experiment("example", read=True):
+   Logic_Input(1, 0, 0, elementXYZ=True)
+   Logic_Output(1, 0, 0)
+   print(get_Element(1, 0, 0))
+```
+输出结果:
+```
+[<physicsLab.circuit.elements.logicCircuit.Logic_Input object at 0x000000000247AE80>, <physicsLab.circuit.elements.logicCircuit.Logic_Output object at 0x000000000247AEE0>]
+Successfully compiled experiment "example"! 2 elements, 0 wires.
+[<physicsLab.circuit.elements.logicCircuit.Logic_Output object at 0x0000000002D1DA90>, <physicsLab.circuit.elements.logicCircuit.Logic_Input object at 0x000000000247AEE0>, <physicsLab.circuit.elements.logicCircuit.Logic_Output object at 0x0000000002A28C40>]
+Successfully compiled experiment "example"! 4 elements, 0 wires.
+```
+
+你能理解为什么第二次打印时输出的列表长度为3吗?  
+因为在上一次写入的时候会将元件坐标系自动转化为物实坐标系, 在第二次read的时候会直接读取存档内的物实坐标系, 那么上一次创建时的`Logic_Input(1, 0, 0elementXYZ=True)`自然就不会在后面read这次的坐标索引中被找到了
+
 ## 删除元件
 我们也可以删除元件：
 ```python
