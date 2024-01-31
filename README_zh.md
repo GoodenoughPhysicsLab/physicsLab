@@ -13,10 +13,16 @@
 ## 安装教程
 
 1.  请确保你的电脑有[Python](https://www.python.org)（大于3.6）与[物理实验室PC版](https://www.turtlesim.com/)（也可以联系[开发者Jone-Chen](https://gitee.com/civitasjohn)）
-2.  在cmd或shell输入：
+
+2.  在cmd或shell输入以下载physicsLab：
 ```shell
 pip install physicsLab
 ```
+在某些非正常情况，你可能无法顺利使用`pip`，此时你可以换为该命令来解决该问题：
+```shell
+python -m pip install physicsLab
+```
+
 3.  有一个并非必需的功能：播放midi。你可以输入下面命令的任意一条：
 ```shell
 pip install plmidi
@@ -24,10 +30,15 @@ pip install pygame
 ```
 点击跳转至[plmidi](https://github.com/GoodenoughPhysicsLab/plmidi)  
 之所以没有做安装physicsLab的时候自动安装这两个库，是因为安卓的`qpython`在下载含c的库的时候存在问题  
-1.  如果你等不及使用一些新功能的话，测试版通常在gitee可以找到
+
+4.  物实存档使用了中文字符，默认编码为`utf-8`。但在一些非正常情况，存档的编码可能被改变。虽然`physicsLab`有一定的处理存档编码问题的能力，但如果还是出现了问题，请输入该命令：
+```bash
+pip install chardet
+```
+此时`physicsLab`会自动调用`chardet`来处理更加棘手的文件编码问题。  
 
 ## 搭建开发环境
-切换至physicsLab根目录，输入以下指令：
+切换至physicsLab根目录，输入以下指令 (仅限于`Windows`) ：
 ```
 .\cmd\setup_project.bat
 ```
@@ -41,7 +52,7 @@ pip安装的包会被放在site-package文件夹下
 如果此方法失效了，虽然这一定不是这个方法的问题，但你还可以在python的开头写上这两行代码来解决这个问题：  
 ```python
 import sys
-sys.path.append("your physicsLab's path") # 将字符串替换为你想添加的路径
+sys.path.append("/your/path/of/physicsLab") # 将字符串替换为你想添加的路径
 ```
 这个方法很丑陋但很简单好用，可以帮你快速解决问题，毕竟能跑起来就很不错了   
 其原理是python会在sys.path这个列表里面的路径去寻找python package，若未找到则会报错。因此该方法的原理就是把python找不到的路径加进去，python就找到了   
@@ -57,6 +68,8 @@ python3.6及以上应该没问题
 ## 使用说明
 *目前```physicsLab```在```windows```上的支持最好，在`Android`上仅支持手动导入/导出存档（默认在```physicsLabSav```文件夹中）。*  
 其他操作系统上的行为与在`Android`  上应该一致，但未经过测试。  
+
+> 在新版`qpython`中大大削减了python在文件路径操作方面的权限，这意味着在qpython上使用physicsLab生成的存档将很难被物实导入，因为物实没权限访问不了。
 
 下面给出一个简单的例子（该例子仅用于讲解，你大概率无法运行）：
 ```Python
