@@ -69,7 +69,8 @@ python3.6及以上应该没问题
 *目前```physicsLab```在```windows```上的支持最好，在`Android`上仅支持手动导入/导出存档（默认在```physicsLabSav```文件夹中）。*  
 其他操作系统上的行为与在`Android`  上应该一致，但未经过测试。  
 
-> 在新版`qpython`中大大削减了python在文件路径操作方面的权限，这意味着在qpython上使用physicsLab生成的存档将很难被物实导入，因为物实没权限访问不了。
+> 在`qpython v3.2.5`中大大削减了python在文件路径操作方面的权限，这意味着在qpython上使用physicsLab生成的存档将很难被物实导入，因为物实没权限访问不了。
+> 但此问题在[qpython v3.2.3](https://github.com/qpython-android/qpython/releases/tag/v3.2.3)中不存在，推荐下载该版本。
 
 下面给出一个简单的例子（该例子仅用于讲解，你大概率无法运行）：
 ```Python
