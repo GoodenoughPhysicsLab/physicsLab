@@ -68,7 +68,7 @@ class Experiment:
         self.elements_Index: list = [] # List[self]
 
         if sav_name is not None:
-            self.open(sav_name)
+            self.open_or_crt(sav_name)
     
     def __open(self) -> None:
         self.is_open = True
@@ -271,11 +271,11 @@ class Experiment:
             return stringJson
 
         if self.SavPath is None: # 检查是否已经.open()或.crt()
-            raise phy_errors.ExperimentError("write after open or crt")
+            raise phy_errors.ExperimentError("write before open or crt")
         if self.is_open_or_crt == True:
             self.is_open_or_crt = False
         else:
-            raise phy_errors.ExperimentError("write after open or crt")
+            raise phy_errors.ExperimentError("write before open or crt")
 
         if not no_pop:
             stack_Experiment.pop()
@@ -300,15 +300,19 @@ class Experiment:
                 f.write(context)
 
         # 编译成功，打印信息
+        if self.is_open:
+            status = "update"
+        elif self.is_crt:
+            status = "create"
         if self.ExperimentType == experimentType.Circuit:
             _colorUtils.color_print(
-                f"Successfully compiled experiment \"{self.PlSav['InternalName']}\"! "
+                f"Successfully {status} experiment \"{self.PlSav['InternalName']}\"! "
                 f"{self.Elements.__len__()} elements, {self.Wires.__len__()} wires.",
                 color=_colorUtils.COLOR.GREEN
             )
         else:
             _colorUtils.color_print(
-                f"Successfully compiled experiment \"{self.PlSav['InternalName']}\"! "
+                f"Successfully {status} experiment \"{self.PlSav['InternalName']}\"! "
                 f"{self.Elements.__len__()} elements.",
                 color=_colorUtils.COLOR.GREEN
             )
