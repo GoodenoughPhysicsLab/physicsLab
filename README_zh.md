@@ -12,7 +12,7 @@
 
 ## 安装教程
 
-1.  请确保你的电脑有[Python](https://www.python.org)（大于3.6）与[物理实验室PC版](https://www.turtlesim.com/)（也可以联系[开发者Jone-Chen](https://gitee.com/civitasjohn)）
+1.  请确保你的电脑有[Python](https://www.python.org)（大于等于3.7）与[物理实验室PC版](https://www.turtlesim.com/)（简称`物实`）（也可以联系[开发者Jone-Chen](https://gitee.com/civitasjohn)）
 
 2.  在cmd或shell输入以下载physicsLab：
 ```shell
@@ -22,6 +22,10 @@ pip install physicsLab
 ```shell
 python -m pip install physicsLab
 ```
+在`Windows`下，该命令等价于:
+```shell
+py -m pip install physicsLab
+```
 
 3.  有一个并非必需的功能：播放midi。你可以输入下面命令的任意一条：
 ```shell
@@ -29,6 +33,8 @@ pip install plmidi
 pip install pygame
 ```
 点击跳转至[plmidi](https://github.com/GoodenoughPhysicsLab/plmidi)  
+> <font color=red>Note: </font>由于作者遇到`python -m build`的bug与`github ci`的一些限制，导致作者暂时不再考虑将`plmidi`上传至`pypi`。[获取最新的plmidi版本](https://github.com/GoodenoughPhysicsLab/plmidi/releases)，解压即可运行。
+
 之所以没有做安装physicsLab的时候自动安装这两个库，是因为安卓的`qpython`在下载含c的库的时候存在问题  
 
 4.  物实存档使用了中文字符，默认编码为`utf-8`。但在一些非正常情况，存档的编码可能被改变。虽然`physicsLab`有一定的处理存档编码问题的能力，但如果还是出现了问题，请输入该命令：
@@ -37,13 +43,22 @@ pip install chardet
 ```
 此时`physicsLab`会自动调用`chardet`来处理更加棘手的文件编码问题。  
 
+5. 如果下载成功，请输入下面的代码以验证`physicsLab`已经可以使用了
+```Python
+from physicsLab import *
+
+with experiment("example"):
+    Logic_Input(0, 0, 0.1)
+```
+然后打开物实，点击`从本地读取`，点击一个名为`example`的实验。如果出现了一个悬空的逻辑输入，则说明一切都成功了。
+
 ## 搭建开发环境
 切换至physicsLab根目录，输入以下指令 (仅限于`Windows`) ：
 ```
 .\cmd\setup_project.bat
 ```
 
-### 新手解惑: 为什么我明明安装了physicsLab, python却告诉我无法找到？
+## 新手解惑: 为什么我明明安装了physicsLab, python却告诉我无法找到？
 pip安装的包会被放在site-package文件夹下  
 这大概率是因为pip安装的包所对应的site-package与你使用的python对应的site-package不一样导致的  
 解决方案：找到ide调用的python对应的site-package，然后把physicsLab与physicsLab.egg-info复制过去  
@@ -59,11 +74,11 @@ sys.path.append("/your/path/of/physicsLab") # 将字符串替换为你想添加�
 注：每次运行的时候加入的path都是临时的，因此该方法必须让python在每次运行的时候都执行一遍   
 
 
-## 开发环境
+## 已经测试过的环境
 Windows7: python 3.7.8  &&  python 3.8.10  
 Android: qpython(app) 3.11.4  
-目测对其他版本支持应该也很好  
-python3.6及以上应该没问题
+
+python3.7及以上都是没问题的
 
 ## 使用说明
 *目前```physicsLab```在```windows```上的支持最好，在`Android`上仅支持手动导入/导出存档（默认在```physicsLabSav```文件夹中）。*  
@@ -77,7 +92,7 @@ python3.6及以上应该没问题
 from physicsLab import *
 
   # 打开存档
-open_Experiment("在物实保存的本地存档的名字")
+open_Experiment("example")
   # 例：open_Experiment('测逝')
   # 也支持输入存档的文件名（也就是xxx.sav）
   # 如果你希望程序不覆盖掉存档中已有的实验状态，需要这样写
@@ -144,9 +159,7 @@ with experiment('测逝', read=True):
 2. github: https://github.com/GoodenoughPhysicsLab/physicsLab
 3. gitee: https://gitee.com/script2000/physicsLab
 
-## 参与贡献
-1.  Fork 本仓库
-2.  新建```yourName_xxx```分支
-3.  新建`Pull Request(PR)`
-4.  完善文档
-5.  提`issue`或帮忙回答问题
+## contribute
+`physicsLab`没有强行要求代码风格，但需要注意与上下文保持一致  
+
+你可以从更新文档、bugfix、写[测试代码](test_physicsLab.py)开始入手

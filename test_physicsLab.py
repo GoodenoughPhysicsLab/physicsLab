@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
+
+USE_VIZTRACER: bool = False
+
 import unittest
 from physicsLab import *
 from physicsLab.union import *
 from physicsLab.experiment import stack_Experiment
-#from viztracer import VizTracer
+if USE_VIZTRACER:
+    from viztracer import VizTracer
 
 class TestError(Exception):
     def __init__(self, no_pop: bool=False) -> None:
@@ -25,18 +29,19 @@ def my_test_dec(method: Callable):
 
 class MyTestCase(unittest.TestCase):
     # init unittest class
-    # @classmethod
-    # def setUpClass(cls):
-    #     tracer = VizTracer()
-    #     tracer.start()
-    #
-    #     cls.tracer = tracer
-    #
-    # @classmethod
-    # def tearDownClass(cls):
-    #     tracer = cls.tracer
-    #     tracer.stop()
-    #     tracer.save() # also takes output_file as an optional argument
+    if USE_VIZTRACER:
+        @classmethod
+        def setUpClass(cls):
+            tracer = VizTracer()
+            tracer.start()
+
+            cls.tracer = tracer
+
+        @classmethod
+        def tearDownClass(cls):
+            tracer = cls.tracer
+            tracer.stop()
+            tracer.save() # also takes output_file as an optional argument
 
     @my_test_dec
     def test_experiment1(self):
@@ -297,8 +302,6 @@ class MyTestCase(unittest.TestCase):
                     n = music.Note(1, pitch=12 * i + j + 21)
                     t.append(n)
                     n.append(music.Note(1, pitch=12 * i + j + 23))
-            #t.notes[-1] = None
-            #print(t)
             t.release(-1, -1, 0)
     
     @my_test_dec
