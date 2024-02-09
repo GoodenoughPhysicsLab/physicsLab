@@ -330,11 +330,9 @@ class Chord:
             raise TypeError
 
         self.time = time
+        self._notes = []
         # {instrument: List[Note], ...}
-        self._notes = list(notes)
         self.ins_notes: Dict[int, List[Note]] = {}
-
-        self.velocity: float = max([a_note.velocity for a_note in notes])
 
         for a_note in notes:
             self.append(a_note)
@@ -348,11 +346,21 @@ class Chord:
     def __len__(self) -> int:
         return len(self.ins_notes.keys())
 
+    @staticmethod
+    def _get_velocity(notes: List[Note], is_average: bool = False) -> float:
+        if is_average:
+            sum = 0
+            for a_note in notes:
+                sum += a_note.velocity
+            return _format_velocity(sum / len(notes))
+        else:
+            return _format_velocity(max([a_note.velocity for a_note in notes]))
+
     # 将新的音符加入到和弦中
     def append(self, a_note: Note) -> Self:
         if not isinstance(a_note, Note):
             raise TypeError
-        
+
         if a_note not in self._notes:
             self._notes.append(a_note)
 
@@ -361,11 +369,9 @@ class Chord:
                 self.ins_notes[a_note.instrument].append(a_note)
         else:
             self.ins_notes[a_note.instrument] = [a_note]
-        
-        self.velocity = max(self.velocity, a_note.velocity)
 
         return self
-    
+
     # 将Chord存储的数据转变为对应的物实的电路
     def release(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None) -> elements.Simple_Instrument:
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
@@ -378,8 +384,8 @@ class Chord:
             notes: List[Note] = self.ins_notes[ins]
             temp: elements.Simple_Instrument = elements.Simple_Instrument(
                 x, y, z + delta_z, elementXYZ=True,instrument=ins,
-                pitch=notes[0].pitch, is_ideal_model=True, velocity=self.velocity
-            ).set_Rotation(0, 0, 0) # type: ignore
+                pitch=notes[0].pitch, is_ideal_model=True, velocity=self._get_velocity(notes, is_average=True)
+            ).set_Rotation(0, 0, 0)
             if first_ins is None:
                 first_ins = temp
             else:

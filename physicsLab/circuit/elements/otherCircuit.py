@@ -36,7 +36,7 @@ class Simple_Instrument(CircuitBase):
         if not (
             (isinstance(instrument, int) and 0 <= instrument <= 128) and
             (isinstance(bpm, int) and 20 <= bpm <= 240) and
-            (isinstance(velocity, (int, float)) and 0 < velocity <= 1)
+            (isinstance(velocity, (int, float)) and 0 <= velocity <= 1)
         ):
             raise TypeError
 
@@ -60,7 +60,7 @@ class Simple_Instrument(CircuitBase):
 
     # 物实v2.4.7新功能: 简单乐器同时播放多个音符
     def add_note(self, *pitchs: int) -> Self:
-        if not all(isinstance(a_pitch, int) and 20 <= a_pitch <= 128 for a_pitch in pitchs):
+        if not all(isinstance(a_pitch, int) and 0 <= a_pitch < 128 for a_pitch in pitchs):
             raise TypeError
         
         for a_pitch in pitchs:
@@ -69,7 +69,7 @@ class Simple_Instrument(CircuitBase):
                 self._arguments["Properties"][f"音高{amount}"] = a_pitch
                 self._arguments["Properties"]["和弦"] += 1
                 self.notes.append(a_pitch)
-        
+
         return self
 
     # 获取简单乐器已有的和弦    
