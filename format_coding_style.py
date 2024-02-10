@@ -16,10 +16,13 @@ if __name__ == "__main__":
 
             context: str = ""
             for line in lines:
+                while line.endswith(' '):
+                    line = line[:-1]
+
                 if is_all_blank(line):
                     context += '\n'
                 else:
                     context += line + '\n'
             context = context[:-1]
-            with open(f"{root}/{file}", "w", encoding="utf-8") as f:            
+            with open(f"{root}/{file}", "w", encoding="utf-8") as f:
                 f.write(context)

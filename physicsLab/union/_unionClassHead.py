@@ -39,7 +39,7 @@ class UnionMeta(type):
 
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if not (elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None)):
-            x, y, z = _elementXYZ.translateXYZ(x, y, z)        
+            x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
 
         self.__init__(x, y, z, bitLength, elementXYZ, unionHeading, fold, foldMaxNum, *args, **kwags)
@@ -52,7 +52,7 @@ class UnionMeta(type):
 class UnionBase(metaclass=UnionMeta):
     # 此类无法被实例化
     def __init__(self, *args, **kwargs):
-        raise phy_errors.instantiateError    
+        raise phy_errors.instantiateError
 
     # 获取以模块化电路生成顺序为item的原件的self
     # 一定有self._elements

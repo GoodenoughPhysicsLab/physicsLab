@@ -133,7 +133,7 @@ class Midi:
             return False
 
         if not isinstance(player, Midi.PLAYER) and player is not None:
-            raise TypeError        
+            raise TypeError
 
         # main
         self.write_midi()
@@ -269,7 +269,7 @@ class Midi:
                   div_time: numType = 100,
                   max_notes: Optional[int] = 800,
                   sav_name: str = "temp" # 产生的存档的名字, 也可直接在生成.pl.py中修改
-    ) -> Self:        
+    ) -> Self:
         if not (isinstance(div_time, (int, float)) or
                 isinstance(max_notes, int)) and max_notes is not None:
            raise TypeError
@@ -376,7 +376,7 @@ class Chord:
     def release(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None) -> elements.Simple_Instrument:
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if not (elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None)):
-            x, y, z = _elementXYZ.translateXYZ(x, y, z)        
+            x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
 
         first_ins = None # 第一个音符
@@ -524,7 +524,7 @@ class Piece:
     def release(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None) -> "Player":
         return Player(self, x, y, z, elementXYZ)
 
-    # Piece中所有Notes与Chord的数量    
+    # Piece中所有Notes与Chord的数量
     def count_notes(self) -> int:
         res = 0
         for note in self.notes:

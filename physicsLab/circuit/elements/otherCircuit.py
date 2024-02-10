@@ -72,7 +72,7 @@ class Simple_Instrument(CircuitBase):
 
         return self
 
-    # 获取简单乐器已有的和弦    
+    # 获取简单乐器已有的和弦
     def get_chord(self) -> tuple:
         return tuple(self.notes)
 

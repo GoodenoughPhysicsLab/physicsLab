@@ -84,7 +84,7 @@ def set_O(x: numType, y: numType, z: numType) -> None:
 # 修正bigElement的坐标
 def amend_big_Element(
         x: numType,
-        y: numType, 
+        y: numType,
         z: numType
     ):
     return x, y + _yAmend, z
