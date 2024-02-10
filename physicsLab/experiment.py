@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 import os
-import sys
 import json
 import copy
+import platform
 
 import physicsLab._tools as _tools
 import physicsLab.phy_errors as phy_errors
@@ -10,18 +10,14 @@ import physicsLab.savTemplate as savTemplate
 import physicsLab._colorUtils as _colorUtils
 
 from physicsLab.experimentType import experimentType
-from physicsLab.typehint import Union, Optional, List, Self, Dict
+from physicsLab.typehint import Union, Optional, List, Self, Dict, numType
 
 # 最新被操作的存档
 class stack_Experiment:
-    __single_instance: Optional["stack_Experiment"] = None
     data: List["Experiment"] = []
 
-    def __new__(cls) -> Self:
-        if cls.__single_instance is None:
-            cls.__single_instance = object.__new__(cls)
-
-        return cls.__single_instance
+    def __new__(cls):
+        return cls
 
     @classmethod
     def push(cls, data: "Experiment") -> None:
@@ -33,7 +29,7 @@ class stack_Experiment:
     @classmethod
     def top(cls) -> "Experiment":
         if len(cls.data) == 0:
-            raise phy_errors.ExperimentError("operate but no experiment(experiment stack is empty)")
+            raise phy_errors.ExperimentError("no experiment can be operated(experiment stack is empty)")
 
         return cls.data[-1]
 
@@ -43,13 +39,14 @@ class stack_Experiment:
         cls.data.pop()
         return res
 
+# 获取当前正在操作的存档
 def get_Experiment() -> stack_Experiment:
     return stack_Experiment.top()
 
 # 实验（存档）类
 class Experiment:
     FILE_HEAD = "physicsLabSav"
-    if sys.platform == "win32":
+    if platform.system() == "Windows":
         from getpass import getuser
         FILE_HEAD = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Circuit"
     
@@ -73,6 +70,10 @@ class Experiment:
     def __open(self) -> None:
         self.is_open = True
         self.CameraSave = json.loads(self.PlSav["Experiment"]["CameraSave"])
+        temp = eval(f"({self.CameraSave['VisionCenter']})")
+        self.VisionCenter: _tools.position = _tools.position(temp[0], temp[2], temp[1]) # x, z, y
+        temp = eval(f"({self.CameraSave['TargetRotation']})")
+        self.TargetRotation: _tools.position = _tools.position(temp[0], temp[2], temp[1]) # x, z, y
 
         self.ExperimentType: experimentType = {
             experimentType.Circuit.value: experimentType.Circuit,
@@ -80,25 +81,21 @@ class Experiment:
             experimentType.Electromagnetism.value: experimentType.Electromagnetism
         }[self.PlSav["Type"]]
 
+        if self.PlSav["Summary"] is None:
+            self.PlSav["Summary"] = savTemplate.Circuit["Summary"]
+
         if self.ExperimentType == experimentType.Circuit:
             self.Wires: List[dict] = [] # 存档对应的导线
             # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
-            if self.PlSav["Summary"] is None:
-                self.PlSav["Summary"] = savTemplate.Circuit["Summary"]
 
         elif self.ExperimentType == experimentType.Celestial:
             self.StatusSave: dict = {"MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
                                     "ScalingName": "内太阳系", "LengthScale": 1.0, "SizeLinear": 0.0001,
                                     "SizeNonlinear": 0.5, "StarPresent": False, "Setting": None}
-            if self.PlSav["Summary"] is None:
-                self.PlSav["Summary"] = savTemplate.Celestial["Summary"]
-
 
         elif self.ExperimentType == experimentType.Electromagnetism:
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
-            if self.PlSav["Summary"] is None:
-                self.PlSav["Summary"] = savTemplate.Electromagnetism["Summary"]
 
     # 打开一个指定的sav文件 (支持输入本地实验的名字或sav文件名)
     def open(self, sav_name : str) -> "Experiment":
@@ -141,19 +138,25 @@ class Experiment:
             self.Wires: List[dict] = [] # 存档对应的导线
             # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
-            self.CameraSave: dict = {"Mode": 0, "Distance": 2.7, "VisionCenter": "0,1.08,-0.45", "TargetRotation": "50,0,0"}
+            self.CameraSave: dict = {"Mode": 0, "Distance": 2.7, "VisionCenter": None, "TargetRotation": None}
+            self.VisionCenter: _tools.position = _tools.position(0, 1.08, -0.45)
+            self.TargetRotation: _tools.position = _tools.position(50, 0, 0)
 
         elif self.ExperimentType == experimentType.Celestial:
             self.PlSav: dict = copy.deepcopy(savTemplate.Celestial)
             self.StatusSave: dict = {"MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
                                      "ScalingName": "内太阳系", "LengthScale": 1.0, "SizeLinear": 0.0001,
                                      "SizeNonlinear": 0.5, "StarPresent": False, "Setting": None}
-            self.CameraSave: dict = {"Mode": 2, "Distance": 2.75, "VisionCenter": "0,1.08,0", "TargetRotation": "90,0,0"}
+            self.CameraSave: dict = {"Mode": 2, "Distance": 2.75, "VisionCenter": None, "TargetRotation": None}
+            self.VisionCenter: _tools.position = _tools.position(0 ,0, 1.08)
+            self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
 
         elif self.ExperimentType == experimentType.Electromagnetism:
             self.PlSav: dict = copy.deepcopy(savTemplate.Electromagnetism)
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
-            self.CameraSave: dict = {"Mode": 0, "Distance": 3.25, "VisionCenter": "0,0.88,0", "TargetRotation": "90,0,0"}
+            self.CameraSave: dict = {"Mode": 0, "Distance": 3.25, "VisionCenter": None, "TargetRotation": None}
+            self.VisionCenter: _tools.position = _tools.position(0, 0 ,0.88)
+            self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
 
         self.entitle(sav_name)
     
@@ -247,10 +250,8 @@ class Experiment:
                 obj = crt_Element(element["ModelID"], x, y, z) # type: ignore -> num type: int | float
 
             rotation = eval(f'({element["Rotation"]})')
-            x = rotation[0]
-            z = rotation[1]
-            y = rotation[2]
-            obj.set_Rotation(x, y, z)
+            r_x, r_y, r_z = rotation[0], rotation[2], rotation[1]
+            obj.set_Rotation(r_x, r_y, r_z)
             obj._arguments['Identifier'] = element['Identifier']
             from .circuit.elements.logicCircuit import Logic_Input, eight_bit_Input
             # 如果obj是逻辑输入
@@ -279,7 +280,9 @@ class Experiment:
 
         if not no_pop:
             stack_Experiment.pop()
-        
+
+        self.CameraSave["VisionCenter"] = f"{self.VisionCenter.x},{self.VisionCenter.z},{self.VisionCenter.y}"
+        self.CameraSave["TargetRotation"] = f"{self.TargetRotation.x},{self.TargetRotation.z},{self.TargetRotation.y}"
         self.PlSav["Experiment"]["CameraSave"] = json.dumps(self.CameraSave)
 
         self.StatusSave["Elements"] = self.Elements
@@ -353,6 +356,9 @@ class Experiment:
     def show(self) -> "Experiment":
         if self.SavPath is None:
             raise TypeError
+        
+        if platform.system() != "Windows":
+            return self
 
         os.popen(f'notepad {self.SavPath}')
         return self
@@ -375,8 +381,36 @@ class Experiment:
         return self
     
     # 设置实验者的视角
-    def viewing(self):
-        self.CameraSave
+    # x, y, z : 实验者观察的坐标
+    # distance: 实验者到(x, y, z)的距离
+    # rotation: 实验者观察的角度
+    def viewing(self,
+                x: Optional[numType] = None,
+                y: Optional[numType] = None,
+                z: Optional[numType] = None,
+                distance: Optional[numType] = None,
+                rotation_x: Optional[numType] = None,
+                rotation_y: Optional[numType] = None,
+                rotation_z: Optional[numType] = None
+        ):
+        if x is None:
+            x = self.VisionCenter.x
+        if y is None:
+            y = self.VisionCenter.y
+        if z is None:
+            z = self.VisionCenter.z
+        if distance is None:
+            distance = self.CameraSave["Distance"]
+        if rotation_x is None:
+            rotation_x = self.TargetRotation.x
+        if rotation_y is None:
+            rotation_y = self.TargetRotation.y
+        if rotation_z is None:
+            rotation_z = self.TargetRotation.z
+
+        self.VisionCenter = _tools.position(x, y, z)
+        self.CameraSave["Distance"] = distance
+        self.TargetRotation = _tools.position(rotation_x, rotation_y, rotation_z)
 
 # 仅供with时使用
 class experiment:
@@ -417,7 +451,7 @@ class experiment:
         self.is_exit = is_exit
 
     # 上下文管理器，搭配with使用
-    def __enter__(self):
+    def __enter__(self) -> Experiment:
         if not self.force_crt:
             self._Experiment: Experiment = Experiment().open_or_crt(self.savName, self.experimentType)
         else:
@@ -444,7 +478,7 @@ class experiment:
             self._Experiment.delete(self.delete_warning_status)
             return
 
-# 索取所有物实存档的文件名
+# 获取所有物实存档的文件名
 def getAllSav() -> List:
     from os import walk
     savs = [i for i in walk(Experiment.FILE_HEAD)][0]

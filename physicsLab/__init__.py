@@ -1,37 +1,36 @@
 # -*- coding: utf-8 -*-
 
 # 颜色打印
-from physicsLab._colorUtils import close_color_print
+from ._colorUtils import close_color_print
 # 操作实验
-from physicsLab.experiment import *
+from .experiment import *
 # 实验类型
-from physicsLab.experimentType import *
+from .experimentType import *
 # 电学实验
-from physicsLab.circuit import *
+from .circuit import *
 # 天体物理实验
-from physicsLab.celestial import *
+from .celestial import *
 # 电与磁实验
-from physicsLab.electromagnetism import *
+from .electromagnetism import *
 # 操作元件
-from physicsLab.element import *
+from .element import *
 # `physicsLab`自定义异常类
-from physicsLab.phy_errors import *
+from .phy_errors import *
 # 模块化电路
 from .union.wires import *
 import physicsLab.union as union
 import physicsLab.music as music
 
-# Win: 若存档对应文件夹不存在直接报错
-from os import path as _path, mkdir as _mkdir
-
 # 检测操作系统
-from sys import platform as _platform
-if _platform == "win32":
-    if not _path.exists(Experiment.FILE_HEAD):
+# Win: 若存档对应文件夹不存在直接报错
+import os
+import platform
+if platform.system() == "Windows":
+    if not os.path.exists(Experiment.FILE_HEAD):
         raise RuntimeError("The folder does not exist, try launching Physics-Lab-AR and try it out")
 else:
-    if not _path.exists("physicsLabSav"):
-        _mkdir("physicsLabSav")
+    if not os.path.exists("physicsLabSav"):
+        os.mkdir("physicsLabSav")
 
 # 在import了physicsLab的程序的第一行加上# -*- coding: utf-8 -*-
 try: # 在cmd或者shell上无法执行该功能
@@ -46,7 +45,6 @@ try: # 在cmd或者shell上无法执行该功能
                 f.write(f'# -*- coding: utf-8 -*-{s}')
             else:
                 f.write(f'# -*- coding: utf-8 -*-\n{s}')
-    del sys
 except FileNotFoundError:
     close_color_print()
 

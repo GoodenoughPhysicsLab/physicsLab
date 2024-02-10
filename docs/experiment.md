@@ -18,16 +18,19 @@ with experiment('name'):
 ## 打开存档
 你必须指明你要打开的是哪个存档：
 ```Python
-open_Experiment('xxx.sav') # 存档的文件名，不推荐使用
-open_Experiment('blabla') # 通过在物实保存的本地实验的名字打开存档
+Experiment.open('example.sav')
+Experiment.open('example')
+open_Experiment('example.sav') # 存档的文件名，不推荐使用
+open_Experiment('example') # 通过在物实保存的本地实验的名字打开存档
 ```
 ><font color=red>Note: </font>你可以多次调用`open_Experiment()`或`crt_Experiment()`, 但只有你最后一次调用该函数打开或创建的存档会被操作
 
 ## 创建存档
 如果你想要创建一个实验：
 ```python
-crt_Experiment('存档的名字')
-crt_Experiment("xxx", experimentType=experimentType.Circuit) # 指定实验类型
+Experiment.crt('example')
+crt_Experiment('example')
+crt_Experiment("example", experimentType=experimentType.Circuit) # 指定实验类型
 ```
 > <font color=red>Note: </font>你可以多次调用`open_Experiment()`或`crt_Experiment()`, 但只有你最后一次调用该函数打开或创建的存档会被操作
 
@@ -35,6 +38,8 @@ crt_Experiment("xxx", experimentType=experimentType.Circuit) # 指定实验类�
 
 如果你希望打开存档失败不报错而是创建存档，除了使用`with experiment(...)`，你还可以使用
 ```Python
+Experiment("example")
+Experiment.open_or_crt("example")
 open_or_crt_Experiment(savName: str, experimentType) -> None
 ```
 该函数与`crt_Experiment`传参相同，但`experimentType`参数仅在尝试创建存档时有效
@@ -48,30 +53,55 @@ open_or_crt_Experiment(savName: str, experimentType) -> None
 ## 读取存档的内容
 被打开的存档不会读取原实验的状态。如果你不希望原实验的状态被覆盖，需要调用该函数：  
 ```Python
+Experiment.read()
 read_Experiment()
 ```
 
 ## 向存档中写入
 最后你需要调用该函数往存档里写入程序运行之后的结果：  
 ```Python
+Experiment.write()
 write_Experiment()
+```
+
+## 删除存档
+除了创建存档，你也可以删除存档：
+```Python
+Experiment.delete()
+del_Experiment()
+```
+
+## 停止操作存档
+`Experiment.write()`与`Experiment.delete()`都会停止操作存档，但如果你只想停止操作该存档而不想将当前的实验状态保存或者书删除实验的话，你可以调用: 
+```Python
+Experiment.exit()
+exit_Experiment()
 ```
 
 ## 用记事本打开存档文件
 你也可以打开存档查看：
 ```Python
+Experiment.read()
 show_Experiment()
 ```
 仅`Windows`上有效
-
-## 删除存档
-除了创建存档，你也可以删除存档：
-```Python
-del_Experiment()
-```
 
 ## 多存档操作
 获取当前正在操作的存档:
 ```Python
 get_Experiment()
+```
+
+## 设置实验者的观察视角
+```Python
+Experiment.viewing(
+    self,
+    x: Optional[numType] = None,
+    y: Optional[numType] = None,
+    z: Optional[numType] = None,
+    distance: Optional[numType] = None,
+    rotation_x: Optional[numType] = None,
+    rotation_y: Optional[numType] = None,
+    rotation_z: Optional[numType] = None
+):
 ```

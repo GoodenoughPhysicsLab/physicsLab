@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from typing import Tuple, Union, List
 from collections import namedtuple
+from .typehint import Tuple, Union, List, numType, Callable
 
-# class position
 position = namedtuple("position", ["x", "y", "z"])
 
 # 四舍五入physicsLab中的数据
