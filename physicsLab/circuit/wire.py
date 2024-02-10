@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import physicsLab.phy_errors as phy_errors
+from physicsLab import errors
 
 from physicsLab.experiment import stack_Experiment
 from physicsLab.experimentType import experimentType
@@ -42,10 +42,10 @@ def _check_typeWire(func):
                 color = {"black": "黑", "blue": "蓝", "red": "红", "green": "绿", "yellow": "黄"}[color]
 
             if (color not in ("黑", "蓝", "红", "绿", "黄")):
-                raise phy_errors.WireColorError
+                raise errors.WireColorError
 
             if stack_Experiment.top().ExperimentType != experimentType.Circuit:
-                raise phy_errors.ExperimentTypeError
+                raise errors.ExperimentTypeError
 
             func(SourcePin, TargetPin, color)
 
@@ -79,16 +79,16 @@ def del_Wire(SourcePin: Pin, TargetPin: Pin, color: str = '蓝') -> None:
         if a_wire in _Expe.Wires:
             _Expe.Wires.remove(a_wire)
         else:
-            raise phy_errors.WireNotFoundError
+            raise errors.WireNotFoundError
 
 # 删除所有导线
 def clear_Wires() -> None:
     if stack_Experiment.top().ExperimentType != experimentType.Circuit:
-        raise phy_errors.ExperimentTypeError
+        raise errors.ExperimentTypeError
     stack_Experiment.top().Wires.clear()
 
 # 获取当前导线数
 def count_Wires() -> int:
     if stack_Experiment.top().ExperimentType != experimentType.Circuit:
-        raise phy_errors.ExperimentTypeError
+        raise errors.ExperimentTypeError
     return len(stack_Experiment.top().Wires)

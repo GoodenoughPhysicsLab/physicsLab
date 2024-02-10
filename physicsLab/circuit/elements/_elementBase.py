@@ -1,6 +1,6 @@
 # coding=utf-8
-import physicsLab.phy_errors as phy_errors
-import physicsLab.circuit.wire as _elementPin
+from physicsLab import errors
+from physicsLab.circuit import wire
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.experimentType import experimentType
@@ -30,7 +30,7 @@ class CircuitMeta(type):
         _Expe: Experiment = stack_Experiment.top()
 
         if _Expe.ExperimentType != experimentType.Circuit:
-            raise phy_errors.ExperimentTypeError
+            raise errors.ExperimentTypeError
 
         self.is_elementXYZ = False # 元件坐标系
         if not hasattr(cls, "is_bigElement"):
@@ -39,7 +39,7 @@ class CircuitMeta(type):
         x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
         self._position = position(x, y, z) # type: ignore -> define _arguments in metaclass
         # 元件坐标系
-        if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
+        if elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None):
             x, y, z = _elementXYZ.xyzTranslate(x, y, z)
             self.is_elementXYZ = True
 
@@ -71,7 +71,7 @@ class CircuitMeta(type):
 class CircuitBase(metaclass=CircuitMeta):
     # 类无法被实例化
     def __init__(self, *args, **kwargs) -> NoReturn:
-        raise phy_errors.instantiateError
+        raise errors.instantiateError
 
     # 设置原件的角度
     def set_Rotation(self, xRotation: numType = 0, yRotation: numType = 0, zRotation: numType = 180) -> Self:
@@ -92,7 +92,7 @@ class CircuitBase(metaclass=CircuitMeta):
         x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
 
         #元件坐标系
-        if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
+        if elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None):
             x, y, z = _elementXYZ.xyzTranslate(x, y, z)
             self.is_elementXYZ = True
 
@@ -129,14 +129,14 @@ class CircuitBase(metaclass=CircuitMeta):
 # 双引脚模拟电路原件的引脚
 def two_pin_ArtificialCircuit_Pin(cls):
     @property
-    def red(self) -> _elementPin.Pin:
-        return _elementPin.Pin(self, 0)
+    def red(self) -> wire.Pin:
+        return wire.Pin(self, 0)
 
     cls.red, cls.l = red, red
 
     @property
-    def black(self) -> _elementPin.Pin:
-        return _elementPin.Pin(self, 1)
+    def black(self) -> wire.Pin:
+        return wire.Pin(self, 1)
 
     cls.black, cls.r = black, black
 

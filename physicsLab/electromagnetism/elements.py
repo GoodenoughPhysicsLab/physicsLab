@@ -1,6 +1,6 @@
 # coding=utf-8
-import physicsLab._tools as _tools
-import physicsLab.phy_errors as phy_errors
+from physicsLab import _tools
+from physicsLab import errors
 
 from physicsLab.experiment import stack_Experiment
 from physicsLab.experimentType import experimentType
@@ -60,7 +60,7 @@ def _element_Init_HEAD(func: Callable) -> Callable:
         ):
             raise TypeError('illegal argument')
         if stack_Experiment.top().ExperimentType != experimentType.Electromagnetism:
-            raise phy_errors.ExperimentTypeError
+            raise errors.ExperimentTypeError
 
         _Expe = stack_Experiment.top()
 

@@ -2,5 +2,5 @@
 try:
     from .unionMusic import *
 except ImportError:
-    import physicsLab.phy_errors as errors
-    errors.warning("can not use physicsLab.music, type `pip install mido`")
+    from physicsLab.errors import warning
+    warning("can not use physicsLab.music, type `pip install mido`")

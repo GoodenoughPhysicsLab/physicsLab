@@ -4,10 +4,10 @@ import json
 import copy
 import platform
 
-import physicsLab._tools as _tools
-import physicsLab.phy_errors as phy_errors
-import physicsLab.savTemplate as savTemplate
-import physicsLab._colorUtils as _colorUtils
+from physicsLab import  _tools
+from physicsLab import errors
+from physicsLab import savTemplate
+from physicsLab import _colorUtils
 
 from physicsLab.experimentType import experimentType
 from physicsLab.typehint import Union, Optional, List, Self, Dict, numType
@@ -29,7 +29,7 @@ class stack_Experiment:
     @classmethod
     def top(cls) -> "Experiment":
         if len(cls.data) == 0:
-            raise phy_errors.ExperimentError("no experiment can be operated(experiment stack is empty)")
+            raise errors.ExperimentError("no experiment can be operated(experiment stack is empty)")
 
         return cls.data[-1]
 
@@ -100,7 +100,7 @@ class Experiment:
     # 打开一个指定的sav文件 (支持输入本地实验的名字或sav文件名)
     def open(self, sav_name : str) -> "Experiment":
         if self.is_open_or_crt:
-            raise phy_errors.experimentExistError
+            raise errors.experimentExistError
         self.is_open_or_crt = True
         stack_Experiment.push(self)
 
@@ -110,7 +110,7 @@ class Experiment:
             self.SavPath = f"{Experiment.FILE_HEAD}/{sav_name}"
             if not os.path.exists(self.SavPath):
                 stack_Experiment.pop()
-                raise phy_errors.OpenExperimentError(f'No such experiment "{sav_name}"')
+                raise errors.OpenExperimentError(f'No such experiment "{sav_name}"')
             self.PlSav = _open_sav(self.SavPath)
             self.__open()
             return self
@@ -119,7 +119,7 @@ class Experiment:
         self.SavPath = f"{Experiment.FILE_HEAD}/{self.FileName}"
         if self.FileName is None:
             stack_Experiment.pop()
-            raise phy_errors.OpenExperimentError(f'No such experiment "{sav_name}"')
+            raise errors.OpenExperimentError(f'No such experiment "{sav_name}"')
 
         self.PlSav = search_Experiment.sav
         self.__open()
@@ -163,7 +163,7 @@ class Experiment:
     # 创建存档，输入为存档名 sav_name: 存档名; experiment_type: 实验类型; force_crt: 不论实验是否已经存在,强制创建
     def crt(self, sav_name: str, experiment_type: experimentType = experimentType.Circuit, force_crt: bool=False) -> "Experiment":
         if self.is_open_or_crt:
-            raise phy_errors.experimentExistError
+            raise errors.experimentExistError
         self.is_open_or_crt = True
 
         if not isinstance(sav_name, str) or not isinstance(experiment_type, experimentType):
@@ -171,7 +171,7 @@ class Experiment:
 
         search = search_Experiment(sav_name)
         if not force_crt and search is not None:
-            raise phy_errors.crtExperimentFailError
+            raise errors.crtExperimentFailError
         elif force_crt and search is not None:
             path = f"{Experiment.FILE_HEAD}/{search}"
             os.remove(path)
@@ -186,7 +186,7 @@ class Experiment:
     # 先尝试打开实验, 若失败则创建实验
     def open_or_crt(self, savName: str, experimentType: experimentType = experimentType.Circuit) -> "Experiment":
         if self.is_open_or_crt:
-            raise phy_errors.experimentExistError
+            raise errors.experimentExistError
         self.is_open_or_crt = True
 
         if not isinstance(savName, str):
@@ -207,11 +207,11 @@ class Experiment:
         if self.SavPath is None: # 是否已.open()或.crt()
             raise TypeError
         if self.is_read:
-            phy_errors.warning("experiment has been read")
+            errors.warning("experiment has been read")
             return self
         self.is_read = True
         if self.is_crt:
-            phy_errors.warning("can not read because you create this experiment")
+            errors.warning("can not read because you create this experiment")
             return self
 
         status_sav = json.loads(self.PlSav["Experiment"]["StatusSave"])
@@ -272,11 +272,11 @@ class Experiment:
             return stringJson
 
         if self.SavPath is None: # 检查是否已经.open()或.crt()
-            raise phy_errors.ExperimentError("write before open or crt")
-        if self.is_open_or_crt == True:
+            raise errors.ExperimentError("write before open or crt")
+        if self.is_open_or_crt is True:
             self.is_open_or_crt = False
         else:
-            raise phy_errors.ExperimentError("write before open or crt")
+            raise errors.ExperimentError("write before open or crt")
 
         if not no_pop:
             stack_Experiment.pop()
@@ -331,7 +331,7 @@ class Experiment:
             os.remove(self.SavPath)
             _colorUtils.color_print(f"Successfully delete experiment {self.PlSav['InternalName']}({self.FileName})!", _colorUtils.COLOR.BLUE)
         else:
-            phy_errors.warning(f"experiment {self.PlSav['InternalName']}({self.FileName}) do not exist.", warning_status)
+            errors.warning(f"experiment {self.PlSav['InternalName']}({self.FileName}) do not exist.", warning_status)
 
         if os.path.exists(self.SavPath.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
             os.remove(self.SavPath.replace(".sav", ".jpg"))
@@ -462,7 +462,7 @@ class experiment:
         if self.elementXYZ:
             if self._Experiment.ExperimentType != experimentType.Circuit:
                 stack_Experiment.pop()
-                raise phy_errors.ExperimentTypeError
+                raise errors.ExperimentTypeError
             import physicsLab.circuit.elementXYZ as _elementXYZ
             _elementXYZ.set_elementXYZ(True)
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import physicsLab.circuit as circuit
-import physicsLab.phy_errors as errors
+from physicsLab import circuit
+from physicsLab import element
+from physicsLab import errors
 
 from .wires import union_Pin
 from ._unionClassHead import UnionBase
@@ -274,10 +275,10 @@ class Four_sixteen_Decoder:
     @property
     def inputData(self):
         return union_Pin(
-            circuit.Pin(circuit.get_Element(self.x + 0.15, self.y + 0.3, self.z), 0),
-            circuit.Pin(circuit.get_Element(self.x + 0.15, self.y + 0.3, self.z), 1),
-            circuit.Pin(circuit.get_Element(self.x, self.y + 0.3, self.z), 0),
-            circuit.Pin(circuit.get_Element(self.x, self.y + 0.3, self.z), 1)
+            circuit.Pin(element.get_Element(self.x + 0.15, self.y + 0.3, self.z), 0),
+            circuit.Pin(element.get_Element(self.x + 0.15, self.y + 0.3, self.z), 1),
+            circuit.Pin(element.get_Element(self.x, self.y + 0.3, self.z), 0),
+            circuit.Pin(element.get_Element(self.x, self.y + 0.3, self.z), 1)
         )
 
     # 输出译码器的数据

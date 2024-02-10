@@ -154,7 +154,7 @@ class Simple_Instrument(CircuitBase):
             ):
                 raise TypeError
 
-            var = 1 if rising_falling == True else 0 if rising_falling is None else -1
+            var = 1 if rising_falling is True else 0 if rising_falling is None else -1
 
             pitch = {
                 'A': 22,

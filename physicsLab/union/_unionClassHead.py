@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import physicsLab.phy_errors as phy_errors
-import physicsLab.circuit.elements as elements
+from physicsLab import errors
+from physicsLab.circuit import elements
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab._tools import roundData
@@ -22,7 +22,7 @@ class UnionMeta(type):
     ):
         self = cls.__new__(cls)
         if stack_Experiment.top().ExperimentType != experimentType.Circuit:
-            raise phy_errors.ExperimentTypeError
+            raise errors.ExperimentTypeError
 
         if foldMaxNum <= 0 or not(
             isinstance(x, (int, float)) or
@@ -35,10 +35,10 @@ class UnionMeta(type):
         ):
             raise TypeError
         if not isinstance(bitLength, int) or bitLength < 1:
-            raise phy_errors.bitLengthError("bitLength must get a integer")
+            raise errors.bitLengthError("bitLength must get a integer")
 
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
-        if not (elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None)):
+        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
 
@@ -52,7 +52,7 @@ class UnionMeta(type):
 class UnionBase(metaclass=UnionMeta):
     # 此类无法被实例化
     def __init__(self, *args, **kwargs):
-        raise phy_errors.instantiateError
+        raise errors.instantiateError
 
     # 获取以模块化电路生成顺序为item的原件的self
     # 一定有self._elements

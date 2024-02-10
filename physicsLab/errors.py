@@ -2,8 +2,7 @@
 # 用于存放自定义错误类
 # 由于有时在package外需要异常处理，故不为文件私有变量
 from typing import Optional
-
-import physicsLab._colorUtils as _colorUtils
+from physicsLab import _colorUtils
 
 # 抛出警告, 当warning_status==False
 def warning(msg: str, warning_status: Optional[bool]=None) -> None:

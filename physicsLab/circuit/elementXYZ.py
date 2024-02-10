@@ -4,7 +4,7 @@
 # 单位y是一个是门的宽
 # 单位z为物实默认坐标系的0.1
 
-import physicsLab.phy_errors as phy_errors
+from physicsLab import errors
 
 from physicsLab.typehint import numType
 from physicsLab.experiment import stack_Experiment
@@ -16,7 +16,7 @@ _elementXYZ: bool = False
 # 是否将全局设置为元件坐标系
 def set_elementXYZ(boolen: bool) -> None:
     if stack_Experiment.top().ExperimentType != experimentType.Circuit:
-        raise phy_errors.ExperimentTypeError
+        raise errors.ExperimentTypeError
     if not isinstance(boolen, bool):
         raise TypeError
     global _elementXYZ
@@ -41,7 +41,7 @@ _xOrigin, _yOrigin, _zOrigin = 0, 0, 0
 # 将元件坐标系转换为物实支持的坐标系
 def xyzTranslate(x: numType, y: numType, z: numType):
     if stack_Experiment.top().ExperimentType != experimentType.Circuit:
-        raise phy_errors.ExperimentTypeError
+        raise errors.ExperimentTypeError
 
     x *= _xUnit
     y *= _yUnit
@@ -55,7 +55,7 @@ def xyzTranslate(x: numType, y: numType, z: numType):
 # 将物实支持的坐标系转换为元件坐标系
 def translateXYZ(x: numType, y: numType, z: numType, bigElement: bool = False):
     if stack_Experiment.top().ExperimentType != experimentType.Circuit:
-        raise phy_errors.ExperimentTypeError
+        raise errors.ExperimentTypeError
 
     x /= _xUnit
     y /= _yUnit

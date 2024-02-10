@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-import physicsLab._tools as _tools
-import physicsLab.phy_errors as phy_errors
-import physicsLab.circuit.elements as elements
 import physicsLab.circuit.elementXYZ as _elementXYZ
+
+from physicsLab import _tools
+from physicsLab import errors
+from physicsLab.circuit import elements
 
 from physicsLab.experiment import stack_Experiment
 from physicsLab.typehint import numType, Optional, Union, List
@@ -21,7 +22,7 @@ def crt_Element(name: str, x: numType = 0, y: numType = 0, z: numType = 0, eleme
 
     name = name.strip()
     # 元件坐标系
-    if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
+    if elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None):
         x, y, z = _elementXYZ.xyzTranslate(x, y, z)
     x, y, z = _tools.roundData(x, y, z) # type: ignore
     if (name == '555 Timer'):
@@ -42,7 +43,7 @@ def get_Element(x: NnumType=None, y: NnumType=None, z: NnumType=None, *, index: 
 
         position = _tools.roundData(x, y, z)
         if position not in _Expe.elements_Position.keys():
-            raise phy_errors.ElementNotExistError(f"{position} do not exist")
+            raise errors.ElementNotExistError(f"{position} do not exist")
 
         result: list = _Expe.elements_Position[position]
         return result[0] if len(result) == 1 else result
@@ -55,7 +56,7 @@ def get_Element(x: NnumType=None, y: NnumType=None, z: NnumType=None, *, index: 
         if 0 < index <= len(_Expe.elements_Index):
             return _Expe.elements_Index[index - 1]
         else:
-            raise phy_errors.getElementError
+            raise errors.getElementError
 
     _Expe = stack_Experiment.top()
     if None not in [x, y, z]:

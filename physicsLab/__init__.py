@@ -15,11 +15,11 @@ from .electromagnetism import *
 # 操作元件
 from .element import *
 # `physicsLab`自定义异常类
-from .phy_errors import *
+from .errors import *
 # 模块化电路
 from .union.wires import *
-import physicsLab.union as union
-import physicsLab.music as music
+from physicsLab import union
+from physicsLab import music
 
 # 检测操作系统
 # Win: 若存档对应文件夹不存在直接报错

@@ -1,13 +1,13 @@
 ﻿# -*- coding: utf-8 -*-
 import mido
-import physicsLab.phy_errors as phy_errors
 import physicsLab._colorUtils as colorUtils
-import physicsLab.circuit.elements as elements
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from math import ceil, sqrt
 from enum import Enum, unique
 
+from physicsLab import errors
+from physicsLab.circuit import elements
 from physicsLab._tools import roundData
 from physicsLab.union import crt_Wires, D_WaterLamp
 from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, numType
@@ -141,7 +141,7 @@ class Midi:
         if player is not None:
             f = (sound_by_plmidi, sound_by_pygame, sound_by_os)[player.value]
             if not f():
-                phy_errors.warning(f"can not use {f.__name__} to sound midi.")
+                errors.warning(f"can not use {f.__name__} to sound midi.")
             return self
 
         if sound_by_plmidi():
@@ -151,7 +151,7 @@ class Midi:
         elif sound_by_os():
             pass
         else:
-            phy_errors.warning("can not use sound methods")
+            errors.warning("can not use sound methods")
 
         return self
 
@@ -375,7 +375,7 @@ class Chord:
     # 将Chord存储的数据转变为对应的物实的电路
     def release(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None) -> elements.Simple_Instrument:
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
-        if not (elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None)):
+        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
 
@@ -575,7 +575,7 @@ class Player:
         ):
             raise TypeError
 
-        if not (elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None)):
+        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
 
         # 给乐器增加休止符
@@ -603,7 +603,7 @@ class Player:
         try:
             xPlayer = D_WaterLamp(x + 1, y + 1, z, unionHeading=True, bitLength=side, elementXYZ=True)
             yPlayer = D_WaterLamp(x, y + 3, z, bitLength=ceil(len_musicArray / side), elementXYZ=True)
-        except phy_errors.bitLengthError as e:
+        except errors.bitLengthError as e:
             from physicsLab._colorUtils import color_print, COLOR
             color_print("bigLength of D_WaterLamp is too short, try to use argument \"div_time\" in class Midi to solve this problem", COLOR.RED)
             raise e

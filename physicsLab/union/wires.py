@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from typing import Union, Callable, Tuple
-
-import physicsLab.phy_errors as phy_errors
-
+from physicsLab import errors
 from ._unionClassHead import UnionBase
 from physicsLab.circuit.wire import crt_Wire, del_Wire, Pin
 
@@ -39,7 +37,7 @@ def check_TypeUnionPin(func: Callable):
             raise TypeError
 
         if len(sourcePin.elementPins) != len(targetPin.elementPins):
-            phy_errors.warning(
+            errors.warning(
                 f"The number of {sourcePin.union_self.__class__.__name__}'s output pin "
                 f"are not equal to {targetPin.union_self.__class__.__name__}'s input pin."
             )
