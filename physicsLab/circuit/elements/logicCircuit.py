@@ -170,7 +170,7 @@ class _big_element(_logicBase):
                           "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0}, "Statistics": {},
                           "Position": "", "Rotation": "", "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
-    
+
     @property
     def is_bigElement(self):
         return True
@@ -451,7 +451,7 @@ class eight_bit_Display(_logicBase):
                                          "十进制": 0.0}, "Position": "",
                           "Rotation": "", "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
-    
+
     @property
     def is_bigElement(self):
         return True

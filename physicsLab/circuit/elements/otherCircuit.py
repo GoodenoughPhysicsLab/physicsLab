@@ -62,7 +62,7 @@ class Simple_Instrument(CircuitBase):
     def add_note(self, *pitchs: int) -> Self:
         if not all(isinstance(a_pitch, int) and 0 <= a_pitch < 128 for a_pitch in pitchs):
             raise TypeError
-        
+
         for a_pitch in pitchs:
             if a_pitch not in self.notes:
                 amount: int = int(self._arguments["Properties"]["和弦"])
@@ -75,7 +75,7 @@ class Simple_Instrument(CircuitBase):
     # 获取简单乐器已有的和弦    
     def get_chord(self) -> tuple:
         return tuple(self.notes)
-    
+
     # 获取简单乐器的和弦
     def get_instrument(self) -> int:
         return self._arguments["Properties"]["乐器"]
@@ -139,11 +139,11 @@ class Simple_Instrument(CircuitBase):
         输入格式：
             tonality: C4, A5 ...
             rising_falling = True 时，为升调，为 False 时降调
-            
+
         输入范围：
             C0 ~ C8
             注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120
-            
+
         '''
         def majorSet_Tonality(self, tonality: str = "C3", rising_falling: Optional[bool] = None) -> "Simple_Instrument":
             if (not isinstance(tonality, str) or

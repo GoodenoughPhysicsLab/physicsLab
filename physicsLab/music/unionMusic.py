@@ -120,12 +120,12 @@ class Midi:
                 except KeyboardInterrupt:
                     pass
                 return True
-        
+
         # 使用系统调用播放midi
         def sound_by_os() -> bool:
             from os import path, system
             colorUtils.color_print("sound by using os", colorUtils.COLOR.CYAN)
-            
+
             if path.exists("temp.mid"):
                 system("temp.mid")
                 return True
@@ -152,7 +152,7 @@ class Midi:
             pass
         else:
             phy_errors.warning("can not use sound methods")
-        
+
         return self
 
     # 将time重设为原来的num倍
@@ -214,7 +214,7 @@ class Midi:
             context = None
             with open(plpath, encoding="utf-8") as f:
                 context = f.read()
-            
+
             import re
             from mido import MidiFile, MidiTrack, Message, MetaMessage
             # 正则匹配内容: MidiTrack([Message(...), ...])
@@ -259,7 +259,7 @@ class Midi:
         mid.tracks.append(self.messages)
         mid.save(midipath)
         self.midifile = midipath
-        
+
         return self
 
     # 以.pl.py的格式导出, div_time: midi的time的单位长度与Note的time的单位长度不同，支持用户手动调整
@@ -319,7 +319,7 @@ class Note:
     def __repr__(self) -> str:
         return f"Note(time={self.time}, playTime={self.playTime}, instrument={self.instrument}, " \
                f"pitch={self.pitch}, velocity={self.velocity})"
-    
+
     def append(self, other: "Note") -> "Chord":
         return Chord(self, other, time=self.time)
 
@@ -391,7 +391,7 @@ class Chord:
             else:
                 temp.i - first_ins.i
                 temp.o - first_ins.o
-            
+
             for a_note in notes:
                 temp.add_note(a_note.pitch) # type: ignore
 
@@ -418,7 +418,7 @@ class Loop:
     def case(self, *notes) -> Self:
         self.cases.append(notes)
         return self
-    
+
     def __iter__(self):
         pass
 
@@ -468,7 +468,7 @@ class Piece:
             other.time -= 1
         self.notes.append(other)
         return self
-    
+
     # 将Piece转化为midi文件(暂不支持Chord)
     def write_midi(self,
                    filepath: str = "temp.mid",
@@ -506,7 +506,7 @@ class Piece:
             elif isinstance(a_note, Note):
                 write_a_midi_note(a_note)
                 none_counter = 0
-        
+
         for channel, program in enumerate(channels):
             track.insert(1, mido.Message("program_change", channel=channel, program=program, time=0))
 
@@ -514,7 +514,7 @@ class Piece:
             f.write(repr(track))
         mid.save(filepath)
         return self
-    
+
     # 将Piece类转换为Midi
     def translate_to_midi(self, filepath="temp.mid") -> Midi:
         self.write_midi(filepath)
@@ -534,7 +534,7 @@ class Piece:
 
     def __len__(self) -> int:
         return len(self.notes)
-    
+
     def __getitem__(self, item: int) -> Optional[Union[Note, Chord]]:
         if not isinstance(item, int):
             raise TypeError
@@ -566,7 +566,7 @@ class Player:
     ) -> None:
         from physicsLab.element import count_Elements
         count_elements_start: int = count_Elements()
-        
+
         if not (
                 isinstance(x, (int, float)) or
                 isinstance(y, (int, float)) or
@@ -664,7 +664,7 @@ class Player:
         stop.o - yesGate.i_low - check1.i
         stop.i_up - yPlayer[ycor // 2].o_up # type: ignore -> D_Flipflop must has attr o_up
         stop.i_low - xPlayer[side - 1].o_up # type: ignore -> D_Flipflop must has attr neg_data_Output
-    
+
         count_elements_end: int = count_Elements()
         self._count_elements = count_elements_end - count_elements_start
 

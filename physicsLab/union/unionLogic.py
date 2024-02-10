@@ -508,7 +508,7 @@ class Super_AndGate:
             any(not isinstance(v, Pin) for v in input_pins) or \
             len(input_pins) < 2:
             raise TypeError
-    
+
         if len(input_pins) == 2:
             And_Gate(x, y, z, elementXYZ)
 
@@ -534,6 +534,6 @@ class Counter_Tick:
             c.o_upmid - c.i_low
         elif stop == 8:
             c.o_up - c.i_low
-        
-        
+
+
         Super_AndGate(x, y, z, elementXYZ, )

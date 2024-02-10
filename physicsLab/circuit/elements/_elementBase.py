@@ -95,7 +95,7 @@ class CircuitBase(metaclass=CircuitMeta):
         if elementXYZ == True or (_elementXYZ.is_elementXYZ() == True and elementXYZ is None):
             x, y, z = _elementXYZ.xyzTranslate(x, y, z)
             self.is_elementXYZ = True
-        
+
         del stack_Experiment.top().elements_Position[self._position]
         self._position = position(x, y, z) # type: ignore -> define _arguments in metaclass
         self._arguments['Position'] = f"{x},{z},{y}" # type: ignore -> define _arguments in metaclass

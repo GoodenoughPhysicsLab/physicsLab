@@ -9,7 +9,7 @@ position = namedtuple("position", ["x", "y", "z"])
 def roundData(*num) -> Union[int, float, Tuple[float]]:
     if not all(isinstance(val, (int, float)) for val in num):
         raise TypeError
-    
+
     if len(num) == 1:
         return round(num[0], 4)
     return tuple(float(round(i, 4)) for i in num)

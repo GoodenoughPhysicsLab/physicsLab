@@ -45,7 +45,7 @@ class UnionMeta(type):
         self.__init__(x, y, z, bitLength, elementXYZ, unionHeading, fold, foldMaxNum, *args, **kwags)
         if not hasattr(self, "_elements"):
             raise AttributeError
-        
+
         return self
 
 # Union class的基类 MixIn Class
@@ -60,7 +60,7 @@ class UnionBase(metaclass=UnionMeta):
         if not isinstance(item, int):
             raise TypeError
         return self._elements[item] # type: ignore -> 子类含有._elements
-    
+
     # 设置坐标
     def set_Position(self, x, y, z):
         pass

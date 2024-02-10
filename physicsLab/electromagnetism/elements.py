@@ -61,7 +61,7 @@ def _element_Init_HEAD(func: Callable) -> Callable:
             raise TypeError('illegal argument')
         if stack_Experiment.top().ExperimentType != experimentType.Electromagnetism:
             raise phy_errors.ExperimentTypeError
-        
+
         _Expe = stack_Experiment.top()
 
         # 初始化全局变量

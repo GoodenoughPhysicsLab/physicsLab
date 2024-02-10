@@ -49,7 +49,7 @@ class Experiment:
     if platform.system() == "Windows":
         from getpass import getuser
         FILE_HEAD = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Circuit"
-    
+
     def __init__(self, sav_name: Optional[str] = None) -> None:
         self.is_open_or_crt: bool = False
         self.is_open: bool = False
@@ -66,7 +66,7 @@ class Experiment:
 
         if sav_name is not None:
             self.open_or_crt(sav_name)
-    
+
     def __open(self) -> None:
         self.is_open = True
         self.CameraSave = json.loads(self.PlSav["Experiment"]["CameraSave"])
@@ -159,7 +159,7 @@ class Experiment:
             self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
 
         self.entitle(sav_name)
-    
+
     # 创建存档，输入为存档名 sav_name: 存档名; experiment_type: 实验类型; force_crt: 不论实验是否已经存在,强制创建
     def crt(self, sav_name: str, experiment_type: experimentType = experimentType.Circuit, force_crt: bool=False) -> "Experiment":
         if self.is_open_or_crt:
@@ -182,7 +182,7 @@ class Experiment:
 
         self.__crt(sav_name, experiment_type)
         return self
-    
+
     # 先尝试打开实验, 若失败则创建实验
     def open_or_crt(self, savName: str, experimentType: experimentType = experimentType.Circuit) -> "Experiment":
         if self.is_open_or_crt:
@@ -192,7 +192,7 @@ class Experiment:
         if not isinstance(savName, str):
             raise TypeError
         stack_Experiment.push(self)
-        
+
         self.FileName = search_Experiment(savName)
         if self.FileName is not None:
             self.SavPath = f"{Experiment.FILE_HEAD}/{self.FileName}"
@@ -201,7 +201,7 @@ class Experiment:
         else:
             self.__crt(savName, experimentType)
         return self
-    
+
     # 读取实验已有状态
     def read(self) -> "Experiment":
         if self.SavPath is None: # 是否已.open()或.crt()
@@ -321,7 +321,7 @@ class Experiment:
             )
 
         return self
-    
+
     # 删除存档
     def delete(self, warning_status: bool=False) -> None:
         if self.SavPath is None:
@@ -337,11 +337,11 @@ class Experiment:
             os.remove(self.SavPath.replace(".sav", ".jpg"))
 
         stack_Experiment.pop()
-    
+
     # 退出实验而不进行任何操作
     def exit(self) -> None:
         stack_Experiment.pop()
-    
+
     # 对存档名进行重命名
     def entitle(self, sav_name: str) -> "Experiment":
         if not isinstance(sav_name, str):
@@ -351,18 +351,18 @@ class Experiment:
         self.PlSav["InternalName"] = sav_name
 
         return self
-    
+
     # 使用notepad打开改存档
     def show(self) -> "Experiment":
         if self.SavPath is None:
             raise TypeError
-        
+
         if platform.system() != "Windows":
             return self
 
         os.popen(f'notepad {self.SavPath}')
         return self
-    
+
     # 生成与发布实验有关的存档内容
     def publish(self, title: Optional[str] = None, introduction: Optional[str] = None) -> "Experiment":
         # 发布实验时输入实验介绍
@@ -379,7 +379,7 @@ class Experiment:
         name_Experiment(title)
 
         return self
-    
+
     # 设置实验者的视角
     # x, y, z : 实验者观察的坐标
     # distance: 实验者到(x, y, z)的距离

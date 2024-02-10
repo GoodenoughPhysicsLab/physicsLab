@@ -31,7 +31,7 @@ if colorSupport and sys.platform == "win32":
 def color_print(msg: str, color: COLOR) -> None:
     if not isinstance(color, COLOR):
         raise TypeError
-    
+
     global colorSupport
 
     if not isinstance(msg, str):
