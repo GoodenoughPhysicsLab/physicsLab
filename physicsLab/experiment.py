@@ -2,6 +2,7 @@
 import os
 import json
 import copy
+import time
 import platform
 
 from physicsLab import  _tools
@@ -281,6 +282,9 @@ class Experiment:
 
         if not no_pop:
             stack_Experiment.pop()
+
+        self.PlSav["Experiment"]["CreationDate"] = int(time.time() * 1000)
+        self.PlSav["Summary"]["CreationDate"] = int(time.time() * 1000)
 
         self.CameraSave["VisionCenter"] = f"{self.VisionCenter.x},{self.VisionCenter.z},{self.VisionCenter.y}"
         self.CameraSave["TargetRotation"] = f"{self.TargetRotation.x},{self.TargetRotation.z},{self.TargetRotation.y}"

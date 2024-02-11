@@ -1,24 +1,28 @@
 # -*- coding: utf-8 -*-
 
+class _Generate:
+    def __str__(self) -> str:
+        return "Dynamically generated at runtime" # 运行时动态生成
+
 # 所有模板都是只读的
 # 电学实验的sav模板
 Circuit = {
     "Type": 0,
     "Experiment": {
         "ID": None,
-        "Type": 0,  # 实验类型： 0: 电学实验, 1: 电学电路图模式, 2: 天体彩蛋模式, 3：天体物理, 4: 电与磁实验
+        "Type": 0, # 实验类型： 0: 电学实验, 1: 电学电路图模式, 2: 天体彩蛋模式, 3：天体物理, 4: 电与磁实验
         "Components": 7,
         "Subject": None,
-        "StatusSave": None, # 运行时动态生成
-        "CameraSave": None, # 运行时动态生成
+        "StatusSave": _Generate,
+        "CameraSave": _Generate,
         "Version": 2404,
-        "CreationDate": 1673100860436,
+        "CreationDate": _Generate,
         "Paused": False,
         "Summary": None,
         "Plots": None
     },
     "ID": None,
-    "Summary": {  # 发布实验
+    "Summary": { # 发布实验
         "Type": 0,
         "ParentID": None,
         "ParentName": None,
@@ -43,7 +47,7 @@ Circuit = {
         "Comments": 0,
         "Price": 0,
         "Popularity": 0,
-        "CreationDate": 1673086932246,
+        "CreationDate": _Generate,
         "UpdateDate": 0,
         "SortingDate": 0,
         "ID": None,
@@ -64,8 +68,9 @@ Circuit = {
         "Visibility": 0,
         "Settings": {},
         "Multilingual": False
-    }, "CreationDate": 0,
-    "InternalName": None,  # 存档名，运行时动态生成
+    },
+    "CreationDate": 0,
+    "InternalName": _Generate, # 存档名
     "Speed": 1.0,
     "SpeedMinimum": 0.0002,
     "SpeedMaximum": 2.0,
@@ -91,10 +96,10 @@ Celestial = {
         "Type": 3,
         "Components": 0,
         "Subject": None,
-        "StatusSave": None, # 运行时动态生成
-        "CameraSave": None, # 运行时动态生成
+        "StatusSave": _Generate,
+        "CameraSave": _Generate,
         "Version": 2407,
-        "CreationDate": 1702570435066,
+        "CreationDate": _Generate,
         "Paused": False,
         "Summary": None,
         "Plots": None
@@ -125,7 +130,7 @@ Celestial = {
         "Comments": 0,
         "Price": 0,
         "Popularity": 0,
-        "CreationDate": 1683039107861,
+        "CreationDate": _Generate,
         "UpdateDate": 0,
         "SortingDate": 0,
         "ID": None,
@@ -148,7 +153,7 @@ Celestial = {
         "Multilingual": False
     },
     "CreationDate": 0,
-    "InternalName": None,  # 存档名，运行时动态生成
+    "InternalName": _Generate, # 存档名
     "Speed": 1.0,
     "SpeedMinimum": 0.1,
     "SpeedMaximum": 10.0,
@@ -174,10 +179,10 @@ Electromagnetism = {
         "Type": 4,
         "Components": 1,
         "Subject": None,
-        "StatusSave": None, # 运行时动态生成
-        "CameraSave": None, # 运行时动态生成
+        "StatusSave": _Generate,
+        "CameraSave": _Generate,
         "Version": 2405,
-        "CreationDate": 1683039963710,
+        "CreationDate": _Generate,
         "Paused": False,
         "Summary": None,
         "Plots": None
@@ -208,7 +213,7 @@ Electromagnetism = {
         "Comments": 0,
         "Price": 0,
         "Popularity": 0,
-        "CreationDate": 1683039107861,
+        "CreationDate": _Generate,
         "UpdateDate": 0,
         "SortingDate": 0,
         "ID": None,
@@ -231,7 +236,7 @@ Electromagnetism = {
         "Multilingual": False
     },
     "CreationDate": 0,
-    "InternalName": None,  # 存档名，运行时动态生成
+    "InternalName": _Generate, # 存档名
     "Speed": 1.0,
     "SpeedMinimum": 0.1,
     "SpeedMaximum": 2.0,

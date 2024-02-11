@@ -88,7 +88,7 @@ class Midi:
 
                 try:
                     plmidi.sound("temp.mid")
-                except plmidi.OpenMidiFileError or plmidi.plmidiInitError:
+                except (plmidi.OpenMidiFileError, plmidi.plmidiInitError):
                     return False
 
                 return True
@@ -168,7 +168,7 @@ class Midi:
                 len_res += 1
                 note_time = round((msg.time + wait_time) / div_time)
 
-                velocity = _format_velocity(msg.velocity / 128) # 音符的响度
+                velocity = _format_velocity(msg.velocity / 127) # 音符的响度
 
                 if note_time != 0 or len(res) == 0:
                     if note_time == 0:

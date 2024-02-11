@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-
-USE_VIZTRACER: bool = False
-
 import unittest
 from physicsLab import *
 from physicsLab.union import *
 from physicsLab.experiment import stack_Experiment
+
+import format_coding_style as fcs
+
+USE_VIZTRACER: bool = False
+
 if USE_VIZTRACER:
     from viztracer import VizTracer
 
@@ -310,4 +312,5 @@ class MyTestCase(unittest.TestCase):
             Simple_Instrument().add_note(67) # type: ignore
 
 if __name__ == '__main__':
+    fcs.main()
     unittest.main()

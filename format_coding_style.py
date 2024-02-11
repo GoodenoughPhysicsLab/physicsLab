@@ -1,6 +1,6 @@
 import os
 
-if __name__ == "__main__":
+def main():
     for root, dirs, files in os.walk("physicsLab"):
         dirs.remove("__pycache__")
 
@@ -17,3 +17,6 @@ if __name__ == "__main__":
             context = context[:-1]
             with open(f"{root}/{file}", "w", encoding="utf-8") as f:
                 f.write(context)
+
+if __name__ == "__main__":
+    main()
