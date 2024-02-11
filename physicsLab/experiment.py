@@ -473,7 +473,11 @@ class experiment:
 
         return self._Experiment
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, traceback) -> None:
+        if exc_type is not None:
+            self._Experiment.exit()
+            return
+
         if self.is_exit:
             self._Experiment.exit()
             return
