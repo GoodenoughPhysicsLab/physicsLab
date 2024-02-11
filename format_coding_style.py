@@ -1,11 +1,5 @@
 import os
 
-def is_all_blank(line: str) -> str:
-    for char in line:
-        if char != ' ':
-            return False
-    return True
-
 if __name__ == "__main__":
     for root, dirs, files in os.walk("physicsLab"):
         dirs.remove("__pycache__")
@@ -19,10 +13,7 @@ if __name__ == "__main__":
                 while line.endswith(' '):
                     line = line[:-1]
 
-                if is_all_blank(line):
-                    context += '\n'
-                else:
-                    context += line + '\n'
+                context += line + '\n'
             context = context[:-1]
             with open(f"{root}/{file}", "w", encoding="utf-8") as f:
                 f.write(context)

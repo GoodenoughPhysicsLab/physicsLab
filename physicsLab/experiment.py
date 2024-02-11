@@ -40,7 +40,7 @@ class stack_Experiment:
         return res
 
 # 获取当前正在操作的存档
-def get_Experiment() -> stack_Experiment:
+def get_Experiment() -> "Experiment":
     return stack_Experiment.top()
 
 # 实验（存档）类
@@ -55,6 +55,7 @@ class Experiment:
         self.is_open: bool = False
         self.is_crt: bool = False
         self.is_read: bool = False
+        self.is_elementXYZ: bool = False
 
         self.FileName: Optional[str] = None # 存档的文件名
         self.SavPath: Optional[str] = None # 存档的完整路径, 为 f"{experiment.FILE_HEAD}/{self.FileName}"

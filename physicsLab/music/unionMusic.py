@@ -75,14 +75,6 @@ class Midi:
                 self.tempo = msg.tempo
         return res
 
-    # 返回Midi的播放时长
-    def __get_midi_duration(self):
-        res = 0
-        for msg in self._midifile:
-            res += msg.time
-
-        return res
-
     # 播放midi类存储的信息
     def sound(self, player: Optional[PLAYER] = None) -> Self:
         # 使用plmidi播放midi

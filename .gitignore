@@ -32,3 +32,4 @@ physicsLabSav/
 *.mido.py
 *.pl.py
 *.test.*
+*.ignore
