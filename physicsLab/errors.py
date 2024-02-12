@@ -4,8 +4,18 @@
 from typing import Optional
 from physicsLab import _colorUtils
 
-# 抛出警告, 当warning_status==False
-def warning(msg: str, warning_status: Optional[bool]=None) -> None:
+warning_status: Optional[bool] = None
+
+# 设置警告状态
+def set_warning_status(_warning_status: bool) -> None:
+    if not isinstance(_warning_status, bool):
+        raise TypeError
+
+    global warning_status
+    warning_status = _warning_status
+
+# 抛出警告, 当warning_status==None
+def warning(msg: str, warning_status: Optional[bool]=warning_status) -> None:
     if warning_status is None:
         _colorUtils.color_print("Warning: " + msg, _colorUtils.COLOR.YELLOW)
     elif warning_status:

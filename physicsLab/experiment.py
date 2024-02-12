@@ -328,7 +328,7 @@ class Experiment:
         return self
 
     # 删除存档
-    def delete(self, warning_status: bool=False) -> None:
+    def delete(self, warning_status: Optional[bool]=None) -> None:
         if self.SavPath is None:
             raise TypeError
 
@@ -336,6 +336,8 @@ class Experiment:
             os.remove(self.SavPath)
             _colorUtils.color_print(f"Successfully delete experiment {self.PlSav['InternalName']}({self.FileName})!", _colorUtils.COLOR.BLUE)
         else:
+            if warning_status is None:
+                warning_status = errors.warning_status
             errors.warning(f"experiment {self.PlSav['InternalName']}({self.FileName}) do not exist.", warning_status)
 
         if os.path.exists(self.SavPath.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
@@ -488,7 +490,7 @@ class experiment:
             return
 
 # 获取所有物实存档的文件名
-def getAllSav() -> List:
+def getAllSav() -> List[str]:
     from os import walk
     savs = [i for i in walk(Experiment.FILE_HEAD)][0]
     savs = savs[savs.__len__() - 1]

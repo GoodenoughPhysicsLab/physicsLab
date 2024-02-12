@@ -23,7 +23,7 @@ def check_TypeUnionPin(func: Callable):
     def result(
         sourcePin: Union[union_Pin, Pin],
         targetPin: Union[union_Pin, Pin],
-        color="蓝"
+        *args, **kwargs
     ) -> None:
         if isinstance(sourcePin, Pin):
             sourcePin = union_Pin(sourcePin.element_self, sourcePin)
@@ -31,8 +31,8 @@ def check_TypeUnionPin(func: Callable):
             targetPin = union_Pin(targetPin.element_self, targetPin)
 
         if not (
-                isinstance(sourcePin, union_Pin) or
-                isinstance(targetPin, union_Pin)
+                isinstance(sourcePin, union_Pin)
+                and isinstance(targetPin, union_Pin)
         ):
             raise TypeError
 
@@ -42,7 +42,7 @@ def check_TypeUnionPin(func: Callable):
                 f"are not equal to {targetPin.union_self.__class__.__name__}'s input pin."
             )
 
-        func(sourcePin, targetPin, color)
+        func(sourcePin, targetPin, *args, **kwargs)
     return result
 
 # 为unionPin连接导线，相当于自动对数据进行连接导线
@@ -52,7 +52,7 @@ def crt_Wires(
         targetPin: Union[union_Pin, Pin],
         color="蓝"
 ) -> None:
-    for i, o in zip(sourcePin.elementPins, targetPin.elementPins): # type: ignore
+    for i, o in zip(sourcePin.elementPins, targetPin.elementPins):
         crt_Wire(i, o, color)
 
 # 删除unionPin的导线
@@ -60,7 +60,6 @@ def crt_Wires(
 def del_Wires(
         sourcePin: Union[union_Pin, Pin],
         targetPin: Union[union_Pin, Pin],
-        color="蓝"
 ) -> None:
-    for i, o in zip(sourcePin.elementPins, targetPin.elementPins): # type: ignore
-        del_Wire(i, o, color)
+    for i, o in zip(sourcePin.elementPins, targetPin.elementPins):
+        del_Wire(i, o)

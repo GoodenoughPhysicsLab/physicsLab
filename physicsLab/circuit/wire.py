@@ -31,55 +31,53 @@ class OutputPin(Pin):
         super().__init__(input_self, pinLabel)
 
 # 检查函数参数是否是导线
-def _check_typeWire(func):
-    def result(SourcePin: Pin, TargetPin: Pin, color: str = '蓝') -> None:
-        if (
+def _check_typeWire(func: callable):
+    def result(SourcePin: Pin, TargetPin: Pin, *args, **kwargs) -> None:
+        if not (
                 isinstance(SourcePin, Pin) and
                 isinstance(TargetPin, Pin)
         ):
-            # 将英文的color转换为中文
-            if color in ("black", "blue", "red", "green", "yellow"):
-                color = {"black": "黑", "blue": "蓝", "red": "红", "green": "绿", "yellow": "黄"}[color]
+            raise TypeError
 
-            if (color not in ("黑", "蓝", "红", "绿", "黄")):
-                raise errors.WireColorError
+        if stack_Experiment.top().ExperimentType != experimentType.Circuit:
+            raise errors.ExperimentTypeError
 
-            if stack_Experiment.top().ExperimentType != experimentType.Circuit:
-                raise errors.ExperimentTypeError
-
-            func(SourcePin, TargetPin, color)
+        func(SourcePin, TargetPin, *args, **kwargs)
 
     return result
 
 # 连接导线
 @_check_typeWire
 def crt_Wire(SourcePin: Pin, TargetPin: Pin, color: str = '蓝') -> None:
+    if color in ("black", "blue", "red", "green", "yellow"):
+        color = {"black": "黑", "blue": "蓝", "red": "红", "green": "绿", "yellow": "黄"}[color]
+
+    if (color not in ("黑", "蓝", "红", "绿", "黄")):
+        raise errors.WireColorError
+
     stack_Experiment.top().Wires.append({"Source": SourcePin.element_self._arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
                    "Target": TargetPin.element_self._arguments["Identifier"], "TargetPin": TargetPin.pinLabel,
                    "ColorName": f"{color}色导线"})
 
 # 删除导线
 @_check_typeWire
-def del_Wire(SourcePin: Pin, TargetPin: Pin, color: str = '蓝') -> None:
-    a_wire = {
-        "Source": SourcePin.element_self._arguments["Identifier"], "SourcePin": SourcePin.pinLabel,
-        "Target": TargetPin.element_self._arguments["Identifier"], "TargetPin": TargetPin.pinLabel,
-        "ColorName": f"{color}色导线"
-    }
-    _Expe = stack_Experiment.top()
+def del_Wire(SourcePin: Pin, TargetPin: Pin) -> None:
+    def _wire_is_equal(SourcePin: Pin, TargetPin: Pin, a_wire: dict) -> bool:
+        if a_wire["Source"] == SourcePin.element_self._arguments["Identifier"] and a_wire["SourcePin"] == SourcePin.pinLabel \
+           and a_wire["Target"] == TargetPin.element_self._arguments["Identifier"] and a_wire["TargetPin"] == TargetPin.pinLabel:
+                return True
+        elif a_wire["Source"] == TargetPin.element_self._arguments["Identifier"] and a_wire["SourcePin"] == TargetPin.pinLabel \
+               and a_wire["Target"] == SourcePin.element_self._arguments["Identifier"] and a_wire["TargetPin"] == SourcePin.pinLabel:
+                return True
+        return False
 
-    if a_wire in _Expe.Wires:
-        _Expe.Wires.remove(a_wire)
-    else:
-        a_wire = {
-            "Source": TargetPin.element_self._arguments["Identifier"], "SourcePin": TargetPin.pinLabel,
-            "Target": SourcePin.element_self._arguments["Identifier"], "TargetPin": SourcePin.pinLabel,
-            "ColorName": f"{color}色导线"
-        }
-        if a_wire in _Expe.Wires:
-            _Expe.Wires.remove(a_wire)
+    i: int = 0
+    while i < len(stack_Experiment.top().Wires):
+        a_wire = stack_Experiment.top().Wires[i]
+        if _wire_is_equal(SourcePin, TargetPin, a_wire):
+            stack_Experiment.top().Wires.pop(i)
         else:
-            raise errors.WireNotFoundError
+            i += 1
 
 # 删除所有导线
 def clear_Wires() -> None:

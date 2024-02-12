@@ -55,10 +55,10 @@ __all__ = [
     # experimentType.py
     "experimentType",
 
-    # phy_errors.py
+    # errors.py
     "OpenExperimentError", "WireColorError", "WireNotFoundError", "bitLengthError",
     "experimentExistError", "ExperimentTypeError", "getElementError", "crtExperimentFailError",
-    "ExperimentError",
+    "ExperimentError", "set_warning_status", "WarningError", "ElementNotExistError",
 
     # experiment.py
     "Experiment", "experiment", "open_Experiment", "crt_Experiment", "read_Experiment", "write_Experiment",
