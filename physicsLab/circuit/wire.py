@@ -46,6 +46,14 @@ def _check_typeWire(func: callable):
 
     return result
 
+# 原始的连接导线的方式
+def primitive_crt_wire(Source: str, SourcePin: str, Target: str, TargetPin: str, color: str = '蓝'):
+    stack_Experiment.top().Wires.append({
+        "Source": Source, "SourcePin": SourcePin,
+        "Target": TargetPin, "TargetPin": TargetPin,
+        "ColorName": f"{color}色导线"
+    })
+
 # 连接导线
 @_check_typeWire
 def crt_Wire(SourcePin: Pin, TargetPin: Pin, color: str = '蓝') -> None:
@@ -67,7 +75,7 @@ def del_Wire(SourcePin: Pin, TargetPin: Pin) -> None:
            and a_wire["Target"] == TargetPin.element_self._arguments["Identifier"] and a_wire["TargetPin"] == TargetPin.pinLabel:
                 return True
         elif a_wire["Source"] == TargetPin.element_self._arguments["Identifier"] and a_wire["SourcePin"] == TargetPin.pinLabel \
-               and a_wire["Target"] == SourcePin.element_self._arguments["Identifier"] and a_wire["TargetPin"] == SourcePin.pinLabel:
+             and a_wire["Target"] == SourcePin.element_self._arguments["Identifier"] and a_wire["TargetPin"] == SourcePin.pinLabel:
                 return True
         return False
 

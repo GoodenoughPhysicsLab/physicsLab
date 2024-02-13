@@ -58,6 +58,13 @@ class Simple_Instrument(CircuitBase):
     def o(self) -> Pin:
         return Pin(self, 1)
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({self._position.x}, {self._position.y}, {self._position.z}, " \
+               f"elementXYZ={self.is_elementXYZ}, instrument={self._arguments['Properties']['乐器']}, " \
+               f"pitch={self._arguments['Properties']['音高']}, bpm={self._arguments['Properties']['节拍']}, " \
+               f"velocity={self._arguments['Properties']['音量']}, rated_oltage={self._arguments['Properties']['额定电压']}, " \
+               f"is_ideal_model={self._arguments['Properties']['理想模式']}, is_single={self._arguments['Properties']['脉冲']})"
+
     # 物实v2.4.7新功能: 简单乐器同时播放多个音符
     def add_note(self, *pitchs: int) -> Self:
         if not all(isinstance(a_pitch, int) and 0 <= a_pitch < 128 for a_pitch in pitchs):

@@ -64,7 +64,7 @@ class Experiment:
         # 通过坐标索引元件
         self.elements_Position: Dict[tuple, list] = {}  # key: self._position, value: List[self...]
         # 通过index（元件生成顺序）索引元件
-        self.elements_Index: list = [] # List[self]
+        self.elements_Index: list = [] # List[CircuitBase]
 
         if sav_name is not None:
             self.open_or_crt(sav_name)
@@ -391,7 +391,7 @@ class Experiment:
     # x, y, z : 实验者观察的坐标
     # distance: 实验者到(x, y, z)的距离
     # rotation: 实验者观察的角度
-    def viewing(self,
+    def observe(self,
                 x: Optional[numType] = None,
                 y: Optional[numType] = None,
                 z: Optional[numType] = None,
@@ -399,7 +399,10 @@ class Experiment:
                 rotation_x: Optional[numType] = None,
                 rotation_y: Optional[numType] = None,
                 rotation_z: Optional[numType] = None
-        ):
+    ) -> "Experiment":
+        if self.SavPath is None:
+            raise TypeError
+
         if x is None:
             x = self.VisionCenter.x
         if y is None:
@@ -415,9 +418,56 @@ class Experiment:
         if rotation_z is None:
             rotation_z = self.TargetRotation.z
 
+        if not isinstance(x, (int, float)):
+            raise TypeError
+        if not isinstance(y, (int, float)):
+            raise TypeError
+        if not isinstance(z, (int, float)):
+            raise TypeError
+        if not isinstance(distance, (int, float)):
+            raise TypeError
+        if not isinstance(rotation_x, (int, float)):
+            raise TypeError
+        if not isinstance(rotation_y, (int, float)):
+            raise TypeError
+        if not isinstance(rotation_z, (int, float)):
+            raise TypeError
+
         self.VisionCenter = _tools.position(x, y, z)
         self.CameraSave["Distance"] = distance
         self.TargetRotation = _tools.position(rotation_x, rotation_y, rotation_z)
+
+        return self
+
+    # 与物实示波器图表有关的支持
+    def graph(self) -> "Experiment":
+        if self.SavPath is None:
+            raise TypeError
+
+        pass
+        return self
+
+    # 以physicsLab代码的形式导出实验
+    def export(self, output_path: str = "temp.pl.py", sav_name: str = "temp") -> "Experiment":
+        if self.SavPath is None:
+            raise TypeError
+
+        res: str = f'''from physicsLab import *
+exp = Experiment("{sav_name}")
+'''
+
+        for a_element in self.elements_Index:
+            res += f"{a_element._arguments['Identifier']} = {str(a_element)}\n"
+        # 连接导线未完成(暂时不想调用更原始的primitive_crt_wire)
+        for a_wire in self.Wires:
+            pass
+
+        res += "exp.write()"
+
+        with open(output_path, "w", encoding="utf-8") as f:
+            f.write(res)
+
+        return self
 
 # 仅供with时使用
 class experiment:
@@ -430,7 +480,6 @@ class experiment:
                  experiment_type: experimentType = experimentType.Circuit, # 若创建实验，支持传入指定实验类型
                  extra_filepath: Optional[str] = None, # 将存档写入额外的路径
                  force_crt: bool = False, # 强制创建一个实验, 若已存在则删除已有实验
-                 delete_warning_status: bool = False, # 删除实验时无警告
                  is_exit: bool = False, # 退出试验
     ):
         if not (
@@ -454,7 +503,6 @@ class experiment:
         self.experimentType: experimentType = experiment_type
         self.extra_filepath: Optional[str] = extra_filepath
         self.force_crt = force_crt
-        self.delete_warning_status = delete_warning_status
         self.is_exit = is_exit
 
     # 上下文管理器，搭配with使用
@@ -486,7 +534,7 @@ class experiment:
         if self.write:
             self._Experiment.write(extra_filepath=self.extra_filepath, no_pop=self.delete)
         if self.delete:
-            self._Experiment.delete(self.delete_warning_status)
+            self._Experiment.delete()
             return
 
 # 获取所有物实存档的文件名

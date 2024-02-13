@@ -19,6 +19,15 @@ set_warning_status(True)
 a = Experiment().crt("example")
 a.delete()
 ```
+```Python
+from physicsLab import *
+
+set_warning_status(True)
+
+with experiment("example") as e:
+    ...
+```
+
 
 除了全局设置警告状态，还可以在一些会抛出警告的函数的参数中设置警告状态，这就是局部设置    
 ```Python
@@ -26,15 +35,6 @@ from physicsLab import *
 
 a = Experiment().crt("example")
 a.delete(warning_status=True)
-```
-
-如果使用`with experiment("example")`的形式打开存档，会默认局部设置不打印警告，以`Experiment.delete()`为例，此时设置状态需使用`delete_warning_status`参数
-example:
-```Python
-from physicsLab import *
-
-with experiment("example", write=False, delete=True, delete_warning_status=True) as exp:
-    pass
 ```
 
 ## 异常
