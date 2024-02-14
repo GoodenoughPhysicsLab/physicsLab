@@ -1,4 +1,6 @@
 # coding=utf-8
+import inspect
+
 from physicsLab import errors
 from physicsLab.circuit import wire
 import physicsLab.circuit.elementXYZ as _elementXYZ
@@ -48,7 +50,7 @@ class CircuitMeta(type):
         if self.is_elementXYZ and self.is_bigElement:
             x, y, z = _elementXYZ.amend_big_Element(x, y, z)
 
-        self._arguments["Identifier"] = randString(32)
+        self._arguments["Identifier"] = f"pl{CircuitBase.__index}"
         # x, z, y 物实采用欧拉坐标系
         self._arguments["Position"] = f"{x},{z},{y}"
 
@@ -127,6 +129,14 @@ class CircuitBase(metaclass=CircuitMeta):
     # 打印参数
     def print_arguments(self) -> None:
         print(self._arguments) # type: ignore
+
+    @classmethod
+    def _get_property(cls) -> list:
+        res: list = []
+        for name, _ in inspect.getmembers(cls, lambda i: isinstance(i, property)):
+            res.append(name)
+
+        return res
 
 # 双引脚模拟电路原件的引脚
 def two_pin_ArtificialCircuit_Pin(cls):

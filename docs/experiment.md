@@ -94,7 +94,7 @@ get_Experiment()
 
 ## 设置实验者的观察视角
 ```Python
-Experiment.viewing(
+Experiment.observe(
     self,
     x: Optional[numType] = None,
     y: Optional[numType] = None,
@@ -104,4 +104,9 @@ Experiment.viewing(
     rotation_y: Optional[numType] = None,
     rotation_z: Optional[numType] = None
 ):
+```
+
+## 以physicsLab代码的形式导出
+```Python
+Experiment.export()
 ```

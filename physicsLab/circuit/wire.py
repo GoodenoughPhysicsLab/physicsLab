@@ -2,7 +2,7 @@
 from physicsLab import errors
 from physicsLab.experiment import get_Experiment
 from physicsLab.experimentType import experimentType
-from physicsLab.typehint import WireDict
+from physicsLab.typehint import WireDict, Optional
 
 # 电学元件引脚类, 模电元件引脚无明确的输入输出之分, 因此用这个
 class Pin:
@@ -19,7 +19,23 @@ class Pin:
         return obj
 
     def __eq__(self, other: "Pin") -> bool:
+        if not isinstance(other, Pin):
+            return False
+
         return self.element_self == other.element_self and self.pinLabel == other.pinLabel
+
+    # 将self转换为 CircuitBase.a_pin的形式
+    def export_str(self) -> str:
+        pin_name = self._get_pin_name_of_class()
+        if pin_name is None:
+            raise RuntimeError("Pin is not belong to any element")
+        return f"{self.element_self._arguments['Identifier']}.{pin_name}"
+
+    def _get_pin_name_of_class(self) -> Optional[str]:
+        for method in self.element_self._get_property():
+            if eval(f"self.element_self.{method}") == self:
+                return method
+        return None
 
 # 只用于输入的引脚
 class InputPin(Pin):
@@ -48,13 +64,19 @@ class Wire:
 
     def __eq__(self, other: "Wire") -> bool:
         if not isinstance(other, Wire):
-            raise TypeError
+            return False
 
         if ((self.Source == other.Source and self.Target == other.Target)
            or (self.Source == other.Target and self.Target == other.Source)):
             return True
         else:
             return False
+
+    def __repr__(self) -> str:
+        if self.color == "蓝":
+            return f"{self.Source.export_str()} - {self.Target.export_str()}"
+        else:
+            return f"crt_Wire({self.Source.export_str()}, {self.Target.export_str()}, '{self.color}')"
 
     def release(self) -> WireDict:
         return {

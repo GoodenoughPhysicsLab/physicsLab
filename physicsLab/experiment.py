@@ -467,14 +467,13 @@ class Experiment:
         if self.SavPath is None:
             raise TypeError
 
-        res: str = f"from physicsLab import *\nexp = Experiment('{sav_name}')"
+        res: str = f"from physicsLab import *\nexp = Experiment('{sav_name}')\n"
 
         for a_element in self.Elements:
             res += f"{a_element._arguments['Identifier']} = {str(a_element)}\n"
         # 连接导线未完成(暂时不想调用更原始的primitive_crt_wire)
         for a_wire in self.Wires:
-            pass
-
+            res += str(a_wire) + '\n'
         res += "\nexp.write()"
 
         with open(output_path, "w", encoding="utf-8") as f:
