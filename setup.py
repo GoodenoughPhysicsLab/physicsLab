@@ -7,7 +7,7 @@ setuptools.setup(
     license="MIT",
     author="Goodenough",
     author_email="2381642961@qq.com",
-    description="Python API for physics-lab-AR",
+    description="Python API for Physics-Lab-AR",
     long_description="click \"[there](https://gitee.com/script2000/physicsLab)\" to show more information",
     long_description_content_type="text/markdown",
     url="https://gitee.com/script2000/physicsLab",
@@ -19,5 +19,5 @@ setuptools.setup(
         "Natural Language :: Chinese (Simplified)",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.7',
+    python_requires='>=3.8',
 )

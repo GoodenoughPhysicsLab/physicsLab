@@ -12,7 +12,7 @@
 
 ## 安装教程
 
-1.  请确保你的电脑有[Python](https://www.python.org)（大于等于3.7）与[物理实验室PC版](https://www.turtlesim.com/)（简称`物实`）（也可以联系[开发者Jone-Chen](https://gitee.com/civitasjohn)）
+1.  请确保你的电脑有[Python](https://www.python.org)（大于等于3.8）与[物理实验室PC版](https://www.turtlesim.com/)（简称`物实`）（也可以联系[开发者Jone-Chen](https://gitee.com/civitasjohn)）
 
 2.  在cmd或shell输入以下载physicsLab：
 ```shell
@@ -75,10 +75,9 @@ sys.path.append("/your/path/of/physicsLab") # 将字符串替换为你想添加�
 
 
 ## 已经测试过的环境
-Windows7: python 3.7.8  &&  python 3.8.10  
-Android: qpython(app) 3.11.4  
-
-python3.7及以上都是没问题的
+* Windows7: python 3.8.10  
+* github ci: python 3.8, 3.9, 3.10, 3.11, 3.12  
+* Android: qpython(app) 3.11.4  
 
 ## 使用说明
 *目前```physicsLab```在```windows```上的支持最好，在`Android`上仅支持手动导入/导出存档（默认在```physicsLabSav```文件夹中）。*  

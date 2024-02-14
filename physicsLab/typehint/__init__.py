@@ -9,14 +9,11 @@ except ImportError:
 
 from typing import *
 
-if TYPE_CHECKING:
-    class WireDict(TypedDict):
-        Source: str
-        SourcePin: str
-        Target: str
-        TargetPin: str
-        ColorName: str
-else:
-    WireDict = dict
+class WireDict(TypedDict):
+    Source: str
+    SourcePin: str
+    Target: str
+    TargetPin: str
+    ColorName: str
 
 numType = Union[int, float]
