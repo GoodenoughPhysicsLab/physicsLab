@@ -4,11 +4,12 @@
 
 ![输入图片说明](./cover.jpg)
 
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE) 
-
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![build](https://github.com/gaogaotiantian/viztracer/workflows/build/badge.svg)](https://github.com/GoodenoughPhysicsLab/plmidi/actions)
+![support-version](https://img.shields.io/pypi/pyversions/viztracer)
 
 ## 介绍
-在物理实验室做实验的时候，我们可能会苦恼于元件不够整齐，需要重复的搭建某些电路且重复地做测试，或元件无法浮空等问题。这些问题都可以通过改存档来轻易解决！然而，手动改存档操作麻烦且出错率高。于是我写了```physicsLab```，并在其中封装了一些常用功能，让你用```Python```也能够轻易地在物实做实验，而且***你甚至不需用知道存档在电脑的哪里！***
+在物理实验室做实验的时候，我们可能会苦恼于元件不够整齐，需要重复的搭建某些电路且重复地做测试，或元件无法浮空等问题。这些问题都可以通过改存档来轻易解决！然而，手动改存档操作麻烦且出错率高。于是我写了`physicsLab`，并在其中封装了一些常用功能，让你用`Python`也能够轻易地在物实做实验，而且***你甚至不需用知道存档在电脑的哪里！***
 
 ## 安装教程
 
@@ -33,17 +34,16 @@ pip install plmidi
 pip install pygame
 ```
 点击跳转至[plmidi](https://github.com/GoodenoughPhysicsLab/plmidi)  
-> <font color=red>Note: </font>由于作者遇到`python -m build`的bug与`github ci`的一些限制，导致作者暂时不再考虑将`plmidi`上传至`pypi`。[获取最新的plmidi版本](https://github.com/GoodenoughPhysicsLab/plmidi/releases)，解压即可运行。
 
 之所以没有做安装physicsLab的时候自动安装这两个库，是因为安卓的`qpython`在下载含c的库的时候存在问题  
 
-4.  物实存档使用了中文字符，默认编码为`utf-8`。但在一些非正常情况，存档的编码可能被改变。虽然`physicsLab`有一定的处理存档编码问题的能力，但如果还是出现了问题，请输入该命令：
+4.  物实存档使用了中文字符，默认编码为`utf-8`。但在一些非正常情况，存档的编码可能被改变。虽然`physicsLab`有一定的处理存档编码问题的能力，但如果还是出现了问题，请输入该命令：  
 ```bash
 pip install chardet
 ```
 此时`physicsLab`会自动调用`chardet`来处理更加棘手的文件编码问题。  
 
-5. 如果下载成功，请输入下面的代码以验证`physicsLab`已经可以使用了
+5. 如果下载成功，请输入下面的代码以验证`physicsLab`已经可以使用了  
 ```Python
 from physicsLab import *
 
@@ -51,18 +51,19 @@ with experiment("example"):
     Logic_Input(0, 0, 0.1)
 ```
 然后打开物实，点击`从本地读取`，点击一个名为`example`的实验。如果出现了一个悬空的逻辑输入，则说明一切都成功了。
+> <font color=red>Note: </font> 每次运行`physicsLab`后都需要重新打开物实，点击`从本地读取`
 
 ## 搭建开发环境
-切换至physicsLab根目录，输入以下指令 (仅限于`Windows`) ：
+切换至physicsLab根目录，输入以下指令 (仅限于`Windows`):
 ```
 .\cmd\setup_project.bat
 ```
 
 ## 新手解惑: 为什么我明明安装了physicsLab, python却告诉我无法找到？
-pip安装的包会被放在site-package文件夹下  
-这大概率是因为pip安装的包所对应的site-package与你使用的python对应的site-package不一样导致的  
-解决方案：找到ide调用的python对应的site-package，然后把physicsLab与physicsLab.egg-info复制过去  
-同时我推荐去学一下python的虚拟环境`venv`，有效解决此问题  
+pip安装的包会被放在`site-package`文件夹下  
+这大概率是因为pip安装的包所对应的`site-package`与你使用的`python`对应的`site-package`不一样导致的  
+解决方案：找到ide调用的`python`对应的`site-package`，然后把`physicsLab`与`physicsLab.egg-info`复制过去  
+同时我推荐去学一下`python`的虚拟环境`venv`，有效解决此问题  
   
 如果此方法失效了，虽然这一定不是这个方法的问题，但你还可以在python的开头写上这两行代码来解决这个问题：  
 ```python
@@ -75,16 +76,16 @@ sys.path.append("/your/path/of/physicsLab") # 将字符串替换为你想添加�
 
 
 ## 已经测试过的环境
-* Windows7: python 3.8.10  
-* github ci: python 3.8, 3.9, 3.10, 3.11, 3.12  
+* windows: python 3.8, 3.9, 3.10, 3.11, 3.12  
 * Android: qpython(app) 3.11.4  
 
 ## 使用说明
-*目前```physicsLab```在```windows```上的支持最好，在`Android`上仅支持手动导入/导出存档（默认在```physicsLabSav```文件夹中）。*  
-其他操作系统上的行为与在`Android`  上应该一致，但未经过测试。  
+*目前`physicsLab`在`windows`上的支持最好，在`Android`上仅支持手动导入/导出存档（默认在`physicsLabSav`文件夹中）。*  
+其他操作系统上的行为与在`Android`上应该一致，但未经过测试。  
 
 > 在`qpython v3.2.5`中大大削减了python在文件路径操作方面的权限，这意味着在qpython上使用physicsLab生成的存档将很难被物实导入，因为物实没权限访问不了。
 > 但此问题在[qpython v3.2.3](https://github.com/qpython-android/qpython/releases/tag/v3.2.3)中不存在，推荐下载该版本。
+> 不过由于安卓权限的问题，用起来肯定没有电脑上方便。
 
 下面给出一个简单的例子（该例子仅用于讲解，你大概率无法运行）：
 ```Python
@@ -114,7 +115,7 @@ write_Experiment()
   # 然后用物实打开存档见证奇迹
 ```
 
-```physicsLab```还支持功能相同但更优雅的方式：
+`physicsLab`还支持等价但更优雅的方式 (这也是我最推荐的方式):
 ```python
 from physicsLab import *
 
@@ -127,7 +128,7 @@ with experiment('测逝', read=True):
   
 更详细的内容请在[文档](docs)中查看  
 请注意：由于`physicsLab`使用中文注释并出现过编码问题，因此physicsLab有一套确保编码为`utf-8`的机制  
-此时你可以手动在```Python```代码的第一行添加如下注释：
+此时你可以手动在`Python`代码的第一行添加如下注释：
 ```Python
 # -*- coding: utf-8 -*-
 
