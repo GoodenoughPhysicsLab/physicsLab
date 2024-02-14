@@ -9,9 +9,9 @@ from physicsLab import  _tools
 from physicsLab import errors
 from physicsLab import savTemplate
 from physicsLab import _colorUtils
-
-from physicsLab.experimentType import experimentType
-from physicsLab.typehint import Union, Optional, List, Self, Dict, numType
+from .savTemplate import Generate
+from .experimentType import experimentType
+from .typehint import Union, Optional, List, Dict, numType
 
 # 最新被操作的存档
 class stack_Experiment:
@@ -60,14 +60,20 @@ class Experiment:
 
         self.FileName: Optional[str] = None # 存档的文件名
         self.SavPath: Optional[str] = None # 存档的完整路径, 为 f"{experiment.FILE_HEAD}/{self.FileName}"
-        self.Elements: list = [] # 装原件的_arguments
         # 通过坐标索引元件
         self.elements_Position: Dict[tuple, list] = {}  # key: self._position, value: List[self...]
         # 通过index（元件生成顺序）索引元件
-        self.elements_Index: list = [] # List[CircuitBase]
+        self.Elements: list = [] # List[CircuitBase]
 
         if sav_name is not None:
             self.open_or_crt(sav_name)
+
+    # 通过_arguments["Identifier"]获取元件
+    def get_element_from_identifier(self, identifier: str):
+        for element in self.Elements:
+            if element._arguments["Identifier"] == identifier:
+                return element
+        raise errors.ExperimentError
 
     def __open(self) -> None:
         self.is_open = True
@@ -87,7 +93,7 @@ class Experiment:
             self.PlSav["Summary"] = savTemplate.Circuit["Summary"]
 
         if self.ExperimentType == experimentType.Circuit:
-            self.Wires: List[dict] = [] # 存档对应的导线
+            self.Wires: list = [] # List[Wire] # 存档对应的导线
             # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
 
@@ -137,10 +143,10 @@ class Experiment:
 
         if self.ExperimentType == experimentType.Circuit:
             self.PlSav: dict = copy.deepcopy(savTemplate.Circuit)
-            self.Wires: List[dict] = [] # 存档对应的导线
+            self.Wires = [] # List[Wire] # 存档对应的导线
             # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
-            self.CameraSave: dict = {"Mode": 0, "Distance": 2.7, "VisionCenter": None, "TargetRotation": None}
+            self.CameraSave: dict = {"Mode": 0, "Distance": 2.7, "VisionCenter": Generate, "TargetRotation": Generate}
             self.VisionCenter: _tools.position = _tools.position(0, 1.08, -0.45)
             self.TargetRotation: _tools.position = _tools.position(50, 0, 0)
 
@@ -149,14 +155,14 @@ class Experiment:
             self.StatusSave: dict = {"MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
                                      "ScalingName": "内太阳系", "LengthScale": 1.0, "SizeLinear": 0.0001,
                                      "SizeNonlinear": 0.5, "StarPresent": False, "Setting": None}
-            self.CameraSave: dict = {"Mode": 2, "Distance": 2.75, "VisionCenter": None, "TargetRotation": None}
+            self.CameraSave: dict = {"Mode": 2, "Distance": 2.75, "VisionCenter": Generate, "TargetRotation": Generate}
             self.VisionCenter: _tools.position = _tools.position(0 ,0, 1.08)
             self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
 
         elif self.ExperimentType == experimentType.Electromagnetism:
             self.PlSav: dict = copy.deepcopy(savTemplate.Electromagnetism)
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
-            self.CameraSave: dict = {"Mode": 0, "Distance": 3.25, "VisionCenter": None, "TargetRotation": None}
+            self.CameraSave: dict = {"Mode": 0, "Distance": 3.25, "VisionCenter": Generate, "TargetRotation": Generate}
             self.VisionCenter: _tools.position = _tools.position(0, 0 ,0.88)
             self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
 
@@ -219,9 +225,6 @@ class Experiment:
         status_sav = json.loads(self.PlSav["Experiment"]["StatusSave"])
         # 元件
         _local_Elements = status_sav["Elements"]
-        # 导线
-        if self.ExperimentType == experimentType.Circuit:
-            self.Wires = status_sav['Wires']
 
         for element in _local_Elements:
             # 坐标标准化 (消除浮点误差)
@@ -264,6 +267,18 @@ class Experiment:
                 obj._arguments['Statistics'] = element['Statistics']
                 obj._arguments['Properties']['十进制'] = element['Properties']['十进制']
 
+        # 导线
+        if self.ExperimentType == experimentType.Circuit:
+            from .circuit.wire import Wire, Pin
+            self.Wires = [
+                Wire(
+                    Pin(self.get_element_from_identifier(wire_dict["Source"]), wire_dict["SourcePin"]),
+                    Pin(self.get_element_from_identifier(wire_dict["Target"]), wire_dict["TargetPin"]),
+                    wire_dict["ColorName"][0] # e.g. "蓝"
+                )
+                for wire_dict in status_sav['Wires']
+            ]
+
     # 以物实存档的格式导出实验
     def write(self, extra_filepath: Optional[str] = None, ln: bool = False, no_pop: bool = False) -> "Experiment":
         def _format_StatusSave(stringJson: str) -> str:
@@ -290,9 +305,9 @@ class Experiment:
         self.CameraSave["TargetRotation"] = f"{self.TargetRotation.x},{self.TargetRotation.z},{self.TargetRotation.y}"
         self.PlSav["Experiment"]["CameraSave"] = json.dumps(self.CameraSave)
 
-        self.StatusSave["Elements"] = self.Elements
+        self.StatusSave["Elements"] = [a_element._arguments for a_element in self.Elements]
         if self.ExperimentType == experimentType.Circuit:
-            self.StatusSave["Wires"] = self.Wires
+            self.StatusSave["Wires"] = [a_wire.release() for a_wire in self.Wires]
         self.PlSav["Experiment"]["StatusSave"] = json.dumps(self.StatusSave, ensure_ascii=False, separators=(',', ': '))
 
         context: str = json.dumps(self.PlSav, indent=2, ensure_ascii=False, separators=(',', ': '))
@@ -452,17 +467,15 @@ class Experiment:
         if self.SavPath is None:
             raise TypeError
 
-        res: str = f'''from physicsLab import *
-exp = Experiment("{sav_name}")
-'''
+        res: str = f"from physicsLab import *\nexp = Experiment('{sav_name}')"
 
-        for a_element in self.elements_Index:
+        for a_element in self.Elements:
             res += f"{a_element._arguments['Identifier']} = {str(a_element)}\n"
         # 连接导线未完成(暂时不想调用更原始的primitive_crt_wire)
         for a_wire in self.Wires:
             pass
 
-        res += "exp.write()"
+        res += "\nexp.write()"
 
         with open(output_path, "w", encoding="utf-8") as f:
             f.write(res)

@@ -51,7 +51,6 @@ class CircuitMeta(type):
         self._arguments["Identifier"] = randString(32)
         # x, z, y 物实采用欧拉坐标系
         self._arguments["Position"] = f"{x},{z},{y}"
-        _Expe.Elements.append(self._arguments)
 
         # 该坐标是否已存在，则存入列表
         if self._position in _Expe.elements_Position.keys():
@@ -61,7 +60,7 @@ class CircuitMeta(type):
         self.set_Rotation()
         # 通过元件生成顺序来索引元件
         self._index = CircuitMeta.__index
-        _Expe.elements_Index.append(self)
+        _Expe.Elements.append(self)
         # 元件index索引加1
         CircuitMeta.__index += 1
         return self

@@ -53,8 +53,8 @@ def get_Element(x: NnumType=None, y: NnumType=None, z: NnumType=None, *, index: 
         if not isinstance(index, int):
             raise TypeError
 
-        if 0 < index <= len(_Expe.elements_Index):
-            return _Expe.elements_Index[index - 1]
+        if 0 < index <= len(_Expe.Elements):
+            return _Expe.Elements[index - 1]
         else:
             raise errors.getElementError
 
@@ -77,16 +77,11 @@ def del_Element(
     identifier = self._arguments["Identifier"] # type: ignore
 
     _Expe = stack_Experiment.top()
-    # 删除Elements中的引用
-    for element in _Expe.Elements:
-        if element["Identifier"] == identifier:
-            _Expe.Elements.remove(element)
-            break
 
     i = 0
     while i < _Expe.Wires.__len__():
         wire = _Expe.Wires[i]
-        if wire['Source'] == identifier or wire['Target'] == identifier:
+        if wire.Source.element_self._arguments["Identifier"] == identifier or wire.Target.element_self._arguments["Identifier"] == identifier:
             _Expe.Wires.pop(i)
         else:
             i += 1
@@ -98,9 +93,9 @@ def del_Element(
             break
 
     # 删除elements_Index中的引用
-    for element in _Expe.elements_Index:
+    for element in _Expe.Elements:
         if element is self:
-            _Expe.elements_Index.remove(self)
+            _Expe.Elements.remove(self)
             break
 
 # 原件的数量
@@ -110,7 +105,6 @@ def count_Elements() -> int:
 # 清空原件
 def clear_Elements() -> None:
     _Expe = stack_Experiment.top()
-    _Expe.Elements.clear()
     _Expe.Wires.clear()
-    _Expe.elements_Index.clear()
+    _Expe.Elements.clear()
     _Expe.elements_Position.clear()

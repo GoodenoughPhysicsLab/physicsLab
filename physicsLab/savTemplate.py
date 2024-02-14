@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-class _Generate:
+class Generate:
     def __str__(self) -> str:
         return "Dynamically generated at runtime" # 运行时动态生成
 
@@ -13,10 +13,10 @@ Circuit = {
         "Type": 0, # 实验类型： 0: 电学实验, 1: 电学电路图模式, 2: 天体彩蛋模式, 3：天体物理, 4: 电与磁实验
         "Components": 7,
         "Subject": None,
-        "StatusSave": _Generate,
-        "CameraSave": _Generate,
+        "StatusSave": Generate,
+        "CameraSave": Generate,
         "Version": 2404,
-        "CreationDate": _Generate,
+        "CreationDate": Generate,
         "Paused": False,
         "Summary": None,
         "Plots": None
@@ -47,7 +47,7 @@ Circuit = {
         "Comments": 0,
         "Price": 0,
         "Popularity": 0,
-        "CreationDate": _Generate,
+        "CreationDate": Generate,
         "UpdateDate": 0,
         "SortingDate": 0,
         "ID": None,
@@ -70,7 +70,7 @@ Circuit = {
         "Multilingual": False
     },
     "CreationDate": 0,
-    "InternalName": _Generate, # 存档名
+    "InternalName": Generate, # 存档名
     "Speed": 1.0,
     "SpeedMinimum": 0.0002,
     "SpeedMaximum": 2.0,
@@ -96,10 +96,10 @@ Celestial = {
         "Type": 3,
         "Components": 0,
         "Subject": None,
-        "StatusSave": _Generate,
-        "CameraSave": _Generate,
+        "StatusSave": Generate,
+        "CameraSave": Generate,
         "Version": 2407,
-        "CreationDate": _Generate,
+        "CreationDate": Generate,
         "Paused": False,
         "Summary": None,
         "Plots": None
@@ -130,7 +130,7 @@ Celestial = {
         "Comments": 0,
         "Price": 0,
         "Popularity": 0,
-        "CreationDate": _Generate,
+        "CreationDate": Generate,
         "UpdateDate": 0,
         "SortingDate": 0,
         "ID": None,
@@ -153,7 +153,7 @@ Celestial = {
         "Multilingual": False
     },
     "CreationDate": 0,
-    "InternalName": _Generate, # 存档名
+    "InternalName": Generate, # 存档名
     "Speed": 1.0,
     "SpeedMinimum": 0.1,
     "SpeedMaximum": 10.0,
@@ -179,10 +179,10 @@ Electromagnetism = {
         "Type": 4,
         "Components": 1,
         "Subject": None,
-        "StatusSave": _Generate,
-        "CameraSave": _Generate,
+        "StatusSave": Generate,
+        "CameraSave": Generate,
         "Version": 2405,
-        "CreationDate": _Generate,
+        "CreationDate": Generate,
         "Paused": False,
         "Summary": None,
         "Plots": None
@@ -213,7 +213,7 @@ Electromagnetism = {
         "Comments": 0,
         "Price": 0,
         "Popularity": 0,
-        "CreationDate": _Generate,
+        "CreationDate": Generate,
         "UpdateDate": 0,
         "SortingDate": 0,
         "ID": None,
@@ -236,7 +236,7 @@ Electromagnetism = {
         "Multilingual": False
     },
     "CreationDate": 0,
-    "InternalName": _Generate, # 存档名
+    "InternalName": Generate, # 存档名
     "Speed": 1.0,
     "SpeedMinimum": 0.1,
     "SpeedMaximum": 2.0,
