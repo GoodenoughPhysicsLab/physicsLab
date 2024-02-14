@@ -1,6 +1,6 @@
 # PhysicsLab
 
-[中文](./README_zh.md)
+[中文](./README_zh.md) (More recommended)  
 
 ![输入图片说明](./cover.jpg)
 
@@ -8,7 +8,7 @@
 When conducting experiments in the physics laboratory, we may be troubled by issues such as untidy components, the need to repeatedly build certain circuits and perform tests, or the inability of components to float. These problems can be easily solved by changing the archive! However, manually changing the archive operation is cumbersome and has a high error rate. So I wrote ```PhysicsLab```and encapsulated some commonly used functions in it, allowing you to easily conduct experiments on real objects using ```Python```, and you don't even need to know where to save it on your computer
 
 ## Installation Tutorial
-1. Please ensure that your computer has [Python](https://www.python.org) (greater than or equal to 3.6) and [Physics Laboratory PC Version](https://www.turtlesim.com) (You can also contact developer [Jone Chen](https://gitee.com/civitasjohn)）
+1. Please ensure that your computer has [Python](https://www.python.org) (greater than or equal to 3.6) and [Physics Laboratory PC Version](https://www.turtlesim.com) (You can also contact developer [Jone Chen](https://gitee.com/civitasjohn))
 2. Enter in cmd or shell:
 ```
 pip install physicsLab
