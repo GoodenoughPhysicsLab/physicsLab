@@ -11,7 +11,7 @@ from physicsLab import savTemplate
 from physicsLab import _colorUtils
 from .savTemplate import Generate
 from .experimentType import experimentType
-from .typehint import Union, Optional, List, Dict, numType
+from .typehint import Union, Optional, List, Dict, numType, Self
 
 # 最新被操作的存档
 class stack_Experiment:
@@ -106,7 +106,7 @@ class Experiment:
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
 
     # 打开一个指定的sav文件 (支持输入本地实验的名字或sav文件名)
-    def open(self, sav_name : str) -> "Experiment":
+    def open(self, sav_name : str) -> Self:
         if self.is_open_or_crt:
             raise errors.experimentExistError
         self.is_open_or_crt = True
@@ -134,7 +134,10 @@ class Experiment:
 
         return self
 
-    def __crt(self, sav_name: str, experiment_type: experimentType = experimentType.Circuit) -> None:
+    def __crt(self,
+              sav_name: str,
+              experiment_type: experimentType = experimentType.Circuit
+    ) -> None:
         self.is_crt = True
         self.ExperimentType = experiment_type
 
@@ -146,16 +149,22 @@ class Experiment:
             self.Wires = [] # List[Wire] # 存档对应的导线
             # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
-            self.CameraSave: dict = {"Mode": 0, "Distance": 2.7, "VisionCenter": Generate, "TargetRotation": Generate}
+            self.CameraSave: dict = {
+                "Mode": 0, "Distance": 2.7, "VisionCenter": Generate, "TargetRotation": Generate
+            }
             self.VisionCenter: _tools.position = _tools.position(0, 1.08, -0.45)
             self.TargetRotation: _tools.position = _tools.position(50, 0, 0)
 
         elif self.ExperimentType == experimentType.Celestial:
             self.PlSav: dict = copy.deepcopy(savTemplate.Celestial)
-            self.StatusSave: dict = {"MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
-                                     "ScalingName": "内太阳系", "LengthScale": 1.0, "SizeLinear": 0.0001,
-                                     "SizeNonlinear": 0.5, "StarPresent": False, "Setting": None}
-            self.CameraSave: dict = {"Mode": 2, "Distance": 2.75, "VisionCenter": Generate, "TargetRotation": Generate}
+            self.StatusSave: dict = {
+                "MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
+                "ScalingName": "内太阳系", "LengthScale": 1.0, "SizeLinear": 0.0001,
+                "SizeNonlinear": 0.5, "StarPresent": False, "Setting": None
+            }
+            self.CameraSave: dict = {
+                "Mode": 2, "Distance": 2.75, "VisionCenter": Generate, "TargetRotation": Generate
+            }
             self.VisionCenter: _tools.position = _tools.position(0 ,0, 1.08)
             self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
 
@@ -169,7 +178,11 @@ class Experiment:
         self.entitle(sav_name)
 
     # 创建存档，输入为存档名 sav_name: 存档名; experiment_type: 实验类型; force_crt: 不论实验是否已经存在,强制创建
-    def crt(self, sav_name: str, experiment_type: experimentType = experimentType.Circuit, force_crt: bool=False) -> "Experiment":
+    def crt(self,
+            sav_name: str,
+            experiment_type: experimentType = experimentType.Circuit,
+            force_crt: bool=False
+    ) -> Self:
         if self.is_open_or_crt:
             raise errors.experimentExistError
         self.is_open_or_crt = True
@@ -192,7 +205,10 @@ class Experiment:
         return self
 
     # 先尝试打开实验, 若失败则创建实验
-    def open_or_crt(self, savName: str, experimentType: experimentType = experimentType.Circuit) -> "Experiment":
+    def open_or_crt(self,
+                    savName: str,
+                    experimentType: experimentType = experimentType.Circuit
+    ) -> Self:
         if self.is_open_or_crt:
             raise errors.experimentExistError
         self.is_open_or_crt = True
@@ -211,7 +227,7 @@ class Experiment:
         return self
 
     # 读取实验已有状态
-    def read(self) -> "Experiment":
+    def read(self) -> Self:
         if self.SavPath is None: # 是否已.open()或.crt()
             raise TypeError
         if self.is_read:
@@ -280,7 +296,7 @@ class Experiment:
             ]
 
     # 以物实存档的格式导出实验
-    def write(self, extra_filepath: Optional[str] = None, ln: bool = False, no_pop: bool = False) -> "Experiment":
+    def write(self, extra_filepath: Optional[str] = None, ln: bool = False, no_pop: bool = False) -> Self:
         def _format_StatusSave(stringJson: str) -> str:
             stringJson = stringJson.replace('{\\\"ModelID', '\n      {\\\"ModelID') # format element json
             stringJson = stringJson.replace('DiagramRotation\\\": 0}]', 'DiagramRotation\\\": 0}\n    ]') # format end element json
@@ -365,7 +381,7 @@ class Experiment:
         stack_Experiment.pop()
 
     # 对存档名进行重命名
-    def entitle(self, sav_name: str) -> "Experiment":
+    def entitle(self, sav_name: str) -> Self:
         if not isinstance(sav_name, str):
             raise TypeError
 
@@ -375,7 +391,7 @@ class Experiment:
         return self
 
     # 使用notepad打开改存档
-    def show(self) -> "Experiment":
+    def show(self) -> Self:
         if self.SavPath is None:
             raise TypeError
 
@@ -386,7 +402,7 @@ class Experiment:
         return self
 
     # 生成与发布实验有关的存档内容
-    def publish(self, title: Optional[str] = None, introduction: Optional[str] = None) -> "Experiment":
+    def publish(self, title: Optional[str] = None, introduction: Optional[str] = None) -> Self:
         # 发布实验时输入实验介绍
         def introduce_Experiment(introduction: Union[str, None]) -> None:
             if introduction is not None:
@@ -414,7 +430,7 @@ class Experiment:
                 rotation_x: Optional[numType] = None,
                 rotation_y: Optional[numType] = None,
                 rotation_z: Optional[numType] = None
-    ) -> "Experiment":
+    ) -> Self:
         if self.SavPath is None:
             raise TypeError
 
@@ -455,7 +471,7 @@ class Experiment:
         return self
 
     # 与物实示波器图表有关的支持
-    def graph(self) -> "Experiment":
+    def graph(self) -> Self:
         if self.SavPath is None:
             raise TypeError
 
@@ -463,7 +479,7 @@ class Experiment:
         return self
 
     # 以physicsLab代码的形式导出实验
-    def export(self, output_path: str = "temp.pl.py", sav_name: str = "temp") -> "Experiment":
+    def export(self, output_path: str = "temp.pl.py", sav_name: str = "temp") -> Self:
         if self.SavPath is None:
             raise TypeError
 
@@ -599,11 +615,16 @@ def open_Experiment(sav_name: str) -> Experiment:
     return Experiment().open(sav_name)
 
 # 创建存档，输入为存档名
-def crt_Experiment(sav_name: str, experimentType: experimentType = experimentType.Circuit, force_crt: bool=False) -> Experiment:
+def crt_Experiment(sav_name: str,
+                   experimentType: experimentType = experimentType.Circuit,
+                   force_crt: bool=False
+) -> Experiment:
     return Experiment().crt(sav_name, experimentType, force_crt)
 
 # 先尝试打开实验，若失败则创建实验。只支持输入存档名
-def open_or_crt_Experiment(sav_name: str, experimentType: experimentType = experimentType.Circuit) -> Experiment:
+def open_or_crt_Experiment(sav_name: str,
+                           experimentType: experimentType = experimentType.Circuit
+) -> Experiment:
     return Experiment().open_or_crt(sav_name, experimentType)
 
 # 读取sav文件已有的原件与导线

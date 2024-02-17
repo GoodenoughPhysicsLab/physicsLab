@@ -3,7 +3,7 @@ import os
 from typing import List
 
 ignores: List[str] = [
-    "typing_extensions.py"
+    #
 ]
 
 if __name__ == "__main__":

@@ -1,9 +1,4 @@
-# Visual Studio
-/.vs
-# PyCharm
-/.idea
-# Visual Studio Code
-/.vscode
+/.*
 
 /venv
 

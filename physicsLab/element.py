@@ -12,7 +12,9 @@ from physicsLab.circuit.elements._elementBase import CircuitBase
 NnumType = Optional[numType]
 
 # 创建原件，本质上仍然是实例化
-def crt_Element(name: str, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None) -> CircuitBase:
+def crt_Element(
+    name: str, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None
+) -> CircuitBase:
     if not (isinstance(name, str)
             and isinstance(x, (int, float))
             and isinstance(y, (int, float))
@@ -35,7 +37,9 @@ def crt_Element(name: str, x: numType = 0, y: numType = 0, z: numType = 0, eleme
         return eval(f"elements.{name.replace(' ', '_').replace('-', '_')}({x},{y},{z})")
 
 # 获取对应坐标的self
-def get_Element(x: NnumType=None, y: NnumType=None, z: NnumType=None, *, index: NnumType=None) -> Union[CircuitBase, List[CircuitBase]]:
+def get_Element(
+    x: NnumType=None, y: NnumType=None, z: NnumType=None, *, index: NnumType=None
+) -> Union[CircuitBase, List[CircuitBase]]:
     # 通过坐标索引元件
     def position_Element(x: numType, y: numType, z: numType):
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
@@ -81,7 +85,8 @@ def del_Element(
     i = 0
     while i < _Expe.Wires.__len__():
         wire = _Expe.Wires[i]
-        if wire.Source.element_self._arguments["Identifier"] == identifier or wire.Target.element_self._arguments["Identifier"] == identifier:
+        if wire.Source.element_self._arguments["Identifier"] == identifier or \
+           wire.Target.element_self._arguments["Identifier"] == identifier:
             _Expe.Wires.pop(i)
         else:
             i += 1
