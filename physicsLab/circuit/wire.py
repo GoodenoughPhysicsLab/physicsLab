@@ -29,7 +29,7 @@ class Pin:
         pin_name = self._get_pin_name_of_class()
         if pin_name is None:
             raise RuntimeError("Pin is not belong to any element")
-        return f"{self.element_self._arguments['Identifier']}.{pin_name}"
+        return f"e{self.element_self.get_Index()}.{pin_name}"
 
     def _get_pin_name_of_class(self) -> Optional[str]:
         for method in self.element_self._get_property():

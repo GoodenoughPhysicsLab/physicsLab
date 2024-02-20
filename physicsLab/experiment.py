@@ -486,8 +486,7 @@ class Experiment:
         res: str = f"from physicsLab import *\nexp = Experiment('{sav_name}')\n"
 
         for a_element in self.Elements:
-            res += f"{a_element._arguments['Identifier']} = {str(a_element)}\n"
-        # 连接导线未完成(暂时不想调用更原始的primitive_crt_wire)
+            res += f"e{a_element.get_Index()} = {str(a_element)}\n"
         for a_wire in self.Wires:
             res += str(a_wire) + '\n'
         res += "\nexp.write()"
