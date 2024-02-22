@@ -76,7 +76,7 @@ class Midi:
         return res
 
     # 播放midi类存储的信息
-    def sound(self, player: Optional[PLAYER] = None) -> Self:
+    def sound(self, player: Optional[PLAYER] = None, is_sourcefile: bool = False) -> Self:
         # 使用plmidi播放midi
         def sound_by_plmidi() -> bool:
             try:
@@ -87,7 +87,7 @@ class Midi:
                 colorUtils.color_print("sound by using plmidi", colorUtils.COLOR.CYAN)
 
                 try:
-                    plmidi.sound("temp.mid")
+                    plmidi.sound(midifile)
                 except (plmidi.OpenMidiFileError, plmidi.plmidiInitError):
                     return False
 
@@ -104,7 +104,7 @@ class Midi:
 
                 # 代码参考自musicpy的play函数
                 mixer.init()
-                mixer.music.load("temp.mid")
+                mixer.music.load(midifile)
                 try:
                     mixer.music.play()
                     while mixer.music.get_busy():
@@ -118,8 +118,8 @@ class Midi:
             from os import path, system
             colorUtils.color_print("sound by using os", colorUtils.COLOR.CYAN)
 
-            if path.exists("temp.mid"):
-                system("temp.mid")
+            if path.exists(midifile):
+                system(midifile)
                 return True
 
             return False
@@ -127,7 +127,11 @@ class Midi:
         if not isinstance(player, Midi.PLAYER) and player is not None:
             raise TypeError
 
-        # main
+        if is_sourcefile:
+            midifile = self.midifile
+        else:
+            midifile = "temp.mid"
+
         self.write_midi()
 
         if player is not None:
