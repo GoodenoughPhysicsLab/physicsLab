@@ -112,6 +112,7 @@ class Experiment:
         self.is_open_or_crt = True
         stack_Experiment.push(self)
 
+        # .sav文件名
         sav_name = sav_name.strip()
         if sav_name.endswith('.sav'):
             self.FileName = sav_name
@@ -123,6 +124,7 @@ class Experiment:
             self.__open()
             return self
 
+        # 存档名(本地实验的名字)
         self.FileName = search_Experiment(sav_name)
         self.SavPath = f"{Experiment.FILE_HEAD}/{self.FileName}"
         if self.FileName is None:
@@ -171,7 +173,12 @@ class Experiment:
         elif self.ExperimentType == experimentType.Electromagnetism:
             self.PlSav: dict = copy.deepcopy(savTemplate.Electromagnetism)
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
-            self.CameraSave: dict = {"Mode": 0, "Distance": 3.25, "VisionCenter": Generate, "TargetRotation": Generate}
+            self.CameraSave: dict = {
+                "Mode": 0,
+                "Distance": 3.25,
+                "VisionCenter": Generate,
+                "TargetRotation": Generate
+            }
             self.VisionCenter: _tools.position = _tools.position(0, 0 ,0.88)
             self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
 
@@ -296,10 +303,18 @@ class Experiment:
             ]
 
     # 以物实存档的格式导出实验
-    def write(self, extra_filepath: Optional[str] = None, ln: bool = False, no_pop: bool = False) -> Self:
+    def write(self,
+              extra_filepath: Optional[str] = None,
+              ln: bool = False,
+              no_pop: bool = False
+    ) -> Self:
         def _format_StatusSave(stringJson: str) -> str:
-            stringJson = stringJson.replace('{\\\"ModelID', '\n      {\\\"ModelID') # format element json
-            stringJson = stringJson.replace('DiagramRotation\\\": 0}]', 'DiagramRotation\\\": 0}\n    ]') # format end element json
+            stringJson = stringJson.replace( # format element json
+                "{\\\"ModelID', '\n      {\\\"ModelID"
+            )
+            stringJson = stringJson.replace( # format end element json
+                "DiagramRotation\\\": 0}]', 'DiagramRotation\\\": 0}\n    ]"
+            )
             stringJson = stringJson.replace('{\\\"Source', '\n      {\\\"Source')
             stringJson = stringJson.replace(u"色导线\\\"}]}", "色导线\\\"}\n    ]}")
             return stringJson
@@ -317,14 +332,17 @@ class Experiment:
         self.PlSav["Experiment"]["CreationDate"] = int(time.time() * 1000)
         self.PlSav["Summary"]["CreationDate"] = int(time.time() * 1000)
 
-        self.CameraSave["VisionCenter"] = f"{self.VisionCenter.x},{self.VisionCenter.z},{self.VisionCenter.y}"
-        self.CameraSave["TargetRotation"] = f"{self.TargetRotation.x},{self.TargetRotation.z},{self.TargetRotation.y}"
+        self.CameraSave["VisionCenter"] = \
+            f"{self.VisionCenter.x},{self.VisionCenter.z},{self.VisionCenter.y}"
+        self.CameraSave["TargetRotation"] = \
+            f"{self.TargetRotation.x},{self.TargetRotation.z},{self.TargetRotation.y}"
         self.PlSav["Experiment"]["CameraSave"] = json.dumps(self.CameraSave)
 
         self.StatusSave["Elements"] = [a_element._arguments for a_element in self.Elements]
         if self.ExperimentType == experimentType.Circuit:
             self.StatusSave["Wires"] = [a_wire.release() for a_wire in self.Wires]
-        self.PlSav["Experiment"]["StatusSave"] = json.dumps(self.StatusSave, ensure_ascii=False, separators=(',', ': '))
+        self.PlSav["Experiment"]["StatusSave"] = \
+            json.dumps(self.StatusSave, ensure_ascii=False, separators=(',', ': '))
 
         context: str = json.dumps(self.PlSav, indent=2, ensure_ascii=False, separators=(',', ': '))
         if ln:
@@ -365,11 +383,17 @@ class Experiment:
 
         if os.path.exists(self.SavPath): # 如果一个实验被创建但还未被写入, 就会触发错误
             os.remove(self.SavPath)
-            _colorUtils.color_print(f"Successfully delete experiment {self.PlSav['InternalName']}({self.FileName})!", _colorUtils.COLOR.BLUE)
+            _colorUtils.color_print(
+                f"Successfully delete experiment {self.PlSav['InternalName']}({self.FileName})!",
+                _colorUtils.COLOR.BLUE
+            )
         else:
             if warning_status is None:
                 warning_status = errors.warning_status
-            errors.warning(f"experiment {self.PlSav['InternalName']}({self.FileName}) do not exist.", warning_status)
+            errors.warning(
+                f"experiment {self.PlSav['InternalName']}({self.FileName}) do not exist.",
+                warning_status
+            )
 
         if os.path.exists(self.SavPath.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
             os.remove(self.SavPath.replace(".sav", ".jpg"))
@@ -631,7 +655,10 @@ def read_Experiment() -> None:
     stack_Experiment.top().read()
 
 # 将编译完成的json写入sav, ln: 是否将存档中字符串格式json换行
-def write_Experiment(extra_filepath: Optional[str] = None, ln: bool = False, no_pop: bool = False) -> None:
+def write_Experiment(extra_filepath: Optional[str] = None,
+                     ln: bool = False,
+                     no_pop: bool = False
+) -> None:
     stack_Experiment.top().write(extra_filepath, ln, no_pop)
 
 # 删除存档

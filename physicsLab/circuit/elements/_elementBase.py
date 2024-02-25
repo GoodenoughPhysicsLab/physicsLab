@@ -75,7 +75,9 @@ class CircuitBase(metaclass=CircuitMeta):
         raise errors.instantiateError
 
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self._position.x}, {self._position.y}, {self._position.z}, {self.is_elementXYZ})"
+        #TODO Simple_Instrument 的__repr__方法参数更多
+        return f"{self.__class__.__name__}" \
+               f"({self._position.x}, {self._position.y}, {self._position.z}, {self.is_elementXYZ})"
 
     # 设置原件的角度
     def set_Rotation(self, xRotation: numType = 0, yRotation: numType = 0, zRotation: numType = 180) -> Self:
@@ -86,7 +88,7 @@ class CircuitBase(metaclass=CircuitMeta):
         ):
             raise RuntimeError('illegal argument')
 
-        self._arguments["Rotation"] = f"{roundData(xRotation)},{roundData(zRotation)},{roundData(yRotation)}" # type: ignore -> define _arguments in metaclass
+        self._arguments["Rotation"] = f"{roundData(xRotation)},{roundData(zRotation)},{roundData(yRotation)}"
         return self
 
     # 重新设置元件的坐标
@@ -110,7 +112,7 @@ class CircuitBase(metaclass=CircuitMeta):
     def format_Position(self) -> tuple:
         if not isinstance(self._position, tuple) or self._position.__len__() != 3:
             raise RuntimeError("Position must be a tuple of length three but gets some other value")
-        self._position = position(*roundData(self._position.x, self._position.y, self._position.z)) # type: ignore -> result type: tuple
+        self._position = position(*roundData(self._position.x, self._position.y, self._position.z))
         return self._position
 
     # 获取原件的坐标

@@ -42,7 +42,11 @@ def get_Element(
 ) -> Union[CircuitBase, List[CircuitBase]]:
     # 通过坐标索引元件
     def position_Element(x: numType, y: numType, z: numType):
-        if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
+        if not (
+            isinstance(x, (int, float))
+            and isinstance(y, (int, float))
+            and isinstance(z, (int, float))
+        ):
             raise TypeError('illegal argument')
 
         position = _tools.roundData(x, y, z)

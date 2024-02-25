@@ -41,10 +41,15 @@ class Simple_Instrument(CircuitBase):
         ):
             raise TypeError
 
-        self._arguments = {'ModelID': 'Simple Instrument', 'Identifier': '', 'IsBroken': False, 'IsLocked': False,
-                           'Properties': {'额定电压': rated_oltage, '额定功率': 0.3, '音量': velocity, '音高': None, '节拍': bpm, '锁定': 1.0,
-                                          "和弦": 1.0, '乐器': instrument, "理想模式": int(is_ideal_model), "脉冲": int(is_single), "电平": 0.0},
-                           'Statistics': {'瞬间功率': 0, '瞬间电流': 0, '瞬间电压': 0, '功率': 0, '电压': 0, '电流': 0},
+        self._arguments = {'ModelID': 'Simple Instrument', 'Identifier': '',
+                           'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'额定电压': rated_oltage, '额定功率': 0.3,
+                                          '音量': velocity, '音高': None, '节拍': bpm,
+                                          '锁定': 1.0, "和弦": 1.0, '乐器': instrument,
+                                          "理想模式": int(is_ideal_model),
+                                          "脉冲": int(is_single), "电平": 0.0},
+                           'Statistics': {'瞬间功率': 0, '瞬间电流': 0, '瞬间电压': 0,
+                                          '功率': 0, '电压': 0, '电流': 0},
                            'Position': '', 'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
 
@@ -65,8 +70,10 @@ class Simple_Instrument(CircuitBase):
         return f"{self.__class__.__name__}({self._position.x}, {self._position.y}, {self._position.z}, " \
                f"elementXYZ={self.is_elementXYZ}, instrument={self._arguments['Properties']['乐器']}, " \
                f"pitch={self._arguments['Properties']['音高']}, bpm={self._arguments['Properties']['节拍']}, " \
-               f"velocity={self._arguments['Properties']['音量']}, rated_oltage={self._arguments['Properties']['额定电压']}, " \
-               f"is_ideal_model={self._arguments['Properties']['理想模式']}, is_single={bool(self._arguments['Properties']['脉冲'])}, " \
+               f"velocity={self._arguments['Properties']['音量']}, " \
+               f"rated_oltage={self._arguments['Properties']['额定电压']}, " \
+               f"is_ideal_model={self._arguments['Properties']['理想模式']}, " \
+               f"is_single={bool(self._arguments['Properties']['脉冲'])}, " \
                f"other_chord_notes={self.notes})"
 
     # 物实v2.4.7新功能: 简单乐器同时播放多个音符
@@ -156,7 +163,10 @@ class Simple_Instrument(CircuitBase):
             注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120
 
         '''
-        def majorSet_Tonality(self, tonality: str = "C3", rising_falling: Optional[bool] = None) -> "Simple_Instrument":
+        def majorSet_Tonality(self,
+                              tonality: str = "C3",
+                              rising_falling: Optional[bool] = None
+        ) -> Self:
             if (not isinstance(tonality, str) or
                 len(tonality) != 2 or
                 tonality.upper()[0] not in "ABCDEFG" or

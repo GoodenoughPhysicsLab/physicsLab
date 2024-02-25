@@ -37,7 +37,8 @@ class _logicBase(CircuitBase):
 class Logic_Input(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Logic Input", "Identifier": "",
-                          "IsBroken": False, "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0, "开关": 0},
+                          "IsBroken": False, "IsLocked": False,
+                          "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0, "开关": 0},
                           "Statistics": {"电流": 0.0, "电压": 0.0, "功率": 0.0},
                           "Position": "",
                           "Rotation": "", "DiagramCached": False,
@@ -167,8 +168,8 @@ class Nimp_Gate(_3_pin_Gate):
 class _big_element(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "", "Identifier": "", "IsBroken": False,
-                          "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0}, "Statistics": {},
-                          "Position": "", "Rotation": "", "DiagramCached": False,
+                          "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0},
+                          "Statistics": {}, "Position": "", "Rotation": "", "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property
@@ -447,9 +448,9 @@ class eight_bit_Display(_logicBase):
         self._arguments = {"ModelID": "8bit Display", "Identifier": "",
                           "IsBroken": False, "IsLocked": False,
                           "Properties": {"高电平": 3.0, "低电平": 0.0, "状态": 0.0, "锁定": 1.0},
-                          "Statistics": {"7": 0.0, "6": 0.0, "5": 0.0, "4": 0.0, "3": 0.0, "2": 0.0, "1": 0.0, "0": 0.0,
-                                         "十进制": 0.0}, "Position": "",
-                          "Rotation": "", "DiagramCached": False,
+                          "Statistics": {"7": 0.0, "6": 0.0, "5": 0.0, "4": 0.0,
+                                         "3": 0.0, "2": 0.0, "1": 0.0, "0": 0.0, "十进制": 0.0},
+                          "Position": "", "Rotation": "", "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property

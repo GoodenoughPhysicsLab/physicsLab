@@ -131,8 +131,7 @@ class Midi:
             midifile = self.midifile
         else:
             midifile = "temp.mid"
-
-        self.write_midi()
+            self.write_midi()
 
         if player is not None:
             f = (sound_by_plmidi, sound_by_pygame, sound_by_os)[player.value]
@@ -177,10 +176,16 @@ class Midi:
                 if note_time != 0 or len(res) == 0:
                     if note_time == 0:
                         note_time = 1
-                    res.append(Note(note_time, instrument=self.channels[msg.channel], pitch=msg.note, velocity=velocity)) # type: ignore -> must have
+                    res.append(
+                        Note(note_time,
+                             instrument=self.channels[msg.channel],
+                             pitch=msg.note, velocity=velocity)
+                    )
                 else:
                     # res[-1]是`Note`或`Chord`且在赋值之后一定是Chord, 此时Note的time的值不重要(因为和弦的音符是同时播放的)
-                    res[-1] = res[-1].append(Note(time=1, instrument=self.channels[msg.channel], pitch=msg.note, velocity=velocity))
+                    res[-1] = res[-1].append(
+                        Note(time=1, instrument=self.channels[msg.channel], pitch=msg.note, velocity=velocity)
+                    )
                 wait_time = 0
             elif msg.time != 0:
                 wait_time += msg.time
@@ -369,7 +374,12 @@ class Chord:
         return self
 
     # 将Chord存储的数据转变为对应的物实的电路
-    def release(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None) -> elements.Simple_Instrument:
+    def release(self,
+                x: numType = 0,
+                y: numType = 0,
+                z: numType = 0,
+                elementXYZ: Optional[bool] = None
+    ) -> elements.Simple_Instrument:
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
@@ -482,15 +492,28 @@ class Piece:
                 else:
                     channels[channel] = a_note.instrument
 
-            track.append(mido.Message("note_off", channel=channel, note=a_note.pitch, velocity=int(a_note.velocity * 100), time=basic_time * none_counter)) # time通过音符后的None的数量确定
-            track.append(mido.Message("note_on", channel=channel, note=a_note.pitch, velocity=int(a_note.velocity * 100), time=0))
+            track.append(
+                mido.Message("note_off",
+                             channel=channel,
+                             note=a_note.pitch,
+                             velocity=int(a_note.velocity * 100),
+                             time=basic_time * none_counter)
+                ) # time通过音符后的None的数量确定
+            track.append(
+                mido.Message("note_on",
+                             channel=channel,
+                             note=a_note.pitch,
+                             velocity=int(a_note.velocity * 100),
+                             time=0)
+            )
 
         track = mido.MidiTrack()
         mid = mido.MidiFile(tracks=[track])
         channels: List[int] = [0] * 16
 
         none_counter: int = 0
-        track.append(mido.MetaMessage("set_tempo", tempo=self.bpm * 5000, time=0)) # 500_000 / 100, 500_000是Midi.tempo的默认数字，100是self.bpm的默认数字
+         # 500_000 / 100, 500_000是Midi.tempo的默认数字，100是self.bpm的默认数字
+        track.append(mido.MetaMessage("set_tempo", tempo=self.bpm * 5000, time=0))
         for a_note in self.notes:
             if a_note is None:
                 none_counter += 1
@@ -601,14 +624,18 @@ class Player:
             yPlayer = D_WaterLamp(x, y + 3, z, bitLength=ceil(len_musicArray / side), elementXYZ=True)
         except errors.bitLengthError as e:
             from physicsLab._colorUtils import color_print, COLOR
-            color_print("bigLength of D_WaterLamp is too short, try to use argument \"div_time\" in class Midi to solve this problem", COLOR.RED)
+            color_print(
+                "bigLength of D_WaterLamp is too short, "
+                "try to use argument \"div_time\" in class Midi to solve this problem",
+                COLOR.RED
+            )
             raise e
 
 
         yesGate = elements.Full_Adder(x + 1, y + 1, z + 1, True)
         yesGate.i_low - yesGate.i_mid
         xPlayer[0].o_low - yesGate.i_up # type: ignore
-        crt_Wires(xPlayer.data_Output[0], yPlayer.data_Input) # type: ignore -> yPlayer must has attr data_Input
+        crt_Wires(xPlayer.data_Output[0], yPlayer.data_Input)
 
         check1 = elements.No_Gate(x + 2, y, z, True)
         check2 = elements.Multiplier(x + 3, y, z, True)
@@ -646,7 +673,10 @@ class Player:
             elif isinstance(a_note, Note):
                 ins = elements.Simple_Instrument(
                     1 + x + xcor, 4 + y + ycor, z, pitch=a_note.pitch,
-                    instrument=a_note.instrument, elementXYZ=True, is_ideal_model=True, velocity=a_note.velocity
+                    instrument=a_note.instrument,
+                    elementXYZ=True,
+                    is_ideal_model=True,
+                    velocity=a_note.velocity
                 ).set_Rotation(0, 0, 0) # type: ignore
             # 连接x轴的d触的导线
             if xcor == 0:

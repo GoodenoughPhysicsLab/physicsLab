@@ -17,7 +17,7 @@ def main():
                     line = line[:-1]
 
                 if len(line) > 110:
-                    print(f"{root}/{file} {line_num + 1}: this line is TOO LONG({len(line)}/110)")
+                    print(f"{root}\{file} {line_num + 1}: this line is TOO LONG({len(line)}/110)")
 
                 context += line + '\n'
             context = context[:-1]

@@ -46,7 +46,12 @@ class Const_NoGate:
     __singleton: "Const_NoGate" = None # type: ignore
     __singleton_NoGate: No_Gate = None # type: ignore
 
-    def __new__(cls, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None) -> Self:
+    def __new__(cls,
+                x: numType = 0,
+                y: numType = 0,
+                z: numType = 0,
+                elementXYZ: Optional[bool] = None
+    ) -> Self:
         if Const_NoGate.__singleton_NoGate is None:
             Const_NoGate.__singleton = object.__new__(cls)
             Const_NoGate.__singleton_NoGate = No_Gate(x, y, z, elementXYZ)
@@ -240,8 +245,12 @@ class Two_four_Decoder(Union_LogicBase):
         obj3 = Nimp_Gate(x, y + 0.2, z)
         obj4 = And_Gate(x, y + 0.3, z)
         self._elements = [obj1, obj2, obj3, obj4]
-        circuit.crt_Wire(obj1.i_up, obj2.i_low), circuit.crt_Wire(obj2.i_low, obj3.i_up), circuit.crt_Wire(obj3.i_up, obj4.i_up)
-        circuit.crt_Wire(obj1.i_low, obj2.i_up), circuit.crt_Wire(obj2.i_up, obj3.i_low), circuit.crt_Wire(obj3.i_low, obj4.i_low)
+        circuit.crt_Wire(obj1.i_up, obj2.i_low)
+        circuit.crt_Wire(obj2.i_low, obj3.i_up)
+        circuit.crt_Wire(obj3.i_up, obj4.i_up)
+        circuit.crt_Wire(obj1.i_low, obj2.i_up)
+        circuit.crt_Wire(obj2.i_up, obj3.i_low)
+        circuit.crt_Wire(obj3.i_low, obj4.i_low)
 
 # 4-16译码器
 class Four_sixteen_Decoder:
@@ -255,10 +264,18 @@ class Four_sixteen_Decoder:
         obj3 = Nimp_Gate(x, y + 0.2, z); obj4 = And_Gate(x, y + 0.3, z)
         obj5 = Nor_Gate(x + 0.15, y, z); obj6 = Nimp_Gate(x + 0.15, y + 0.1, z)
         obj7 = Nimp_Gate(x + 0.15, y + 0.2, z); obj8 = And_Gate(x + 0.15, y + 0.3, z)
-        circuit.crt_Wire(obj1.i_up, obj2.i_low), circuit.crt_Wire(obj2.i_low, obj3.i_up), circuit.crt_Wire(obj3.i_up, obj4.i_up)
-        circuit.crt_Wire(obj5.i_up, obj6.i_low), circuit.crt_Wire(obj6.i_low, obj7.i_up), circuit.crt_Wire(obj7.i_up, obj8.i_up)
-        circuit.crt_Wire(obj1.i_low, obj2.i_up), circuit.crt_Wire(obj2.i_up, obj3.i_low), circuit.crt_Wire(obj3.i_low, obj4.i_low)
-        circuit.crt_Wire(obj5.i_low, obj6.i_up), circuit.crt_Wire(obj6.i_up, obj7.i_low), circuit.crt_Wire(obj7.i_low, obj8.i_low)
+        circuit.crt_Wire(obj1.i_up, obj2.i_low)
+        circuit.crt_Wire(obj2.i_low, obj3.i_up)
+        circuit.crt_Wire(obj3.i_up, obj4.i_up)
+        circuit.crt_Wire(obj5.i_up, obj6.i_low)
+        circuit.crt_Wire(obj6.i_low, obj7.i_up)
+        circuit.crt_Wire(obj7.i_up, obj8.i_up)
+        circuit.crt_Wire(obj1.i_low, obj2.i_up)
+        circuit.crt_Wire(obj2.i_up, obj3.i_low)
+        circuit.crt_Wire(obj3.i_low, obj4.i_low)
+        circuit.crt_Wire(obj5.i_low, obj6.i_up)
+        circuit.crt_Wire(obj6.i_up, obj7.i_low)
+        circuit.crt_Wire(obj7.i_low, obj8.i_low)
         for i in [0.3, 0.45, 0.6, 0.75]:
             for j in [0.05, 0.25]:
                 obj = Multiplier(x + i, y + j, z)

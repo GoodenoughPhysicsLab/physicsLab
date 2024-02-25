@@ -57,7 +57,8 @@ class NE555(CircuitBase):
 class Basic_Capacitor(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Basic Capacitor", "Identifier": "",
-                           "IsBroken": False, "IsLocked": False, "Properties": {"耐压": 16.0, "电容": 1e-06, "内阻": 5.0, "锁定": 1.0},
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"耐压": 16.0, "电容": 1e-06, "内阻": 5.0, "锁定": 1.0},
                            "Statistics": {}, "Position": "",
                            "Rotation": "", "DiagramCached": False,
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
@@ -102,8 +103,8 @@ class Operational_Amplifier(CircuitBase):
 # 继电器
 class Relay_Component(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Relay Component", "Identifier": "", "IsBroken": False, "IsLocked": False,
-                           "Properties": {"开关": 0.0, "线圈电感": 0.2, "线圈电阻": 20.0,
+        self._arguments = {"ModelID": "Relay Component", "Identifier": "", "IsBroken": False,
+                           "IsLocked": False, "Properties": {"开关": 0.0, "线圈电感": 0.2, "线圈电阻": 20.0,
                                           "接通电流": 0.02, "额定电流": 1.0, "锁定": 1.0}, "Statistics": {},
                            "Position": "", "Rotation": "",
                            "DiagramCached": False, "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
@@ -132,8 +133,8 @@ class Relay_Component(CircuitBase):
 # n mos
 class N_MOSFET(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "N-MOSFET", "Identifier": "", "IsBroken": False,
-                           "IsLocked": False, "Properties": {"PNP": 1.0, "放大系数": 0.027, "阈值电压": 1.5, "最大功率": 100.0, "锁定": 1.0},
+        self._arguments = {"ModelID": "N-MOSFET", "Identifier": "", "IsBroken": False, "IsLocked": False,
+                           "Properties": {"PNP": 1.0, "放大系数": 0.027, "阈值电压": 1.5, "最大功率": 100.0, "锁定": 1.0},
                            "Statistics": {"电压GS": 0.0, "电压": 0.0, "电流": 0.0, "功率": 0.0, "状态": 0.0},
                            "Position": "", "Rotation": "", "DiagramCached": False,
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
@@ -176,7 +177,8 @@ class _source_electricity(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "", "Identifier": "",
                            "IsBroken": False, "IsLocked": False,
-                           "Properties": {"电压": 3.0, "内阻": 0.5, "频率": 20000.0, "偏移": 0.0, "占空比": 0.5, "锁定": 1.0},
+                           "Properties": {"电压": 3.0, "内阻": 0.5, "频率": 20000.0, "偏移": 0.0,
+                                          "占空比": 0.5, "锁定": 1.0},
                            "Statistics": {"电流": 0.0, "功率": 0.0, "电压": -3.0},
                            "Position": "", "Rotation": "", "DiagramCached": False,
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
