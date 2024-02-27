@@ -51,7 +51,7 @@ with experiment("example"):
     Logic_Input(0, 0, 0.1)
 ```
 然后打开物实，点击`从本地读取`，点击一个名为`example`的实验。如果出现了一个悬空的逻辑输入，则说明一切都成功了。
-> <font color=red>Note: </font> 每次运行`physicsLab`后都需要重新打开物实，点击`从本地读取`
+> <font color=red>Note: </font> 每次运行`physicsLab`后都需要重新加载物实的本地存档，即点击`从本地读取`，再次点击对应存档，使物实重新加载该存档
 
 ## 搭建开发环境
 切换至physicsLab根目录，输入以下指令 (仅限于`Windows`):
@@ -155,9 +155,9 @@ with experiment('测逝', read=True):
 4. 作者在接下来一段时间内将因为学业难以维护该仓库，但这并不代表弃坑。
 
 ## 其他
-1. 更多内容请在 [other physicsLab](https://gitee.com/script2000/temporary-warehouse/tree/master/other%20physicsLab) 中查看
-2. github: https://github.com/GoodenoughPhysicsLab/physicsLab
-3. gitee: https://gitee.com/script2000/physicsLab
+* 更多内容请在 [other physicsLab](https://gitee.com/script2000/temporary-warehouse/tree/master/other%20physicsLab) 中查看
+* github: https://github.com/GoodenoughPhysicsLab/physicsLab
+* gitee: https://gitee.com/script2000/physicsLab
 
 ## contribute
 `physicsLab`没有强行要求代码风格，但需要注意与上下文保持一致  
