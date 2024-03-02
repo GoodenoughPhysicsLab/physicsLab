@@ -22,3 +22,22 @@ with experiment("example"):
 因此，div_time的值越小，对midi的处理就越精细，但随之而来的影响是乐曲的播放速度变慢。  
 `max_notes`用来控制音乐电路的音符的数量，当`max_notes=None`时，physicsLab会将整首midi乐曲都给处理完。  
 `release`对应的三个参数分别是x, y, z，个人感觉这`-1, -1, 0`就已经很好用了，没必要修改。  
+
+## 播放midi
+我最推荐使用我为physicsLab专门写的二进制拓展：`plmidi`  
+下载plmidi:
+```shell
+pip install plmidi
+```
+但`pygame`也有播放midi的功能，你也可以下载pygame：
+```shell
+pip install pygame
+```
+如果上述两个package都不存在，那么physicsLab会尝试系统调用播放midi。  
+
+通过调用Midi的sound方法来播放midi：
+```python
+from physicsLab import *
+
+music.Midi("/your/path/of/midi").sound()
+```
