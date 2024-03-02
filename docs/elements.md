@@ -202,6 +202,7 @@
         <td>电容</td>
         <td>Basic_Capacitor</td>
         <td>Basic Capacitor</td>
+        <td>red, black</td>
     </tr>
     <tr>
         <td>接地</td>
@@ -267,6 +268,7 @@
         <td>简单开关</td>
         <td>Simple_Switch</td>
         <td>Simple Switch</td>
+        <td>red, black</td>
     </tr>
     <tr>
         <td>单刀双掷开关</td>
@@ -282,11 +284,19 @@
         <td>按钮开关</td>
         <td>Push_Switch</td>
         <td>Push Switch</td>
+        <td>red, black</td>
+    </tr>
+    <tr>
+        <td>白炽灯泡</td>
+        <td>Incandescent_Lamp</td>
+        <td>Incandescent Lamp</td>
+        <td>red, black</td>
     </tr>
     <tr>
         <td>一节电池</td>
         <td>Battery_Source</td>
         <td>Battery Source</td>
+        <td>red, black</td>
     </tr>
     <tr>
         <td>学生电源</td>
@@ -297,16 +307,37 @@
         <td>电阻</td>
         <td>Resistor</td>
         <td>Resistor</td>
+        <td>red, black</td>
     </tr>
     <tr>
         <td>保险丝</td>
         <td>Fuse_Component</td>
         <td>Fuse Component</td>
+        <td>red, black</td>
     </tr>
     <tr>
         <td>滑动变阻器</td>
         <td>Slide_Rheostat</td>
         <td>Slide Rheostat</td>
+        <td>l_up, l_low, r_up, r_low</td>
+    </tr>
+    <tr>
+        <td>灵敏电流计</td>
+        <td>Galvanometer</td>
+        <td>Galvanometer</td>
+        <td>l, mid, r</td>
+    </tr>
+    <tr>
+        <td>微安表</td>
+        <td>Microammeter</td>
+        <td>Microammeter</td>
+        <td>l, mid, r</td>
+    </tr>
+    <tr>
+        <td>电能表</td>
+        <td>Electricity_Meter</td>
+        <td>Electricity Meter</td>
+        <td>l, l_mid, r_mid, r</td>
     </tr>
 </table>
 
@@ -328,6 +359,12 @@
         <td>简单乐器</td>
         <td>Simple_Instrument</td>
         <td>Simple Instrument</td>
-        <td>i, o</td>
+        <td>i, o, red, black</td>
+    </tr>
+    <tr>
+        <td>蜂鸣器</td>
+        <td>Buzzer</td>
+        <td>Buzzer</td>
+        <td>red, black</td>
     </tr>
 </table>

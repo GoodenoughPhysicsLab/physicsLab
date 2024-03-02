@@ -9,7 +9,7 @@ from enum import Enum, unique
 from physicsLab import errors
 from physicsLab.circuit import elements
 from physicsLab._tools import roundData
-from physicsLab.union import crt_Wires, D_WaterLamp
+from physicsLab.unit import crt_Wires, D_WaterLamp
 from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, numType
 
 def _format_velocity(velocity: float) -> float:
@@ -249,7 +249,6 @@ class Midi:
         return self
 
     # 以 .mid 的形式导出, read_midi已经在Midi的__init__中实现
-    # update: 是否将Midi.midifile更新
     def write_midi(self, midipath: str = "temp.mid") -> Self:
         if not isinstance(midipath, str):
             raise TypeError
@@ -259,7 +258,6 @@ class Midi:
         mid = mido.MidiFile()
         mid.tracks.append(self.messages)
         mid.save(midipath)
-        self.midifile = midipath
 
         return self
 

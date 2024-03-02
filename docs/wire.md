@@ -23,6 +23,7 @@ with experiment("example"):
 ```Python
 element.o - element2.i
 ```
+但通过这种方法连接的导线只能为蓝色  
 
 所有元件都定义得有自己的引脚名称，这里举个例子：  
 ```python
@@ -31,7 +32,7 @@ a = Or_Gate(0.1, 0.1, 0)
 crt_Wire(a.o, a.i_up)
 ```
 
-引脚也可以在[所有元件.md](./%E6%89%80%E6%9C%89%E5%85%83%E4%BB%B6.md)中找到
+引脚也可以在[所有元件.md](elements.md)中找到
 
 ## 删除导线
 除了创建导线外，也可以删除导线：  

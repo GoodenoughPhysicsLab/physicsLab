@@ -17,8 +17,8 @@ from .element import *
 # `physicsLab`自定义异常类
 from .errors import *
 # 模块化电路
-from .union.wires import *
-from physicsLab import union
+from .unit.wires import *
+from physicsLab import unit
 from physicsLab import music
 
 # 检测操作系统
@@ -80,10 +80,11 @@ __all__ = [
     "Or_Gate", "And_Gate", "Nor_Gate", "Nand_Gate", "Xor_Gate", "Xnor_Gate", "Imp_Gate", "Nimp_Gate",
     "Half_Adder", "Full_Adder", "Multiplier", "D_Flipflop", "T_Flipflop", "JK_Flipflop", "Counter",
     "Random_Generator", "eight_bit_Input", "eight_bit_Display", "Electric_Fan", "Simple_Instrument",
-    "P_MOSFET",
+    "P_MOSFET", "Incandescent_Lamp", "Buzzer", "Multimeter", "Galvanometer", "Microammeter",
+    "Electricity_Meter",
 
     # unionElements
-    "union", "music",
+    "unit", "music",
 
     # wires.py
     "crt_Wires", "del_Wires",

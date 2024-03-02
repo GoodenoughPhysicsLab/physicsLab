@@ -3,20 +3,20 @@ from typing import Optional
 
 from ..wire import Pin
 from physicsLab.typehint import numType
-from ._elementBase import CircuitBase, two_pin_ArtificialCircuit_Pin
+from physicsLab.savTemplate import Generate
+from ._elementBase import CircuitBase, ArtificialBase
 
 # 开关基类
 class _switch_Base(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "", "Identifier": "", "IsBroken": False,
+        self._arguments = {"ModelID": "", "Identifier": Generate, "IsBroken": False,
                           "IsLocked": False, "Properties": {"开关": 0, "锁定": 1.0},
                           "Statistics": {}, "Position": "",
                           "Rotation": "", "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
 
 # 简单开关
-@two_pin_ArtificialCircuit_Pin
-class Simple_Switch(_switch_Base):
+class Simple_Switch(_switch_Base, ArtificialBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         super(Simple_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Simple Switch"
@@ -69,22 +69,34 @@ class DPDT_Switch(_switch_Base):
     def r_low(self) -> Pin:
         return Pin(self, 2)
 
+# 白炽灯泡
+class Incandescent_Lamp(ArtificialBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+        self._arguments = {'ModelID': 'Incandescent Lamp', "Identifier": Generate,
+                           'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'额定电压': 3.0, '额定功率': 0.85},
+                           'Statistics': {'瞬间功率': 0.0, '瞬间电流': 0.0, '瞬间电压': 0.0,
+                                          '功率': 0.0, '电压': 0.0, '电流': 0.0,
+                                          '灯泡温度': 300.0, '电阻': 0.5},
+                            'Position': '', 'Rotation': '', 'DiagramCached': False,
+                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
+                            'DiagramRotation': 0}
+
+
 # 按钮开关
-@two_pin_ArtificialCircuit_Pin
-class Push_Switch(CircuitBase):
+class Push_Switch(ArtificialBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {
-            "ModelID": "Push Switch", "Identifier": "", "IsBroken": False, "IsLocked": False,
+            "ModelID": "Push Switch", "Identifier": Generate, "IsBroken": False, "IsLocked": False,
             "Properties": {"开关": 0.0, "默认开关": 0.0, "锁定": 1.0}, "Statistics": {"电流": 0.0}, "Position": "",
             "Rotation": "", "DiagramCached": False, "DiagramPosition": {
                 "X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
 
 # 一节电池
-@two_pin_ArtificialCircuit_Pin
-class Battery_Source(CircuitBase):
+class Battery_Source(ArtificialBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Battery Source", "Identifier": "",
+        self._arguments = {"ModelID": "Battery Source", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"最大功率": 16.2, "电压": 3.0, "内阻": 0.5},
                            "Statistics": {"电流": 0, "功率": 0, "电压": 0},
@@ -95,7 +107,7 @@ class Battery_Source(CircuitBase):
 # 学生电源
 class Student_Source(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Student Source", "Identifier": "",
+        self._arguments = {"ModelID": "Student Source", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"交流电压": 3.0, "直流电压": 3.0, "开关": 0.0, "频率": 50.0},
                            "Statistics": {"瞬间功率": 0.0, "瞬间电压": 0.0, "瞬间电流": 0.0,
@@ -124,10 +136,9 @@ class Student_Source(CircuitBase):
         return Pin(self, 3)
 
 # 电阻
-@two_pin_ArtificialCircuit_Pin
-class Resistor(CircuitBase):
+class Resistor(ArtificialBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Resistor", "Identifier": "", "IsBroken": False,
+        self._arguments = {"ModelID": "Resistor", "Identifier": Generate, "IsBroken": False,
                            "IsLocked": False,
                            "Properties": {"最大电阻": 1000_0000.0, "最小电阻": 0.1, "电阻": 10, "锁定": 1.0},
                            "Statistics": {"瞬间功率": 0, "瞬间电流": 0,
@@ -137,10 +148,9 @@ class Resistor(CircuitBase):
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
 # 保险丝
-@two_pin_ArtificialCircuit_Pin
-class Fuse_Component(CircuitBase):
+class Fuse_Component(ArtificialBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Fuse Component", "Identifier": "",
+        self._arguments = {"ModelID": "Fuse Component", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"开关": 1.0, "额定电流": 0.3, "熔断电流": 0.5, "锁定": 1.0},
                            "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
@@ -151,7 +161,7 @@ class Fuse_Component(CircuitBase):
 # 滑动变阻器
 class Slide_Rheostat(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Slide Rheostat", "Identifier": "",
+        self._arguments = {"ModelID": "Slide Rheostat", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"额定电阻": 10.0, "滑块位置": 0.0,
                                           "电阻1": 10, "电阻2": 10.0, "锁定": 1.0},
@@ -176,4 +186,74 @@ class Slide_Rheostat(CircuitBase):
 
     @property
     def r_up(self) -> Pin:
+        return Pin(self, 3)
+
+# 多用电表
+class Multimeter(ArtificialBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+        self._arguments = {'ModelID': 'Multimeter', "Identifier": Generate,
+                           'IsBroken': False, 'IsLocked': False, 'Properties': {'状态': 0.0},
+                           'Statistics': {'瞬间功率': 0.0, '瞬间电流': 0.0, '瞬间电压': 0.0,
+                                          '功率': 0.0, '电压': 0.0, '电流': 0.0},
+                            'Position': '', 'Rotation': '', 'DiagramCached': False,
+                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
+                            'DiagramRotation': 0}
+
+class _ElectricityMeterBase(CircuitBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+        self._arguments = {'ModelID': Generate, "Identifier": Generate,
+                           'IsBroken': False, 'IsLocked': False, 'Properties': {'量程': 3.0},
+                           'Statistics': {'电流': 0.0, '功率': 0.0, '电压': 0.0, '刻度': 0.0},
+                           'Position': '', 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
+                           'DiagramRotation': 0}
+    @property
+    def l(self) -> Pin:
+        return Pin(self, 0)
+
+    @property
+    def mid(self) -> Pin:
+        return Pin(self, 1)
+
+    @property
+    def r(self) -> Pin:
+        return Pin(self, 2)
+
+# 灵敏电流计
+class Galvanometer(_ElectricityMeterBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+        super(Galvanometer, self).__init__(x, y, z, elementXYZ)
+        self._arguments["ModelID"] = "Galvanometer"
+
+# 微安表
+class Microammeter(_ElectricityMeterBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+        super(Microammeter, self).__init__(x, y, z, elementXYZ)
+        self._arguments["ModelID"] = "Microammeter"
+
+# 电能表
+class Electricity_Meter(CircuitBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+        self._arguments = {'ModelID': 'Electricity Meter', "Identifier": Generate,
+                           'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'示数': 0.0, '额定电流': 6.0},
+                           'Statistics': {'电流': 0.0, '电压': 0.0, '功率': 0.0},
+                           'Position': '', 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
+                           'DiagramRotation': 0}
+
+    @property
+    def l(self) -> Pin:
+        return Pin(self, 0)
+
+    @property
+    def l_mid(self) -> Pin:
+        return Pin(self, 2)
+
+    @property
+    def r_mid(self) -> Pin:
+        return Pin(self, 1)
+
+    @property
+    def r(self) -> Pin:
         return Pin(self, 3)

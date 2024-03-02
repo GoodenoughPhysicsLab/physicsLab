@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from physicsLab.typehint import numType
-from ..wire import InputPin, OutputPin
 from ._elementBase import CircuitBase
+from ..wire import InputPin, OutputPin
+from physicsLab.typehint import numType
+from physicsLab.savTemplate import Generate
 from physicsLab.typehint import Optional, Self
 
 class _logicBase(CircuitBase):
@@ -36,7 +37,7 @@ class _logicBase(CircuitBase):
 # 逻辑输入
 class Logic_Input(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Logic Input", "Identifier": "",
+        self._arguments = {"ModelID": "Logic Input", "Identifier": Generate,
                           "IsBroken": False, "IsLocked": False,
                           "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0, "开关": 0},
                           "Statistics": {"电流": 0.0, "电压": 0.0, "功率": 0.0},
@@ -57,7 +58,7 @@ class Logic_Input(_logicBase):
 # 逻辑输出
 class Logic_Output(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Logic Output", "Identifier": "",
+        self._arguments = {"ModelID": "Logic Output", "Identifier": Generate,
                           "IsBroken": False, "IsLocked": False,
                           "Properties": {"状态": 0.0, "高电平": 3.0, "低电平": 0.0, "锁定": 1.0}, "Statistics": {},
                           "Position": "",
@@ -71,7 +72,7 @@ class Logic_Output(_logicBase):
 # 2引脚门电路
 class _2_pin_Gate(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "", "Identifier": "", "IsBroken": False,
+        self._arguments = {"ModelID": "", "Identifier": Generate, "IsBroken": False,
                           "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "最大电流": 0.1, "锁定": 1.0},
                           "Statistics": {}, "Position": "", "Rotation": "", "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
@@ -99,7 +100,7 @@ class No_Gate(_2_pin_Gate):
 # 3引脚门电路
 class _3_pin_Gate(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "", "Identifier": "", "IsBroken": False,
+        self._arguments = {"ModelID": "", "Identifier": Generate, "IsBroken": False,
                           "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "最大电流": 0.1, "锁定": 1.0},
                           "Statistics": {}, "Position": "", "Rotation": "", "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
@@ -167,7 +168,7 @@ class Nimp_Gate(_3_pin_Gate):
 # 2体积元件父类
 class _big_element(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "", "Identifier": "", "IsBroken": False,
+        self._arguments = {"ModelID": "", "Identifier": Generate, "IsBroken": False,
                           "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0},
                           "Statistics": {}, "Position": "", "Rotation": "", "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
@@ -395,7 +396,7 @@ class Random_Generator(_big_element):
 # 8位输入器
 class eight_bit_Input(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "8bit Input", "Identifier": "", "IsBroken": False,
+        self._arguments = {"ModelID": "8bit Input", "Identifier": Generate, "IsBroken": False,
                            "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "十进制": 0.0, "锁定": 1.0},
                            "Statistics": {}, "Position": "", "Rotation": "", "DiagramCached": False,
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
@@ -445,7 +446,7 @@ class eight_bit_Input(_logicBase):
 # 8位显示器
 class eight_bit_Display(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "8bit Display", "Identifier": "",
+        self._arguments = {"ModelID": "8bit Display", "Identifier": Generate,
                           "IsBroken": False, "IsLocked": False,
                           "Properties": {"高电平": 3.0, "低电平": 0.0, "状态": 0.0, "锁定": 1.0},
                           "Statistics": {"7": 0.0, "6": 0.0, "5": 0.0, "4": 0.0,

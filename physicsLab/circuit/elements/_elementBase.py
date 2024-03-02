@@ -140,18 +140,12 @@ class CircuitBase(metaclass=CircuitMeta):
 
         return res
 
-# 双引脚模拟电路原件的引脚
-def two_pin_ArtificialCircuit_Pin(cls):
+# 双引脚模拟电路原件的基类
+class ArtificialBase(CircuitBase):
     @property
     def red(self) -> wire.Pin:
         return wire.Pin(self, 0)
 
-    cls.red, cls.l = red, red
-
     @property
     def black(self) -> wire.Pin:
         return wire.Pin(self, 1)
-
-    cls.black, cls.r = black, black
-
-    return cls
