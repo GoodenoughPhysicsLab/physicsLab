@@ -192,17 +192,20 @@ class Slide_Rheostat(CircuitBase):
 class Multimeter(ArtificialBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Multimeter', "Identifier": Generate,
-                           'IsBroken': False, 'IsLocked': False, 'Properties': {'状态': 0.0},
+                           'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'状态': 0.0, "锁定": 1.0},
                            'Statistics': {'瞬间功率': 0.0, '瞬间电流': 0.0, '瞬间电压': 0.0,
                                           '功率': 0.0, '电压': 0.0, '电流': 0.0},
                             'Position': '', 'Rotation': '', 'DiagramCached': False,
                             'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
                             'DiagramRotation': 0}
 
-class _ElectricityMeterBase(CircuitBase):
+# 灵敏电流计
+class Galvanometer(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
-        self._arguments = {'ModelID': Generate, "Identifier": Generate,
-                           'IsBroken': False, 'IsLocked': False, 'Properties': {'量程': 3.0},
+        self._arguments = {'ModelID': "Galvanometer", "Identifier": Generate,
+                           'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'量程': 3.0, "锁定": 1.0},
                            'Statistics': {'电流': 0.0, '功率': 0.0, '电压': 0.0, '刻度': 0.0},
                            'Position': '', 'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
@@ -219,24 +222,36 @@ class _ElectricityMeterBase(CircuitBase):
     def r(self) -> Pin:
         return Pin(self, 2)
 
-# 灵敏电流计
-class Galvanometer(_ElectricityMeterBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
-        super(Galvanometer, self).__init__(x, y, z, elementXYZ)
-        self._arguments["ModelID"] = "Galvanometer"
 
 # 微安表
-class Microammeter(_ElectricityMeterBase):
+class Microammeter(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
-        super(Microammeter, self).__init__(x, y, z, elementXYZ)
-        self._arguments["ModelID"] = "Microammeter"
+        self._arguments = {'ModelID': 'Microammeter', 'Identifier': Generate,
+                           'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'量程': 0.1, "锁定": 1.0},
+                           'Statistics': {'电流': 0.0, '功率': 0.0, '电压': 0.0, '刻度': 0.0},
+                           'Position': '', 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
+                           'DiagramRotation': 0}
+
+    @property
+    def l(self) -> Pin:
+        return Pin(self, 0)
+
+    @property
+    def mid(self) -> Pin:
+        return Pin(self, 1)
+
+    @property
+    def r(self) -> Pin:
+        return Pin(self, 2)
 
 # 电能表
 class Electricity_Meter(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
         self._arguments = {'ModelID': 'Electricity Meter', "Identifier": Generate,
                            'IsBroken': False, 'IsLocked': False,
-                           'Properties': {'示数': 0.0, '额定电流': 6.0},
+                           'Properties': {'示数': 0.0, '额定电流': 6.0, "锁定": 1.0},
                            'Statistics': {'电流': 0.0, '电压': 0.0, '功率': 0.0},
                            'Position': '', 'Rotation': '', 'DiagramCached': False,
                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
@@ -257,3 +272,71 @@ class Electricity_Meter(CircuitBase):
     @property
     def r(self) -> Pin:
         return Pin(self, 3)
+
+# 电阻箱
+class Resistance_Box(CircuitBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+        self._arguments = {'ModelID': 'Resistance Box', "Identifier": Generate,
+                           'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'最大电阻': 10000.0, '最小电阻': 0.1,
+                                          '电阻': 10.0, "锁定": 1.0},
+                           'Statistics': {'瞬间功率': 0.0, '瞬间电流': 0.0, '瞬间电压': 0.0,
+                                          '功率': 0.0, '电压': 0.0, '电流': 0.0},
+                            'Position': '', 'Rotation': '', 'DiagramCached': False,
+                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
+                            'DiagramRotation': 0}
+
+    @property
+    def l(self) -> Pin:
+        return Pin(self, 0)
+
+    @property
+    def r(self) -> Pin:
+        return Pin(self, 1)
+
+# 直流安培表
+class Simple_Ammeter(CircuitBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+        self._arguments = {'ModelID': 'Simple Ammeter', "Identifier": Generate,
+                           'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'量程': 0.007, '内阻': 0.007,
+                                          '名义量程': 3.0, "锁定": 1.0},
+                           'Statistics': {'电流': 0.0, '功率': 0.0, '电压': 0.0, '刻度': 0.0},
+                           'Position': '', 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
+                           'DiagramRotation': 0}
+
+    @property
+    def l(self) -> Pin:
+        return Pin(self, 0)
+
+    @property
+    def mid(self) -> Pin:
+        return Pin(self, 1)
+
+    @property
+    def r(self) -> Pin:
+        return Pin(self, 2)
+
+# 直流电压表
+class Simple_Voltmeter(CircuitBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+        self._arguments = {'ModelID': 'Simple Voltmeter', "Identifier": Generate,
+                           'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'量程': 0.001, '名义量程': 15.0, "锁定": 1.0},
+                           'Statistics': {'电流': 0.0, '功率': 0.0, '电压': 0.0, '刻度': 0.0},
+                           'Position': '', 'Rotation': '', 'DiagramCached': False,
+                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
+                           'DiagramRotation': 0}
+
+    @property
+    def l(self) -> Pin:
+        return Pin(self, 0)
+
+    @property
+    def mid(self) -> Pin:
+        return Pin(self, 1)
+
+    @property
+    def r(self) -> Pin:
+        return Pin(self, 2)

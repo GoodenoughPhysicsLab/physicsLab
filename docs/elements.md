@@ -1,5 +1,9 @@
 # 所有元件 elements
 
+所有元件共有的attribute:  
+is_bigElement # 是否是大体积元件  
+is_elementXYZ # 是否是元件坐标系  
+
 ## 逻辑电路
 
 <table border="1">
@@ -11,13 +15,6 @@
             get_HighLeaveValue # 获取高电平的值<br>
             set_LowLeaveValue # 设置低电平的值<br>
             get_LowLeaveValue # 获取高电平的值<br>
-        </td>
-    </tr>
-    <tr>
-        <td colspan=5>
-            逻电元件共有的attribute:<br>
-            is_bigElement # 是否是大体积元件<br>
-            is_elementXYZ # 是否是元件坐标系<br>
         </td>
     </tr>
     <tr>
@@ -338,6 +335,24 @@
         <td>Electricity_Meter</td>
         <td>Electricity Meter</td>
         <td>l, l_mid, r_mid, r</td>
+    </tr>
+    <tr>
+        <td>电阻箱</td>
+        <td>Resistance_Box</td>
+        <td>Resistance Box</td>
+        <td>l, r</td>
+    </tr>
+    <tr>
+        <td>直流安培表</td>
+        <td>Simple_Ammeter</td>
+        <td>Simple Ammeter</td>
+        <td>l, mid, r</td>
+    </tr>
+    <tr>
+        <td>直流电压表</td>
+        <td>Simple_Voltmeter</td>
+        <td>Simple Voltmeter</td>
+        <td>l, mid, r</td>
     </tr>
 </table>
 
