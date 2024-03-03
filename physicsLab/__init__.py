@@ -81,7 +81,8 @@ __all__ = [
     "Half_Adder", "Full_Adder", "Multiplier", "D_Flipflop", "T_Flipflop", "JK_Flipflop", "Counter",
     "Random_Generator", "eight_bit_Input", "eight_bit_Display", "Electric_Fan", "Simple_Instrument",
     "P_MOSFET", "Incandescent_Lamp", "Buzzer", "Multimeter", "Galvanometer", "Microammeter",
-    "Electricity_Meter", "Resistance_Box", "Simple_Ammeter", "Simple_Voltmeter",
+    "Electricity_Meter", "Resistance_Box", "Simple_Ammeter", "Simple_Voltmeter", "Basic_Inductor",
+    "Basic_Diode", "Light_Emitting_Diode",
 
     # unionElements
     "unit", "music",

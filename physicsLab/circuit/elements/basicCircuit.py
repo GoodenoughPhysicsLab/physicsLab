@@ -71,7 +71,7 @@ class DPDT_Switch(_switch_Base):
 
 # 白炽灯泡
 class Incandescent_Lamp(ArtificialBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {'ModelID': 'Incandescent Lamp', "Identifier": Generate,
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'额定电压': 3.0, '额定功率': 0.85},
@@ -190,7 +190,7 @@ class Slide_Rheostat(CircuitBase):
 
 # 多用电表
 class Multimeter(ArtificialBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {'ModelID': 'Multimeter', "Identifier": Generate,
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'状态': 0.0, "锁定": 1.0},
@@ -202,7 +202,7 @@ class Multimeter(ArtificialBase):
 
 # 灵敏电流计
 class Galvanometer(CircuitBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {'ModelID': "Galvanometer", "Identifier": Generate,
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'量程': 3.0, "锁定": 1.0},
@@ -225,7 +225,7 @@ class Galvanometer(CircuitBase):
 
 # 微安表
 class Microammeter(CircuitBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {'ModelID': 'Microammeter', 'Identifier': Generate,
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'量程': 0.1, "锁定": 1.0},
@@ -248,7 +248,7 @@ class Microammeter(CircuitBase):
 
 # 电能表
 class Electricity_Meter(CircuitBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {'ModelID': 'Electricity Meter', "Identifier": Generate,
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'示数': 0.0, '额定电流': 6.0, "锁定": 1.0},
@@ -275,7 +275,7 @@ class Electricity_Meter(CircuitBase):
 
 # 电阻箱
 class Resistance_Box(CircuitBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {'ModelID': 'Resistance Box', "Identifier": Generate,
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'最大电阻': 10000.0, '最小电阻': 0.1,
@@ -296,7 +296,7 @@ class Resistance_Box(CircuitBase):
 
 # 直流安培表
 class Simple_Ammeter(CircuitBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {'ModelID': 'Simple Ammeter', "Identifier": Generate,
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'量程': 0.007, '内阻': 0.007,
@@ -320,7 +320,7 @@ class Simple_Ammeter(CircuitBase):
 
 # 直流电压表
 class Simple_Voltmeter(CircuitBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {'ModelID': 'Simple Voltmeter', "Identifier": Generate,
                            'IsBroken': False, 'IsLocked': False,
                            'Properties': {'量程': 0.001, '名义量程': 15.0, "锁定": 1.0},

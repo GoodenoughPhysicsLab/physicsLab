@@ -202,6 +202,24 @@ is_elementXYZ # 是否是元件坐标系
         <td>red, black</td>
     </tr>
     <tr>
+        <td>电感</td>
+        <td>Basic_Inductor</td>
+        <td>Basic Inductor</td>
+        <td>red, black</td>
+    </tr>
+    <tr>
+        <td>二极管</td>
+        <td>Basic_Diode</td>
+        <td>Basic_Diode</td>
+        <td>red, black</td>
+    </tr>
+    <tr>
+        <td>发光二极管</td>
+        <td>Light_Emitting_Diode</td>
+        <td>Light-Emitting Diode</td>
+        <td>red, black</td>
+    </tr>
+    <tr>
         <td>接地</td>
         <td>Ground_Component</td>
         <td>Ground Component</td>

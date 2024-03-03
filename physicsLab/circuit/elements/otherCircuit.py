@@ -150,7 +150,7 @@ class Simple_Instrument(ArtificialBase):
 
 # 蜂鸣器
 class Buzzer(ArtificialBase):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {'ModelID': 'Buzzer', 'Identifier': Generate, 'IsBroken': False,
                            'IsLocked': False, 'Properties': {'额定电压': 3.0, '额定功率': 0.3},
                            'Statistics': {'瞬间功率': 0.0, '瞬间电流': 0.0, '瞬间电压': 0.0,
