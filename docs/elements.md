@@ -4,6 +4,9 @@
 is_bigElement # 是否是大体积元件  
 is_elementXYZ # 是否是元件坐标系  
 
+  
+  除了逻辑电路外，其他电路的元件都没有独有的method
+
 ## 逻辑电路
 
 <table border="1">
@@ -223,6 +226,13 @@ is_elementXYZ # 是否是元件坐标系
         <td>接地</td>
         <td>Ground_Component</td>
         <td>Ground Component</td>
+        <td>i</td>
+    </tr>
+    <tr>
+        <td>理想变压器</td>
+        <td>Transformer</td>
+        <td>Transformer</td>
+        <td>l_up, l_low, r_up, r_low</td>
     </tr>
     <tr>
         <td>运算放大器</td>
@@ -248,26 +258,31 @@ is_elementXYZ # 是否是元件坐标系
         <td>正弦波发生器</td>
         <td>Sinewave_Source</td>
         <td>Sinewave Source</td>
+        <td>red, black</td>
     </tr>
     <tr>
         <td>方波发生器</td>
         <td>Square_Source</td>
         <td>Square Source</td>
+        <td>red, black</td>
     </tr>
     <tr>
         <td>三角波发生器</td>
         <td>Triangle_Source</td>
         <td>Triangle Source</td>
+        <td>red, black</td>
     </tr>
     <tr>
         <td>锯齿波发生器</td>
         <td>Sawtooth_Source</td>
         <td>Sawtooth Source</td>
+        <td>red, black</td>
     </tr>
     <tr>
         <td>尖峰波发生器</td>
         <td>Pulse_Source</td>
         <td>Pulse Source</td>
+        <td>red, black</td>
     </tr>
 </table>
 

@@ -32,7 +32,7 @@ get_Element(0, 0, 0) # x, y, z
 get_Element(index=1) # 通过元件是第多少个被创建的来获取
 ```
 
-> <font color=red>Note:</font>  
+> Note:   
 > 1.  当元件的坐标重叠时，此时会返回一个含所有位于该坐标的元件的list  
 > 2.  `get_Element`并不会区分索引的坐标是不是元件坐标系( elementXYZ )  
 >     但你可以通过元件的`is_elementXYZ`属性来获取是否是元件坐标系
@@ -46,7 +46,7 @@ with experiment("example"):
     Or_Gate(0, 0, 0.1) # index = 2
 ``` 
 
-> <font color=red>Note:</font>  
+> Note:   
 > `get_Element`用来索引的坐标为创建元件时对应的坐标, 与是否为元件坐标系无关
 
 用一个简单的例子来说明:
@@ -120,7 +120,7 @@ with experiment("example"):
     set_O(0.2, 0.2, 0.1)
     print(get_OriginPosition()) # 获取坐标原点
 ```
-> <font color=red>Note: </font>set_O只认为传进来的x, y, z为物实默认坐标系下的坐标而非元件坐标系
+> Note: set_O只认为传进来的x, y, z为物实默认坐标系下的坐标而非元件坐标系
 
 ### 获取坐标原点
 如上面的例子所示，可以使用`get_OriginPosition()`来获取坐标原点

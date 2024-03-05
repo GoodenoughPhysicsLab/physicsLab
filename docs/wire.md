@@ -19,7 +19,7 @@ with experiment("example"):
 
 另一种方法 :  
 之所以做了这个是因为我觉得`-`与导线很像  
-> <font color=red>Note: </font>有时候IDE会认为重载后的减法运算后没有变量去接受返回值, 因此会给出黄色波浪线
+> Note: 有时候IDE会认为重载后的减法运算后没有变量去接受返回值, 因此会给出黄色波浪线
 ```Python
 element.o - element2.i
 ```
@@ -46,7 +46,7 @@ with experiment("example"):
     del_Wire(element.o, element2.i, color="red")
 ```
 使用方法与crt_Wire一模一样  
-> <font color=red>Note: </font>目前删除导线时仍然需要提供绝对准确的颜色参数, 未来可能会考虑只需用提供两个引脚就行了
+> Note: 目前删除导线时仍然需要提供绝对准确的颜色参数, 未来可能会考虑只需用提供两个引脚就行了
 
 ## others
 尽管我尽量避免讲一些实现, 但这个我还是忍不住想讲一下这个  

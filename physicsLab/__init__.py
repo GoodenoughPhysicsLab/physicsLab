@@ -82,7 +82,7 @@ __all__ = [
     "Random_Generator", "eight_bit_Input", "eight_bit_Display", "Electric_Fan", "Simple_Instrument",
     "P_MOSFET", "Incandescent_Lamp", "Buzzer", "Multimeter", "Galvanometer", "Microammeter",
     "Electricity_Meter", "Resistance_Box", "Simple_Ammeter", "Simple_Voltmeter", "Basic_Inductor",
-    "Basic_Diode", "Light_Emitting_Diode",
+    "Basic_Diode", "Light_Emitting_Diode", "Transformer",
 
     # unionElements
     "unit", "music",

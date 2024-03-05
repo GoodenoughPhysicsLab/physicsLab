@@ -111,6 +111,36 @@ class Ground_Component(CircuitBase):
     def i(self) -> Pin:
         return Pin(self, 0)
 
+# 理想变压器
+class Transformer(CircuitBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {'ModelID': 'Transformer', "Identifier": Generate,
+                           'IsBroken': False, 'IsLocked': False,
+                           'Properties': {'输入电压': 3.0, '输出电压': 36.0,
+                                          '额定功率': 20.0, '耦合系数': 1.0, "锁定": 1.0},
+                            'Statistics': {'电流1': 0.0, '电压1': 0.0, '功率1': 0.0, '电流2': 0.0,
+                                           '电压2': 0.0, '功率2': 0.0},
+                            'Position': '', 'Rotation': '', 'DiagramCached': False,
+                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
+                            'DiagramRotation': 0}
+
+    @property
+    def l_up(self) -> Pin:
+        return Pin(self, 0)
+
+    @property
+    def r_up(self) -> Pin:
+        return Pin(self, 1)
+
+    @property
+    def l_low(self) -> Pin:
+        return Pin(self, 2)
+
+    @property
+    def r_low(self) -> Pin:
+        return Pin(self, 3)
+
+
 # 运算放大器
 class Operational_Amplifier(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
@@ -209,7 +239,7 @@ class P_MOSFET(CircuitBase):
         return Pin(self, 1)
 
 # 波形发生器基类
-class _source_electricity(CircuitBase):
+class _source_electricity(ArtificialBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "", "Identifier": Generate, "IsBroken": False, "IsLocked": False,
                            "Properties": {"电压": 3.0, "内阻": 0.5, "频率": 20000.0, "偏移": 0.0,
@@ -217,16 +247,6 @@ class _source_electricity(CircuitBase):
                            "Statistics": {"电流": 0.0, "功率": 0.0, "电压": -3.0},
                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
-
-    @property
-    def l(self) -> Pin:
-        return Pin(self, 0)
-    i = l
-
-    @property
-    def r(self) -> Pin:
-        return Pin(self, 1)
-    o = r
 
 # 正弦波发生器
 class Sinewave_Source(_source_electricity):

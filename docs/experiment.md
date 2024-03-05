@@ -23,7 +23,7 @@ Experiment.open('example')
 open_Experiment('example.sav') # 存档的文件名，不推荐使用
 open_Experiment('example') # 通过在物实保存的本地实验的名字打开存档
 ```
-><font color=red>Note: </font>你可以多次调用`open_Experiment()`或`crt_Experiment()`, 但只有你最后一次调用该函数打开或创建的存档会被操作
+>Note: 你可以多次调用`open_Experiment()`或`crt_Experiment()`, 但只有你最后一次调用该函数打开或创建的存档会被操作
 
 ## 创建存档
 如果你想要创建一个实验：
@@ -32,7 +32,7 @@ Experiment.crt('example')
 crt_Experiment('example')
 crt_Experiment("example", experimentType=experimentType.Circuit) # 指定实验类型
 ```
-> <font color=red>Note: </font>你可以多次调用`open_Experiment()`或`crt_Experiment()`, 但只有你最后一次调用该函数打开或创建的存档会被操作
+> Note: 你可以多次调用`open_Experiment()`或`crt_Experiment()`, 但只有你最后一次调用该函数打开或创建的存档会被操作
 
 ```type```参数用于指定创建存档的类型，详情请查看```指定创建实验类型```  
 
