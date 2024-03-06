@@ -55,6 +55,9 @@ class Wire:
     def __init__(self, Source: Pin, Target: Pin, color: str = '蓝') -> None:
         if not isinstance(Source, Pin) or not isinstance(Target, Pin):
             raise TypeError
+
+        if color in ("black", "blue", "red", "green", "yellow"):
+            color = {"black": "黑", "blue": "蓝", "red": "红", "green": "绿", "yellow": "黄"}[color]
         if color not in ('蓝', '绿', '黄', '红', '紫'):
             raise errors.WireColorError
 
@@ -106,12 +109,6 @@ def _check_typeWire(func: callable):
 # 连接导线
 @_check_typeWire
 def crt_Wire(SourcePin: Pin, TargetPin: Pin, color: str = "blue") -> None:
-    if color in ("black", "blue", "red", "green", "yellow"):
-        color = {"black": "黑", "blue": "蓝", "red": "红", "green": "绿", "yellow": "黄"}[color]
-
-    if color not in ("黑", "蓝", "红", "绿", "黄"):
-        raise errors.WireColorError
-
     get_Experiment().Wires.append(Wire(SourcePin, TargetPin, color))
 
 # 删除导线

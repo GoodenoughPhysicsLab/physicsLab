@@ -66,37 +66,37 @@ class Basic_Capacitor(ArtificialBase):
 # 电感
 class Basic_Inductor(ArtificialBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {'ModelID': 'Basic Inductor', "Identifier": Generate,
-                           'IsBroken': False, 'IsLocked': False,
-                           'Properties': {'额定电流': 1.0, '电感': 0.05, '内阻': 1.0, "锁定": 1.0},
-                           'Statistics': {'电流': 0.0, '功率': 0.0, '电压': 0.0},
-                           "Position": Generate, "Rotation": Generate, 'DiagramCached': False,
-                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
-                           'DiagramRotation': 0}
+        self._arguments = {"ModelID": "Basic Inductor", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"额定电流": 1.0, "电感": 0.05, "内阻": 1.0, "锁定": 1.0},
+                           "Statistics": {"电流": 0.0, "功率": 0.0, "电压": 0.0},
+                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+                           "DiagramRotation": 0}
 
 # 二极管
 class Basic_Diode(ArtificialBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {'ModelID': 'Basic Diode', "Identifier": Generate,
-                           'IsBroken': False, 'IsLocked': False,
-                           'Properties': {'击穿电压': 0.0, '前向压降': 0.6, '额定电流': 1.0,
-                                          '工作电压': 3.0, "锁定": 1.0},
-                            'Statistics': {'电流': 0.0, '电压': 0.0, '功率': 0.0},
-                            "Position": Generate, "Rotation": Generate, 'DiagramCached': False,
-                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
-                            'DiagramRotation': 0}
+        self._arguments = {"ModelID": "Basic Diode", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"击穿电压": 0.0, "前向压降": 0.6, "额定电流": 1.0,
+                                          "工作电压": 3.0, "锁定": 1.0},
+                            "Statistics": {"电流": 0.0, "电压": 0.0, "功率": 0.0},
+                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+                            "DiagramRotation": 0}
 
 # 发光二极管
 class Light_Emitting_Diode(ArtificialBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {'ModelID': 'Light-Emitting Diode', "Identifier": Generate,
-                           'IsBroken': False, 'IsLocked': False,
-                           'Properties': {'反向耐压': 6.0, '击穿电压': 0.0, '前向压降': 2.1024259,
-                                          '工作电流': 0.01, '工作电压': 3.0, "锁定": 1.0},
-                            'Statistics': {'电流1': 0.0, '电压1': 0.0, '功率1': 0.0, '亮度1': 0.0},
-                            "Position": Generate, "Rotation": Generate, 'DiagramCached': False,
-                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
-                            'DiagramRotation': 0}
+        self._arguments = {"ModelID": "Light-Emitting Diode", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"反向耐压": 6.0, "击穿电压": 0.0, "前向压降": 2.1024259,
+                                          "工作电流": 0.01, "工作电压": 3.0, "锁定": 1.0},
+                            "Statistics": {"电流1": 0.0, "电压1": 0.0, "功率1": 0.0, "亮度1": 0.0},
+                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+                            "DiagramRotation": 0}
 
 # 接地
 class Ground_Component(CircuitBase):
@@ -114,15 +114,73 @@ class Ground_Component(CircuitBase):
 # 理想变压器
 class Transformer(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {'ModelID': 'Transformer', "Identifier": Generate,
-                           'IsBroken': False, 'IsLocked': False,
-                           'Properties': {'输入电压': 3.0, '输出电压': 36.0,
-                                          '额定功率': 20.0, '耦合系数': 1.0, "锁定": 1.0},
-                            'Statistics': {'电流1': 0.0, '电压1': 0.0, '功率1': 0.0, '电流2': 0.0,
-                                           '电压2': 0.0, '功率2': 0.0},
-                            'Position': '', 'Rotation': '', 'DiagramCached': False,
-                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
-                            'DiagramRotation': 0}
+        self._arguments = {"ModelID": "Transformer", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"输入电压": 3.0, "输出电压": 36.0,
+                                          "额定功率": 20.0, "耦合系数": 1.0, "锁定": 1.0},
+                            "Statistics": {"电流1": 0.0, "电压1": 0.0, "功率1": 0.0, "电流2": 0.0,
+                                           "电压2": 0.0, "功率2": 0.0},
+                            "Position": "", "Rotation": "", "DiagramCached": False,
+                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+                            "DiagramRotation": 0}
+
+    @property
+    def l_up(self) -> Pin:
+        return Pin(self, 0)
+
+    @property
+    def r_up(self) -> Pin:
+        return Pin(self, 1)
+
+    @property
+    def l_low(self) -> Pin:
+        return Pin(self, 2)
+
+    @property
+    def r_low(self) -> Pin:
+        return Pin(self, 3)
+
+# 中心抽头变压器
+class Tapped_Transformer(CircuitBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Tapped Transformer", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"输入电压": 3.0, "输出电压": 36.0, "额定功率": 20.0,
+                                          "耦合系数": 1.0, "锁定": 1.0},
+                            "Statistics": {"电流1": 0.0, "电压1": 0.0, "功率1": 0.0, "电流2": 0.0, "电压2": 0.0},
+                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+
+    @property
+    def l_up(self) -> Pin:
+        return Pin(self, 0)
+
+    @property
+    def r_up(self) -> Pin:
+        return Pin(self, 1)
+
+    @property
+    def l_low(self) -> Pin:
+        return Pin(self, 2)
+
+    @property
+    def r_low(self) -> Pin:
+        return Pin(self, 3)
+
+    @property
+    def mid(self) -> Pin:
+        return Pin(self, 4)
+
+# 理想互感
+class Mutual_Inductor(CircuitBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Mutual Inductor", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"电感1": 4.0, "电感2": 1.0, "耦合系数": 1.0, "锁定": 1.0},
+                           "Statistics": {"电流1": 0.0, "电压1": 0.0, "功率1": 0.0, "电流2": 0.0,
+                                          "电压2": 0.0, "功率2": 0.0},
+                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property
     def l_up(self) -> Pin:

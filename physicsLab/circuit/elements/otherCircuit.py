@@ -7,15 +7,16 @@ from physicsLab.typehint import Optional, Self, List, Union, numType
 # 小电扇
 class Electric_Fan(ArtificialBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {'ModelID': 'Electric Fan', 'Identifier': Generate,
-                           'IsBroken': False, 'IsLocked': False,
-                           'Properties': {'额定电阻': 1.0, '马达常数': 0.1, '转动惯量': 0.01, '电感': 5e-05, '负荷扭矩': 0.01,
-                                          '反电动势系数': 0.001, '粘性摩擦系数': 0.01, '角速度': 0, '锁定': 1.0},
-                           'Statistics': {'瞬间功率': 0, '瞬间电流': 0, '瞬间电压': 0, '功率': 0,
-                                          '电压': 0, '电流': 0, '摩擦扭矩': 0, '角速度': 0,
-                                          '反电动势': 0, '转速': 0, '输入功率': 0, '输出功率': 0},
-                           'Position': '', 'Rotation': '', 'DiagramCached': False,
-                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+        self._arguments = {"ModelID": "Electric Fan", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"额定电阻": 1.0, "马达常数": 0.1, "转动惯量": 0.01,
+                                          "电感": 5e-05, "负荷扭矩": 0.01, "反电动势系数": 0.001,
+                                          "粘性摩擦系数": 0.01, "角速度": 0, "锁定": 1.0},
+                           "Statistics": {"瞬间功率": 0, "瞬间电流": 0, "瞬间电压": 0, "功率": 0,
+                                          "电压": 0, "电流": 0, "摩擦扭矩": 0, "角速度": 0,
+                                          "反电动势": 0, "转速": 0, "输入功率": 0, "输出功率": 0},
+                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
 # 简单乐器
 class Simple_Instrument(ArtificialBase):
@@ -41,17 +42,17 @@ class Simple_Instrument(ArtificialBase):
         ):
             raise TypeError
 
-        self._arguments = {'ModelID': 'Simple Instrument', 'Identifier': Generate,
-                           'IsBroken': False, 'IsLocked': False,
-                           'Properties': {'额定电压': rated_oltage, '额定功率': 0.3,
-                                          '音量': velocity, '音高': None, '节拍': bpm,
-                                          '锁定': 1.0, "和弦": 1.0, '乐器': instrument,
+        self._arguments = {"ModelID": "Simple Instrument", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"额定电压": rated_oltage, "额定功率": 0.3,
+                                          "音量": velocity, "音高": None, "节拍": bpm,
+                                          "锁定": 1.0, "和弦": 1.0, "乐器": instrument,
                                           "理想模式": int(is_ideal_model),
                                           "脉冲": int(is_single), "电平": 0.0},
-                           'Statistics': {'瞬间功率': 0, '瞬间电流': 0, '瞬间电压': 0,
-                                          '功率': 0, '电压': 0, '电流': 0},
-                           'Position': '', 'Rotation': '', 'DiagramCached': False,
-                           'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0}, 'DiagramRotation': 0}
+                           "Statistics": {"瞬间功率": 0, "瞬间电流": 0, "瞬间电压": 0,
+                                          "功率": 0, "电压": 0, "电流": 0},
+                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
         self.set_Tonality(pitch)
         self.notes: List[int] = [self._arguments["Properties"]["音高"]] # 仅用于记录self已有的音符
@@ -100,7 +101,7 @@ class Simple_Instrument(ArtificialBase):
 
     # 设置音高
     def set_Tonality(self, pitch: Union[int, str], tone: Optional[bool] = None) -> "Simple_Instrument":
-        '''
+        """
         输入格式：
             tonality: C4, A5 ...
             rising_falling = True 时，为升调，为 False 时降调
@@ -108,7 +109,7 @@ class Simple_Instrument(ArtificialBase):
         输入范围：
             C0 ~ C8
             注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120
-        '''
+        """
         def majorSet_Tonality(self,
                               tonality: str = "C3",
                               rising_falling: Optional[bool] = None
@@ -140,7 +141,7 @@ class Simple_Instrument(ArtificialBase):
             if 0 <= pitch < 128:
                 self._arguments["Properties"]["音高"] = pitch
             else:
-                raise TypeError('Input number out of range')
+                raise TypeError("Input number out of range")
         elif isinstance(pitch, str):
             majorSet_Tonality(self, pitch, tone)
         else:
@@ -151,10 +152,10 @@ class Simple_Instrument(ArtificialBase):
 # 蜂鸣器
 class Buzzer(ArtificialBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {'ModelID': 'Buzzer', 'Identifier': Generate, 'IsBroken': False,
-                           'IsLocked': False, 'Properties': {'额定电压': 3.0, '额定功率': 0.3},
-                           'Statistics': {'瞬间功率': 0.0, '瞬间电流': 0.0, '瞬间电压': 0.0,
-                                          '功率': 0.0, '电压': 0.0, '电流': 0.0},
-                            'Position': '', 'Rotation': '', 'DiagramCached': False,
-                            'DiagramPosition': {'X': 0, 'Y': 0, 'Magnitude': 0.0},
-                            'DiagramRotation': 0}
+        self._arguments = {"ModelID": "Buzzer", "Identifier": Generate, "IsBroken": False,
+                           "IsLocked": False, "Properties": {"额定电压": 3.0, "额定功率": 0.3},
+                           "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
+                                          "功率": 0.0, "电压": 0.0, "电流": 0.0},
+                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+                            "DiagramRotation": 0}

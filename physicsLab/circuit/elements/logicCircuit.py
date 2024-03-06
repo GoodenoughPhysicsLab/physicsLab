@@ -41,8 +41,7 @@ class Logic_Input(_logicBase):
                           "IsBroken": False, "IsLocked": False,
                           "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0, "开关": 0},
                           "Statistics": {"电流": 0.0, "电压": 0.0, "功率": 0.0},
-                          "Position": "",
-                          "Rotation": "", "DiagramCached": False,
+                          "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
                           "DiagramRotation": 0}
 
@@ -61,7 +60,7 @@ class Logic_Output(_logicBase):
         self._arguments = {"ModelID": "Logic Output", "Identifier": Generate,
                           "IsBroken": False, "IsLocked": False,
                           "Properties": {"状态": 0.0, "高电平": 3.0, "低电平": 0.0, "锁定": 1.0}, "Statistics": {},
-                          "Position": "",
+                          "Position": Generate,
                           "Rotation": "0,180,0", "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
@@ -74,7 +73,7 @@ class _2_pin_Gate(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "", "Identifier": Generate, "IsBroken": False,
                           "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "最大电流": 0.1, "锁定": 1.0},
-                          "Statistics": {}, "Position": "", "Rotation": "", "DiagramCached": False,
+                          "Statistics": {}, "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property
@@ -102,7 +101,7 @@ class _3_pin_Gate(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "", "Identifier": Generate, "IsBroken": False,
                           "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "最大电流": 0.1, "锁定": 1.0},
-                          "Statistics": {}, "Position": "", "Rotation": "", "DiagramCached": False,
+                          "Statistics": {}, "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property
@@ -170,7 +169,7 @@ class _big_element(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "", "Identifier": Generate, "IsBroken": False,
                           "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0},
-                          "Statistics": {}, "Position": "", "Rotation": "", "DiagramCached": False,
+                          "Statistics": {}, "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property
@@ -398,7 +397,7 @@ class eight_bit_Input(_logicBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "8bit Input", "Identifier": Generate, "IsBroken": False,
                            "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "十进制": 0.0, "锁定": 1.0},
-                           "Statistics": {}, "Position": "", "Rotation": "", "DiagramCached": False,
+                           "Statistics": {}, "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     def set_num(self, num : int):
@@ -451,7 +450,7 @@ class eight_bit_Display(_logicBase):
                           "Properties": {"高电平": 3.0, "低电平": 0.0, "状态": 0.0, "锁定": 1.0},
                           "Statistics": {"7": 0.0, "6": 0.0, "5": 0.0, "4": 0.0,
                                          "3": 0.0, "2": 0.0, "1": 0.0, "0": 0.0, "十进制": 0.0},
-                          "Position": "", "Rotation": "", "DiagramCached": False,
+                          "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
     @property

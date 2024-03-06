@@ -235,6 +235,18 @@ is_elementXYZ # 是否是元件坐标系
         <td>l_up, l_low, r_up, r_low</td>
     </tr>
     <tr>
+        <td>中心抽头变压器</td>
+        <td>Tapped_Transformer</td>
+        <td>Tapped Transformer</td>
+        <td>l_up, l_low, r_up, r_low, mid</td>
+    </tr>
+    <tr>
+        <td>理想互感</td>
+        <td>Mutual_Inductor</td>
+        <td>Mutual Inductor</td>
+        <td>l_up, l_low, r_up, r_low</td>
+    </tr>
+    <tr>
         <td>运算放大器</td>
         <td>Operational_Amplifier</td>
         <td>Operational Amplifier</td>
