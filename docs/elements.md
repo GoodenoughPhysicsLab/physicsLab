@@ -247,6 +247,18 @@ is_elementXYZ # 是否是元件坐标系
         <td>l_up, l_low, r_up, r_low</td>
     </tr>
     <tr>
+        <td>全波整流器</td>
+        <td>Rectifier</td>
+        <td>Rectifier</td>
+        <td>l_up, l_low, r_up, r_low</td>
+    </tr>
+    <tr>
+        <td>三极管</td>
+        <td>Transistor</td>
+        <td>Transistor</td>
+        <td>B, C, E</td>
+    </tr>
+    <tr>
         <td>运算放大器</td>
         <td>Operational_Amplifier</td>
         <td>Operational Amplifier</td>

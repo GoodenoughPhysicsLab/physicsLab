@@ -70,10 +70,6 @@ class CircuitMeta(type):
 
 # 所有电学元件的父类
 class CircuitBase(metaclass=CircuitMeta):
-    # 类无法被实例化
-    def __init__(self, *args, **kwargs) -> NoReturn:
-        raise errors.instantiateError
-
     def __repr__(self) -> str:
         #TODO Simple_Instrument 的__repr__方法参数更多
         return f"{self.__class__.__name__}" \
@@ -141,7 +137,7 @@ class CircuitBase(metaclass=CircuitMeta):
         return res
 
 # 双引脚模拟电路原件的基类
-class ArtificialBase(CircuitBase):
+class TwoPinMixIn(CircuitBase):
     @property
     def red(self) -> wire.Pin:
         return wire.Pin(self, 0)

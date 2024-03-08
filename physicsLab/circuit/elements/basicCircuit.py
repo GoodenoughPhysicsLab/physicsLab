@@ -4,7 +4,7 @@ from typing import Optional
 from ..wire import Pin
 from physicsLab.typehint import numType
 from physicsLab.savTemplate import Generate
-from ._elementBase import CircuitBase, ArtificialBase
+from ._elementBase import CircuitBase, TwoPinMixIn
 
 # 开关基类
 class _switch_Base(CircuitBase):
@@ -16,7 +16,7 @@ class _switch_Base(CircuitBase):
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
 
 # 简单开关
-class Simple_Switch(_switch_Base, ArtificialBase):
+class Simple_Switch(_switch_Base, TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         super(Simple_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Simple Switch"
@@ -70,7 +70,7 @@ class DPDT_Switch(_switch_Base):
         return Pin(self, 2)
 
 # 白炽灯泡
-class Incandescent_Lamp(ArtificialBase):
+class Incandescent_Lamp(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Incandescent Lamp", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -84,18 +84,18 @@ class Incandescent_Lamp(ArtificialBase):
 
 
 # 按钮开关
-class Push_Switch(ArtificialBase):
+class Push_Switch(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Push Switch", "Identifier": Generate, 
+        self._arguments = {"ModelID": "Push Switch", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
-                           "Properties": {"开关": 0.0, "默认开关": 0.0, "锁定": 1.0}, 
-                           "Statistics": {"电流": 0.0}, 
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False, 
+                           "Properties": {"开关": 0.0, "默认开关": 0.0, "锁定": 1.0},
+                           "Statistics": {"电流": 0.0},
+                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
 
 # 一节电池
-class Battery_Source(ArtificialBase):
+class Battery_Source(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Battery Source", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -135,7 +135,7 @@ class Student_Source(CircuitBase):
         return Pin(self, 3)
 
 # 电阻
-class Resistor(ArtificialBase):
+class Resistor(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Resistor", "Identifier": Generate, "IsBroken": False,
                            "IsLocked": False,
@@ -146,7 +146,7 @@ class Resistor(ArtificialBase):
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
 # 保险丝
-class Fuse_Component(ArtificialBase):
+class Fuse_Component(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Fuse Component", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -187,7 +187,7 @@ class Slide_Rheostat(CircuitBase):
         return Pin(self, 3)
 
 # 多用电表
-class Multimeter(ArtificialBase):
+class Multimeter(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Multimeter", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,

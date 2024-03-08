@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from ..wire import Pin
-from ._elementBase import ArtificialBase
+from ._elementBase import TwoPinMixIn
 from physicsLab.savTemplate import Generate
 from physicsLab.typehint import Optional, Self, List, Union, numType
 
 # 小电扇
-class Electric_Fan(ArtificialBase):
+class Electric_Fan(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Electric Fan", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -19,7 +19,7 @@ class Electric_Fan(ArtificialBase):
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
 # 简单乐器
-class Simple_Instrument(ArtificialBase):
+class Simple_Instrument(TwoPinMixIn):
     def __init__(
             self,
             x: numType = 0,
@@ -150,7 +150,7 @@ class Simple_Instrument(ArtificialBase):
         return self
 
 # 蜂鸣器
-class Buzzer(ArtificialBase):
+class Buzzer(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Buzzer", "Identifier": Generate, "IsBroken": False,
                            "IsLocked": False, "Properties": {"额定电压": 3.0, "额定功率": 0.3},

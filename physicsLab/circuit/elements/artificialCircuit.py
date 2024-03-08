@@ -4,7 +4,7 @@ from typing import Optional
 from ..wire import Pin
 from physicsLab.typehint import numType
 from physicsLab.savTemplate import Generate
-from ._elementBase import CircuitBase, ArtificialBase
+from ._elementBase import CircuitBase, TwoPinMixIn
 
 # 555定时器
 class NE555(CircuitBase):
@@ -54,7 +54,7 @@ class NE555(CircuitBase):
         return Pin(self, 7)
 
 # 电容
-class Basic_Capacitor(ArtificialBase):
+class Basic_Capacitor(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Basic Capacitor", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -64,7 +64,7 @@ class Basic_Capacitor(ArtificialBase):
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
 # 电感
-class Basic_Inductor(ArtificialBase):
+class Basic_Inductor(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Basic Inductor", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -75,7 +75,7 @@ class Basic_Inductor(ArtificialBase):
                            "DiagramRotation": 0}
 
 # 二极管
-class Basic_Diode(ArtificialBase):
+class Basic_Diode(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Basic Diode", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -87,7 +87,7 @@ class Basic_Diode(ArtificialBase):
                             "DiagramRotation": 0}
 
 # 发光二极管
-class Light_Emitting_Diode(ArtificialBase):
+class Light_Emitting_Diode(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Light-Emitting Diode", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -198,6 +198,54 @@ class Mutual_Inductor(CircuitBase):
     def r_low(self) -> Pin:
         return Pin(self, 3)
 
+# 全波整流器
+class Rectifier(CircuitBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Rectifier", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"前向压降": 0.8, "额定电流": 1.0, "锁定": 1.0},
+                           "Statistics": {"电流": 0.0}, "Position": Generate, "Rotation": Generate,
+                           "DiagramCached": False, "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+                           "DiagramRotation": 0}
+
+    @property
+    def l_up(self) -> Pin:
+        return Pin(self, 0)
+
+    @property
+    def r_up(self) -> Pin:
+        return Pin(self, 1)
+
+    @property
+    def l_low(self) -> Pin:
+        return Pin(self, 2)
+
+    @property
+    def r_low(self) -> Pin:
+        return Pin(self, 3)
+
+# 三极管
+class Transistor(CircuitBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Transistor", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"PNP": 1.0, "放大系数": 100.0, "最大功率": 5.0, "锁定": 1.0},
+                           "Statistics": {"电压BC": 0.0, "电压BE": 0.0, "电压CE": 0.0, "功率": 0.0},
+                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+
+    @property
+    def B(self) -> Pin:
+        return Pin(self, 0)
+
+    @property
+    def C(self) -> Pin:
+        return Pin(self, 1)
+
+    @property
+    def E(self) -> Pin:
+        return Pin(self, 2)
+
 
 # 运算放大器
 class Operational_Amplifier(CircuitBase):
@@ -297,7 +345,7 @@ class P_MOSFET(CircuitBase):
         return Pin(self, 1)
 
 # 波形发生器基类
-class _source_electricity(ArtificialBase):
+class _source_electricity(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "", "Identifier": Generate, "IsBroken": False, "IsLocked": False,
                            "Properties": {"电压": 3.0, "内阻": 0.5, "频率": 20000.0, "偏移": 0.0,

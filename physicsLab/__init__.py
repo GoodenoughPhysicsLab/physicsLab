@@ -83,6 +83,7 @@ __all__ = [
     "P_MOSFET", "Incandescent_Lamp", "Buzzer", "Multimeter", "Galvanometer", "Microammeter",
     "Electricity_Meter", "Resistance_Box", "Simple_Ammeter", "Simple_Voltmeter", "Basic_Inductor",
     "Basic_Diode", "Light_Emitting_Diode", "Transformer", "Tapped_Transformer", "Mutual_Inductor",
+    "Rectifier", "Transistor",
 
     # unionElements
     "unit", "music",
