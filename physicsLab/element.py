@@ -86,14 +86,14 @@ def del_Element(
 
     _Expe = stack_Experiment.top()
 
-    i = 0
-    while i < _Expe.Wires.__len__():
-        wire = _Expe.Wires[i]
-        if wire.Source.element_self._arguments["Identifier"] == identifier or \
-           wire.Target.element_self._arguments["Identifier"] == identifier:
-            _Expe.Wires.pop(i)
-        else:
-            i += 1
+    res_Wires = set()
+    for a_wire in _Expe.Wires:
+        if a_wire.Source.element_self._arguments["Identifier"] == identifier or \
+           a_wire.Target.element_self._arguments["Identifier"] == identifier:
+           continue
+
+        res_Wires.add(a_wire)
+    _Expe.Wires = res_Wires
 
     # 删除elements_Position中的引用
     for elements in _Expe.elements_Position.values():

@@ -65,6 +65,11 @@ class Wire:
         self.Target: Pin = Target
         self.color: str = color
 
+    def __hash__(self) -> int:
+        return hash(
+            (self.Source.element_self, self.Source.pinLabel, self.Target.element_self, self.Target.pinLabel)
+        )
+
     def __eq__(self, other: "Wire") -> bool:
         if not isinstance(other, Wire):
             return False
@@ -109,17 +114,16 @@ def _check_typeWire(func: callable):
 # 连接导线
 @_check_typeWire
 def crt_Wire(SourcePin: Pin, TargetPin: Pin, color: str = "blue") -> None:
-    get_Experiment().Wires.append(Wire(SourcePin, TargetPin, color))
+    get_Experiment().Wires.add(Wire(SourcePin, TargetPin, color))
 
 # 删除导线
 @_check_typeWire
 def del_Wire(SourcePin: Pin, TargetPin: Pin) -> None:
-    i: int = 0
-    while i < len(get_Experiment().Wires):
-        if Wire(SourcePin, TargetPin) == get_Experiment().Wires[i]:
-            get_Experiment().Wires.pop(i)
-        else:
-            i += 1
+    temp = Wire(SourcePin, TargetPin)
+    if temp in get_Experiment().Wires:
+        get_Experiment().Wires.remove(temp)
+    else:
+        get_Experiment().Wires.remove(Wire(TargetPin, SourcePin))
 
 # 删除所有导线
 def clear_Wires() -> None:

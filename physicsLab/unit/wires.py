@@ -30,10 +30,7 @@ def check_TypeUnionPin(func: Callable):
         if isinstance(targetPin, Pin):
             targetPin = union_Pin(targetPin.element_self, targetPin)
 
-        if not (
-                isinstance(sourcePin, union_Pin)
-                and isinstance(targetPin, union_Pin)
-        ):
+        if not isinstance(sourcePin, union_Pin) or not isinstance(targetPin, union_Pin):
             raise TypeError
 
         if len(sourcePin.elementPins) != len(targetPin.elementPins):

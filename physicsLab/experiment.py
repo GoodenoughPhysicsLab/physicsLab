@@ -93,9 +93,9 @@ class Experiment:
             self.PlSav["Summary"] = savTemplate.Circuit["Summary"]
 
         if self.ExperimentType == experimentType.Circuit:
-            self.Wires: list = [] # List[Wire] # 存档对应的导线
+            self.Wires: set = set() # Set[Wire] # 存档对应的导线
             # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
-            self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
+            self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": Generate, "Wires": Generate}
 
         elif self.ExperimentType == experimentType.Celestial:
             self.StatusSave: dict = {"MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
@@ -148,13 +148,13 @@ class Experiment:
 
         if self.ExperimentType == experimentType.Circuit:
             self.PlSav: dict = copy.deepcopy(savTemplate.Circuit)
-            self.Wires = [] # List[Wire] # 存档对应的导线
+            self.Wires: set = set() # Set[Wire] # 存档对应的导线
             # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
-            self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": [], "Wires": []}
+            self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": Generate, "Wires": Generate}
             self.CameraSave: dict = {
                 "Mode": 0, "Distance": 2.7, "VisionCenter": Generate, "TargetRotation": Generate
             }
-            self.VisionCenter: _tools.position = _tools.position(0, 1.08, -0.45)
+            self.VisionCenter: _tools.position = _tools.position(0, -0.45, 1.08)
             self.TargetRotation: _tools.position = _tools.position(50, 0, 0)
 
         elif self.ExperimentType == experimentType.Celestial:
@@ -174,10 +174,7 @@ class Experiment:
             self.PlSav: dict = copy.deepcopy(savTemplate.Electromagnetism)
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
             self.CameraSave: dict = {
-                "Mode": 0,
-                "Distance": 3.25,
-                "VisionCenter": Generate,
-                "TargetRotation": Generate
+                "Mode": 0, "Distance": 3.25, "VisionCenter": Generate, "TargetRotation": Generate
             }
             self.VisionCenter: _tools.position = _tools.position(0, 0 ,0.88)
             self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
@@ -316,7 +313,7 @@ class Experiment:
                 "DiagramRotation\\\": 0}]', 'DiagramRotation\\\": 0}\n    ]"
             )
             stringJson = stringJson.replace('{\\\"Source', '\n      {\\\"Source')
-            stringJson = stringJson.replace(u"色导线\\\"}]}", "色导线\\\"}\n    ]}")
+            stringJson = stringJson.replace("色导线\\\"}]}", "色导线\\\"}\n    ]}")
             return stringJson
 
         if self.SavPath is None: # 检查是否已经.open()或.crt()

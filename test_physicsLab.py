@@ -92,6 +92,17 @@ class MyTestCase(unittest.TestCase):
         with experiment("__test__", is_exit=True, force_crt=True):
             a = Or_Gate()
             crt_Wire(a.o, a.i_up, "red")
+            self.assertEqual(count_Wires(), 1)
+
+            del_Wire(a.o, a.i_up)
+            self.assertEqual(count_Wires(), 0)
+    
+    def test_same_crt_wire(self):
+        with experiment("__test__", is_exit=True, force_crt=True):
+            a = Or_Gate()
+            crt_Wire(a.o, a.i_up, "red")
+            crt_Wire(a.o, a.i_up, "red")
+            self.assertEqual(count_Wires(), 1)
 
     @my_test_dec
     def test_union_Sum(self):
