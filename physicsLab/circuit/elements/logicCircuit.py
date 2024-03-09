@@ -493,3 +493,22 @@ class eight_bit_Display(_logicBase):
     @property
     def o_low(self) -> OutputPin:
         return OutputPin(self, 7)
+
+# 施密特触发器
+class Schmitt_Trigger(CircuitBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Schmitt Trigger", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"工作模式": 0.0, "切变速率": 0.5, "高电准位": 5.0, "锁定": 1.0,
+                                          "正向阈值": 3.33333334, "低电准位": 0.0, "负向阈值": 1.66666666},
+                            "Statistics": {"输入电压": 0.0, "输出电压": 0.0, "1": 0.0},
+                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+
+    @property
+    def i(self) -> InputPin:
+        return InputPin(self, 0)
+
+    @property
+    def o(self) -> OutputPin:
+        return OutputPin(self, 1)

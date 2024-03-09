@@ -2,8 +2,8 @@
 from typing import Optional
 
 from ..wire import Pin
-from physicsLab.typehint import numType
 from physicsLab.savTemplate import Generate
+from physicsLab.typehint import numType, Self
 from ._elementBase import CircuitBase, TwoPinMixIn
 
 # 开关基类
@@ -15,17 +15,37 @@ class _switch_Base(CircuitBase):
                           "Rotation": Generate, "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
 
+    # 打开开关
+    def turn_on_switch(self) -> Self:
+        self._arguments["Properties"]["开关"] = 0
+        return self
+
 # 简单开关
 class Simple_Switch(_switch_Base, TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         super(Simple_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Simple Switch"
 
+    # 闭合开关
+    def turn_off_switch(self) -> Self:
+        self._arguments["Properties"]["开关"] = 1
+        return self
+
 # 单刀双掷开关
 class SPDT_Switch(_switch_Base):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         super(SPDT_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "SPDT Switch"
+
+    # 向左闭合开关
+    def turn_off_left_switch(self) -> Self:
+        self._arguments["Properties"]["开关"] = 1
+        return self
+
+    # 向右闭合开关
+    def turn_off_right_switch(self) -> Self:
+        self._arguments["Properties"]["开关"] = 2
+        return self
 
     @property
     def l(self) -> Pin:
@@ -44,6 +64,16 @@ class DPDT_Switch(_switch_Base):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         super(DPDT_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "DPDT Switch"
+
+    # 向左关闭开关
+    def turn_off_left_switch(self) -> Self:
+        self._arguments["Properties"]["开关"] = 1
+        return self
+
+    # 向右关闭开关
+    def turn_off_right_switch(self) -> Self:
+        self._arguments["Properties"]["开关"] = 2
+        return self
 
     @property
     def l_up(self) -> Pin:
@@ -69,6 +99,36 @@ class DPDT_Switch(_switch_Base):
     def r_low(self) -> Pin:
         return Pin(self, 2)
 
+# 按钮开关
+class Push_Switch(TwoPinMixIn):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Push Switch", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"开关": 0.0, "默认开关": 0.0, "锁定": 1.0},
+                           "Statistics": {"电流": 0.0},
+                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+
+# 空气开关
+class Air_Switch(TwoPinMixIn):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Air Switch", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"开关": 0.0, "额定电流": 10.0, "锁定": 1.0},
+                           "Statistics": {},
+                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+
+    # 打开开关
+    def turn_on_switch(self) -> Self:
+        self._arguments["Properties"]["开关"] = 0
+        return self
+
+    # 闭合开关
+    def turn_off_switch(self) -> Self:
+        self._arguments["Properties"]["开关"] = 1
+        return self
+
 # 白炽灯泡
 class Incandescent_Lamp(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
@@ -81,18 +141,6 @@ class Incandescent_Lamp(TwoPinMixIn):
                             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
                             "DiagramRotation": 0}
-
-
-# 按钮开关
-class Push_Switch(TwoPinMixIn):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Push Switch", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"开关": 0.0, "默认开关": 0.0, "锁定": 1.0},
-                           "Statistics": {"电流": 0.0},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
-
 
 # 一节电池
 class Battery_Source(TwoPinMixIn):
@@ -219,7 +267,6 @@ class Galvanometer(CircuitBase):
     @property
     def r(self) -> Pin:
         return Pin(self, 2)
-
 
 # 微安表
 class Microammeter(CircuitBase):

@@ -5,7 +5,7 @@ is_bigElement # 是否是大体积元件
 is_elementXYZ # 是否是元件坐标系  
 
   
-  除了逻辑电路外，其他电路的元件都没有独有的method
+> Note: 如果表格没有***类独有的method***，说明该表格中的所有元件都没有类独有的method
 
 ## 逻辑电路
 
@@ -182,6 +182,13 @@ is_elementXYZ # 是否是元件坐标系
         <td>i_up, i_upmid, i_lowmid, i_low, o_up, o_upmid, o_lowmid, o_low</td>
         <td>None</td>
     </tr>
+    <tr>
+        <td>施密特触发器</td>
+        <td>Schmitt_Trigger</td>
+        <td>Schmitt Trigger</td>
+        <td>i, o</td>
+        <td>None</td>
+    </tr>
 </tbody>
 </table>
 
@@ -259,6 +266,12 @@ is_elementXYZ # 是否是元件坐标系
         <td>B, C, E</td>
     </tr>
     <tr>
+        <td>比较器</td>
+        <td>Comparator</td>
+        <td>Comparator</td>
+        <td>i_up, i_low, o</td>
+    </tr>
+    <tr>
         <td>运算放大器</td>
         <td>Operational_Amplifier</td>
         <td>Operational Amplifier</td>
@@ -317,99 +330,126 @@ is_elementXYZ # 是否是元件坐标系
         <th>元件在physicsLab中对应的的类名</th>
         <th>元件在物实存档中对应的名称（即ModelID）</th>
         <th>引脚</th>
+        <th>类独有的method</th>
     </tr>
     <tr>
         <td>简单开关</td>
         <td>Simple_Switch</td>
         <td>Simple Switch</td>
         <td>red, black</td>
+        <td>turn_on_switch # 打开开关; turn_off_switch # 闭合开关</td>
     </tr>
     <tr>
         <td>单刀双掷开关</td>
         <td>SPDT_Switch</td>
         <td>SPDT Switch</td>
+        <td>l, mid, r</td>
+        <td>turn_on_switch # 打开开关; turn_off_left_switch # 向左闭合开关; turn_off_right_switch # 向右闭合开关</td>
     </tr>
     <tr>
         <td>双刀双掷开关</td>
         <td>DPDT_Switch</td>
         <td>DPDT Switch</td>
+        <td>l_up, l_low, mid_up, mid_low, r_up, r_low</td>
+        <td>turn_on_switch # 打开开关; turn_off_left_switch # 向左闭合开关; turn_off_right_switch # 向右闭合开关</td>
     </tr>
     <tr>
         <td>按钮开关</td>
         <td>Push_Switch</td>
         <td>Push Switch</td>
         <td>red, black</td>
+        <td>None</td>
+    </tr>
+    <tr>
+        <td>空气开关</td>
+        <td>Air_Switch</td>
+        <td>Air Switch</td>
+        <td>red, black</td>
+        <td>turn_on_switch # 打开开关; turn_off_switch # 闭合开关</td>
     </tr>
     <tr>
         <td>白炽灯泡</td>
         <td>Incandescent_Lamp</td>
         <td>Incandescent Lamp</td>
         <td>red, black</td>
+        <td>None</td>
     </tr>
     <tr>
         <td>一节电池</td>
         <td>Battery_Source</td>
         <td>Battery Source</td>
         <td>red, black</td>
+        <td>None</td>
     </tr>
     <tr>
         <td>学生电源</td>
         <td>Student_Source</td>
         <td>Student Source</td>
+        <td></td>
+        <td>None</td>
     </tr>
     <tr>
         <td>电阻</td>
         <td>Resistor</td>
         <td>Resistor</td>
         <td>red, black</td>
+        <td>None</td>
     </tr>
     <tr>
         <td>保险丝</td>
         <td>Fuse_Component</td>
         <td>Fuse Component</td>
         <td>red, black</td>
+        <td>None</td>
     </tr>
     <tr>
         <td>滑动变阻器</td>
         <td>Slide_Rheostat</td>
         <td>Slide Rheostat</td>
         <td>l_up, l_low, r_up, r_low</td>
+        <td>None</td>
     </tr>
     <tr>
         <td>灵敏电流计</td>
         <td>Galvanometer</td>
         <td>Galvanometer</td>
         <td>l, mid, r</td>
+        <td>None</td>
     </tr>
     <tr>
         <td>微安表</td>
         <td>Microammeter</td>
         <td>Microammeter</td>
         <td>l, mid, r</td>
+        <td>None</td>
     </tr>
     <tr>
         <td>电能表</td>
         <td>Electricity_Meter</td>
         <td>Electricity Meter</td>
         <td>l, l_mid, r_mid, r</td>
+        <td>None</td>
     </tr>
     <tr>
         <td>电阻箱</td>
         <td>Resistance_Box</td>
         <td>Resistance Box</td>
         <td>l, r</td>
+        <td>None</td>
     </tr>
     <tr>
         <td>直流安培表</td>
         <td>Simple_Ammeter</td>
         <td>Simple Ammeter</td>
         <td>l, mid, r</td>
+        <td>None</td>
     </tr>
     <tr>
         <td>直流电压表</td>
         <td>Simple_Voltmeter</td>
         <td>Simple Voltmeter</td>
         <td>l, mid, r</td>
+        <td>None</td>
     </tr>
 </table>
 

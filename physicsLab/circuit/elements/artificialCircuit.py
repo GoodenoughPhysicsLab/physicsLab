@@ -246,6 +246,27 @@ class Transistor(CircuitBase):
     def E(self) -> Pin:
         return Pin(self, 2)
 
+# 比较器
+class Comparator(CircuitBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Comparator", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0},
+                           "Statistics": {},
+                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+
+    @property
+    def o(self) -> Pin:
+        return Pin(self, 0)
+
+    @property
+    def i_up(self) -> Pin:
+        return Pin(self, 1)
+
+    @property
+    def i_low(self) -> Pin:
+        return Pin(self, 2)
 
 # 运算放大器
 class Operational_Amplifier(CircuitBase):
@@ -273,11 +294,13 @@ class Operational_Amplifier(CircuitBase):
 # 继电器
 class Relay_Component(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Relay Component", "Identifier": Generate, "IsBroken": False,
-                           "IsLocked": False, "Properties": {"开关": 0.0, "线圈电感": 0.2, "线圈电阻": 20.0,
-                                          "接通电流": 0.02, "额定电流": 1.0, "锁定": 1.0}, "Statistics": {},
-                           "Position": Generate, "Rotation": Generate,
-                           "DiagramCached": False, "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+        self._arguments = {"ModelID": "Relay Component", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"开关": 0.0, "线圈电感": 0.2, "线圈电阻": 20.0,
+                                          "接通电流": 0.02, "额定电流": 1.0, "锁定": 1.0},
+                            "Statistics": {},
+                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
                            "DiagramRotation": 0}
 
     @property
