@@ -34,7 +34,7 @@
 5.  增加了`Midi.set_tempo`方法
 
 ## 1.3.3
-1.  完成Midi.write_plm的主要逻辑
+1.  完成`Midi.write_plm`的主要逻辑
 
 ## 1.3.4
 1.  进一步完善了Midi类（translate_to_piece）
@@ -85,3 +85,4 @@
 
 # 1.4.5
 1.  增加了更多的元件
+2.  重复连接的导线将不会被连接

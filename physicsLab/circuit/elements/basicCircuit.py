@@ -38,12 +38,12 @@ class SPDT_Switch(_switch_Base):
         self._arguments["ModelID"] = "SPDT Switch"
 
     # 向左闭合开关
-    def turn_off_left_switch(self) -> Self:
+    def left_turn_off_switch(self) -> Self:
         self._arguments["Properties"]["开关"] = 1
         return self
 
     # 向右闭合开关
-    def turn_off_right_switch(self) -> Self:
+    def right_turn_off_switch(self) -> Self:
         self._arguments["Properties"]["开关"] = 2
         return self
 
@@ -66,12 +66,12 @@ class DPDT_Switch(_switch_Base):
         self._arguments["ModelID"] = "DPDT Switch"
 
     # 向左关闭开关
-    def turn_off_left_switch(self) -> Self:
+    def left_turn_off_switch(self) -> Self:
         self._arguments["Properties"]["开关"] = 1
         return self
 
     # 向右关闭开关
-    def turn_off_right_switch(self) -> Self:
+    def right_turn_off_switch(self) -> Self:
         self._arguments["Properties"]["开关"] = 2
         return self
 
