@@ -15,8 +15,8 @@ class _switch_Base(CircuitBase):
                           "Rotation": Generate, "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
 
-    # 打开开关
-    def turn_on_switch(self) -> Self:
+    # 断开开关
+    def turn_off_switch(self) -> Self:
         self._arguments["Properties"]["开关"] = 0
         return self
 
@@ -27,7 +27,7 @@ class Simple_Switch(_switch_Base, TwoPinMixIn):
         self._arguments["ModelID"] = "Simple Switch"
 
     # 闭合开关
-    def turn_off_switch(self) -> Self:
+    def turn_on_switch(self) -> Self:
         self._arguments["Properties"]["开关"] = 1
         return self
 
@@ -38,12 +38,12 @@ class SPDT_Switch(_switch_Base):
         self._arguments["ModelID"] = "SPDT Switch"
 
     # 向左闭合开关
-    def left_turn_off_switch(self) -> Self:
+    def left_turn_on_switch(self) -> Self:
         self._arguments["Properties"]["开关"] = 1
         return self
 
     # 向右闭合开关
-    def right_turn_off_switch(self) -> Self:
+    def right_turn_on_switch(self) -> Self:
         self._arguments["Properties"]["开关"] = 2
         return self
 
@@ -65,13 +65,13 @@ class DPDT_Switch(_switch_Base):
         super(DPDT_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "DPDT Switch"
 
-    # 向左关闭开关
-    def left_turn_off_switch(self) -> Self:
+    # 向左闭合开关
+    def left_turn_on_switch(self) -> Self:
         self._arguments["Properties"]["开关"] = 1
         return self
 
-    # 向右关闭开关
-    def right_turn_off_switch(self) -> Self:
+    # 向右闭合开关
+    def right_turn_on_switch(self) -> Self:
         self._arguments["Properties"]["开关"] = 2
         return self
 
@@ -119,13 +119,13 @@ class Air_Switch(TwoPinMixIn):
                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
-    # 打开开关
-    def turn_on_switch(self) -> Self:
+    # 断开开关
+    def turn_off_switch(self) -> Self:
         self._arguments["Properties"]["开关"] = 0
         return self
 
     # 闭合开关
-    def turn_off_switch(self) -> Self:
+    def turn_on_switch(self) -> Self:
         self._arguments["Properties"]["开关"] = 1
         return self
 

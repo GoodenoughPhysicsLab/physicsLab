@@ -337,21 +337,21 @@ is_elementXYZ # 是否是元件坐标系
         <td>Simple_Switch</td>
         <td>Simple Switch</td>
         <td>red, black</td>
-        <td>turn_on_switch # 打开开关; turn_off_switch # 闭合开关</td>
+        <td>turn_off_switch # 断开开关; turn_on_switch # 闭合开关</td>
     </tr>
     <tr>
         <td>单刀双掷开关</td>
         <td>SPDT_Switch</td>
         <td>SPDT Switch</td>
         <td>l, mid, r</td>
-        <td>turn_on_switch # 打开开关; left_turn_off_switch # 向左闭合开关; right_turn_off_switch # 向右闭合开关</td>
+        <td>turn_off_switch # 断开开关; left_turn_on_switch # 向左闭合开关; right_turn_on_switch # 向右闭合开关</td>
     </tr>
     <tr>
         <td>双刀双掷开关</td>
         <td>DPDT_Switch</td>
         <td>DPDT Switch</td>
         <td>l_up, l_low, mid_up, mid_low, r_up, r_low</td>
-        <td>turn_on_switch # 打开开关; left_turn_off_switch # 向左闭合开关; right_turn_off_switch # 向右闭合开关</td>
+        <td>turn_off_switch # 断开开关; left_turn_on_switch # 向左闭合开关; right_turn_on_switch # 向右闭合开关</td>
     </tr>
     <tr>
         <td>按钮开关</td>
@@ -365,7 +365,7 @@ is_elementXYZ # 是否是元件坐标系
         <td>Air_Switch</td>
         <td>Air Switch</td>
         <td>red, black</td>
-        <td>turn_on_switch # 打开开关; turn_off_switch # 闭合开关</td>
+        <td>turn_off_switch # 断开开关; turn_on_switch # 闭合开关</td>
     </tr>
     <tr>
         <td>白炽灯泡</td>

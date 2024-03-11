@@ -44,14 +44,13 @@
 1.  改进`Midi.sound`的播放机制,使`plmidi`与`pygame`的播放效果相同
 
 ## 1.3.6
-1.  元件类增加`hook`
-2.  使用了物实`v2.4.7`的特性优化模块化音乐电路，这也意味着旧版本物实不支持`physicsLab`生成的电路
-3.  修复了颜色打印的Bug，增加了`close_color_print()`以关闭颜色打印
-4.  更改了在`Android`上创建存档的行为，同时理论上支持了其他操作系统
-5.  更新了`write_Experiment`的`extra_filepath`
-6.  更新了`Piece.write_midi`, `Piece.traslate_to_midi`
-7.  更新了简单乐器播放多个音符的机制:`Simple_Instrument.add_note`与获取简单乐器的和弦:`Simple_Instrument.get_chord()`
-8.  实装了`Chord`类，同时禁止了旧有的和弦表示方式
+1.  使用了物实`v2.4.7`的特性优化模块化音乐电路，这也意味着旧版本物实不支持`physicsLab`生成的电路
+2.  修复了颜色打印的Bug，增加了`close_color_print()`以关闭颜色打印
+3.  更改了在`Android`上创建存档的行为，同时理论上支持了其他操作系统
+4.  更新了`write_Experiment`的`extra_filepath`
+5.  更新了`Piece.write_midi`, `Piece.traslate_to_midi`
+6.  更新了简单乐器播放多个音符的机制:`Simple_Instrument.add_note`与获取简单乐器的和弦:`Simple_Instrument.get_chord()`
+7.  实装了`Chord`类，同时禁止了旧有的和弦表示方式
 
 ## 1.3.7
 1.  修复了由`typing`导致的问题
