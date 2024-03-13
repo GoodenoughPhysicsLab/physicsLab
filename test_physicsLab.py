@@ -47,7 +47,7 @@ class MyTestCase(unittest.TestCase):
 
     @my_test_dec
     def test_experiment1(self):
-        crt_Experiment("__test__", force_crt=True)
+        exp: Experiment = Experiment().crt("__test__", force_crt=True)
         a = Yes_Gate()
         self.assertEqual(count_Elements(), 1)
         self.assertEqual(a.get_Position(), (0, 0, 0))
@@ -60,28 +60,28 @@ class MyTestCase(unittest.TestCase):
         crt_Element('Logic Input')
         self.assertEqual(count_Elements(), 2)
         get_Element(0, 0, 0)
-        exit_Experiment()
+        exp.exit()
 
     @my_test_dec
     def test_read_Experiment(self):
-        crt_Experiment("__test__", force_crt=True)
+        exp: Experiment = Experiment().crt("__test__", force_crt=True)
 
         self.assertEqual(count_Elements(), 0)
         self.assertEqual(count_Wires(), 0)
         Logic_Input()
-        write_Experiment()
+        exp.write()
 
-        open_Experiment("__test__")
-        read_Experiment()
+        exp2: Experiment = Experiment().open("__test__")
+        exp2.read()
         self.assertEqual(count_Elements(), 1)
-        exit_Experiment()
+        exp2.delete()
 
     @my_test_dec
     def test_crt_Experiment(self):
         try:
-            crt_Experiment("__test__", force_crt=True)
-            write_Experiment()
-            crt_Experiment("__test__") # will fail
+            exp: Experiment = Experiment().crt("__test__", force_crt=True)
+            exp.write()
+            Experiment().crt("__test__") # will fail
         except crtExperimentFailError:
             Experiment("__test__").delete()
         else:
@@ -106,18 +106,18 @@ class MyTestCase(unittest.TestCase):
 
     @my_test_dec
     def test_union_Sum(self):
-        crt_Experiment("__test__", force_crt=True)
+        exp: Experiment = Experiment().crt("__test__", force_crt=True)
         unit.Sum(0, -1, 0, 64)
         self.assertEqual(count_Elements(), 64)
         self.assertEqual(count_Wires(), 63)
         clear_Elements()
         self.assertEqual(count_Wires(), 0)
         self.assertEqual(count_Elements(), 0)
-        exit_Experiment()
+        exp.exit()
 
     @my_test_dec
     def test_get_Element(self):
-        crt_Experiment("__test__", force_crt=True)
+        exp: Experiment = Experiment().crt("__test__", force_crt=True)
         Or_Gate(0, 0, 0)
         crt_Wire(
             get_Element(0, 0, 0).o,
@@ -125,25 +125,25 @@ class MyTestCase(unittest.TestCase):
         )
         crt_Wire(get_Element(0,0,0).i_low, get_Element(index=1).o)
         self.assertEqual(count_Wires(), 2)
-        exit_Experiment()
+        exp.exit()
 
     # 测逝用例未写完
     @my_test_dec
     def test_set_O(self):
-        crt_Experiment("__test__", force_crt=True)
+        exp: Experiment = Experiment().crt("__test__", force_crt=True)
         set_O(-1, -1, 0)
         for x in range(10):
             for y in range(10):
                 Yes_Gate(x, y, 0, True)
         self.assertEqual(count_Elements(), 100)
-        exit_Experiment()
+        exp.exit()
 
     @my_test_dec
     def test_errors(self):
         try:
             with experiment("__test__", delete=True, force_crt=True):
                 pass
-            open_Experiment('__test__') # do not exist
+            Experiment().open('__test__') # do not exist
         except OpenExperimentError:
             pass
         else:
@@ -152,7 +152,7 @@ class MyTestCase(unittest.TestCase):
     # 测试元件坐标系2
     @my_test_dec
     def test_aTest(self):
-        crt_Experiment("__test__", force_crt=True)
+        exp: Experiment = Experiment().crt("__test__", force_crt=True)
         set_elementXYZ(True)
         set_O(-1, -1, 0)
         for x in range(10):
@@ -166,15 +166,15 @@ class MyTestCase(unittest.TestCase):
         get_Element(index=2).i - get_Element(index=3).o - get_Element(index=4).i
         self.assertEqual(count_Wires(), 3)
         self.assertEqual(count_Elements(), 150)
-        exit_Experiment()
+        exp.exit()
 
     @my_test_dec
     def test_open_many_Experiment(self):
-        crt_Experiment("_Test", force_crt=True)
+        exp: Experiment = Experiment().crt("__test__", force_crt=True)
         with experiment('__test__', is_exit=True, force_crt=True):
             Logic_Input()
             self.assertEqual(1, count_Elements())
-        exit_Experiment()
+        exp.exit()
 
     @my_test_dec
     def test_with_and_coverPosition(self):

@@ -355,9 +355,9 @@ class Experiment:
 
         # 编译成功，打印信息
         if self.is_open:
-            status = "update"
+            status: str = "update"
         elif self.is_crt:
-            status = "create"
+            status: str = "create"
         if self.ExperimentType == experimentType.Circuit:
             _colorUtils.color_print(
                 f"Successfully {status} experiment \"{self.PlSav['InternalName']}\"! "
@@ -593,7 +593,7 @@ def getAllSav() -> List[str]:
     return [aSav for aSav in savs if aSav.endswith('sav')]
 
 # 打开一个存档, 返回存档对应的dict
-def _open_sav(sav_name) -> dict:
+def _open_sav(sav_name) -> Optional[dict]:
     def encode_sav(path: str, encoding: str) -> Optional[dict]:
         try:
             with open(path, encoding=encoding) as f:
@@ -628,53 +628,3 @@ def search_Experiment(sav_name: str) -> Optional[str]:
             return aSav
 
     return None
-
-# 以下为旧式调用方式， 为兼容代码
-# 打开实验
-def open_Experiment(sav_name: str) -> Experiment:
-    return Experiment().open(sav_name)
-
-# 创建存档，输入为存档名
-def crt_Experiment(sav_name: str,
-                   experimentType: experimentType = experimentType.Circuit,
-                   force_crt: bool=False
-) -> Experiment:
-    return Experiment().crt(sav_name, experimentType, force_crt)
-
-# 先尝试打开实验，若失败则创建实验。只支持输入存档名
-def open_or_crt_Experiment(sav_name: str,
-                           experimentType: experimentType = experimentType.Circuit
-) -> Experiment:
-    return Experiment().open_or_crt(sav_name, experimentType)
-
-# 读取sav文件已有的原件与导线
-def read_Experiment() -> None:
-    stack_Experiment.top().read()
-
-# 将编译完成的json写入sav, ln: 是否将存档中字符串格式json换行
-def write_Experiment(extra_filepath: Optional[str] = None,
-                     ln: bool = False,
-                     no_pop: bool = False
-) -> None:
-    stack_Experiment.top().write(extra_filepath, ln, no_pop)
-
-# 删除存档
-def del_Experiment() -> None:
-    stack_Experiment.top().delete()
-
-# 使用notepad打开该存档
-def show_Experiment() -> None:
-    # os.system() 在文件夹有空格的时候会出现错误
-    stack_Experiment.top().show()
-
-# 重命名存档
-def entitle_Experiment(sav_name: str):
-    stack_Experiment.top().entitle(sav_name)
-
-# 发布实验
-def publish_Experiment(title: Optional[str] = None, introduction: Optional[str] = None) -> None:
-    stack_Experiment.top().publish(title, introduction)
-
-# 退出实验而不进行任何操作
-def exit_Experiment():
-    stack_Experiment.top().exit()
