@@ -32,22 +32,6 @@ else:
     if not os.path.exists("physicsLabSav"):
         os.mkdir("physicsLabSav")
 
-# 在import了physicsLab的程序的第一行加上# -*- coding: utf-8 -*-
-try: # 在cmd或者shell上无法执行该功能
-    import sys
-    s = ""
-    with open(sys.argv[0], encoding='utf-8') as f:
-        s = f.read()
-    if not s.replace('\n', '').startswith("# -*- coding: utf-8 -*-") and \
-       not s.replace('\n', '').startswith("#coding=utf-8"):
-        with open(sys.argv[0], 'w', encoding='utf-8') as f:
-            if s.startswith('\n'):
-                f.write(f'# -*- coding: utf-8 -*-{s}')
-            else:
-                f.write(f'# -*- coding: utf-8 -*-\n{s}')
-except FileNotFoundError:
-    close_color_print()
-
 __all__ = [
     # _colorUtils.py
     "close_color_print",
@@ -80,7 +64,9 @@ __all__ = [
     "P_MOSFET", "Incandescent_Lamp", "Buzzer", "Multimeter", "Galvanometer", "Microammeter",
     "Electricity_Meter", "Resistance_Box", "Simple_Ammeter", "Simple_Voltmeter", "Basic_Inductor",
     "Basic_Diode", "Light_Emitting_Diode", "Transformer", "Tapped_Transformer", "Mutual_Inductor",
-    "Rectifier", "Transistor", "Comparator", "Air_Switch", "Schmitt_Trigger",
+    "Rectifier", "Transistor", "Comparator", "Air_Switch", "Schmitt_Trigger", "Spark_Gap", "Tesla_Coil",
+    "Color_Light_Emitting_Diode", "Dual_Light_Emitting_Diode", "Electric_Bell", "Musical_Box",
+    "Resistance_Law", "Solenoid",
 
     # unionElements
     "unit", "music",

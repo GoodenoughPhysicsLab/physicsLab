@@ -70,7 +70,7 @@ class instantiateError(Exception):
         return "This class cannot be instantiated"
 
 class ExperimentError(Exception):
-    def __init__(self, string: str) -> None:
+    def __init__(self, string: str = "") -> None:
         self.err_msg: str = string
 
     def __str__(self) -> str:

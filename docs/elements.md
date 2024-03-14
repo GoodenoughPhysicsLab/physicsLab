@@ -461,11 +461,59 @@ is_elementXYZ # 是否是元件坐标系
         <th>元件在物实存档中对应的名称（即ModelID）</th>
         <th>引脚</th>
     </tr>
-        <tr>
+    <tr>
+        <td>火花隙</td>
+        <td>Spark_Gap</td>
+        <td>Spark Gap</td>
+        <td>red, black</td>
+    </tr>
+    <tr>
+        <td>特斯拉线圈</td>
+        <td>Tesla_Coil</td>
+        <td>Tesla Coil</td>
+        <td>red, black</td>
+    </tr>
+    <tr>
+        <td>彩色发光二级管</td>
+        <td>Color_Light_Emitting_Diode</td>
+        <td>Color Light-Emitting Diode</td>
+        <td>l_up, l_low, l_mid, r</td>
+    </tr>
+    <tr>
+        <td>演示发光二级管</td>
+        <td>Dual_Light_Emitting_Diode</td>
+        <td>Dual Light-Emitting Diode</td>
+        <td>red, black</td>
+    </tr>
+    <tr>
+        <td>电铃</td>
+        <td>Electric_Bell</td>
+        <td>Electric Bell</td>
+        <td>red, black</td>
+    </tr>
+    <tr>
+        <td>八音盒</td>
+        <td>Musical_Box</td>
+        <td>Musical Box</td>
+        <td>red, black</td>
+    </tr>
+    <tr>
         <td>小风扇</td>
         <td>Electric_Fan</td>
         <td>Electric Fan</td>
         <td>red, black</td>
+    </tr>
+    <tr>
+        <td>电阻定律实验</td>
+        <td>Resistance_Law</td>
+        <td>Resistance Law</td>
+        <td>l_up, l_upmid, l_lowmid, l_low, r_up, r_upmid, r_lowmid, r_low</td>
+    </tr>
+    <tr>
+        <td>通电螺线管</td>
+        <td>Solenoid</td>
+        <td>Solenoid</td>
+        <td>red, black, subred, subblack</td>
     </tr>
     <tr>
         <td>简单乐器</td>

@@ -1,8 +1,180 @@
 # -*- coding: utf-8 -*-
 from ..wire import Pin
-from ._elementBase import TwoPinMixIn
 from physicsLab.savTemplate import Generate
+from ._elementBase import TwoPinMixIn, CircuitBase
 from physicsLab.typehint import Optional, Self, List, Union, numType
+
+# 蜂鸣器
+class Buzzer(TwoPinMixIn):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Buzzer", "Identifier": Generate, "IsBroken": False,
+                           "IsLocked": False, "Properties": {"额定电压": 3.0, "额定功率": 0.3},
+                           "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
+                                          "功率": 0.0, "电压": 0.0, "电流": 0.0},
+                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+                            "DiagramRotation": 0}
+
+# 火花隙
+class Spark_Gap(TwoPinMixIn):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Spark Gap", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"击穿电压": 1000.0, "击穿电阻": 1.0, "维持电流": 0.001, "锁定": 1.0},
+                           "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0},
+                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+
+# 特斯拉线圈
+class Tesla_Coil(TwoPinMixIn):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Tesla Coil", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"击穿电压": 30000.0, "次级电容": 2.5e-11, "次级电阻": 1.0,
+                                          "电感1": 0.1, "电感2": 90.0, "锁定": 1.0},
+                           "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0},
+                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+
+# 彩色发光二极管
+class Color_Light_Emitting_Diode(CircuitBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Color Light-Emitting Diode", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"反向耐压": 6.0, "击穿电压": 0.0, "前向压降": 2.1024259,
+                                          "工作电流": 0.01, "工作电压": 3.0, "锁定": 1.0},
+                           "Statistics": {"电流1": 0.0, "电压1": 0.0, "功率1": 0.0, "亮度1": 0.0,
+                                          "电流2": 0.0, "电压2": 0.0, "功率2": 0.0, "亮度2": 0.0,
+                                          "电流3": 0.0, "电压3": 0.0, "功率3": 0.0, "亮度3": 0.0},
+                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+
+    @property
+    def l_up(self) -> Pin:
+        return Pin(self, 0)
+
+    @property
+    def l_mid(self) -> Pin:
+        return Pin(self, 1)
+
+    @property
+    def l_low(self) -> Pin:
+        return Pin(self, 2)
+
+    @property
+    def r(self) -> Pin:
+        return Pin(self, 3)
+
+# 演示发光二极管
+class Dual_Light_Emitting_Diode(TwoPinMixIn):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Dual Light-Emitting Diode", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"反向耐压": 6.0, "击穿电压": 0.0, "前向压降": 2.1024259,
+                                          "工作电流": 0.01, "工作电压": 3.0, "锁定": 1.0},
+                           "Statistics": {"电流1": 0.0, "电压1": 0.0, "功率1": 0.0, "亮度1": 0.0, "电流2": 0.0,
+                                          "电压2": 0.0, "功率2": 0.0, "亮度2": 0.0},
+                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+
+# 电铃
+class Electric_Bell(TwoPinMixIn):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Electric Bell", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"额定电压": 3.0, "额定功率": 0.3, "锁定": 1.0},
+                           "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
+                                          "功率": 0.0, "电压": 0.0, "电流": 0.0},
+                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+
+# 八音盒
+class Musical_Box(TwoPinMixIn):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Musical Box", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"额定电压": 3.0, "额定功率": 0.3, "锁定": 1.0},
+                           "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0, "功率": 0.0,
+                                          "电压": 0.0, "电流": 0.0},
+                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+
+# 电阻定律实验
+class Resistance_Law(CircuitBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Resistance Law", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"电阻率": 1.0, "电阻率2": 4.0, "电阻率3": 1.0, "最大长度": 2.0,
+                                          "最小长度": 0.1, "长度": 1.0, "最大半径": 0.01, "最小半径": 0.0001,
+                                          "半径": 0.0005, "电阻": 1.4, "电阻2": 0.56, "电阻3": 0.02, "锁定": 1.0},
+                            "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0, "功率": 0.0,
+                                           "电压": 0.0, "电流": 0.0, "瞬间功率1": 0.0, "瞬间电流1": 0.0,
+                                           "瞬间电压1": 0.0, "功率1": 0.0, "电压1": 0.0, "电流1": 0.0,
+                                           "瞬间功率2": 0.0, "瞬间电流2": 0.0, "瞬间电压2": 0.0, "功率2": 0.0,
+                                           "电压2": 0.0, "电流2": 0.0, "瞬间功率3": 0.0, "瞬间电流3": 0.0,
+                                           "瞬间电压3": 0.0, "功率3": 0.0, "电压3": 0.0, "电流3": 0.0},
+                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+
+    @property
+    def l_low(self) -> Pin:
+        return Pin(self, 0)
+
+    @property
+    def l_lowmid(self) -> Pin:
+        return Pin(self, 1)
+
+    @property
+    def l_upmid(self) -> Pin:
+        return Pin(self, 2)
+
+    @property
+    def l_up(self) -> Pin:
+        return Pin(self, 3)
+
+    @property
+    def r_low(self) -> Pin:
+        return Pin(self, 4)
+
+    @property
+    def r_lowmid(self) -> Pin:
+        return Pin(self, 5)
+
+    @property
+    def r_upmid(self) -> Pin:
+        return Pin(self, 6)
+
+    @property
+    def r_up(self) -> Pin:
+        return Pin(self, 7)
+
+# 通电螺线管
+class Solenoid(CircuitBase):
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        self._arguments = {"ModelID": "Solenoid", "Identifier": Generate,
+                           "IsBroken": False, "IsLocked": False,
+                           "Properties": {"插入铁芯": 1.0, "内圈状态": 0.0, "切割速度": 1.0, "锁定": 1.0,
+                                          "线圈匝数": 100.0, "线圈位置": 0.0, "内线圈半径": 0.1, "磁通量": 0.0},
+                            "Statistics": {"电流-内线圈": 0.0, "功率-内线圈": 0.0, "电压-内线圈": 0.0,
+                                           "磁感应强度": 0.0, "磁通量": 0.0, "电压-外线圈": 0.0},
+                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+
+    @property
+    def subred(self) -> Pin:
+        return Pin(self, 0)
+
+    @property
+    def subblack(self) -> Pin:
+        return Pin(self, 1)
+
+    @property
+    def red(self) -> Pin:
+        return Pin(self, 2)
+
+    @property
+    def black(self) -> Pin:
+        return Pin(self, 3)
 
 # 小电扇
 class Electric_Fan(TwoPinMixIn):
@@ -148,14 +320,3 @@ class Simple_Instrument(TwoPinMixIn):
             raise TypeError
 
         return self
-
-# 蜂鸣器
-class Buzzer(TwoPinMixIn):
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Buzzer", "Identifier": Generate, "IsBroken": False,
-                           "IsLocked": False, "Properties": {"额定电压": 3.0, "额定功率": 0.3},
-                           "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
-                                          "功率": 0.0, "电压": 0.0, "电流": 0.0},
-                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
-                            "DiagramRotation": 0}

@@ -299,6 +299,8 @@ class Experiment:
                 for wire_dict in status_sav['Wires']
             ]
 
+        return self
+
     # 以物实存档的格式导出实验
     def write(self,
               extra_filepath: Optional[str] = None,

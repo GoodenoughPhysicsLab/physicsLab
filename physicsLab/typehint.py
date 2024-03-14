@@ -9,4 +9,4 @@ class WireDict(TypedDict):
     TargetPin: str
     ColorName: str
 
-numType = Union[int, float]
+numType: TypeAlias = Union[int, float]
