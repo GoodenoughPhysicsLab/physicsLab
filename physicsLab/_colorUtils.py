@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import sys
+import platform
 from enum import Enum, unique
 
 @unique
@@ -17,7 +17,7 @@ class COLOR(Enum):
 # 打印write_Experiment的信息时是否使用彩色字
 colorSupport = True
 
-if colorSupport and sys.platform == "win32":
+if colorSupport and platform.system == "Windows":
     try:
         # https://stackoverflow.com/questions/36760127/...
         # how-to-use-the-new-support-for-ansi-escape-sequences-in-the-windows-10-console

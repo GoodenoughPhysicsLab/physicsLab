@@ -9,7 +9,7 @@ from ._elementBase import CircuitBase, TwoPinMixIn
 # 开关基类
 class _switch_Base(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "", "Identifier": Generate, "IsBroken": False,
+        self._arguments = {"ModelID": Generate, "Identifier": Generate, "IsBroken": False,
                           "IsLocked": False, "Properties": {"开关": 0, "锁定": 1.0},
                           "Statistics": {}, "Position": Generate,
                           "Rotation": Generate, "DiagramCached": False,
@@ -26,6 +26,14 @@ class Simple_Switch(_switch_Base, TwoPinMixIn):
         super(Simple_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Simple Switch"
 
+    def __repr__(self) -> str:
+        res = f"Simple_Switch({self._position.x}, {self._position.y}, {self._position.z}, " \
+              f"elementXYZ={self.is_elementXYZ})"
+        
+        if self._arguments["Properties"]["开关"] == 1:
+            res += ".turn_on_switch()"
+        return res
+
     # 闭合开关
     def turn_on_switch(self) -> Self:
         self._arguments["Properties"]["开关"] = 1
@@ -36,6 +44,16 @@ class SPDT_Switch(_switch_Base):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         super(SPDT_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "SPDT Switch"
+
+    def __repr__(self) -> str:
+        res = f"SPDT_Switch({self._position.x}, {self._position.y}, {self._position.z}, " \
+              f"elementXYZ={self.is_elementXYZ})"
+
+        if self._arguments["Properties"]["开关"] == 1:
+            res += ".left_turn_on_switch()"
+        elif self._arguments["Properties"]["开关"] == 2:
+            res += ".right_turn_on_switch()"
+        return res
 
     # 向左闭合开关
     def left_turn_on_switch(self) -> Self:
@@ -64,6 +82,16 @@ class DPDT_Switch(_switch_Base):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         super(DPDT_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "DPDT Switch"
+    
+    def __repr__(self) -> str:
+        res = f"DPDT_Switch({self._position.x}, {self._position.y}, {self._position.z}, " \
+              f"elementXYZ={self.is_elementXYZ})"
+
+        if self._arguments["Properties"]["开关"] == 1:
+            res += ".left_turn_on_switch()"
+        elif self._arguments["Properties"]["开关"] == 2:
+            res += ".right_turn_on_switch()"
+        return res
 
     # 向左闭合开关
     def left_turn_on_switch(self) -> Self:
@@ -119,6 +147,14 @@ class Air_Switch(TwoPinMixIn):
                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
+    def __repr__(self) -> str:
+        res = f"Air_Switch({self._position.x}, {self._position.y}, {self._position.z}, " \
+              f"elementXYZ={self.is_elementXYZ})"
+        
+        if self._arguments["Properties"]["开关"] == 1:
+            res += ".turn_on_switch()"
+        return res
+    
     # 断开开关
     def turn_off_switch(self) -> Self:
         self._arguments["Properties"]["开关"] = 0

@@ -205,7 +205,6 @@ class Simple_Instrument(TwoPinMixIn):
             rated_oltage: numType = 3.0, # 额定电压
             is_ideal_model: bool = False, # 是否为理想模式
             is_single: bool = True, # 简单乐器是否只响一次
-            other_chord_notes: list = [], # 其他和弦音
     ) -> None:
         if not (
             (isinstance(instrument, int) and 0 <= instrument <= 128) and
@@ -228,8 +227,6 @@ class Simple_Instrument(TwoPinMixIn):
 
         self.set_Tonality(pitch)
         self.notes: List[int] = [self._arguments["Properties"]["音高"]] # 仅用于记录self已有的音符
-        for a_note in other_chord_notes:
-            self.add_note(a_note)
 
     @property
     def i(self) -> Pin:
@@ -246,8 +243,8 @@ class Simple_Instrument(TwoPinMixIn):
                f"velocity={self._arguments['Properties']['音量']}, " \
                f"rated_oltage={self._arguments['Properties']['额定电压']}, " \
                f"is_ideal_model={self._arguments['Properties']['理想模式']}, " \
-               f"is_single={bool(self._arguments['Properties']['脉冲'])}, " \
-               f"other_chord_notes={self.notes})"
+               f"is_single={bool(self._arguments['Properties']['脉冲'])}" \
+               f").add_note({str(self.notes)[1:-2]})"
 
     # 物实v2.4.7新功能: 简单乐器同时播放多个音符
     def add_note(self, *pitchs: int) -> Self:
