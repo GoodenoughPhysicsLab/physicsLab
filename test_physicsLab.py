@@ -101,7 +101,7 @@ class MyTestCase(unittest.TestCase):
         with experiment("__test__", is_exit=True, force_crt=True):
             a = Or_Gate()
             crt_Wire(a.o, a.i_up, "red")
-            crt_Wire(a.o, a.i_up, "red")
+            crt_Wire(a.i_up, a.o, "blue")
             self.assertEqual(count_Wires(), 1)
 
     @my_test_dec

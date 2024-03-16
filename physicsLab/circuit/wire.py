@@ -68,6 +68,8 @@ class Wire:
     def __hash__(self) -> int:
         return hash(
             (self.Source.element_self, self.Source.pinLabel, self.Target.element_self, self.Target.pinLabel)
+        ) + hash(
+            (self.Target.element_self, self.Target.pinLabel, self.Source.element_self, self.Source.pinLabel)
         )
 
     def __eq__(self, other: "Wire") -> bool:
