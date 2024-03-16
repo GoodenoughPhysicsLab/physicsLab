@@ -41,7 +41,7 @@ class Union_LogicBase(UnionBase):
             element.set_LowLeaveValue(num)
         return self
 
-# 只读非门，若没有则创建一个只读非门，若已存在则不会创建新的元件，该类为单例模式
+# 只读非门，若没有则创建一个只读非门，若已存在则不会创建新的元件
 class Const_NoGate:
     __singleton: "Const_NoGate" = None # type: ignore
     __singleton_NoGate: No_Gate = None # type: ignore

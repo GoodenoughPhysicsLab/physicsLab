@@ -32,6 +32,26 @@ else:
     if not os.path.exists("physicsLabSav"):
         os.mkdir("physicsLabSav")
 
+# 获取 Physics-Lab-AR 版本
+def get_Physics_Lab_AR_version() -> Optional[str]:
+    if platform.system() == "Windows":
+        from getpass import getuser
+        version_file = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Unity/" \
+                       f"30fdf88e-c67c-4ae8-a0f5-83bb57b9a5c3/Analytics/values"
+        if os.path.exists(version_file):
+            import json
+            with open(version_file) as f:
+                version = json.loads(f.read())["app_ver"]
+                return version
+    
+    return None
+
+plAR_version = get_Physics_Lab_AR_version()
+if plAR_version is not None:
+    _, mid, small = eval(f"({plAR_version.replace('.', ',')})")
+    if mid < 4 or mid == 4 and small < 7:
+        warning("the version of Physics-Lab-AR is less than v2.4.7")
+
 __all__ = [
     # _colorUtils.py
     "close_color_print",

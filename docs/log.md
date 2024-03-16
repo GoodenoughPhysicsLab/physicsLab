@@ -87,3 +87,8 @@
 2.  重复连接的导线将不会被连接
 3.  删除旧式函数调用的xxx_Experiment等api (不兼容更新)
 4.  删除自动增加`# -*- coding: utf-8 -*-`的机制
+
+# 1.4.6
+1.  修复重复连接导线时的bug
+2.  将`music.Midi`的`read_midopy`移动到`__init__`中
+3.  修复`export`的bug
