@@ -44,11 +44,11 @@ class Logic_Input(_logicBase):
                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
                           "DiagramRotation": 0}
-    
+
     def __repr__(self) -> str:
         res = f"Logic_Input({self._position.x}, {self._position.y}, {self._position.z}, " \
               f"elementXYZ={self.is_elementXYZ})"
-        
+
         if self._arguments["Properties"]["开关"] == 1.0:
             res += ".set_highLevel()"
         return res
@@ -416,7 +416,7 @@ class eight_bit_Input(_logicBase):
     def __repr__(self) -> str:
         res = f"eight_bit_Input({self._position.x}, {self._position.y}, {self._position.z}, " \
               f"elementXYZ={self.is_elementXYZ})"
-        
+
         if self._arguments["Properties"]["十进制"] != 0:
             res += f".set_num({self._arguments['Properties']['十进制']})"
         return res

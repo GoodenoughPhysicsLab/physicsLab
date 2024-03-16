@@ -29,7 +29,7 @@ class Simple_Switch(_switch_Base, TwoPinMixIn):
     def __repr__(self) -> str:
         res = f"Simple_Switch({self._position.x}, {self._position.y}, {self._position.z}, " \
               f"elementXYZ={self.is_elementXYZ})"
-        
+
         if self._arguments["Properties"]["开关"] == 1:
             res += ".turn_on_switch()"
         return res
@@ -82,7 +82,7 @@ class DPDT_Switch(_switch_Base):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         super(DPDT_Switch, self).__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "DPDT Switch"
-    
+
     def __repr__(self) -> str:
         res = f"DPDT_Switch({self._position.x}, {self._position.y}, {self._position.z}, " \
               f"elementXYZ={self.is_elementXYZ})"
@@ -150,11 +150,11 @@ class Air_Switch(TwoPinMixIn):
     def __repr__(self) -> str:
         res = f"Air_Switch({self._position.x}, {self._position.y}, {self._position.z}, " \
               f"elementXYZ={self.is_elementXYZ})"
-        
+
         if self._arguments["Properties"]["开关"] == 1:
             res += ".turn_on_switch()"
         return res
-    
+
     # 断开开关
     def turn_off_switch(self) -> Self:
         self._arguments["Properties"]["开关"] = 0

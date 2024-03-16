@@ -3,12 +3,13 @@ import inspect
 
 from physicsLab import errors
 from physicsLab.circuit import wire
+from physicsLab.elementBase import ElementBase
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.experimentType import experimentType
+from physicsLab.typehint import Optional, Self, numType
 from physicsLab._tools import roundData, randString, position
 from physicsLab.experiment import Experiment, stack_Experiment
-from physicsLab.typehint import Optional, NoReturn, Self, numType
 
 # electricity class's metaClass
 class CircuitMeta(type):
@@ -67,9 +68,8 @@ class CircuitMeta(type):
         CircuitMeta.__index += 1
         return self
 
-
 # 所有电学元件的父类
-class CircuitBase(metaclass=CircuitMeta):
+class CircuitBase(ElementBase, metaclass=CircuitMeta):
     def __repr__(self) -> str:
         #TODO Simple_Instrument 的__repr__方法参数更多
         return f"{self.__class__.__name__}" \

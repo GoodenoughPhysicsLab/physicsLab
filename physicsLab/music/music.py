@@ -48,10 +48,35 @@ class Midi:
             program: midi音色
             tempo: 播放速度
         '''
+        def read_midopy(plpath: str = "temp.mido.py") -> Self:
+            self.midifile = "temp.mid"
+
+            context = None
+            with open(plpath, encoding="utf-8") as f:
+                context = f.read()
+
+            import re
+            from mido import MidiFile, MidiTrack, Message, MetaMessage
+            # 正则匹配内容: MidiTrack([Message(...), ...])
+            re_context = re.search(r"MidiTrack\(\[[^\]]+\]\)", context, re.M)
+            if re_context is None:
+                raise SyntaxError(f"error context in {plpath}")
+            self.messages = eval(re_context.group()) # 用到mido import出的内容
+
+            return self
+
         if not isinstance(midifile, str):
             raise TypeError
 
-        self.midifile: str = midifile
+        from os import path
+        if not path.exists(midifile):
+            raise FileNotFoundError
+
+        if midifile.endswith(".mido.py"):
+            read_midopy(midifile)
+        else:
+            self.midifile: str = midifile
+
         self.channels: List[int] = [0] * 16
         self.tempo: int = 500_000
         self.messages: mido.MidiTrack = self.__get_midi_messages()
@@ -210,27 +235,6 @@ class Midi:
         为了修改方便, 默认使用 str(mido.MidiTrack) 的方式导出
         而且是个Py文件, 大家想要自己修改也是很方便的
     '''
-    def read_midopy(self, plpath: str = "temp.mido.py") -> Self:
-        def _read_midopy(plpath):
-            context = None
-            with open(plpath, encoding="utf-8") as f:
-                context = f.read()
-
-            import re
-            from mido import MidiFile, MidiTrack, Message, MetaMessage
-            # 正则匹配内容: MidiTrack([Message(...), ...])
-            re_context = re.search(r"MidiTrack\(\[[^\]]+\]\)", context, re.M)
-            if re_context is None:
-                raise SyntaxError(f"error context in {plpath}")
-            self.messages = eval(re_context.group()) # 用到mido import出的内容
-
-        from os import path
-        if not path.exists(plpath):
-            raise FileNotFoundError
-
-        self.midifile = "temp.mid"
-        _read_midopy(plpath)
-        return self
 
     # 导出一个 .mido.py 文件
     def write_midopy(self, path: str="temp.mido.py") -> Self:
@@ -238,7 +242,9 @@ class Midi:
             path += ".mido.py"
 
         with open(path, "w", encoding="utf-8") as f:
-            f.write(f"from mido import MidiFile, MidiTrack, MetaMessage, Message\n"
+            f.write(f"import os\n"
+                    f"os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'\n"
+                    f"from mido import MidiFile, MidiTrack, MetaMessage, Message\n"
                     f"mid = MidiFile()\n"
                     f"track = {str(self.messages)}\n"
                     f"mid.tracks.append(track)\n"
