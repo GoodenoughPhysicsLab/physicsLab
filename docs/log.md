@@ -92,3 +92,4 @@
 1.  修复重复连接导线时的bug
 2.  将`music.Midi`的`read_midopy`移动到`__init__`中
 3.  修复`export`的bug
+4.  将`Piece.translate_to_midi`改名为`Piece.to_midi`，`Midi.translate_to_piece`改名为`Midi.to_piece`（不兼容更新）

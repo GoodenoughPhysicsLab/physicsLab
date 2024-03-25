@@ -14,7 +14,7 @@ pip install mido
 from physicsLab import *
 
 with experiment("example"):
-    music.Midi("/your/path/of/midi.mid").translate_to_piece(div_time=120, max_notes=2000).release(-1, -1, 0) # x=-1, y=-1, z=0
+    music.Midi("/your/path/of/midi.mid").to_piece(div_time=120, max_notes=2000).release(-1, -1, 0) # x=-1, y=-1, z=0
 ```
 
 上面的示例代码打开或创建了一个名为`example`的存档  

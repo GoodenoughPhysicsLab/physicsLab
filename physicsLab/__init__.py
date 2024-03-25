@@ -41,7 +41,7 @@ def get_Physics_Lab_AR_version() -> Optional[str]:
         if os.path.exists(version_file):
             import json
             with open(version_file) as f:
-                version = json.loads(f.read())["app_ver"]
+                version = json.load(f)["app_ver"]
                 return version
 
     return None
