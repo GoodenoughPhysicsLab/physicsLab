@@ -221,7 +221,7 @@ class Midi:
         return res
 
     # 转换为physicsLab的piece类
-    def translate_to_piece(self, div_time: numType = 100, max_notes: Optional[int] = 800) -> "Piece":
+    def to_piece(self, div_time: numType = 100, max_notes: Optional[int] = 800) -> "Piece":
         return Piece(self._get_notes_list(div_time, max_notes))
 
     ''' *.pl.py文件:
@@ -539,7 +539,7 @@ class Piece:
         return self
 
     # 将Piece类转换为Midi
-    def translate_to_midi(self, filepath="temp.mid") -> Midi:
+    def to_midi(self, filepath="temp.mid") -> Midi:
         self.write_midi(filepath)
         return Midi(filepath)
 
