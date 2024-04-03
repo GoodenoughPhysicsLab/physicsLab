@@ -63,7 +63,8 @@ class Experiment:
         # 通过坐标索引元件
         self.elements_Position: Dict[tuple, list] = {}  # key: self._position, value: List[self...]
         # 通过index（元件生成顺序）索引元件
-        self.Elements: list = [] # List[CircuitBase]
+        from .circuit.elements._elementBase import CircuitBase
+        self.Elements: List[CircuitBase] = []
 
         if sav_name is not None:
             self.open_or_crt(sav_name)
@@ -290,14 +291,14 @@ class Experiment:
         # 导线
         if self.ExperimentType == experimentType.Circuit:
             from .circuit.wire import Wire, Pin
-            self.Wires = [
-                Wire(
-                    Pin(self.get_element_from_identifier(wire_dict["Source"]), wire_dict["SourcePin"]),
-                    Pin(self.get_element_from_identifier(wire_dict["Target"]), wire_dict["TargetPin"]),
-                    wire_dict["ColorName"][0] # e.g. "蓝"
+            for wire_dict in status_sav['Wires']:
+                self.Wires.add(
+                    Wire(
+                        Pin(self.get_element_from_identifier(wire_dict["Source"]), wire_dict["SourcePin"]),
+                        Pin(self.get_element_from_identifier(wire_dict["Target"]), wire_dict["TargetPin"]),
+                        wire_dict["ColorName"][0] # e.g. "蓝"
+                    )
                 )
-                for wire_dict in status_sav['Wires']
-            ]
 
         return self
 
@@ -516,6 +517,48 @@ class Experiment:
 
         with open(output_path, "w", encoding="utf-8") as f:
             f.write(res)
+
+        return self
+
+    # 合并另一实验
+    # x, y, z, elementXYZ为重新设置要合并的实验的坐标系原点在self的坐标系的位置
+    def merge(self,
+              other: "Experiment",
+              x: numType = 0,
+              y: numType = 0,
+              z: numType = 0,
+              elementXYZ: Optional[bool] = None
+    ) -> Self:
+        if self.SavPath is None:
+            raise TypeError
+        if other.SavPath is None:
+            raise TypeError
+
+        if self is other:
+            return self
+
+        import physicsLab.circuit.elementXYZ as _elementXYZ
+        if self.ExperimentType == experimentType.Circuit and other.ExperimentType == experimentType.Circuit:
+            if elementXYZ is True or _elementXYZ.is_elementXYZ() is True and elementXYZ is None:
+                x, y, z = _elementXYZ.xyzTranslate(x, y, z)
+
+        for a_element in other.Elements:
+            a_element = copy.deepcopy(a_element)
+            e_x, e_y, e_z = a_element.get_Position()
+            if a_element.is_elementXYZ:
+                e_x, e_y, e_z = _elementXYZ.xyzTranslate(e_x, e_y, e_z)
+            a_element.set_Position(e_x + x, e_y + y, e_z + z) # type: ignore
+
+            self.Elements.append(a_element)
+            p = a_element.get_Position()
+            if p in self.elements_Position.keys():
+                self.elements_Position[p].append(a_element)
+            else:
+                self.elements_Position[p] = [a_element]
+
+        if self.ExperimentType == experimentType.Circuit and other.ExperimentType == experimentType.Circuit:
+            for wire in other.Wires:
+                    self.Wires.add(wire)
 
         return self
 

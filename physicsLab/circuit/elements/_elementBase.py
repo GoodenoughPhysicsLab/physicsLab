@@ -2,13 +2,14 @@
 import inspect
 
 from physicsLab import errors
+from physicsLab import _tools
 from physicsLab.circuit import wire
 from physicsLab.elementBase import ElementBase
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.experimentType import experimentType
 from physicsLab.typehint import Optional, Self, numType
-from physicsLab._tools import roundData, randString, position
+from physicsLab._tools import roundData, randString
 from physicsLab.experiment import Experiment, stack_Experiment
 
 # electricity class's metaClass
@@ -40,9 +41,9 @@ class CircuitMeta(type):
             cls.is_bigElement = property(lambda self: False) # 2体积元件
 
         x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
-        self._position = position(x, y, z) # type: ignore -> define _arguments in metaclass
+        self._position = _tools.position(x, y, z) # type: ignore -> define _arguments in metaclass
         # 元件坐标系
-        if elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None):
+        if elementXYZ is True or _elementXYZ.is_elementXYZ() is True and elementXYZ is None:
             x, y, z = _elementXYZ.xyzTranslate(x, y, z)
             self.is_elementXYZ = True
 
@@ -51,7 +52,7 @@ class CircuitMeta(type):
         if self.is_elementXYZ and self.is_bigElement:
             x, y, z = _elementXYZ.amend_big_Element(x, y, z)
 
-        self._arguments["Identifier"] = f"pl{CircuitBase.__index}"
+        self._arguments["Identifier"] = randString(32)
         # x, z, y 物实采用欧拉坐标系
         self._arguments["Position"] = f"{x},{z},{y}"
 
@@ -82,7 +83,7 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
                 isinstance(yRotation, (int, float)) and
                 isinstance(zRotation, (int, float))
         ):
-            raise RuntimeError('illegal argument')
+            raise TypeError
 
         self._arguments["Rotation"] = f"{roundData(xRotation)},{roundData(zRotation)},{roundData(yRotation)}"
         return self
@@ -90,26 +91,28 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
     # 重新设置元件的坐标
     def set_Position(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> Self:
         if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
-            raise RuntimeError('illegal argument')
+            raise TypeError
         x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
 
         #元件坐标系
-        if elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None):
+        if elementXYZ is True or _elementXYZ.is_elementXYZ() is True and elementXYZ is None:
             x, y, z = _elementXYZ.xyzTranslate(x, y, z)
             self.is_elementXYZ = True
 
-        del stack_Experiment.top().elements_Position[self._position]
-        self._position = position(x, y, z) # type: ignore -> define _arguments in metaclass
-        self._arguments['Position'] = f"{x},{z},{y}" # type: ignore -> define _arguments in metaclass
-        stack_Experiment.top().elements_Position[self._position] = self
-        return self
+        for _, self_list in stack_Experiment.top().elements_Position.items():
+            if self in self_list:
+                self_list.remove(self)
 
-    # 格式化坐标参数，主要避免浮点误差
-    def format_Position(self) -> tuple:
-        if not isinstance(self._position, tuple) or self._position.__len__() != 3:
-            raise RuntimeError("Position must be a tuple of length three but gets some other value")
-        self._position = position(*roundData(self._position.x, self._position.y, self._position.z))
-        return self._position
+        self._position = _tools.position(x, y, z) # type: ignore -> define _arguments in metaclass
+        self._arguments['Position'] = f"{x},{z},{y}" # type: ignore -> define _arguments in metaclass
+
+        _Expe = stack_Experiment.top()
+        if self._position in _Expe.elements_Position.keys():
+            _Expe.elements_Position[self._position].append(self)
+        else:
+            _Expe.elements_Position[self._position] = [self]
+
+        return self
 
     # 获取原件的坐标
     def get_Position(self) -> tuple:

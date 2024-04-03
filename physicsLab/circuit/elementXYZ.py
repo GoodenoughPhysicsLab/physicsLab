@@ -24,9 +24,9 @@ def is_elementXYZ() -> bool:
     return get_Experiment().is_elementXYZ
 
 # 物实坐标系x, y, z单位1
-_xUnit: numType = 0.16
-_yUnit: numType = 0.08
-_zUnit: numType = 0.1
+_X_UNIT: float = 0.16
+_Y_UNIT: float = 0.08
+_Z_UNIT: float = 0.1
 # big_element坐标修正
 _yAmend = 0.045
 
@@ -40,9 +40,9 @@ def xyzTranslate(x: numType, y: numType, z: numType, is_bigElement: bool = False
     if get_Experiment().ExperimentType != experimentType.Circuit:
         raise errors.ExperimentTypeError
 
-    x *= _xUnit
-    y *= _yUnit
-    z *= _zUnit
+    x *= _X_UNIT
+    y *= _Y_UNIT
+    z *= _Z_UNIT
     # 修改元件坐标系原点
     x += _xOrigin
     y += _yOrigin
@@ -56,9 +56,9 @@ def translateXYZ(x: numType, y: numType, z: numType, is_bigElement: bool = False
     if get_Experiment().ExperimentType != experimentType.Circuit:
         raise errors.ExperimentTypeError
 
-    x /= _xUnit
-    y /= _yUnit
-    z /= _zUnit
+    x /= _X_UNIT
+    y /= _Y_UNIT
+    z /= _Z_UNIT
     # 修改元件坐标系原点
     x -= _xOrigin
     y -= _yOrigin
@@ -94,9 +94,9 @@ def get_xyzUnit(*args):
         raise TypeError
 
     index = {
-        "x": _xUnit,
-        "y": _yUnit,
-        "z": _zUnit
+        "x": _X_UNIT,
+        "y": _Y_UNIT,
+        "z": _Z_UNIT
     }
     if len(args) == 1:
         return index[args[0]]

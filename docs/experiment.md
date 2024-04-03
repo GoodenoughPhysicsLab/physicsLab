@@ -97,3 +97,16 @@ Experiment.observe(
 ```Python
 Experiment.export()
 ```
+
+## 合并其他实验
+`Experiment.merge(other: Experiment, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None)`  
+`other`为要合并的实验  
+`x, y, z, elementXYZ`为重新设置要合并的实验的坐标系原点在self的坐标系的位置  
+```Python
+with experiment("example1") as exp:
+    Logic_Input().o - Logic_Output(1, 0, 0, elementXYZ=True).i
+
+    with experiment("example2") as exp2:
+        Logic_Output(0, 0, 0.1)
+        exp2.merge(exp, 1, 0, 0, elementXYZ=True)
+```

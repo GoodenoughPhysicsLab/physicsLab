@@ -322,6 +322,17 @@ class MyTestCase(unittest.TestCase):
         with experiment("__test__", force_crt=True, is_exit=True):
             Simple_Instrument().add_note(67) # type: ignore
 
+    @my_test_dec
+    def test_merge_Experiment(self):
+        with experiment("__test__", force_crt=True, is_exit=True) as exp:
+            Logic_Input().o - Logic_Output(1, 0, 0, elementXYZ=True).i
+
+            with experiment("_Test", force_crt=True, is_exit=True) as exp2:
+                Logic_Output(0, 0, 0.1)
+                exp2.merge(exp, 1, 0, 0, elementXYZ=True)
+
+                self.assertEqual(count_Elements(), 3)
+
 if __name__ == '__main__':
     fcs.main()
     unittest.main()
