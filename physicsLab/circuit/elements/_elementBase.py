@@ -32,6 +32,7 @@ class CircuitMeta(type):
         ):
             raise TypeError('illegal argument')
         _Expe: Experiment = stack_Experiment.top()
+        self.experiment: Experimsnt = _Expe
 
         if _Expe.ExperimentType != experimentType.Circuit:
             raise errors.ExperimentTypeError

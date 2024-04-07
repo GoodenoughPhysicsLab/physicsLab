@@ -544,6 +544,7 @@ class Experiment:
 
         for a_element in other.Elements:
             a_element = copy.deepcopy(a_element)
+            a_element.experiment = self
             e_x, e_y, e_z = a_element.get_Position()
             if a_element.is_elementXYZ:
                 e_x, e_y, e_z = _elementXYZ.xyzTranslate(e_x, e_y, e_z)

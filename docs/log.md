@@ -93,3 +93,6 @@
 2.  将`music.Midi`的`read_midopy`移动到`__init__`中
 3.  修复`export`的bug
 4.  将`Piece.translate_to_midi`改名为`Piece.to_midi`，`Midi.translate_to_piece`改名为`Midi.to_piece`（不兼容更新）
+
+# 1.4.7
+1.  新增`Experiment.merge`
