@@ -153,6 +153,7 @@ a.get_HighLeaveValue() # 获取高电平的值，仅逻辑电路元件有效
 a.get_LowLeaveValue() # 获取低电平的值，仅逻辑电路元件有效
 a.print_arguments() # 打印元件对应的存档信息
 a.modelID # 获取元件的ModelID
+a.experiment # 获取元件对应的实验
 ```
 在[所有元件 elements](elements.md)中也介绍得有元件的方法
 

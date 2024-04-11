@@ -28,7 +28,7 @@ class Pin:
     def export_str(self) -> str:
         pin_name = self._get_pin_name_of_class()
         if pin_name is None:
-            raise RuntimeError("Pin is not belong to any element")
+            raise errors.ExperimentError("Pin is not belong to any element")
         return f"e{self.element_self.get_Index()}.{pin_name}"
 
     def _get_pin_name_of_class(self) -> Optional[str]:
@@ -55,6 +55,9 @@ class Wire:
     def __init__(self, Source: Pin, Target: Pin, color: str = '蓝') -> None:
         if not isinstance(Source, Pin) or not isinstance(Target, Pin):
             raise TypeError
+
+        if Source.element_self.experiment != Target.element_self.experiment:
+            raise errors.ExperimentError("can't link wire in two experiment")
 
         if color in ("black", "blue", "red", "green", "yellow"):
             color = {"black": "黑", "blue": "蓝", "red": "红", "green": "绿", "yellow": "黄"}[color]

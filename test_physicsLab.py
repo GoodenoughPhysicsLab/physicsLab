@@ -333,6 +333,19 @@ class MyTestCase(unittest.TestCase):
 
                 self.assertEqual(count_Elements(), 3)
 
+    @my_test_dec
+    def test_link_wire_in_two_experiment(self):
+        with experiment("__test__", force_crt=True, is_exit=True) as exp:
+            a = Logic_Input()
+            with experiment("_Test", force_crt=True, is_exit=True) as exp2:
+                b = Logic_Output()
+                try:
+                    a.o - b.i
+                except ExperimentError:
+                    pass
+                else:
+                    raise TestError
+
 if __name__ == '__main__':
     fcs.main()
     unittest.main()
