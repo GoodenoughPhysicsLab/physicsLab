@@ -13,7 +13,6 @@ from .savTemplate import Generate
 from .experimentType import experimentType
 from .typehint import Union, Optional, List, Dict, numType, Self
 
-# 最新被操作的存档
 class stack_Experiment:
     data: List["Experiment"] = []
 
@@ -40,12 +39,12 @@ class stack_Experiment:
         cls.data.pop()
         return res
 
-# 获取当前正在操作的存档
 def get_Experiment() -> "Experiment":
+    ''' 获取当前正在操作的存档 '''
     return stack_Experiment.top()
 
-# 实验（存档）类
 class Experiment:
+    ''' 实验（存档）类 '''
     FILE_HEAD = "physicsLabSav"
     if platform.system() == "Windows":
         from getpass import getuser
@@ -69,8 +68,8 @@ class Experiment:
         if sav_name is not None:
             self.open_or_crt(sav_name)
 
-    # 通过_arguments["Identifier"]获取元件
     def get_element_from_identifier(self, identifier: str):
+        ''' 通过_arguments["Identifier"]获取元件 '''
         for element in self.Elements:
             if element._arguments["Identifier"] == identifier:
                 return element
@@ -106,8 +105,8 @@ class Experiment:
         elif self.ExperimentType == experimentType.Electromagnetism:
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
 
-    # 打开一个指定的sav文件 (支持输入本地实验的名字或sav文件名)
     def open(self, sav_name : str) -> Self:
+        ''' 打开一个指定的sav文件 (支持输入本地实验的名字或sav文件名) '''
         if self.is_open_or_crt:
             raise errors.experimentExistError
         self.is_open_or_crt = True
@@ -182,12 +181,15 @@ class Experiment:
 
         self.entitle(sav_name)
 
-    # 创建存档，输入为存档名 sav_name: 存档名; experiment_type: 实验类型; force_crt: 不论实验是否已经存在,强制创建
     def crt(self,
             sav_name: str,
             experiment_type: experimentType = experimentType.Circuit,
             force_crt: bool=False
     ) -> Self:
+        ''' 创建存档，输入为存档名 sav_name: 存档名; 
+            experiment_type: 实验类型; 
+            force_crt: 不论实验是否已经存在,强制创建 
+        '''
         if self.is_open_or_crt:
             raise errors.experimentExistError
         self.is_open_or_crt = True
@@ -209,11 +211,11 @@ class Experiment:
         self.__crt(sav_name, experiment_type)
         return self
 
-    # 先尝试打开实验, 若失败则创建实验
     def open_or_crt(self,
                     savName: str,
                     experimentType: experimentType = experimentType.Circuit
     ) -> Self:
+        ''' 先尝试打开实验, 若失败则创建实验 '''
         if self.is_open_or_crt:
             raise errors.experimentExistError
         self.is_open_or_crt = True
@@ -231,8 +233,8 @@ class Experiment:
             self.__crt(savName, experimentType)
         return self
 
-    # 读取实验已有状态
     def read(self) -> Self:
+        ''' 读取实验已有状态 '''
         if self.SavPath is None: # 是否已.open()或.crt()
             raise TypeError
         if self.is_read:
@@ -302,12 +304,12 @@ class Experiment:
 
         return self
 
-    # 以物实存档的格式导出实验
     def write(self,
               extra_filepath: Optional[str] = None,
               ln: bool = False,
               no_pop: bool = False
     ) -> Self:
+        ''' 以物实存档的格式导出实验 '''
         def _format_StatusSave(stringJson: str) -> str:
             stringJson = stringJson.replace( # format element json
                 "{\\\"ModelID', '\n      {\\\"ModelID"
@@ -373,8 +375,8 @@ class Experiment:
 
         return self
 
-    # 删除存档
     def delete(self, warning_status: Optional[bool]=None) -> None:
+        ''' 删除存档 '''
         if self.SavPath is None:
             raise TypeError
 
@@ -397,12 +399,12 @@ class Experiment:
 
         stack_Experiment.pop()
 
-    # 退出实验而不进行任何操作
     def exit(self) -> None:
+        ''' 退出实验而不进行任何操作 '''
         stack_Experiment.pop()
 
-    # 对存档名进行重命名
     def entitle(self, sav_name: str) -> Self:
+        ''' 对存档名进行重命名 '''
         if not isinstance(sav_name, str):
             raise TypeError
 
@@ -411,8 +413,8 @@ class Experiment:
 
         return self
 
-    # 使用notepad打开改存档
     def show(self) -> Self:
+        ''' 使用notepad打开改存档 '''
         if self.SavPath is None:
             raise TypeError
 
@@ -422,15 +424,15 @@ class Experiment:
         os.popen(f'notepad {self.SavPath}')
         return self
 
-    # 生成与发布实验有关的存档内容
     def publish(self, title: Optional[str] = None, introduction: Optional[str] = None) -> Self:
-        # 发布实验时输入实验介绍
+        ''' 生成与发布实验有关的存档内容 '''
         def introduce_Experiment(introduction: Union[str, None]) -> None:
+            '''  发布实验时输入实验介绍 '''
             if introduction is not None:
                 self.PlSav['Summary']['Description'] = introduction.split('\n')
 
-        # 发布实验时输入实验标题
         def name_Experiment(title: Union[str, None]) -> None:
+            ''' 发布实验时输入实验标题 '''
             if title is not None:
                 self.PlSav['Summary']['Subject'] = title
 
@@ -439,10 +441,6 @@ class Experiment:
 
         return self
 
-    # 设置实验者的视角
-    # x, y, z : 实验者观察的坐标
-    # distance: 实验者到(x, y, z)的距离
-    # rotation: 实验者观察的角度
     def observe(self,
                 x: Optional[numType] = None,
                 y: Optional[numType] = None,
@@ -452,6 +450,11 @@ class Experiment:
                 rotation_y: Optional[numType] = None,
                 rotation_z: Optional[numType] = None
     ) -> Self:
+        ''' 设置实验者的视角
+            x, y, z : 实验者观察的坐标
+            distance: 实验者到(x, y, z)的距离
+            rotation: 实验者观察的角度
+        '''
         if self.SavPath is None:
             raise TypeError
 
@@ -491,16 +494,16 @@ class Experiment:
 
         return self
 
-    # 与物实示波器图表有关的支持
     def graph(self) -> Self:
+        ''' 与物实示波器图表有关的支持 '''
         if self.SavPath is None:
             raise TypeError
 
         pass
         return self
 
-    # 以physicsLab代码的形式导出实验
     def export(self, output_path: str = "temp.pl.py", sav_name: str = "temp") -> Self:
+        ''' 以physicsLab代码的形式导出实验 '''
         if self.SavPath is None:
             raise TypeError
 
@@ -517,8 +520,6 @@ class Experiment:
 
         return self
 
-    # 合并另一实验
-    # x, y, z, elementXYZ为重新设置要合并的实验的坐标系原点在self的坐标系的位置
     def merge(self,
               other: "Experiment",
               x: numType = 0,
@@ -526,6 +527,9 @@ class Experiment:
               z: numType = 0,
               elementXYZ: Optional[bool] = None
     ) -> Self:
+        ''' 合并另一实验
+            x, y, z, elementXYZ为重新设置要合并的实验的坐标系原点在self的坐标系的位置
+        '''
         if self.SavPath is None:
             raise TypeError
         if other.SavPath is None:
@@ -534,19 +538,12 @@ class Experiment:
         if self is other:
             return self
 
-        import physicsLab.circuit.elementXYZ as _elementXYZ
-        # if self.ExperimentType == experimentType.Circuit and other.ExperimentType == experimentType.Circuit:
-        #     if elementXYZ is True or _elementXYZ.is_elementXYZ() is True and elementXYZ is None:
-        #         x, y, z = _elementXYZ.xyzTranslate(x, y, z)
-
         identifier_to_element: dict = {}
 
         for a_element in other.Elements:
             a_element = copy.deepcopy(a_element, memo={id(a_element.experiment): a_element})
             a_element.experiment = self
             e_x, e_y, e_z = a_element.get_Position()
-            # if a_element.is_elementXYZ:
-            #     e_x, e_y, e_z = _elementXYZ.xyzTranslate(e_x, e_y, e_z)
             a_element.set_Position(e_x + x, e_y + y, e_z + z, elementXYZ)
             # set_Position已处理与elements_Position有关的操作
             self.Elements.append(a_element)
@@ -557,8 +554,8 @@ class Experiment:
             for a_wire in other.Wires:
                 a_wire = copy.deepcopy(
                     a_wire, memo={
-                        id(a_wire.Source): a_wire.Source,
-                        id(a_wire.Target): a_wire.Target,
+                        id(a_wire.Source.element_self): a_wire.Source.element_self,
+                        id(a_wire.Target.element_self): a_wire.Target.element_self,
                 })
                 a_wire.Source.element_self = identifier_to_element[a_wire.Source.element_self._arguments["Identifier"]]
                 a_wire.Target.element_self = identifier_to_element[a_wire.Target.element_self._arguments["Identifier"]]
@@ -566,8 +563,8 @@ class Experiment:
 
         return self
 
-# 仅供with时使用
 class experiment:
+    ''' 仅提供通过with操作存档 '''
     def __init__(self,
                  sav_name: str, # 实验名(非存档文件名)
                  read: bool = False, # 是否读取存档原有状态
@@ -602,7 +599,6 @@ class experiment:
         self.force_crt = force_crt
         self.is_exit = is_exit
 
-    # 上下文管理器，搭配with使用
     def __enter__(self) -> Experiment:
         if not self.force_crt:
             self._Experiment: Experiment = Experiment().open_or_crt(self.savName, self.experimentType)
@@ -634,15 +630,15 @@ class experiment:
             self._Experiment.delete()
             return
 
-# 获取所有物实存档的文件名
 def getAllSav() -> List[str]:
+    ''' 获取所有物实存档的文件名 '''
     from os import walk
     savs = [i for i in walk(Experiment.FILE_HEAD)][0]
     savs = savs[savs.__len__() - 1]
     return [aSav for aSav in savs if aSav.endswith('sav')]
 
-# 打开一个存档, 返回存档对应的dict
 def _open_sav(sav_name) -> Optional[dict]:
+    ''' 打开一个存档, 返回存档对应的dict '''
     def encode_sav(path: str, encoding: str) -> Optional[dict]:
         try:
             with open(path, encoding=encoding) as f:
@@ -668,8 +664,8 @@ def _open_sav(sav_name) -> Optional[dict]:
             encoding = chardet.detect(f.read())["encoding"]
         return encode_sav(f"{Experiment.FILE_HEAD}/{sav_name}", encoding)
 
-# 检测实验是否存在，输入为存档名，若存在则返回存档对应的文件名，若不存在则返回None
 def search_Experiment(sav_name: str) -> Optional[str]:
+    '''  检测实验是否存在，输入为存档名，若存在则返回存档对应的文件名，若不存在则返回None'''
     for aSav in getAllSav():
         sav = _open_sav(aSav)
         if sav["InternalName"] == sav_name:
