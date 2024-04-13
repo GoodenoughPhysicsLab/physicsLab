@@ -280,7 +280,7 @@ class MyTestCase(unittest.TestCase):
             Logic_Input()
             try:
                 get_Element(index=2)
-            except getElementError:
+            except ElementNotFound:
                 pass
             else:
                 raise TestError
@@ -345,6 +345,21 @@ class MyTestCase(unittest.TestCase):
                     pass
                 else:
                     raise TestError
+    
+    @my_test_dec
+    def test_merge_Experiment2(self):
+        with experiment("__test__", force_crt=True, is_exit=True) as exp:
+            e = Yes_Gate()
+            e.i - e.o
+
+            with experiment("_Test", force_crt=True, is_exit=True) as exp2:
+                Logic_Output(0, 0, 0.1)
+                exp2.merge(exp, 1, 0, 0, elementXYZ=True)
+                a = get_Element(1, 0, 0)
+                a.i - a.o
+
+                self.assertEqual(count_Elements(), 2)
+                self.assertEqual(count_Wires(), 1)
 
 if __name__ == '__main__':
     fcs.main()

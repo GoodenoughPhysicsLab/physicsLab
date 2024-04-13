@@ -46,8 +46,7 @@ with experiment("example"):
     Or_Gate(0, 0, 0.1) # index = 2
 ``` 
 
-> Note:   
-> `get_Element`用来索引的坐标为创建元件时对应的坐标, 与是否为元件坐标系无关
+> Note: `get_Element`用来索引的坐标为创建元件时对应的坐标, 与是否为元件坐标系无关
 
 用一个简单的例子来说明:
 ```Python
@@ -70,7 +69,16 @@ Successfully compiled experiment "example"! 4 elements, 0 wires.
 ```
 
 你能理解为什么第二次打印时输出的列表长度为3吗?  
-因为在上一次写入的时候会将元件坐标系自动转化为物实坐标系, 在第二次read的时候会直接读取存档内的物实坐标系, 那么上一次创建时的`Logic_Input(1, 0, 0elementXYZ=True)`自然就不会在后面read这次的坐标索引中被找到了
+因为在上一次写入的时候会将元件坐标系自动转化为物实坐标系, 在第二次read的时候会直接读取存档内的物实坐标系, 那么上一次创建时的`Logic_Input(1, 0, 0elementXYZ=True)`自然就不会在后面read这次的坐标索引中被找到了  
+  
+当`get_Element`索引元件失败时，会抛出`ElementNotFound`的Error  
+如果你想在索引失败时不抛出error，需要使用default参数
+```Python
+from physicsLab import *
+
+with experiment("example"):
+    get_Element(1, 0, 0, default=None)
+```
 
 ## 删除元件
 我们也可以删除元件：

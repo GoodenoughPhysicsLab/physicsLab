@@ -37,40 +37,48 @@ def crt_Element(
         return eval(f"elements.{name.replace(' ', '_').replace('-', '_')}({x},{y},{z})")
 
 # 获取对应坐标的self
-def get_Element(
-    x: NnumType=None, y: NnumType=None, z: NnumType=None, *, index: NnumType=None
+def get_Element(x: NnumType=None,
+                y: NnumType=None,
+                z: NnumType=None,
+                *,
+                index: NnumType=None,
+                **kwargs
 ) -> Union[CircuitBase, List[CircuitBase]]:
     # 通过坐标索引元件
-    def position_Element(x: numType, y: numType, z: numType):
+    def position_get(x: numType, y: numType, z: numType):
         if not (
             isinstance(x, (int, float))
             and isinstance(y, (int, float))
             and isinstance(z, (int, float))
         ):
-            raise TypeError('illegal argument')
+            raise TypeError
 
         position = _tools.roundData(x, y, z)
         if position not in _Expe.elements_Position.keys():
-            raise errors.ElementNotExistError(f"{position} do not exist")
+            if "defualt" in kwargs:
+                return kwargs["defualt"]
+            raise errors.ElementNotFound(f"{position} do not exist")
 
         result: list = _Expe.elements_Position[position]
         return result[0] if len(result) == 1 else result
 
     # 通过index（元件生成顺序）索引元件
-    def index_Element(index: int):
+    def index_get(index: int):
         if not isinstance(index, int):
             raise TypeError
 
         if 0 < index <= len(_Expe.Elements):
             return _Expe.Elements[index - 1]
         else:
-            raise errors.getElementError
+            if "defualt" in kwargs:
+                return kwargs["defualt"]
+            raise errors.ElementNotFound
 
     _Expe = stack_Experiment.top()
     if None not in [x, y, z]:
-        return position_Element(x, y, z)
+        return position_get(x, y, z)
     elif index is not None:
-        return index_Element(index)
+        return index_get(index)
     else:
         raise TypeError
 

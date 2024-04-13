@@ -61,7 +61,7 @@ __all__ = [
 
     # errors.py
     "OpenExperimentError", "WireColorError", "WireNotFoundError", "bitLengthError",
-    "experimentExistError", "ExperimentTypeError", "getElementError", "crtExperimentFailError",
+    "experimentExistError", "ExperimentTypeError", "ElementNotFound", "crtExperimentFailError",
     "ExperimentError", "set_warning_status", "WarningError", "ElementNotExistError",
 
     # experiment.py

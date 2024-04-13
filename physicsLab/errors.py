@@ -60,7 +60,7 @@ class ExperimentTypeError(Exception):
         return "The type of experiment does not match the element"
 
 # 用于get_Element 获取元件引用失败
-class getElementError(Exception):
+class ElementNotFound(Exception):
     def __str__(self):
         return "Index out of range"
 

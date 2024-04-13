@@ -35,8 +35,8 @@ _xOrigin, _yOrigin, _zOrigin = 0, 0, 0
 
 ### end define ###
 
-# 将元件坐标系转换为物实支持的坐标系
 def xyzTranslate(x: numType, y: numType, z: numType, is_bigElement: bool = False):
+    ''' 将元件坐标系转换为物实支持的坐标系 '''
     if get_Experiment().ExperimentType != experimentType.Circuit:
         raise errors.ExperimentTypeError
 

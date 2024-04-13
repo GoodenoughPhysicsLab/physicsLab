@@ -332,17 +332,14 @@ class Experiment:
         self.PlSav["Experiment"]["CreationDate"] = int(time.time() * 1000)
         self.PlSav["Summary"]["CreationDate"] = int(time.time() * 1000)
 
-        self.CameraSave["VisionCenter"] = \
-            f"{self.VisionCenter.x},{self.VisionCenter.z},{self.VisionCenter.y}"
-        self.CameraSave["TargetRotation"] = \
-            f"{self.TargetRotation.x},{self.TargetRotation.z},{self.TargetRotation.y}"
+        self.CameraSave["VisionCenter"] = f"{self.VisionCenter.x},{self.VisionCenter.z},{self.VisionCenter.y}"
+        self.CameraSave["TargetRotation"] = f"{self.TargetRotation.x},{self.TargetRotation.z},{self.TargetRotation.y}"
         self.PlSav["Experiment"]["CameraSave"] = json.dumps(self.CameraSave)
 
         self.StatusSave["Elements"] = [a_element._arguments for a_element in self.Elements]
         if self.ExperimentType == experimentType.Circuit:
             self.StatusSave["Wires"] = [a_wire.release() for a_wire in self.Wires]
-        self.PlSav["Experiment"]["StatusSave"] = \
-            json.dumps(self.StatusSave, ensure_ascii=False, separators=(',', ': '))
+        self.PlSav["Experiment"]["StatusSave"] = json.dumps(self.StatusSave, ensure_ascii=False, separators=(',', ': '))
 
         context: str = json.dumps(self.PlSav, indent=2, ensure_ascii=False, separators=(',', ': '))
         if ln:
@@ -538,28 +535,34 @@ class Experiment:
             return self
 
         import physicsLab.circuit.elementXYZ as _elementXYZ
-        if self.ExperimentType == experimentType.Circuit and other.ExperimentType == experimentType.Circuit:
-            if elementXYZ is True or _elementXYZ.is_elementXYZ() is True and elementXYZ is None:
-                x, y, z = _elementXYZ.xyzTranslate(x, y, z)
+        # if self.ExperimentType == experimentType.Circuit and other.ExperimentType == experimentType.Circuit:
+        #     if elementXYZ is True or _elementXYZ.is_elementXYZ() is True and elementXYZ is None:
+        #         x, y, z = _elementXYZ.xyzTranslate(x, y, z)
+
+        identifier_to_element: dict = {}
 
         for a_element in other.Elements:
-            a_element = copy.deepcopy(a_element)
+            a_element = copy.deepcopy(a_element, memo={id(a_element.experiment): a_element})
             a_element.experiment = self
             e_x, e_y, e_z = a_element.get_Position()
-            if a_element.is_elementXYZ:
-                e_x, e_y, e_z = _elementXYZ.xyzTranslate(e_x, e_y, e_z)
-            a_element.set_Position(e_x + x, e_y + y, e_z + z) # type: ignore
-
+            # if a_element.is_elementXYZ:
+            #     e_x, e_y, e_z = _elementXYZ.xyzTranslate(e_x, e_y, e_z)
+            a_element.set_Position(e_x + x, e_y + y, e_z + z, elementXYZ)
+            # set_Position已处理与elements_Position有关的操作
             self.Elements.append(a_element)
-            p = a_element.get_Position()
-            if p in self.elements_Position.keys():
-                self.elements_Position[p].append(a_element)
-            else:
-                self.elements_Position[p] = [a_element]
+
+            identifier_to_element[a_element._arguments["Identifier"]] = a_element
 
         if self.ExperimentType == experimentType.Circuit and other.ExperimentType == experimentType.Circuit:
-            for wire in other.Wires:
-                    self.Wires.add(wire)
+            for a_wire in other.Wires:
+                a_wire = copy.deepcopy(
+                    a_wire, memo={
+                        id(a_wire.Source): a_wire.Source,
+                        id(a_wire.Target): a_wire.Target,
+                })
+                a_wire.Source.element_self = identifier_to_element[a_wire.Source.element_self._arguments["Identifier"]]
+                a_wire.Target.element_self = identifier_to_element[a_wire.Target.element_self._arguments["Identifier"]]
+                self.Wires.add(a_wire)
 
         return self
 

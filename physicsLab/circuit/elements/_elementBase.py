@@ -32,7 +32,7 @@ class CircuitMeta(type):
         ):
             raise TypeError('illegal argument')
         _Expe: Experiment = stack_Experiment.top()
-        self.experiment: Experimsnt = _Expe
+        self.experiment = _Expe
 
         if _Expe.ExperimentType != experimentType.Circuit:
             raise errors.ExperimentTypeError
@@ -73,7 +73,6 @@ class CircuitMeta(type):
 # 所有电学元件的父类
 class CircuitBase(ElementBase, metaclass=CircuitMeta):
     def __repr__(self) -> str:
-        #TODO Simple_Instrument 的__repr__方法参数更多
         return f"{self.__class__.__name__}" \
                f"({self._position.x}, {self._position.y}, {self._position.z}, {self.is_elementXYZ})"
 
@@ -95,6 +94,8 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
             raise TypeError
         x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
 
+        self._position = _tools.position(x, y, z)
+
         #元件坐标系
         if elementXYZ is True or _elementXYZ.is_elementXYZ() is True and elementXYZ is None:
             x, y, z = _elementXYZ.xyzTranslate(x, y, z)
@@ -104,7 +105,6 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
             if self in self_list:
                 self_list.remove(self)
 
-        self._position = _tools.position(x, y, z) # type: ignore -> define _arguments in metaclass
         self._arguments['Position'] = f"{x},{z},{y}" # type: ignore -> define _arguments in metaclass
 
         _Expe = stack_Experiment.top()

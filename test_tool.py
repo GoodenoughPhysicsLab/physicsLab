@@ -49,7 +49,6 @@ class Viz:
         self.tracer.start()
 
     def __exit__(self, exc_type, exc_val, traceback):
-        if exc_type is None:
-            self.tracer.stop()
-            self.tracer.save()
-            subprocess.call(["vizviewer", "result.json"])
+        self.tracer.stop()
+        self.tracer.save()
+        subprocess.call(["vizviewer", "result.json"])

@@ -95,7 +95,11 @@ Experiment.observe(
 
 ## 以physicsLab代码的形式导出
 ```Python
-Experiment.export()
+from physicslab import *
+
+with experiment("example") as exp:
+    # do something
+    exp.export()
 ```
 
 ## 合并其他实验
