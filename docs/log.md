@@ -98,3 +98,4 @@
 1.  新增`Experiment.merge`
 2.  元件新增`experiment`属性
 3.  `get_Element`增加`default`参数
+4.  重命名`unit`为`lib` （不兼容更新）

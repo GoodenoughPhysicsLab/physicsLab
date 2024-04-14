@@ -186,9 +186,9 @@ class Experiment:
             experiment_type: experimentType = experimentType.Circuit,
             force_crt: bool=False
     ) -> Self:
-        ''' 创建存档，输入为存档名 sav_name: 存档名; 
-            experiment_type: 实验类型; 
-            force_crt: 不论实验是否已经存在,强制创建 
+        ''' 创建存档，输入为存档名 sav_name: 存档名;
+            experiment_type: 实验类型;
+            force_crt: 不论实验是否已经存在,强制创建
         '''
         if self.is_open_or_crt:
             raise errors.experimentExistError
@@ -553,11 +553,11 @@ class Experiment:
             for a_wire in other.Wires:
                 a_wire = copy.deepcopy(
                     a_wire, memo={
-                        id(a_wire.Source.element_self): a_wire.Source.element_self,
-                        id(a_wire.Target.element_self): a_wire.Target.element_self,
+                        id(a_wire.Source.element_self):
+                            identifier_to_element[a_wire.Source.element_self._arguments["Identifier"]],
+                        id(a_wire.Target.element_self):
+                            identifier_to_element[a_wire.Target.element_self._arguments["Identifier"]],
                 })
-                a_wire.Source.element_self = identifier_to_element[a_wire.Source.element_self._arguments["Identifier"]]
-                a_wire.Target.element_self = identifier_to_element[a_wire.Target.element_self._arguments["Identifier"]]
                 self.Wires.add(a_wire)
 
         return self
@@ -664,7 +664,7 @@ def _open_sav(sav_name) -> Optional[dict]:
         return encode_sav(f"{Experiment.FILE_HEAD}/{sav_name}", encoding)
 
 def search_Experiment(sav_name: str) -> Optional[str]:
-    '''  检测实验是否存在，输入为存档名，若存在则返回存档对应的文件名，若不存在则返回None'''
+    '''  检测实验是否存在, 输入为存档名, 若存在则返回存档对应的文件名, 若不存在则返回None'''
     for aSav in getAllSav():
         sav = _open_sav(aSav)
         if sav["InternalName"] == sav_name:

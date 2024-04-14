@@ -9,7 +9,7 @@ from enum import Enum, unique
 from physicsLab import errors
 from physicsLab.circuit import elements
 from physicsLab._tools import roundData
-from physicsLab.unit import crt_Wires, D_WaterLamp
+from physicsLab.lib import crt_Wires, D_WaterLamp
 from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, numType
 
 def _format_velocity(velocity: float) -> float:
@@ -120,6 +120,8 @@ class Midi:
 
         # 使用pygame播放midi
         def sound_by_pygame() -> bool:
+            import os
+            os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
             try:
                 from pygame import mixer, time
             except ImportError:

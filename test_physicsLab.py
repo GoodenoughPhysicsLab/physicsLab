@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 from physicsLab import *
-from physicsLab.unit import *
+from physicsLab.lib import *
 from physicsLab.experiment import stack_Experiment
 
 import format_coding_style as fcs
@@ -17,7 +17,7 @@ class TestError(Exception):
 
     def __str__(self) -> str:
         if not self.no_pop:
-            exit_Experiment()
+            get_Experiment().exit()
         return "Test Fail"
 
 def my_test_dec(method: Callable):
@@ -107,7 +107,7 @@ class MyTestCase(unittest.TestCase):
     @my_test_dec
     def test_union_Sum(self):
         exp: Experiment = Experiment().crt("__test__", force_crt=True)
-        unit.Sum(0, -1, 0, 64)
+        lib.Sum(0, -1, 0, 64)
         self.assertEqual(count_Elements(), 64)
         self.assertEqual(count_Wires(), 63)
         clear_Elements()
@@ -195,10 +195,10 @@ class MyTestCase(unittest.TestCase):
     @my_test_dec
     def test_wires(self):
         with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
-            a = unit.Inputs(0, 0, 0, 8)
-            b = unit.Outputs(0.6, 0, 0, 8, elementXYZ=False)
+            a = lib.Inputs(0, 0, 0, 8)
+            b = lib.Outputs(0.6, 0, 0, 8, elementXYZ=False)
             Logic_Output(0.6, 0, 0.1, elementXYZ=False)
-            c = unit.D_WaterLamp(1, 0, 0, bitLength=8)
+            c = lib.D_WaterLamp(1, 0, 0, bitLength=8)
             crt_Wires(b.data_Input, c.data_Output)
             self.assertEqual(25, count_Elements())
             self.assertEqual(23, count_Wires())
@@ -209,10 +209,10 @@ class MyTestCase(unittest.TestCase):
     @my_test_dec
     def test_union_Sum2(self):
         with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
-            a = unit.Inputs(-1, 0, 0, 8)
-            b = unit.Inputs(-2, 0, 0, 8)
-            c = unit.Sum(0, 0, 0, 8)
-            d = unit.Outputs(1, 0, 0, 8)
+            a = lib.Inputs(-1, 0, 0, 8)
+            b = lib.Inputs(-2, 0, 0, 8)
+            c = lib.Sum(0, 0, 0, 8)
+            d = lib.Outputs(1, 0, 0, 8)
             a.data_Output - c.data_Input1
             b.data_Output - c.data_Input2
             c.data_Output - d.data_Input
@@ -254,14 +254,14 @@ class MyTestCase(unittest.TestCase):
     @my_test_dec
     def test_union_Sub(self):
         with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
-            a = unit.Sub(bitLength=8, fold=False)
-            crt_Wires(unit.Inputs(-3, 0, 0, 8).data_Output, a.minuend)
-            crt_Wires(unit.Inputs(-2, 0, 0, 8).data_Output, a.subtrahend)
-            crt_Wires(unit.Outputs(2, 0, 0, 9).data_Input, a.outputs)
+            a = lib.Sub(bitLength=8, fold=False)
+            crt_Wires(lib.Inputs(-3, 0, 0, 8).data_Output, a.minuend)
+            crt_Wires(lib.Inputs(-2, 0, 0, 8).data_Output, a.subtrahend)
+            crt_Wires(lib.Outputs(2, 0, 0, 9).data_Input, a.outputs)
             self.assertEqual(count_Elements(), 42)
             self.assertEqual(count_Wires(), 41)
 
-            unit.Sub(-5, 0, 0)
+            lib.Sub(-5, 0, 0)
 
     # 测试简单乐器设置音高的三种方法
     @my_test_dec

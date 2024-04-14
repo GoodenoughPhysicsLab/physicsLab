@@ -17,8 +17,8 @@ from .element import *
 # `physicsLab`自定义异常类
 from .errors import *
 # 模块化电路
-from .unit.wires import *
-from physicsLab import unit
+from .lib.wires import *
+from physicsLab import lib
 from physicsLab import music
 
 # 检测操作系统
@@ -89,7 +89,7 @@ __all__ = [
     "Resistance_Law", "Solenoid",
 
     # unionElements
-    "unit", "music",
+    "lib", "music",
 
     # wires.py
     "crt_Wires", "del_Wires",
