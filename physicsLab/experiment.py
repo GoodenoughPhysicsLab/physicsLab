@@ -541,8 +541,7 @@ class Experiment:
         identifier_to_element: dict = {}
 
         for a_element in other.Elements:
-            a_element = copy.deepcopy(a_element, memo={id(a_element.experiment): a_element})
-            a_element.experiment = self
+            a_element = copy.deepcopy(a_element, memo={id(a_element.experiment): self})
             e_x, e_y, e_z = a_element.get_Position()
             a_element.set_Position(e_x + x, e_y + y, e_z + z, elementXYZ)
             # set_Position已处理与elements_Position有关的操作

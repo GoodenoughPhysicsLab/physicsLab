@@ -5,7 +5,7 @@
 ![输入图片说明](./cover.jpg)
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![build](https://github.com/gaogaotiantian/viztracer/workflows/build/badge.svg)](https://github.com/GoodenoughPhysicsLab/plmidi/actions)
+[![build](https://github.com/gaogaotiantian/viztracer/workflows/build/badge.svg)](https://github.com/GoodenoughPhysicsLab/physicsLab/actions)
 ![support-version](https://img.shields.io/pypi/pyversions/viztracer)
 
 ## 介绍
