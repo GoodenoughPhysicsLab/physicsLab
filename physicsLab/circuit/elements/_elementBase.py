@@ -14,9 +14,6 @@ from physicsLab.experiment import Experiment, stack_Experiment
 
 # electricity class's metaClass
 class CircuitMeta(type):
-    # element index
-    __index = 1
-
     def __call__(cls,
                  x: numType = 0,
                  y: numType = 0,
@@ -63,11 +60,9 @@ class CircuitMeta(type):
         else:
             _Expe.elements_Position[self._position] = [self]
         self.set_Rotation()
-        # 通过元件生成顺序来索引元件
-        self._index = CircuitMeta.__index
+
         _Expe.Elements.append(self)
-        # 元件index索引加1
-        CircuitMeta.__index += 1
+
         return self
 
 # 所有电学元件的父类
@@ -98,10 +93,10 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
 
         #元件坐标系
         if elementXYZ is True or _elementXYZ.is_elementXYZ() is True and elementXYZ is None:
-            x, y, z = _elementXYZ.xyzTranslate(x, y, z)
+            x, y, z = _elementXYZ.xyzTranslate(x, y, z, self.is_bigElement)
             self.is_elementXYZ = True
-            if self.is_bigElement:
-                x, y, z = _elementXYZ.amend_big_Element(x, y, z)
+            # if self.is_bigElement:
+            #     x, y, z = _elementXYZ.amend_big_Element(x, y, z)
 
         for _, self_list in stack_Experiment.top().elements_Position.items():
             if self in self_list:
@@ -123,7 +118,7 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
 
     # 获取元件的index（每创建一个元件，index就加1）
     def get_Index(self) -> int:
-        return self._index # type: ignore -> define self._index in metaclass
+        return self.experiment.Elements.index(self) + 1
 
     # 获取子类的类型（也就是ModelID）
     @property

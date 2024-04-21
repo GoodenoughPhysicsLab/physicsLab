@@ -593,9 +593,9 @@ class Player:
         count_elements_start: int = count_Elements()
 
         if not (
-                isinstance(x, (int, float)) or
-                isinstance(y, (int, float)) or
-                isinstance(z, (int, float)) or
+                isinstance(x, (int, float)) and
+                isinstance(y, (int, float)) and
+                isinstance(z, (int, float)) and
                 isinstance(musicArray, Piece)
         ):
             raise TypeError

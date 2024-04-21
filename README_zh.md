@@ -92,26 +92,24 @@ sys.path.append("/your/path/of/physicsLab") # 将字符串替换为你想添加�
 from physicsLab import *
 
   # 打开存档
-open_Experiment("example")
-  # 例：open_Experiment('测逝')
   # 也支持输入存档的文件名（也就是xxx.sav）
+e = Experiment("example")
   # 如果你希望程序不覆盖掉存档中已有的实验状态，需要这样写
-read_Experiment()
+e.read()
   # 创建一个逻辑输入，坐标为(0, 0, 0.1)
 Logic_Input(0, 0, 0.1)
-  # 你也可以不写坐标，默认是(0,0,0)，请注意2原件的坐标不允许重叠！
+  # 你也可以不写坐标，默认是(0,0,0)
 o = Or_Gate()
-  # 此时o存储的是orGate的self
   # 元件含有引脚属性，是对物实原始的引脚表示方法的封装
   # 比如或门（Or_Gate），含有 i_up, i_low, o三个引脚属性
   # 通过引脚属性，就可以更方便的连接导线了
 
   # crt_Wire()函数用来连接导线，有三个参数：SourcePin, TargetPin, color
   # SourcePin与TargetPin必须传入元件的引脚
-  # color可有可无，默认为蓝色
+  # color可以不写，默认为蓝色
 crt_Wire(o.i_up, o.i_low)
   # 将程序中生成的原件，导线等等写入存档
-write_Experiment()
+e.write()
   # 然后用物实打开存档见证奇迹
 ```
 
@@ -119,7 +117,7 @@ write_Experiment()
 ```python
 from physicsLab import *
 
-with experiment('测逝', read=True):
+with experiment("example", read=True):
     Logic_Input(0, 0, 0.1)
     o = Or_Gate()
     o.i_up - o.i_low # 连接导线

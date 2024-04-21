@@ -26,6 +26,7 @@ def my_test_dec(method: Callable):
 
         if len(stack_Experiment.data) != 0:
             print(f"method \"{method.__code__.co_name}\"({method.__code__.co_firstlineno}) test fail due to len(stack_Experiment) != 0")
+            stack_Experiment.data.clear()
             raise TestError
     return result
 
@@ -354,7 +355,7 @@ class MyTestCase(unittest.TestCase):
 
             with experiment("_Test", force_crt=True, is_exit=True) as exp2:
                 Logic_Output(0, 0, 0.1)
-                exp2.merge(exp, 1, 0, 0, elementXYZ=True)
+                exp2.merge(exp, 1, 0, 0, elementXYZ=True) # 逆天Bug, what happend
                 a = get_Element(1, 0, 0)
                 a.i - a.o
 

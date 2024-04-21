@@ -11,32 +11,34 @@ from physicsLab.circuit.elements._elementBase import CircuitBase
 
 NnumType = Optional[numType]
 
-# 创建原件，本质上仍然是实例化
-def crt_Element(
-    name: str, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None
+def crt_Element(name: str,
+                x: numType = 0,
+                y: numType = 0,
+                z: numType = 0,
+                elementXYZ: Optional[bool] = None,
+                *args,
+                **kwargs
 ) -> CircuitBase:
+    ''' 创建原件，本质上仍然是实例化 '''
     if not (isinstance(name, str)
             and isinstance(x, (int, float))
             and isinstance(y, (int, float))
             and isinstance(z, (int, float))
     ):
-        raise RuntimeError("Wrong parameter type")
+        raise TypeError
 
     name = name.strip()
-    # 元件坐标系
-    if elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None):
-        x, y, z = _elementXYZ.xyzTranslate(x, y, z)
     x, y, z = _tools.roundData(x, y, z) # type: ignore
     if (name == '555 Timer'):
-        return elements.NE555(x, y, z)
+        return elements.NE555(x, y, z, elementXYZ)
     elif (name == '8bit Input'):
-        return elements.eight_bit_Input(x, y, z)
+        return elements.eight_bit_Input(x, y, z, elementXYZ)
     elif (name == '8bit Display'):
-        return elements.eight_bit_Display(x, y, z)
+        return elements.eight_bit_Display(x, y, z, elementXYZ)
     else:
-        return eval(f"elements.{name.replace(' ', '_').replace('-', '_')}({x},{y},{z})")
+        return eval(f"elements.{name.replace(' ', '_').replace('-', '_')}"
+                    f"({x}, {y}, {z}, {elementXYZ}, *{args}, **{kwargs})")
 
-# 获取对应坐标的self
 def get_Element(x: NnumType=None,
                 y: NnumType=None,
                 z: NnumType=None,
@@ -44,6 +46,7 @@ def get_Element(x: NnumType=None,
                 index: NnumType=None,
                 **kwargs
 ) -> Union[CircuitBase, List[CircuitBase]]:
+    ''' 获取对应坐标的id '''
     # 通过坐标索引元件
     def position_get(x: numType, y: numType, z: numType):
         if not (
@@ -82,11 +85,10 @@ def get_Element(x: NnumType=None,
     else:
         raise TypeError
 
-# 删除原件
 def del_Element(
         self: CircuitBase # self是物实三大实验支持的所有元件
 ) -> None:
-
+    ''' 删除原件 '''
     if not isinstance(self, CircuitBase):
         raise TypeError
 

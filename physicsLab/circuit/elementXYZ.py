@@ -28,17 +28,14 @@ _X_UNIT: float = 0.16
 _Y_UNIT: float = 0.08
 _Z_UNIT: float = 0.1
 # big_element坐标修正
-_yAmend = 0.045
-
-# 元件坐标系原点
-_xOrigin, _yOrigin, _zOrigin = 0, 0, 0
-
-### end define ###
+_Y_AMEND = 0.045
 
 def xyzTranslate(x: numType, y: numType, z: numType, is_bigElement: bool = False):
     ''' 将元件坐标系转换为物实支持的坐标系 '''
     if get_Experiment().ExperimentType != experimentType.Circuit:
         raise errors.ExperimentTypeError
+
+    _xOrigin, _yOrigin, _zOrigin = get_OriginPosition()
 
     x *= _X_UNIT
     y *= _Y_UNIT
@@ -51,10 +48,12 @@ def xyzTranslate(x: numType, y: numType, z: numType, is_bigElement: bool = False
         x, y, z = amend_big_Element(x, y, z)
     return x, y, z
 
-# 将物实支持的坐标系转换为元件坐标系
 def translateXYZ(x: numType, y: numType, z: numType, is_bigElement: bool = False):
+    ''' 将物实支持的坐标系转换为元件坐标系 '''
     if get_Experiment().ExperimentType != experimentType.Circuit:
         raise errors.ExperimentTypeError
+
+    _xOrigin, _yOrigin, _zOrigin = get_OriginPosition()
 
     x /= _X_UNIT
     y /= _Y_UNIT
@@ -65,7 +64,7 @@ def translateXYZ(x: numType, y: numType, z: numType, is_bigElement: bool = False
     z -= _zOrigin
     # 修改大体积逻辑电路原件的坐标
     if is_bigElement:
-        y -= _yAmend
+        y -= _Y_AMEND
     return x, y, z
 
 # 设置元件坐标系原点O，输入值为物实坐标系
@@ -81,11 +80,11 @@ def set_O(x: numType, y: numType, z: numType) -> None:
 
 # 修正bigElement的坐标
 def amend_big_Element(x: numType, y: numType, z: numType):
-    return x, y + _yAmend, z
+    return x, y + _Y_AMEND, z
 
 # 获取坐标原点
 def get_OriginPosition() -> position:
-    return position(_xOrigin, _yOrigin, _zOrigin)
+    return get_Experiment().elementXYZ_origin_position
 
 # 输入"x" 返回_xUnit
 # 输入"y", "z" 返回_yUnit, _zUnit

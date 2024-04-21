@@ -55,7 +55,6 @@ class Experiment:
         self.is_open: bool = False
         self.is_crt: bool = False
         self.is_read: bool = False
-        self.is_elementXYZ: bool = False
 
         self.FileName: Optional[str] = None # 存档的文件名
         self.SavPath: Optional[str] = None # 存档的完整路径, 为 f"{experiment.FILE_HEAD}/{self.FileName}"
@@ -93,6 +92,9 @@ class Experiment:
             self.PlSav["Summary"] = savTemplate.Circuit["Summary"]
 
         if self.ExperimentType == experimentType.Circuit:
+            self.is_elementXYZ: bool = False
+            # 元件坐标系的坐标原点
+            self.elementXYZ_origin_position: _tools.position = _tools.position(0, 0, 0)
             self.Wires: set = set() # Set[Wire] # 存档对应的导线
             # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": Generate, "Wires": Generate}
@@ -147,6 +149,9 @@ class Experiment:
         self.SavPath = f"{Experiment.FILE_HEAD}/{self.FileName}"
 
         if self.ExperimentType == experimentType.Circuit:
+            self.is_elementXYZ: bool = False
+            # 元件坐标系的坐标原点
+            self.elementXYZ_origin_position: _tools.position = _tools.position(0, 0, 0)
             self.PlSav: dict = copy.deepcopy(savTemplate.Circuit)
             self.Wires: set = set() # Set[Wire] # 存档对应的导线
             # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
@@ -543,6 +548,12 @@ class Experiment:
         for a_element in other.Elements:
             a_element = copy.deepcopy(a_element, memo={id(a_element.experiment): self})
             e_x, e_y, e_z = a_element.get_Position()
+            if self.ExperimentType == experimentType.Circuit:
+                from .circuit.elementXYZ import xyzTranslate, translateXYZ
+                if elementXYZ and not a_element.is_elementXYZ:
+                    e_x, e_y, e_z = translateXYZ(e_x, e_y, e_z, a_element.is_bigElement)
+                elif not elementXYZ and a_element.is_elementXYZ:
+                    e_x, e_y, e_z = xyzTranslate(e_x, e_y, e_z, a_element.is_bigElement)
             a_element.set_Position(e_x + x, e_y + y, e_z + z, elementXYZ)
             # set_Position已处理与elements_Position有关的操作
             self.Elements.append(a_element)
