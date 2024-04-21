@@ -287,13 +287,26 @@ class Experiment:
             obj.set_Rotation(r_x, r_y, r_z)
             obj._arguments['Identifier'] = element['Identifier']
             from .circuit.elements.logicCircuit import Logic_Input, eight_bit_Input
-            # 如果obj是逻辑输入
+            from .circuit.elements.basicCircuit import Simple_Switch, SPDT_Switch, DPDT_Switch, Air_Switch
+
             if isinstance(obj, Logic_Input) and element['Properties'].get('开关') == 1:
                 obj.set_highLevel()
-            # 如果obj是8位输入器
+
             elif isinstance(obj, eight_bit_Input):
                 obj._arguments['Statistics'] = element['Statistics']
                 obj._arguments['Properties']['十进制'] = element['Properties']['十进制']
+
+            elif isinstance(obj, Simple_Switch) and element["Properties"]["开关"] == 1:
+                obj.turn_on_switch()
+
+            elif isinstance(obj, Air_Switch) and element["Properties"]["开关"] == 1:
+                obj.turn_on_switch()
+
+            elif isinstance(obj, SPDT_Switch) or isinstance(obj, DPDT_Switch):
+                if element["Properties"]["开关"] == 1:
+                    obj.left_turn_on_switch()
+                elif element["Properties"]["开关"] == 2:
+                    obj.right_turn_on_switch()
 
         # 导线
         if self.ExperimentType == experimentType.Circuit:

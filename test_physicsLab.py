@@ -355,7 +355,7 @@ class MyTestCase(unittest.TestCase):
 
             with experiment("_Test", force_crt=True, is_exit=True) as exp2:
                 Logic_Output(0, 0, 0.1)
-                exp2.merge(exp, 1, 0, 0, elementXYZ=True) # 逆天Bug, what happend
+                exp2.merge(exp, 1, 0, 0, elementXYZ=True)
                 a = get_Element(1, 0, 0)
                 a.i - a.o
 
