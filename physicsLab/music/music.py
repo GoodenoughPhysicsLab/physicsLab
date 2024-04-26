@@ -222,9 +222,13 @@ class Midi:
 
         return res
 
-    # 转换为physicsLab的piece类
-    def to_piece(self, div_time: numType = 100, max_notes: Optional[int] = 800) -> "Piece":
-        return Piece(self._get_notes_list(div_time, max_notes))
+    def to_piece(self,
+                 div_time: numType = 100,
+                 max_notes: Optional[int] = 800,
+                 is_optimize: bool = True, # 是否将多个音符优化为和弦
+                 ) -> "Piece":
+        ''' 转换为Piece类 '''
+        return Piece(self._get_notes_list(div_time, max_notes), is_optimize=is_optimize)
 
     ''' *.pl.py文件:
         pl即为 physicsLab file
@@ -297,9 +301,9 @@ class Midi:
 
         return self
 
-# 音符类
 # TODO 增加更多的设置pitch的方法 -> 参考Simple_Instrument
 class Note:
+    ''' 音符类 '''
     def __init__(self,
                  time: int, # 间隔多少时间才播放此Note
                  playTime: int = 1,  # 音符发出声音的时长 暂时不支持相关机制
@@ -330,8 +334,8 @@ class Note:
     def append(self, other: "Note") -> "Chord":
         return Chord(self, other, time=self.time)
 
-# 和弦类
 class Chord:
+    ''' 和弦类 '''
     def __init__(self, *notes: Note, time: int) -> None:
         if len(notes) < 1 or time < 1:
             raise TypeError
@@ -384,30 +388,50 @@ class Chord:
                 x: numType = 0,
                 y: numType = 0,
                 z: numType = 0,
-                elementXYZ: Optional[bool] = None
-    ) -> elements.Simple_Instrument:
+                elementXYZ: Optional[bool] = None,
+                is_optimize: bool = True,
+                ) -> elements.Simple_Instrument:
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
 
-        first_ins = None # 第一个音符
-        for delta_z, ins in enumerate(self.ins_notes):
-            notes: List[Note] = self.ins_notes[ins]
-            temp: elements.Simple_Instrument = elements.Simple_Instrument(
-                x, y, z + delta_z, elementXYZ=True,instrument=ins,
-                pitch=notes[0].pitch, is_ideal_model=True, velocity=self._get_velocity(notes, is_average=True)
-            ).set_Rotation(0, 0, 0)
-            if first_ins is None:
-                first_ins = temp
-            else:
-                temp.i - first_ins.i
-                temp.o - first_ins.o
+        first_ins: Optional[elements.Simple_Instrument] = None # 第一个音符
+        if is_optimize:
+            for delta_z, ins in enumerate(self.ins_notes):
+                notes: List[Note] = self.ins_notes[ins]
+                temp: elements.Simple_Instrument = elements.Simple_Instrument(
+                    x, y, z + delta_z, elementXYZ=True,instrument=ins,
+                    pitch=notes[0].pitch, is_ideal_model=True, velocity=self._get_velocity(notes, is_average=True)
+                ).set_Rotation(0, 0, 0)
 
-            for a_note in notes:
-                temp.add_note(a_note.pitch) # type: ignore
+                if first_ins is None:
+                    first_ins = temp
+                else:
+                    temp.i - first_ins.i
+                    temp.o - first_ins.o
 
-        return first_ins # type: ignore -> first_ins 不会是None
+                for a_note in notes:
+                    temp.add_note(a_note.pitch) # type: ignore
+        else:
+            delta_z = 0
+            for _, ins in enumerate(self.ins_notes):
+                for a_note in self.ins_notes[ins]: # type: ignore
+                    temp = elements.Simple_Instrument(
+                        x, y, z + delta_z, elementXYZ=True,instrument=ins,
+                        pitch=a_note.pitch, is_ideal_model=True, velocity=a_note.velocity
+                    ).set_Rotation(0, 0, 0)
+
+                    if first_ins is None:
+                        first_ins = temp
+                    else:
+                        temp.i - first_ins.i
+                        temp.o - first_ins.o
+
+                    delta_z += 1
+
+        assert first_ins is not None
+        return first_ins
 
 # 循环类，用于创建一段循环的音乐片段
 # TODO: 完善Loop存储的数据结构
@@ -437,38 +461,36 @@ class Loop:
     def __next__(self):
         pass
 
-# 乐曲类
+class Rest_symbol:
+    ''' 休止符 '''
+    __singleton: Optional[Self] = None
+    def __new__(cls) -> Self:
+        if cls.__singleton is None:
+            cls.__singleton = super().__new__(cls)
+        return cls.__singleton
+
 class Piece:
+    ''' 乐曲类 '''
     def __init__(self,
                  notes: Optional[List[Union[Note, Chord]]] = None, # TODO: support Loop
-                 # 设置整个音轨的默认参数 Track global variable
-                 instrument: int = 0, # 演奏的乐器，暂时只支持传入数字
-                 pitch: int = 60, # 音高/音调
-                 bpm: int = 100, # 节奏
-                 volume: float = 1.0 # 音量/响度
-    ) -> None:
-        if not (
-                isinstance(instrument, int) and
-                isinstance(pitch, int) and
-                isinstance(bpm, int) and
-                0 < volume <= 1
-        ) or (
-            ( not isinstance(notes, (list, Loop))
+                 is_optimize: bool = True, # 是否将多个音符优化为和弦
+                 ) -> None:
+        if (
+            ( not isinstance(notes, list)
             or not all(isinstance(val, (Note, Chord)) for val in notes) )
             and notes is not None
         ):
             raise TypeError
 
-        if notes is None:
-            notes = []
+        self.is_optimize = is_optimize
 
-        self.instrument = instrument
-        self.pitch = pitch
-        self.bpm = bpm
-        self.volume = volume
-        self.notes: List[Optional[Union[Note, Chord]]] = []
-        for a_note in notes:
-            self.append(a_note)
+        # self.notes会将Note与Chord中用time表示的休止符展开为Rest_symbol
+        if notes is None:
+            self.notes = []
+        else:
+            self.notes: List[Union[Note, Chord, Rest_symbol]] = []
+            for a_note in notes:
+                self.append(a_note)
 
     # 向Piece类添加数据成员
     def append(self, other: Union[Note, Chord]) -> Self:
@@ -476,7 +498,7 @@ class Piece:
             raise TypeError
 
         while other.time > 1:
-            self.notes.append(None)
+            self.notes.append(Rest_symbol())
             other.time -= 1
         self.notes.append(other)
         return self
@@ -521,7 +543,7 @@ class Piece:
          # 500_000 / 100, 500_000是Midi.tempo的默认数字，100是self.bpm的默认数字
         track.append(mido.MetaMessage("set_tempo", tempo=self.bpm * 5000, time=0))
         for a_note in self.notes:
-            if a_note is None:
+            if isinstance(a_note, Rest_symbol):
                 none_counter += 1
             elif isinstance(a_note, Chord):
                 for note_list in a_note.ins_notes.values():
@@ -547,7 +569,7 @@ class Piece:
 
     # 将Piece转换为物实对应的电路
     def release(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None) -> "Player":
-        return Player(self, x, y, z, elementXYZ)
+        return Player(self, x, y, z, elementXYZ, self.is_optimize)
 
     # Piece中所有Notes与Chord的数量
     def count_notes(self) -> int:
@@ -560,7 +582,7 @@ class Piece:
     def __len__(self) -> int:
         return len(self.notes)
 
-    def __getitem__(self, item: int) -> Optional[Union[Note, Chord]]:
+    def __getitem__(self, item: int) -> Union[Note, Chord, Rest_symbol]:
         if not isinstance(item, int):
             raise TypeError
         return self.notes[item]
@@ -587,8 +609,9 @@ class Player:
                  x: numType = 0,
                  y: numType = 0,
                  z: numType = 0,
-                 elementXYZ = None
-    ) -> None:
+                 elementXYZ = None,
+                 is_optimize: bool = True
+                 ) -> None:
         from physicsLab.element import count_Elements
         count_elements_start: int = count_Elements()
 
@@ -604,9 +627,9 @@ class Player:
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
 
         # 给乐器增加休止符
-        while musicArray.notes[-1] is None:
+        while isinstance(musicArray.notes[-1], Rest_symbol):
             musicArray.notes.pop()
-        while musicArray.notes[0] is None:
+        while isinstance(musicArray.notes[0], Rest_symbol):
             musicArray.notes.pop(0)
 
         len_musicArray: int = len(musicArray)
@@ -661,7 +684,7 @@ class Player:
         # main
         xcor, ycor = -1, 0
         for a_note in musicArray:
-            if a_note is None:
+            if isinstance(a_note, Rest_symbol):
                 xcor += 1
                 if xcor == side:
                     xcor = 0
@@ -675,7 +698,7 @@ class Player:
                 xcor = 0
                 ycor += 2
             if isinstance(a_note, Chord):
-                ins = a_note.release(1 + x + xcor,  4 + y + ycor, z, elementXYZ=True)
+                ins = a_note.release(1 + x + xcor,  4 + y + ycor, z, elementXYZ=True, is_optimize=is_optimize)
             elif isinstance(a_note, Note):
                 ins = elements.Simple_Instrument(
                     1 + x + xcor, 4 + y + ycor, z, pitch=a_note.pitch,

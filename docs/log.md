@@ -100,3 +100,8 @@
 3.  `get_Element`增加`default`参数
 4.  重命名`unit`为`lib` （不兼容更新）
 5.  `crt_Element`新增`*args`与`**kwargs`用来传递创建一些元件需要的额外的参数
+
+# 1.4.8
+1.  删除`Piece`类的冗余参数
+2.  新增休止符类`Rest_symbol`
+3.  `to_piece`新增`is_optimize`参数
