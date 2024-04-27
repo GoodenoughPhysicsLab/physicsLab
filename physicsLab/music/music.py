@@ -14,7 +14,6 @@ from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, num
 
 def _format_velocity(velocity: float) -> float:
     velocity = min(1, velocity)
-    velocity = max(0.05, velocity)
 
     return velocity
 
@@ -188,31 +187,35 @@ class Midi:
         return self
 
     # 返回 [Note(...), Chord(...), ...]
-    def _get_notes_list(self, div_time: numType, max_notes: Optional[int]) -> List[Union["Note", "Chord"]]:
-        res: List[Union[Note, Chord]] = []
+    def _get_notes_list(self,
+                        div_time: numType, max_notes: Optional[int],
+                        is_fix_strange_note: bool = False,
+                        ) -> List[Union["Note", "Chord"]]:
 
+        res: List[Union[Note, Chord]] = []
         wait_time: int = 0
         len_res: int = 0
+
         for msg in self.messages:
-            if msg.type == "note_on": # type: ignore -> Message/MetaMessage must have attr type
+            if msg.type == "note_on":
+                velocity: float = _format_velocity(msg.velocity / 127) # 音符的响度
+                ins: int = self.channels[msg.channel]
+
+                if velocity == 0 or (is_fix_strange_note and ins == 0 and velocity >= 0.85):
+                    if msg.time != 0:
+                        wait_time += msg.time
+                    continue
+
                 len_res += 1
                 note_time = round((msg.time + wait_time) / div_time)
-
-                velocity = _format_velocity(msg.velocity / 127) # 音符的响度
 
                 if note_time != 0 or len(res) == 0:
                     if note_time == 0:
                         note_time = 1
-                    res.append(
-                        Note(note_time,
-                             instrument=self.channels[msg.channel],
-                             pitch=msg.note, velocity=velocity)
-                    )
+                    res.append(Note(time=note_time, instrument=ins, pitch=msg.note, velocity=velocity))
                 else:
                     # res[-1]是`Note`或`Chord`且在赋值之后一定是Chord, 此时Note的time的值不重要(因为和弦的音符是同时播放的)
-                    res[-1] = res[-1].append(
-                        Note(time=1, instrument=self.channels[msg.channel], pitch=msg.note, velocity=velocity)
-                    )
+                    res[-1] = res[-1].append(Note(time=1, instrument=ins, pitch=msg.note, velocity=velocity))
                 wait_time = 0
             elif msg.time != 0:
                 wait_time += msg.time
@@ -226,9 +229,11 @@ class Midi:
                  div_time: numType = 100,
                  max_notes: Optional[int] = 800,
                  is_optimize: bool = True, # 是否将多个音符优化为和弦
+                 is_fix_strange_note: bool = False, # 是否修正一些奇怪的音符
                  ) -> "Piece":
         ''' 转换为Piece类 '''
-        return Piece(self._get_notes_list(div_time, max_notes), is_optimize=is_optimize)
+        return Piece(self._get_notes_list(div_time, max_notes, is_fix_strange_note),
+                     is_optimize=is_optimize)
 
     ''' *.pl.py文件:
         pl即为 physicsLab file
@@ -412,11 +417,11 @@ class Chord:
                     temp.o - first_ins.o
 
                 for a_note in notes:
-                    temp.add_note(a_note.pitch) # type: ignore
+                    temp.add_note(a_note.pitch)
         else:
             delta_z = 0
-            for _, ins in enumerate(self.ins_notes):
-                for a_note in self.ins_notes[ins]: # type: ignore
+            for ins, notes in self.ins_notes.items():
+                for a_note in notes:
                     temp = elements.Simple_Instrument(
                         x, y, z + delta_z, elementXYZ=True,instrument=ins,
                         pitch=a_note.pitch, is_ideal_model=True, velocity=a_note.velocity
@@ -610,7 +615,7 @@ class Player:
                  y: numType = 0,
                  z: numType = 0,
                  elementXYZ = None,
-                 is_optimize: bool = True
+                 is_optimize: bool = True,
                  ) -> None:
         from physicsLab.element import count_Elements
         count_elements_start: int = count_Elements()

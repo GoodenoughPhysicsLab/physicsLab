@@ -22,6 +22,7 @@ with experiment("example"):
 因此，div_time的值越小，对midi的处理就越精细，但随之而来的影响是乐曲的播放速度变慢。  
 `max_notes`用来控制音乐电路的音符的数量，当`max_notes=None`时，physicsLab会将整首midi乐曲都给处理完。  
 `to_piece`还有一个参数: `is_optimize`参数，为`False`时将不会把多个音符优化为和弦  
+`to_piece`还有一个参数: `is_fix_strange_note`，用来优化一些midi中的奇怪的，不符合和弦的，而且总是钢琴樱色的，音量贼大的音符
 `release`对应的三个参数分别是x, y, z，个人感觉这`-1, -1, 0`就已经很好用了，没必要修改。  
 
 ## 播放midi

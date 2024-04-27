@@ -104,4 +104,5 @@
 # 1.4.8
 1.  删除`Piece`类的冗余参数
 2.  新增休止符类`Rest_symbol`
-3.  `to_piece`新增`is_optimize`参数
+3.  `to_piece`新增`is_optimize`参数，用来控制是否优化为和弦
+4.  `to_piece`新增`is_fix_strange_note`参数，用来控制是否修正一些midi中奇怪的音符
