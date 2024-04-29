@@ -45,10 +45,15 @@ def get_Experiment() -> "Experiment":
 
 class Experiment:
     ''' 实验（存档）类 '''
-    FILE_HEAD = "physicsLabSav"
     if platform.system() == "Windows":
         from getpass import getuser
         FILE_HEAD = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Circuit"
+    else:
+        _home = os.environ.get('PHYSICSLAB_HOME_PATH')
+        if _home is None:
+            FILE_HEAD = "physicsLabSav"
+        else:
+            FILE_HEAD = f"{_home}/physicsLabSav"
 
     def __init__(self, sav_name: Optional[str] = None) -> None:
         self.is_open_or_crt: bool = False

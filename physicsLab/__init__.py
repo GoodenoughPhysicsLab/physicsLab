@@ -29,8 +29,8 @@ if platform.system() == "Windows":
     if not os.path.exists(Experiment.FILE_HEAD):
         raise RuntimeError("The folder does not exist, try launching Physics-Lab-AR and try it out")
 else:
-    if not os.path.exists("physicsLabSav"):
-        os.mkdir("physicsLabSav")
+    if not os.path.exists(Experiment.FILE_HEAD):
+        os.mkdir(Experiment.FILE_HEAD)
 
 # 获取 Physics-Lab-AR 版本
 def get_Physics_Lab_AR_version() -> Optional[str]:

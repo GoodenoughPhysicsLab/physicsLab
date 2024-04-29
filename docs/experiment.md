@@ -114,3 +114,6 @@ with experiment("example1") as exp:
         Logic_Output(0, 0, 0.1)
         exp2.merge(exp, 1, 0, 0, elementXYZ=True)
 ```
+
+## 手动设置输出路径
+你可以使用`os.environ["PHYSICSLAB_HOME_PATH"] = "xxx"`来设置physicsLab产生的存档的默认路径（该功能仅为非Windows操作系统提供，因为这些操作系统通常有着严格的权限设置）
