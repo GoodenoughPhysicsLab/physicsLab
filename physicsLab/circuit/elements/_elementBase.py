@@ -95,8 +95,6 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
         if elementXYZ is True or _elementXYZ.is_elementXYZ() is True and elementXYZ is None:
             x, y, z = _elementXYZ.xyzTranslate(x, y, z, self.is_bigElement)
             self.is_elementXYZ = True
-            # if self.is_bigElement:
-            #     x, y, z = _elementXYZ.amend_big_Element(x, y, z)
 
         for _, self_list in stack_Experiment.top().elements_Position.items():
             if self in self_list:

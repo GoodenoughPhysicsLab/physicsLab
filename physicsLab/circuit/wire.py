@@ -56,7 +56,7 @@ class Wire:
         if not isinstance(Source, Pin) or not isinstance(Target, Pin):
             raise TypeError
 
-        if Source.element_self.experiment != Target.element_self.experiment:
+        if Source.element_self.experiment is not Target.element_self.experiment:
             raise errors.ExperimentError("can't link wire in two experiment")
 
         if color in ("black", "blue", "red", "green", "yellow"):

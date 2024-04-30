@@ -9,8 +9,6 @@ from physicsLab.experiment import stack_Experiment
 from physicsLab.typehint import numType, Optional, Union, List
 from physicsLab.circuit.elements._elementBase import CircuitBase
 
-NnumType = Optional[numType]
-
 def crt_Element(name: str,
                 x: numType = 0,
                 y: numType = 0,
@@ -39,11 +37,11 @@ def crt_Element(name: str,
         return eval(f"elements.{name.replace(' ', '_').replace('-', '_')}"
                     f"({x}, {y}, {z}, {elementXYZ}, *{args}, **{kwargs})")
 
-def get_Element(x: NnumType=None,
-                y: NnumType=None,
-                z: NnumType=None,
+def get_Element(x: Optional[numType] = None,
+                y: Optional[numType] = None,
+                z: Optional[numType] = None,
                 *,
-                index: NnumType=None,
+                index: Optional[numType] = None,
                 **kwargs
 ) -> Union[CircuitBase, List[CircuitBase]]:
     ''' 获取对应坐标的id '''
