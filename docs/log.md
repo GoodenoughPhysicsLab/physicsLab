@@ -107,3 +107,4 @@
 3.  `to_piece`新增`is_optimize`参数，用来控制是否优化为和弦
 4.  `to_piece`新增`is_fix_strange_note`参数，用来控制是否修正一些midi中奇怪的音符
 5.  新增设置环境变量`PHYSICSLAB_HOME_PATH`
+6.  增加`crt_Wire`自连接导线的检查
