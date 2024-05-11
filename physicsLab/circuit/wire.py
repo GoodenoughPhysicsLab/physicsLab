@@ -2,7 +2,7 @@
 from physicsLab import errors
 from physicsLab.experiment import get_Experiment
 from physicsLab.experimentType import experimentType
-from physicsLab.typehint import WireDict, Optional
+from physicsLab.typehint import WireDict, Optional, Callable
 
 # 电学元件引脚类, 模电元件引脚无明确的输入输出之分, 因此用这个
 class Pin:
@@ -59,6 +59,9 @@ class Wire:
         if Source.element_self.experiment is not Target.element_self.experiment:
             raise errors.ExperimentError("can't link wire in two experiment")
 
+        if Source == Target:
+            raise errors.ExperimentError()
+
         if color in ("black", "blue", "red", "green", "yellow"):
             color = {"black": "黑", "blue": "蓝", "red": "红", "green": "绿", "yellow": "黄"}[color]
         if color not in ('蓝', '绿', '黄', '红', '紫'):
@@ -101,7 +104,7 @@ class Wire:
         }
 
 # 检查函数参数是否是导线
-def _check_typeWire(func: callable):
+def _check_typeWire(func: Callable):
     def result(SourcePin: Pin, TargetPin: Pin, *args, **kwargs) -> None:
         if not (
                 isinstance(SourcePin, Pin) and

@@ -247,8 +247,8 @@ class Midi:
         而且是个Py文件, 大家想要自己修改也是很方便的
     '''
 
-    # 导出一个 .mido.py 文件
     def write_midopy(self, path: str="temp.mido.py") -> Self:
+        ''' 导出一个 .mido.py 文件 '''
         if not path.endswith(".mido.py"):
             path += ".mido.py"
 

@@ -361,6 +361,17 @@ class MyTestCase(unittest.TestCase):
 
                 self.assertEqual(count_Elements(), 2)
                 self.assertEqual(count_Wires(), 1)
+    
+    @my_test_dec
+    def test_crt_self_wire(self):
+        with experiment("__test__", force_crt=True, is_exit=True) as exp:
+            e = Logic_Output()
+            try:
+                e.i - e.i
+            except ExperimentError:
+                pass
+            else:
+                raise TestError
 
 if __name__ == '__main__':
     fcs.main()
