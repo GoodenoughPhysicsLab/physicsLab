@@ -252,12 +252,17 @@ class Midi:
         if not path.endswith(".mido.py"):
             path += ".mido.py"
 
+            mido.MidiFile()
+
         with open(path, "w", encoding="utf-8") as f:
             f.write(f"import os\n"
                     f"os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'\n"
                     f"from mido import MidiFile, MidiTrack, MetaMessage, Message\n"
-                    f"mid = MidiFile()\n"
-                    f"track = {str(self.messages)}\n"
+                    f"mid = MidiFile(type={self._midifile.type}, "
+                    f"ticks_per_beat={self._midifile.ticks_per_beat}, "
+                    f"charset='{self._midifile.charset}', "
+                    f"clip={self._midifile.clip})\n"
+                    f"track = {self.messages}\n"
                     f"mid.tracks.append(track)\n"
                     f"mid.save(\"temp.mid\")\n"
                     f"from physicsLab.music import Midi\n"
@@ -272,7 +277,9 @@ class Midi:
         if not midipath.endswith(".mid"):
             midipath += ".mid"
 
-        mid = mido.MidiFile()
+        mid = mido.MidiFile(ticks_per_beat=self._midifile.ticks_per_beat,
+                            type=self._midifile.type,
+                            charset=self._midifile.charset)
         mid.tracks.append(self.messages)
         mid.save(midipath)
 
