@@ -76,12 +76,11 @@ class Midi:
         else:
             self.midifile: str = midifile
 
-        self.channels: List[int] = [0] * 16
         self.tempo: int = 500_000
         self.messages: mido.MidiTrack = self.__get_midi_messages()
 
-    # 使用mido打开一个midi文件并获取其tracks
     def __get_midi_messages(self) -> mido.MidiTrack:
+        ''' 使用mido打开一个midi文件并获取其messages '''
         self._midifile = mido.MidiFile(self.midifile, clip=True)
         wait_time: numType = 0
         res = mido.MidiTrack()
@@ -93,8 +92,6 @@ class Midi:
             elif msg.time != 0:
                 wait_time += msg.time
 
-            if msg.type == "program_change":
-                self.channels[msg.channel] = msg.program
             if msg.type == "set_tempo":
                 self.tempo = msg.tempo
         return res
@@ -195,11 +192,14 @@ class Midi:
         res: List[Union[Note, Chord]] = []
         wait_time: int = 0
         len_res: int = 0
+        channels: List[int] = [0] * 16
 
         for msg in self.messages:
+            if msg.type == "program_change":
+                channels[msg.channel] = msg.program
             if msg.type == "note_on":
                 velocity: float = _format_velocity(msg.velocity / 127) # 音符的响度
-                ins: int = self.channels[msg.channel]
+                ins: int = channels[msg.channel]
 
                 if velocity == 0 or (is_fix_strange_note and ins == 0 and velocity >= 0.85):
                     if msg.time != 0:
