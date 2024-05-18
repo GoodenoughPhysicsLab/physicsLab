@@ -76,7 +76,6 @@ class Midi:
         else:
             self.midifile: str = midifile
 
-        self.tempo: int = 500_000
         self.messages: mido.MidiTrack = self.__get_midi_messages()
 
     def __get_midi_messages(self) -> mido.MidiTrack:
@@ -92,8 +91,6 @@ class Midi:
             elif msg.time != 0:
                 wait_time += msg.time
 
-            if msg.type == "set_tempo":
-                self.tempo = msg.tempo
         return res
 
     # 播放midi类存储的信息
@@ -173,8 +170,8 @@ class Midi:
 
         return self
 
-    # 将time重设为原来的num倍
     def set_tempo(self, num: numType = 1) -> Self:
+        ''' 将time重设为原来的num倍 '''
         if not isinstance(num, (int, float)):
             raise TypeError
 
@@ -185,29 +182,39 @@ class Midi:
 
     # 返回 [Note(...), Chord(...), ...]
     def _get_notes_list(self,
-                        div_time: numType, max_notes: Optional[int],
-                        is_fix_strange_note: bool = False,
+                        div_time: Optional[numType],
+                        max_notes: Optional[int],
+                        fix_strange_note: bool = False,
                         ) -> List[Union["Note", "Chord"]]:
 
         res: List[Union[Note, Chord]] = []
         wait_time: int = 0
         len_res: int = 0
         channels: List[int] = [0] * 16
+        tempo: int = 500_000
+        _div_time = div_time
 
         for msg in self.messages:
             if msg.type == "program_change":
                 channels[msg.channel] = msg.program
+            if msg.type == "set_tempo":
+                tempo = msg.tempo
+                if div_time is None:
+                    _div_time = mido.second2tick(0.11, self._midifile.ticks_per_beat, tempo)
+
             if msg.type == "note_on":
                 velocity: float = _format_velocity(msg.velocity / 127) # 音符的响度
                 ins: int = channels[msg.channel]
 
-                if velocity == 0 or (is_fix_strange_note and ins == 0 and velocity >= 0.85):
+                if velocity == 0 or (fix_strange_note and ins == 0 and velocity >= 0.85):
                     if msg.time != 0:
                         wait_time += msg.time
                     continue
 
                 len_res += 1
-                note_time = round((msg.time + wait_time) / div_time)
+                if _div_time is None:
+                    raise RuntimeError("find some error in midifile, please manually pass in the div_time parameter")
+                note_time = round((msg.time + wait_time) / _div_time)
 
                 if note_time != 0 or len(res) == 0:
                     if note_time == 0:
@@ -226,13 +233,14 @@ class Midi:
         return res
 
     def to_piece(self,
-                 div_time: numType = 100,
+                 div_time: Optional[numType] = None,
                  max_notes: Optional[int] = 800,
                  is_optimize: bool = True, # 是否将多个音符优化为和弦
-                 is_fix_strange_note: bool = False, # 是否修正一些奇怪的音符
+                 fix_strange_note: bool = False, # 是否修正一些奇怪的音符
                  ) -> "Piece":
         ''' 转换为Piece类 '''
-        return Piece(self._get_notes_list(div_time, max_notes, is_fix_strange_note),
+
+        return Piece(self._get_notes_list(div_time, max_notes, fix_strange_note),
                      is_optimize=is_optimize)
 
     ''' *.pl.py文件:
@@ -252,8 +260,6 @@ class Midi:
         if not path.endswith(".mido.py"):
             path += ".mido.py"
 
-            mido.MidiFile()
-
         with open(path, "w", encoding="utf-8") as f:
             f.write(f"import os\n"
                     f"os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'\n"
@@ -270,8 +276,8 @@ class Midi:
 
         return self
 
-    # 以 .mid 的形式导出, read_midi已经在Midi的__init__中实现
     def write_midi(self, midipath: str = "temp.mid") -> Self:
+        """ 导出一个 .mid 文件 """
         if not isinstance(midipath, str):
             raise TypeError
         if not midipath.endswith(".mid"):
@@ -285,14 +291,13 @@ class Midi:
 
         return self
 
-    # 以.pl.py的格式导出, div_time: midi的time的单位长度与Note的time的单位长度不同，支持用户手动调整
-    # max_notes: 最大的音符数，因为物实没法承受过多的元件
     def write_plpy(self,
                   filepath: str = "temp.pl.py",
-                  div_time: numType = 100,
-                  max_notes: Optional[int] = 800,
+                  div_time: numType = 100, # midi的time的单位长度与Note的time的单位长度不同，支持用户手动调整
+                  max_notes: Optional[int] = 800, # 最大的音符数，因为物实没法承受过多的元件
                   sav_name: str = "temp" # 产生的存档的名字, 也可直接在生成.pl.py中修改
     ) -> Self:
+        ''' 以.pl.py的格式导出 '''
         if not (isinstance(div_time, (int, float)) or
                 isinstance(max_notes, int)) and max_notes is not None:
            raise TypeError

@@ -108,3 +108,6 @@
 4.  `to_piece`新增`is_fix_strange_note`参数，用来控制是否修正一些midi中奇怪的音符
 5.  新增设置环境变量`PHYSICSLAB_HOME_PATH`
 6.  增加`crt_Wire`自连接导线的检查
+
+# 1.4.9
+1.  重命名`Midi.to_piece`的`is_fix_strange_note`参数为`fix_strange_note`（不兼容更新）
