@@ -329,8 +329,9 @@ class Midi:
 
     def write_plpy(self,
                   filepath: str = "temp.pl.py",
-                  div_time: numType = 100, # midi的time的单位长度与Note的time的单位长度不同，支持用户手动调整
+                  div_time: Optional[numType] = None, # midi的time的单位长度与Note的time的单位长度不同，支持用户手动调整
                   max_notes: Optional[int] = 800, # 最大的音符数，因为物实没法承受过多的元件
+                  fix_strange_note: bool = False,
                   sav_name: str = "temp" # 产生的存档的名字, 也可直接在生成.pl.py中修改
     ) -> Self:
         ''' 以.pl.py的格式导出 '''
@@ -341,7 +342,7 @@ class Midi:
         if not filepath.endswith(".pl.py"):
             filepath += ".pl.py"
 
-        l_notes: List[Union[Note, Chord]] = self._get_notes_list(div_time, max_notes)
+        l_notes: List[Union[Note, Chord]] = self._get_notes_list(div_time, max_notes, fix_strange_note)
         notes_str = ""
         for a_note in l_notes:
             notes_str += "        " + repr(a_note) + ",\n"
