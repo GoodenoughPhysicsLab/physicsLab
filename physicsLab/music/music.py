@@ -1,4 +1,8 @@
 ﻿# -*- coding: utf-8 -*-
+import os
+import io
+import tempfile
+
 import mido
 import physicsLab._colorUtils as colorUtils
 import physicsLab.circuit.elementXYZ as _elementXYZ
@@ -17,23 +21,37 @@ def _format_velocity(velocity: float) -> float:
 
     return velocity
 
+PL_TEMP_PATH = "pltemp.mid"
+
 # midi类，用于提供physicsLab与midi文件之间的桥梁
 ''' 重要midi事件及作用:
-    note_on        -> message: 播放音符
-    note_off       -> message: 停止播放音符
-    program_change -> message: 改变某个音轨对应的音色
-    set_tempo  -> metaMessage: 改变midi播放速度
+    note_on        ->     message: 播放音符
+    note_off       ->     message: 停止播放音符
+    program_change ->     message: 改变某个音轨对应的音色
+    set_tempo      -> MetaMessage: 改变midi播放速度
 '''
 class Midi:
     # 仅被Midi.sound方法调用
-    # 你也许需要这样写：e.g. player=music.Midi.PLAYER.os
+    # e.g. player=music.Midi.PLAYER.os
     @unique
     class PLAYER(Enum):
         plmidi = 0
         pygame = 1
         os = 2
 
-    def __init__(self, midifile: str) -> None:
+    def __init__(self, midifile: Union[str, io.IOBase, tempfile._TemporaryFileWrapper]) -> None:
+        ''' .midifile: 支持三种参数
+            * str: midi文件路径
+            * str: .mido.py文件路径
+            * io.IOBase: 打开的midi文件
+
+            Note: midifile也支持tempfile, 但你应该使用tempfile.NamedTemporaryFile()
+            (尽管tempfile.TempraryFile也可能可以运行)
+        '''
+
+        if not isinstance(midifile, (str, io.IOBase, tempfile._TemporaryFileWrapper)):
+            raise TypeError
+
         ''' self.messages的参数格式:
             mido.MidiTrack([
                 Message -> (type: {{note_on or note_off}}, channel, note, velocity, time),
@@ -47,43 +65,52 @@ class Midi:
             program: midi音色
             tempo: 播放速度
         '''
-        def read_midopy(plpath: str = "temp.mido.py") -> Self:
-            self.midifile = "temp.mid"
 
-            context = None
-            with open(plpath, encoding="utf-8") as f:
-                context = f.read()
+        self.__use_tmpfile: bool = False
 
-            import re
-            from mido import MidiFile, MidiTrack, Message, MetaMessage
-            # 正则匹配内容: MidiTrack([Message(...), ...])
-            re_context = re.search(r"MidiTrack\(\[[^\]]+\]\)", context, re.M)
-            if re_context is None:
-                raise SyntaxError(f"error context in {plpath}")
-            self.messages = eval(re_context.group()) # 用到mido import出的内容
-
-            return self
-
-        if not isinstance(midifile, str):
-            raise TypeError
-
-        from os import path
-        if not path.exists(midifile):
-            raise FileNotFoundError
-
-        if midifile.endswith(".mido.py"):
-            read_midopy(midifile)
+        if isinstance(midifile, (io.IOBase, tempfile._TemporaryFileWrapper)):
+            self.midifile: str = midifile.name # type: ignore # midi文件名
+            self.midofile = mido.MidiFile(file=midifile, clip=True)
+            self.messages: mido.MidiTrack = self.__get_midi_messages()
         else:
-            self.midifile: str = midifile
+            if not isinstance(midifile, str):
+                raise TypeError
+            if not os.path.exists(midifile):
+                raise FileNotFoundError
 
-        self.messages: mido.MidiTrack = self.__get_midi_messages()
+            if midifile.endswith(".mido.py"): # .mido.py
+                context = None
+                with open(midifile, encoding="utf-8") as f:
+                    context = f.read()
+
+                import re
+                from mido import MidiFile, MidiTrack, Message, MetaMessage
+                # 正则匹配内容: MidiTrack([Message(...), ...])
+                re_context = re.search(r"MidiTrack\(\[[^\]]+\]\)", context, re.M)
+                if re_context is None:
+                    raise SyntaxError(f"error context in {midifile}")
+                self.messages = eval(re_context.group()) # 用到mido import出的内容
+                re_context = re.search(r"MidiFile\(.*", context, re.M).group().replace("[track]", "[self.messages]")
+                self.midofile = eval(re_context)
+                self.__use_tmpfile = True
+                with tempfile.NamedTemporaryFile(delete=False) as f:
+                    self.midifile = f.name
+                    self.midofile.save(file=f)
+
+            else: # midifile.endswith(".mid")
+                self.midifile = midifile
+                self.midofile = mido.MidiFile(self.midifile, clip=True)
+                self.messages = self.__get_midi_messages()
+
+    def __del__(self):
+        if self.__use_tmpfile:
+            os.remove(self.midifile)
 
     def __get_midi_messages(self) -> mido.MidiTrack:
         ''' 使用mido打开一个midi文件并获取其messages '''
-        self._midifile = mido.MidiFile(self.midifile, clip=True)
         wait_time: numType = 0
         res = mido.MidiTrack()
-        for msg in self._midifile.merged_track:
+        for msg in self.midofile.merged_track:
             if msg.type in ("note_on", "note_off", "program_change", "set_tempo"):
                 res.append(msg)
                 msg.time += wait_time
@@ -113,7 +140,6 @@ class Midi:
 
         # 使用pygame播放midi
         def sound_by_pygame() -> bool:
-            import os
             os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
             try:
                 from pygame import mixer, time
@@ -135,11 +161,10 @@ class Midi:
 
         # 使用系统调用播放midi
         def sound_by_os() -> bool:
-            from os import path, system
             colorUtils.color_print("sound by using os", colorUtils.COLOR.CYAN)
 
-            if path.exists(midifile):
-                system(midifile)
+            if os.path.exists(midifile):
+                os.system(midifile)
                 return True
 
             return False
@@ -147,26 +172,32 @@ class Midi:
         if not isinstance(player, Midi.PLAYER) and player is not None:
             raise TypeError
 
+        use_tempfile: bool = False
         if is_sourcefile:
             midifile = self.midifile
         else:
-            midifile = "temp.mid"
-            self.write_midi()
+            with tempfile.NamedTemporaryFile(delete=False) as tmpf:
+                midifile = tmpf.name
+                self.write_midi(tmpf)
 
-        if player is not None:
-            f = (sound_by_plmidi, sound_by_pygame, sound_by_os)[player.value]
-            if not f():
-                errors.warning(f"can not use {f.__name__} to sound midi.")
-            return self
+        try:
+            if player is not None:
+                f = (sound_by_plmidi, sound_by_pygame, sound_by_os)[player.value]
+                if not f():
+                    errors.warning(f"can not use {f.__name__} to sound midi.")
+                return self
 
-        if sound_by_plmidi():
-            pass # needless to do anything
-        elif sound_by_pygame():
-            pass
-        elif sound_by_os():
-            pass
-        else:
-            errors.warning("can not use sound methods")
+            if sound_by_plmidi():
+                pass # needless to do anything
+            elif sound_by_pygame():
+                pass
+            elif sound_by_os():
+                pass
+            else:
+                errors.warning("can not use sound methods")
+        finally:
+            if use_tempfile:
+                os.remove(midifile)
 
         return self
 
@@ -200,7 +231,7 @@ class Midi:
             if msg.type == "set_tempo":
                 tempo = msg.tempo
                 if div_time is None:
-                    _div_time = mido.second2tick(0.11, self._midifile.ticks_per_beat, tempo)
+                    _div_time = mido.second2tick(0.11, self.midofile.ticks_per_beat, tempo)
 
             if msg.type == "note_on":
                 velocity: float = _format_velocity(msg.velocity / 127) # 音符的响度
@@ -253,41 +284,46 @@ class Midi:
         为了更方便的研究Midi而诞生的文件格式
         为了修改方便, 默认使用 str(mido.MidiTrack) 的方式导出
         而且是个Py文件, 大家想要自己修改也是很方便的
+        也可以直接使用Midi("example.mido.py")的形式进行导入
     '''
 
-    def write_midopy(self, path: str="temp.mido.py") -> Self:
+    def write_midopy(self, path: str="pltemp.mido.py") -> Self:
         ''' 导出一个 .mido.py 文件 '''
         if not path.endswith(".mido.py"):
             path += ".mido.py"
 
         with open(path, "w", encoding="utf-8") as f:
-            f.write(f"import os\n"
-                    f"os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'\n"
+            f.write(f"import os, tempfile\n"
                     f"from mido import MidiFile, MidiTrack, MetaMessage, Message\n"
-                    f"mid = MidiFile(type={self._midifile.type}, "
-                    f"ticks_per_beat={self._midifile.ticks_per_beat}, "
-                    f"charset='{self._midifile.charset}', "
-                    f"clip={self._midifile.clip})\n"
                     f"track = {self.messages}\n"
-                    f"mid.tracks.append(track)\n"
-                    f"mid.save(\"temp.mid\")\n"
-                    f"from physicsLab.music import Midi\n"
-                    f"Midi(\"temp.mid\").sound()")
+                    f"mid = MidiFile(type={self.midofile.type}, "
+                    f"ticks_per_beat={self.midofile.ticks_per_beat}, "
+                    f"charset='{self.midofile.charset}', "
+                    f"clip={self.midofile.clip}, "
+                    f"tracks=[track])\n"
+                    f"with tempfile.NamedTemporaryFile() as f:\n"
+                    f"    mid.save(file=f)\n"
+                    f"    f.seek(0)\n"
+                    f"    os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'\n"
+                    f"    from physicsLab.music import Midi\n"
+                    f"    Midi(f).sound()")
 
         return self
 
-    def write_midi(self, midipath: str = "temp.mid") -> Self:
-        """ 导出一个 .mid 文件 """
-        if not isinstance(midipath, str):
+    def write_midi(self, midipath: Union[str, io.IOBase, tempfile._TemporaryFileWrapper] = PL_TEMP_PATH) -> Self:
+        """ 导出一个 .mid 文件
+            * midipath: 字符串格式的路径 或 打开的midi文件对象
+        """
+        if not isinstance(midipath, (str, io.IOBase, tempfile._TemporaryFileWrapper)):
             raise TypeError
-        if not midipath.endswith(".mid"):
-            midipath += ".mid"
 
-        mid = mido.MidiFile(ticks_per_beat=self._midifile.ticks_per_beat,
-                            type=self._midifile.type,
-                            charset=self._midifile.charset)
-        mid.tracks.append(self.messages)
-        mid.save(midipath)
+        if isinstance(midipath, str):
+            if not midipath.endswith(".mid"):
+                midipath += ".mid"
+
+            self.midofile.save(midipath)
+        else:
+            self.midofile.save(file=midipath)
 
         return self
 
@@ -522,7 +558,7 @@ class Piece:
 
     # 将Piece转化为midi文件(暂不支持Chord)
     def write_midi(self,
-                   filepath: str = "temp.mid",
+                   filepath: str = PL_TEMP_PATH,
                    basic_time: int = 100 # 将Note的time变为Midi的time扩大的倍数
     ) -> Self:
         def write_a_midi_note(a_note: Note):
@@ -580,7 +616,7 @@ class Piece:
         return self
 
     # 将Piece类转换为Midi
-    def to_midi(self, filepath="temp.mid") -> Midi:
+    def to_midi(self, filepath=PL_TEMP_PATH) -> Midi:
         self.write_midi(filepath)
         return Midi(filepath)
 

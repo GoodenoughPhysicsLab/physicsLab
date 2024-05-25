@@ -111,3 +111,6 @@
 
 # 1.4.9
 1.  重命名`Midi.to_piece`的`is_fix_strange_note`参数为`fix_strange_note`（不兼容更新）
+2.  更智能的`Midi`的`div_time`参数的自动推测
+
+# 1.4.10
