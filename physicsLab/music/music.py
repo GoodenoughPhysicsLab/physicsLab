@@ -177,6 +177,7 @@ class Midi:
             midifile = self.midifile
         else:
             with tempfile.NamedTemporaryFile(delete=False) as tmpf:
+                use_tempfile = True
                 midifile = tmpf.name
                 self.write_midi(tmpf)
 
