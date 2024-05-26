@@ -14,7 +14,7 @@ from physicsLab import errors
 from physicsLab.circuit import elements
 from physicsLab._tools import roundData
 from physicsLab.lib import crt_Wires, D_WaterLamp
-from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, numType
+from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, numType, Callable
 
 def _format_velocity(velocity: float) -> float:
     velocity = min(1, velocity)
@@ -216,7 +216,8 @@ class Midi:
     def _get_notes_list(self,
                         div_time: Optional[numType],
                         max_notes: Optional[int],
-                        fix_strange_note: bool = False,
+                        fix_strange_note: bool,
+                        notes_filter: Optional[Callable],
                         ) -> List[Union["Note", "Chord"]]:
 
         res: List[Union[Note, Chord]] = []
@@ -238,7 +239,9 @@ class Midi:
                 velocity: float = _format_velocity(msg.velocity / 127) # 音符的响度
                 ins: int = channels[msg.channel]
 
-                if velocity == 0 or (fix_strange_note and ins == 0 and velocity >= 0.85):
+                if velocity == 0 \
+                   or (fix_strange_note and ins == 0 and velocity >= 0.85) \
+                   or (notes_filter is not None and notes_filter(ins, velocity)):
                     if msg.time != 0:
                         wait_time += msg.time
                     continue
@@ -269,10 +272,11 @@ class Midi:
                  max_notes: Optional[int] = 800,
                  is_optimize: bool = True, # 是否将多个音符优化为和弦
                  fix_strange_note: bool = False, # 是否修正一些奇怪的音符
+                 notes_filter: Optional[Callable] = None,
                  ) -> "Piece":
         ''' 转换为Piece类 '''
 
-        return Piece(self._get_notes_list(div_time, max_notes, fix_strange_note),
+        return Piece(self._get_notes_list(div_time, max_notes, fix_strange_note, notes_filter),
                      is_optimize=is_optimize)
 
     ''' *.pl.py文件:
@@ -333,6 +337,7 @@ class Midi:
                   div_time: Optional[numType] = None, # midi的time的单位长度与Note的time的单位长度不同，支持用户手动调整
                   max_notes: Optional[int] = 800, # 最大的音符数，因为物实没法承受过多的元件
                   fix_strange_note: bool = False,
+                  notes_filter: Optional[Callable] = None,
                   sav_name: str = "temp" # 产生的存档的名字, 也可直接在生成.pl.py中修改
     ) -> Self:
         ''' 以.pl.py的格式导出 '''
@@ -343,7 +348,7 @@ class Midi:
         if not filepath.endswith(".pl.py"):
             filepath += ".pl.py"
 
-        l_notes: List[Union[Note, Chord]] = self._get_notes_list(div_time, max_notes, fix_strange_note)
+        l_notes: List[Union[Note, Chord]] = self._get_notes_list(div_time, max_notes, fix_strange_note, notes_filter)
         notes_str = ""
         for a_note in l_notes:
             notes_str += "        " + repr(a_note) + ",\n"
