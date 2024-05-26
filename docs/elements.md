@@ -141,9 +141,16 @@ is_elementXYZ # 是否是元件坐标系
         <td>None</td>
     </tr>
     <tr>
-        <td>T触发器</td>
+        <td>T'触发器</td>
         <td>T_Flipflop</td>
         <td>T Flipflop</td>
+        <td>i_up, i_low, o_up, o_low</td>
+        <td>None</td>
+    </tr>
+    <tr>
+        <td>T触发器</td>
+        <td>Real_T_Flipflop</td>
+        <td>Real-T Flipflop</td>
         <td>i_up, i_low, o_up, o_low</td>
         <td>None</td>
     </tr>

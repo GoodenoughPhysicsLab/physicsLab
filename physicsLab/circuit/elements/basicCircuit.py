@@ -23,7 +23,7 @@ class _switch_Base(CircuitBase):
 # 简单开关
 class Simple_Switch(_switch_Base, TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Simple_Switch, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Simple Switch"
 
     def __repr__(self) -> str:
@@ -42,7 +42,7 @@ class Simple_Switch(_switch_Base, TwoPinMixIn):
 # 单刀双掷开关
 class SPDT_Switch(_switch_Base):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(SPDT_Switch, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "SPDT Switch"
 
     def __repr__(self) -> str:
@@ -80,7 +80,7 @@ class SPDT_Switch(_switch_Base):
 # 双刀双掷开关
 class DPDT_Switch(_switch_Base):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(DPDT_Switch, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "DPDT Switch"
 
     def __repr__(self) -> str:

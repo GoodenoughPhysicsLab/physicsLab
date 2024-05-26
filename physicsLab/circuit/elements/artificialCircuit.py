@@ -380,29 +380,29 @@ class _source_electricity(TwoPinMixIn):
 # 正弦波发生器
 class Sinewave_Source(_source_electricity):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Sinewave_Source, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Sinewave Source"
 
 # 方波发生器
 class Square_Source(_source_electricity):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Square_Source, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Square Source"
 
 # 三角波发生器
 class Triangle_Source(_source_electricity):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Triangle_Source, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Triangle Source"
 
 # 锯齿波发生器
 class Sawtooth_Source(_source_electricity):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Sawtooth_Source, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Sawtooth Source"
 
 # 尖峰波发生器
 class Pulse_Source(_source_electricity):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Pulse_Source, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Pulse Source"

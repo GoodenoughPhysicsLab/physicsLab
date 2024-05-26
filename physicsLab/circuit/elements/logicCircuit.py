@@ -6,8 +6,8 @@ from physicsLab.savTemplate import Generate
 from physicsLab.typehint import Optional, Self
 
 class _logicBase(CircuitBase):
-    # 设置高电平的值
     def set_HighLeaveValue(self, num: numType) -> Self:
+        ''' 设置高电平的值 '''
         if not isinstance(num, (int, float)):
             raise TypeError("illegal argument")
         if num < self.get_LowLeaveValue():
@@ -16,12 +16,12 @@ class _logicBase(CircuitBase):
 
         return self
 
-    # 获取高电平的值
     def get_HighLeaveValue(self) -> numType:
+        ''' 获取高电平的值 '''
         return self._arguments["Properties"]["高电平"] # type: ignore -> subclass must has attr _arguments
 
-    # 设置低电平的值
     def set_LowLeaveValue(self, num: numType) -> Self:
+        ''' 设置低电平的值 '''
         if not isinstance(num, (int, float)):
             raise TypeError("illegal argument")
         if num > self.get_HighLeaveValue():
@@ -30,12 +30,12 @@ class _logicBase(CircuitBase):
 
         return self
 
-    # 获取高电平的值
     def get_LowLeaveValue(self):
+        ''' 获取低电平的值 '''
         return self._arguments["Properties"]["低电平"] # type: ignore -> subclass must has attr _arguments
 
-# 逻辑输入
 class Logic_Input(_logicBase):
+    ''' 逻辑输入 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Logic Input", "Identifier": Generate,
                           "IsBroken": False, "IsLocked": False,
@@ -53,8 +53,8 @@ class Logic_Input(_logicBase):
             res += ".set_highLevel()"
         return res
 
-    # 将逻辑输入的状态设置为1
     def set_highLevel(self) -> "Logic_Input":
+        ''' 将逻辑输入的状态设置为1 '''
         self._arguments["Properties"]["开关"] = 1.0
         return self
 
@@ -62,8 +62,8 @@ class Logic_Input(_logicBase):
     def o(self) -> OutputPin:
         return OutputPin(self, 0)
 
-# 逻辑输出
 class Logic_Output(_logicBase):
+    ''' 逻辑输出 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Logic Output", "Identifier": Generate,
                           "IsBroken": False, "IsLocked": False,
@@ -76,8 +76,8 @@ class Logic_Output(_logicBase):
     def i(self) -> InputPin:
             return InputPin(self, 0)
 
-# 2引脚门电路
 class _2_pin_Gate(_logicBase):
+    ''' 2引脚门电路基类 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": Generate, "Identifier": Generate, "IsBroken": False, "IsLocked": False,
                           "Properties": {"高电平": 3.0, "低电平": 0.0, "最大电流": 0.1, "锁定": 1.0},
@@ -93,20 +93,20 @@ class _2_pin_Gate(_logicBase):
     def o(self) -> OutputPin:
         return OutputPin(self, 1)
 
-# 是门
 class Yes_Gate(_2_pin_Gate):
+    ''' 是门 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Yes_Gate, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Yes Gate"
 
-# 非门
 class No_Gate(_2_pin_Gate):
+    ''' 非门 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(No_Gate, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "No Gate"
 
-# 3引脚门电路
 class _3_pin_Gate(_logicBase):
+    ''' 3引脚门电路基类 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "", "Identifier": Generate, "IsBroken": False, "IsLocked": False,
                           "Properties": {"高电平": 3.0, "低电平": 0.0, "最大电流": 0.1, "锁定": 1.0},
@@ -126,56 +126,56 @@ class _3_pin_Gate(_logicBase):
     def o(self) -> OutputPin:
         return OutputPin(self, 2)
 
-# 或门
 class Or_Gate(_3_pin_Gate):
+    ''' 或门 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Or_Gate, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Or Gate"
 
-# 与门
 class And_Gate(_3_pin_Gate):
+    ''' 与门 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(And_Gate, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "And Gate"
 
-# 或非门
 class Nor_Gate(_3_pin_Gate):
+    ''' 或非门 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Nor_Gate, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Nor Gate"
 
-# 与非门
 class Nand_Gate(_3_pin_Gate):
+    ''' 与非门 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Nand_Gate, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Nand Gate"
 
-# 异或门
 class Xor_Gate(_3_pin_Gate):
+    ''' 异或门 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Xor_Gate, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Xor Gate"
 
-# 同或门
 class Xnor_Gate(_3_pin_Gate):
+    ''' 同或门 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Xnor_Gate, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Xnor Gate"
 
-# 蕴含门
 class Imp_Gate(_3_pin_Gate):
+    ''' 蕴含门 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Imp_Gate, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Imp Gate"
 
-# 蕴含非门
 class Nimp_Gate(_3_pin_Gate):
+    ''' 蕴含非门 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Nimp_Gate, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Nimp Gate"
 
-# 2体积元件父类
 class _big_element(_logicBase):
+    ''' 2体积元件父类 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "", "Identifier": Generate, "IsBroken": False,
                           "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0},
@@ -187,10 +187,10 @@ class _big_element(_logicBase):
     def is_bigElement(self):
         return True
 
-# 半加器
 class Half_Adder(_big_element):
+    ''' 半加器 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Half_Adder, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Half Adder"
 
     @property
@@ -209,10 +209,10 @@ class Half_Adder(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-# 全加器
 class Full_Adder(_big_element):
+    ''' 全加器 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Full_Adder, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Full Adder"
 
     @property
@@ -235,10 +235,10 @@ class Full_Adder(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-# 二位乘法器
 class Multiplier(_big_element):
+    ''' 二位乘法器 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Multiplier, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Multiplier"
 
     @property
@@ -273,10 +273,10 @@ class Multiplier(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 3)
 
-# D触发器
 class D_Flipflop(_big_element):
+    ''' D触发器 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(D_Flipflop, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "D Flipflop"
 
     @property
@@ -295,10 +295,10 @@ class D_Flipflop(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-# T触发器
 class T_Flipflop(_big_element):
+    ''' T'触发器 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(T_Flipflop, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "T Flipflop"
 
     @property
@@ -317,10 +317,32 @@ class T_Flipflop(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-# JK触发器
-class JK_Flipflop(_big_element):
+class Real_T_Flipflop(_big_element):
+    ''' T触发器 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(JK_Flipflop, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
+        self._arguments["ModelID"] = "Real-T Flipflop"
+
+    @property
+    def i_up(self) -> InputPin:
+        return InputPin(self, 2)
+
+    @property
+    def i_low(self) -> InputPin:
+        return InputPin(self, 3)
+
+    @property
+    def o_up(self) -> OutputPin:
+        return OutputPin(self, 0)
+
+    @property
+    def o_low(self) -> OutputPin:
+        return OutputPin(self, 1)
+
+class JK_Flipflop(_big_element):
+    ''' JK触发器 '''
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "JK Flipflop"
 
     @property
@@ -343,10 +365,10 @@ class JK_Flipflop(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-# 计数器
 class Counter(_big_element):
+    ''' 计数器 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Counter, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Counter"
 
     @property
@@ -373,10 +395,10 @@ class Counter(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 3)
 
-# 随机数发生器
 class Random_Generator(_big_element):
+    ''' 随机数发生器 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        super(Random_Generator, self).__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z, elementXYZ)
         self._arguments["ModelID"] = "Random Generator"
 
     @property
@@ -403,8 +425,8 @@ class Random_Generator(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 3)
 
-# 8位输入器
 class eight_bit_Input(_logicBase):
+    ''' 8位输入器 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "8bit Input", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -463,8 +485,8 @@ class eight_bit_Input(_logicBase):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 7)
 
-# 8位显示器
 class eight_bit_Display(_logicBase):
+    ''' 8位显示器 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "8bit Display", "Identifier": Generate,
                           "IsBroken": False, "IsLocked": False,
@@ -510,8 +532,8 @@ class eight_bit_Display(_logicBase):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 7)
 
-# 施密特触发器
 class Schmitt_Trigger(CircuitBase):
+    ''' 施密特触发器 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self._arguments = {"ModelID": "Schmitt Trigger", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
