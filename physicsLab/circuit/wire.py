@@ -64,7 +64,7 @@ class Wire:
 
         if color in ("black", "blue", "red", "green", "yellow"):
             color = {"black": "黑", "blue": "蓝", "red": "红", "green": "绿", "yellow": "黄"}[color]
-        if color not in ('蓝', '绿', '黄', '红', '紫'):
+        if color not in ('蓝', '绿', '黄', '红', '黑'):
             raise errors.WireColorError
 
         self.Source: Pin = Source

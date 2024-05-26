@@ -90,8 +90,11 @@ class Midi:
                 if re_context is None:
                     raise SyntaxError(f"error context in {midifile}")
                 self.messages = eval(re_context.group()) # 用到mido import出的内容
-                re_context = re.search(r"MidiFile\(.*", context, re.M).group().replace("[track]", "[self.messages]")
-                self.midofile = eval(re_context)
+
+                re_context = re.search(r"MidiFile\(.*", context, re.M)
+                if re_context is None:
+                    raise SyntaxError(f"error context in {midifile}")
+                self.midofile = eval(re_context.group().replace("[track]", "[self.messages]"))
                 self.__use_tmpfile = True
                 with tempfile.NamedTemporaryFile(delete=False) as f:
                     self.midifile = f.name
