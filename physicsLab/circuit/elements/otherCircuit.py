@@ -270,50 +270,47 @@ class Simple_Instrument(TwoPinMixIn):
 
     # 设置音高
     def set_Tonality(self, pitch: Union[int, str], tone: Optional[bool] = None) -> "Simple_Instrument":
-        """
-        输入格式：
-            tonality: C4, A5 ...
-            rising_falling = True 时，为升调，为 False 时降调
-
-        输入范围：
-            C0 ~ C8
-            注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120
-        """
-        def majorSet_Tonality(self,
-                              tonality: str = "C3",
-                              rising_falling: Optional[bool] = None
-        ) -> None:
-            if (not isinstance(tonality, str) or
-                len(tonality) != 2 or
-                tonality.upper()[0] not in "ABCDEFG" or
-                tonality[1] not in "012345678" or
-                not (isinstance(rising_falling, bool) or rising_falling is None)
-            ):
-                raise TypeError
-
-            var = 1 if rising_falling is True else 0 if rising_falling is None else -1
-
-            pitch = {
-                'A': 22,
-                'B': 23,
-                'C': 24,
-                'D': 25,
-                'E': 26,
-                'F': 27,
-                'G': 28
-            }[tonality.upper()[0]] + 12 * int(tonality[1]) + var
-
-            self._arguments["Properties"]["音高"] = pitch
-
-        # main
         if isinstance(pitch, int):
             if 0 <= pitch < 128:
                 self._arguments["Properties"]["音高"] = pitch
             else:
                 raise TypeError("Input number out of range")
         elif isinstance(pitch, str):
-            majorSet_Tonality(self, pitch, tone)
+            self._arguments["Properties"]["音高"] = majorSet_Tonality(pitch, tone)
         else:
             raise TypeError
 
         return self
+
+def majorSet_Tonality(tonality: str,
+                      rising_falling: Optional[bool] = None
+                      ) -> int:
+    """ 输入格式：
+            tonality: C4, A5 ...
+            rising_falling = True 时，为升调，为 False 时降调
+
+        输入范围：
+            C0 ~ C8
+            注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120
+    """
+    if (not isinstance(tonality, str) or
+        len(tonality) != 2 or
+        tonality.upper()[0] not in "ABCDEFG" or
+        tonality[1] not in "012345678" or
+        not (isinstance(rising_falling, bool) or rising_falling is None)
+    ):
+        raise TypeError
+
+    var = 1 if rising_falling is True else 0 if rising_falling is None else -1
+
+    pitch = {
+        'A': 22,
+        'B': 23,
+        'C': 24,
+        'D': 25,
+        'E': 26,
+        'F': 27,
+        'G': 28
+    }[tonality.upper()[0]] + 12 * int(tonality[1]) + var
+
+    return pitch

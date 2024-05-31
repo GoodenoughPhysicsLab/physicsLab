@@ -293,6 +293,8 @@ class MyTestCase(unittest.TestCase):
             music.Note(0)
         except TypeError:
             pass
+        else:
+            raise TestError
 
     @my_test_dec
     def test_const_is_bigElement(self):

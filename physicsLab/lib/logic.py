@@ -3,7 +3,7 @@ from physicsLab import circuit
 from physicsLab import element
 from physicsLab import errors
 
-from .wires import union_Pin
+from .wires import unitPin
 from ._unionClassHead import UnionBase
 from physicsLab.circuit.elements import *
 from physicsLab.typehint import Optional, Self, Callable, List, Tuple, numType
@@ -115,22 +115,22 @@ class Sum(Union_LogicBase):
         link_union_Sum(self._elements)
 
     @property
-    def data_Input1(self) -> union_Pin:
-        return union_Pin(
+    def data_Input1(self) -> unitPin:
+        return unitPin(
             self,
             *(element.i_mid for element in self._elements)
         )
 
     @property
-    def data_Input2(self) -> union_Pin:
-        return union_Pin(
+    def data_Input2(self) -> unitPin:
+        return unitPin(
             self,
             *(element.i_up for element in self._elements)
         )
 
     @property
-    def data_Output(self) -> union_Pin:
-        return union_Pin(
+    def data_Output(self) -> unitPin:
+        return unitPin(
             self,
             *(element.o_up for element in self._elements),
             self._elements[-1].o_low
@@ -215,8 +215,8 @@ class Sub(Union_LogicBase):
 
     # 被减数
     @property
-    def minuend(self) -> union_Pin:
-        return union_Pin(
+    def minuend(self) -> unitPin:
+        return unitPin(
             self,
             *(e.i_up for e in self._fullAdders)
         )
@@ -224,14 +224,14 @@ class Sub(Union_LogicBase):
     # 减数
     @property
     def subtrahend(self):
-        return union_Pin(
+        return unitPin(
             self,
             *(e.i for e in self._noGates)
         )
 
     @property
     def outputs(self):
-        return union_Pin(
+        return unitPin(
             self,
             *(e.o_up for e in self._fullAdders),
             self._fullAdders[-1].o_low
@@ -291,7 +291,7 @@ class Four_sixteen_Decoder:
     # 输入译码器的数据
     @property
     def inputData(self):
-        return union_Pin(
+        return unitPin(
             circuit.Pin(element.get_Element(self.x + 0.15, self.y + 0.3, self.z), 0),
             circuit.Pin(element.get_Element(self.x + 0.15, self.y + 0.3, self.z), 1),
             circuit.Pin(element.get_Element(self.x, self.y + 0.3, self.z), 0),
@@ -352,8 +352,8 @@ class Inputs(Union_LogicBase):
         )
 
     @property
-    def data_Output(self) -> union_Pin:
-        return union_Pin(
+    def data_Output(self) -> unitPin:
+        return unitPin(
             self,
             *(element.o for element in self._elements)
         )
@@ -408,8 +408,8 @@ class Outputs(Union_LogicBase):
         )
 
     @property
-    def data_Input(self) -> union_Pin:
-        return union_Pin(
+    def data_Input(self) -> unitPin:
+        return unitPin(
             self,
             *(element.i for element in self._elements)
         )
@@ -490,15 +490,15 @@ class D_WaterLamp(Union_LogicBase):
         link_D_Flipflop(self._elements)
 
     @property
-    def data_Input(self) -> union_Pin:
-        return union_Pin(
+    def data_Input(self) -> unitPin:
+        return unitPin(
             self,
             self._elements[0].i_low
         )
 
     @property
-    def data_Output(self) -> union_Pin:
-        return union_Pin(
+    def data_Output(self) -> unitPin:
+        return unitPin(
             self,
             self._elements[0].o_low,
             *(element.o_up for element in self._elements[1:])
@@ -506,8 +506,8 @@ class D_WaterLamp(Union_LogicBase):
 
     # 与data_Output相反的引脚
     @property
-    def neg_data_Output(self) -> union_Pin:
-        return union_Pin(
+    def neg_data_Output(self) -> unitPin:
+        return unitPin(
             self,
             self._elements[0].o_up,
             *(element.o_low for element in self._elements[1:])

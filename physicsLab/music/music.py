@@ -10,10 +10,12 @@ import physicsLab.circuit.elementXYZ as _elementXYZ
 from math import ceil, sqrt
 from enum import Enum, unique
 
+from physicsLab import lib
 from physicsLab import errors
 from physicsLab.circuit import elements
 from physicsLab._tools import roundData
 from physicsLab.lib import crt_Wires, D_WaterLamp
+from physicsLab.circuit.elements.otherCircuit import majorSet_Tonality
 from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, numType, Callable
 
 def _format_velocity(velocity: float) -> float:
@@ -364,28 +366,36 @@ class Midi:
 
         return self
 
-# TODO 增加更多的设置pitch的方法 -> 参考Simple_Instrument
 class Note:
     ''' 音符类 '''
     def __init__(self,
                  time: int, # 间隔多少时间才播放此Note
                  playTime: int = 1,  # 音符发出声音的时长 暂时不支持相关机制
                  instrument: int = 0, # 演奏的乐器，暂时只支持传入数字
-                 pitch: int = 60, # 音高/音调
+                 pitch: Union[int, str] = 60, # 音高/音调
+                 rising_falling: Optional[bool] = None, # 当pitch为字符串时, 此参数用来确定是否升降调
                  velocity: Union[int, float] = 0.64 # 音量/响度
     ) -> None:
         if not (
                 isinstance(time, int) and
                 isinstance(playTime, int) and
                 isinstance(instrument, int) and
-                isinstance(pitch, int) and
-                0 <= pitch < 128 and
-                isinstance(velocity, (int, float)) and 0 < velocity <= 1
+                isinstance(velocity, (int, float)) and 0 < velocity <= 1 and
+                (rising_falling is None or isinstance(rising_falling, bool))
         ) or time <= 0:
             raise TypeError
 
+        if isinstance(pitch, int):
+            if not 0 < pitch <= 127:
+                raise ValueError
+
+            self.pitch = pitch
+        elif isinstance(pitch, str):
+            self.pitch = majorSet_Tonality(pitch, rising_falling)
+        else:
+            raise TypeError
+
         self.instrument = instrument
-        self.pitch: int = pitch
         self.velocity = velocity
         self.time = time
         self.playTime = playTime
@@ -704,17 +714,10 @@ class Player:
         else:
             side = 2
 
-        tick = elements.Nimp_Gate(x + 1, y, z, True)
-        counter = elements.Counter(x, y + 1, z, True)
-        l_input = elements.Logic_Input(x, y, z, True)
-        l_input.o - tick.i_up
-        tick.o - tick.i_low
-        tick.o - counter.i_up
-
         try:
             xPlayer = D_WaterLamp(x + 1, y + 1, z, unionHeading=True, bitLength=side, elementXYZ=True)
             yPlayer = D_WaterLamp(x, y + 3, z, bitLength=ceil(len_musicArray / side), elementXYZ=True)
-        except errors.bitLengthError as e:
+        except errors.bitLengthError as e: #TODO 应该支持超短的bitLength而不是报错
             from physicsLab._colorUtils import color_print, COLOR
             color_print(
                 "bigLength of D_WaterLamp is too short, "
@@ -722,15 +725,19 @@ class Player:
                 COLOR.RED
             )
             raise e
+        
+        tick = elements.Nimp_Gate(x + 1, y, z, True)
+        counter = elements.Counter(x, y + 1, z, True)
+        l_input = elements.Logic_Input(x, y, z, True)
+        l_input.o - tick.i_up
+        tick.o - tick.i_low
+        tick.o - counter.i_up
 
+        yesGate = elements.Yes_Gate(x + 2, y, z, True)
+        xPlayer[0].o_low - yesGate.i
 
-        yesGate = elements.Full_Adder(x + 1, y + 1, z + 1, True)
-        yesGate.i_low - yesGate.i_mid
-        xPlayer[0].o_low - yesGate.i_up # type: ignore
         crt_Wires(xPlayer.data_Output[0], yPlayer.data_Input)
 
-        check1 = elements.No_Gate(x + 2, y, z, True)
-        check2 = elements.Multiplier(x + 3, y, z, True)
         # 上升沿触发器
         no_gate = elements.No_Gate(x + 1, y, z + 1, True)
         and_gate = elements.And_Gate(x + 2, y, z + 1, True)
@@ -738,11 +745,11 @@ class Player:
         no_gate.i - and_gate.i_up
 
         l_input.o - no_gate.i
-        check1.o - check2.i_low
-        yesGate.o_low - check2.i_upmid
-        check2.i_lowmid - and_gate.o
-        counter.o_upmid - check2.i_up
-        crt_Wires(check2.o_lowmid, xPlayer.data_Input)
+
+        or_gate = elements.Or_Gate(x + 3, y, z, True)
+        or_gate.i_low - and_gate.o
+        or_gate.i_up - counter.o_upmid
+        crt_Wires(or_gate.o, xPlayer.data_Input)
 
         # main
         xcor, ycor = -1, 0
@@ -772,14 +779,15 @@ class Player:
                 ).set_Rotation(0, 0, 0) # type: ignore
             # 连接x轴的d触的导线
             if xcor == 0:
-                yesGate.o_up - ins.i
+                yesGate.o - ins.i
             else:
                 ins.i - xPlayer.data_Output[xcor]
             # 连接y轴的d触的导线
             ins.o - yPlayer.neg_data_Output[ycor // 2] # type: ignore -> yPlayer must has attr neg_data_Output
 
         stop = elements.And_Gate(x + 1, y + ycor + 3, z, True)
-        stop.o - yesGate.i_low - check1.i
+        stop.o - counter.i_low
+
         stop.i_up - yPlayer[ycor // 2].o_up # type: ignore -> D_Flipflop must has attr o_up
         stop.i_low - xPlayer[side - 1].o_up # type: ignore -> D_Flipflop must has attr neg_data_Output
 

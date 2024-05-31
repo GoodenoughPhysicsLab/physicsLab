@@ -31,7 +31,7 @@ _Z_UNIT: float = 0.1
 _Y_AMEND = 0.045
 
 def xyzTranslate(x: numType, y: numType, z: numType, is_bigElement: bool = False):
-    ''' 将元件坐标系转换为物实支持的坐标系 '''
+    ''' 将元件坐标系转换为物实的坐标系 '''
     if get_Experiment().ExperimentType != experimentType.Circuit:
         raise errors.ExperimentTypeError
 
@@ -49,7 +49,7 @@ def xyzTranslate(x: numType, y: numType, z: numType, is_bigElement: bool = False
     return x, y, z
 
 def translateXYZ(x: numType, y: numType, z: numType, is_bigElement: bool = False):
-    ''' 将物实支持的坐标系转换为元件坐标系 '''
+    ''' 将物实的坐标系转换为元件坐标系 '''
     if get_Experiment().ExperimentType != experimentType.Circuit:
         raise errors.ExperimentTypeError
 

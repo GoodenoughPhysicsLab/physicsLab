@@ -25,9 +25,11 @@ class CircuitMeta(type):
         if not (
                 isinstance(x, (float, int)) and
                 isinstance(y, (float, int)) and
-                isinstance(z, (float, int))
+                isinstance(z, (float, int)) and
+                (elementXYZ is None or isinstance(elementXYZ, bool))
         ):
-            raise TypeError('illegal argument')
+            raise TypeError
+
         _Expe: Experiment = stack_Experiment.top()
         self.experiment = _Expe
 
