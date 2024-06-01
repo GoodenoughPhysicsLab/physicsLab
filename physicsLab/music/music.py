@@ -725,7 +725,7 @@ class Player:
                 COLOR.RED
             )
             raise e
-        
+
         tick = elements.Nimp_Gate(x + 1, y, z, True)
         counter = elements.Counter(x, y + 1, z, True)
         l_input = elements.Logic_Input(x, y, z, True)

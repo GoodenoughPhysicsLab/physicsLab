@@ -143,7 +143,7 @@ class MyTestCase(unittest.TestCase):
     def test_errors(self):
         try:
             with experiment("__test__", delete=True, force_crt=True):
-                pass
+                pass # 确保__test__实验不存在
             Experiment().open('__test__') # do not exist
         except OpenExperimentError:
             pass

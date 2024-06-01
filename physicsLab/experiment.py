@@ -115,7 +115,7 @@ class Experiment:
     def open(self, sav_name : str) -> Self:
         ''' 打开一个指定的sav文件 (支持输入本地实验的名字或sav文件名) '''
         if self.is_open_or_crt:
-            raise errors.experimentExistError
+            raise errors.ExperimentHasOpenError
         self.is_open_or_crt = True
         stack_Experiment.push(self)
 
@@ -201,7 +201,7 @@ class Experiment:
             force_crt: 不论实验是否已经存在,强制创建
         '''
         if self.is_open_or_crt:
-            raise errors.experimentExistError
+            raise errors.ExperimentHasOpenError
         self.is_open_or_crt = True
 
         if not isinstance(sav_name, str) or not isinstance(experiment_type, experimentType):
@@ -227,7 +227,7 @@ class Experiment:
     ) -> Self:
         ''' 先尝试打开实验, 若失败则创建实验 '''
         if self.is_open_or_crt:
-            raise errors.experimentExistError
+            raise errors.ExperimentHasOpenError
         self.is_open_or_crt = True
 
         if not isinstance(savName, str):
@@ -245,8 +245,8 @@ class Experiment:
 
     def read(self) -> Self:
         ''' 读取实验已有状态 '''
-        if self.SavPath is None: # 是否已.open()或.crt()
-            raise TypeError
+        if not self.is_open_or_crt:
+            raise errors.ExperimentNotOpenError
         if self.is_read:
             errors.warning("experiment has been read")
             return self
@@ -344,12 +344,15 @@ class Experiment:
             stringJson = stringJson.replace("色导线\\\"}]}", "色导线\\\"}\n    ]}")
             return stringJson
 
-        if self.SavPath is None: # 检查是否已经.open()或.crt()
-            raise errors.ExperimentError("write before open or crt")
+        if not self.is_open_or_crt:
+            raise errors.ExperimentNotOpenError
         if self.is_open_or_crt is True:
-            self.is_open_or_crt = False
+            if not no_pop:
+                self.is_open_or_crt = False
         else:
             raise errors.ExperimentError("write before open or crt")
+
+        assert self.SavPath is not None
 
         if not no_pop:
             stack_Experiment.pop()
@@ -400,8 +403,10 @@ class Experiment:
 
     def delete(self, warning_status: Optional[bool]=None) -> None:
         ''' 删除存档 '''
-        if self.SavPath is None:
-            raise TypeError
+        if not self.is_open_or_crt:
+            raise errors.ExperimentNotOpenError
+
+        assert self.SavPath is not None
 
         if os.path.exists(self.SavPath): # 如果一个实验被创建但还未被写入, 就会触发错误
             os.remove(self.SavPath)
@@ -431,6 +436,9 @@ class Experiment:
         if not isinstance(sav_name, str):
             raise TypeError
 
+        if not self.is_open_or_crt:
+            raise errors.ExperimentNotOpenError
+
         self.PlSav["Summary"]["Subject"] = sav_name
         self.PlSav["InternalName"] = sav_name
 
@@ -438,8 +446,10 @@ class Experiment:
 
     def show(self) -> Self:
         ''' 使用notepad打开改存档 '''
-        if self.SavPath is None:
-            raise TypeError
+        if not self.is_open_or_crt:
+            raise errors.ExperimentNotOpenError
+
+        assert self.SavPath is not None
 
         if platform.system() != "Windows":
             return self
@@ -458,6 +468,11 @@ class Experiment:
             ''' 发布实验时输入实验标题 '''
             if title is not None:
                 self.PlSav['Summary']['Subject'] = title
+
+        if not self.is_open_or_crt:
+            raise errors.ExperimentNotOpenError
+
+        assert self.SavPath is not None
 
         introduce_Experiment(introduction)
         name_Experiment(title)
@@ -478,8 +493,8 @@ class Experiment:
             distance: 实验者到(x, y, z)的距离
             rotation: 实验者观察的角度
         '''
-        if self.SavPath is None:
-            raise TypeError
+        if not self.is_open_or_crt:
+            raise errors.ExperimentNotOpenError
 
         if x is None:
             x = self.VisionCenter.x
@@ -517,18 +532,31 @@ class Experiment:
 
         return self
 
+    def paused(self, status: bool = True) -> Self:
+        ''' 暂停实验 '''
+        if not self.is_open_or_crt:
+            raise errors.ExperimentNotOpenError
+        if not isinstance(status, bool):
+            raise TypeError
+
+        self.PlSav["Paused"] = status
+        self.PlSav["Experiment"]["Paused"] = status
+
+        return self
+
+
     def graph(self) -> Self:
         ''' 与物实示波器图表有关的支持 '''
-        if self.SavPath is None:
-            raise TypeError
+        if not self.is_open_or_crt:
+            raise errors.ExperimentNotOpenError
 
         pass
         return self
 
     def export(self, output_path: str = "temp.pl.py", sav_name: str = "temp") -> Self:
         ''' 以physicsLab代码的形式导出实验 '''
-        if self.SavPath is None:
-            raise TypeError
+        if not self.is_open_or_crt:
+            raise errors.ExperimentNotOpenError
 
         res: str = f"from physicsLab import *\nexp = Experiment('{sav_name}')\n"
 
@@ -553,10 +581,10 @@ class Experiment:
         ''' 合并另一实验
             x, y, z, elementXYZ为重新设置要合并的实验的坐标系原点在self的坐标系的位置
         '''
-        if self.SavPath is None:
-            raise TypeError
-        if other.SavPath is None:
-            raise TypeError
+        if not self.is_open_or_crt or not other.is_open_or_crt:
+            raise errors.ExperimentNotOpenError
+
+        assert self.SavPath is not None and other.SavPath is not None
 
         if self is other:
             return self
@@ -592,7 +620,7 @@ class Experiment:
         return self
 
 class experiment:
-    ''' 仅提供通过with操作存档 '''
+    ''' 仅提供通过with操作存档的功能的高层次api '''
     def __init__(self,
                  sav_name: str, # 实验名(非存档文件名)
                  read: bool = False, # 是否读取存档原有状态

@@ -150,7 +150,6 @@ with experiment("example", read=True):
 ## 不足
 1. 在物理实验室连接导线只需要点击两下，但用程序连接导线相对麻烦一些。
 2. 在物理实验室选择原件只需要点击一下，但用程序选择原件相对麻烦一些。
-3. 作者在接下来一段时间内将因为学业难以维护该仓库，但这并不代表弃坑。
 
 ## 其他
 * 更多内容请在 [other physicsLab](https://gitee.com/script2000/temporary-warehouse/tree/master/other%20physicsLab) 中查看

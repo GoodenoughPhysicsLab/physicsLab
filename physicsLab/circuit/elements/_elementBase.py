@@ -73,8 +73,8 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
         return f"{self.__class__.__name__}" \
                f"({self._position.x}, {self._position.y}, {self._position.z}, {self.is_elementXYZ})"
 
-    # 设置原件的角度
     def set_Rotation(self, xRotation: numType = 0, yRotation: numType = 0, zRotation: numType = 180) -> Self:
+        ''' 设置原件的角度 '''
         if not (
                 isinstance(xRotation, (int, float)) and
                 isinstance(yRotation, (int, float)) and

@@ -117,3 +117,14 @@ with experiment("example1") as exp:
 
 ## 手动设置输出路径
 你可以使用`os.environ["PHYSICSLAB_HOME_PATH"] = "xxx"`来设置physicsLab产生的存档的默认路径（该功能仅为非Windows操作系统提供，因为这些操作系统通常有着严格的权限设置）
+
+## 暂停实验
+你可以使用`Experiment.paused(status: bool)`来暂停实验
+```Python
+from physicsLab import *
+
+with experiment("example") as exp:
+    exp.paused()
+    # 如果要解除暂停实验，请使用exp.paused(False)
+    # do something
+```

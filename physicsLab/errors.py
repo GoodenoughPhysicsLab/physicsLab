@@ -45,10 +45,35 @@ class bitLengthError(Exception):
     def __str__(self):
         return "illegal bitLength number"
 
-# 创建实验已存在
-class experimentExistError(Exception):
+class ExperimentHasOpenError(Exception):
+    ''' 已打开实验 '''
+    def __str__(self):
+        return "The experiment has been opened"
+
+class ExperimentNotOpenError(Exception):
+    ''' 未打开实验 '''
+    def __str__(self):
+        return "The experiment has not been opened"
+
+class ExperimentHasExistError(Exception):
+    ''' 实验已存在 '''
     def __str__(self):
         return 'Duplicate name archives are forbidden'
+
+class ExperimentNotExistError(Exception):
+    ''' 实验不存在 '''
+    def __str__(self):
+        return "The experiment does not exist"
+
+class ExperimentHasCrtError(Exception):
+    ''' 实验已创建 '''
+    def __str__(self):
+        return "The experiment has been created"
+
+class ExperimentHasNotCrtError(Exception):
+    ''' 实验未创建 '''
+    def __str__(self):
+        return "The experiment has not been created"
 
 class crtExperimentFailError(Exception):
     def __str__(self):
