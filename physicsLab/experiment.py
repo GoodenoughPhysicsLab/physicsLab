@@ -384,7 +384,7 @@ class Experiment:
         # 编译成功，打印信息
         if self.is_open:
             status: str = "update"
-        elif self.is_crt:
+        else: # self.is_crt
             status: str = "create"
         if self.ExperimentType == experimentType.Circuit:
             _colorUtils.color_print(

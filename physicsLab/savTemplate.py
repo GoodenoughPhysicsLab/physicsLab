@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 class Generate:
-    def __str__(self) -> str:
-        return "Dynamically generated at runtime" # 运行时动态生成
+    ''' Dynamically generated at runtime ''' # 运行时动态生成
 
 # 所有模板都是只读的
 # 电学实验的sav模板

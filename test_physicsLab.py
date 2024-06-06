@@ -200,10 +200,10 @@ class MyTestCase(unittest.TestCase):
             b = lib.Outputs(0.6, 0, 0, 8, elementXYZ=False)
             Logic_Output(0.6, 0, 0.1, elementXYZ=False)
             c = lib.D_WaterLamp(1, 0, 0, bitLength=8)
-            crt_Wires(b.data_Input, c.data_Output)
+            crt_Wires(b.inputs, c.outputs)
             self.assertEqual(25, count_Elements())
             self.assertEqual(23, count_Wires())
-            del_Wires(c.data_Output, b.data_Input)
+            del_Wires(c.outputs, b.inputs)
             self.assertEqual(15, count_Wires())
 
     # 测逝模块化加法电路
@@ -214,9 +214,9 @@ class MyTestCase(unittest.TestCase):
             b = lib.Inputs(-2, 0, 0, 8)
             c = lib.Sum(0, 0, 0, 8)
             d = lib.Outputs(1, 0, 0, 8)
-            a.data_Output - c.data_Input1
-            b.data_Output - c.data_Input2
-            c.data_Output - d.data_Input
+            a.outputs - c.input1
+            b.outputs - c.input2
+            c.outputs - d.inputs
 
     # 测试打开实验类型与文件不吻合
     @my_test_dec
@@ -256,9 +256,9 @@ class MyTestCase(unittest.TestCase):
     def test_union_Sub(self):
         with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
             a = lib.Sub(bitLength=8, fold=False)
-            crt_Wires(lib.Inputs(-3, 0, 0, 8).data_Output, a.minuend)
-            crt_Wires(lib.Inputs(-2, 0, 0, 8).data_Output, a.subtrahend)
-            crt_Wires(lib.Outputs(2, 0, 0, 9).data_Input, a.outputs)
+            crt_Wires(lib.Inputs(-3, 0, 0, 8).outputs, a.minuend)
+            crt_Wires(lib.Inputs(-2, 0, 0, 8).outputs, a.subtrahend)
+            crt_Wires(lib.Outputs(2, 0, 0, 9).inputs, a.outputs)
             self.assertEqual(count_Elements(), 42)
             self.assertEqual(count_Wires(), 41)
 

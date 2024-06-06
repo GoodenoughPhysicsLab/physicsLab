@@ -715,7 +715,7 @@ class Player:
             side = 2
 
         try:
-            xPlayer = D_WaterLamp(x + 1, y + 1, z, unionHeading=True, bitLength=side, elementXYZ=True)
+            xPlayer = D_WaterLamp(x + 1, y + 1, z, heading=True, bitLength=side, elementXYZ=True)
             yPlayer = D_WaterLamp(x, y + 3, z, bitLength=ceil(len_musicArray / side), elementXYZ=True)
         except errors.bitLengthError as e: #TODO 应该支持超短的bitLength而不是报错
             from physicsLab._colorUtils import color_print, COLOR
@@ -736,7 +736,7 @@ class Player:
         yesGate = elements.Yes_Gate(x + 2, y, z, True)
         xPlayer[0].o_low - yesGate.i
 
-        crt_Wires(xPlayer.data_Output[0], yPlayer.data_Input)
+        crt_Wires(xPlayer.outputs[0], yPlayer.inputs)
 
         # 上升沿触发器
         no_gate = elements.No_Gate(x + 1, y, z + 1, True)
@@ -749,7 +749,7 @@ class Player:
         or_gate = elements.Or_Gate(x + 3, y, z, True)
         or_gate.i_low - and_gate.o
         or_gate.i_up - counter.o_upmid
-        crt_Wires(or_gate.o, xPlayer.data_Input)
+        crt_Wires(or_gate.o, xPlayer.inputs)
 
         # main
         xcor, ycor = -1, 0
@@ -781,9 +781,9 @@ class Player:
             if xcor == 0:
                 yesGate.o - ins.i
             else:
-                ins.i - xPlayer.data_Output[xcor]
+                ins.i - xPlayer.outputs[xcor]
             # 连接y轴的d触的导线
-            ins.o - yPlayer.neg_data_Output[ycor // 2] # type: ignore -> yPlayer must has attr neg_data_Output
+            ins.o - yPlayer.neg_outputs[ycor // 2] # type: ignore -> yPlayer must has attr neg_data_Output
 
         stop = elements.And_Gate(x + 1, y + ycor + 3, z, True)
         stop.o - counter.i_low

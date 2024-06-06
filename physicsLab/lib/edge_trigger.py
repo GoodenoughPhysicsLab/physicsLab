@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import physicsLab.circuit.elements as elements
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
+from physicsLab.circuit import elements
 from physicsLab.circuit.wire import InputPin, OutputPin
 from physicsLab.typehint import numType, Optional, Self
 

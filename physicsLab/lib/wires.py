@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 from typing import Union, Callable, Tuple
 from physicsLab import errors
-from ._unionClassHead import UnionBase
 from physicsLab.circuit.wire import crt_Wire, del_Wire, Pin
 
 # 模块化电路的“引脚”，输入输出都是数据
 class unitPin:
-    __slots__ = ("union_self", "elementPins")
-    def __init__(self, union_self: UnionBase, *elementPins):
-        self.union_self = union_self
+    __slots__ = ("lib_self", "elementPins")
+    def __init__(self, lib_self, *elementPins):
+        self.lib_self = lib_self
         self.elementPins: Tuple[Pin] = tuple(elementPins)
 
     # 通过unionPin[num]来索引单个bit
@@ -35,8 +34,8 @@ def check_TypeUnionPin(func: Callable):
 
         if len(sourcePin.elementPins) != len(targetPin.elementPins):
             errors.warning(
-                f"The number of {sourcePin.union_self.__class__.__name__}'s output pin "
-                f"are not equal to {targetPin.union_self.__class__.__name__}'s input pin."
+                f"The number of {sourcePin.lib_self.__class__.__name__}'s output pin "
+                f"are not equal to {targetPin.lib_self.__class__.__name__}'s input pin."
             )
 
         func(sourcePin, targetPin, *args, **kwargs)
@@ -44,19 +43,17 @@ def check_TypeUnionPin(func: Callable):
 
 # 为unionPin连接导线，相当于自动对数据进行连接导线
 @check_TypeUnionPin
-def crt_Wires(
-        sourcePin: Union[unitPin, Pin],
-        targetPin: Union[unitPin, Pin],
-        color="蓝"
-) -> None:
+def crt_Wires(sourcePin: Union[unitPin, Pin],
+              targetPin: Union[unitPin, Pin],
+              color="蓝"
+              ) -> None:
     for i, o in zip(sourcePin.elementPins, targetPin.elementPins):
         crt_Wire(i, o, color)
 
 # 删除unionPin的导线
 @check_TypeUnionPin
-def del_Wires(
-        sourcePin: Union[unitPin, Pin],
-        targetPin: Union[unitPin, Pin],
-) -> None:
+def del_Wires(sourcePin: Union[unitPin, Pin],
+              targetPin: Union[unitPin, Pin],
+              ) -> None:
     for i, o in zip(sourcePin.elementPins, targetPin.elementPins):
         del_Wire(i, o)
