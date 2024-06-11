@@ -8,7 +8,7 @@ from physicsLab import errors
 from physicsLab._tools import position
 from physicsLab.typehint import numType
 from physicsLab.experiment import get_Experiment
-from physicsLab.experimentType import experimentType
+from physicsLab.enums import experimentType
 
 # 是否将全局设置为元件坐标系
 def set_elementXYZ(boolen: bool) -> None:

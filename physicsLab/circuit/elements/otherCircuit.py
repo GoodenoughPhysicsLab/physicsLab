@@ -268,21 +268,25 @@ class Simple_Instrument(TwoPinMixIn):
     def get_instrument(self) -> int:
         return self._arguments["Properties"]["乐器"]
 
-    # 设置音高
-    def set_Tonality(self, pitch: Union[int, str], tone: Optional[bool] = None) -> "Simple_Instrument":
+    def set_Tonality(self, pitch: Union[int, str], rising_falling: Optional[bool] = None) -> "Simple_Instrument":
+        ''' 输入格式：
+            tonality: C4, A5 ...
+            rising_falling = True 时, 为升调, 为 False 时降调
+        '''
+
         if isinstance(pitch, int):
             if 0 <= pitch < 128:
                 self._arguments["Properties"]["音高"] = pitch
             else:
                 raise TypeError("Input number out of range")
         elif isinstance(pitch, str):
-            self._arguments["Properties"]["音高"] = majorSet_Tonality(pitch, tone)
+            self._arguments["Properties"]["音高"] = majorSet_Tonality(pitch, rising_falling)
         else:
             raise TypeError
 
         return self
 
-def majorSet_Tonality(tonality: str,
+def majorSet_Tonality(pitch: str,
                       rising_falling: Optional[bool] = None
                       ) -> int:
     """ 输入格式：
@@ -293,10 +297,10 @@ def majorSet_Tonality(tonality: str,
             C0 ~ C8
             注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120
     """
-    if (not isinstance(tonality, str) or
-        len(tonality) != 2 or
-        tonality.upper()[0] not in "ABCDEFG" or
-        tonality[1] not in "012345678" or
+    if (not isinstance(pitch, str) or
+        len(pitch) != 2 or
+        pitch.upper()[0] not in "ABCDEFG" or
+        pitch[1] not in "012345678" or
         not (isinstance(rising_falling, bool) or rising_falling is None)
     ):
         raise TypeError
@@ -311,6 +315,6 @@ def majorSet_Tonality(tonality: str,
         'E': 26,
         'F': 27,
         'G': 28
-    }[tonality.upper()[0]] + 12 * int(tonality[1]) + var
+    }[pitch.upper()[0]] + 12 * int(pitch[1]) + var
 
     return pitch

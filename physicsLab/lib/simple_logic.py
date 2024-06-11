@@ -6,7 +6,7 @@ from .wires import unitPin
 from physicsLab._tools import roundData
 from physicsLab.circuit import elements
 from physicsLab.experiment import get_Experiment
-from physicsLab.experimentType import experimentType
+from physicsLab.enums import experimentType
 from physicsLab.typehint import numType, Optional, Self, List, Union
 
 class Const_NoGate:

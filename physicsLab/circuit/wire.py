@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from physicsLab import errors
 from physicsLab.experiment import get_Experiment
-from physicsLab.experimentType import experimentType
+from physicsLab.enums import experimentType
 from physicsLab.typehint import WireDict, Optional, Callable
 
 # 电学元件引脚类, 模电元件引脚无明确的输入输出之分, 因此用这个

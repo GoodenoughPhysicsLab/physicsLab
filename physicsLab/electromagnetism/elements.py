@@ -3,7 +3,7 @@ from physicsLab import _tools
 from physicsLab import errors
 
 from physicsLab.experiment import stack_Experiment
-from physicsLab.experimentType import experimentType
+from physicsLab.enums import experimentType
 from physicsLab.typehint import Callable, Optional, numType
 
 # 所有电与磁元件的父类

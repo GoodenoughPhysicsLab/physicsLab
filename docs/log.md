@@ -114,8 +114,11 @@
 2.  更智能的`Midi`的`div_time`参数的自动推测
 
 # 1.4.10
-*  `Midi`类支持直接导入文件对象(io.IOBase)
-*  `Midi.to_piece`与`Midi.write_plpy`新增`notes_filter`参数，该参数要求传入一个2个参数（第一个为instrument, 第二个为velocity），输出为bool的函数，用来过滤音符
-*  `Note`支持`C3`这种风格的构造
-*  增加`lib.Rising_edge_trigger`, `lib.Falling_edge_trigger`, `lib.Edge_trigger`
-*  增加`Experiment.paused`
+1.  `Midi`类支持直接导入文件对象(io.IOBase)
+2.  `Midi.to_piece`与`Midi.write_plpy`新增`notes_filter`参数，该参数要求传入一个2个参数（第一个为instrument, 第二个为velocity），输出为bool的函数，用来过滤音符
+3.  `Note`支持`C3`这种风格的构造
+4.  增加`lib.Rising_edge_trigger`, `lib.Falling_edge_trigger`, `lib.Edge_trigger`
+5.  增加`Experiment.paused`
+6.  增加`web`子模块
+7.  增加`Tag`(enum class)
+8.  增加`Category`

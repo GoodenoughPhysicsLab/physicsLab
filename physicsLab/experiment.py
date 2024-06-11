@@ -10,7 +10,7 @@ from physicsLab import errors
 from physicsLab import savTemplate
 from physicsLab import _colorUtils
 from .savTemplate import Generate
-from .experimentType import experimentType
+from .enums import experimentType
 from .typehint import Union, Optional, List, Dict, numType, Self
 
 class stack_Experiment:

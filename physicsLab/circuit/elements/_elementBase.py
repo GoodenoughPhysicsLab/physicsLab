@@ -7,7 +7,7 @@ from physicsLab.circuit import wire
 from physicsLab.elementBase import ElementBase
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
-from physicsLab.experimentType import experimentType
+from physicsLab.enums import experimentType
 from physicsLab.typehint import Optional, Self, numType
 from physicsLab._tools import roundData, randString
 from physicsLab.experiment import Experiment, stack_Experiment
