@@ -49,43 +49,39 @@ class User:
     @staticmethod
     def _login(username: Optional[str], passward: Optional[str]) -> Optional[_login_res]:
         ''' 登录, 默认为匿名登录
-            通过返回列表的
+            通过返回字典的Token与AuthCode实现登陆
         '''
         response = requests.post(
             "http://physics-api-cn.turtlesim.com/Users/Authenticate",
             json={
-        "Login": username,
-        "Password": passward,
-        "Version": 2411,
-        "Device": {
-            "ID": None,
-            "Identifier": "7db01528cf13e2199e141c402d79190e",
-            "Platform": "Android",
-            "Model": "HONOR ROD-W09",
-            "System": "Android OS 12 / API-31 (HONORROD-W09/7.0.0.186C00)",
-            "CPU": "ARM64 FP ASIMD AES",
-            "GPU": "Mali-G610 MC6",
-            "SystemMemory": 7691,
-            "GraphicMemory": 2048,
-            "ScreenWidth": 2560,
-            "ScreenHeight": 1600,
-            "ScreenDPI": 360,
-            "ScreenSize": 8.4,
-            "Timezone": "Local",
-            "Language": "Chinese"
-        },
-        "Statistic": None
-    },
+                "Login": username,
+                "Password": passward,
+                "Version": 2411,
+                "Device": {
+                    "ID": None,
+                    "Identifier": "7db01528cf13e2199e141c402d79190e",
+                    "Platform": "Android",
+                    "Model": "HONOR ROD-W09",
+                    "System": "Android OS 12 / API-31 (HONORROD-W09/7.0.0.186C00)",
+                    "CPU": "ARM64 FP ASIMD AES",
+                    "GPU": "Mali-G610 MC6",
+                    "SystemMemory": 7691,
+                    "GraphicMemory": 2048,
+                    "ScreenWidth": 2560,
+                    "ScreenHeight": 1600,
+                    "ScreenDPI": 360,
+                    "ScreenSize": 8.4,
+                    "Timezone": "Local",
+                    "Language": "Chinese"
+                 },
+                "Statistic": None
+            },
             headers={
                 "Content-Type": "application/json",
                 "Accept": "application/json",
                 "Accept-Language": "zh-CN"
             },
         )
-
-        import json
-        with open("test.json", "w", encoding="utf-8") as f:
-            f.write(json.dumps(response.json(), ensure_ascii=False, indent=2))
 
         if response.status_code == 200:
             return response.json()
