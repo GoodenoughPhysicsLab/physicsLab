@@ -5,9 +5,6 @@ import platform
 from getpass import getuser
 from typing import Optional
 
-if platform.system() != "Windows":
-    raise RuntimeError("plAR.py only support Windows")
-
 def get_plAR_version():
     ''' 获取物实版本 '''
     if platform.system() == "Windows":
@@ -23,11 +20,13 @@ def get_plAR_version():
 
 def get_plAR_path() -> Optional[str]:
     ''' 获取物实路径 '''
-    with open(f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Player-prev.log") as f:
-        f.readline()
-        f.readline()
-        res = os.path.dirname(os.path.dirname(f.readline()[25:-2]))
+    if platform.system() == "Windows":
+        with open(f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Player-prev.log") as f:
+            f.readline()
+            f.readline()
+            res = os.path.dirname(os.path.dirname(f.readline()[25:-2]))
 
-    if res == "":
-        return None
-    return res
+        if res == "":
+            return None
+        return res
+    return None

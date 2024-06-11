@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import os
+import platform
 
 # 颜色打印
 from ._colorUtils import close_color_print
@@ -28,8 +30,6 @@ from physicsLab import music
 
 # 检测操作系统
 # Win: 若存档对应文件夹不存在直接报错
-import os
-import platform
 if platform.system() == "Windows":
     if not os.path.exists(Experiment.FILE_HEAD):
         raise RuntimeError("The folder does not exist, try launching Physics-Lab-AR and try it out")
@@ -42,3 +42,6 @@ if plAR_version is not None:
     _, mid, small = eval(f"({plAR_version.replace('.', ',')})")
     if mid < 4 or mid == 4 and small < 7:
         warning("the version of Physics-Lab-AR is less than v2.4.7")
+
+del os
+del platform
