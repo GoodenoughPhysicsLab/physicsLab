@@ -27,7 +27,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install mido typing-extensions
+        pip install mido typing-extensions requests
     - name: Test with unittest
       run: |
         python -m unittest test_physicsLab
