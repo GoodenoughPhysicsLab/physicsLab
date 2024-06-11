@@ -19,7 +19,9 @@ from .errors import *
 
 from .lib.wires import crt_Wires, del_Wires
 
-from physicsLab import web
+from physicsLab.plAR import *
+
+from physicsLab.web import *
 
 from physicsLab import lib
 from physicsLab import music
@@ -35,21 +37,7 @@ else:
     if not os.path.exists(Experiment.FILE_HEAD):
         os.mkdir(Experiment.FILE_HEAD)
 
-# 获取 Physics-Lab-AR 版本
-def get_Physics_Lab_AR_version() -> Optional[str]:
-    if platform.system() == "Windows":
-        from getpass import getuser
-        version_file = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Unity/" \
-                       f"30fdf88e-c67c-4ae8-a0f5-83bb57b9a5c3/Analytics/values"
-        if os.path.exists(version_file):
-            import json
-            with open(version_file) as f:
-                version = json.load(f)["app_ver"]
-                return version
-
-    return None
-
-plAR_version = get_Physics_Lab_AR_version()
+plAR_version = get_plAR_version()
 if plAR_version is not None:
     _, mid, small = eval(f"({plAR_version.replace('.', ',')})")
     if mid < 4 or mid == 4 and small < 7:

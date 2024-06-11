@@ -44,3 +44,9 @@ class Tag(Enum):
     Stories = "小说专区"
     Charroom = "聊天"
     Q_A = "问与答"
+    # 远古标签
+    Logic_Circuit = "逻辑电路"
+    DC_Circuit = "直流电路"
+    AC_Circuit = "交流电路"
+    Electronic = "电子电路"
+    Interest = "兴趣"

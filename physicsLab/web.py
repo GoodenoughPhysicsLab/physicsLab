@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 import requests
+import platform
 
-from typing import Optional, List
+from typing import Optional, List, TypedDict
+
+from physicsLab import errors
 from physicsLab.enums import Tag, Category
 
 def get_start_page() -> Optional[dict]:
@@ -12,95 +15,158 @@ def get_start_page() -> Optional[dict]:
         return response.json()
     return None
 
-def get_library(token: str, auto_code: str) -> Optional[dict]:
-    ''' 获取社区作品列表 '''
-    if not isinstance(token, str) or not isinstance(auto_code, str):
-        raise TypeError
 
-    response = requests.post(
-        "https://physics-api-cn.turtlesim.com/Contents/GetLibrary",
-        json={"Identifier": "Discussions", "Language": "Chinese"},
-        headers={
-            "Content-Type": "application/json",
-            "x-API-Token": token,
-            "x-API-AuthCode": auto_code,
-            "x-API-Version": "2411"
-        }
-    )
+class _login_res(TypedDict):
+    Token: str
+    AuthCode: str
 
-    if response.status_code == 200:
-        return response.json()
-    return None
+class User:
+    def __init__(self,
+                 username: Optional[str] = None,
+                 passward: Optional[str] = None,
+                 *,
+                 token: Optional[str] = None,
+                 auth_code: Optional[str] = None
+                 ) -> None:
+        if username is not None and not isinstance(username, str) or \
+                passward is not None and not isinstance(passward, str) or \
+                token is not None and not isinstance(token, str) or \
+                auth_code is not None and not isinstance(auth_code, str):
+            raise TypeError
 
-def query_experiment(token: str,
-                     auto_code: str,
-                     tags: List[Tag],
-                     category: Category = Category.Experiment,
-                     languages: Optional[List[str]]=None,
-                     maxnum: int = 18,
-                     ) -> Optional[dict]:
-    ''' 查询实验
-        * tags: 根据列表内的物实实验的标签进行对应的搜索
-        * languages: 根据列表内的语言进行对应的搜索
-        * maxnum: 最大搜索数量
-    '''
-    if not isinstance(token, str) or not isinstance(auto_code, str) \
-         or not isinstance(category, Category) or (
-        not isinstance(tags, list) or not all(isinstance(tag, Tag) for tag in tags)) or languages is not None and (
-        not isinstance(languages, list) or not all(isinstance(language, str) for language in languages) or (
-        not isinstance(maxnum, int) or maxnum <= 0
+        if token is not None and auth_code is not None:
+            self.token = token
+            self.auth_code = auth_code
+        else:
+            tmp = self._login(username, passward)
+
+            if tmp is None:
+                raise Exception("log in failed")
+
+            self.token = tmp["Token"]
+            self.auth_code = tmp["AuthCode"]
+
+    @staticmethod
+    def _login(username: Optional[str], passward: Optional[str]) -> Optional[_login_res]:
+        ''' 登录, 默认为匿名登录
+            通过返回列表的
+        '''
+        response = requests.post(
+            "http://physics-api-cn.turtlesim.com/Users/Authenticate",
+            json={
+        "Login": username,
+        "Password": passward,
+        "Version": 2411,
+        "Device": {
+            "ID": None,
+            "Identifier": "7db01528cf13e2199e141c402d79190e",
+            "Platform": "Android",
+            "Model": "HONOR ROD-W09",
+            "System": "Android OS 12 / API-31 (HONORROD-W09/7.0.0.186C00)",
+            "CPU": "ARM64 FP ASIMD AES",
+            "GPU": "Mali-G610 MC6",
+            "SystemMemory": 7691,
+            "GraphicMemory": 2048,
+            "ScreenWidth": 2560,
+            "ScreenHeight": 1600,
+            "ScreenDPI": 360,
+            "ScreenSize": 8.4,
+            "Timezone": "Local",
+            "Language": "Chinese"
+        },
+        "Statistic": None
+    },
+            headers={
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Accept-Language": "zh-CN"
+            },
         )
-        ):
-        raise TypeError
 
-    if languages is None:
-        languages = []
-    tags2 = [tag.value for tag in tags]
+        import json
+        with open("test.json", "w", encoding="utf-8") as f:
+            f.write(json.dumps(response.json(), ensure_ascii=False, indent=2))
 
-    response = requests.post(
-        "http://physics-api-cn.turtlesim.com/Contents/QueryExperiments",
-        json={
-            "Query": {
-                "Category": category.value,
-                "Languages": languages,
-                "ExcludeLanguages": None,
-                "Tags": tags2,
-                "ModelTags": None,
-                "ExcludeTags": None,
-                "ModelID": None,
-                "ParentID": None,
-                "UserID": None,
-                "Special": None,
-                "From": None,
-                "Skip": 0,
-                "Take": maxnum,
-                "Days": 0,
-                "Sort": 0,
-                "ShowAnnouncement": False
+        if response.status_code == 200:
+            return response.json()
+        return None
+
+    def get_library(self) -> Optional[dict]:
+        ''' 获取社区作品列表 '''
+        if not isinstance(self.token, str) or not isinstance(self.auth_code, str):
+            raise TypeError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com/Contents/GetLibrary",
+            json={"Identifier": "Discussions", "Language": "Chinese"},
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+                "x-API-Version": "2411"
             }
-        },
-        headers={
-            "Content-Type": "application/json",
-            "x-API-Token": token,
-            "x-API-AuthCode": auto_code,
-        }
-    )
+        )
 
-    if response.status_code == 200:
-        return response.json()
-    return None
+        if response.status_code == 200:
+            return response.json()
+        return None
 
-def anonymous_login(): # TODO
-    ''' 匿名登录 '''
-    response = requests.post(
-        "http://physics-api-cn.turtlesim.com/Users/Authenticate",
-        headers={
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-            "Accept-Language": "zh-CN"
-        },
-    )
+    def query_experiment(self,
+                         tags: List[Tag],
+                         exclude_tags: Optional[List[Tag]] = None,
+                         category: Category = Category.Experiment,
+                         languages: Optional[List[str]]=None,
+                         maxnum: int = 18,
+                        ) -> Optional[dict]:
+        ''' 查询实验
+            * tags: 根据列表内的物实实验的标签进行对应的搜索
+            * languages: 根据列表内的语言进行对应的搜索
+            * maxnum: 最大搜索数量
+        '''
+        if not isinstance(self.token, str) or not isinstance(self.auth_code, str) \
+            or not isinstance(category, Category) or (
+            not isinstance(tags, list) or not all(isinstance(tag, Tag) for tag in tags)) or languages is not None and (
+            not isinstance(languages, list) or not all(isinstance(language, str) for language in languages) or (
+            not isinstance(maxnum, int) or maxnum <= 0)
+            ):
+            raise TypeError
 
-    if response.status_code == 200:
-        return response.json()
-    return None
+        if languages is None:
+            languages = []
+        tags2 = [tag.value for tag in tags]
+
+        if exclude_tags is not None:
+            exclude_tags = [tag.value for tag in exclude_tags] # type: ignore
+
+        response = requests.post(
+            "http://physics-api-cn.turtlesim.com/Contents/QueryExperiments",
+            json={
+                "Query": {
+                    "Category": category.value,
+                    "Languages": languages,
+                    "ExcludeLanguages": None,
+                    "Tags": tags2,
+                    "ModelTags": None,
+                    "ExcludeTags": exclude_tags,
+                    "ModelID": None,
+                    "ParentID": None,
+                    "UserID": None,
+                    "Special": None,
+                    "From": None,
+                    "Skip": 0,
+                    "Take": maxnum,
+                    "Days": 0,
+                    "Sort": 0,
+                    "ShowAnnouncement": False
+                }
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            }
+        )
+
+        if response.status_code == 200:
+            return response.json()
+        return None

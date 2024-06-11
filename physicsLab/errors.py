@@ -107,3 +107,8 @@ class WarningError(Exception):
 
 class ElementNotExistError(Exception):
     pass
+
+class LogInFaild(Exception):
+    ''' 登录失败 '''
+    def __str__(self):
+        return "Log in failed"
