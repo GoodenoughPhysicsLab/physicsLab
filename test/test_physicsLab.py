@@ -1,24 +1,11 @@
 # -*- coding: utf-8 -*-
-import unittest
-from physicsLab import *
+
+from base import *
+
 from physicsLab.lib import *
 from physicsLab.experiment import stack_Experiment
 
 import format_coding_style as fcs
-
-USE_VIZTRACER: bool = False
-
-if USE_VIZTRACER:
-    from viztracer import VizTracer
-
-class TestError(Exception):
-    def __init__(self, no_pop: bool=False) -> None:
-        self.no_pop = no_pop
-
-    def __str__(self) -> str:
-        if not self.no_pop:
-            get_Experiment().exit()
-        return "Test Fail"
 
 def my_test_dec(method: Callable):
     def result(*args, **kwarg):
@@ -30,22 +17,7 @@ def my_test_dec(method: Callable):
             raise TestError
     return result
 
-class MyTestCase(unittest.TestCase):
-    # init unittest class
-    if USE_VIZTRACER:
-        @classmethod
-        def setUpClass(cls):
-            tracer = VizTracer()
-            tracer.start()
-
-            cls.tracer = tracer
-
-        @classmethod
-        def tearDownClass(cls):
-            tracer = cls.tracer
-            tracer.stop()
-            tracer.save() # also takes output_file as an optional argument
-
+class BasicTest(PLTestBase):
     @my_test_dec
     def test_experiment1(self):
         exp: Experiment = Experiment().crt("__test__", force_crt=True)
@@ -374,7 +346,3 @@ class MyTestCase(unittest.TestCase):
                 pass
             else:
                 raise TestError
-
-if __name__ == '__main__':
-    fcs.main()
-    unittest.main()

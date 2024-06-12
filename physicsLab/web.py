@@ -108,7 +108,7 @@ class User:
         return None
 
     def query_experiment(self,
-                         tags: List[Tag],
+                         tags: Optional[List[Tag]] = None,
                          exclude_tags: Optional[List[Tag]] = None,
                          category: Category = Category.Experiment,
                          languages: Optional[List[str]]=None,
@@ -120,7 +120,7 @@ class User:
             * maxnum: 最大搜索数量
         '''
         if not isinstance(self.token, str) or not isinstance(self.auth_code, str) \
-            or not isinstance(category, Category) or (
+            or not isinstance(category, Category) or tags is not None and (
             not isinstance(tags, list) or not all(isinstance(tag, Tag) for tag in tags)) or languages is not None and (
             not isinstance(languages, list) or not all(isinstance(language, str) for language in languages) or (
             not isinstance(maxnum, int) or maxnum <= 0)
@@ -129,7 +129,10 @@ class User:
 
         if languages is None:
             languages = []
-        tags2 = [tag.value for tag in tags]
+        if tags is not None:
+            tags2 = [tag.value for tag in tags]
+        else:
+            tags2 = None
 
         if exclude_tags is not None:
             exclude_tags = [tag.value for tag in exclude_tags] # type: ignore
@@ -166,3 +169,7 @@ class User:
         if response.status_code == 200:
             return response.json()
         return None
+
+    def get_comments(self):
+        ''' 获取留言板信息 '''
+        pass

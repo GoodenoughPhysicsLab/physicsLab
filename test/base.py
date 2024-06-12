@@ -1,0 +1,34 @@
+import sys
+sys.path.append("..")
+
+from unittest import TestCase
+from physicsLab import *
+
+USE_VIZTRACER: bool = False
+
+if USE_VIZTRACER:
+    from viztracer import VizTracer
+
+class TestError(Exception):
+    def __init__(self, no_pop: bool=False) -> None:
+        self.no_pop = no_pop
+
+    def __str__(self) -> str:
+        if not self.no_pop:
+            get_Experiment().exit()
+        return "Test Fail"
+
+class PLTestBase(TestCase):
+    if USE_VIZTRACER:
+        @classmethod
+        def setUpClass(cls):
+            tracer = VizTracer()
+            tracer.start()
+
+            cls.tracer = tracer
+
+        @classmethod
+        def tearDownClass(cls):
+            tracer = cls.tracer
+            tracer.stop()
+            tracer.save() # also takes output_file as an optional argument

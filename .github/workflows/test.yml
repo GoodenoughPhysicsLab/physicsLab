@@ -30,4 +30,4 @@ jobs:
         pip install mido typing-extensions requests
     - name: Test with unittest
       run: |
-        python -m unittest test_physicsLab
+        python -m unittest
