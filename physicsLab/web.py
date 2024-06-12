@@ -170,6 +170,26 @@ class User:
             return response.json()
         return None
 
-    def get_comments(self):
-        ''' 获取留言板信息 '''
-        pass
+    def get_comments(self, identifier: str) -> Optional[dict]:
+        ''' 获取留言板信息
+            identifier: 物实用户的ID
+        '''
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com:443/Messages/GetComments",
+            json={
+                "TargetID": identifier,
+                "TargetType": "User",
+                "CommentID": None,
+                "Take": 16,
+                "Skip": 0
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            }
+        )
+
+        if response.status_code == 200:
+            return response.json()
+        return None
