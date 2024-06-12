@@ -7,22 +7,13 @@ from physicsLab import experiment, Logic_Input
 with experiment("example"):
     Logic_Input(0, 0, 0.1)
 ```
-执行程序，打开物实，重新打开对应实验(example) 查看奇迹  
-> Note：该程序会首先检查本地是否存在实验“example”，若存在则打开对应实验，若不存在则会自动创建一个名为"example"的实验
+执行程序，打开物实，打开名为example的实验查看奇迹  
+
+`experiment("example")`会首先检查本地是否存在实验“example”，若存在则打开，若不存在则会自动创建一个名为"example"的实验
+
+`with`对应的缩进内写的代码会被视为是对实验`example`的操作，比如`Logic_Input(0, 0, 0.1)`对应着创建一个坐标为`x=0, y=0, z=0.1`的逻辑输入
 
 上面的方式是***最方便***也是我***最推荐***的  
-  
-更原始一些但等价的方式是像下面这样写：
-```python
-from physicsLab import Experiment, Logic_Input
-
-exp = Experiment.open_or_crt("example") # 创建一个名为"example"的实验
-Logic_Input(0, 0, 0.1) # 创建一个逻辑输入
-exp.write() # 写入试验（如果不写入的话将无法更新本地存档的状态
-```
-怎样，看起来还算简单吧  
-  
-更原始一些的api是`Experiment.open()`与`Experiment.crt()`，不是很推荐用户使用这两个方法
 
 ## 创建元件
 创建元件非常简单：
@@ -30,7 +21,7 @@ exp.write() # 写入试验（如果不写入的话将无法更新本地存档的
 from physicsLab import *
 
 with experiment("example"):
-    Logic_Input(0.1, 0.2, 0) # 创建一个逻辑输入
+    Logic_Output(0.1, 0.2, 0) # 创建一个逻辑输出
 ```
 更多的元件请在[elements.md](./elements.md)中查看
 

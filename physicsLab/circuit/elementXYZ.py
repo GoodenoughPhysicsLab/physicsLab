@@ -8,11 +8,11 @@ from physicsLab import errors
 from physicsLab._tools import position
 from physicsLab.typehint import numType
 from physicsLab.experiment import get_Experiment
-from physicsLab.enums import experimentType
+from physicsLab.enums import ExperimentType
 
 # 是否将全局设置为元件坐标系
 def set_elementXYZ(boolen: bool) -> None:
-    if get_Experiment().ExperimentType != experimentType.Circuit:
+    if get_Experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
     if not isinstance(boolen, bool):
         raise TypeError
@@ -32,7 +32,7 @@ _Y_AMEND = 0.045
 
 def xyzTranslate(x: numType, y: numType, z: numType, is_bigElement: bool = False):
     ''' 将元件坐标系转换为物实的坐标系 '''
-    if get_Experiment().ExperimentType != experimentType.Circuit:
+    if get_Experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
 
     _xOrigin, _yOrigin, _zOrigin = get_OriginPosition()
@@ -50,7 +50,7 @@ def xyzTranslate(x: numType, y: numType, z: numType, is_bigElement: bool = False
 
 def translateXYZ(x: numType, y: numType, z: numType, is_bigElement: bool = False):
     ''' 将物实的坐标系转换为元件坐标系 '''
-    if get_Experiment().ExperimentType != experimentType.Circuit:
+    if get_Experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
 
     _xOrigin, _yOrigin, _zOrigin = get_OriginPosition()

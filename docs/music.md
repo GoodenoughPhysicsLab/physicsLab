@@ -27,6 +27,28 @@ with experiment("example"):
 `release`对应的三个参数分别是x, y, z，个人感觉这`-1, -1, 0`就已经很好用了，没必要修改。  
 
 ## class Midi
+`Midi` 类是`Piece`与 *midi文件* 之间的桥梁  
+```Python
+from physicsLab import *
+
+m = music.Midi("example.mid")
+m.sound() # 播放该midi，此方法会尝试使用plmidi, pygame与系统调用来播放
+m.sound(player=music.Midi.PLAYER.PYGAME) # 指定使用pygame播放midi
+# 共有PLAYER.plmidi, PLAYER.pygame, PLAYER.os三个参数
+
+m.translate_to_piece() # 将Midi类转换为Piece类
+
+# Midi类有一种特殊的存储数据的类型: .mido.py
+# 这个文件导出的音符信息可以方便的进行修改，播放
+m.read_midopy("path") # 读取指定path的 .mido.py
+m.write_midopy("path") # 导出 .mido.py到指定路径
+
+m.write_midi("path") # 导出midi到指定路径
+# 为啥没有read_midi的方法呢? 因为创建一个Midi类的时候就可以读取Midi
+
+# .pl.py: 生成一种可以运行后可以易于编辑, 且运行后就可以生成在物实对应的电路的文件结构
+m.write_plpy() # 将文件以.pl.py的格式导出
+```
 
 ### Midi.sound() # 播放midi
 我最推荐使用我为physicsLab专门写的二进制拓展：`plmidi`  
@@ -47,10 +69,32 @@ from physicsLab import *
 music.Midi("/your/path/of/midi").sound()
 ```
 
+> Note: 参数的作用之类的在源码的注释中可以找到  
+请注意，`Note`, `Chord`, `Piece`为数据类（只用来存储数据），要转变为物实对应的电路结构需要使用`Piece.release()`方法
 ## class Note
+`Note`是音符类  
+其中的`time`参数的含义是***距离播放该音符需要等待多少时间***
+
+注意`time`参数需要大于0  
+在midi的表示方法中，time=0表示和弦，但这在physicsLab中是非法的
+如果你要表示和弦，请使用`Chord`类
 
 ## class Chord
+`Chord(self, *notes: Note, time: int)`
+* `notes`: 一个音符的列表，列表中的音符将共同构成这个和弦
+* `time`: 和弦的time，其对Chord的作用与Note的time一致
 
 ## class Piece
+```Piece```是乐曲类
+这是一个只用来保存数据的类，想要往里面存储音符必须是`Note`，如果是休止符则用`Rest_symbol`表示  
+初始化时支持传入`list`，但也支持`append`方法  
+将Piece类转换为可以在物实播放的电路，除了使用`Player(piece, x, y, z, elementXYZ)`的方法，也可以使用`piece.release(x, y, z, elementXYZ)`的方法，两者是等价的。  
+在`midi`中最容易碰到的是播放速度过慢或过快的问题，你可以调用`Piece().set_tempo(num)`来重新设置播放速度，`num`参数的含义是将原有的播放速度乘以num倍。
+```Python
+from physicsLab import *
 
-## class Player
+with experiment("example"):
+    p = Piece([Note(time=1), Note(time=2)])
+
+    p.release() # 转化为物实的音乐电路
+```

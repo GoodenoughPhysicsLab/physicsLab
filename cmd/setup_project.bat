@@ -9,6 +9,7 @@ py -m venv venv
 .\venv\Scripts\pip install pygame
 .\venv\Scripts\pip install viztracer
 .\venv\Scripts\pip install typing-extensions
+.\venv\Scripts\pip install requests
 
 @echo "type this cmd to open venv:"
 @echo "    .\venv\Scripts\activate"

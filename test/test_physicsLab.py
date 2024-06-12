@@ -192,8 +192,8 @@ class BasicTest(PLTestBase):
 
     # 测试打开实验类型与文件不吻合
     @my_test_dec
-    def test_experimentType(self):
-        with experiment("__test__", experiment_type=experimentType.Electromagnetism, is_exit=True, force_crt=True):
+    def test_ExperimentType(self):
+        with experiment("__test__", experiment_type=ExperimentType.Electromagnetism, is_exit=True, force_crt=True):
             try:
                 Positive_Charge()
                 Logic_Input()
@@ -203,17 +203,17 @@ class BasicTest(PLTestBase):
                 raise TestError
 
     @my_test_dec
-    def test_experimentType3(self):
-        with experiment("__test__", experiment_type=experimentType.Circuit, is_exit=True, force_crt=True):
+    def test_ExperimentType3(self):
+        with experiment("__test__", experiment_type=ExperimentType.Circuit, is_exit=True, force_crt=True):
             Logic_Input()
-        with experiment("__test__", experiment_type=experimentType.Celestial, is_exit=True, force_crt=True):
+        with experiment("__test__", experiment_type=ExperimentType.Celestial, is_exit=True, force_crt=True):
             pass
-        with experiment("__test__", experiment_type=experimentType.Electromagnetism, is_exit=True, force_crt=True):
+        with experiment("__test__", experiment_type=ExperimentType.Electromagnetism, is_exit=True, force_crt=True):
             pass
 
     @my_test_dec
     def test_electromagnetism(self):
-        with experiment("__test__", is_exit=True, experiment_type=experimentType.Electromagnetism, force_crt=True):
+        with experiment("__test__", is_exit=True, experiment_type=ExperimentType.Electromagnetism, force_crt=True):
             Negative_Charge(-0.1, 0, 0)
             Positive_Charge(0.1, 0, 0)
             self.assertEqual(count_Elements(), 2)

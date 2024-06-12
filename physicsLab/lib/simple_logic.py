@@ -6,7 +6,7 @@ from .wires import unitPin
 from physicsLab._tools import roundData
 from physicsLab.circuit import elements
 from physicsLab.experiment import get_Experiment
-from physicsLab.enums import experimentType
+from physicsLab.enums import ExperimentType
 from physicsLab.typehint import numType, Optional, Self, List, Union
 
 class Const_NoGate:
@@ -82,7 +82,7 @@ class _Simple_Logic_Meta(type):
                  *args, **kwags
     ):
         self = cls.__new__(cls)
-        if get_Experiment().ExperimentType != experimentType.Circuit:
+        if get_Experiment().experiment_type != ExperimentType.Circuit:
             raise errors.ExperimentTypeError
 
         if foldMaxNum <= 0 or not(

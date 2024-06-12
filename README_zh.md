@@ -23,19 +23,16 @@ pip install physicsLab
 ```shell
 python -m pip install physicsLab
 ```
-在`Windows`下，该命令等价于:
-```shell
-py -m pip install physicsLab
-```
+> Note: 在`Windows`下你可以输入`py`来使用`python`，`MacOS`下可能需要输入`python3`来使用`python`
 
-3.  有一个并非必需的功能：播放midi。你可以输入下面命令的任意一条：
+1.  有一个并非必需的功能：播放midi。你可以输入下面命令的任意一条：
 ```shell
 pip install plmidi
 pip install pygame
 ```
 点击跳转至[plmidi](https://github.com/GoodenoughPhysicsLab/plmidi)  
 
-之所以没有做安装physicsLab的时候自动安装这两个库，是因为安卓的`qpython`在下载含c的库的时候存在问题  
+之所以没有做安装physicsLab的时候自动安装这两个库，是因为`Android`的`qpython`在下载含c的库的时候存在问题  
 
 4.  物实存档使用了中文字符，默认编码为`utf-8`。但在一些非正常情况，存档的编码可能被改变。虽然`physicsLab`有一定的处理存档编码问题的能力，但如果还是出现了问题，请输入该命令：  
 ```bash
@@ -53,13 +50,7 @@ with experiment("example"):
 然后打开物实，点击`从本地读取`，点击一个名为`example`的实验。如果出现了一个悬空的逻辑输入，则说明一切都成功了。
 > Note:  每次运行`physicsLab`后都需要重新加载物实的本地存档，即点击`从本地读取`，再次点击对应存档，使物实重新加载该存档
 
-## 搭建开发环境
-切换至physicsLab根目录，输入以下指令 (仅限于`Windows`):
-```
-.\cmd\setup_project.bat
-```
-
-## 新手解惑: 为什么我明明安装了physicsLab, python却告诉我无法找到？
+### 新手解惑: 为什么我明明安装了physicsLab, python却告诉我无法找到？
 pip安装的包会被放在`site-package`文件夹下  
 这大概率是因为pip安装的包所对应的`site-package`与你使用的`python`对应的`site-package`不一样导致的  
 解决方案：找到ide调用的`python`对应的`site-package`，然后把`physicsLab`与`physicsLab.egg-info`复制过去  
@@ -74,9 +65,14 @@ sys.path.append("/your/path/of/physicsLab") # 将字符串替换为你想添加�
 其原理是python会在sys.path这个列表里面的路径去寻找python package，若未找到则会报错。因此该方法的原理就是把python找不到的路径加进去，python就找到了   
 注：每次运行的时候加入的path都是临时的，因此该方法必须让python在每次运行的时候都执行一遍   
 
+## 搭建开发环境
+切换至physicsLab根目录，输入以下指令 (仅限于`Windows`):
+```
+.\cmd\setup_project.bat
+```
 
 ## 经测试过的环境
-* Windows | Ubuntu: python 3.8, 3.9, 3.10, 3.11, 3.12  
+* Windows | Linux(Ubuntu): python 3.8, 3.9, 3.10, 3.11, 3.12  
 * Android: qpython(app) 3.11.0  
 
 ## 使用说明
@@ -137,15 +133,15 @@ with experiment("example", read=True):
 不过由于编码导致问题的情况似乎很少
 
 ## 优点
-1.  `physicsLab`拥有优秀的与物实存档交互的能力，你甚至可以使用程序完成部分工作之后你再继续完成或者让程序在你已完成的实验的基础上继续完成。  
+*  `physicsLab`拥有优秀的与物实存档交互的能力，你甚至可以使用程序完成部分工作之后你再继续完成或者让程序在你已完成的实验的基础上继续完成。  
   如此灵活的功能使得physicsLab即使是在python shell上也能出色的完成工作！
-2.  `physicsLab`为纯python库，其c拓展部分(主要是midi相关的)被放到了`plmidi`中，但`plmidi`不是必须需要的。纯Python库通常意味着更容易使用，更少的问题。
-3.  封装了物实里的大量原件，即使是***未解锁的原件***也可以轻易用脚本生成，甚至一些常用的电路也被封装好了！
-4.  物理实验室存档的位置有点隐蔽，但用该脚本生成实验时，你无须亲自寻找这个文件在哪里。
-5.  绝大多数调用的库皆为Python的内置库，唯一的外置库为`mido`，但没有mido带来的影响仅仅是`physicsLab.music`无法使用罢了。
-6.  相比于手动做实验，代码复用率更高，许多逻辑电路已经被封装，只需简单的一行调用即可生成。
-7.  程序有利于大型实验的创作
-8.  最重要的一点：改存档做出来的实验往往有十分惊艳的效果！
+*  `physicsLab`为纯python库，其c拓展部分(与midi相关的)被放到了`plmidi`中，但`plmidi`不是必须需要的。纯Python库通常意味着更容易使用，更少的问题。
+*  封装了物实里的大量原件，即使是***未解锁的原件***也可以轻易用脚本生成，甚至一些常用的电路也被封装好了！
+*  物理实验室存档的位置有点隐蔽，但用该脚本生成实验时，你无须亲自寻找这个文件在哪里。
+*  外部依赖少
+*  相比于手动做实验，代码复用率更高，许多逻辑电路已经被封装，只需简单的一行调用即可生成。
+*  程序有利于大型实验的创作
+*  改存档做出来的实验往往有十分惊艳的效果！
 
 ## 不足
 1. 在物理实验室连接导线只需要点击两下，但用程序连接导线相对麻烦一些。
@@ -159,4 +155,4 @@ with experiment("example", read=True):
 ## contribute
 `physicsLab`没有强行要求代码风格，但需要注意与上下文保持一致  
 
-你可以从更新文档、bugfix、写[测试代码](test_physicsLab.py)开始入手
+你可以从更新文档、bugfix、写[测试代码](test)开始入手

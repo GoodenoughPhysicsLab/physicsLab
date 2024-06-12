@@ -3,7 +3,7 @@ from physicsLab import _tools
 from physicsLab import errors
 
 from physicsLab.experiment import stack_Experiment
-from physicsLab.enums import experimentType
+from physicsLab.enums import ExperimentType
 from physicsLab.typehint import Callable, Optional, numType
 
 # 所有电与磁元件的父类
@@ -59,7 +59,7 @@ def _element_Init_HEAD(func: Callable) -> Callable:
                 isinstance(z, (float, int))
         ):
             raise TypeError('illegal argument')
-        if stack_Experiment.top().ExperimentType != experimentType.Electromagnetism:
+        if stack_Experiment.top().experiment_type != ExperimentType.Electromagnetism:
             raise errors.ExperimentTypeError
 
         _Expe = stack_Experiment.top()

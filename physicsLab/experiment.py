@@ -4,13 +4,14 @@ import json
 import copy
 import time
 import platform
+import tempfile
 
 from physicsLab import  _tools
 from physicsLab import errors
 from physicsLab import savTemplate
 from physicsLab import _colorUtils
 from .savTemplate import Generate
-from .enums import experimentType
+from .enums import ExperimentType
 from .typehint import Union, Optional, List, Dict, numType, Self
 
 class stack_Experiment:
@@ -87,16 +88,16 @@ class Experiment:
         temp = eval(f"({self.CameraSave['TargetRotation']})")
         self.TargetRotation: _tools.position = _tools.position(temp[0], temp[2], temp[1]) # x, z, y
 
-        self.ExperimentType: experimentType = {
-            experimentType.Circuit.value: experimentType.Circuit,
-            experimentType.Celestial.value: experimentType.Celestial,
-            experimentType.Electromagnetism.value: experimentType.Electromagnetism
+        self.experiment_type: ExperimentType = {
+            ExperimentType.Circuit.value: ExperimentType.Circuit,
+            ExperimentType.Celestial.value: ExperimentType.Celestial,
+            ExperimentType.Electromagnetism.value: ExperimentType.Electromagnetism
         }[self.PlSav["Type"]]
 
         if self.PlSav["Summary"] is None:
             self.PlSav["Summary"] = savTemplate.Circuit["Summary"]
 
-        if self.ExperimentType == experimentType.Circuit:
+        if self.experiment_type == ExperimentType.Circuit:
             self.is_elementXYZ: bool = False
             # 元件坐标系的坐标原点
             self.elementXYZ_origin_position: _tools.position = _tools.position(0, 0, 0)
@@ -104,12 +105,12 @@ class Experiment:
             # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": Generate, "Wires": Generate}
 
-        elif self.ExperimentType == experimentType.Celestial:
+        elif self.experiment_type == ExperimentType.Celestial:
             self.StatusSave: dict = {"MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
                                     "ScalingName": "内太阳系", "LengthScale": 1.0, "SizeLinear": 0.0001,
                                     "SizeNonlinear": 0.5, "StarPresent": False, "Setting": None}
 
-        elif self.ExperimentType == experimentType.Electromagnetism:
+        elif self.experiment_type == ExperimentType.Electromagnetism:
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
 
     def open(self, sav_name : str) -> Self:
@@ -145,15 +146,15 @@ class Experiment:
 
     def __crt(self,
               sav_name: str,
-              experiment_type: experimentType = experimentType.Circuit
+              experiment_type: ExperimentType = ExperimentType.Circuit
     ) -> None:
         self.is_crt = True
-        self.ExperimentType = experiment_type
+        self.experiment_type = experiment_type
 
         self.FileName = f"{_tools.randString(34)}.sav"
         self.SavPath = f"{Experiment.FILE_HEAD}/{self.FileName}"
 
-        if self.ExperimentType == experimentType.Circuit:
+        if self.experiment_type == ExperimentType.Circuit:
             self.is_elementXYZ: bool = False
             # 元件坐标系的坐标原点
             self.elementXYZ_origin_position: _tools.position = _tools.position(0, 0, 0)
@@ -167,7 +168,7 @@ class Experiment:
             self.VisionCenter: _tools.position = _tools.position(0, -0.45, 1.08)
             self.TargetRotation: _tools.position = _tools.position(50, 0, 0)
 
-        elif self.ExperimentType == experimentType.Celestial:
+        elif self.experiment_type == ExperimentType.Celestial:
             self.PlSav: dict = copy.deepcopy(savTemplate.Celestial)
             self.StatusSave: dict = {
                 "MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
@@ -180,7 +181,7 @@ class Experiment:
             self.VisionCenter: _tools.position = _tools.position(0 ,0, 1.08)
             self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
 
-        elif self.ExperimentType == experimentType.Electromagnetism:
+        elif self.experiment_type == ExperimentType.Electromagnetism:
             self.PlSav: dict = copy.deepcopy(savTemplate.Electromagnetism)
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
             self.CameraSave: dict = {
@@ -193,7 +194,7 @@ class Experiment:
 
     def crt(self,
             sav_name: str,
-            experiment_type: experimentType = experimentType.Circuit,
+            experiment_type: ExperimentType = ExperimentType.Circuit,
             force_crt: bool=False
     ) -> Self:
         ''' 创建存档，输入为存档名 sav_name: 存档名;
@@ -204,7 +205,7 @@ class Experiment:
             raise errors.ExperimentHasOpenError
         self.is_open_or_crt = True
 
-        if not isinstance(sav_name, str) or not isinstance(experiment_type, experimentType):
+        if not isinstance(sav_name, str) or not isinstance(experiment_type, ExperimentType):
             raise TypeError
 
         search = search_Experiment(sav_name)
@@ -223,7 +224,7 @@ class Experiment:
 
     def open_or_crt(self,
                     savName: str,
-                    experimentType: experimentType = experimentType.Circuit
+                    ExperimentType: ExperimentType = ExperimentType.Circuit
     ) -> Self:
         ''' 先尝试打开实验, 若失败则创建实验 '''
         if self.is_open_or_crt:
@@ -240,7 +241,7 @@ class Experiment:
             self.PlSav = search_Experiment.sav
             self.__open()
         else:
-            self.__crt(savName, experimentType)
+            self.__crt(savName, ExperimentType)
         return self
 
     def read(self) -> Self:
@@ -267,7 +268,7 @@ class Experiment:
             # 实例化对象
             from physicsLab.element import crt_Element
 
-            if self.ExperimentType == experimentType.Circuit:
+            if self.experiment_type == ExperimentType.Circuit:
                 if element["ModelID"] == "Simple Instrument":
                     from .circuit.elements.otherCircuit import Simple_Instrument
                     obj = Simple_Instrument(
@@ -314,7 +315,7 @@ class Experiment:
                     obj.right_turn_on_switch()
 
         # 导线
-        if self.ExperimentType == experimentType.Circuit:
+        if self.experiment_type == ExperimentType.Circuit:
             from .circuit.wire import Wire, Pin
             for wire_dict in status_sav['Wires']:
                 self.Wires.add(
@@ -326,6 +327,19 @@ class Experiment:
                 )
 
         return self
+
+    def __write(self):
+        self.PlSav["Experiment"]["CreationDate"] = int(time.time() * 1000)
+        self.PlSav["Summary"]["CreationDate"] = int(time.time() * 1000)
+
+        self.CameraSave["VisionCenter"] = f"{self.VisionCenter.x},{self.VisionCenter.z},{self.VisionCenter.y}"
+        self.CameraSave["TargetRotation"] = f"{self.TargetRotation.x},{self.TargetRotation.z},{self.TargetRotation.y}"
+        self.PlSav["Experiment"]["CameraSave"] = json.dumps(self.CameraSave)
+
+        self.StatusSave["Elements"] = [a_element._arguments for a_element in self.Elements]
+        if self.experiment_type == ExperimentType.Circuit:
+            self.StatusSave["Wires"] = [a_wire.release() for a_wire in self.Wires]
+        self.PlSav["Experiment"]["StatusSave"] = json.dumps(self.StatusSave, ensure_ascii=False, separators=(',', ': '))
 
     def write(self,
               extra_filepath: Optional[str] = None,
@@ -357,17 +371,7 @@ class Experiment:
         if not no_pop:
             stack_Experiment.pop()
 
-        self.PlSav["Experiment"]["CreationDate"] = int(time.time() * 1000)
-        self.PlSav["Summary"]["CreationDate"] = int(time.time() * 1000)
-
-        self.CameraSave["VisionCenter"] = f"{self.VisionCenter.x},{self.VisionCenter.z},{self.VisionCenter.y}"
-        self.CameraSave["TargetRotation"] = f"{self.TargetRotation.x},{self.TargetRotation.z},{self.TargetRotation.y}"
-        self.PlSav["Experiment"]["CameraSave"] = json.dumps(self.CameraSave)
-
-        self.StatusSave["Elements"] = [a_element._arguments for a_element in self.Elements]
-        if self.ExperimentType == experimentType.Circuit:
-            self.StatusSave["Wires"] = [a_wire.release() for a_wire in self.Wires]
-        self.PlSav["Experiment"]["StatusSave"] = json.dumps(self.StatusSave, ensure_ascii=False, separators=(',', ': '))
+        self.__write()
 
         context: str = json.dumps(self.PlSav, indent=2, ensure_ascii=False, separators=(',', ': '))
         if ln:
@@ -386,7 +390,7 @@ class Experiment:
             status: str = "update"
         else: # self.is_crt
             status: str = "create"
-        if self.ExperimentType == experimentType.Circuit:
+        if self.experiment_type == ExperimentType.Circuit:
             _colorUtils.color_print(
                 f"Successfully {status} experiment \"{self.PlSav['InternalName']}\"! "
                 f"{self.Elements.__len__()} elements, {self.Wires.__len__()} wires.",
@@ -449,12 +453,17 @@ class Experiment:
         if not self.is_open_or_crt:
             raise errors.ExperimentNotOpenError
 
-        assert self.SavPath is not None
+        assert self.is_open_or_crt
 
         if platform.system() != "Windows":
             return self
 
-        os.popen(f'notepad {self.SavPath}')
+        self.__write()
+        with tempfile.NamedTemporaryFile("w", delete=False, encoding="utf-8") as f:
+            f.write(json.dumps(self.PlSav, indent=2, ensure_ascii=False, separators=(',', ': ')))
+        
+        os.system(f'notepad "{f.name}"')
+        os.remove(f.name)
         return self
 
     def publish(self, title: Optional[str] = None, introduction: Optional[str] = None) -> Self:
@@ -594,7 +603,7 @@ class Experiment:
         for a_element in other.Elements:
             a_element = copy.deepcopy(a_element, memo={id(a_element.experiment): self})
             e_x, e_y, e_z = a_element.get_Position()
-            if self.ExperimentType == experimentType.Circuit:
+            if self.experiment_type == ExperimentType.Circuit:
                 from .circuit.elementXYZ import xyzTranslate, translateXYZ
                 if elementXYZ and not a_element.is_elementXYZ:
                     e_x, e_y, e_z = translateXYZ(e_x, e_y, e_z, a_element.is_bigElement)
@@ -606,7 +615,7 @@ class Experiment:
 
             identifier_to_element[a_element._arguments["Identifier"]] = a_element
 
-        if self.ExperimentType == experimentType.Circuit and other.ExperimentType == experimentType.Circuit:
+        if self.experiment_type == ExperimentType.Circuit and other.experiment_type == ExperimentType.Circuit:
             for a_wire in other.Wires:
                 a_wire = copy.deepcopy(
                     a_wire, memo={
@@ -627,9 +636,9 @@ class experiment:
                  delete: bool = False, # 是否删除实验
                  write: bool = True, # 是否写入实验
                  elementXYZ: bool = False, # 元件坐标系
-                 experiment_type: experimentType = experimentType.Circuit, # 若创建实验，支持传入指定实验类型
+                 experiment_type: ExperimentType = ExperimentType.Circuit, # 若创建实验，支持传入指定实验类型
                  extra_filepath: Optional[str] = None, # 将存档写入额外的路径
-                 force_crt: bool = False, # 强制创建一个实验, 若已存在则删除已有实验
+                 force_crt: bool = False, # 强制创建一个实验, 若已存在则覆盖已有实验
                  is_exit: bool = False, # 退出试验
     ):
         if not (
@@ -638,7 +647,7 @@ class experiment:
             isinstance(delete, bool) and
             isinstance(elementXYZ, bool) and
             isinstance(write, bool) and
-            isinstance(experiment_type, experimentType)
+            isinstance(experiment_type, ExperimentType)
         ) and (
             not isinstance(extra_filepath, str) and
             extra_filepath is not None
@@ -650,21 +659,21 @@ class experiment:
         self.delete: bool = delete
         self.write: bool = write
         self.elementXYZ: bool = elementXYZ
-        self.experimentType: experimentType = experiment_type
+        self.ExperimentType: ExperimentType = experiment_type
         self.extra_filepath: Optional[str] = extra_filepath
         self.force_crt = force_crt
         self.is_exit = is_exit
 
     def __enter__(self) -> Experiment:
         if not self.force_crt:
-            self._Experiment: Experiment = Experiment().open_or_crt(self.savName, self.experimentType)
+            self._Experiment: Experiment = Experiment().open_or_crt(self.savName, self.ExperimentType)
         else:
-            self._Experiment: Experiment = Experiment().crt(self.savName, self.experimentType, self.force_crt)
+            self._Experiment: Experiment = Experiment().crt(self.savName, self.ExperimentType, self.force_crt)
 
         if self.read:
             self._Experiment.read()
         if self.elementXYZ:
-            if self._Experiment.ExperimentType != experimentType.Circuit:
+            if self._Experiment.experiment_type != ExperimentType.Circuit:
                 stack_Experiment.pop()
                 raise errors.ExperimentTypeError
             import physicsLab.circuit.elementXYZ as _elementXYZ
@@ -680,8 +689,8 @@ class experiment:
         if self.is_exit:
             self._Experiment.exit()
             return
-        if self.write:
-            self._Experiment.write(extra_filepath=self.extra_filepath, no_pop=self.delete)
+        if self.write and not self.delete:
+            self._Experiment.write(extra_filepath=self.extra_filepath)
         if self.delete:
             self._Experiment.delete()
             return

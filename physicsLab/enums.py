@@ -2,7 +2,7 @@
 from enum import Enum, unique
 
 @unique
-class experimentType(Enum):
+class ExperimentType(Enum):
     ''' 实验的类型 '''
     # 电学实验
     Circuit = 0

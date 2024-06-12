@@ -119,6 +119,6 @@
 3.  `Note`支持`C3`这种风格的构造
 4.  增加`lib.Rising_edge_trigger`, `lib.Falling_edge_trigger`, `lib.Edge_trigger`
 5.  增加`Experiment.paused`
-6.  增加`web`子模块
+6.  增加对`web-api`的操作的更高级api
 7.  增加`Tag`(enum class)
 8.  增加`Category`

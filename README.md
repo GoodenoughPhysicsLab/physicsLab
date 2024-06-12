@@ -4,8 +4,12 @@
 
 ![输入图片说明](./cover.jpg)
 
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![build](https://github.com/gaogaotiantian/viztracer/workflows/build/badge.svg)](https://github.com/GoodenoughPhysicsLab/physicsLab/actions)
+![support-version](https://img.shields.io/pypi/pyversions/viztracer)
+
 ## Introduction
-When conducting experiments in the physics laboratory, we may be troubled by issues such as untidy components, the need to repeatedly build certain circuits and perform tests, or the inability of components to float. These problems can be easily solved by changing the archive! However, manually changing the archive operation is cumbersome and has a high error rate. So I wrote ```PhysicsLab```and encapsulated some commonly used functions in it, allowing you to easily conduct experiments on real objects using ```Python```, and you don't even need to know where to save it on your computer
+In physics laboratories, we often struggle with organizing components, repeatedly setting up circuits for testing, and the inconvenience of components not being able to float. These issues can be easily addressed by modifying save files! However, manual modification of save files is cumbersome and prone to errors. That's why I created `physicsLab`, a package that encapsulates commonly used functionalities, allowing you to easily conduct experiments in the physics lab using Python, **without even knowing where the save files are stored on your computer!**
 
 ## Installation Tutorial
 1. Please ensure that your computer has [Python](https://www.python.org) (greater than or equal to 3.6) and [Physics Laboratory PC Version](https://www.turtlesim.com) (You can also contact developer [Jone Chen](https://gitee.com/civitasjohn))
@@ -13,7 +17,7 @@ When conducting experiments in the physics laboratory, we may be troubled by iss
 ```
 pip install physicsLab
 ```
-If you can```t wait to use some new features, the beta version can usually be found on Gitee
+If you can't wait to use some new features, the beta version can usually be found on Gitee
 
 ## Development environment
 Python 3.7.8, win7

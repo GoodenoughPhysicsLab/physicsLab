@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from physicsLab import errors
 from physicsLab.experiment import get_Experiment
-from physicsLab.enums import experimentType
+from physicsLab.enums import ExperimentType
 from physicsLab.typehint import WireDict, Optional, Callable
 
 # 电学元件引脚类, 模电元件引脚无明确的输入输出之分, 因此用这个
@@ -112,7 +112,7 @@ def _check_typeWire(func: Callable):
         ):
             raise TypeError
 
-        if get_Experiment().ExperimentType != experimentType.Circuit:
+        if get_Experiment().experiment_type != ExperimentType.Circuit:
             raise errors.ExperimentTypeError
 
         func(SourcePin, TargetPin, *args, **kwargs)
@@ -135,12 +135,12 @@ def del_Wire(SourcePin: Pin, TargetPin: Pin) -> None:
 
 # 删除所有导线
 def clear_Wires() -> None:
-    if get_Experiment().ExperimentType != experimentType.Circuit:
+    if get_Experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
     get_Experiment().Wires.clear()
 
 # 获取当前导线数
 def count_Wires() -> int:
-    if get_Experiment().ExperimentType != experimentType.Circuit:
+    if get_Experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
     return len(get_Experiment().Wires)

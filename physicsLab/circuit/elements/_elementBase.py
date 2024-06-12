@@ -7,7 +7,7 @@ from physicsLab.circuit import wire
 from physicsLab.elementBase import ElementBase
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
-from physicsLab.enums import experimentType
+from physicsLab.enums import ExperimentType
 from physicsLab.typehint import Optional, Self, numType
 from physicsLab._tools import roundData, randString
 from physicsLab.experiment import Experiment, stack_Experiment
@@ -33,7 +33,7 @@ class CircuitMeta(type):
         _Expe: Experiment = stack_Experiment.top()
         self.experiment = _Expe
 
-        if _Expe.ExperimentType != experimentType.Circuit:
+        if _Expe.experiment_type != ExperimentType.Circuit:
             raise errors.ExperimentTypeError
 
         self.is_elementXYZ = False # 元件坐标系
