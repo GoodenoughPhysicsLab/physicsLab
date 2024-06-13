@@ -122,3 +122,4 @@
 6.  增加对`web-api`的操作的更高级api
 7.  增加`Tag`(enum class)
 8.  增加`Category`
+9.  增加`lib.Super_AndGate`, `lib.Tick_Counter`
