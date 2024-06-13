@@ -461,7 +461,7 @@ class Experiment:
         self.__write()
         with tempfile.NamedTemporaryFile("w", delete=False, encoding="utf-8") as f:
             f.write(json.dumps(self.PlSav, indent=2, ensure_ascii=False, separators=(',', ': ')))
-        
+
         os.system(f'notepad "{f.name}"')
         os.remove(f.name)
         return self

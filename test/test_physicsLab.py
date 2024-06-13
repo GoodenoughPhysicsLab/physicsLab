@@ -80,7 +80,7 @@ class BasicTest(PLTestBase):
     @my_test_dec
     def test_union_Sum(self):
         exp: Experiment = Experiment().crt("__test__", force_crt=True)
-        lib.Sum(0, -1, 0, 64)
+        lib.Sum(0, -1, 0, bitLength=64)
         self.assertEqual(count_Elements(), 64)
         self.assertEqual(count_Wires(), 63)
         clear_Elements()
@@ -168,8 +168,8 @@ class BasicTest(PLTestBase):
     @my_test_dec
     def test_wires(self):
         with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
-            a = lib.Inputs(0, 0, 0, 8)
-            b = lib.Outputs(0.6, 0, 0, 8, elementXYZ=False)
+            a = lib.Inputs(0, 0, 0, bitLength=8)
+            b = lib.Outputs(0.6, 0, 0, bitLength=8, elementXYZ=False)
             Logic_Output(0.6, 0, 0.1, elementXYZ=False)
             c = lib.D_WaterLamp(1, 0, 0, bitLength=8)
             crt_Wires(b.inputs, c.outputs)
@@ -182,10 +182,10 @@ class BasicTest(PLTestBase):
     @my_test_dec
     def test_union_Sum2(self):
         with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
-            a = lib.Inputs(-1, 0, 0, 8)
-            b = lib.Inputs(-2, 0, 0, 8)
-            c = lib.Sum(0, 0, 0, 8)
-            d = lib.Outputs(1, 0, 0, 8)
+            a = lib.Inputs(-1, 0, 0, bitLength=8)
+            b = lib.Inputs(-2, 0, 0, bitLength=8)
+            c = lib.Sum(0, 0, 0, bitLength=8)
+            d = lib.Outputs(1, 0, 0, bitLength=8)
             a.outputs - c.input1
             b.outputs - c.input2
             c.outputs - d.inputs
@@ -228,9 +228,9 @@ class BasicTest(PLTestBase):
     def test_union_Sub(self):
         with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
             a = lib.Sub(bitLength=8, fold=False)
-            crt_Wires(lib.Inputs(-3, 0, 0, 8).outputs, a.minuend)
-            crt_Wires(lib.Inputs(-2, 0, 0, 8).outputs, a.subtrahend)
-            crt_Wires(lib.Outputs(2, 0, 0, 9).inputs, a.outputs)
+            crt_Wires(lib.Inputs(-3, 0, 0, bitLength=8).outputs, a.minuend)
+            crt_Wires(lib.Inputs(-2, 0, 0, bitLength=8).outputs, a.subtrahend)
+            crt_Wires(lib.Outputs(2, 0, 0, bitLength=9).inputs, a.outputs)
             self.assertEqual(count_Elements(), 42)
             self.assertEqual(count_Wires(), 41)
 

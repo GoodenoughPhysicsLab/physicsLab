@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from typing import Union, Callable, Tuple
+from typing import Union, Callable, Tuple, Optional
+
 from physicsLab import errors
 from physicsLab.circuit.wire import crt_Wire, del_Wire, Pin
 
@@ -22,6 +23,7 @@ def check_TypeUnionPin(func: Callable):
     def result(
         sourcePin: Union[unitPin, Pin],
         targetPin: Union[unitPin, Pin],
+        warning_status: Optional[bool] = None,
         *args, **kwargs
     ) -> None:
         if isinstance(sourcePin, Pin):
@@ -35,7 +37,8 @@ def check_TypeUnionPin(func: Callable):
         if len(sourcePin.elementPins) != len(targetPin.elementPins):
             errors.warning(
                 f"The number of {sourcePin.lib_self.__class__.__name__}'s output pin "
-                f"are not equal to {targetPin.lib_self.__class__.__name__}'s input pin."
+                f"are not equal to {targetPin.lib_self.__class__.__name__}'s input pin.",
+                warning_status=warning_status
             )
 
         func(sourcePin, targetPin, *args, **kwargs)
@@ -45,6 +48,7 @@ def check_TypeUnionPin(func: Callable):
 @check_TypeUnionPin
 def crt_Wires(sourcePin: Union[unitPin, Pin],
               targetPin: Union[unitPin, Pin],
+              warning_status: Optional[bool] = None,
               color="蓝"
               ) -> None:
     for i, o in zip(sourcePin.elementPins, targetPin.elementPins):
@@ -54,6 +58,7 @@ def crt_Wires(sourcePin: Union[unitPin, Pin],
 @check_TypeUnionPin
 def del_Wires(sourcePin: Union[unitPin, Pin],
               targetPin: Union[unitPin, Pin],
+              warning_status: Optional[bool] = None,
               ) -> None:
     for i, o in zip(sourcePin.elementPins, targetPin.elementPins):
         del_Wire(i, o)

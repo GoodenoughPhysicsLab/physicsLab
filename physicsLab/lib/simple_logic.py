@@ -2,12 +2,12 @@
 import physicsLab.errors as errors
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
-from .wires import unitPin
+from .wires import unitPin, crt_Wires
 from physicsLab._tools import roundData
 from physicsLab.circuit import elements
 from physicsLab.experiment import get_Experiment
 from physicsLab.enums import ExperimentType
-from physicsLab.typehint import numType, Optional, Self, List, Union
+from physicsLab.typehint import numType, Optional, Self
 
 class Const_NoGate:
     ''' 只读非门，若没有则创建一个只读非门，若已存在则不会创建新的元件 '''
@@ -31,6 +31,122 @@ class Const_NoGate:
     def o(self):
         assert Const_NoGate.__singleton_NoGate is not None
         return Const_NoGate.__singleton_NoGate.o
+
+class Super_AndGate:
+    ''' 多引脚与门, 引脚数为num '''
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: bool = False, num: int = 4) -> None:
+        if not isinstance(x, (int, float)) or not isinstance(y, (int, float)) or \
+           not isinstance(z, (int, float)) or not isinstance(elementXYZ, bool) or \
+           not isinstance(num, int) or num <= 1:
+            raise TypeError
+
+        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+        x, y, z = roundData(x, y, z)
+
+        if num == 2:
+            m = elements.And_Gate(x, y, z, elementXYZ=True)
+            self._inputs = [m.i_low, m.i_up]
+            self._outputs = unitPin(self, m.o)
+            return
+        elif num == 3 or num == 4:
+            m = elements.Multiplier(x, y, z, elementXYZ=True)
+            self._inputs = [m.i_low, m.i_lowmid, m.i_upmid, m.i_up]
+            self._outputs = unitPin(self, m.o_up)
+            if num == 3:
+                m.i_up - m.i_upmid
+            return
+        if num == 5:
+            m = elements.Multiplier(x, y, z, elementXYZ=True)
+            a = elements.And_Gate(x, y, z, elementXYZ=True)
+            m.o_up - a.i_low
+            self._inputs = [m.i_low, m.i_lowmid, m.i_upmid, m.i_up, a.i_up]
+            self._outputs = unitPin(self, a.o)
+            return
+
+        muls, mod_num = divmod(num, 4)
+        self._inputs = []
+
+        if mod_num == 2 or mod_num == 3:
+            muls = [elements.Multiplier(x, y, z, elementXYZ=True) for _ in range(muls)]
+            tmp = Super_AndGate(x, y, z, True, len(muls) + 1)
+        elif mod_num == 1:
+            muls = [elements.Multiplier(x, y, z, elementXYZ=True) for _ in range(muls - 1)]
+            tmp = Super_AndGate(x, y, z, True, len(muls) + 5)
+        else: # end_num == 0
+            muls = [elements.Multiplier(x, y, z, elementXYZ=True) for _ in range(muls)]
+            tmp = Super_AndGate(x, y, z, True, len(muls))
+
+        if mod_num == 3:
+            end_element = elements.Multiplier(x, y, z, elementXYZ=True)
+            end_element.i_up - end_element.i_upmid
+            crt_Wires(unitPin(None, *(mul.o_up for mul in muls), end_element.o_up), tmp.inputs)
+            for mul in muls:
+                self._inputs += [mul.i_low, mul.i_lowmid, mul.i_upmid, mul.i_up]
+            self._inputs += [end_element.i_low, end_element.i_lowmid, end_element.i_upmid, end_element.i_up]
+
+        elif mod_num == 2:
+            end_element = elements.And_Gate(x, y, z, elementXYZ=True)
+            crt_Wires(unitPin(None, *(mul.o_up for mul in muls), end_element.o), tmp.inputs)
+            for mul in muls:
+                self._inputs += [mul.i_low, mul.i_lowmid, mul.i_upmid, mul.i_up]
+            self._inputs += [end_element.i_low, end_element.i_up]
+
+        elif mod_num == 1:
+            for mul, i in zip(muls, tmp._inputs):
+                mul.o_up - i
+            for mul in muls:
+                self._inputs += [mul.i_low, mul.i_lowmid, mul.i_upmid, mul.i_up]
+            self._inputs += tmp._inputs[len(muls):]
+
+        else: # end_num == 0
+            crt_Wires(unitPin(None, *(mul.o_up for mul in muls)), tmp.inputs)
+            for mul in muls:
+                self._inputs += [mul.i_low, mul.i_lowmid, mul.i_upmid, mul.i_up]
+
+        self._outputs = tmp.output
+
+    @property
+    def inputs(self) -> unitPin:
+        return unitPin(
+            self,
+            *self._inputs
+        )
+
+    @property
+    def output(self) -> unitPin:
+        return self._outputs
+
+class Tick_Counter:
+    ''' 当 逻辑输入 输入了num次, 就输出为1, 否则为0
+        如果输出为1, 则进入下一个周期，在下一次输入了num次时输出为1, 否则为0
+    '''
+    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: bool = False, num: int = 2) -> None:
+        if not isinstance(x, (int, float)) or \
+           not isinstance(y, (int, float)) or \
+           not isinstance(z, (int, float)) or \
+           not isinstance(elementXYZ, bool) or \
+           not isinstance(num, int) or num <= 0:
+            raise TypeError
+
+        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+        x, y, z = roundData(x, y, z)
+
+        if num == 2:
+            self.output = elements.T_Flipflop(x, y, z, True)
+        else:
+            if num >= 16:
+                raise Exception("Do not support num >= 16 in this version")
+            self.output = elements.Counter(x + 1, y, z, True)
+
+            #
+
+            imp = elements.Imp_Gate(x, y + 1, z, True)
+            or_gate = elements.Or_Gate(x, y, z, True)
+            or_gate.i_low - or_gate.o
+            or_gate.o - imp.i_up
+            or_gate.i_up - self.output.i_up
 
 class Two_four_Decoder:
     ''' 2-4译码器 '''
@@ -74,8 +190,8 @@ class _Simple_Logic_Meta(type):
                  x: numType = 0,
                  y: numType = 0,
                  z: numType = 0,
-                 bitLength: int = 4,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+                 bitLength: int = 4,
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 4,  # 达到foldMaxNum个元件数时即在z轴自动折叠
@@ -103,7 +219,15 @@ class _Simple_Logic_Meta(type):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
 
-        self.__init__(x, y, z, bitLength, elementXYZ, heading, fold, foldMaxNum, *args, **kwags)
+        self.__init__(x=x,
+                      y=y,
+                      z=z,
+                      elementXYZ=elementXYZ,
+                      bitLength=bitLength,
+                      heading=heading,
+                      fold=fold,
+                      foldMaxNum=foldMaxNum,
+                      *args, **kwags)
         assert hasattr(self, "_elements")
 
         return self
@@ -115,13 +239,13 @@ class _Base(metaclass=_Simple_Logic_Meta):
 
         return self._elements[item]
 
-    def set_HighLeaveValue(self, num: numType) -> Self:
+    def set_HighLevelValue(self, num: numType) -> Self:
         ''' 设置高电平的值 '''
         for element in self._elements:
             element.set_HighLeaveValue(num)
         return self
 
-    def set_LowLeaveValue(self, num: numType) -> Self:
+    def set_LowLevelValue(self, num: numType) -> Self:
         ''' 设置低电平的值 '''
         for element in self._elements:
             element.set_LowLeaveValue(num)
@@ -133,8 +257,8 @@ class Sum(_Base):
                  x: numType = 0,
                  y: numType = 0,
                  z: numType = 0,
-                 bitLength: int = 4,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+                 bitLength: int = 4,
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
@@ -199,8 +323,8 @@ class Sub(_Base):
                  x: numType = 0,
                  y: numType = 0,
                  z: numType = 0,
-                 bitLength: int = 4, # 减法器的最大计算比特数
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+                 bitLength: int = 4, # 减法器的最大计算比特数
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
@@ -291,8 +415,8 @@ class D_WaterLamp(_Base):
                  x: numType = 0,
                  y: numType = 0,
                  z: numType = 0,
-                 bitLength: int = 4,
                  elementXYZ: Optional[bool] = None, # x, y, z是否为元件坐标系
+                 bitLength: int = 4,
                  heading: bool = False, # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False, # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 4, # 达到foldMaxNum个元件数时即在z轴自动折叠
@@ -382,8 +506,8 @@ class Inputs(_Base):
                  x: numType = 0,
                  y: numType = 0,
                  z: numType = 0,
-                 bitLength: int = 4,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+                 bitLength: int = 4,
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 8  # 达到foldMaxNum个元件数时即在z轴自动折叠
@@ -431,8 +555,8 @@ class Outputs(_Base):
                  x: numType = 0,
                  y: numType = 0,
                  z: numType = 0,
-                 bitLength: int = 4,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+                 bitLength: int = 4,
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 8  # 达到foldMaxNum个元件数时即在z轴自动折叠

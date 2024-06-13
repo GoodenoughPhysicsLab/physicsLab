@@ -14,10 +14,10 @@ is_elementXYZ # 是否是元件坐标系
     <tr>
         <td colspan=5>
             逻电元件共有的method:<br>
-            set_HighLeaveValue # 设置高电平的值<br>
-            get_HighLeaveValue # 获取高电平的值<br>
-            set_LowLeaveValue # 设置低电平的值<br>
-            get_LowLeaveValue # 获取高电平的值<br>
+            set_HighLevelValue # 设置高电平的值<br>
+            get_HighLevelValue # 获取高电平的值<br>
+            set_LowLevelValue # 设置低电平的值<br>
+            get_LowLevelValue # 获取高电平的值<br>
         </td>
     </tr>
     <tr>

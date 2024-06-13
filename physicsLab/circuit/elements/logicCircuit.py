@@ -6,31 +6,31 @@ from physicsLab.savTemplate import Generate
 from physicsLab.typehint import Optional, Self
 
 class _logicBase(CircuitBase):
-    def set_HighLeaveValue(self, num: numType) -> Self:
+    def set_HighLevelValue(self, num: numType) -> Self:
         ''' 设置高电平的值 '''
         if not isinstance(num, (int, float)):
             raise TypeError("illegal argument")
-        if num < self.get_LowLeaveValue():
+        if num < self.get_LowLevelValue():
             raise TypeError("illegal range")
         self._arguments["Properties"]["高电平"] = num # type: ignore -> subclass must has attr _arguments
 
         return self
 
-    def get_HighLeaveValue(self) -> numType:
+    def get_HighLevelValue(self) -> numType:
         ''' 获取高电平的值 '''
         return self._arguments["Properties"]["高电平"] # type: ignore -> subclass must has attr _arguments
 
-    def set_LowLeaveValue(self, num: numType) -> Self:
+    def set_LowLevelValue(self, num: numType) -> Self:
         ''' 设置低电平的值 '''
         if not isinstance(num, (int, float)):
             raise TypeError("illegal argument")
-        if num > self.get_HighLeaveValue():
+        if num > self.get_HighLevelValue():
             raise TypeError("illegal range")
         self._arguments["Properties"]["低电平"] = num # type: ignore -> subclass must has attr _arguments
 
         return self
 
-    def get_LowLeaveValue(self):
+    def get_LowLevelValue(self):
         ''' 获取低电平的值 '''
         return self._arguments["Properties"]["低电平"] # type: ignore -> subclass must has attr _arguments
 
