@@ -122,11 +122,9 @@ class Tick_Counter:
         如果输出为1, 则进入下一个周期，在下一次输入了num次时输出为1, 否则为0
     '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: bool = False, num: int = 2) -> None:
-        if not isinstance(x, (int, float)) or \
-           not isinstance(y, (int, float)) or \
-           not isinstance(z, (int, float)) or \
-           not isinstance(elementXYZ, bool) or \
-           not isinstance(num, int) or num <= 0:
+        if not isinstance(x, (int, float)) or not isinstance(y, (int, float)) or \
+           not isinstance(z, (int, float)) or not isinstance(elementXYZ, bool) or \
+           not isinstance(num, int) or num <= 1:
             raise TypeError
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
@@ -134,19 +132,52 @@ class Tick_Counter:
         x, y, z = roundData(x, y, z)
 
         if num == 2:
-            self.output = elements.T_Flipflop(x, y, z, True)
+            self._output = elements.T_Flipflop(x, y, z, True)
         else:
             if num >= 16:
                 raise Exception("Do not support num >= 16 in this version")
-            self.output = elements.Counter(x + 1, y, z, True)
 
-            #
+            self._output = elements.Counter(x + 1, y, z, True)
+
+            bitlist = []
+            num -= 1
+            for _ in range(4):
+                bitlist.append(num & 1)
+                num >>= 1
+
+            output_pins = []
+            for i, a_bit in enumerate(bitlist):
+                if a_bit:
+                    _p = [self._output.o_low, self._output.o_lowmid, self._output.o_upmid, self._output.o_up][i]
+                    output_pins.append(_p)
+                    self._o = unitPin(self, _p)
+
+            if len(output_pins) >= 2:
+                sa = Super_AndGate(x + 1, y, z, True, len(output_pins))
+                self._o = sa.output
+                crt_Wires(unitPin(None, *output_pins), sa.inputs)
 
             imp = elements.Imp_Gate(x, y + 1, z, True)
             or_gate = elements.Or_Gate(x, y, z, True)
             or_gate.i_low - or_gate.o
             or_gate.o - imp.i_up
-            or_gate.i_up - self.output.i_up
+            or_gate.i_up - self._output.i_up
+            imp.o - self._output.i_low
+            crt_Wires(self._o, imp.i_low)
+
+    @property
+    def input(self) -> unitPin:
+        if isinstance(self._output, elements.T_Flipflop):
+            return unitPin(self, self._output.i_low)
+        else: # isinstance(self._output, elements.Counter)
+            return unitPin(self, self._output.i_up)
+
+    @property
+    def output(self) -> unitPin:
+        if isinstance(self._output, elements.T_Flipflop):
+            return unitPin(self, self._output.o_low)
+        else: # isinstance(self._output, elements.Counter)
+            return self._o
 
 class Two_four_Decoder:
     ''' 2-4译码器 '''
@@ -428,6 +459,12 @@ class D_WaterLamp(_Base):
         if not isinstance(is_loop, bool):
             raise TypeError
 
+        self.is_bitlen_equal_to_2: bool = False
+        if bitLength == 2:
+            self.is_bitlen_equal_to_2 = True
+            self._elements = [elements.T_Flipflop(x, y, z, True)]
+            return
+
         self._elements: list = []
 
         if heading:
@@ -485,11 +522,18 @@ class D_WaterLamp(_Base):
 
     @property
     def outputs(self) -> unitPin:
-        return unitPin(
-            self,
-            self._elements[0].o_low,
-            *(element.o_up for element in self._elements[1:])
-        )
+        if not self.is_bitlen_equal_to_2:
+            return unitPin(
+                self,
+                self._elements[0].o_low,
+                *(element.o_up for element in self._elements[1:])
+            )
+        else:
+            return unitPin(
+                self,
+                self._elements[0].o_up,
+                self._elements[0].o_low
+            )
 
     # 与data_Output相反的引脚
     @property
