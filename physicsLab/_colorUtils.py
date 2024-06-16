@@ -18,7 +18,6 @@ class COLOR(Enum):
 # 打印write_Experiment的信息时是否使用彩色字
 _ColorSupport = True
 
-# 打印颜色字
 def color_print(msg: str, color: COLOR) -> None:
     if not isinstance(color, COLOR) or not isinstance(msg, str):
         raise TypeError
@@ -30,7 +29,7 @@ def color_print(msg: str, color: COLOR) -> None:
     else:
         print(msg)
 
-# 关闭打印时的color
 def close_color_print():
+    ''' 关闭打印文字的颜色 '''
     global _ColorSupport
     _ColorSupport = False

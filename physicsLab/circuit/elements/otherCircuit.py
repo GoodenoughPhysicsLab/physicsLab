@@ -209,7 +209,10 @@ class Simple_Instrument(TwoPinMixIn):
         if not (
             (isinstance(instrument, int) and 0 <= instrument <= 128) and
             (isinstance(bpm, int) and 20 <= bpm <= 240) and
-            (isinstance(velocity, (int, float)) and 0 <= velocity <= 1)
+            (isinstance(velocity, (int, float)) and 0 <= velocity <= 1) and
+            isinstance(rated_oltage, (int, float)) and
+            isinstance(is_ideal_model, bool) and
+            isinstance(is_single, bool)
         ):
             raise TypeError
 

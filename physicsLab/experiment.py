@@ -56,8 +56,11 @@ class Experiment:
         else:
             FILE_HEAD = f"{_home}/physicsLabSav"
 
+    @property
+    def is_open_or_crt(self) -> bool:
+        return self.is_open or self.is_crt
+
     def __init__(self, sav_name: Optional[str] = None) -> None:
-        self.is_open_or_crt: bool = False
         self.is_open: bool = False
         self.is_crt: bool = False
         self.is_read: bool = False
@@ -117,7 +120,6 @@ class Experiment:
         ''' 打开一个指定的sav文件 (支持输入本地实验的名字或sav文件名) '''
         if self.is_open_or_crt:
             raise errors.ExperimentHasOpenError
-        self.is_open_or_crt = True
         stack_Experiment.push(self)
 
         # .sav文件名
@@ -203,7 +205,6 @@ class Experiment:
         '''
         if self.is_open_or_crt:
             raise errors.ExperimentHasOpenError
-        self.is_open_or_crt = True
 
         if not isinstance(sav_name, str) or not isinstance(experiment_type, ExperimentType):
             raise TypeError
@@ -229,7 +230,6 @@ class Experiment:
         ''' 先尝试打开实验, 若失败则创建实验 '''
         if self.is_open_or_crt:
             raise errors.ExperimentHasOpenError
-        self.is_open_or_crt = True
 
         if not isinstance(savName, str):
             raise TypeError
@@ -273,16 +273,16 @@ class Experiment:
                     from .circuit.elements.otherCircuit import Simple_Instrument
                     obj = Simple_Instrument(
                         x, y, z, elementXYZ=False,
-                        instrument=element["Properties"]["乐器"],
-                        pitch=element["Properties"]["音高"],
+                        instrument=int(element["Properties"]["乐器"]),
+                        pitch=int(element["Properties"]["音高"]),
                         velocity=element["Properties"]["音量"],
                         rated_oltage=element["Properties"]["额定电压"],
                         is_ideal_model=bool(element["Properties"]["理想模式"]),
-                        is_single=int(element["Properties"]["脉冲"])
+                        is_single=bool(element["Properties"]["脉冲"])
                     )
                     for attr, val in element["Properties"].items():
                         if attr.startswith("音高"):
-                            obj.add_note(val)
+                            obj.add_note(int(val))
                 else:
                     obj = crt_Element(element["ModelID"], x, y, z, elementXYZ=False)
             else:
@@ -362,7 +362,8 @@ class Experiment:
             raise errors.ExperimentNotOpenError
         if self.is_open_or_crt is True:
             if not no_pop:
-                self.is_open_or_crt = False
+                self.is_open = False
+                self.is_crt = False
         else:
             raise errors.ExperimentError("write before open or crt")
 

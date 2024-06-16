@@ -2,7 +2,7 @@
 from physicsLab import errors
 from physicsLab.experiment import get_Experiment
 from physicsLab.enums import ExperimentType
-from physicsLab.typehint import WireDict, Optional, Callable
+from physicsLab.typehint import Optional, Callable
 
 # 电学元件引脚类, 模电元件引脚无明确的输入输出之分, 因此用这个
 class Pin:
@@ -94,7 +94,7 @@ class Wire:
         else:
             return f"crt_Wire({self.Source.export_str()}, {self.Target.export_str()}, '{self.color}')"
 
-    def release(self) -> WireDict:
+    def release(self) -> dict:
         return {
             "Source": self.Source.element_self._arguments["Identifier"],
             "SourcePin": self.Source.pinLabel,
