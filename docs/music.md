@@ -1,5 +1,4 @@
 # music
-
 `physicsLab.music`本来是`physicsLab`的模块化电路的其中一个组成部分，不过由于其引入了`mido`这个依赖，所以我单独将其分离出来。  
 正常情况下，下载physicsLab时会自动下载mido。如果无法使用mido的话只会无法使用`physicsLab.music`，此时你需要输入该命令下载mido这个依赖：
 ```bash
@@ -20,7 +19,7 @@ with experiment("example"):
 上面的示例代码打开或创建了一个名为`example`的存档  
 `max_notes`用来控制音乐电路的音符的数量，当`max_notes=None`时，physicsLab会将整首midi乐曲都给处理完。  
 `to_piece`还有一些其他的参数: 
-* `div_time`: 用来调控生成的音乐电路的节奏。其原理大概是这样的：一个midi文件的时长是固定的，physicsLab以div_time的时长为最小的单位，如果有一堆音符的播放时长在div_time内，那么这些音符会被处理为一个和弦；后面的音符会以同样的原理被处理为下一个音符/和弦，或者下下个，下下下个音符/和弦...  
+* `div_time`: 用来调控生成的音乐电路的节奏。其原理大概是这样的：一个midi文件的时长是固定的，physicsLab以`div_time`的时长为最小的单位，如果有一堆音符的播放时长在`div_time`内，那么这些音符会被处理为一个和弦；后面的音符会以同样的原理被处理为下一个音符/和弦，或者下下个，下下下个音符/和弦...  
 因此，div_time的值越小，对midi的处理就越精细，但随之而来的影响是乐曲的播放速度变慢。  
 * `is_optimize`: 为`False`时将不会把多个音符优化为和弦  
 * `fix_strange_note`: 用来优化一些midi中的奇怪的，不符合和弦的，而且总是钢琴音色的，音量贼大的音符  
@@ -73,7 +72,7 @@ music.Midi("/your/path/of/midi").sound()
 请注意，`Note`, `Chord`, `Piece`为数据类（只用来存储数据），要转变为物实对应的电路结构需要使用`Piece.release()`方法
 ## class Note
 `Note`是音符类  
-其中的`time`参数的含义是***距离播放该音符需要等待多少时间***
+其中的`time`参数的含义是***距离播放该音符需要等待多少midi时间(为整数, 即int)***
 
 注意`time`参数需要大于0  
 在midi的表示方法中，time=0表示和弦，但这在physicsLab中是非法的
