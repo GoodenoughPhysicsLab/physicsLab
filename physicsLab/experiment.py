@@ -358,6 +358,12 @@ class Experiment:
             stringJson = stringJson.replace("色导线\\\"}]}", "色导线\\\"}\n    ]}")
             return stringJson
 
+        # 编译成功，打印信息
+        if self.is_open:
+            status: str = "update"
+        else: # self.is_crt
+            status: str = "create"
+
         if not self.is_open_or_crt:
             raise errors.ExperimentNotOpenError
         if self.is_open_or_crt is True:
@@ -386,11 +392,6 @@ class Experiment:
             with open(extra_filepath, "w", encoding="utf-8") as f:
                 f.write(context)
 
-        # 编译成功，打印信息
-        if self.is_open:
-            status: str = "update"
-        else: # self.is_crt
-            status: str = "create"
         if self.experiment_type == ExperimentType.Circuit:
             _colorUtils.color_print(
                 f"Successfully {status} experiment \"{self.PlSav['InternalName']}\"! "
