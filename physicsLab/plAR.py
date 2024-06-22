@@ -7,7 +7,7 @@ import platform
 from getpass import getuser
 from typing import Optional
 
-def get_plAR_version():
+def get_plAR_version() -> Optional[str]:
     ''' 获取物实版本 '''
     if platform.system() == "Windows":
         dir_l = tuple(os.walk(f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Unity/"))[0][1]

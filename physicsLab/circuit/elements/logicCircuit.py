@@ -422,7 +422,7 @@ class Random_Generator(_big_element):
         return OutputPin(self, 3)
 
 class eight_bit_Input(_logicBase):
-    ''' 8位输入器 '''
+    ''' 八位输入器 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "8bit Input", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -482,7 +482,7 @@ class eight_bit_Input(_logicBase):
         return OutputPin(self, 7)
 
 class eight_bit_Display(_logicBase):
-    ''' 8位显示器 '''
+    ''' 八位显示器 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "8bit Display", "Identifier": Generate,
                           "IsBroken": False, "IsLocked": False,

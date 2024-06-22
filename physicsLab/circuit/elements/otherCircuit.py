@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+import physicsLab.plAR as plar
+import physicsLab.errors as errors
+
 from ..wire import Pin
 from ._elementBase import TwoPinMixIn, CircuitBase
 from physicsLab.typehint import Optional, numType, CircuitElementData, Self, Generate, Union, List
 
-# 蜂鸣器
 class Buzzer(TwoPinMixIn):
+    ''' 蜂鸣器 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Buzzer", "Identifier": Generate, "IsBroken": False,
                            "IsLocked": False, "Properties": {"额定电压": 3.0, "额定功率": 0.3},
@@ -14,8 +17,8 @@ class Buzzer(TwoPinMixIn):
                             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
                             "DiagramRotation": 0}
 
-# 火花隙
 class Spark_Gap(TwoPinMixIn):
+    ''' 火花隙 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Spark Gap", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -24,8 +27,8 @@ class Spark_Gap(TwoPinMixIn):
                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
-# 特斯拉线圈
 class Tesla_Coil(TwoPinMixIn):
+    ''' 特斯拉线圈 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Tesla Coil", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -35,8 +38,8 @@ class Tesla_Coil(TwoPinMixIn):
                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
-# 彩色发光二极管
 class Color_Light_Emitting_Diode(CircuitBase):
+    ''' 彩色发光二极管 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Color Light-Emitting Diode", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -64,8 +67,8 @@ class Color_Light_Emitting_Diode(CircuitBase):
     def r(self) -> Pin:
         return Pin(self, 3)
 
-# 演示发光二极管
 class Dual_Light_Emitting_Diode(TwoPinMixIn):
+    ''' 演示发光二极管 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Dual Light-Emitting Diode", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -76,8 +79,8 @@ class Dual_Light_Emitting_Diode(TwoPinMixIn):
                             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
-# 电铃
 class Electric_Bell(TwoPinMixIn):
+    ''' 电铃 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Electric Bell", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -87,8 +90,8 @@ class Electric_Bell(TwoPinMixIn):
                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
-# 八音盒
 class Musical_Box(TwoPinMixIn):
+    ''' 八音盒 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Musical Box", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -98,8 +101,8 @@ class Musical_Box(TwoPinMixIn):
                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
-# 电阻定律实验
 class Resistance_Law(CircuitBase):
+    ''' 电阻定律实验 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Resistance Law", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -147,8 +150,8 @@ class Resistance_Law(CircuitBase):
     def r_up(self) -> Pin:
         return Pin(self, 7)
 
-# 通电螺线管
 class Solenoid(CircuitBase):
+    ''' 通电螺线管 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Solenoid", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -175,8 +178,8 @@ class Solenoid(CircuitBase):
     def black(self) -> Pin:
         return Pin(self, 3)
 
-# 小电扇
 class Electric_Fan(TwoPinMixIn):
+    ''' 小电扇 '''
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Electric Fan", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -189,8 +192,8 @@ class Electric_Fan(TwoPinMixIn):
                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
-# 简单乐器
 class Simple_Instrument(TwoPinMixIn):
+    ''' 简单乐器 '''
     def __init__(
             self,
             x: numType = 0,
@@ -248,10 +251,16 @@ class Simple_Instrument(TwoPinMixIn):
                f"is_single={bool(self.data['Properties']['脉冲'])}" \
                f").add_note({str(self.notes)[1:-2]})"
 
-    # 物实v2.4.7新功能: 简单乐器同时播放多个音符
     def add_note(self, *pitchs: int) -> Self:
+        ''' 物实v2.4.7新功能: 简单乐器同时播放多个音符 '''
         if not all(isinstance(a_pitch, int) and 0 <= a_pitch < 128 for a_pitch in pitchs):
             raise TypeError
+
+        version = plar.get_plAR_version()
+        if version is not None:
+            version = eval(f"{version.replace('.', ',')}")
+            if version[2] < 7 or version[1] < 4:
+                errors.warning("Physics-Lab-AR's version less than 2.4.7")
 
         for a_pitch in pitchs:
             if a_pitch not in self.notes:

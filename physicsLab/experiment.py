@@ -6,6 +6,7 @@ import time
 import platform
 import tempfile
 
+from physicsLab import chart
 from physicsLab import  _tools
 from physicsLab import errors
 from physicsLab import savTemplate
@@ -349,12 +350,12 @@ class Experiment:
         ''' 以物实存档的格式导出实验 '''
         def _format_StatusSave(stringJson: str) -> str:
             stringJson = stringJson.replace( # format element json
-                "{\\\"ModelID', '\n      {\\\"ModelID"
+                "{\\\"ModelID", "\n      {\\\"ModelID"
             )
             stringJson = stringJson.replace( # format end element json
-                "DiagramRotation\\\": 0}]', 'DiagramRotation\\\": 0}\n    ]"
+                "DiagramRotation\\\": 0}]", "DiagramRotation\\\": 0}\n    ]"
             )
-            stringJson = stringJson.replace('{\\\"Source', '\n      {\\\"Source')
+            stringJson = stringJson.replace("{\\\"Source", "\n      {\\\"Source")
             stringJson = stringJson.replace("色导线\\\"}]}", "色导线\\\"}\n    ]}")
             return stringJson
 
@@ -556,14 +557,16 @@ class Experiment:
 
         return self
 
-
-    def graph(self) -> Self:
-        ''' 与物实示波器图表有关的支持 '''
+    def graph(self) -> Optional[List[chart.Plot]]:
+        ''' 获取物实示波器图表的封装类 '''
         if not self.is_open_or_crt:
             raise errors.ExperimentNotOpenError
 
-        pass
-        return self
+        if self.PlSav["Plots"] is None:
+            return None
+
+        res = [chart.Plot(a_graph) for a_graph in self.PlSav["Plots"]]
+        return res
 
     def export(self, output_path: str = "temp.pl.py", sav_name: str = "temp") -> Self:
         ''' 以physicsLab代码的形式导出实验 '''

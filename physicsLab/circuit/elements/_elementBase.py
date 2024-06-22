@@ -1,4 +1,5 @@
-# coding=utf-8
+# -*- coding: utf-8 -*-
+import abc
 import inspect
 
 from physicsLab import errors
@@ -8,7 +9,7 @@ from physicsLab.elementBase import ElementBase
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.enums import ExperimentType
-from physicsLab.typehint import Optional, Self, numType
+from physicsLab.typehint import Optional, Self, numType, CircuitElementData, Generate
 from physicsLab._tools import roundData, randString
 from physicsLab.experiment import Experiment, get_Experiment
 
@@ -71,6 +72,18 @@ class CircuitMeta(type):
 
 # 所有电学元件的父类
 class CircuitBase(ElementBase, metaclass=CircuitMeta):
+    @property
+    @abc.abstractmethod
+    def is_bigElement(self) -> bool:
+        ''' 该元件是否是逻辑电路的两体积元件 '''
+
+    def __define_virtual_var_to_let_ide_show(self,
+                                             data: CircuitElementData,
+                                             exp: Experiment):
+        ''' useless '''
+        self.data: CircuitElementData = data
+        self.experiment: Experiment = exp
+
     def __repr__(self) -> str:
         return  f"{self.__class__.__name__}" \
                 f"({self._position.x}, {self._position.y}, {self._position.z}, " \
@@ -123,9 +136,10 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
     def get_Index(self) -> int:
         return self.experiment.Elements.index(self) + 1
 
-    # 获取子类的类型（也就是ModelID）
+    # 获取子类的类型
     @property
     def modelID(self) -> str:
+        assert not isinstance(self.data['ModelID'], type(Generate))
         return self.data['ModelID']
 
     @classmethod
