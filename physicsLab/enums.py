@@ -22,6 +22,7 @@ class Category(Enum):
 @unique
 class Tag(Enum):
     ''' 标签 '''
+    #TODO 投稿 标签
     # 实验区
     Circuit = "Type-0"
     Celestial = "Type-3"

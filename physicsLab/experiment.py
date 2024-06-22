@@ -77,9 +77,9 @@ class Experiment:
             self.open_or_crt(sav_name)
 
     def get_element_from_identifier(self, identifier: str):
-        ''' 通过_arguments["Identifier"]获取元件 '''
+        ''' 通过 原件的["Identifier"]获取元件的引用 '''
         for element in self.Elements:
-            if element._arguments["Identifier"] == identifier:
+            if element.data["Identifier"] == identifier:
                 return element
         raise errors.ExperimentError
 
@@ -291,7 +291,7 @@ class Experiment:
             rotation = eval(f'({element["Rotation"]})')
             r_x, r_y, r_z = rotation[0], rotation[2], rotation[1]
             obj.set_Rotation(r_x, r_y, r_z)
-            obj._arguments['Identifier'] = element['Identifier']
+            obj.data['Identifier'] = element['Identifier']
             from .circuit.elements.logicCircuit import Logic_Input, eight_bit_Input
             from .circuit.elements.basicCircuit import Simple_Switch, SPDT_Switch, DPDT_Switch, Air_Switch
 
@@ -299,8 +299,8 @@ class Experiment:
                 obj.set_highLevel()
 
             elif isinstance(obj, eight_bit_Input):
-                obj._arguments['Statistics'] = element['Statistics']
-                obj._arguments['Properties']['十进制'] = element['Properties']['十进制']
+                obj.data['Statistics'] = element['Statistics']
+                obj.data['Properties']['十进制'] = element['Properties']['十进制']
 
             elif isinstance(obj, Simple_Switch) and element["Properties"]["开关"] == 1:
                 obj.turn_on_switch()
@@ -336,7 +336,7 @@ class Experiment:
         self.CameraSave["TargetRotation"] = f"{self.TargetRotation.x},{self.TargetRotation.z},{self.TargetRotation.y}"
         self.PlSav["Experiment"]["CameraSave"] = json.dumps(self.CameraSave)
 
-        self.StatusSave["Elements"] = [a_element._arguments for a_element in self.Elements]
+        self.StatusSave["Elements"] = [a_element.data for a_element in self.Elements]
         if self.experiment_type == ExperimentType.Circuit:
             self.StatusSave["Wires"] = [a_wire.release() for a_wire in self.Wires]
         self.PlSav["Experiment"]["StatusSave"] = json.dumps(self.StatusSave, ensure_ascii=False, separators=(',', ': '))
@@ -358,14 +358,15 @@ class Experiment:
             stringJson = stringJson.replace("色导线\\\"}]}", "色导线\\\"}\n    ]}")
             return stringJson
 
+        if not self.is_open_or_crt:
+            raise errors.ExperimentNotOpenError
+
         # 编译成功，打印信息
         if self.is_open:
             status: str = "update"
         else: # self.is_crt
             status: str = "create"
 
-        if not self.is_open_or_crt:
-            raise errors.ExperimentNotOpenError
         if self.is_open_or_crt is True:
             if not no_pop:
                 self.is_open = False
@@ -544,7 +545,7 @@ class Experiment:
         return self
 
     def paused(self, status: bool = True) -> Self:
-        ''' 暂停实验 '''
+        ''' 暂停或解除暂停实验 '''
         if not self.is_open_or_crt:
             raise errors.ExperimentNotOpenError
         if not isinstance(status, bool):
@@ -615,16 +616,16 @@ class Experiment:
             # set_Position已处理与elements_Position有关的操作
             self.Elements.append(a_element)
 
-            identifier_to_element[a_element._arguments["Identifier"]] = a_element
+            identifier_to_element[a_element.data["Identifier"]] = a_element
 
         if self.experiment_type == ExperimentType.Circuit and other.experiment_type == ExperimentType.Circuit:
             for a_wire in other.Wires:
                 a_wire = copy.deepcopy(
                     a_wire, memo={
                         id(a_wire.Source.element_self):
-                            identifier_to_element[a_wire.Source.element_self._arguments["Identifier"]],
+                            identifier_to_element[a_wire.Source.element_self.data["Identifier"]],
                         id(a_wire.Target.element_self):
-                            identifier_to_element[a_wire.Target.element_self._arguments["Identifier"]],
+                            identifier_to_element[a_wire.Target.element_self.data["Identifier"]],
                 })
                 self.Wires.add(a_wire)
 

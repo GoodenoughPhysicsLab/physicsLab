@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 from ..wire import Pin
-from physicsLab.savTemplate import Generate
 from ._elementBase import TwoPinMixIn, CircuitBase
-from physicsLab.typehint import Optional, Self, List, Union, numType
+from physicsLab.typehint import Optional, numType, CircuitElementData, Self, Generate, Union, List
 
 # 蜂鸣器
 class Buzzer(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Buzzer", "Identifier": Generate, "IsBroken": False,
+        self.data: CircuitElementData = {"ModelID": "Buzzer", "Identifier": Generate, "IsBroken": False,
                            "IsLocked": False, "Properties": {"额定电压": 3.0, "额定功率": 0.3},
                            "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
                                           "功率": 0.0, "电压": 0.0, "电流": 0.0},
@@ -18,7 +17,7 @@ class Buzzer(TwoPinMixIn):
 # 火花隙
 class Spark_Gap(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Spark Gap", "Identifier": Generate,
+        self.data: CircuitElementData = {"ModelID": "Spark Gap", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"击穿电压": 1000.0, "击穿电阻": 1.0, "维持电流": 0.001, "锁定": 1.0},
                            "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0},
@@ -28,7 +27,7 @@ class Spark_Gap(TwoPinMixIn):
 # 特斯拉线圈
 class Tesla_Coil(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Tesla Coil", "Identifier": Generate,
+        self.data: CircuitElementData = {"ModelID": "Tesla Coil", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"击穿电压": 30000.0, "次级电容": 2.5e-11, "次级电阻": 1.0,
                                           "电感1": 0.1, "电感2": 90.0, "锁定": 1.0},
@@ -39,7 +38,7 @@ class Tesla_Coil(TwoPinMixIn):
 # 彩色发光二极管
 class Color_Light_Emitting_Diode(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Color Light-Emitting Diode", "Identifier": Generate,
+        self.data: CircuitElementData = {"ModelID": "Color Light-Emitting Diode", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"反向耐压": 6.0, "击穿电压": 0.0, "前向压降": 2.1024259,
                                           "工作电流": 0.01, "工作电压": 3.0, "锁定": 1.0},
@@ -68,7 +67,7 @@ class Color_Light_Emitting_Diode(CircuitBase):
 # 演示发光二极管
 class Dual_Light_Emitting_Diode(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Dual Light-Emitting Diode", "Identifier": Generate,
+        self.data: CircuitElementData = {"ModelID": "Dual Light-Emitting Diode", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"反向耐压": 6.0, "击穿电压": 0.0, "前向压降": 2.1024259,
                                           "工作电流": 0.01, "工作电压": 3.0, "锁定": 1.0},
@@ -80,7 +79,7 @@ class Dual_Light_Emitting_Diode(TwoPinMixIn):
 # 电铃
 class Electric_Bell(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Electric Bell", "Identifier": Generate,
+        self.data: CircuitElementData = {"ModelID": "Electric Bell", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"额定电压": 3.0, "额定功率": 0.3, "锁定": 1.0},
                            "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
@@ -91,7 +90,7 @@ class Electric_Bell(TwoPinMixIn):
 # 八音盒
 class Musical_Box(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Musical Box", "Identifier": Generate,
+        self.data: CircuitElementData = {"ModelID": "Musical Box", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"额定电压": 3.0, "额定功率": 0.3, "锁定": 1.0},
                            "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0, "功率": 0.0,
@@ -102,7 +101,7 @@ class Musical_Box(TwoPinMixIn):
 # 电阻定律实验
 class Resistance_Law(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Resistance Law", "Identifier": Generate,
+        self.data: CircuitElementData = {"ModelID": "Resistance Law", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"电阻率": 1.0, "电阻率2": 4.0, "电阻率3": 1.0, "最大长度": 2.0,
                                           "最小长度": 0.1, "长度": 1.0, "最大半径": 0.01, "最小半径": 0.0001,
@@ -151,7 +150,7 @@ class Resistance_Law(CircuitBase):
 # 通电螺线管
 class Solenoid(CircuitBase):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Solenoid", "Identifier": Generate,
+        self.data: CircuitElementData = {"ModelID": "Solenoid", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"插入铁芯": 1.0, "内圈状态": 0.0, "切割速度": 1.0, "锁定": 1.0,
                                           "线圈匝数": 100.0, "线圈位置": 0.0, "内线圈半径": 0.1, "磁通量": 0.0},
@@ -179,7 +178,7 @@ class Solenoid(CircuitBase):
 # 小电扇
 class Electric_Fan(TwoPinMixIn):
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
-        self._arguments = {"ModelID": "Electric Fan", "Identifier": Generate,
+        self.data: CircuitElementData = {"ModelID": "Electric Fan", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"额定电阻": 1.0, "马达常数": 0.1, "转动惯量": 0.01,
                                           "电感": 5e-05, "负荷扭矩": 0.01, "反电动势系数": 0.001,
@@ -216,7 +215,7 @@ class Simple_Instrument(TwoPinMixIn):
         ):
             raise TypeError
 
-        self._arguments = {"ModelID": "Simple Instrument", "Identifier": Generate,
+        self.data: CircuitElementData = {"ModelID": "Simple Instrument", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"额定电压": rated_oltage, "额定功率": 0.3,
                                           "音量": velocity, "音高": None, "节拍": bpm,
@@ -229,7 +228,7 @@ class Simple_Instrument(TwoPinMixIn):
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
         self.set_Tonality(pitch)
-        self.notes: List[int] = [self._arguments["Properties"]["音高"]] # 仅用于记录self已有的音符
+        self.notes: List[int] = [self.data["Properties"]["音高"]] # 仅用于记录self已有的音符
 
     @property
     def i(self) -> Pin:
@@ -241,12 +240,12 @@ class Simple_Instrument(TwoPinMixIn):
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self._position.x}, {self._position.y}, {self._position.z}, " \
-               f"elementXYZ={self.is_elementXYZ}, instrument={self._arguments['Properties']['乐器']}, " \
-               f"pitch={self._arguments['Properties']['音高']}, bpm={self._arguments['Properties']['节拍']}, " \
-               f"velocity={self._arguments['Properties']['音量']}, " \
-               f"rated_oltage={self._arguments['Properties']['额定电压']}, " \
-               f"is_ideal_model={self._arguments['Properties']['理想模式']}, " \
-               f"is_single={bool(self._arguments['Properties']['脉冲'])}" \
+               f"elementXYZ={self.is_elementXYZ}, instrument={self.data['Properties']['乐器']}, " \
+               f"pitch={self.data['Properties']['音高']}, bpm={self.data['Properties']['节拍']}, " \
+               f"velocity={self.data['Properties']['音量']}, " \
+               f"rated_oltage={self.data['Properties']['额定电压']}, " \
+               f"is_ideal_model={self.data['Properties']['理想模式']}, " \
+               f"is_single={bool(self.data['Properties']['脉冲'])}" \
                f").add_note({str(self.notes)[1:-2]})"
 
     # 物实v2.4.7新功能: 简单乐器同时播放多个音符
@@ -256,9 +255,9 @@ class Simple_Instrument(TwoPinMixIn):
 
         for a_pitch in pitchs:
             if a_pitch not in self.notes:
-                amount: int = int(self._arguments["Properties"]["和弦"])
-                self._arguments["Properties"][f"音高{amount}"] = a_pitch
-                self._arguments["Properties"]["和弦"] += 1
+                amount: int = int(self.data["Properties"]["和弦"])
+                self.data["Properties"][f"音高{amount}"] = a_pitch
+                self.data["Properties"]["和弦"] += 1
                 self.notes.append(a_pitch)
 
         return self
@@ -269,7 +268,7 @@ class Simple_Instrument(TwoPinMixIn):
 
     # 获取简单乐器的和弦
     def get_instrument(self) -> int:
-        return self._arguments["Properties"]["乐器"]
+        return self.data["Properties"]["乐器"]
 
     def set_Tonality(self, pitch: Union[int, str], rising_falling: Optional[bool] = None) -> "Simple_Instrument":
         ''' 输入格式：
@@ -279,11 +278,11 @@ class Simple_Instrument(TwoPinMixIn):
 
         if isinstance(pitch, int):
             if 0 <= pitch < 128:
-                self._arguments["Properties"]["音高"] = pitch
+                self.data["Properties"]["音高"] = pitch
             else:
                 raise TypeError("Input number out of range")
         elif isinstance(pitch, str):
-            self._arguments["Properties"]["音高"] = majorSet_Tonality(pitch, rising_falling)
+            self.data["Properties"]["音高"] = majorSet_Tonality(pitch, rising_falling)
         else:
             raise TypeError
 
@@ -310,7 +309,7 @@ def majorSet_Tonality(pitch: str,
 
     var = 1 if rising_falling is True else 0 if rising_falling is None else -1
 
-    pitch = {
+    res = {
         'A': 22,
         'B': 23,
         'C': 24,
@@ -320,4 +319,4 @@ def majorSet_Tonality(pitch: str,
         'G': 28
     }[pitch.upper()[0]] + 12 * int(pitch[1]) + var
 
-    return pitch
+    return res

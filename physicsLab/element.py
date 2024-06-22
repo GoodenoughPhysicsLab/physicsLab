@@ -44,7 +44,7 @@ def get_Element(x: Optional[numType] = None,
                 index: Optional[numType] = None,
                 **kwargs
 ) -> Union[CircuitBase, List[CircuitBase]]:
-    ''' 获取对应坐标的id '''
+    ''' 获取对应坐标的元件的reference '''
     # 通过坐标索引元件
     def position_get(x: numType, y: numType, z: numType):
         if not (
@@ -90,14 +90,14 @@ def del_Element(
     if not isinstance(self, CircuitBase):
         raise TypeError
 
-    identifier = self._arguments["Identifier"] # type: ignore
+    identifier = self.data["Identifier"] # type: ignore
 
     _Expe = stack_Experiment.top()
 
     res_Wires = set()
     for a_wire in _Expe.Wires:
-        if a_wire.Source.element_self._arguments["Identifier"] == identifier or \
-           a_wire.Target.element_self._arguments["Identifier"] == identifier:
+        if a_wire.Source.element_self.data["Identifier"] == identifier or \
+           a_wire.Target.element_self.data["Identifier"] == identifier:
            continue
 
         res_Wires.add(a_wire)

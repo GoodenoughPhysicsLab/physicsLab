@@ -50,6 +50,8 @@ with experiment("example"):
 
 用一个简单的例子来说明:
 ```Python
+from physicsLab import *
+
 with experiment("example"):
    Logic_Input(1, 0, 0, elementXYZ=True)
    Logic_Output(1, 0, 0)
@@ -62,15 +64,16 @@ with experiment("example", read=True):
 ```
 输出结果:
 ```
-[<physicsLab.circuit.elements.logicCircuit.Logic_Input object at 0x000000000247AE80>, <physicsLab.circuit.elements.logicCircuit.Logic_Output object at 0x000000000247AEE0>]
-Successfully compiled experiment "example"! 2 elements, 0 wires.
-[<physicsLab.circuit.elements.logicCircuit.Logic_Output object at 0x0000000002D1DA90>, <physicsLab.circuit.elements.logicCircuit.Logic_Input object at 0x000000000247AEE0>, <physicsLab.circuit.elements.logicCircuit.Logic_Output object at 0x0000000002A28C40>]
-Successfully compiled experiment "example"! 4 elements, 0 wires.
+[Logic_Input(1, 0, 0, elementXYZ=True), Logic_Output(1, 0, 0, elementXYZ=False)]
+Successfully create experiment "example"! 2 elements, 0 wires.
+[Logic_Output(1, 0, 0, elementXYZ=False), Logic_Input(1, 0, 0, elementXYZ=True), Logic_Output(1, 0, 0, elementXYZ=False)]
+Successfully update experiment "example"! 4 elements, 0 wires.
 ```
 
 你能理解为什么第二次打印时输出的列表长度为3吗?  
 因为在上一次写入的时候会将元件坐标系自动转化为物实坐标系, 在第二次read的时候会直接读取存档内的物实坐标系, 那么上一次创建时的`Logic_Input(1, 0, 0elementXYZ=True)`自然就不会在后面read这次的坐标索引中被找到了  
-  
+如果要索引第一次创建的元件坐标系的元件, 需要这样写`get_Element(xyzTranslate(1, 0, 0))`  
+详见`元件坐标系`  
 当`get_Element`索引元件失败时，会抛出`ElementNotFound`的Error  
 如果你想在索引失败时不抛出error，需要使用default参数
 ```Python
@@ -141,27 +144,31 @@ get_xyzUnit("y", "z") # result: 0.08, 0.1
 ```
 
 ### 与物实坐标系的转换
-`translateXYZ`将物实坐标系转换为元件坐标系（包括2体积元件坐标修正）   
+`translateXYZ`将物实坐标系转换为元件坐标系（包括2体积元件坐标修正）  
 `xyzTranslate`将元件坐标系转换为物实坐标系（默认不支持2体积元件坐标修正）, 但你可以通过传入元件的`is_bigElement`属性来进行2体积元件修正
 
 
-## Methods
+## methods & attributes
 所有的元件都有一些方法来操作
 ```python
 from physicsLab import *
-a = Logic_Input()
 
-a.set_highLevel() # 将逻辑输入设置为输出为1（仅对逻辑输入有效）
-a.get_Position() # 获取元件坐标
-a.set_Position() # 设置元件坐标（暂时只支持元件坐标系）
-a.get_Index() # 获取元件的Index（元件生成顺序）
-a.set_HighLeaveValue() # 设置高电平的值，仅逻辑电路元件有效
-a.set_LowLeaveValue() # 设置低电平的值，仅逻辑电路元件有效
-a.get_HighLeaveValue() # 获取高电平的值，仅逻辑电路元件有效
-a.get_LowLeaveValue() # 获取低电平的值，仅逻辑电路元件有效
-a.print_arguments() # 打印元件对应的存档信息
-a.modelID # 获取元件的ModelID
-a.experiment # 获取元件对应的实验
+with experiment("example"):
+    a = Logic_Input()
+
+    # methods
+    a.set_highLevel() # 将逻辑输入设置为输出为1（仅对逻辑输入有效）
+    a.get_Position() # 获取元件坐标
+    a.set_Position() # 设置元件坐标（暂时只支持元件坐标系）
+    a.get_Index() # 获取元件的Index（元件生成顺序）
+    a.set_HighLeaveValue() # 设置高电平的值，仅逻辑电路元件有效
+    a.set_LowLeaveValue() # 设置低电平的值，仅逻辑电路元件有效
+    a.get_HighLeaveValue() # 获取高电平的值，仅逻辑电路元件有效
+    a.get_LowLeaveValue() # 获取低电平的值，仅逻辑电路元件有效
+    # attributes
+    a.data # 获取元件在物实对应的dict
+    a.modelID # 获取元件的ModelID
+    a.experiment # 获取元件对应的实验
 ```
 在[所有元件 elements](elements.md)中也介绍得有元件的方法
 

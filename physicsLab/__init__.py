@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+''' Python API for Physics-Lab-AR '''
 import os
 import platform
 

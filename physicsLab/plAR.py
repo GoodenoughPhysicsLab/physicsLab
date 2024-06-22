@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+''' 对Physics-Lab-AR(Quantam Physics)进行操作的API '''
 import os
 import json
 import platform

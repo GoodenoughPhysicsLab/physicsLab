@@ -96,9 +96,9 @@ class Wire:
 
     def release(self) -> dict:
         return {
-            "Source": self.Source.element_self._arguments["Identifier"],
+            "Source": self.Source.element_self.data["Identifier"],
             "SourcePin": self.Source.pinLabel,
-            "Target": self.Target.element_self._arguments["Identifier"],
+            "Target": self.Target.element_self.data["Identifier"],
             "TargetPin": self.Target.pinLabel,
             "ColorName": f"{self.color}色导线"
         }

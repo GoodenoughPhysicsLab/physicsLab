@@ -18,7 +18,7 @@ class _elementBase:
         ):
             raise RuntimeError('illegal argument')
 
-        self._arguments["Rotation"] = \
+        self.data["Rotation"] = \
             f"{_tools.roundData(xRotation)},{_tools.roundData(zRotation)},{_tools.roundData(yRotation)}"
         return self
 
@@ -29,7 +29,7 @@ class _elementBase:
         x, y, z = _tools.roundData(x, y, z)
         del stack_Experiment.top().elements_Position[self._position]
         self._position = (x, y, z)
-        self._arguments['Position'] = f"{x},{z},{y}"
+        self.data['Position'] = f"{x},{z},{y}"
         stack_Experiment.top().elements_Position[self._position] = self
         return self
 
@@ -73,9 +73,9 @@ def _element_Init_HEAD(func: Callable) -> Callable:
 
         func(self, x, y, z)
 
-        self._arguments["Identifier"] = _tools.randString(32)
+        self.data["Identifier"] = _tools.randString(32)
         # x, z, y 物实采用欧拉坐标系
-        self._arguments["Position"] = f"{x},{z},{y}"
+        self.data["Position"] = f"{x},{z},{y}"
 
         # 该坐标是否已存在，则存入列表
         if self._position in _Expe.elements_Position.keys():
@@ -102,7 +102,7 @@ def _element_Init_HEAD(func: Callable) -> Callable:
 class Negative_Charge(_elementBase):
     @_element_Init_HEAD
     def __init__(self, x: numType, y: numType, z: numType):
-        self._arguments = {'ModelID': 'Negative Charge', 'Identifier': '',
+        self.data = {'ModelID': 'Negative Charge', 'Identifier': '',
                            'Properties': {'锁定': 1.0, '强度': -1e-07, '质量': 0.1},
                            'Position': '', 'Rotation': '', 'Velocity': '0,0,0',
                            'AngularVelocity': '0,0,0'}
@@ -111,7 +111,7 @@ class Negative_Charge(_elementBase):
 class Positive_Charge(_elementBase):
     @_element_Init_HEAD
     def __init__(self, x: numType, y: numType, z: numType):
-        self._arguments = {'ModelID': 'Positive Charge', 'Identifier': '',
+        self.data = {'ModelID': 'Positive Charge', 'Identifier': '',
                            'Properties': {'锁定': 1.0, '强度': 1e-07, '质量': 0.1},
                            'Position': '', 'Rotation': '', 'Velocity': '0,0,0',
                            'AngularVelocity': '0,0,0'}
