@@ -99,7 +99,6 @@ class User:
                 "Content-Type": "application/json",
                 "x-API-Token": self.token,
                 "x-API-AuthCode": self.auth_code,
-                "x-API-Version": "2411"
             }
         )
 
@@ -170,10 +169,40 @@ class User:
             return response.json()
         return None
 
+    def post_comment(self, target_id: str, content: str) -> Optional[dict]:
+        '''
+        '''
+        if not isinstance(self.token, str) or not isinstance(self.auth_code, str):
+            raise TypeError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com:443/Messages/PostComment",
+            json={
+                "TargetID": target_id,
+                "TargetType": "User",
+                "Language": "Chinese",
+                "ReplyID": "",
+                "Content": content,
+                "Special": None
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            }
+        )
+
+        if response.status_code == 200:
+            return response.json()
+        return None
+
     def get_comments(self, identifier: str) -> Optional[dict]:
         ''' 获取留言板信息
             identifier: 物实用户的ID
         '''
+        if not isinstance(self.token, str) or not isinstance(self.auth_code, str):
+            raise TypeError
+
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Messages/GetComments",
             json={
