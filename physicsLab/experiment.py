@@ -6,7 +6,6 @@ import time
 import platform
 import tempfile
 
-from physicsLab import chart
 from physicsLab import  _tools
 from physicsLab import errors
 from physicsLab import savTemplate
@@ -557,8 +556,9 @@ class Experiment:
 
         return self
 
-    def graph(self) -> Optional[List[chart.Plot]]:
+    def graph(self) -> Optional[list]: # List[chart.Plot]
         ''' 获取物实示波器图表的封装类 '''
+        from physicsLab import chart
         if not self.is_open_or_crt:
             raise errors.ExperimentNotOpenError
 
