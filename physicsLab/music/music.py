@@ -168,8 +168,8 @@ class Midi:
         def sound_by_os() -> bool:
             colorUtils.color_print("sound by using os", colorUtils.COLOR.CYAN)
 
-            if os.path.exists(midifile):
-                os.system(midifile)
+            if os.path.exists(self.midifile):
+                os.system(f"\"{self.midifile}\"")
                 return True
 
             return False

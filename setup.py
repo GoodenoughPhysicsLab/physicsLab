@@ -8,7 +8,8 @@ setuptools.setup(
     author="Goodenough",
     author_email="2381642961@qq.com",
     description="Python API for Physics-Lab-AR",
-    long_description="click \"[there](https://gitee.com/script2000/physicsLab)\" to show more information",
+    long_description="click \"[there](https://gitee.com/script2000/physicsLab)\" or "
+                     "[there](https://github.com/GoodenoughPhysicsLab/physicsLab) to show more information",
     long_description_content_type="text/markdown",
     url="https://gitee.com/script2000/physicsLab",
     packages=setuptools.find_packages(),
