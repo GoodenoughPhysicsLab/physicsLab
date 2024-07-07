@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-import requests
 import platform
+import requests
 
 from typing import Optional, List, TypedDict
 
+from physicsLab import plAR
 from physicsLab import errors
 from physicsLab.enums import Tag, Category
 
@@ -38,25 +39,30 @@ class User:
             self.token = token
             self.auth_code = auth_code
         else:
-            tmp = self._login(username, passward)
+            tmp = self.__login(username, passward)
 
             if tmp is None:
-                raise Exception("log in failed")
+                raise errors.LogInFaild
 
             self.token = tmp["Token"]
             self.auth_code = tmp["AuthCode"]
 
     @staticmethod
-    def _login(username: Optional[str], passward: Optional[str]) -> Optional[_login_res]:
+    def __login(username: Optional[str], passward: Optional[str]) -> Optional[_login_res]:
         ''' 登录, 默认为匿名登录
             通过返回字典的Token与AuthCode实现登陆
         '''
+        version = plAR.get_plAR_version()
+        if version is not None:
+            version = int(version.replace(".", ""))
+        else:
+            version = 2411
         response = requests.post(
             "http://physics-api-cn.turtlesim.com/Users/Authenticate",
             json={
                 "Login": username,
                 "Password": passward,
-                "Version": 2411,
+                "Version": version,
                 "Device": {
                     "ID": None,
                     "Identifier": "7db01528cf13e2199e141c402d79190e",
