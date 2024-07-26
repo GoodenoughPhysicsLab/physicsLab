@@ -50,6 +50,7 @@ class User:
     @staticmethod
     def __login(username: Optional[str], passward: Optional[str]) -> Optional[_login_res]:
         ''' 登录, 默认为匿名登录
+
             通过返回字典的Token与AuthCode实现登陆
         '''
         version = plAR.get_plAR_version()
@@ -120,9 +121,11 @@ class User:
                          maxnum: int = 18,
                         ) -> Optional[dict]:
         ''' 查询实验
-            * tags: 根据列表内的物实实验的标签进行对应的搜索
-            * languages: 根据列表内的语言进行对应的搜索
-            * maxnum: 最大搜索数量
+            @param tags: 根据列表内的物实实验的标签进行对应的搜索
+            @param exclude_tags: 除了列表内的标签的实验都会被搜索到
+            @param category: 实验区还是黑洞区
+            @param languages: 根据列表内的语言进行对应的搜索
+            @param maxnum: 最大搜索数量
         '''
         if not isinstance(self.token, str) or not isinstance(self.auth_code, str) \
             or not isinstance(category, Category) or tags is not None and (
@@ -176,7 +179,9 @@ class User:
         return None
 
     def post_comment(self, target_id: str, content: str) -> Optional[dict]:
-        '''
+        ''' 发表评论
+            @param target_id: 目标ID
+            @param content: 评论内容
         '''
         if not isinstance(self.token, str) or not isinstance(self.auth_code, str):
             raise TypeError
@@ -204,7 +209,7 @@ class User:
 
     def get_comments(self, identifier: str) -> Optional[dict]:
         ''' 获取留言板信息
-            identifier: 物实用户的ID
+            @param identifier: 物实用户的ID
         '''
         if not isinstance(self.token, str) or not isinstance(self.auth_code, str):
             raise TypeError
@@ -217,6 +222,79 @@ class User:
                 "CommentID": None,
                 "Take": 16,
                 "Skip": 0
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            }
+        )
+
+        if response.status_code == 200:
+            return response.json()
+        return None
+
+    def get_summary(self, content_id: str, category: Category):
+        ''' 获取实验摘要
+            @param content_id: 实验ID
+            @param category: 实验区还是黑洞区
+        '''
+        if not isinstance(content_id, str) or not isinstance(category, Category):
+            raise TypeError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com/Contents/GetSummary",
+            json={
+                "ContentID": content_id,
+                "Category": category.value,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            }
+        )
+
+        if response.status_code == 200:
+            return response.json()
+        return None
+
+    def get_derivatives(self, content_id: str, category: Category):
+        ''' 获取作品的详细信息
+            @param content_id: 实验ID
+            @param category: 实验区还是黑洞区
+        '''
+        if not isinstance(content_id, str) or not isinstance(category, Category):
+            raise TypeError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com/Contents/GetDerivatives",
+            json={
+                "ContentID": content_id,
+                "Category": category.value,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            }
+        )
+
+        if response.status_code == 200:
+            return response.json()
+        return None
+
+    def get_user(self, user_id: str):
+        ''' 获取用户信息
+            @param user_id: 用户ID
+        '''
+        if not isinstance(user_id, str):
+            raise TypeError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com/Users/GetUser",
+            json={
+                "ID": user_id,
             },
             headers={
                 "Content-Type": "application/json",
