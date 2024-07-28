@@ -12,6 +12,11 @@ ExperimentType是枚举类，用于指定实验类型。目前支持三种类型
 * Celestial 天体物理
 * Electromagnetism 电与磁
 
+## enum class Category
+* Experiment 实验区
+* Discussion 讨论区(黑洞区)
+* BlackHole 讨论区(黑洞区)
+
 ## 打开存档
 这是***最推荐的方式***。你可以用with语句打开一个存档
 ```python
@@ -80,6 +85,7 @@ from physicsLab import *
 
 with experiment("example", read=True):
     # do something
+    ...
 ```
 你也可以这么写：
 ```Python
@@ -90,6 +96,23 @@ with experiment("example") as exp:
     # do something
 ```
 
+## 读取已发布到物实的实验
+你可以使用`Experiment.read_from_web()`获取已发布到物实上的实验
+```Python
+from physicsLab import *
+
+with experiment("example") as exp:
+    exp.read_from_web("642cf37a494746375aae306a", Category.Discussion)
+```
+
+## 对存档名进行重命名
+该方法会同时修改存档名与发布后的标题
+```Python
+from physicsLab import *
+
+with experiment("example") as exp:
+    exp.entitle("new_name")
+```
 
 ## 保存程序修改后的存档
 如果你使用的是`with experiment()`的话，你不需要自己操心这一步骤  
@@ -147,12 +170,13 @@ exp.delete()
 ```
 
 ## 停止操作存档
-`Experiment.write()`与`Experiment.delete()`都会停止操作存档，但如果你只想放弃本次用程序操作存档，你可以调用`Experiment.exit`: 
+`Experiment.write()`与`Experiment.delete()`都会停止操作存档，但如果你只想放弃本次用程序操作存档(所有对存档的修改都放弃)，你可以调用`Experiment.exit`:
 ```Python
 from physicsLab import *
 
 with experiment("example", is_exit=True):
-    # do something, 但不会改变存档的状态
+    # do something
+    ...
 ```
 
 ```Python

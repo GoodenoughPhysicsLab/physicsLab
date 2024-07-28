@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-import os
-import time
 import requests
 
 from typing import Optional, List, TypedDict
 
 from physicsLab import plAR
 from physicsLab import errors
-from physicsLab import Experiment
 from physicsLab.enums import Tag, Category
 
 def _check_response(response: requests.Response) -> dict:
@@ -204,54 +201,6 @@ class User:
         )
 
         return _check_response(response)
-
-    # development
-    def upload_experiment(self, image_path: str, experiment: Experiment) -> None:
-        ''' 上传(发布/更新) 实验
-            @param image_path: 图片路径
-            @param summary: 实验介绍,
-                Experiment.export_summary()与User.get_summary()["Data"]为符合要求的输入
-        '''
-        if not isinstance(image_path, str) or not isinstance(experiment, Experiment):
-            raise TypeError
-        if not os.path.exists(image_path) or not os.path.isfile(image_path):
-            raise FileNotFoundError
-        if self.is_anonymous:
-            raise PermissionError("you must register first")
-
-        summary = experiment.PlSav["Summary"]
-        summary["CreationDate"] = time.time() * 1000
-
-        # 请求更新实验
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com/Contents/SubmitExperiment",
-            json={
-            "Request": {
-                "FileSize": os.path.getsize(image_path),
-                'Extension': ".jpg",
-            },
-            'Summary': summary,
-        },
-            headers={
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-                'Accept-Encoding': 'gzip',
-                'Content-Type': 'gzipped/json',
-            }
-        )
-        _check_response(response)
-
-        # 上传图片
-        # with open(image_path, "rb") as f:
-        #     data = {
-        #         'policy': (None, response.json()['Data']['Token']['Policy'], None),
-        #         'authorization': (None, self.auth_code, None),
-        #         'file': ('temp.jpg', f, None),
-        #     }
-        #     requests.post(
-        #         "http://v0.api.upyun.com/qphysics",
-        #         files=data,
-        #     )
 
     def post_comment(self, target_id: str, content: str) -> dict:
         ''' 发表评论

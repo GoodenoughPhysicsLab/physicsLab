@@ -3,6 +3,7 @@ import os
 import json
 import copy
 import time
+import requests
 import platform
 import tempfile
 
@@ -10,6 +11,8 @@ from physicsLab import  _tools
 from physicsLab import errors
 from physicsLab import savTemplate
 from physicsLab import _colorUtils
+from .web import User, _check_response
+from .enums import Category
 from .savTemplate import Generate
 from .enums import ExperimentType
 from .typehint import Union, Optional, List, Dict, numType, Self
@@ -83,13 +86,16 @@ class Experiment:
                 return element
         raise errors.ExperimentError
 
-    def __open(self) -> None:
-        self.is_open = True
-        self.CameraSave = json.loads(self.PlSav["Experiment"]["CameraSave"])
+    def __read_CameraSave(self, camera_save: str) -> None:
+        self.CameraSave = json.loads(camera_save)
         temp = eval(f"({self.CameraSave['VisionCenter']})")
         self.VisionCenter: _tools.position = _tools.position(temp[0], temp[2], temp[1]) # x, z, y
         temp = eval(f"({self.CameraSave['TargetRotation']})")
         self.TargetRotation: _tools.position = _tools.position(temp[0], temp[2], temp[1]) # x, z, y
+
+    def __open(self) -> None:
+        self.is_open = True
+        self.__read_CameraSave(self.PlSav["Experiment"]["CameraSave"])
 
         self.experiment_type: ExperimentType = {
             ExperimentType.Circuit.value: ExperimentType.Circuit,
@@ -117,7 +123,9 @@ class Experiment:
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
 
     def open(self, sav_name : str) -> Self:
-        ''' 打开一个指定的sav文件 (支持输入本地实验的名字或sav文件名) '''
+        ''' [[该方法为构造函数]]
+            打开一个指定的sav文件 (支持输入本地实验的名字或sav文件名)
+        '''
         if self.is_open_or_crt:
             raise errors.ExperimentHasOpenError
         stack_Experiment.push(self)
@@ -130,7 +138,9 @@ class Experiment:
             if not os.path.exists(self.SavPath):
                 stack_Experiment.pop()
                 raise errors.OpenExperimentError(f'No such experiment "{sav_name}"')
-            self.PlSav = _open_sav(self.SavPath)
+            _temp = _open_sav(self.SavPath)
+            assert _temp is not None
+            self.PlSav = _temp
             self.__open()
             return self
 
@@ -199,9 +209,11 @@ class Experiment:
             experiment_type: ExperimentType = ExperimentType.Circuit,
             force_crt: bool=False
     ) -> Self:
-        ''' 创建存档，输入为存档名 sav_name: 存档名;
-            experiment_type: 实验类型;
-            force_crt: 不论实验是否已经存在,强制创建
+        ''' [[该方法为构造函数]]
+            创建存档
+            @sav_name: 存档名
+            @experiment_type: 实验类型
+            @force_crt: 不论实验是否已经存在,强制创建
         '''
         if self.is_open_or_crt:
             raise errors.ExperimentHasOpenError
@@ -224,43 +236,30 @@ class Experiment:
         return self
 
     def open_or_crt(self,
-                    savName: str,
+                    sav_name: str,
                     ExperimentType: ExperimentType = ExperimentType.Circuit
     ) -> Self:
-        ''' 先尝试打开实验, 若失败则创建实验 '''
+        ''' [[该方法为构造函数]]
+            先尝试打开实验, 若失败则创建实验
+        '''
         if self.is_open_or_crt:
             raise errors.ExperimentHasOpenError
 
-        if not isinstance(savName, str):
+        if not isinstance(sav_name, str):
             raise TypeError
         stack_Experiment.push(self)
 
-        self.FileName = search_Experiment(savName)
+        self.FileName = search_Experiment(sav_name)
         if self.FileName is not None:
             self.SavPath = f"{Experiment.FILE_HEAD}/{self.FileName}"
             self.PlSav = search_Experiment.sav
             self.__open()
         else:
-            self.__crt(savName, ExperimentType)
+            self.__crt(sav_name, ExperimentType)
         return self
 
-    def read(self) -> Self:
-        ''' 读取实验已有状态 '''
-        if not self.is_open_or_crt:
-            raise errors.ExperimentNotOpenError
-        if self.is_read:
-            errors.warning("experiment has been read")
-            return self
-        self.is_read = True
-        if self.is_crt:
-            errors.warning("can not read because you create this experiment")
-            return self
-
-        status_sav = json.loads(self.PlSav["Experiment"]["StatusSave"])
-        # 元件
-        _local_Elements = status_sav["Elements"]
-
-        for element in _local_Elements:
+    def __read_element(self, _elements: list) -> None:
+        for element in _elements:
             # 坐标标准化 (消除浮点误差)
             position = eval(f"({element['Position']})")
             x, y, z = position[0], position[2], position[1]
@@ -286,7 +285,7 @@ class Experiment:
                 else:
                     obj = crt_Element(element["ModelID"], x, y, z, elementXYZ=False)
             else:
-                obj = crt_Element(element["ModelID"], x, y, z) # type: ignore -> num type: int | float
+                obj = crt_Element(element["ModelID"], x, y, z)
 
             rotation = eval(f'({element["Rotation"]})')
             r_x, r_y, r_z = rotation[0], rotation[2], rotation[1]
@@ -314,10 +313,10 @@ class Experiment:
                 elif element["Properties"]["开关"] == 2:
                     obj.right_turn_on_switch()
 
-        # 导线
+    def __read_wire(self, _wires: list) -> None:
         if self.experiment_type == ExperimentType.Circuit:
             from .circuit.wire import Wire, Pin
-            for wire_dict in status_sav['Wires']:
+            for wire_dict in _wires:
                 self.Wires.add(
                     Wire(
                         Pin(self.get_element_from_identifier(wire_dict["Source"]), wire_dict["SourcePin"]),
@@ -326,9 +325,56 @@ class Experiment:
                     )
                 )
 
+    def read(self) -> Self:
+        ''' 读取实验已有状态 '''
+        if not self.is_open_or_crt:
+            raise errors.ExperimentNotOpenError
+        if self.is_read:
+            errors.warning("experiment has been read")
+            return self
+        self.is_read = True
+        if self.is_crt:
+            errors.warning("can not read because you create this experiment")
+            return self
+
+        status_sav = json.loads(self.PlSav["Experiment"]["StatusSave"])
+
+        self.__read_element(status_sav["Elements"])
+        self.__read_wire(status_sav["Wires"])
+
         return self
 
-    def __write(self):
+    def read_from_web(self,
+                      id: str,
+                      category: Category,
+                      user: Optional[User] = None,
+                      ) -> Self:
+        ''' 获取已经发布到物实的实验的实验状态(包括元件, 导线, 发布后的标题, 实验介绍)
+
+            由于存档名与发布后的标题可以不同, 因此该方法只会修改发布后的标题, 不会修改存档名
+            @sav_name: 获取到的实验保存到本地存档的名字
+            @id: 物实实验的id
+            @category: 实验区还是黑洞区
+        '''
+        if not self.is_open_or_crt:
+            raise errors.ExperimentHasOpenError
+        if not isinstance(id, str) or not isinstance(category, Category):
+            raise TypeError
+
+        if user is None:
+            user = User()
+        _summary = user.get_summary(id, category)["Data"]
+        _experiment = user.get_experiment(_summary["ContentID"])["Data"]
+        _StatusSave = json.loads(_experiment["StatusSave"])
+        self.__read_CameraSave(_experiment["CameraSave"])
+        self.__read_element(_StatusSave["Elements"])
+        self.__read_wire(_StatusSave["Wires"])
+
+        del _summary["$type"]
+        self.PlSav["Summary"] = _summary
+        return self
+
+    def __write(self) -> None:
         self.PlSav["Experiment"]["CreationDate"] = int(time.time() * 1000)
         self.PlSav["Summary"]["CreationDate"] = int(time.time() * 1000)
 
@@ -634,6 +680,59 @@ class Experiment:
 
         return self
 
+    def upload(self, image_path: str, experiment: "Experiment", user: Optional[User] = None) -> None:
+        ''' 上传(发布/更新) 实验
+            @param image_path: 图片路径
+            @param summary: 实验介绍,
+                Experiment.export_summary()与User.get_summary()["Data"]为符合要求的输入
+        '''
+        if not isinstance(image_path, str) or \
+            not isinstance(experiment, Experiment) or \
+            user is not None and not isinstance(user, User):
+            raise TypeError
+        if not os.path.exists(image_path) or not os.path.isfile(image_path):
+            raise FileNotFoundError
+
+        if user is None:
+            user = User()
+
+        if user.is_anonymous:
+            raise PermissionError("you must register first")
+
+        summary = experiment.PlSav["Summary"]
+        summary["CreationDate"] = time.time() * 1000
+
+        # 请求更新实验
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com/Contents/SubmitExperiment",
+            json={
+            "Request": {
+                "FileSize": os.path.getsize(image_path),
+                'Extension': ".jpg",
+            },
+            'Summary': summary,
+        },
+            headers={
+                "x-API-Token": user.token,
+                "x-API-AuthCode": user.auth_code,
+                'Accept-Encoding': 'gzip',
+                'Content-Type': 'gzipped/json',
+            }
+        )
+        _check_response(response)
+
+        # 上传图片
+        # with open(image_path, "rb") as f:
+        #     data = {
+        #         'policy': (None, response.json()['Data']['Token']['Policy'], None),
+        #         'authorization': (None, self.auth_code, None),
+        #         'file': ('temp.jpg', f, None),
+        #     }
+        #     requests.post(
+        #         "http://v0.api.upyun.com/qphysics",
+        #         files=data,
+        #     )
+
 class experiment:
     ''' 仅提供通过with操作存档的功能的高层次api '''
     def __init__(self,
@@ -739,6 +838,8 @@ def search_Experiment(sav_name: str) -> Optional[str]:
     '''  检测实验是否存在, 输入为存档名, 若存在则返回存档对应的文件名, 若不存在则返回None'''
     for aSav in getAllSav():
         sav = _open_sav(aSav)
+        if sav is None:
+            continue
         if sav["InternalName"] == sav_name:
             search_Experiment.sav = sav
             return aSav

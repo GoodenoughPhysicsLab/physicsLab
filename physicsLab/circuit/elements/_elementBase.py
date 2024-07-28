@@ -80,7 +80,9 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
     def __define_virtual_var_to_let_ide_show(self,
                                              data: CircuitElementData,
                                              exp: Experiment):
-        ''' useless '''
+        ''' useless
+            这些变量的定义在CircuitMeta中
+        '''
         self.data: CircuitElementData = data
         self.experiment: Experiment = exp
 
