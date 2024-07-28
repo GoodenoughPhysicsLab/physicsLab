@@ -24,8 +24,7 @@ from .lib.wires import crt_Wires, del_Wires
 
 from physicsLab.plAR import *
 
-from physicsLab.web import *
-
+from physicsLab import web
 from physicsLab import lib
 from physicsLab import music
 

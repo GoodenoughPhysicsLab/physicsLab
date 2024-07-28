@@ -108,7 +108,9 @@ class WarningError(Exception):
 class ElementNotExistError(Exception):
     pass
 
-class LogInFaild(Exception):
-    ''' 登录失败 '''
+class ResponseFail(Exception):
+    ''' 返回消息体失败 '''
+    def __init__(self, err_msg: str):
+        self.err_msg: str = err_msg
     def __str__(self):
-        return "Log in failed"
+        return self.err_msg
