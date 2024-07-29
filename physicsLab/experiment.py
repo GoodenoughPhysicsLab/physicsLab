@@ -3,19 +3,29 @@ import os
 import json
 import copy
 import time
+import gzip
 import requests
 import platform
 import tempfile
 
+from datetime import datetime
+
+from physicsLab import plAR
 from physicsLab import  _tools
 from physicsLab import errors
 from physicsLab import savTemplate
 from physicsLab import _colorUtils
 from .web import User, _check_response
-from .enums import Category
+from .enums import Category, Tag
 from .savTemplate import Generate
 from .enums import ExperimentType
-from .typehint import Union, Optional, List, Dict, numType, Self
+from .typehint import Union, Optional, List, Dict, numType, Self, Callable
+
+def id_to_time(id: str) -> datetime:
+    ''' 从 用户id/实验id 中获取其对应的时间
+    '''
+    seconds = int(id[0:8], 16)
+    return datetime.fromtimestamp(seconds)
 
 class stack_Experiment:
     data: List["Experiment"] = []
@@ -371,6 +381,7 @@ class Experiment:
         self.__read_wire(_StatusSave["Wires"])
 
         del _summary["$type"]
+        _summary["Category"] = category.value
         self.PlSav["Summary"] = _summary
         return self
 
@@ -407,7 +418,6 @@ class Experiment:
         if not self.is_open_or_crt:
             raise errors.ExperimentNotOpenError
 
-        # 编译成功，打印信息
         if self.is_open:
             status: str = "update"
         else: # self.is_crt
@@ -515,12 +525,23 @@ class Experiment:
         os.remove(f.name)
         return self
 
-    def publish(self, title: Optional[str] = None, introduction: Optional[str] = None) -> Self:
-        ''' 生成与发布实验有关的存档内容 '''
+    def edit_publish_info(self,
+                title: Optional[str] = None,
+                introduction: Optional[str] = None,
+                wx: bool = False,
+                ) -> Self:
+        ''' 生成与发布实验有关的存档内容
+            @param title: 标题
+            @param introduction: 简介
+            @param wx: 是否续写简介
+        '''
         def introduce_Experiment(introduction: Union[str, None]) -> None:
             '''  发布实验时输入实验介绍 '''
             if introduction is not None:
-                self.PlSav['Summary']['Description'] = introduction.split('\n')
+                if self.PlSav['Summary']['Description'] is not None and wx:
+                    self.PlSav['Summary']['Description'] += introduction.split('\n')
+                else:
+                    self.PlSav['Summary']['Description'] = introduction.split('\n')
 
         def name_Experiment(title: Union[str, None]) -> None:
             ''' 发布实验时输入实验标题 '''
@@ -534,6 +555,165 @@ class Experiment:
 
         introduce_Experiment(introduction)
         name_Experiment(title)
+
+        return self
+
+    def __upload(self,
+            user: User,
+            category: Optional[Category],
+            image_path: Optional[str],
+            ):
+        if image_path is not None and not isinstance(image_path, str) or \
+            category is not None and not isinstance(category, Category) or \
+            not isinstance(user, User):
+            raise TypeError
+        if image_path is not None and (not os.path.exists(image_path) or not os.path.isfile(image_path)):
+            raise FileNotFoundError
+        if user.is_anonymous:
+            raise PermissionError("you must register first")
+
+        self.__write()
+        workspace = copy.deepcopy(self.PlSav)
+        workspace["Summary"] = None
+        _summary = self.PlSav["Summary"]
+
+        if _summary["Language"] is None:
+            _summary["Language"] = "Chinese"
+
+        if not hasattr(user, "Nickname"):
+            _user_info = user.get_user(user.user_id)["Data"]
+
+            _summary["User"]["ID"] = _user_info["User"]["ID"]
+            _summary["User"]["Nickname"] = _user_info["User"]["Nickname"]
+            _summary["User"]["Signature"] = _user_info["User"]["Signature"]
+            _summary["User"]["Avatar"] = _user_info["User"]["Avatar"]
+            _summary["User"]["AvatarRegion"] = _user_info["User"]["AvatarRegion"]
+            _summary["User"]["Decoration"] = _user_info["User"]["Decoration"]
+            _summary["User"]["Verification"] = _user_info["User"]["Verification"]
+        else:
+            _summary["User"]["ID"] = user.user_id
+            _summary["User"]["Nickname"] = user.nickname
+            _summary["User"]["Signature"] = user.signature
+            _summary["User"]["Avatar"] = user.avatar
+            _summary["User"]["AvatarRegion"] = user.avatar_region
+            _summary["User"]["Decoration"] = user.decoration
+            _summary["User"]["Verification"] = user.verification
+
+
+        if category is not None:
+            _summary["Category"] = category.value
+
+        plar_ver = plAR.get_plAR_version()
+        if plar_ver is not None:
+            plar_ver = int(plar_ver.replace(".", ""))
+        else:
+            plar_ver = 2411
+        _summary["Version"] = plar_ver
+
+        # 请求更新实验
+        submit_data = {
+            "Summary": _summary,
+            "Workspace": workspace,
+        }
+        if image_path is not None:
+            submit_data["Request"] = {
+                "FileSize": os.path.getsize(image_path),
+                'Extension': ".jpg",
+            }
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com/Contents/SubmitExperiment",
+            data=gzip.compress(json.dumps(submit_data).encode("utf-8")),
+            headers={
+                "x-API-Token": user.token,
+                "x-API-AuthCode": user.auth_code,
+                "x-API-Version": str(plar_ver),
+                "Accept-Encoding": "gzip",
+                "Content-Type": "gzipped/json",
+            }
+        )
+        def callback(status_code):
+            if status_code == 403:
+                _colorUtils.color_print(
+                    "you can't submit experiment because you are not the author "
+                    "or experiment status(elements, tags...) is invalid",
+                    _colorUtils.COLOR.RED,
+                )
+        _check_response(response, callback)
+        experiment_id = response.json()["Data"]["Summary"]["ID"]
+
+        # 上传图片
+        if image_path is None:
+            return experiment_id, submit_data
+        with open(image_path, "rb") as f:
+            data = {
+                "policy": (None, response.json()["Data"]["Token"]["Policy"], None),
+                "authorization": (None, response.json()["Data"]["Token"]["Authorization"], None),
+                "file": ("temp.jpg", f, None),
+            }
+            response = requests.post(
+                "http://v0.api.upyun.com/qphysics",
+                files=data,
+            )
+            response.raise_for_status()
+
+        _summary['Image'] += 1
+
+        return experiment_id, submit_data
+
+    def upload(self,
+                user: User,
+                category: Category,
+                image_path: Optional[str] = None,
+                ) -> Self:
+        ''' 发布新实验
+            @user: 不允许匿名登录
+            @param category: 实验区还是黑洞区
+            @param image_path: 图片路径
+        '''
+        if not isinstance(category, Category):
+            raise TypeError
+        if self.PlSav["Summary"]["ID"] is not None:
+            raise Exception(
+                "upload can only be used to upload a brand new experiment, try using update instead"
+            )
+
+        experiment_id, submit_data = self.__upload(user, category, image_path)
+
+        user.confirm_experiment(experiment_id, {
+            Category.Experiment.value: Category.Experiment,
+            Category.Discussion.value: Category.Discussion,
+        }[category.value], submit_data["Summary"]["Image"])
+
+        return self
+
+    def update(self,
+               user: User,
+               image_path: Optional[str] = None,
+               ) -> Self:
+        ''' 更新实验到物实
+            @user: 不允许匿名登录
+            @param image_path: 图片路径
+        '''
+        if self.PlSav["Summary"]["ID"] is None:
+            raise Exception(
+                "update can only be used to upload an exist experiment, try using upload instead"
+            )
+
+        _, submit_data = self.__upload(user, None, image_path)
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com/Contents/SubmitExperiment",
+            data=gzip.compress(json.dumps(submit_data).encode("utf-8")),
+            headers={
+                "x-API-Token": user.token,
+                "x-API-AuthCode": user.auth_code,
+                "x-API-Version": str(submit_data["Summary"]["Version"]),
+                "Accept-Encoding": "gzip",
+                "Content-Type": "gzipped/json",
+            }
+        )
+        _check_response(response)
 
         return self
 
@@ -679,59 +859,6 @@ class Experiment:
                 self.Wires.add(a_wire)
 
         return self
-
-    def upload(self, image_path: str, experiment: "Experiment", user: Optional[User] = None) -> None:
-        ''' 上传(发布/更新) 实验
-            @param image_path: 图片路径
-            @param summary: 实验介绍,
-                Experiment.export_summary()与User.get_summary()["Data"]为符合要求的输入
-        '''
-        if not isinstance(image_path, str) or \
-            not isinstance(experiment, Experiment) or \
-            user is not None and not isinstance(user, User):
-            raise TypeError
-        if not os.path.exists(image_path) or not os.path.isfile(image_path):
-            raise FileNotFoundError
-
-        if user is None:
-            user = User()
-
-        if user.is_anonymous:
-            raise PermissionError("you must register first")
-
-        summary = experiment.PlSav["Summary"]
-        summary["CreationDate"] = time.time() * 1000
-
-        # 请求更新实验
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com/Contents/SubmitExperiment",
-            json={
-            "Request": {
-                "FileSize": os.path.getsize(image_path),
-                'Extension': ".jpg",
-            },
-            'Summary': summary,
-        },
-            headers={
-                "x-API-Token": user.token,
-                "x-API-AuthCode": user.auth_code,
-                'Accept-Encoding': 'gzip',
-                'Content-Type': 'gzipped/json',
-            }
-        )
-        _check_response(response)
-
-        # 上传图片
-        # with open(image_path, "rb") as f:
-        #     data = {
-        #         'policy': (None, response.json()['Data']['Token']['Policy'], None),
-        #         'authorization': (None, self.auth_code, None),
-        #         'file': ('temp.jpg', f, None),
-        #     }
-        #     requests.post(
-        #         "http://v0.api.upyun.com/qphysics",
-        #         files=data,
-        #     )
 
 class experiment:
     ''' 仅提供通过with操作存档的功能的高层次api '''

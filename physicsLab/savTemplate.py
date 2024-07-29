@@ -38,7 +38,7 @@ Circuit = {
         "ModelName": None,
         "ModelTags": [],
         "Version": 0,
-        "Language": None,
+        "Language": "Chinese",
         "Visits": 0,
         "Stars": 0,
         "Supports": 0,
@@ -49,16 +49,16 @@ Circuit = {
         "CreationDate": Generate,
         "UpdateDate": 0,
         "SortingDate": 0,
-        "ID": None,
+        "ID": None, # 实验的ID
         "Category": None,
         "Subject": "",
         "LocalizedSubject": None,
-        "Image": 0,
+        "Image": -1,
         "ImageRegion": 0,
         "User": {
-            "ID": None,
-            "Nickname": None,
-            "Signature": None,
+            "ID": None, # 用户ID
+            "Nickname": None, # 用户昵称
+            "Signature": None, # 签名
             "Avatar": 0,
             "AvatarRegion": 0,
             "Decoration": 0,
@@ -66,6 +66,7 @@ Circuit = {
         },
         "Visibility": 0,
         "Settings": {},
+        "Anonymous": False,
         "Multilingual": False
     },
     "CreationDate": 0,

@@ -105,6 +105,29 @@ with experiment("example") as exp:
     exp.read_from_web("642cf37a494746375aae306a", Category.Discussion)
 ```
 
+## 向物实发布新的实验
+```Python
+from physicsLab import *
+
+user = web.User(YOUR_UESRNAME, YOUR_PASSWORD)
+
+with experiment("example") as exp:
+    # do something
+    exp.upload(user, Category.Discussion, YOUR_IMAGE_PATH)
+```
+
+## 向物实上传已发布的实验
+```Python
+from physicsLab import *
+
+user = web.User(YOUR_UESRNAME, YOUR_PASSWORD)
+
+with experiment("example") as exp:
+    exp.read_from_web("642cf37a494746375aae306a", Category.Discussion)
+    # do something
+    exp.update(user, YOUR_IMAGE_PATH)
+```
+
 ## 对存档名进行重命名
 该方法会同时修改存档名与发布后的标题
 ```Python
@@ -187,6 +210,15 @@ exp = Experiment("example")
 exp.exit()
 ```
 
+## 编辑存档的发布信息
+使用`edit_publish_info`方法, `title`参数修改发布标题，`description`参数定义发布描述，`wx`参数为是否续写`description`的内容
+```python
+from physicsLab import *
+
+with experiment("example") as exp:
+    exp.edit_publish_info(title="new_title", description="new_description", wx=True)
+```
+
 ## 用记事本打开存档文件
 你也可以打开存档查看：
 ```Python
@@ -263,4 +295,11 @@ with experiment("example") as exp:
     exp.paused()
     # 如果要解除暂停实验，请使用exp.paused(False)
     ...
+```
+
+## 通过用户/实验的id获取时间
+```python
+from physicsLab import *
+
+print(id_to_time("62d3fd092f3a2a60cc8ccc9e"))
 ```

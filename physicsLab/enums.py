@@ -41,7 +41,7 @@ class Tag(Enum):
     ApplyForFeature = "精选申请"
     # 黑洞区
     BUG = "BUG"
-    Discussion = "综合交流"
+    Discussion = "交流"
     Stories = "小说专区"
     Charroom = "聊天"
     Q_A = "问与答"

@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
+from random import choice
+from string import ascii_lowercase, ascii_letters, digits
+
 from collections import namedtuple
-from .typehint import Tuple, Union, List, numType, Callable
+from .typehint import Tuple, Union, numType
 
 position = namedtuple("position", ["x", "y", "z"])
 
@@ -15,10 +18,12 @@ def roundData(*num) -> Union[numType, Tuple[numType]]:
     return tuple(round(i, 4) for i in num)
 
 # 生成随机字符串
-def randString(strLength: int) -> str:
+def randString(strLength: int, lower: bool = False) -> str:
     if not isinstance(strLength, int):
         raise TypeError
 
-    from string import ascii_letters as _ascii_letters, digits as _digits
-    from random import choice as _choice
-    return ''.join(_choice(_ascii_letters + _digits) for _ in range(strLength))
+    if lower:
+        letters = ascii_lowercase
+    else:
+        letters = ascii_letters
+    return ''.join(choice(letters + digits) for _ in range(strLength))

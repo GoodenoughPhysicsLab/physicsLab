@@ -7,7 +7,11 @@ from physicsLab import plAR
 from physicsLab import errors
 from physicsLab.enums import Tag, Category
 
-def _check_response(response: requests.Response) -> dict:
+def _check_response(response: requests.Response, callback = None) -> dict:
+    ''' 检查返回的response
+        @callback: 自定义物实返回的status对应的报错信息,
+                    要求传入status_code(捕获物实返回体中的status_code), 无返回值
+    '''
     response.raise_for_status()
 
     response_json = response.json()
@@ -15,8 +19,9 @@ def _check_response(response: requests.Response) -> dict:
 
     if status_code == 200:
         return response_json
+    if callback is not None:
+        callback(status_code)
     raise errors.ResponseFail(f"Physics-Lab-AR returned error code {status_code} : {response_json['Message']}")
-
 
 def get_start_page() -> dict:
     ''' 获取主页数据 '''
@@ -35,28 +40,40 @@ class User:
                  passward: Optional[str] = None,
                  *,
                  token: Optional[str] = None,
-                 auth_code: Optional[str] = None
+                 auth_code: Optional[str] = None,
+                 user_id: Optional[str] = None,
                  ) -> None:
         if username is not None and not isinstance(username, str) or \
                 passward is not None and not isinstance(passward, str) or \
                 token is not None and not isinstance(token, str) or \
-                auth_code is not None and not isinstance(auth_code, str):
+                auth_code is not None and not isinstance(auth_code, str) or \
+                user_id is not None and not isinstance(user_id, str):
             raise TypeError
 
         # True: 是匿名登录; False: 不是匿名登录
         self.is_anonymous: bool = True
 
-        if token is not None and auth_code is not None:
+        if token is not None and auth_code is not None and user_id is not None:
             self.token = token
             self.auth_code = auth_code
+            self.user_id = user_id
             self.is_anonymous = False
         else:
             tmp = self.__login(username, passward)
 
-            self.is_anonymous = tmp["Data"]["User"]["Nickname"] is None
-
             self.token = tmp["Token"]
             self.auth_code = tmp["AuthCode"]
+            self.user_id = tmp["Data"]["User"]["ID"]
+
+            self.is_anonymous = tmp["Data"]["User"]["Nickname"] is None
+
+            if not self.is_anonymous:
+                self.nickname = tmp["Data"]["User"]["Nickname"]
+                self.signature = tmp["Data"]["User"]["Signature"]
+                self.avatar = tmp["Data"]["User"]["Avatar"]
+                self.avatar_region = tmp["Data"]["User"]["AvatarRegion"]
+                self.decoration = tmp["Data"]["User"]["Decoration"]
+                self.verification = tmp["Data"]["User"]["Verification"]
 
     @staticmethod
     def __login(username: Optional[str], passward: Optional[str]) -> _login_res:
@@ -76,23 +93,9 @@ class User:
                 "Password": passward,
                 "Version": version,
                 "Device": {
-                    "ID": None,
                     "Identifier": "7db01528cf13e2199e141c402d79190e",
-                    "Platform": "Android",
-                    "Model": "HONOR ROD-W09",
-                    "System": "Android OS 12 / API-31 (HONORROD-W09/7.0.0.186C00)",
-                    "CPU": "ARM64 FP ASIMD AES",
-                    "GPU": "Mali-G610 MC6",
-                    "SystemMemory": 7691,
-                    "GraphicMemory": 2048,
-                    "ScreenWidth": 2560,
-                    "ScreenHeight": 1600,
-                    "ScreenDPI": 360,
-                    "ScreenSize": 8.4,
-                    "Timezone": "Local",
                     "Language": "Chinese"
                  },
-                "Statistic": None
             },
             headers={
                 "Content-Type": "application/json",
@@ -202,19 +205,47 @@ class User:
 
         return _check_response(response)
 
-    def post_comment(self, target_id: str, content: str) -> dict:
+    def confirm_experiment(self, summary_id: str, category: Category, image_counter: int) -> dict:
+        if not isinstance(summary_id, str) or \
+            not isinstance(category, Category) or \
+            not isinstance(image_counter, int):
+            raise TypeError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com/Contents/ConfirmExperiment",
+            json={
+                "SummaryID": summary_id,
+                "Category": category.value,
+                "Image": image_counter,
+                "Extension": ".jpg",
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode":self.auth_code,
+            }
+        )
+
+        return _check_response(response)
+
+    def post_comment(self, target_id: str, content: str, target_type: str) -> dict:
         ''' 发表评论
             @param target_id: 目标用户的ID
             @param content: 评论内容
+            @param target_type: User, Discussion, Experiment
         '''
-        if not isinstance(self.token, str) or not isinstance(self.auth_code, str):
+        if not isinstance(self.token, str) or \
+            not isinstance(self.auth_code, str) or \
+            not isinstance(target_id, str):
             raise TypeError
+        if target_type not in ("User", "Discussion", "Experiment"):
+            raise ValueError
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Messages/PostComment",
             json={
                 "TargetID": target_id,
-                "TargetType": "User",
+                "TargetType": target_type,
                 "Language": "Chinese",
                 "ReplyID": "",
                 "Content": content,
@@ -229,18 +260,23 @@ class User:
 
         return _check_response(response)
 
-    def get_comments(self, id: str) -> dict:
+    def get_comments(self, id: str, target_type: str) -> dict:
         ''' 获取留言板信息
-            @param id: 物实用户的ID
+            @param id: 物实用户的ID/实验的id
+            @param target_type: User, Discussion, Experiment
         '''
-        if not isinstance(self.token, str) or not isinstance(self.auth_code, str):
+        if not isinstance(self.token, str) or \
+            not isinstance(self.auth_code, str) or \
+            not isinstance(target_type, str):
             raise TypeError
+        if target_type not in ("User", "Discussion", "Experiment"):
+            raise ValueError
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Messages/GetComments",
             json={
                 "TargetID": id,
-                "TargetType": "User",
+                "TargetType": target_type,
                 "CommentID": None,
                 "Take": 16,
                 "Skip": 0
@@ -275,7 +311,13 @@ class User:
             }
         )
 
-        return _check_response(response)
+        def callback(status_code):
+            if status_code == 403:
+                raise PermissionError("login failed")
+            if status_code == 404:
+                raise errors.ResponseFail("experiment not found(may be you select category wrong)")
+
+        return _check_response(response, callable)
 
     def get_derivatives(self, content_id: str, category: Category) -> dict:
         ''' 获取作品的详细信息
@@ -311,6 +353,48 @@ class User:
             "https://physics-api-cn.turtlesim.com/Users/GetUser",
             json={
                 "ID": user_id,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            }
+        )
+
+        return _check_response(response)
+
+    def get_profile(self) -> dict:
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com:443/Contents/GetProfile",
+            json={
+                "ID": self.user_id,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            }
+        )
+
+        return _check_response(response)
+
+    def star(self, content_id: str, category: Category, status: bool = True):
+        ''' 添加收藏
+            @param content_id: 实验的ID
+            @param category: 实验区, 黑洞区
+            @param status: True: 收藏, False: 取消收藏
+        '''
+        if not isinstance(content_id, str) or \
+            not isinstance(category, Category) or \
+            not isinstance(status, bool):
+            raise TypeError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com/Contents/StarContent",
+            json={
+                "ContentID": content_id,
+                "Status": status,
+                "Category": category.value,
             },
             headers={
                 "Content-Type": "application/json",

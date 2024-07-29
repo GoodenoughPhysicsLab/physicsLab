@@ -123,3 +123,8 @@
 7.  增加`Tag`(enum class)
 8.  增加`Category`
 9.  增加`lib.Super_AndGate`, `lib.Tick_Counter`
+
+# 1.4.11
+1.  更多`web`api
+2.  增加`Experiment.read_from_web`
+3.  增加`Experiment.upload`, `Experiment.update`
