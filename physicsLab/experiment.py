@@ -664,14 +664,15 @@ class Experiment:
     def upload(self,
                 user: User,
                 category: Category,
-                image_path: Optional[str] = None,
+                image_path: str,
                 ) -> Self:
         ''' 发布新实验
             @user: 不允许匿名登录
             @param category: 实验区还是黑洞区
             @param image_path: 图片路径
         '''
-        if not isinstance(category, Category):
+        if not isinstance(category, Category) or \
+            not isinstance(image_path, str):
             raise TypeError
         if self.PlSav["Summary"]["ID"] is not None:
             raise Exception(
