@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import requests
 
 from typing import Optional, List, TypedDict
@@ -41,23 +42,28 @@ class User:
                  *,
                  token: Optional[str] = None,
                  auth_code: Optional[str] = None,
-                 user_id: Optional[str] = None,
                  ) -> None:
         if username is not None and not isinstance(username, str) or \
                 passward is not None and not isinstance(passward, str) or \
                 token is not None and not isinstance(token, str) or \
-                auth_code is not None and not isinstance(auth_code, str) or \
-                user_id is not None and not isinstance(user_id, str):
+                auth_code is not None and not isinstance(auth_code, str):
             raise TypeError
 
-        # True: 是匿名登录; False: 不是匿名登录
-        self.is_anonymous: bool = True
-
-        if token is not None and auth_code is not None and user_id is not None:
+        if token is not None and auth_code is not None:
             self.token = token
             self.auth_code = auth_code
-            self.user_id = user_id
+
+            tmp = self.__login()
             self.is_anonymous = False
+
+            self.user_id = tmp["Data"]["User"]["ID"]
+            self.nickname = tmp["Data"]["User"]["Nickname"]
+            self.signature = tmp["Data"]["User"]["Signature"]
+            self.avatar = tmp["Data"]["User"]["Avatar"]
+            self.avatar_region = tmp["Data"]["User"]["AvatarRegion"]
+            self.decoration = tmp["Data"]["User"]["Decoration"]
+            self.verification = tmp["Data"]["User"]["Verification"]
+
         else:
             tmp = self.__login(username, passward)
 
@@ -65,9 +71,17 @@ class User:
             self.auth_code = tmp["AuthCode"]
             self.user_id = tmp["Data"]["User"]["ID"]
 
-            self.is_anonymous = tmp["Data"]["User"]["Nickname"] is None
+            # True: 是匿名登录; False: 不是匿名登录
+            self.is_anonymous: bool = tmp["Data"]["User"]["Nickname"] is None
 
-            if not self.is_anonymous:
+            if self.is_anonymous:
+                self.nickname = None
+                self.signature = None
+                self.avatar = None
+                self.avatar_region = None
+                self.decoration = None
+                self.verification = None
+            else:
                 self.nickname = tmp["Data"]["User"]["Nickname"]
                 self.signature = tmp["Data"]["User"]["Signature"]
                 self.avatar = tmp["Data"]["User"]["Avatar"]
@@ -75,8 +89,9 @@ class User:
                 self.decoration = tmp["Data"]["User"]["Decoration"]
                 self.verification = tmp["Data"]["User"]["Verification"]
 
-    @staticmethod
-    def __login(username: Optional[str], passward: Optional[str]) -> _login_res:
+    def __login(self,
+                username: Optional[str] = None,
+                passward: Optional[str] = None) -> _login_res:
         ''' 登录, 默认为匿名登录
 
             通过返回字典的Token与AuthCode实现登陆
@@ -86,6 +101,17 @@ class User:
             version = int(version.replace(".", ""))
         else:
             version = 2411
+
+        headers = {
+            "x-API-Version": str(version),
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Accept-Language": "zh-CN",
+        }
+        if hasattr(self, "token") and hasattr(self, "auth_code"):
+            headers["x-API-Token"] = self.token
+            headers["x-API-AuthCode"] = self.auth_code
+
         response = requests.post(
             "http://physics-api-cn.turtlesim.com/Users/Authenticate",
             json={
@@ -95,13 +121,9 @@ class User:
                 "Device": {
                     "Identifier": "7db01528cf13e2199e141c402d79190e",
                     "Language": "Chinese"
-                 },
+                    },
             },
-            headers={
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "Accept-Language": "zh-CN"
-            },
+            headers=headers,
         )
 
         return _check_response(response) # type: ignore -> response must match _login_res
@@ -404,3 +426,33 @@ class User:
         )
 
         return _check_response(response)
+
+    def upload_image(self, policy: str, authorization: str, image_path: str) -> dict:
+        ''' 上传实验图片
+            @policy @authorization 可通过/Contents/SubmitExperiment获取
+            @param image_path: 待上传的图片在本地的路径
+        '''
+        if policy is None or authorization is None:
+            raise RuntimeError("Sorry, Physics-Lab-AR can't upload this iamge")
+        if not isinstance(policy, str) or \
+            not isinstance(authorization, str) or \
+            not isinstance(image_path, str):
+            raise TypeError
+        if not os.path.exists(image_path) or not os.path.isfile(image_path):
+            raise FileNotFoundError
+
+        with open(image_path, "rb") as f:
+            data = {
+                "policy": (None, policy, None),
+                "authorization": (None, authorization, None),
+                "file": ("temp.jpg", f, None),
+            }
+            response = requests.post(
+                "http://v0.api.upyun.com/qphysics",
+                files=data,
+            )
+            response.raise_for_status()
+            if response.json()["code"] != 200:
+                raise errors.ResponseFail(f"error code {response.json()['code']}: "
+                                          f"{response.json()['message']}")
+            return response.json()

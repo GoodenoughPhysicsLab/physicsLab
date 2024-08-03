@@ -19,7 +19,7 @@ from .web import User, _check_response
 from .enums import Category, Tag
 from .savTemplate import Generate
 from .enums import ExperimentType
-from .typehint import Union, Optional, List, Dict, numType, Self, Callable
+from .typehint import Union, Optional, List, Dict, numType, Self
 
 def id_to_time(id: str) -> datetime:
     ''' 从 用户id/实验id 中获取其对应的时间
@@ -52,7 +52,7 @@ class stack_Experiment:
         res = cls.top()
         cls.data.pop()
         return res
-
+    
 def get_Experiment() -> "Experiment":
     ''' 获取当前正在操作的存档 '''
     return stack_Experiment.top()
@@ -579,26 +579,13 @@ class Experiment:
 
         if _summary["Language"] is None:
             _summary["Language"] = "Chinese"
-
-        if not hasattr(user, "Nickname"):
-            _user_info = user.get_user(user.user_id)["Data"]
-
-            _summary["User"]["ID"] = _user_info["User"]["ID"]
-            _summary["User"]["Nickname"] = _user_info["User"]["Nickname"]
-            _summary["User"]["Signature"] = _user_info["User"]["Signature"]
-            _summary["User"]["Avatar"] = _user_info["User"]["Avatar"]
-            _summary["User"]["AvatarRegion"] = _user_info["User"]["AvatarRegion"]
-            _summary["User"]["Decoration"] = _user_info["User"]["Decoration"]
-            _summary["User"]["Verification"] = _user_info["User"]["Verification"]
-        else:
-            _summary["User"]["ID"] = user.user_id
-            _summary["User"]["Nickname"] = user.nickname
-            _summary["User"]["Signature"] = user.signature
-            _summary["User"]["Avatar"] = user.avatar
-            _summary["User"]["AvatarRegion"] = user.avatar_region
-            _summary["User"]["Decoration"] = user.decoration
-            _summary["User"]["Verification"] = user.verification
-
+        _summary["User"]["ID"] = user.user_id
+        _summary["User"]["Nickname"] = user.nickname
+        _summary["User"]["Signature"] = user.signature
+        _summary["User"]["Avatar"] = user.avatar
+        _summary["User"]["AvatarRegion"] = user.avatar_region
+        _summary["User"]["Decoration"] = user.decoration
+        _summary["User"]["Verification"] = user.verification
 
         if category is not None:
             _summary["Category"] = category.value
@@ -615,13 +602,18 @@ class Experiment:
             "Summary": _summary,
             "Workspace": workspace,
         }
+
         if image_path is not None:
+            image_size = os.path.getsize(image_path)
+            if image_size >= 1048576:
+                errors.warning("image size is bigger than 1MB")
+                image_size = -image_size # 利用物实bug发布大图片
             submit_data["Request"] = {
-                "FileSize": os.path.getsize(image_path),
+                "FileSize": image_size,
                 'Extension': ".jpg",
             }
 
-        response = requests.post(
+        submit_response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/SubmitExperiment",
             data=gzip.compress(json.dumps(submit_data).encode("utf-8")),
             headers={
@@ -639,32 +631,14 @@ class Experiment:
                     "or experiment status(elements, tags...) is invalid",
                     _colorUtils.COLOR.RED,
                 )
-        _check_response(response, callback)
-        experiment_id = response.json()["Data"]["Summary"]["ID"]
+        _check_response(submit_response, callback)
 
-        # 上传图片
-        if image_path is None:
-            return experiment_id, submit_data
-        with open(image_path, "rb") as f:
-            data = {
-                "policy": (None, response.json()["Data"]["Token"]["Policy"], None),
-                "authorization": (None, response.json()["Data"]["Token"]["Authorization"], None),
-                "file": ("temp.jpg", f, None),
-            }
-            response = requests.post(
-                "http://v0.api.upyun.com/qphysics",
-                files=data,
-            )
-            response.raise_for_status()
-
-        _summary['Image'] += 1
-
-        return experiment_id, submit_data
+        return submit_response.json(), submit_data
 
     def upload(self,
                 user: User,
                 category: Category,
-                image_path: str,
+                image_path: Optional[str] = None,
                 ) -> Self:
         ''' 发布新实验
             @user: 不允许匿名登录
@@ -672,19 +646,27 @@ class Experiment:
             @param image_path: 图片路径
         '''
         if not isinstance(category, Category) or \
-            not isinstance(image_path, str):
+            image_path is not None and not isinstance(image_path, str):
             raise TypeError
         if self.PlSav["Summary"]["ID"] is not None:
             raise Exception(
                 "upload can only be used to upload a brand new experiment, try using update instead"
             )
 
-        experiment_id, submit_data = self.__upload(user, category, image_path)
+        submit_response, submit_data = self.__upload(user, category, image_path)
 
-        user.confirm_experiment(experiment_id, {
-            Category.Experiment.value: Category.Experiment,
-            Category.Discussion.value: Category.Discussion,
-        }[category.value], submit_data["Summary"]["Image"])
+        submit_data["Summary"]["Image"] += 1
+        user.confirm_experiment(
+            submit_response["Data"]["Summary"]["ID"], {
+                Category.Experiment.value: Category.Experiment,
+                Category.Discussion.value: Category.Discussion,
+            }[category.value], submit_data["Summary"]["Image"]
+        )
+
+        if image_path is not None:
+            user.upload_image(submit_response["Data"]["Token"]["Policy"],
+                            submit_response["Data"]["Token"]["Authorization"],
+                            image_path)
 
         return self
 
@@ -701,8 +683,9 @@ class Experiment:
                 "update can only be used to upload an exist experiment, try using upload instead"
             )
 
-        _, submit_data = self.__upload(user, None, image_path)
+        submit_response, submit_data = self.__upload(user, None, image_path)
 
+        submit_data["Summary"]["Image"] += 1
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/SubmitExperiment",
             data=gzip.compress(json.dumps(submit_data).encode("utf-8")),
@@ -715,6 +698,11 @@ class Experiment:
             }
         )
         _check_response(response)
+
+        if image_path is not None:
+            user.upload_image(submit_response["Data"]["Token"]["Policy"],
+                            submit_response["Data"]["Token"]["Authorization"],
+                            image_path)
 
         return self
 
