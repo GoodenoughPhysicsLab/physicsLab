@@ -16,7 +16,7 @@ from physicsLab import errors
 from physicsLab import savTemplate
 from physicsLab import _colorUtils
 from .web import User, _check_response
-from .enums import Category, Tag
+from .enums import Category
 from .savTemplate import Generate
 from .enums import ExperimentType
 from .typehint import Union, Optional, List, Dict, numType, Self
@@ -335,16 +335,16 @@ class Experiment:
                     )
                 )
 
-    def read(self) -> Self:
+    def read(self, warning_status: Optional[bool] = None) -> Self:
         ''' 读取实验已有状态 '''
         if not self.is_open_or_crt:
             raise errors.ExperimentNotOpenError
         if self.is_read:
-            errors.warning("experiment has been read")
+            errors.warning("experiment has been read", warning_status)
             return self
         self.is_read = True
         if self.is_crt:
-            errors.warning("can not read because you create this experiment")
+            errors.warning("can not read because you create this experiment", warning_status)
             return self
 
         status_sav = json.loads(self.PlSav["Experiment"]["StatusSave"])
@@ -464,7 +464,7 @@ class Experiment:
 
         return self
 
-    def delete(self, warning_status: Optional[bool]=None) -> None:
+    def delete(self, warning_status: Optional[bool] = None) -> None:
         ''' 删除存档 '''
         if not self.is_open_or_crt:
             raise errors.ExperimentNotOpenError
@@ -562,6 +562,7 @@ class Experiment:
             user: User,
             category: Optional[Category],
             image_path: Optional[str],
+            warning_status: Optional[bool],
             ):
         if image_path is not None and not isinstance(image_path, str) or \
             category is not None and not isinstance(category, Category) or \
@@ -606,7 +607,7 @@ class Experiment:
         if image_path is not None:
             image_size = os.path.getsize(image_path)
             if image_size >= 1048576:
-                errors.warning("image size is bigger than 1MB")
+                errors.warning("image size is bigger than 1MB", warning_status)
                 image_size = -image_size # 利用物实bug发布大图片
             submit_data["Request"] = {
                 "FileSize": image_size,
@@ -639,6 +640,7 @@ class Experiment:
                 user: User,
                 category: Category,
                 image_path: Optional[str] = None,
+                warning_status: Optional[bool] = None,
                 ) -> Self:
         ''' 发布新实验
             @user: 不允许匿名登录
@@ -653,7 +655,7 @@ class Experiment:
                 "upload can only be used to upload a brand new experiment, try using update instead"
             )
 
-        submit_response, submit_data = self.__upload(user, category, image_path)
+        submit_response, submit_data = self.__upload(user, category, image_path, warning_status)
 
         submit_data["Summary"]["Image"] += 1
         user.confirm_experiment(
@@ -673,6 +675,7 @@ class Experiment:
     def update(self,
                user: User,
                image_path: Optional[str] = None,
+               warning_status: Optional[bool] = None,
                ) -> Self:
         ''' 更新实验到物实
             @user: 不允许匿名登录
@@ -683,7 +686,7 @@ class Experiment:
                 "update can only be used to upload an exist experiment, try using upload instead"
             )
 
-        submit_response, submit_data = self.__upload(user, None, image_path)
+        submit_response, submit_data = self.__upload(user, None, image_path, warning_status)
 
         submit_data["Summary"]["Image"] += 1
         response = requests.post(

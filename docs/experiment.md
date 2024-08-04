@@ -106,6 +106,7 @@ with experiment("example") as exp:
 ```
 
 ## 向物实发布新的实验
+如果需要修改实验的tag, 需要手动改`Experiment().PlSav["Summary"]["Tags"]`
 ```Python
 from physicsLab import *
 
