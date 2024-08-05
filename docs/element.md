@@ -101,18 +101,28 @@ del_Element(a) # input: element's self, output: None
 此函数将从调用该函数之后到打开下一个存档之前的作用域的坐标系设置为元件坐标系
 ```Python
 from physicsLab import *
-set_elementXYZ(True)
+
+expe = Experiment("example")
+set_elementXYZ(True) # 将expe设置为原件坐标系
+# do something
+expe.write()
 ```
 当你只希望某个元件是元件坐标系，而其他元件不受影响时，你可以在创建元件时传入对应参数
 ```Python
-And_Gate(0, 0, 0.1) # 这个或门的坐标为物实坐标系
-Or_Gate(0, 1, 0, elementXYZ=True) # 这个或门的坐标为元件坐标系，其他元件也一样
+from physicsLab import *
+
+with experiment("example"):
+    And_Gate(0, 0, 0.1) # 这个或门的坐标为物实坐标系
+    Or_Gate(0, 1, 0, elementXYZ=True) # 这个或门的坐标为元件坐标系
 ```
+
 ### 判断是否为元件坐标系
 你也可以使用该函数获取当前作用域下是否为元件坐标系：
 ```python
 from physicsLab import *
-is_elementXYZ() # return a bool
+
+with experiment("example"):
+    print(is_elementXYZ())
 ```
 如果你想查看某个元件是否为元件坐标系，可以通过元件属性`is_elementXYZ`查看：
 ```Python
@@ -126,6 +136,7 @@ with experiment("example"):
 ### 设置元件坐标系的坐标原点
 元件坐标系原点默认为物实坐标系的元件：`(0, 0, 0)`，但这是可以动态设置的
 ```Python
+from physicsLab import *
 
 with experiment("example"):
     set_O(0.2, 0.2, 0.1)
@@ -137,10 +148,12 @@ with experiment("example"):
 如上面的例子所示，可以使用`get_OriginPosition()`来获取坐标原点
 
 ### 获取物实坐标系单位长度
-`get_xyzUnit()`用于此功能
+`get_xyzUnit()`用于获取元件坐标系下的单位长度对应着物实坐标系下的值
 ```Python
-get_xyzUnit("x") # result: 0.16
-get_xyzUnit("y", "z") # result: 0.08, 0.1
+from physicsLab import *
+
+with experiment("example"):
+    print(get_xyzUnit())
 ```
 
 ### 与物实坐标系的转换

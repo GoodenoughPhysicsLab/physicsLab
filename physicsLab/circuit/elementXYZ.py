@@ -73,8 +73,7 @@ def set_O(x: numType, y: numType, z: numType) -> None:
         isinstance(y, (int, float)) and
         isinstance(z, (int, float))
     ):
-        global _xOrigin, _yOrigin, _zOrigin
-        _xOrigin, _yOrigin, _zOrigin = x, y, z
+        get_Experiment().elementXYZ_origin_position = position(x, y, z)
     else:
         raise TypeError
 
@@ -86,17 +85,7 @@ def amend_big_Element(x: numType, y: numType, z: numType):
 def get_OriginPosition() -> position:
     return get_Experiment().elementXYZ_origin_position
 
-# 输入"x" 返回_xUnit
-# 输入"y", "z" 返回_yUnit, _zUnit
-def get_xyzUnit(*args):
-    if any(i not in ("x", "y", "z") for i in args):
-        raise TypeError
-
-    index = {
-        "x": _X_UNIT,
-        "y": _Y_UNIT,
-        "z": _Z_UNIT
-    }
-    if len(args) == 1:
-        return index[args[0]]
-    return (index[string] for string in args)
+def get_xyzUnit() -> tuple:
+    ''' 获取元件坐标系下的单位长度对应着物实坐标系下的值
+    '''
+    return _X_UNIT, _Y_UNIT, _Z_UNIT

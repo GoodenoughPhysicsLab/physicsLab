@@ -52,7 +52,7 @@ class stack_Experiment:
         res = cls.top()
         cls.data.pop()
         return res
-    
+
 def get_Experiment() -> "Experiment":
     ''' 获取当前正在操作的存档 '''
     return stack_Experiment.top()
@@ -117,6 +117,7 @@ class Experiment:
             self.PlSav["Summary"] = savTemplate.Circuit["Summary"]
 
         if self.experiment_type == ExperimentType.Circuit:
+            # 该实验是否是元件坐标系
             self.is_elementXYZ: bool = False
             # 元件坐标系的坐标原点
             self.elementXYZ_origin_position: _tools.position = _tools.position(0, 0, 0)

@@ -7,7 +7,7 @@ from physicsLab._tools import roundData
 from physicsLab.circuit import elements
 from physicsLab.experiment import get_Experiment
 from physicsLab.enums import ExperimentType
-from physicsLab.typehint import numType, Optional, Self
+from physicsLab.typehint import numType, Optional, Self, Union
 
 class Const_NoGate:
     ''' 只读非门，若没有则创建一个只读非门，若已存在则不会创建新的元件 '''
@@ -264,8 +264,8 @@ class _Simple_Logic_Meta(type):
         return self
 
 class _Base(metaclass=_Simple_Logic_Meta):
-    def __getitem__(self, item: int) -> "elements.CircuitBase":
-        if not isinstance(item, int):
+    def __getitem__(self, item: Union[int, slice]):
+        if not isinstance(item, (int, slice)):
             raise TypeError
 
         return self._elements[item]
