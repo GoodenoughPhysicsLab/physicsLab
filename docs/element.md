@@ -158,7 +158,7 @@ with experiment("example"):
 
 ### 与物实坐标系的转换
 `translateXYZ`将物实坐标系转换为元件坐标系（包括2体积元件坐标修正）  
-`xyzTranslate`将元件坐标系转换为物实坐标系（默认不支持2体积元件坐标修正）, 但你可以通过传入元件的`is_bigElement`属性来进行2体积元件修正
+`xyzTranslate`将元件坐标系转换为物实坐标系（默认不支持2体积元件坐标修正）, 但你可以通过传入元件的`is_bigElement`方法来进行2体积元件修正
 
 
 ## methods & attributes

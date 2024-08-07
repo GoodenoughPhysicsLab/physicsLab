@@ -15,8 +15,8 @@ class NE555(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    @property
-    def is_bigElement(self):
+    @staticmethod
+    def is_bigElement():
         return True
 
     @property

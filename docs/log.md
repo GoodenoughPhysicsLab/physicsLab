@@ -128,3 +128,8 @@
 1.  更多`web`api
 2.  增加`Experiment.read_from_web`
 3.  增加`Experiment.upload`, `Experiment.update`
+
+# 1.4.12
+1.  增加`lib.MultiElements`
+2.  增强了减号连接导线的功能(`Pin` - `unitPin`)
+3.  修复`CircuitBase.is_bigElement`, 同时去除其property属性（不兼容更新）

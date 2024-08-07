@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from re import T
 from base import *
 
 from physicsLab.lib import *
@@ -269,15 +270,14 @@ class BasicTest(PLTestBase):
             raise TestError
 
     @my_test_dec
-    def test_const_is_bigElement(self):
+    def test_is_bigElement(self):
         with experiment("__test__", force_crt=True, is_exit=True):
-            a = Multiplier()
-            try:
-                a.is_bigElement = False
-            except AttributeError:
-                pass
-            else:
-                raise TestError
+            self.assertEqual(Logic_Output.is_bigElement(), False)
+            self.assertEqual(Multiplier.is_bigElement(), True)
+            self.assertEqual(Or_Gate.is_bigElement(), False)
+            self.assertEqual(Logic_Input().is_bigElement(), False)
+            self.assertEqual(Full_Adder().is_bigElement(), True)
+            self.assertEqual(Xor_Gate().is_bigElement(), False)
 
     @my_test_dec
     def test_musicPlayer(self):

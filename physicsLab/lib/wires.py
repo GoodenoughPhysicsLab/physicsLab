@@ -19,6 +19,13 @@ class unitPin:
         crt_Wires(self, other)
         return other
 
+    def __iter__(self):
+        return iter(self.elementPins)
+
+    def __next__(self):
+        for i in self.elementPins:
+            yield i
+
 def check_TypeUnionPin(func: Callable):
     def result(
         sourcePin: Union[unitPin, Pin],

@@ -831,9 +831,9 @@ class Experiment:
             if self.experiment_type == ExperimentType.Circuit:
                 from .circuit.elementXYZ import xyzTranslate, translateXYZ
                 if elementXYZ and not a_element.is_elementXYZ:
-                    e_x, e_y, e_z = translateXYZ(e_x, e_y, e_z, a_element.is_bigElement)
+                    e_x, e_y, e_z = translateXYZ(e_x, e_y, e_z, a_element.is_bigElement())
                 elif not elementXYZ and a_element.is_elementXYZ:
-                    e_x, e_y, e_z = xyzTranslate(e_x, e_y, e_z, a_element.is_bigElement)
+                    e_x, e_y, e_z = xyzTranslate(e_x, e_y, e_z, a_element.is_bigElement())
             a_element.set_Position(e_x + x, e_y + y, e_z + z, elementXYZ)
             # set_Position已处理与elements_Position有关的操作
             self.Elements.append(a_element)

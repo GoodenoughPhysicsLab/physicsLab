@@ -2,7 +2,7 @@
 from physicsLab import errors
 from physicsLab.experiment import get_Experiment
 from physicsLab.enums import ExperimentType
-from physicsLab.typehint import Optional, Callable
+from physicsLab.typehint import Optional, Callable, Union
 
 # 电学元件引脚类, 模电元件引脚无明确的输入输出之分, 因此用这个
 class Pin:
@@ -14,8 +14,14 @@ class Pin:
         self.pinLabel: int = pinLabel
 
     # 重载减法运算符作为连接导线的语法
-    def __sub__(self, obj: "Pin") -> "Pin":
-        crt_Wire(self, obj)
+    def __sub__(self, obj: Union["Pin", "unitPin"]) -> Union["Pin", "unitPin"]: # type: ignore unitPin
+        from physicsLab.lib.wires import unitPin, crt_Wires
+        if isinstance(obj, Pin):
+            crt_Wire(self, obj)
+        elif isinstance(obj, unitPin):
+            crt_Wires(self, obj)
+        else:
+            raise TypeError
         return obj
 
     def __eq__(self, other: "Pin") -> bool:

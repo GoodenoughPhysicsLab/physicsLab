@@ -5,9 +5,10 @@ import physicsLab.circuit.elementXYZ as _elementXYZ
 from .wires import unitPin, crt_Wires
 from physicsLab._tools import roundData
 from physicsLab.circuit import elements
+from physicsLab.circuit.wire import crt_Wire, Pin
 from physicsLab.experiment import get_Experiment
 from physicsLab.enums import ExperimentType
-from physicsLab.typehint import numType, Optional, Self, Union
+from physicsLab.typehint import numType, Optional, Self, Union, Type, List
 
 class Const_NoGate:
     ''' 只读非门，若没有则创建一个只读非门，若已存在则不会创建新的元件 '''
@@ -18,8 +19,8 @@ class Const_NoGate:
                 x: numType = 0,
                 y: numType = 0,
                 z: numType = 0,
-                elementXYZ: Optional[bool] = None
-    ) -> Self:
+                elementXYZ: Optional[bool] = None,
+                ):
         if Const_NoGate.__singleton_NoGate is None:
             Const_NoGate.__singleton = object.__new__(cls)
             Const_NoGate.__singleton_NoGate = elements.No_Gate(x, y, z, elementXYZ)
@@ -34,9 +35,17 @@ class Const_NoGate:
 
 class Super_AndGate:
     ''' 多引脚与门, 引脚数为num '''
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: bool = False, num: int = 4) -> None:
-        if not isinstance(x, (int, float)) or not isinstance(y, (int, float)) or \
-           not isinstance(z, (int, float)) or not isinstance(elementXYZ, bool) or \
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 elementXYZ: Optional[bool] = None,
+                 num: int = 4,
+                 ) -> None:
+        if not isinstance(x, (int, float)) or \
+           not isinstance(y, (int, float)) or \
+           not isinstance(z, (int, float)) or \
+           elementXYZ is not None and not isinstance(elementXYZ, bool) or \
            not isinstance(num, int) or num <= 1:
             raise TypeError
 
@@ -117,11 +126,91 @@ class Super_AndGate:
     def output(self) -> unitPin:
         return self._outputs
 
+class Super_OrGate:
+    ''' 多引脚或门, 引脚数为num '''
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 elementXYZ: Optional[bool] = None,
+                 num: int = 4,
+                 ) -> None:
+        if not isinstance(x, (int, float)) or not isinstance(y, (int, float)) or \
+           not isinstance(z, (int, float)) or \
+           elementXYZ is not None and not isinstance(elementXYZ, bool) or \
+           not isinstance(num, int) or num <= 1:
+            raise TypeError
+
+        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+        x, y, z = roundData(x, y, z)
+
+        if num == 2:
+            tmp = elements.Or_Gate(x, y, z, True)
+            self._inputs = [tmp.i_low, tmp.i_up]
+            self._outputs = [tmp.o]
+            self._output = tmp.o
+            return
+        elif num == 3:
+            tmp = elements.Or_Gate(x, y, z, True)
+            tmp2 = elements.Or_Gate(x, y + 1, z, True)
+            tmp2.o - tmp.i_up
+            self._inputs = [tmp.i_low, tmp2.i_low, tmp2.i_up]
+            self._outputs = [tmp.o]
+            self._output = tmp.o
+            return
+
+        self._inputs = []
+        self._outputs = []
+        if num % 2 == 0:
+            num_copy = num
+            while num_copy != 0:
+                tmp = elements.Or_Gate(x, y + (num - num_copy) / 2, z, True)
+                self._inputs += [tmp.i_low, tmp.i_up]
+                self._outputs.append(tmp.o)
+                num_copy -= 2
+            next_orgates = Super_OrGate(x, y, z, True, len(self._outputs))
+            self._output = next_orgates._output
+            for input_, output_ in zip(self._outputs, next_orgates._inputs):
+                crt_Wire(input_, output_)
+        else: # num % 2 == 1
+            num_copy = num
+            while num_copy != 1:
+                tmp = elements.Or_Gate(x, y + (num - num_copy) / 2, z, True)
+                self._inputs += [tmp.i_low, tmp.i_up]
+                self._outputs.append(tmp.o)
+                num_copy -= 2
+            next_orgates = Super_OrGate(x, y, z, True, len(self._outputs) + 1)
+            self._inputs.append(next_orgates._inputs[-1])
+            self._output = next_orgates._output
+            for input_, output_ in zip(self._outputs, next_orgates._inputs):
+                crt_Wire(input_, output_)
+
+    @property
+    def inputs(self) -> unitPin:
+        return unitPin(
+            self,
+            *self._inputs
+        )
+
+    @property
+    def output(self) -> unitPin:
+        return unitPin(
+            self,
+            self._output
+        )
+
 class Tick_Counter:
     ''' 当 逻辑输入 输入了num次, 就输出为1, 否则为0
-        如果输出为1, 则进入下一个周期，在下一次输入了num次时输出为1, 否则为0
+        如果输出为1, 则进入下一个周期, 在下一次输入了num次时输出为1, 否则为0
     '''
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: bool = False, num: int = 2) -> None:
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 elementXYZ: bool = False,
+                 num: int = 2,
+                 ) -> None:
         if not isinstance(x, (int, float)) or not isinstance(y, (int, float)) or \
            not isinstance(z, (int, float)) or not isinstance(elementXYZ, bool) or \
            not isinstance(num, int) or num <= 1:
@@ -544,57 +633,82 @@ class D_WaterLamp(_Base):
             *(element.o_low for element in self._elements[1:])
         )
 
-class Inputs(_Base):
-    '''  多个逻辑输入 '''
+class Register(_Base):
+    ''' 寄存器 '''
     def __init__(self,
                  x: numType = 0,
                  y: numType = 0,
                  z: numType = 0,
-                 elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+                 elementXYZ: Optional[bool] = None, # x, y, z是否为元件坐标系
                  bitLength: int = 4,
-                 heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
-                 fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
-                 foldMaxNum: int = 8  # 达到foldMaxNum个元件数时即在z轴自动折叠
+                 heading: bool = False, # False: 生成的元件为竖直方向，否则为横方向
+                 fold: bool = False, # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
+                 foldMaxNum: int = 4, # 达到foldMaxNum个元件数时即在z轴自动折叠
                  ) -> None:
         self._elements: list = []
+
         if heading:
             if fold:
                 zcor = z
                 for i in range(bitLength):
                     self._elements.append(
-                        elements.Logic_Input(x + i % foldMaxNum, y, zcor, True)
+                        elements.D_Flipflop(x + i % foldMaxNum, y, zcor, True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
-                for i in range(bitLength):
+                for increase in range(bitLength):
                     self._elements.append(
-                        elements.Logic_Input(x + i, y, z, True)
+                        elements.D_Flipflop(x + increase, y, z, True)
                     )
         else:
             if fold:
                 zcor = z
                 for i in range(bitLength):
                     self._elements.append(
-                        elements.Logic_Input(x, y + i % foldMaxNum, zcor, True)
+                        elements.D_Flipflop(x, y + (i % foldMaxNum) * 2, zcor, True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
-                for i in range(bitLength):
+                for increase in range(bitLength):
                     self._elements.append(
-                        elements.Logic_Input(x, y + i, z, True)
+                        elements.D_Flipflop(x, y + increase * 2, z, True)
                     )
+
+        last_element = None
+        for element in self._elements:
+            if last_element is not None:
+                element.i_low - last_element.i_low
+            last_element = element
+
+    @property
+    def clk(self) -> Pin:
+        return self._elements[0].i_low
+
+    @property
+    def inputs(self) -> unitPin:
+        return unitPin(
+            self,
+            *(element.i_up for element in self._elements)
+        )
 
     @property
     def outputs(self) -> unitPin:
         return unitPin(
             self,
-            *(element.o for element in self._elements)
+            *(element.o_up for element in self._elements)
         )
 
-class Outputs(_Base):
-    '''  多个逻辑输入 '''
+    @property
+    def neg_outputs(self) -> unitPin:
+        return unitPin(
+            self,
+            *(element.o_low for element in self._elements)
+        )
+
+class MultiElements(_Base):
+    ''' 创建多个元件 '''
     def __init__(self,
                  x: numType = 0,
                  y: numType = 0,
@@ -603,41 +717,106 @@ class Outputs(_Base):
                  bitLength: int = 4,
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
-                 foldMaxNum: int = 8  # 达到foldMaxNum个元件数时即在z轴自动折叠
+                 foldMaxNum: int = 8,  # 达到foldMaxNum个元件数时即在z轴自动折叠
+                 element: Optional[Type[elements.CircuitBase]] = None,  # 元件类型
                  ) -> None:
+        if element is None or not issubclass(element, elements.CircuitBase):
+            raise TypeError
+
         self._elements: list = []
         if heading:
             if fold:
                 zcor = z
                 for i in range(bitLength):
+                    if element.is_bigElement():
+                        plus = 2 * i % foldMaxNum
+                    else:
+                        plus = i % foldMaxNum
                     self._elements.append(
-                        elements.Logic_Output(x + i % foldMaxNum, y, zcor, True)
+                        element(x + plus, y, zcor, True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
                 for i in range(bitLength):
+                    if element.is_bigElement():
+                        plus = 2 * i
+                    else:
+                        plus = i
                     self._elements.append(
-                        elements.Logic_Output(x + i, y, z, True)
+                        element(x + i, y, z, True)
                     )
         else:
             if fold:
                 zcor = z
                 for i in range(bitLength):
+                    if element.is_bigElement():
+                        plus = 2 * i % foldMaxNum
+                    else:
+                        plus = i % foldMaxNum
                     self._elements.append(
-                        elements.Logic_Output(x, y + i % foldMaxNum, zcor, True)
+                        element(x, y + plus, zcor, True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
                 for i in range(bitLength):
+                    if element.is_bigElement():
+                        plus = 2 * i
+                    else:
+                        plus = i
                     self._elements.append(
-                        elements.Logic_Output(x, y + i, z, True)
+                        element(x, y + plus, z, True)
                     )
+
+    def pins(self, pin: Pin) -> unitPin:
+        if not isinstance(pin, Pin):
+            raise TypeError
+
+        res = []
+        for e in self._elements:
+            for p_name in e._get_property():
+                p = eval(f"e.{p_name}")
+                if isinstance(p, Pin) and p.pinLabel == pin.pinLabel:
+                    res.append(p)
+        return unitPin(self, *res)
+
+class Outputs(MultiElements):
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+                 bitLength: int = 4,
+                 heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
+                 fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
+                 foldMaxNum: int = 8,  # 达到foldMaxNum个元件数时即在z轴自动折叠
+                ) -> None:
+        super().__init__(x, y, z, elementXYZ, bitLength, heading, fold, foldMaxNum, elements.Logic_Output)
 
     @property
     def inputs(self) -> unitPin:
         return unitPin(
             self,
             *(element.i for element in self._elements)
+        )
+
+class Inputs(MultiElements):
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+                 bitLength: int = 4,
+                 heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
+                 fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
+                 foldMaxNum: int = 8,  # 达到foldMaxNum个元件数时即在z轴自动折叠
+                 ) -> None:
+        super().__init__(x, y, z, elementXYZ, bitLength, heading, fold, foldMaxNum, elements.Logic_Input)
+
+    @property
+    def outputs(self) -> unitPin:
+        return unitPin(
+            self,
+            *(element.o for element in self._elements)
         )

@@ -1,8 +1,8 @@
 # 所有元件 elements
 
 所有元件共有的attribute:  
-is_bigElement # 是否是大体积元件  
-is_elementXYZ # 是否是元件坐标系  
+.is_bigElement() # 是否是大体积元件  
+.is_elementXYZ # 是否是元件坐标系  
 
   
 > Note: 如果表格没有***类独有的method***，说明该表格中的所有元件都没有类独有的method

@@ -179,8 +179,8 @@ class _big_element(_logicBase):
                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
-    @property
-    def is_bigElement(self):
+    @staticmethod
+    def is_bigElement():
         return True
 
 class Half_Adder(_big_element):
@@ -445,8 +445,8 @@ class eight_bit_Input(_logicBase):
         else:
             raise RuntimeError("The number range entered is incorrect")
 
-    @property
-    def is_bigElement(self):
+    @staticmethod
+    def is_bigElement():
         return True
 
     @property
@@ -492,8 +492,8 @@ class eight_bit_Display(_logicBase):
                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
-    @property
-    def is_bigElement(self):
+    @staticmethod
+    def is_bigElement():
         return True
 
     @property
