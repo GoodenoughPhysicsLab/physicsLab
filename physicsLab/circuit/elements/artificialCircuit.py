@@ -5,6 +5,8 @@ from physicsLab.typehint import Optional, numType, CircuitElementData, Generate
 
 class NE555(CircuitBase):
     ''' 555定时器 '''
+    is_bigElement = True
+
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "555 Timer", "Identifier": Generate, "IsBroken": False,
                            "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0},
@@ -14,10 +16,6 @@ class NE555(CircuitBase):
                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
-
-    @staticmethod
-    def is_bigElement():
-        return True
 
     @property
     def VCC(self) -> Pin:

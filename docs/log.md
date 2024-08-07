@@ -132,4 +132,4 @@
 # 1.4.12
 1.  增加`lib.MultiElements`
 2.  增强了减号连接导线的功能(`Pin` - `unitPin`)
-3.  修复`CircuitBase.is_bigElement`, 同时去除其property属性（不兼容更新）
+3.  修复`CircuitBase.is_bigElement`

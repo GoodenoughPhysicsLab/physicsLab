@@ -172,16 +172,14 @@ class Nimp_Gate(_3_pin_Gate):
 
 class _big_element(_logicBase):
     ''' 2体积元件父类 '''
+    is_bigElement = True
+
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "", "Identifier": Generate, "IsBroken": False,
                           "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0},
                           "Statistics": {},
                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
-
-    @staticmethod
-    def is_bigElement():
-        return True
 
 class Half_Adder(_big_element):
     ''' 半加器 '''
@@ -423,6 +421,8 @@ class Random_Generator(_big_element):
 
 class eight_bit_Input(_logicBase):
     ''' 八位输入器 '''
+    is_bigElement = True
+
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "8bit Input", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
@@ -444,10 +444,6 @@ class eight_bit_Input(_logicBase):
             self.data["Properties"]["十进制"] = num
         else:
             raise RuntimeError("The number range entered is incorrect")
-
-    @staticmethod
-    def is_bigElement():
-        return True
 
     @property
     def i_up(self) -> InputPin:
@@ -483,6 +479,8 @@ class eight_bit_Input(_logicBase):
 
 class eight_bit_Display(_logicBase):
     ''' 八位显示器 '''
+    is_bigElement = True
+
     def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "8bit Display", "Identifier": Generate,
                           "IsBroken": False, "IsLocked": False,
@@ -491,10 +489,6 @@ class eight_bit_Display(_logicBase):
                                          "3": 0.0, "2": 0.0, "1": 0.0, "0": 0.0, "十进制": 0.0},
                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
-
-    @staticmethod
-    def is_bigElement():
-        return True
 
     @property
     def i_up(self) -> InputPin:

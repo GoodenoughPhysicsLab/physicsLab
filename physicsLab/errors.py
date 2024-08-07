@@ -41,7 +41,7 @@ class WireNotFoundError(Exception):
         return "Unable to delete a nonexistent wire"
 
 # 用于模块化元件的bitLength参数
-class bitLengthError(Exception):
+class BitnumError(Exception):
     def __str__(self):
         return "illegal bitLength number"
 

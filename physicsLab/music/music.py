@@ -715,9 +715,9 @@ class Player:
             side = 2
 
         try:
-            xPlayer = D_WaterLamp(x + 1, y + 1, z, heading=True, bitLength=side, elementXYZ=True)
-            yPlayer = D_WaterLamp(x, y + 3, z, bitLength=ceil(len_musicArray / side), elementXYZ=True)
-        except errors.bitLengthError as e: #TODO 应该支持超短的bitLength而不是报错
+            xPlayer = D_WaterLamp(x + 1, y + 1, z, heading=True, bitnum=side, elementXYZ=True)
+            yPlayer = D_WaterLamp(x, y + 3, z, bitnum=ceil(len_musicArray / side), elementXYZ=True)
+        except errors.BitnumError as e: #TODO 应该支持超短的bitLength而不是报错
             from physicsLab._colorUtils import color_print, COLOR
             color_print(
                 "bigLength of D_WaterLamp is too short, "

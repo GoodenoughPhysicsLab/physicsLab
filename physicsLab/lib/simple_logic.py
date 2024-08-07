@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from symbol import return_stmt
 import physicsLab.errors as errors
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
@@ -40,32 +41,32 @@ class Super_AndGate:
                  y: numType = 0,
                  z: numType = 0,
                  elementXYZ: Optional[bool] = None,
-                 num: int = 4,
+                 bitnum: int = 4,
                  ) -> None:
         if not isinstance(x, (int, float)) or \
            not isinstance(y, (int, float)) or \
            not isinstance(z, (int, float)) or \
            elementXYZ is not None and not isinstance(elementXYZ, bool) or \
-           not isinstance(num, int) or num <= 1:
+           not isinstance(bitnum, int) or bitnum <= 1:
             raise TypeError
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = roundData(x, y, z)
 
-        if num == 2:
+        if bitnum == 2:
             m = elements.And_Gate(x, y, z, elementXYZ=True)
             self._inputs = [m.i_low, m.i_up]
             self._outputs = unitPin(self, m.o)
             return
-        elif num == 3 or num == 4:
+        elif bitnum == 3 or bitnum == 4:
             m = elements.Multiplier(x, y, z, elementXYZ=True)
             self._inputs = [m.i_low, m.i_lowmid, m.i_upmid, m.i_up]
             self._outputs = unitPin(self, m.o_up)
-            if num == 3:
+            if bitnum == 3:
                 m.i_up - m.i_upmid
             return
-        if num == 5:
+        if bitnum == 5:
             m = elements.Multiplier(x, y, z, elementXYZ=True)
             a = elements.And_Gate(x, y, z, elementXYZ=True)
             m.o_up - a.i_low
@@ -73,7 +74,7 @@ class Super_AndGate:
             self._outputs = unitPin(self, a.o)
             return
 
-        muls, mod_num = divmod(num, 4)
+        muls, mod_num = divmod(bitnum, 4)
         self._inputs = []
 
         if mod_num == 2 or mod_num == 3:
@@ -133,25 +134,25 @@ class Super_OrGate:
                  y: numType = 0,
                  z: numType = 0,
                  elementXYZ: Optional[bool] = None,
-                 num: int = 4,
+                 bitnum: int = 4,
                  ) -> None:
         if not isinstance(x, (int, float)) or not isinstance(y, (int, float)) or \
            not isinstance(z, (int, float)) or \
            elementXYZ is not None and not isinstance(elementXYZ, bool) or \
-           not isinstance(num, int) or num <= 1:
+           not isinstance(bitnum, int) or bitnum <= 1:
             raise TypeError
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = roundData(x, y, z)
 
-        if num == 2:
+        if bitnum == 2:
             tmp = elements.Or_Gate(x, y, z, True)
             self._inputs = [tmp.i_low, tmp.i_up]
             self._outputs = [tmp.o]
             self._output = tmp.o
             return
-        elif num == 3:
+        elif bitnum == 3:
             tmp = elements.Or_Gate(x, y, z, True)
             tmp2 = elements.Or_Gate(x, y + 1, z, True)
             tmp2.o - tmp.i_up
@@ -162,10 +163,10 @@ class Super_OrGate:
 
         self._inputs = []
         self._outputs = []
-        if num % 2 == 0:
-            num_copy = num
+        if bitnum % 2 == 0:
+            num_copy = bitnum
             while num_copy != 0:
-                tmp = elements.Or_Gate(x, y + (num - num_copy) / 2, z, True)
+                tmp = elements.Or_Gate(x, y + (bitnum - num_copy) / 2, z, True)
                 self._inputs += [tmp.i_low, tmp.i_up]
                 self._outputs.append(tmp.o)
                 num_copy -= 2
@@ -174,9 +175,9 @@ class Super_OrGate:
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
                 crt_Wire(input_, output_)
         else: # num % 2 == 1
-            num_copy = num
+            num_copy = bitnum
             while num_copy != 1:
-                tmp = elements.Or_Gate(x, y + (num - num_copy) / 2, z, True)
+                tmp = elements.Or_Gate(x, y + (bitnum - num_copy) / 2, z, True)
                 self._inputs += [tmp.i_low, tmp.i_up]
                 self._outputs.append(tmp.o)
                 num_copy -= 2
@@ -209,30 +210,30 @@ class Tick_Counter:
                  y: numType = 0,
                  z: numType = 0,
                  elementXYZ: bool = False,
-                 num: int = 2,
+                 bitnum: int = 2,
                  ) -> None:
         if not isinstance(x, (int, float)) or not isinstance(y, (int, float)) or \
            not isinstance(z, (int, float)) or not isinstance(elementXYZ, bool) or \
-           not isinstance(num, int) or num <= 1:
+           not isinstance(bitnum, int) or bitnum <= 1:
             raise TypeError
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = roundData(x, y, z)
 
-        if num == 2:
+        if bitnum == 2:
             self._output = elements.T_Flipflop(x, y, z, True)
         else:
-            if num >= 16:
+            if bitnum >= 16:
                 raise Exception("Do not support num >= 16 in this version")
 
             self._output = elements.Counter(x + 1, y, z, True)
 
             bitlist = []
-            num -= 1
+            bitnum -= 1
             for _ in range(4):
-                bitlist.append(num & 1)
-                num >>= 1
+                bitlist.append(bitnum & 1)
+                bitnum >>= 1
 
             output_pins = []
             for i, a_bit in enumerate(bitlist):
@@ -305,13 +306,69 @@ class Two_four_Decoder:
             self.and_gate.o,
         )
 
+class Checkout_Register:
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+                 bitnum: int = 4,
+                 ) -> None:
+        if not isinstance(x, (int, float)) or \
+            not isinstance(y, (int, float)) or \
+            not isinstance(z, (int, float)) or \
+            not isinstance(elementXYZ, (bool, type(None))) or \
+            not isinstance(bitnum, int) or bitnum <= 1:
+            raise TypeError
+
+        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+        x, y, z = roundData(x, y, z)
+
+        self.register = Register(x + 1, y, z, True, bitnum, heading=False)
+        self.checkout_nogate = elements.No_Gate(x, y, z, True)
+        self.checkouts = []
+        for delta_y in range(bitnum):
+            m = elements.Multiplier(x, y + delta_y * 2, z, True)
+            m.o_lowmid - self.register.inputs[delta_y]
+            m.i_up - self.checkout_nogate.o
+            m.i_lowmid - self.checkout_nogate.i
+            self.checkouts.append(m)
+
+    @property
+    def checkout(self) -> Pin:
+        return self.checkout_nogate.i
+
+    @property
+    def clk(self) -> Pin:
+        return self.register.clk
+
+    @property
+    def inputs1(self) -> unitPin:
+        return unitPin(
+            self,
+            *[e.i_low for e in self.checkouts]
+        )
+
+    @property
+    def inputs2(self) -> unitPin:
+        return unitPin(
+            self,
+            *[e.i_upmid for e in self.checkouts]
+        )
+
+    @property
+    def outputs(self):
+        return self.register.outputs
+
+
 class _Simple_Logic_Meta(type):
     def __call__(cls,
                  x: numType = 0,
                  y: numType = 0,
                  z: numType = 0,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
-                 bitLength: int = 4,
+                 bitnum: int = 4,
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 4,  # 达到foldMaxNum个元件数时即在z轴自动折叠
@@ -331,8 +388,8 @@ class _Simple_Logic_Meta(type):
             isinstance(foldMaxNum, int)
         ):
             raise TypeError
-        if not isinstance(bitLength, int) or bitLength < 1:
-            raise errors.bitLengthError("bitLength must get a integer")
+        if not isinstance(bitnum, int) or bitnum < 1:
+            raise errors.BitnumError("bitnum must get a integer")
 
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
@@ -343,7 +400,7 @@ class _Simple_Logic_Meta(type):
                       y=y,
                       z=z,
                       elementXYZ=elementXYZ,
-                      bitLength=bitLength,
+                      bitnum=bitnum,
                       heading=heading,
                       fold=fold,
                       foldMaxNum=foldMaxNum,
@@ -378,7 +435,7 @@ class Sum(_Base):
                  y: numType = 0,
                  z: numType = 0,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
-                 bitLength: int = 4,
+                 bitnum: int = 4,
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
@@ -388,24 +445,24 @@ class Sum(_Base):
         if heading:
             if fold:
                 zcor = z
-                for i in range(bitLength):
+                for i in range(bitnum):
                     self._elements.append(elements.Full_Adder(x + i % foldMaxNum, y, zcor, True))
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
-                for increase in range(bitLength):
+                for increase in range(bitnum):
                     self._elements.append(elements.Full_Adder(x + increase, y, z, True))
         else:
             if fold:
                 zcor = z
-                for i in range(bitLength):
+                for i in range(bitnum):
                     self._elements.append(
                         elements.Full_Adder(x, y + (i % foldMaxNum) * 2, zcor, True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
-                for increase in range(bitLength):
+                for increase in range(bitnum):
                     self._elements.append(elements.Full_Adder(x, y + increase * 2, z, True))
 
         # 连接导线
@@ -444,7 +501,7 @@ class Sub(_Base):
                  y: numType = 0,
                  z: numType = 0,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
-                 bitLength: int = 4, # 减法器的最大计算比特数
+                 bitnum: int = 4, # 减法器的最大计算比特数
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
@@ -456,7 +513,7 @@ class Sub(_Base):
         if heading:
             if fold:
                 zcor = z
-                for i in range(bitLength):
+                for i in range(bitnum):
                     self._fullAdders.append(
                         elements.Full_Adder(x + i % foldMaxNum, y - 2, zcor, True)
                     )
@@ -466,7 +523,7 @@ class Sub(_Base):
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
-                for increase in range(bitLength):
+                for increase in range(bitnum):
                     self._fullAdders.append(
                         elements.Full_Adder(x + increase, y - 2, z, True)
                     )
@@ -476,7 +533,7 @@ class Sub(_Base):
         else:
             if fold:
                 zcor = z
-                for i in range(bitLength):
+                for i in range(bitnum):
                     self._fullAdders.append(
                         elements.Full_Adder(x + 1, y + (i % foldMaxNum) * 2, zcor, True)
                     )
@@ -486,7 +543,7 @@ class Sub(_Base):
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
-                for increase in range(bitLength):
+                for increase in range(bitnum):
                     self._fullAdders.append(
                         elements.Full_Adder(x + 1, y + increase * 2, z, True)
                     )
@@ -536,20 +593,20 @@ class D_WaterLamp(_Base):
                  y: numType = 0,
                  z: numType = 0,
                  elementXYZ: Optional[bool] = None, # x, y, z是否为元件坐标系
-                 bitLength: int = 4,
+                 bitnum: int = 4,
                  heading: bool = False, # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False, # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 4, # 达到foldMaxNum个元件数时即在z轴自动折叠
                  is_loop: bool = True # 是否使流水灯循环
                  ) -> None:
-        if bitLength < 2:
-            raise errors.bitLengthError
+        if bitnum < 2:
+            raise errors.BitnumError
 
         if not isinstance(is_loop, bool):
             raise TypeError
 
         self.is_bitlen_equal_to_2: bool = False
-        if bitLength == 2:
+        if bitnum == 2:
             self.is_bitlen_equal_to_2 = True
             self._elements = [elements.T_Flipflop(x, y, z, True)]
             return
@@ -559,28 +616,28 @@ class D_WaterLamp(_Base):
         if heading:
             if fold:
                 zcor = z
-                for i in range(bitLength):
+                for i in range(bitnum):
                     self._elements.append(
                         elements.D_Flipflop(x + i % foldMaxNum, y, zcor, True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
-                for increase in range(bitLength):
+                for increase in range(bitnum):
                     self._elements.append(
                         elements.D_Flipflop(x + increase, y, z, True)
                     )
         else:
             if fold:
                 zcor = z
-                for i in range(bitLength):
+                for i in range(bitnum):
                     self._elements.append(
                         elements.D_Flipflop(x, y + (i % foldMaxNum) * 2, zcor, True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
-                for increase in range(bitLength):
+                for increase in range(bitnum):
                     self._elements.append(
                         elements.D_Flipflop(x, y + increase * 2, z, True)
                     )
@@ -640,7 +697,7 @@ class Register(_Base):
                  y: numType = 0,
                  z: numType = 0,
                  elementXYZ: Optional[bool] = None, # x, y, z是否为元件坐标系
-                 bitLength: int = 4,
+                 bitnum: int = 4,
                  heading: bool = False, # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False, # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 4, # 达到foldMaxNum个元件数时即在z轴自动折叠
@@ -650,28 +707,28 @@ class Register(_Base):
         if heading:
             if fold:
                 zcor = z
-                for i in range(bitLength):
+                for i in range(bitnum):
                     self._elements.append(
                         elements.D_Flipflop(x + i % foldMaxNum, y, zcor, True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
-                for increase in range(bitLength):
+                for increase in range(bitnum):
                     self._elements.append(
                         elements.D_Flipflop(x + increase, y, z, True)
                     )
         else:
             if fold:
                 zcor = z
-                for i in range(bitLength):
+                for i in range(bitnum):
                     self._elements.append(
                         elements.D_Flipflop(x, y + (i % foldMaxNum) * 2, zcor, True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
-                for increase in range(bitLength):
+                for increase in range(bitnum):
                     self._elements.append(
                         elements.D_Flipflop(x, y + increase * 2, z, True)
                     )
@@ -714,7 +771,7 @@ class MultiElements(_Base):
                  y: numType = 0,
                  z: numType = 0,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
-                 bitLength: int = 4,
+                 bitnum: int = 4,
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 8,  # 达到foldMaxNum个元件数时即在z轴自动折叠
@@ -727,8 +784,8 @@ class MultiElements(_Base):
         if heading:
             if fold:
                 zcor = z
-                for i in range(bitLength):
-                    if element.is_bigElement():
+                for i in range(bitnum):
+                    if element.is_bigElement:
                         plus = 2 * i % foldMaxNum
                     else:
                         plus = i % foldMaxNum
@@ -738,8 +795,8 @@ class MultiElements(_Base):
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
-                for i in range(bitLength):
-                    if element.is_bigElement():
+                for i in range(bitnum):
+                    if element.is_bigElement:
                         plus = 2 * i
                     else:
                         plus = i
@@ -749,8 +806,8 @@ class MultiElements(_Base):
         else:
             if fold:
                 zcor = z
-                for i in range(bitLength):
-                    if element.is_bigElement():
+                for i in range(bitnum):
+                    if element.is_bigElement:
                         plus = 2 * i % foldMaxNum
                     else:
                         plus = i % foldMaxNum
@@ -760,8 +817,8 @@ class MultiElements(_Base):
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
-                for i in range(bitLength):
-                    if element.is_bigElement():
+                for i in range(bitnum):
+                    if element.is_bigElement:
                         plus = 2 * i
                     else:
                         plus = i
@@ -787,12 +844,12 @@ class Outputs(MultiElements):
                  y: numType = 0,
                  z: numType = 0,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
-                 bitLength: int = 4,
+                 bitnum: int = 4,
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 8,  # 达到foldMaxNum个元件数时即在z轴自动折叠
                 ) -> None:
-        super().__init__(x, y, z, elementXYZ, bitLength, heading, fold, foldMaxNum, elements.Logic_Output)
+        super().__init__(x, y, z, elementXYZ, bitnum, heading, fold, foldMaxNum, elements.Logic_Output)
 
     @property
     def inputs(self) -> unitPin:
@@ -807,12 +864,12 @@ class Inputs(MultiElements):
                  y: numType = 0,
                  z: numType = 0,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
-                 bitLength: int = 4,
+                 bitnum: int = 4,
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 8,  # 达到foldMaxNum个元件数时即在z轴自动折叠
                  ) -> None:
-        super().__init__(x, y, z, elementXYZ, bitLength, heading, fold, foldMaxNum, elements.Logic_Input)
+        super().__init__(x, y, z, elementXYZ, bitnum, heading, fold, foldMaxNum, elements.Logic_Input)
 
     @property
     def outputs(self) -> unitPin:

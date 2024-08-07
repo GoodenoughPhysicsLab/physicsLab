@@ -49,7 +49,7 @@ class CircuitMeta(type):
         assert hasattr(self, "data")
 
         # 若是big_Element，则修正坐标
-        if self.is_elementXYZ and self.is_bigElement():
+        if self.is_elementXYZ and self.is_bigElement:
             x, y, z = _elementXYZ.amend_big_Element(x, y, z)
 
         self.data["Identifier"] = randString(32)
@@ -69,10 +69,7 @@ class CircuitMeta(type):
 
 # 所有电学元件的父类
 class CircuitBase(ElementBase, metaclass=CircuitMeta):
-    @staticmethod
-    def is_bigElement() -> bool:
-        ''' 该元件是否是逻辑电路的两体积元件 '''
-        return False
+    is_bigElement = False # 该元件是否是逻辑电路的两体积元件
 
     def __define_virtual_var_to_let_ide_show(self,
                                              data: CircuitElementData,
@@ -110,7 +107,7 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
 
         #元件坐标系
         if elementXYZ is True or _elementXYZ.is_elementXYZ() is True and elementXYZ is None:
-            x, y, z = _elementXYZ.xyzTranslate(x, y, z, self.is_bigElement())
+            x, y, z = _elementXYZ.xyzTranslate(x, y, z, self.is_bigElement)
             self.is_elementXYZ = True
 
         for _, self_list in get_Experiment().elements_Position.items():

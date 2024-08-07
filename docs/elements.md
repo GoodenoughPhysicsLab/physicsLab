@@ -1,7 +1,7 @@
 # 所有元件 elements
 
 所有元件共有的attribute:  
-.is_bigElement() # 是否是大体积元件  
+.is_bigElement # 是否是大体积元件  
 .is_elementXYZ # 是否是元件坐标系  
 
   
