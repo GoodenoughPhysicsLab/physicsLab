@@ -133,22 +133,34 @@ class Experiment:
         elif self.experiment_type == ExperimentType.Electromagnetism:
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
 
-    def open(self, sav_name : str) -> Self:
+    def open(self, sav_name : str, is_path: bool = False) -> Self:
         ''' [[该方法为构造函数]]
             打开一个指定的sav文件 (支持输入本地实验的名字或sav文件名)
+            @param sav_name: 存档的名字或存档的文件名(.sav)
+            @param is_path: True则将sav_name作为存档的路径
         '''
         if self.is_open_or_crt:
             raise errors.ExperimentHasOpenError
         stack_Experiment.push(self)
 
+        if is_path:
+            sav_name = os.path.abspath(sav_name)
+            if not os.path.exists(sav_name):
+                raise FileNotFoundError
+
         # .sav文件名
         sav_name = sav_name.strip()
         if sav_name.endswith('.sav'):
-            self.FileName = sav_name
-            self.SavPath = f"{Experiment.FILE_HEAD}/{sav_name}"
-            if not os.path.exists(self.SavPath):
-                stack_Experiment.pop()
-                raise errors.OpenExperimentError(f'No such experiment "{sav_name}"')
+            if not is_path:
+                self.FileName = sav_name
+                self.SavPath = f"{Experiment.FILE_HEAD}/{sav_name}"
+                if not os.path.exists(self.SavPath):
+                    stack_Experiment.pop()
+                    raise errors.OpenExperimentError(f'No such experiment "{sav_name}"')
+            else:
+                self.FileName = os.path.basename(sav_name)
+                self.SavPath = sav_name
+
             _temp = _open_sav(self.SavPath)
             assert _temp is not None
             self.PlSav = _temp
@@ -248,10 +260,14 @@ class Experiment:
 
     def open_or_crt(self,
                     sav_name: str,
-                    ExperimentType: ExperimentType = ExperimentType.Circuit
+                    ExperimentType: ExperimentType = ExperimentType.Circuit,
+                    is_path: bool = False,
     ) -> Self:
         ''' [[该方法为构造函数]]
             先尝试打开实验, 若失败则创建实验
+            @sav_name: 存档名
+            @ExperimentType: 实验类型
+            @is_path: sav_name 是否为路径
         '''
         if self.is_open_or_crt:
             raise errors.ExperimentHasOpenError
@@ -259,6 +275,11 @@ class Experiment:
         if not isinstance(sav_name, str):
             raise TypeError
         stack_Experiment.push(self)
+
+        # 文件名或者路径时
+        if sav_name.endswith(".sav"):
+            self.open(sav_name, is_path)
+            return self
 
         self.FileName = search_Experiment(sav_name)
         if self.FileName is not None:
@@ -879,6 +900,7 @@ class experiment:
                  extra_filepath: Optional[str] = None, # 将存档写入额外的路径
                  force_crt: bool = False, # 强制创建一个实验, 若已存在则覆盖已有实验
                  is_exit: bool = False, # 退出试验
+                 is_path: bool = False, # sav_name是否是路径
     ):
         if not (
             isinstance(sav_name, str) and
@@ -886,7 +908,10 @@ class experiment:
             isinstance(delete, bool) and
             isinstance(elementXYZ, bool) and
             isinstance(write, bool) and
-            isinstance(experiment_type, ExperimentType)
+            isinstance(experiment_type, ExperimentType) and
+            isinstance(force_crt, bool) and
+            isinstance(is_exit, bool) and
+            isinstance(is_path, bool)
         ) and (
             not isinstance(extra_filepath, str) and
             extra_filepath is not None
@@ -900,12 +925,14 @@ class experiment:
         self.elementXYZ: bool = elementXYZ
         self.ExperimentType: ExperimentType = experiment_type
         self.extra_filepath: Optional[str] = extra_filepath
-        self.force_crt = force_crt
-        self.is_exit = is_exit
+        self.force_crt: bool = force_crt
+        self.is_exit: bool = is_exit
+        self.is_path: bool = is_path
 
     def __enter__(self) -> Experiment:
         if not self.force_crt:
-            self._Experiment: Experiment = Experiment().open_or_crt(self.savName, self.ExperimentType)
+            self._Experiment: Experiment = Experiment() \
+                .open_or_crt(self.savName, self.ExperimentType, self.is_path)
         else:
             self._Experiment: Experiment = Experiment().crt(self.savName, self.ExperimentType, self.force_crt)
 
@@ -941,8 +968,10 @@ def getAllSav() -> List[str]:
     savs = savs[savs.__len__() - 1]
     return [aSav for aSav in savs if aSav.endswith('sav')]
 
-def _open_sav(sav_name) -> Optional[dict]:
-    ''' 打开一个存档, 返回存档对应的dict '''
+def _open_sav(sav_path) -> Optional[dict]:
+    ''' 打开一个存档, 返回存档对应的dict
+        @param sav_path: 存档的绝对路径
+    '''
     def encode_sav(path: str, encoding: str) -> Optional[dict]:
         try:
             with open(path, encoding=encoding) as f:
@@ -952,7 +981,9 @@ def _open_sav(sav_name) -> Optional[dict]:
         else:
             return d
 
-    res = encode_sav(f"{Experiment.FILE_HEAD}/{sav_name}", "utf-8")
+    assert os.path.exists(sav_path)
+
+    res = encode_sav(sav_path, "utf-8")
     if res is not None:
         return res
 
@@ -960,18 +991,22 @@ def _open_sav(sav_name) -> Optional[dict]:
         import chardet
     except ImportError:
         for encoding in ("utf-8-sig", "gbk"):
-            res = encode_sav(f"{Experiment.FILE_HEAD}/{sav_name}", encoding)
+            res = encode_sav(sav_path, encoding)
             if res is not None:
                 return res
     else:
-        with open(f"{Experiment.FILE_HEAD}/{sav_name}", "rb") as f:
+        with open(sav_path, "rb") as f:
             encoding = chardet.detect(f.read())["encoding"]
-        return encode_sav(f"{Experiment.FILE_HEAD}/{sav_name}", encoding)
+        return encode_sav(sav_path, encoding)
 
 def search_Experiment(sav_name: str) -> Optional[str]:
-    '''  检测实验是否存在, 输入为存档名, 若存在则返回存档对应的文件名, 若不存在则返回None'''
+    ''' 检测实验是否存在
+        @param sav_name: 存档名
+
+        若存在则返回存档对应的文件名, 若不存在则返回None
+    '''
     for aSav in getAllSav():
-        sav = _open_sav(aSav)
+        sav = _open_sav(os.path.join(Experiment.FILE_HEAD, aSav))
         if sav is None:
             continue
         if sav["InternalName"] == sav_name:
