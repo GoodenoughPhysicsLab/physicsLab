@@ -37,7 +37,8 @@ def warning(msg: str, warning_status: Optional[bool] = None) -> None:
     _colorUtils.color_print("Warning in", _colorUtils.COLOR.YELLOW)
 
     for frame_info in inspect.stack()[::-1]:
-        if inspect.getmodule(frame_info.frame).__name__.startswith("physicsLab"):
+        module = inspect.getmodule(frame_info.frame)
+        if module is None or module.__name__.startswith("physicsLab"):
             continue
         print(f"  File \"{frame_info.filename}\", line {frame_info.lineno}, in {frame_info.function}")
         print(f"    {frame_info.code_context[0].strip()}")
