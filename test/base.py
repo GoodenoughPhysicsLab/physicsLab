@@ -10,13 +10,14 @@ if USE_VIZTRACER:
     from viztracer import VizTracer
 
 class TestError(Exception):
-    def __init__(self, no_pop: bool=False) -> None:
+    def __init__(self, err_msg: str = "Test fail", no_pop: bool=False) -> None:
+        self.err_msg: str = err_msg
         self.no_pop = no_pop
 
     def __str__(self) -> str:
         if not self.no_pop:
             get_Experiment().exit()
-        return "Test Fail"
+        return self.err_msg
 
 class PLTestBase(TestCase):
     if USE_VIZTRACER:

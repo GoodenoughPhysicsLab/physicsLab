@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-from re import T
 from base import *
 
 from physicsLab.lib import *
@@ -13,7 +11,8 @@ def my_test_dec(method: Callable):
         method(*args, **kwarg)
 
         if len(stack_Experiment.data) != 0:
-            print(f"method \"{method.__code__.co_name}\"({method.__code__.co_firstlineno}) test fail due to len(stack_Experiment) != 0")
+            print(f"File {os.path.abspath(__file__)}, line {method.__code__.co_firstlineno} : "
+                  f"test fail due to len(stack_Experiment) != 0")
             stack_Experiment.data.clear()
             raise TestError
     return result
@@ -187,8 +186,8 @@ class BasicTest(PLTestBase):
             b = lib.Inputs(-2, 0, 0, bitnum=8)
             c = lib.Sum(0, 0, 0, bitnum=8)
             d = lib.Outputs(1, 0, 0, bitnum=8)
-            a.outputs - c.input1
-            b.outputs - c.input2
+            a.outputs - c.inputs1
+            b.outputs - c.inputs2
             c.outputs - d.inputs
 
     # 测试打开实验类型与文件不吻合
@@ -228,14 +227,14 @@ class BasicTest(PLTestBase):
     @my_test_dec
     def test_union_Sub(self):
         with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
-            a = lib.Sub(bitnum=8, fold=False)
+            a = lib.Sub(0, 0, 0, bitnum=8, fold=False)
             crt_Wires(lib.Inputs(-3, 0, 0, bitnum=8).outputs, a.minuend)
             crt_Wires(lib.Inputs(-2, 0, 0, bitnum=8).outputs, a.subtrahend)
             crt_Wires(lib.Outputs(2, 0, 0, bitnum=9).inputs, a.outputs)
             self.assertEqual(count_Elements(), 42)
             self.assertEqual(count_Wires(), 41)
 
-            lib.Sub(-5, 0, 0)
+            lib.Sub(-5, 0, 0, bitnum=4)
 
     # 测试简单乐器设置音高的三种方法
     @my_test_dec

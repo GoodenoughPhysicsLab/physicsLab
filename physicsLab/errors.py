@@ -1,25 +1,49 @@
 # -*- coding: utf-8 -*-
 # 用于存放自定义错误类
 # 由于有时在package外需要异常处理，故不为文件私有变量
-from typing import Optional
+import ast
+import inspect
+
+from executing import Source
 from physicsLab import _colorUtils
+from typing import Optional, List
 
-warning_status: Optional[bool] = None
+_warning_status: Optional[bool] = None
 
-# 设置警告状态
-def set_warning_status(_warning_status: bool) -> None:
-    if not isinstance(_warning_status, bool):
+def set_warning_status(warning_status: bool) -> None:
+    ''' 设置警告状态
+        False: 不打印警告
+        None: 打印警告
+        True: 视警告为错误
+    '''
+    if not isinstance(warning_status, bool):
         raise TypeError
 
-    global warning_status
-    warning_status = _warning_status
+    global _warning_status
+    _warning_status = warning_status
 
 # 抛出警告, 当warning_status==None
-def warning(msg: str, warning_status: Optional[bool]=warning_status) -> None:
-    if warning_status is None:
-        _colorUtils.color_print("Warning: " + msg, _colorUtils.COLOR.YELLOW)
-    elif warning_status:
+def warning(msg: str, warning_status: Optional[bool] = None) -> None:
+    if not isinstance(warning_status, (bool, type(None))):
+        raise TypeError
+
+    if _warning_status is not None:
+        warning_status = _warning_status
+
+    if warning_status is False:
+        return
+    if warning_status is True:
         raise WarningError
+
+    # if warning_status is None:
+    _colorUtils.color_print("Warning in", _colorUtils.COLOR.YELLOW)
+
+    for frame_info in inspect.stack()[::-1]:
+        if inspect.getmodule(frame_info.frame).__name__.startswith("physicsLab"):
+            continue
+        print(f"  File \"{frame_info.filename}\", line {frame_info.lineno}, in {frame_info.function}")
+        print(f"    {frame_info.code_context[0].strip()}")
+    _colorUtils.color_print(msg, _colorUtils.COLOR.YELLOW)
 
 # 打开实验异常
 class OpenExperimentError(Exception):

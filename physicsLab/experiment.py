@@ -359,6 +359,7 @@ class Experiment:
                       id: str,
                       category: Category,
                       user: Optional[User] = None,
+                      no_read_experiment_status: bool = False,
                       ) -> Self:
         ''' 获取已经发布到物实的实验的实验状态(包括元件, 导线, 发布后的标题, 实验介绍)
 
@@ -369,17 +370,21 @@ class Experiment:
         '''
         if not self.is_open_or_crt:
             raise errors.ExperimentHasOpenError
-        if not isinstance(id, str) or not isinstance(category, Category):
+        if not isinstance(id, str) or \
+            not isinstance(category, Category) or \
+            not isinstance(no_read_experiment_status, bool):
             raise TypeError
 
         if user is None:
             user = User()
+
         _summary = user.get_summary(id, category)["Data"]
-        _experiment = user.get_experiment(_summary["ContentID"])["Data"]
-        _StatusSave = json.loads(_experiment["StatusSave"])
-        self.__read_CameraSave(_experiment["CameraSave"])
-        self.__read_element(_StatusSave["Elements"])
-        self.__read_wire(_StatusSave["Wires"])
+        if not no_read_experiment_status:
+            _experiment = user.get_experiment(_summary["ContentID"])["Data"]
+            _StatusSave = json.loads(_experiment["StatusSave"])
+            self.__read_CameraSave(_experiment["CameraSave"])
+            self.__read_element(_StatusSave["Elements"])
+            self.__read_wire(_StatusSave["Wires"])
 
         del _summary["$type"]
         _summary["Category"] = category.value
@@ -478,9 +483,9 @@ class Experiment:
                 f"Successfully delete experiment {self.PlSav['InternalName']}({self.FileName})!",
                 _colorUtils.COLOR.BLUE
             )
-        else:
+        elif not self.is_crt:
             if warning_status is None:
-                warning_status = errors.warning_status
+                warning_status = errors._warning_status
             errors.warning(
                 f"experiment {self.PlSav['InternalName']}({self.FileName}) do not exist.",
                 warning_status
