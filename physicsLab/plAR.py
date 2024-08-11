@@ -9,16 +9,20 @@ from typing import Optional
 
 def get_plAR_version() -> Optional[str]:
     ''' 获取物实版本 '''
-    if platform.system() == "Windows":
-        dir_l = tuple(os.walk(f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Unity/"))[0][1]
-        if len(dir_l) == 1:
-            version_file = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/" \
-                           f"Quantum Physics/Unity/{dir_l[0]}/Analytics/values"
+    try:
+        if platform.system() == "Windows":
+            dir_l = tuple(os.walk(f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Unity/"))[0][1]
+            if len(dir_l) == 1:
+                version_file = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/" \
+                            f"Quantum Physics/Unity/{dir_l[0]}/Analytics/values"
 
-            with open(version_file) as f:
-                version = json.load(f)["app_ver"]
-                return version
-    return None
+                with open(version_file) as f:
+                    version = json.load(f)["app_ver"]
+                    return version
+    except:
+        return None
+    else:
+        return None
 
 def get_plAR_path() -> Optional[str]:
     ''' 获取物实路径 '''

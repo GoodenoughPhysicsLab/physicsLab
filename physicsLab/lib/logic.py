@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from symbol import return_stmt
 import physicsLab.errors as errors
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
@@ -53,16 +52,17 @@ class Super_AndGate:
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = roundData(x, y, z)
+        self.bitnum = bitnum
 
         if bitnum == 2:
             m = elements.And_Gate(x, y, z, elementXYZ=True)
             self._inputs = [m.i_low, m.i_up]
-            self._outputs = unitPin(self, m.o)
+            self._outputs = m.o
             return
         elif bitnum == 3 or bitnum == 4:
             m = elements.Multiplier(x, y, z, elementXYZ=True)
             self._inputs = [m.i_low, m.i_lowmid, m.i_upmid, m.i_up]
-            self._outputs = unitPin(self, m.o_up)
+            self._outputs = m.o_up
             if bitnum == 3:
                 m.i_up - m.i_upmid
             return
@@ -71,7 +71,7 @@ class Super_AndGate:
             a = elements.And_Gate(x, y, z, elementXYZ=True)
             m.o_up - a.i_low
             self._inputs = [m.i_low, m.i_lowmid, m.i_upmid, m.i_up, a.i_up]
-            self._outputs = unitPin(self, a.o)
+            self._outputs = a.o
             return
 
         muls, mod_num = divmod(bitnum, 4)
@@ -124,7 +124,7 @@ class Super_AndGate:
         )
 
     @property
-    def output(self) -> unitPin:
+    def output(self) -> Pin:
         return self._outputs
 
 class Super_OrGate:
@@ -138,13 +138,14 @@ class Super_OrGate:
                  ) -> None:
         if not isinstance(x, (int, float)) or not isinstance(y, (int, float)) or \
            not isinstance(z, (int, float)) or \
-           elementXYZ is not None and not isinstance(elementXYZ, bool) or \
+           not isinstance(elementXYZ, (bool, type(None))) or \
            not isinstance(bitnum, int) or bitnum <= 1:
             raise TypeError
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = roundData(x, y, z)
+        self.bitnum = bitnum
 
         if bitnum == 2:
             tmp = elements.Or_Gate(x, y, z, True)
@@ -195,11 +196,81 @@ class Super_OrGate:
         )
 
     @property
-    def output(self) -> unitPin:
+    def output(self) -> Pin:
+        return self._output
+
+class Super_NorGate:
+    ''' 多引脚或非门, 引脚数为num '''
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 elementXYZ: Optional[bool] = None,
+                 bitnum: int = 4,
+                 ) -> None:
+        if not isinstance(x, (int, float)) or not isinstance(y, (int, float)) or \
+           not isinstance(z, (int, float)) or \
+           elementXYZ is not None and not isinstance(elementXYZ, bool) or \
+           not isinstance(bitnum, int) or bitnum <= 1:
+            raise TypeError
+
+        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+        x, y, z = roundData(x, y, z)
+        self.bitnum = bitnum
+
+        if bitnum == 2:
+            tmp = elements.Nor_Gate(x, y, z, True)
+            self._inputs = [tmp.i_low, tmp.i_up]
+            self._outputs = [tmp.o]
+            self._output = tmp.o
+            return
+        elif bitnum == 3:
+            tmp = elements.Nor_Gate(x, y, z, True)
+            tmp2 = elements.Or_Gate(x, y + 1, z, True)
+            tmp2.o - tmp.i_up
+            self._inputs = [tmp.i_low, tmp2.i_low, tmp2.i_up]
+            self._outputs = [tmp.o]
+            self._output = tmp.o
+            return
+
+        self._inputs = []
+        self._outputs = []
+        if bitnum % 2 == 0:
+            num_copy = bitnum
+            while num_copy != 0:
+                tmp = elements.Or_Gate(x, y + (bitnum - num_copy) / 2, z, True)
+                self._inputs += [tmp.i_low, tmp.i_up]
+                self._outputs.append(tmp.o)
+                num_copy -= 2
+            next_orgates = Super_NorGate(x, y, z, True, len(self._outputs))
+            self._output = next_orgates._output
+            for input_, output_ in zip(self._outputs, next_orgates._inputs):
+                crt_Wire(input_, output_)
+        else: # num % 2 == 1
+            num_copy = bitnum
+            while num_copy != 1:
+                tmp = elements.Or_Gate(x, y + (bitnum - num_copy) / 2, z, True)
+                self._inputs += [tmp.i_low, tmp.i_up]
+                self._outputs.append(tmp.o)
+                num_copy -= 2
+            next_orgates = Super_NorGate(x, y, z, True, len(self._outputs) + 1)
+            self._inputs.append(next_orgates._inputs[-1])
+            self._output = next_orgates._output
+            for input_, output_ in zip(self._outputs, next_orgates._inputs):
+                crt_Wire(input_, output_)
+
+    @property
+    def inputs(self) -> unitPin:
         return unitPin(
             self,
-            self._output
+            *self._inputs
         )
+
+    @property
+    def output(self) -> Pin:
+        return self._output
+
 
 class Tick_Counter:
     ''' 当 逻辑输入 输入了num次, 就输出为1, 否则为0
@@ -220,6 +291,7 @@ class Tick_Counter:
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = roundData(x, y, z)
+        self.bitnum = bitnum
 
         if bitnum == 2:
             self._output = elements.T_Flipflop(x, y, z, True)
@@ -306,7 +378,9 @@ class Two_four_Decoder:
             self.and_gate.o,
         )
 
-class Checkout_Register:
+class Switched_Register:
+    ''' 可以切换输入的寄存器
+    '''
     def __init__(self,
                  x: numType = 0,
                  y: numType = 0,
@@ -324,20 +398,21 @@ class Checkout_Register:
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = roundData(x, y, z)
+        self.bitnum = bitnum
 
         self.register = Register(x + 1, y, z, True, bitnum, heading=False)
-        self.checkout_nogate = elements.No_Gate(x, y, z, True)
-        self.checkouts = []
+        self.switch_nogate = elements.No_Gate(x, y, z, True)
+        self.switches = []
         for delta_y in range(bitnum):
             m = elements.Multiplier(x, y + delta_y * 2, z, True)
             m.o_lowmid - self.register.inputs[delta_y]
-            m.i_up - self.checkout_nogate.o
-            m.i_lowmid - self.checkout_nogate.i
-            self.checkouts.append(m)
+            m.i_up - self.switch_nogate.o
+            m.i_lowmid - self.switch_nogate.i
+            self.switches.append(m)
 
     @property
-    def checkout(self) -> Pin:
-        return self.checkout_nogate.i
+    def switch(self) -> Pin:
+        return self.switch_nogate.i
 
     @property
     def clk(self) -> Pin:
@@ -347,20 +422,115 @@ class Checkout_Register:
     def inputs1(self) -> unitPin:
         return unitPin(
             self,
-            *[e.i_low for e in self.checkouts]
+            *[e.i_low for e in self.switches]
         )
 
     @property
     def inputs2(self) -> unitPin:
         return unitPin(
             self,
-            *[e.i_upmid for e in self.checkouts]
+            *[e.i_upmid for e in self.switches]
         )
 
     @property
     def outputs(self):
         return self.register.outputs
 
+class Equal_to:
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+                 bitnum: int = 4,
+                 ) -> None:
+        if not isinstance(x, (int, float)) or \
+            not isinstance(y, (int, float)) or \
+            not isinstance(z, (int, float)) or \
+            not isinstance(elementXYZ, (bool, type(None))) or \
+            not isinstance(bitnum, int) or bitnum <= 1:
+            raise TypeError
+
+        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+        x, y, z = roundData(x, y, z)
+        self.bitnum = bitnum
+
+        self.xnorgates = []
+        self.andgate = Super_AndGate(x, y, z, True, bitnum=bitnum)
+        for delta_y in range(bitnum):
+            xnorgate = elements.Xnor_Gate(x, y + delta_y, z, True)
+            self.andgate.inputs[delta_y] - xnorgate.o
+            self.xnorgates.append(xnorgate)
+
+    @property
+    def inputs1(self) -> unitPin:
+        return unitPin(self, *[e.i_low for e in self.xnorgates])
+
+    @property
+    def inputs2(self) -> unitPin:
+        return unitPin(self, *[e.i_up for e in self.xnorgates])
+
+    @property
+    def output(self) -> Pin:
+        return self.andgate.output
+
+class Signed_Sum:
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+                 bitnum: int = 4,
+                 ) -> None:
+        if not isinstance(x, (int, float)) or \
+            not isinstance(y, (int, float)) or \
+            not isinstance(z, (int, float)) or \
+            not isinstance(elementXYZ, (bool, type(None))) or \
+            not isinstance(bitnum, int) or bitnum <= 1:
+            raise TypeError
+
+        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+        x, y, z = roundData(x, y, z)
+        self.bitnum = bitnum
+
+        self._inputs = AU_SumSub(x, y, z, True, bitnum=bitnum)
+        self._outputs = AU_SumSub(x + 2, y, z, True, bitnum=bitnum)
+        self._inputs.outputs[:-1] - self._outputs.inputs2
+        self.xorgate = elements.Xor_Gate(x, y + bitnum * 2, z, True)
+        nimpgate = elements.Nimp_Gate(x + 1, y + bitnum * 2, z, True)
+        self.xorgate2 = elements.Xor_Gate(x + 2, y + bitnum * 2, z, True)
+        self.xorgate.o - self._inputs.switch
+        nimpgate.o - self._outputs.switch
+        self.xorgate.i_up - self.xorgate2.i_up
+        self.xorgate.o - nimpgate.i_up
+        nimpgate.i_low - self._inputs.outputs[-1]
+        nimpgate.o - self.xorgate2.i_low
+
+    @property
+    def inputs1(self) -> unitPin:
+        return self._inputs.inputs1
+
+    @property
+    def inputs2(self) -> unitPin:
+        return self._inputs.inputs2
+
+    @property
+    def inputs1_sign(self) -> Pin:
+        return self.xorgate.i_up
+
+    @property
+    def inputs2_sign(self) -> Pin:
+        return self.xorgate.i_low
+
+    @property
+    def outputs(self) -> unitPin:
+        return self._outputs.outputs[0:-1]
+
+    @property
+    def outputs_sign(self) -> Pin:
+        return self.xorgate2.o
 
 class _Simple_Logic_Meta(type):
     def __call__(cls,
@@ -390,6 +560,7 @@ class _Simple_Logic_Meta(type):
             raise TypeError
         if not isinstance(bitnum, int) or bitnum < 1:
             raise errors.BitnumError("bitnum must get a integer")
+        self.bitnum = bitnum
 
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
@@ -470,7 +641,7 @@ class Sum(_Base):
                 self._elements[i].o_low - self._elements[i + 1].i_low
 
     @property
-    def input1(self) -> unitPin:
+    def inputs1(self) -> unitPin:
         ''' 加数1 '''
         return unitPin(
             self,
@@ -478,7 +649,7 @@ class Sum(_Base):
         )
 
     @property
-    def input2(self) -> unitPin:
+    def inputs2(self) -> unitPin:
         ''' 加数2 '''
         return unitPin(
             self,
@@ -585,6 +756,103 @@ class Sub(_Base):
             *(e.o_up for e in self._fullAdders),
             self._fullAdders[-1].o_low
         )
+
+class AU_SumSub(_Base):
+    ''' 无符号加减器 '''
+    def __init__(self,
+                 x: numType = 0,
+                 y: numType = 0,
+                 z: numType = 0,
+                 elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+                 bitnum: int = 4, # 减法器的最大计算比特数
+                 heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
+                 fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
+                 foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
+                 ) -> None:
+        self._elements: list = []
+        self._xorgates: List[elements.Xor_Gate] = []
+        self._fullAdders: List[elements.Full_Adder] = []
+
+        if heading:
+            if fold:
+                zcor = z
+                for i in range(bitnum):
+                    self._fullAdders.append(
+                        elements.Full_Adder(x + i % foldMaxNum, y - 2, zcor, True)
+                    )
+                    self._xorgates.append(
+                        elements.Xor_Gate(x + i % foldMaxNum, y, zcor, True)
+                    )
+                    if i == foldMaxNum - 1:
+                        zcor += 1
+            else:
+                for increase in range(bitnum):
+                    self._fullAdders.append(
+                        elements.Full_Adder(x + increase, y - 2, z, True)
+                    )
+                    self._xorgates.append(
+                        elements.Xor_Gate(x + increase, y, z, True)
+                    )
+        else:
+            if fold:
+                zcor = z
+                for i in range(bitnum):
+                    self._fullAdders.append(
+                        elements.Full_Adder(x + 1, y + (i % foldMaxNum) * 2, zcor, True)
+                    )
+                    self._xorgates.append(
+                        elements.Xor_Gate(x, y + (i % foldMaxNum) * 2 + 1, zcor, True)
+                    )
+                    if i == foldMaxNum - 1:
+                        zcor += 1
+            else:
+                for increase in range(bitnum):
+                    self._fullAdders.append(
+                        elements.Full_Adder(x + 1, y + increase * 2, z, True)
+                    )
+                    self._xorgates.append(
+                        elements.Xor_Gate(x, y + increase * 2 + 1, z, True)
+                    )
+
+        # 连接导线
+        for i in range(self._fullAdders.__len__() - 1):
+            self._fullAdders[i].o_low - self._fullAdders[i + 1].i_low
+            self._xorgates[i].o - self._fullAdders[i].i_mid
+            self._xorgates[i].i_low - self._xorgates[i + 1].i_low
+        self._xorgates[-1].o - self._fullAdders[-1].i_mid
+        self._xorgates[0].i_low - self._fullAdders[0].i_low
+
+        self._elements.extend(self._fullAdders + self._xorgates)
+
+    @property
+    def inputs1(self) -> unitPin:
+        ''' 加数1 or 被减数 '''
+        return unitPin(
+            self,
+            *(e.i_up for e in self._fullAdders)
+        )
+
+    @property
+    def inputs2(self) -> unitPin:
+        ''' 加数2 or 减数 '''
+        return unitPin(
+            self,
+            *(e.i_up for e in self._xorgates)
+        )
+
+    @property
+    def outputs(self) -> unitPin:
+        ''' 加法器的结果 '''
+        return unitPin(
+            self,
+            *(e.o_up for e in self._fullAdders),
+            self._fullAdders[-1].o_low
+        )
+
+    @property
+    def switch(self) -> Pin:
+        ''' 切换加法与减法 '''
+        return self._xorgates[0].i_low
 
 class D_WaterLamp(_Base):
     ''' D触发器流水灯 '''

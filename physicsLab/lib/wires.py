@@ -12,8 +12,13 @@ class unitPin:
         self.elementPins: Tuple[Pin] = tuple(elementPins)
 
     # 通过unionPin[num]来索引单个bit
-    def __getitem__(self, item):
-        return self.elementPins[item]
+    def __getitem__(self, item: Union[int, slice]) -> Pin:
+        if isinstance(item, int):
+            return self.elementPins[item]
+        elif isinstance(item, slice):
+            return unitPin(self.lib_self, *self.elementPins[item])
+        else:
+            raise TypeError
 
     def __sub__(self, other: Union[Pin, "unitPin"]):
         crt_Wires(self, other)
@@ -44,7 +49,9 @@ def check_TypeUnionPin(func: Callable):
         if len(sourcePin.elementPins) != len(targetPin.elementPins):
             errors.warning(
                 f"The number of {sourcePin.lib_self.__class__.__name__}'s output pin "
-                f"are not equal to {targetPin.lib_self.__class__.__name__}'s input pin.",
+                f"is {len(sourcePin.elementPins)}, "
+                f"but the number of {targetPin.lib_self.__class__.__name__}'s input pin "
+                f"is {len(targetPin.elementPins)}.",
                 warning_status=warning_status
             )
 

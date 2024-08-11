@@ -130,6 +130,7 @@
 3.  增加`Experiment.upload`, `Experiment.update`
 
 # 1.4.12
-1.  增加`lib.MultiElements`
+1.  增加`lib.MultiElements`等等
 2.  增强了减号连接导线的功能(`Pin` - `unitPin`)
 3.  修复`CircuitBase.is_bigElement`
+4.  新增`Experiment.edit_tags`

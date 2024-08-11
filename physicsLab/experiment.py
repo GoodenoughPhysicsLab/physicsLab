@@ -16,7 +16,7 @@ from physicsLab import errors
 from physicsLab import savTemplate
 from physicsLab import _colorUtils
 from .web import User, _check_response
-from .enums import Category
+from .enums import Category, Tag
 from .savTemplate import Generate
 from .enums import ExperimentType
 from .typehint import Union, Optional, List, Dict, numType, Self
@@ -556,6 +556,15 @@ class Experiment:
 
         introduce_Experiment(introduction)
         name_Experiment(title)
+
+        return self
+
+    def edit_tags(self, *tags: Tag) -> Self:
+        if not all(isinstance(tag, Tag) for tag in tags):
+            raise TypeError
+
+        temp = self.PlSav["Summary"]["Tags"] + [tag.value for tag in tags]
+        self.PlSav["Summary"]["Tags"] = list(set(temp))
 
         return self
 
