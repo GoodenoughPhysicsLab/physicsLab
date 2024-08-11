@@ -15,9 +15,9 @@ from physicsLab.experiment import Experiment, get_Experiment
 # electricity class's metaClass
 class CircuitMeta(type):
     def __call__(cls,
-                 x: numType = 0,
-                 y: numType = 0,
-                 z: numType = 0,
+                 x: numType,
+                 y: numType,
+                 z: numType,
                  elementXYZ: Optional[bool] = None,
                  *args, **kwargs
                 ):

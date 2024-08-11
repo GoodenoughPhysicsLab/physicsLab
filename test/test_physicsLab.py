@@ -21,7 +21,7 @@ class BasicTest(PLTestBase):
     @my_test_dec
     def test_experiment1(self):
         exp: Experiment = Experiment().crt("__test__", force_crt=True)
-        a = Yes_Gate()
+        a = Yes_Gate(0, 0, 0)
         self.assertEqual(count_Elements(), 1)
         self.assertEqual(a.get_Position(), (0, 0, 0))
         crt_Wire(a.o, a.i)
@@ -41,7 +41,7 @@ class BasicTest(PLTestBase):
 
         self.assertEqual(count_Elements(), 0)
         self.assertEqual(count_Wires(), 0)
-        Logic_Input()
+        Logic_Input(0, 0, 0)
         exp.write()
 
         exp2: Experiment = Experiment().open("__test__")
@@ -63,7 +63,7 @@ class BasicTest(PLTestBase):
     @my_test_dec
     def test_crt_wire(self):
         with experiment("__test__", is_exit=True, force_crt=True):
-            a = Or_Gate()
+            a = Or_Gate(0, 0, 0)
             crt_Wire(a.o, a.i_up, "red")
             self.assertEqual(count_Wires(), 1)
 
@@ -72,7 +72,7 @@ class BasicTest(PLTestBase):
     
     def test_same_crt_wire(self):
         with experiment("__test__", is_exit=True, force_crt=True):
-            a = Or_Gate()
+            a = Or_Gate(0, 0, 0)
             crt_Wire(a.o, a.i_up, "red")
             crt_Wire(a.i_up, a.o, "blue")
             self.assertEqual(count_Wires(), 1)
@@ -145,21 +145,21 @@ class BasicTest(PLTestBase):
     def test_open_many_Experiment(self):
         exp: Experiment = Experiment().crt("__test__", force_crt=True)
         with experiment('__test__', is_exit=True, force_crt=True):
-            Logic_Input()
+            Logic_Input(0, 0, 0)
             self.assertEqual(1, count_Elements())
         exp.exit()
 
     @my_test_dec
     def test_with_and_coverPosition(self):
         with experiment("__test__", is_exit=True, force_crt=True):
-            Logic_Input()
-            Or_Gate()
+            Logic_Input(0, 0, 0)
+            Or_Gate(0, 0, 0)
             self.assertEqual(len(get_Element(0, 0, 0)), 2)
 
     @my_test_dec
     def test_del_Element(self):
         with experiment("__test__", is_exit=True, force_crt=True):
-            Logic_Input().o - Or_Gate().o
+            Logic_Input(0, 0, 0).o - Or_Gate(0, 0, 0).o
             del_Element(get_Element(index=2))
             self.assertEqual(count_Elements(), 1)
             self.assertEqual(count_Wires(), 0)
@@ -195,8 +195,8 @@ class BasicTest(PLTestBase):
     def test_ExperimentType(self):
         with experiment("__test__", experiment_type=ExperimentType.Electromagnetism, is_exit=True, force_crt=True):
             try:
-                Positive_Charge()
-                Logic_Input()
+                Positive_Charge(0, 0, 0)
+                Logic_Input(0, 0, 0)
             except ExperimentTypeError:
                 pass
             else:
@@ -205,7 +205,7 @@ class BasicTest(PLTestBase):
     @my_test_dec
     def test_ExperimentType3(self):
         with experiment("__test__", experiment_type=ExperimentType.Circuit, is_exit=True, force_crt=True):
-            Logic_Input()
+            Logic_Input(0, 0, 0)
         with experiment("__test__", experiment_type=ExperimentType.Celestial, is_exit=True, force_crt=True):
             pass
         with experiment("__test__", experiment_type=ExperimentType.Electromagnetism, is_exit=True, force_crt=True):
@@ -240,24 +240,24 @@ class BasicTest(PLTestBase):
     @my_test_dec
     def test_Simple_Instrument(self):
         with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
-            a = Simple_Instrument(pitch=48)
-            a = Simple_Instrument().set_Tonality(48)
-            a = Simple_Instrument(pitch="C3")
-            a = Simple_Instrument().set_Tonality("C3")
+            a = Simple_Instrument(0, 0, 0, pitch=48)
+            a = Simple_Instrument(0, 0, 0).set_Tonality(48)
+            a = Simple_Instrument(0, 0, 0, pitch="C3")
+            a = Simple_Instrument(0, 0, 0).set_Tonality("C3")
             Logic_Input(-1, 0, 0).o - a.i
             a.o - Ground_Component(1, 0, 0).i
 
     @my_test_dec
     def test_getElementError(self):
         with experiment("__test__", is_exit=True, force_crt=True):
-            Logic_Input()
+            Logic_Input(0, 0, 0)
             try:
                 get_Element(index=2)
             except ElementNotFound:
                 pass
             else:
                 raise TestError
-    
+
     @my_test_dec
     def test_unionMusic(self):
         music.Note(2)
@@ -274,9 +274,9 @@ class BasicTest(PLTestBase):
             self.assertEqual(Logic_Output.is_bigElement, False)
             self.assertEqual(Multiplier.is_bigElement, True)
             self.assertEqual(Or_Gate.is_bigElement, False)
-            self.assertEqual(Logic_Input().is_bigElement, False)
-            self.assertEqual(Full_Adder().is_bigElement, True)
-            self.assertEqual(Xor_Gate().is_bigElement, False)
+            self.assertEqual(Logic_Input(0, 0, 0).is_bigElement, False)
+            self.assertEqual(Full_Adder(0, 0, 0).is_bigElement, True)
+            self.assertEqual(Xor_Gate(0, 0, 0).is_bigElement, False)
 
     @my_test_dec
     def test_musicPlayer(self):
@@ -290,16 +290,16 @@ class BasicTest(PLTestBase):
                     t.append(n)
                     n.append(music.Note(1, pitch=12 * i + j + 23))
             t.release(-1, -1, 0)
-    
+
     @my_test_dec
     def test_mutiple_notes_in_Simple_Instrument(self):
         with experiment("__test__", force_crt=True, is_exit=True):
-            Simple_Instrument().add_note(67) # type: ignore
+            Simple_Instrument(0, 0, 0).add_note(67) # type: ignore
 
     @my_test_dec
     def test_merge_Experiment(self):
         with experiment("__test__", force_crt=True, is_exit=True) as exp:
-            Logic_Input().o - Logic_Output(1, 0, 0, elementXYZ=True).i
+            Logic_Input(0, 0, 0).o - Logic_Output(1, 0, 0, elementXYZ=True).i
 
             with experiment("_Test", force_crt=True, is_exit=True) as exp2:
                 Logic_Output(0, 0, 0.1)
@@ -310,20 +310,20 @@ class BasicTest(PLTestBase):
     @my_test_dec
     def test_link_wire_in_two_experiment(self):
         with experiment("__test__", force_crt=True, is_exit=True) as exp:
-            a = Logic_Input()
+            a = Logic_Input(0, 0, 0)
             with experiment("_Test", force_crt=True, is_exit=True) as exp2:
-                b = Logic_Output()
+                b = Logic_Output(0, 0, 0)
                 try:
                     a.o - b.i
                 except ExperimentError:
                     pass
                 else:
                     raise TestError
-    
+
     @my_test_dec
     def test_merge_Experiment2(self):
         with experiment("__test__", force_crt=True, is_exit=True) as exp:
-            e = Yes_Gate()
+            e = Yes_Gate(0, 0, 0)
             e.i - e.o
 
             with experiment("_Test", force_crt=True, is_exit=True) as exp2:
@@ -334,11 +334,11 @@ class BasicTest(PLTestBase):
 
                 self.assertEqual(count_Elements(), 2)
                 self.assertEqual(count_Wires(), 1)
-    
+
     @my_test_dec
     def test_crt_self_wire(self):
         with experiment("__test__", force_crt=True, is_exit=True) as exp:
-            e = Logic_Output()
+            e = Logic_Output(0, 0, 0)
             try:
                 e.i - e.i
             except ExperimentError:

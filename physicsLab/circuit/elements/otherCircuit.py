@@ -8,7 +8,7 @@ from physicsLab.typehint import Optional, numType, CircuitElementData, Self, Gen
 
 class Buzzer(TwoPinMixIn):
     ''' 蜂鸣器 '''
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Buzzer", "Identifier": Generate, "IsBroken": False,
                            "IsLocked": False, "Properties": {"额定电压": 3.0, "额定功率": 0.3},
                            "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
@@ -19,7 +19,7 @@ class Buzzer(TwoPinMixIn):
 
 class Spark_Gap(TwoPinMixIn):
     ''' 火花隙 '''
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Spark Gap", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"击穿电压": 1000.0, "击穿电阻": 1.0, "维持电流": 0.001, "锁定": 1.0},
@@ -29,7 +29,7 @@ class Spark_Gap(TwoPinMixIn):
 
 class Tesla_Coil(TwoPinMixIn):
     ''' 特斯拉线圈 '''
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Tesla Coil", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"击穿电压": 30000.0, "次级电容": 2.5e-11, "次级电阻": 1.0,
@@ -40,7 +40,7 @@ class Tesla_Coil(TwoPinMixIn):
 
 class Color_Light_Emitting_Diode(CircuitBase):
     ''' 彩色发光二极管 '''
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Color Light-Emitting Diode", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"反向耐压": 6.0, "击穿电压": 0.0, "前向压降": 2.1024259,
@@ -69,7 +69,7 @@ class Color_Light_Emitting_Diode(CircuitBase):
 
 class Dual_Light_Emitting_Diode(TwoPinMixIn):
     ''' 演示发光二极管 '''
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Dual Light-Emitting Diode", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"反向耐压": 6.0, "击穿电压": 0.0, "前向压降": 2.1024259,
@@ -81,7 +81,7 @@ class Dual_Light_Emitting_Diode(TwoPinMixIn):
 
 class Electric_Bell(TwoPinMixIn):
     ''' 电铃 '''
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Electric Bell", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"额定电压": 3.0, "额定功率": 0.3, "锁定": 1.0},
@@ -92,7 +92,7 @@ class Electric_Bell(TwoPinMixIn):
 
 class Musical_Box(TwoPinMixIn):
     ''' 八音盒 '''
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Musical Box", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"额定电压": 3.0, "额定功率": 0.3, "锁定": 1.0},
@@ -103,7 +103,7 @@ class Musical_Box(TwoPinMixIn):
 
 class Resistance_Law(CircuitBase):
     ''' 电阻定律实验 '''
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Resistance Law", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"电阻率": 1.0, "电阻率2": 4.0, "电阻率3": 1.0, "最大长度": 2.0,
@@ -152,7 +152,7 @@ class Resistance_Law(CircuitBase):
 
 class Solenoid(CircuitBase):
     ''' 通电螺线管 '''
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Solenoid", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"插入铁芯": 1.0, "内圈状态": 0.0, "切割速度": 1.0, "锁定": 1.0,
@@ -180,7 +180,7 @@ class Solenoid(CircuitBase):
 
 class Electric_Fan(TwoPinMixIn):
     ''' 小电扇 '''
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {"ModelID": "Electric Fan", "Identifier": Generate,
                            "IsBroken": False, "IsLocked": False,
                            "Properties": {"额定电阻": 1.0, "马达常数": 0.1, "转动惯量": 0.01,
@@ -196,9 +196,9 @@ class Simple_Instrument(TwoPinMixIn):
     ''' 简单乐器 '''
     def __init__(
             self,
-            x: numType = 0,
-            y: numType = 0,
-            z: numType = 0,
+            x: numType,
+            y: numType,
+            z: numType,
             elementXYZ: Optional[bool] = None,
             instrument: Union[int, str] = 0, # 演奏的乐器，暂时只支持传入数字
             pitch: Union[int, str] = 60, # 音高/音调: 20 ~ 128

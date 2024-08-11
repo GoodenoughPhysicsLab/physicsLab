@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
 # 用于存放自定义错误类
 # 由于有时在package外需要异常处理，故不为文件私有变量
-import ast
 import inspect
 
-from executing import Source
 from physicsLab import _colorUtils
-from typing import Optional, List
+from typing import Optional
 
 _warning_status: Optional[bool] = None
 
