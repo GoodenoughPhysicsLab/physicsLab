@@ -228,6 +228,8 @@ class User:
         return _check_response(response)
 
     def confirm_experiment(self, summary_id: str, category: Category, image_counter: int) -> dict:
+        ''' 确认发布实验
+        '''
         if not isinstance(summary_id, str) or \
             not isinstance(category, Category) or \
             not isinstance(image_counter, int):
@@ -339,7 +341,7 @@ class User:
             if status_code == 404:
                 raise errors.ResponseFail("experiment not found(may be you select category wrong)")
 
-        return _check_response(response, callable)
+        return _check_response(response, callback)
 
     def get_derivatives(self, content_id: str, category: Category) -> dict:
         ''' 获取作品的详细信息
@@ -456,3 +458,38 @@ class User:
                 raise errors.ResponseFail(f"error code {response.json()['code']}: "
                                           f"{response.json()['message']}")
             return response.json()
+
+    def get_messages(self,
+                     category_id: int = 0,
+                     skip: int = 0,
+                     take: int = 16,
+                     no_templates: bool = True,
+                     ) -> dict:
+        ''' 获取用户收到的消息(比如别人的回
+            @param category_id: 消息类型:
+                0: 全部, 1: 系统邮件, 2: 评论和回复, 3: 关注和粉丝, 4: 作品通知, 5: 管理记录
+            @param skip: 跳过skip条消息
+            @param take: 取take条消息
+        '''
+        if category_id not in (0, 1, 2, 3, 4, 5) or \
+            not isinstance(skip, int) or \
+            not isinstance(take, int) or \
+            not isinstance(no_templates, bool):
+            raise TypeError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com/Messages/GetMessages",
+            json={
+                "CategoryID": category_id,
+                "Skip": skip,
+                "Take": take,
+                "NoTemplates": no_templates,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            }
+        )
+
+        return _check_response(response)
