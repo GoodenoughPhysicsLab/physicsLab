@@ -31,11 +31,11 @@ from physicsLab import music
 # 检测操作系统
 # Win: 若存档对应文件夹不存在直接报错
 if platform.system() == "Windows":
-    if not os.path.exists(Experiment.FILE_HEAD):
+    if not os.path.exists(Experiment.SAV_ROOT_DIR):
         raise RuntimeError("The folder does not exist, try launching Physics-Lab-AR and try it out")
 else:
-    if not os.path.exists(Experiment.FILE_HEAD):
-        os.mkdir(Experiment.FILE_HEAD)
+    if not os.path.exists(Experiment.SAV_ROOT_DIR):
+        os.mkdir(Experiment.SAV_ROOT_DIR)
 
 plAR_version = get_plAR_version()
 if plAR_version is not None:

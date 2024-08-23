@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+from math import fabs
+import os
+
 from base import *
 
 from physicsLab.lib import *
 from physicsLab.experiment import stack_Experiment
-
-import format_coding_style as fcs
 
 def my_test_dec(method: Callable):
     def result(*args, **kwarg):
@@ -55,8 +56,8 @@ class BasicTest(PLTestBase):
             exp: Experiment = Experiment().crt("__test__", force_crt=True)
             exp.write()
             Experiment().crt("__test__") # will fail
-        except crtExperimentFailError:
-            Experiment("__test__").delete()
+        except ExperimentHasExistError:
+            Experiment("__test__").delete(warning_status=False)
         else:
             raise TestError
 
@@ -69,7 +70,7 @@ class BasicTest(PLTestBase):
 
             del_Wire(a.o, a.i_up)
             self.assertEqual(count_Wires(), 0)
-    
+
     def test_same_crt_wire(self):
         with experiment("__test__", is_exit=True, force_crt=True):
             a = Or_Gate(0, 0, 0)
@@ -117,7 +118,7 @@ class BasicTest(PLTestBase):
             with experiment("__test__", delete=True, force_crt=True):
                 pass # 确保__test__实验不存在
             Experiment().open('__test__') # do not exist
-        except OpenExperimentError:
+        except ExperimentNotExistError:
             pass
         else:
             raise TestError

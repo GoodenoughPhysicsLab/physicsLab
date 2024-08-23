@@ -77,7 +77,7 @@ sys.path.append("/your/path/of/physicsLab") # 将字符串替换为你想添加�
 
 ## 使用说明
 > Note: 如果`physicsLab`抛出`TypeError`，请检查你自己的输入参数是否有问题，  
->       如果抛出`AssertionError`，请`bug report`
+>       如果抛出`AssertionError`，请**报告bug**
 
 *目前`physicsLab`在`windows`上的支持最好，在`Android`上仅支持手动导入/导出存档（默认在`physicsLabSav`文件夹中）。*  
 其他操作系统上的行为与在`Android`上应该一致。  

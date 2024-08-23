@@ -71,6 +71,9 @@ class CircuitMeta(type):
 class CircuitBase(ElementBase, metaclass=CircuitMeta):
     is_bigElement = False # 该元件是否是逻辑电路的两体积元件
 
+    def __init__(self) -> None:
+        raise RuntimeError("can not init virtual class")
+
     def __define_virtual_var_to_let_ide_show(self,
                                              data: CircuitElementData,
                                              exp: Experiment):

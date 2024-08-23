@@ -50,6 +50,10 @@ Experiment().open('example.sav') # 根据存档的文件名（也就是xxxx.sav�
                                #（e.g. e229d7fe-7fa3-4efa-9190-dcb4558a385a.sav）
 Experiment().open('example') # 根据存档的实验名（也就是你在物实导入本地实验时看到的实验的名字）进行导入实验
 ```
+但该方法支持读取字符串的形式最完善, 共支持3种:
+1.  存档名（在物实保存的实验的名字）
+2.  文件名 (默认的存档所在的路径)
+3.  自定义存档的路径
 > Note: 当open的实验不存在，会抛出错误；
 
 ## 创建存档
@@ -111,6 +115,7 @@ with experiment("example") as exp:
 from physicsLab import *
 
 user = web.User(YOUR_UESRNAME, YOUR_PASSWORD)
+# 也可使用 web.User(token=YOUR_TOKEN, auth_code=YOUR_AUTH_CODE)
 
 with experiment("example") as exp:
     # do something
@@ -285,7 +290,11 @@ with experiment("example1") as exp:
 ```
 
 ## 手动设置输出路径
-你可以使用`os.environ["PHYSICSLAB_HOME_PATH"] = "xxx"`来设置`physicsLab`产生的存档的默认路径（该功能仅为非Windows操作系统提供，因为这些操作系统通常有着严格的权限设置）
+你可以使用`os.environ["PHYSICSLAB_HOME_PATH"] = "xxx"`来设置`physicsLab`读写存档的默认文件夹
+
+该功能主要为非`Windows`系统设计, 但`Windows`上也可以用，不过谨慎
+
+该方法也是另一种导入任意路径的存档的一种方法(另一种是直接调用`Experiment.read`)
 
 ## 暂停实验
 你可以使用`Experiment.paused(status: bool)`来暂停实验

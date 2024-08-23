@@ -41,17 +41,9 @@ def warning(msg: str, warning_status: Optional[bool] = None) -> None:
         if module is None or module.__name__.startswith("physicsLab"):
             continue
         print(f"  File \"{frame_info.filename}\", line {frame_info.lineno}, in {frame_info.function}")
-        print(f"    {frame_info.code_context[0].strip()}")
+        if frame_info.code_context is not None:
+            print(f"    {frame_info.code_context[0].strip()}")
     _colorUtils.color_print(msg, _colorUtils.COLOR.YELLOW)
-
-# 打开实验异常
-class OpenExperimentError(Exception):
-    err_str = "open a experiment but find nothing(must open a experiment)."
-    def __init__(self, err_str: Optional[str]=None) -> None:
-        OpenExperimentError.err_str = err_str
-
-    def __str__(self):
-        return self.err_str
 
 # 导线颜色类型异常
 class WireColorError(Exception):
@@ -97,10 +89,6 @@ class ExperimentHasNotCrtError(Exception):
     ''' 实验未创建 '''
     def __str__(self):
         return "The experiment has not been created"
-
-class crtExperimentFailError(Exception):
-    def __str__(self):
-        return "Failed to create experiment, the experiment already exists"
 
 # 打开的实验与调用的元件不符
 class ExperimentTypeError(Exception):

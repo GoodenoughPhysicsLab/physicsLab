@@ -9,6 +9,7 @@ import platform
 import tempfile
 
 from datetime import datetime
+from enum import unique, Enum
 
 from physicsLab import plAR
 from physicsLab import  _tools
@@ -59,27 +60,35 @@ def get_Experiment() -> "Experiment":
 
 class Experiment:
     ''' 实验（存档）类 '''
-    if platform.system() == "Windows":
-        from getpass import getuser
-        FILE_HEAD = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Circuit"
+    if os.environ.get("PHYSICSLAB_HOME_PATH"):
+        SAV_ROOT_DIR = os.environ["PHYSICSLAB_HOME_PATH"]
     else:
-        _home = os.environ.get('PHYSICSLAB_HOME_PATH')
-        if _home is None:
-            FILE_HEAD = "physicsLabSav"
+        if platform.system() == "Windows":
+            from getpass import getuser
+            SAV_ROOT_DIR = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Circuit"
         else:
-            FILE_HEAD = f"{_home}/physicsLabSav"
+            SAV_ROOT_DIR = "physicsLabSav"
+
+    @unique
+    class PathLoadMode(Enum):
+        ''' 打开存档时输入字符串的解析模式 '''
+        sav_name = 0 # 存档的名字(在物实内给存档取的名字)
+        file_name = 1 # 存档对应的文件名, 完整路径为 os.path.join(FILE_HEAD, file_name)
+        path = 2 # 用户自己提供的存档的完整路径
 
     @property
     def is_open_or_crt(self) -> bool:
-        return self.is_open or self.is_crt
+        return self.is_opened or self.is_crted
 
-    def __init__(self, sav_name: Optional[str] = None) -> None:
-        self.is_open: bool = False
-        self.is_crt: bool = False
-        self.is_read: bool = False
+    def __init__(self,
+                 sav_name: Optional[str] = None,
+                 experiment_type: ExperimentType = ExperimentType.Circuit, # 仅在创建实验时有效
+                 ) -> None:
+        self.is_opened: bool = False
+        self.is_crted: bool = False
+        self.is_readed: bool = False
 
-        self.FileName: Optional[str] = None # 存档的文件名
-        self.SavPath: Optional[str] = None # 存档的完整路径, 为 f"{experiment.FILE_HEAD}/{self.FileName}"
+        self.SAV_PATH: Optional[str] = None # 存档的完整路径
         # 通过坐标索引元件
         self.elements_Position: Dict[tuple, list] = {}  # key: self._position, value: List[self...]
         # 通过index（元件生成顺序）索引元件
@@ -87,7 +96,7 @@ class Experiment:
         self.Elements: List[CircuitBase] = []
 
         if sav_name is not None:
-            self.open_or_crt(sav_name)
+            self.open_or_crt(sav_name, experiment_type)
 
     def get_element_from_identifier(self, identifier: str):
         ''' 通过 原件的["Identifier"]获取元件的引用 '''
@@ -104,7 +113,7 @@ class Experiment:
         self.TargetRotation: _tools.position = _tools.position(temp[0], temp[2], temp[1]) # x, z, y
 
     def __open(self) -> None:
-        self.is_open = True
+        self.is_opened = True
         self.__read_CameraSave(self.PlSav["Experiment"]["CameraSave"])
 
         self.experiment_type: ExperimentType = {
@@ -133,7 +142,10 @@ class Experiment:
         elif self.experiment_type == ExperimentType.Electromagnetism:
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
 
-    def open(self, sav_name : str, is_path: bool = False) -> Self:
+    def open(self,
+             sav_name : str,
+             path_load_mode: PathLoadMode = PathLoadMode.sav_name,
+             ) -> Self:
         ''' [[该方法为构造函数]]
             打开一个指定的sav文件 (支持输入本地实验的名字或sav文件名)
             @param sav_name: 存档的名字或存档的文件名(.sav)
@@ -141,41 +153,41 @@ class Experiment:
         '''
         if self.is_open_or_crt:
             raise errors.ExperimentHasOpenError
+
+        if not isinstance(sav_name, str) \
+            or not isinstance(path_load_mode, Experiment.PathLoadMode):
+            raise TypeError
+
         stack_Experiment.push(self)
 
-        if is_path:
-            sav_name = os.path.abspath(sav_name)
-            if not os.path.exists(sav_name):
-                raise FileNotFoundError
+        # 直接通过文件路径进行导入
+        if path_load_mode == Experiment.PathLoadMode.file_name \
+                or path_load_mode == Experiment.PathLoadMode.path:
 
-        # .sav文件名
-        sav_name = sav_name.strip()
-        if sav_name.endswith('.sav'):
-            if not is_path:
-                self.FileName = sav_name
-                self.SavPath = f"{Experiment.FILE_HEAD}/{sav_name}"
-                if not os.path.exists(self.SavPath):
-                    stack_Experiment.pop()
-                    raise errors.OpenExperimentError(f'No such experiment "{sav_name}"')
-            else:
-                self.FileName = os.path.basename(sav_name)
-                self.SavPath = sav_name
+            if path_load_mode == Experiment.PathLoadMode.file_name:
+                sav_name = os.path.join(Experiment.SAV_ROOT_DIR, sav_name)
+            self.SAV_PATH = os.path.abspath(sav_name)
 
-            _temp = _open_sav(self.SavPath)
+            if not os.path.exists(self.SAV_PATH):
+                stack_Experiment.pop()
+                raise errors.ExperimentNotExistError(f"{self.SAV_PATH} not found")
+
+            _temp = _open_sav(self.SAV_PATH)
             assert _temp is not None
             self.PlSav = _temp
             self.__open()
-            return self
+        elif path_load_mode == Experiment.PathLoadMode.sav_name: # 通过存档名导入
+            filename = search_Experiment(sav_name)
 
-        # 存档名(本地实验的名字)
-        self.FileName = search_Experiment(sav_name)
-        self.SavPath = f"{Experiment.FILE_HEAD}/{self.FileName}"
-        if self.FileName is None:
-            stack_Experiment.pop()
-            raise errors.OpenExperimentError(f'No such experiment "{sav_name}"')
+            if filename is None:
+                stack_Experiment.pop()
+                raise errors.ExperimentNotExistError(f'No such experiment "{sav_name}"')
 
-        self.PlSav = search_Experiment.sav
-        self.__open()
+            self.SAV_PATH = os.path.join(Experiment.SAV_ROOT_DIR, filename)
+            self.PlSav = search_Experiment.sav
+            self.__open()
+        else:
+            raise AssertionError("Please bug report")
 
         return self
 
@@ -183,11 +195,11 @@ class Experiment:
               sav_name: str,
               experiment_type: ExperimentType = ExperimentType.Circuit
     ) -> None:
-        self.is_crt = True
+        self.is_crted = True
         self.experiment_type = experiment_type
 
-        self.FileName = f"{_tools.randString(34)}.sav"
-        self.SavPath = f"{Experiment.FILE_HEAD}/{self.FileName}"
+        filename = f"{_tools.randString(34)}.sav"
+        self.SAV_PATH = os.path.join(Experiment.SAV_ROOT_DIR, filename)
 
         if self.experiment_type == ExperimentType.Circuit:
             self.is_elementXYZ: bool = False
@@ -230,7 +242,7 @@ class Experiment:
     def crt(self,
             sav_name: str,
             experiment_type: ExperimentType = ExperimentType.Circuit,
-            force_crt: bool=False
+            force_crt: bool = False,
     ) -> Self:
         ''' [[该方法为构造函数]]
             创建存档
@@ -241,14 +253,16 @@ class Experiment:
         if self.is_open_or_crt:
             raise errors.ExperimentHasOpenError
 
-        if not isinstance(sav_name, str) or not isinstance(experiment_type, ExperimentType):
+        if not isinstance(sav_name, str) \
+            or not isinstance(experiment_type, ExperimentType) \
+            or not isinstance(force_crt, bool):
             raise TypeError
 
         search = search_Experiment(sav_name)
         if not force_crt and search is not None:
-            raise errors.crtExperimentFailError
+            raise errors.ExperimentHasExistError
         elif force_crt and search is not None:
-            path = f"{Experiment.FILE_HEAD}/{search}"
+            path = os.path.join(Experiment.SAV_ROOT_DIR, search)
             os.remove(path)
             if os.path.exists(path.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
                 os.remove(path.replace(".sav", ".jpg"))
@@ -260,34 +274,29 @@ class Experiment:
 
     def open_or_crt(self,
                     sav_name: str,
-                    ExperimentType: ExperimentType = ExperimentType.Circuit,
-                    is_path: bool = False,
+                    experiment_type: ExperimentType = ExperimentType.Circuit,
     ) -> Self:
         ''' [[该方法为构造函数]]
             先尝试打开实验, 若失败则创建实验
-            @sav_name: 存档名
-            @ExperimentType: 实验类型
-            @is_path: sav_name 是否为路径
+            @sav_name: 只支持传入存档名
+            @experiment_type: 实验类型, 仅在创建实验时有效
         '''
         if self.is_open_or_crt:
             raise errors.ExperimentHasOpenError
 
-        if not isinstance(sav_name, str):
+        if not isinstance(sav_name, str) \
+            or not isinstance(experiment_type, ExperimentType):
             raise TypeError
+
         stack_Experiment.push(self)
 
-        # 文件名或者路径时
-        if sav_name.endswith(".sav"):
-            self.open(sav_name, is_path)
-            return self
-
-        self.FileName = search_Experiment(sav_name)
-        if self.FileName is not None:
-            self.SavPath = f"{Experiment.FILE_HEAD}/{self.FileName}"
+        filename = search_Experiment(sav_name)
+        if filename is not None:
+            self.SAV_PATH = os.path.join(Experiment.SAV_ROOT_DIR, filename)
             self.PlSav = search_Experiment.sav
             self.__open()
         else:
-            self.__crt(sav_name, ExperimentType)
+            self.__crt(sav_name, experiment_type)
         return self
 
     def __read_element(self, _elements: list) -> None:
@@ -361,11 +370,11 @@ class Experiment:
         ''' 读取实验已有状态 '''
         if not self.is_open_or_crt:
             raise errors.ExperimentNotOpenError
-        if self.is_read:
+        if self.is_readed:
             errors.warning("experiment has been read", warning_status)
             return self
-        self.is_read = True
-        if self.is_crt:
+        self.is_readed = True
+        if self.is_crted:
             errors.warning("can not read because you create this experiment", warning_status)
             return self
 
@@ -428,10 +437,19 @@ class Experiment:
     def write(self,
               extra_filepath: Optional[str] = None,
               ln: bool = False,
-              no_pop: bool = False
+              no_pop: bool = False,
     ) -> Self:
-        ''' 以物实存档的格式导出实验 '''
+        ''' 以物实存档的格式导出实验
+            @param extra_filepath: 自定义保存存档的路径, 但仍会在 SAV_PATH_ROOT 下保存存档
+            @param ln: 是否将StatusSave字符串换行
+            @param no_pop: write之后不退出对该存档的操作
+        '''
         def _format_StatusSave(stringJson: str) -> str:
+            ''' 将StatusSave字符串换行
+                注意: 换行之后的结果不符合json语法(json无多行字符串)
+                     但物实可以读取
+                     因此, 仅用于调试
+            '''
             stringJson = stringJson.replace( # format element json
                 "{\\\"ModelID", "\n      {\\\"ModelID"
             )
@@ -445,19 +463,19 @@ class Experiment:
         if not self.is_open_or_crt:
             raise errors.ExperimentNotOpenError
 
-        if self.is_open:
+        if self.is_opened:
             status: str = "update"
         else: # self.is_crt
             status: str = "create"
 
         if self.is_open_or_crt is True:
             if not no_pop:
-                self.is_open = False
-                self.is_crt = False
+                self.is_opened = False
+                self.is_crted = False
         else:
             raise errors.ExperimentError("write before open or crt")
 
-        assert self.SavPath is not None
+        assert self.SAV_PATH is not None
 
         if not no_pop:
             stack_Experiment.pop()
@@ -468,7 +486,7 @@ class Experiment:
         if ln:
             context = _format_StatusSave(context)
 
-        with open(self.SavPath, "w", encoding="utf-8") as f:
+        with open(self.SAV_PATH, "w", encoding="utf-8") as f:
             f.write(context)
         if extra_filepath is not None:
             if not extra_filepath.endswith(".sav"):
@@ -496,24 +514,24 @@ class Experiment:
         if not self.is_open_or_crt:
             raise errors.ExperimentNotOpenError
 
-        assert self.SavPath is not None
+        assert self.SAV_PATH is not None
 
-        if os.path.exists(self.SavPath): # 如果一个实验被创建但还未被写入, 就会触发错误
-            os.remove(self.SavPath)
+        if os.path.exists(self.SAV_PATH): # 如果一个实验被创建但还未被写入, 就会触发错误
+            os.remove(self.SAV_PATH)
             _colorUtils.color_print(
-                f"Successfully delete experiment {self.PlSav['InternalName']}({self.FileName})!",
+                f"Successfully delete experiment {self.PlSav['InternalName']}({self.SAV_PATH})!",
                 _colorUtils.COLOR.BLUE
             )
-        elif not self.is_crt:
+        elif not self.is_crted:
             if warning_status is None:
                 warning_status = errors._warning_status
             errors.warning(
-                f"experiment {self.PlSav['InternalName']}({self.FileName}) do not exist.",
+                f"experiment {self.PlSav['InternalName']}({self.SAV_PATH}) do not exist.",
                 warning_status
             )
 
-        if os.path.exists(self.SavPath.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
-            os.remove(self.SavPath.replace(".sav", ".jpg"))
+        if os.path.exists(self.SAV_PATH.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
+            os.remove(self.SAV_PATH.replace(".sav", ".jpg"))
 
         stack_Experiment.pop()
 
@@ -578,7 +596,7 @@ class Experiment:
         if not self.is_open_or_crt:
             raise errors.ExperimentNotOpenError
 
-        assert self.SavPath is not None
+        assert self.SAV_PATH is not None
 
         introduce_Experiment(introduction)
         name_Experiment(title)
@@ -853,7 +871,7 @@ class Experiment:
         if not self.is_open_or_crt or not other.is_open_or_crt:
             raise errors.ExperimentNotOpenError
 
-        assert self.SavPath is not None and other.SavPath is not None
+        assert self.SAV_PATH is not None and other.SAV_PATH is not None
 
         if self is other:
             return self
@@ -889,7 +907,7 @@ class Experiment:
         return self
 
 class experiment:
-    ''' 仅提供通过with操作存档的功能的高层次api '''
+    ''' 仅提供通过with操作存档的高层次api '''
     def __init__(self,
                  sav_name: str, # 实验名(非存档文件名)
                  read: bool = False, # 是否读取存档原有状态
@@ -900,8 +918,7 @@ class experiment:
                  extra_filepath: Optional[str] = None, # 将存档写入额外的路径
                  force_crt: bool = False, # 强制创建一个实验, 若已存在则覆盖已有实验
                  is_exit: bool = False, # 退出试验
-                 is_path: bool = False, # sav_name是否是路径
-    ):
+                 ):
         if not (
             isinstance(sav_name, str) and
             isinstance(read, bool) and
@@ -911,10 +928,7 @@ class experiment:
             isinstance(experiment_type, ExperimentType) and
             isinstance(force_crt, bool) and
             isinstance(is_exit, bool) and
-            isinstance(is_path, bool)
-        ) and (
-            not isinstance(extra_filepath, str) and
-            extra_filepath is not None
+            isinstance(extra_filepath, (str, type(None)))
         ):
             raise TypeError
 
@@ -927,12 +941,11 @@ class experiment:
         self.extra_filepath: Optional[str] = extra_filepath
         self.force_crt: bool = force_crt
         self.is_exit: bool = is_exit
-        self.is_path: bool = is_path
 
     def __enter__(self) -> Experiment:
         if not self.force_crt:
             self._Experiment: Experiment = Experiment() \
-                .open_or_crt(self.savName, self.ExperimentType, self.is_path)
+                .open_or_crt(self.savName, self.ExperimentType)
         else:
             self._Experiment: Experiment = Experiment().crt(self.savName, self.ExperimentType, self.force_crt)
 
@@ -964,7 +977,7 @@ class experiment:
 def getAllSav() -> List[str]:
     ''' 获取所有物实存档的文件名 '''
     from os import walk
-    savs = [i for i in walk(Experiment.FILE_HEAD)][0]
+    savs = [i for i in walk(Experiment.SAV_ROOT_DIR)][0]
     savs = savs[savs.__len__() - 1]
     return [aSav for aSav in savs if aSav.endswith('sav')]
 
@@ -1006,7 +1019,7 @@ def search_Experiment(sav_name: str) -> Optional[str]:
         若存在则返回存档对应的文件名, 若不存在则返回None
     '''
     for aSav in getAllSav():
-        sav = _open_sav(os.path.join(Experiment.FILE_HEAD, aSav))
+        sav = _open_sav(os.path.join(Experiment.SAV_ROOT_DIR, aSav))
         if sav is None:
             continue
         if sav["InternalName"] == sav_name:
