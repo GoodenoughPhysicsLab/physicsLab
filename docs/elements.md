@@ -211,6 +211,7 @@
         <td>555定时器</td>
         <td>NE555</td>
         <td>555 Timer</td>
+        <td>VCC, Dis, Thr, Ctrl, Trig, Out, Reset, Ground</td>
     </tr>
     <tr>
         <td>电容</td>
@@ -282,21 +283,25 @@
         <td>运算放大器</td>
         <td>Operational_Amplifier</td>
         <td>Operational Amplifier</td>
+        <td>i_up, i_low, o</td>
     </tr>
     <tr>
         <td>继电器</td>
         <td>Relay_Component</td>
         <td>Relay Component</td>
+        <td>i_up, i_low, o</td>
     </tr>
     <tr>
         <td>N-MOSFET</td>
         <td>N_MOSFET</td>
         <td>N-MOSFET</td>
+        <td>D, S, G</td>
     </tr>
     <tr>
         <td>P-MOSFET</td>
         <td>P_MOSFET</td>
         <td>P-MOSFET</td>
+        <td>D, S, G</td>
     </tr>
     <tr>
         <td>正弦波发生器</td>
@@ -392,7 +397,7 @@
         <td>学生电源</td>
         <td>Student_Source</td>
         <td>Student Source</td>
-        <td></td>
+        <td>l, l_mid, r_mid, r</td>
         <td>None</td>
     </tr>
     <tr>
