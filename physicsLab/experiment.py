@@ -120,7 +120,7 @@ class Experiment:
             ExperimentType.Circuit.value: ExperimentType.Circuit,
             ExperimentType.Celestial.value: ExperimentType.Celestial,
             ExperimentType.Electromagnetism.value: ExperimentType.Electromagnetism
-        }[self.PlSav["Type"]]
+        }[self.PlSav["Experiment"]["Type"]]
 
         if self.PlSav["Summary"] is None:
             self.PlSav["Summary"] = savTemplate.Circuit["Summary"]
@@ -173,8 +173,22 @@ class Experiment:
                 raise errors.ExperimentNotExistError(f"{self.SAV_PATH} not found")
 
             _temp = _open_sav(self.SAV_PATH)
+
             assert _temp is not None
-            self.PlSav = _temp
+
+            if "Experiment" in _temp.keys():
+                self.PlSav = _temp
+            else: # 读取物实导出的存档只含有.sav的Experiment部分
+                if _temp["Type"] == ExperimentType.Circuit.value:
+                    self.PlSav = savTemplate.Circuit
+                elif _temp["Type"] == ExperimentType.Celestial.value:
+                    self.PlSav = savTemplate.Celestial
+                elif _temp["Type"] == ExperimentType.Electromagnetism.value:
+                    self.PlSav = savTemplate.Electromagnetism
+                else:
+                    raise ValueError("invalid format issue of Type in .sav file")
+
+                self.PlSav["Experiment"] = _temp
             self.__open()
         elif path_load_mode == Experiment.PathLoadMode.sav_name: # 通过存档名导入
             filename = search_Experiment(sav_name)
@@ -301,7 +315,6 @@ class Experiment:
 
     def __read_element(self, _elements: list) -> None:
         for element in _elements:
-            # 坐标标准化 (消除浮点误差)
             position = eval(f"({element['Position']})")
             x, y, z = position[0], position[2], position[1]
 
@@ -381,7 +394,8 @@ class Experiment:
         status_sav = json.loads(self.PlSav["Experiment"]["StatusSave"])
 
         self.__read_element(status_sav["Elements"])
-        self.__read_wire(status_sav["Wires"])
+        if self.experiment_type == ExperimentType.Circuit:
+            self.__read_wire(status_sav["Wires"])
 
         return self
 
@@ -460,20 +474,17 @@ class Experiment:
             stringJson = stringJson.replace("色导线\\\"}]}", "色导线\\\"}\n    ]}")
             return stringJson
 
-        if not self.is_open_or_crt:
-            raise errors.ExperimentNotOpenError
+        if self.is_open_or_crt is not True:
+            raise errors.ExperimentError("write before open or crt")
 
         if self.is_opened:
             status: str = "update"
-        else: # self.is_crt
+        else: # self.is_crted
             status: str = "create"
 
-        if self.is_open_or_crt is True:
-            if not no_pop:
-                self.is_opened = False
-                self.is_crted = False
-        else:
-            raise errors.ExperimentError("write before open or crt")
+        if not no_pop:
+            self.is_opened = False
+            self.is_crted = False
 
         assert self.SAV_PATH is not None
 

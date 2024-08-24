@@ -77,8 +77,13 @@ class ExperimentHasExistError(Exception):
 
 class ExperimentNotExistError(Exception):
     ''' 实验不存在 '''
+    err_msg = "The experiment does not exist"
+
+    def __init__(self, err_msg = None) -> None:
+        if err_msg is not None:
+            self.err_msg = err_msg
     def __str__(self):
-        return "The experiment does not exist"
+        return self.err_msg
 
 class ExperimentHasCrtError(Exception):
     ''' 实验已创建 '''
