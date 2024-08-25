@@ -339,9 +339,11 @@ class Experiment:
                 else:
                     obj = crt_Element(element["ModelID"], x, y, z, elementXYZ=False)
                     obj.data["Properties"] = element["Properties"]
+                    obj.data["Properties"]["锁定"] = 1.0
             else:
                 obj = crt_Element(element["ModelID"], x, y, z)
                 obj.data["Properties"] = element["Properties"]
+                obj.data["Properties"]["锁定"] = 1.0
 
             rotation = eval(f'({element["Rotation"]})')
             r_x, r_y, r_z = rotation[0], rotation[2], rotation[1]
