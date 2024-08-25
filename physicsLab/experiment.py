@@ -338,34 +338,15 @@ class Experiment:
                             obj.add_note(int(val))
                 else:
                     obj = crt_Element(element["ModelID"], x, y, z, elementXYZ=False)
+                    obj.data["Properties"] = element["Properties"]
             else:
                 obj = crt_Element(element["ModelID"], x, y, z)
+                obj.data["Properties"] = element["Properties"]
 
             rotation = eval(f'({element["Rotation"]})')
             r_x, r_y, r_z = rotation[0], rotation[2], rotation[1]
             obj.set_Rotation(r_x, r_y, r_z)
             obj.data['Identifier'] = element['Identifier']
-            from .circuit.elements.logicCircuit import Logic_Input, eight_bit_Input
-            from .circuit.elements.basicCircuit import Simple_Switch, SPDT_Switch, DPDT_Switch, Air_Switch
-
-            if isinstance(obj, Logic_Input) and element['Properties'].get('开关') == 1:
-                obj.set_highLevel()
-
-            elif isinstance(obj, eight_bit_Input):
-                obj.data['Statistics'] = element['Statistics']
-                obj.data['Properties']['十进制'] = element['Properties']['十进制']
-
-            elif isinstance(obj, Simple_Switch) and element["Properties"]["开关"] == 1:
-                obj.turn_on_switch()
-
-            elif isinstance(obj, Air_Switch) and element["Properties"]["开关"] == 1:
-                obj.turn_on_switch()
-
-            elif isinstance(obj, SPDT_Switch) or isinstance(obj, DPDT_Switch):
-                if element["Properties"]["开关"] == 1:
-                    obj.left_turn_on_switch()
-                elif element["Properties"]["开关"] == 2:
-                    obj.right_turn_on_switch()
 
     def __read_wire(self, _wires: list) -> None:
         if self.experiment_type == ExperimentType.Circuit:
