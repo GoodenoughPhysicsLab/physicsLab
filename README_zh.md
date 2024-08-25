@@ -149,8 +149,8 @@ with experiment("example", read=True):
 
 ## 其他
 * 更多内容请在 [other physicsLab](https://gitee.com/script2000/temporary-warehouse/tree/master/other%20physicsLab) 中查看
-* github: https://github.com/GoodenoughPhysicsLab/physicsLab
-* gitee: https://gitee.com/script2000/physicsLab
+* 主仓库(github): https://github.com/GoodenoughPhysicsLab/physicsLab
+* 备份仓库(gitee): https://gitee.com/script2000/physicsLab
 
 ## contribute
 `physicsLab`没有强行要求代码风格，但需要注意与上下文保持一致  
