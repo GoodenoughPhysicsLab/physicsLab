@@ -134,3 +134,4 @@
 2.  增强了减号连接导线的功能(`Pin` - `unitPin`)
 3.  修复`CircuitBase.is_bigElement`
 4.  新增`Experiment.edit_tags`
+5.  新增对`sensor`的支持
