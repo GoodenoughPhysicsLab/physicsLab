@@ -18,16 +18,16 @@ class COLOR(Enum):
 # 打印write_Experiment的信息时是否使用彩色字
 _ColorSupport = True
 
-def color_print(msg: str, color: COLOR) -> None:
+def color_print(msg: str, color: COLOR, end="\n") -> None:
     if not isinstance(color, COLOR) or not isinstance(msg, str):
         raise TypeError
 
     global _ColorSupport
 
     if _ColorSupport:
-        print(color.value + msg)
+        print(color.value + msg, end=end)
     else:
-        print(msg)
+        print(msg, end=end)
 
 def close_color_print():
     ''' 关闭打印文字的颜色 '''

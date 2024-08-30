@@ -149,22 +149,26 @@ class User:
                          tags: Optional[List[Tag]] = None,
                          exclude_tags: Optional[List[Tag]] = None,
                          category: Category = Category.Experiment,
-                         languages: Optional[List[str]]=None,
-                         maxnum: int = 18,
+                         languages: Optional[List[str]] = None,
+                         take: int = 18,
+                         skip: int = 0,
                         ) -> dict:
         ''' 查询实验
             @param tags: 根据列表内的物实实验的标签进行对应的搜索
             @param exclude_tags: 除了列表内的标签的实验都会被搜索到
             @param category: 实验区还是黑洞区
             @param languages: 根据列表内的语言进行对应的搜索
-            @param maxnum: 最大搜索数量
+            @param take: 搜索数量
         '''
-        if not isinstance(self.token, str) or not isinstance(self.auth_code, str) \
-            or not isinstance(category, Category) or tags is not None and (
-            not isinstance(tags, list) or not all(isinstance(tag, Tag) for tag in tags)) or languages is not None and (
-            not isinstance(languages, list) or not all(isinstance(language, str) for language in languages) or (
-            not isinstance(maxnum, int) or maxnum <= 0)
-            ):
+        if not isinstance(category, Category) or \
+            not isinstance(tags, (list, type(None))) or \
+            tags is not None and not all(isinstance(tag, Tag) for tag in tags) or \
+            not isinstance(exclude_tags, (list, type(None))) or \
+            exclude_tags is not None and not all(isinstance(tag, Tag) for tag in exclude_tags) or \
+            not isinstance(languages, (list, type(None))) or \
+            languages is not None and not all(isinstance(language, str) for language in languages) or \
+            not isinstance(take, int) or \
+            not isinstance(skip, int):
             raise TypeError
 
         if languages is None:
@@ -192,8 +196,8 @@ class User:
                     "UserID": None,
                     "Special": None,
                     "From": None,
-                    "Skip": 0,
-                    "Take": maxnum,
+                    "Skip": skip,
+                    "Take": take,
                     "Days": 0,
                     "Sort": 0,
                     "ShowAnnouncement": False
@@ -284,16 +288,24 @@ class User:
 
         return _check_response(response)
 
-    def get_comments(self, id: str, target_type: str) -> dict:
+    def get_comments(self,
+                     id: str,
+                     target_type: str,
+                     take: int = 16,
+                     skip: int = 0,
+                     ) -> dict:
         ''' 获取留言板信息
             @param id: 物实用户的ID/实验的id
             @param target_type: User, Discussion, Experiment
         '''
         if not isinstance(self.token, str) or \
             not isinstance(self.auth_code, str) or \
-            not isinstance(target_type, str):
+            not isinstance(target_type, str) or \
+            not isinstance(take, int) or \
+            not isinstance(skip, int):
             raise TypeError
-        if target_type not in ("User", "Discussion", "Experiment"):
+        if target_type not in ("User", "Discussion", "Experiment") or \
+            take <= 0 or skip < 0:
             raise ValueError
 
         response = requests.post(
@@ -302,8 +314,8 @@ class User:
                 "TargetID": id,
                 "TargetType": target_type,
                 "CommentID": None,
-                "Take": 16,
-                "Skip": 0
+                "Take": take,
+                "Skip": skip,
             },
             headers={
                 "Content-Type": "application/json",
@@ -465,10 +477,10 @@ class User:
                      take: int = 16,
                      no_templates: bool = True,
                      ) -> dict:
-        ''' 获取用户收到的消息(比如别人的回
+        ''' 获取用户收到的消息
             @param category_id: 消息类型:
                 0: 全部, 1: 系统邮件, 2: 评论和回复, 3: 关注和粉丝, 4: 作品通知, 5: 管理记录
-            @param skip: 跳过skip条消息
+            @param skip: 传入一个时间戳, 跳过skip条消息
             @param take: 取take条消息
         '''
         if category_id not in (0, 1, 2, 3, 4, 5) or \
@@ -476,6 +488,9 @@ class User:
             not isinstance(take, int) or \
             not isinstance(no_templates, bool):
             raise TypeError
+
+        if take <= 0 or skip < 0:
+            raise ValueError
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Messages/GetMessages",

@@ -12,13 +12,13 @@ def timer_dec(func: Callable):
 
         print(end - start)
         return result
-    
+
     return res
 
 class Timer:
     def __enter__(self):
         self.start = time.time()
-    
+
     def __exit__(self, exc_type, exc_val, traceback):
         if exc_type is None:
             self.end = time.time()

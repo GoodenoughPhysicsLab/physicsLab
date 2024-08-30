@@ -135,3 +135,6 @@
 3.  修复`CircuitBase.is_bigElement`
 4.  新增`Experiment.edit_tags`
 5.  新增对`sensor`的支持
+
+## 1.4.13
+1.  `web.get_comments`增加`take`与`skip`参数
