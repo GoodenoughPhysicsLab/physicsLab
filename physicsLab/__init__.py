@@ -6,7 +6,7 @@ import platform
 # 颜色打印
 from ._colorUtils import close_color_print
 # 操作实验
-from .experiment import Experiment, experiment, search_Experiment, get_Experiment
+from .experiment import Experiment, experiment, search_Experiment, get_Experiment, id_to_time
 # 实验, 标签类型
 from .enums import *
 # 电学实验
