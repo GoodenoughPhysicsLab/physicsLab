@@ -138,3 +138,7 @@
 
 ## 1.4.13
 1.  `web.get_comments`增加`take`与`skip`参数
+
+## 1.4.14
+1.  公开了`id_to_time`
+2.  新增`get_warned_messages`, `get_banned_messages`
