@@ -134,7 +134,8 @@ def get_warned_messages(start_time: numType,
                     warned_messages.append(comment)
                     if warned_message_callback is not None:
                         warned_message_callback(comment)
-                elif "警告" in comment["Content"]: # TODO 判断执行者是否是管理人员
+                elif "警告" in comment["Content"] \
+                        and comment["Verification"] in ("Volunteer", "Editor", "Emeritus", "Administrator"):
                     if maybe_warned_message_callback is not None:
                         maybe_warned_message_callback(comment)
         return comments[-1]["Timestamp"]
