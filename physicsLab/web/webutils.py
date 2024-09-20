@@ -1,21 +1,25 @@
 # -*- coding: utf-8 -*-
-import os
 import copy
 import time
-import threading
 
-from physicsLab import web
-from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
-from physicsLab.typehint import Optional, Callable, numType
 from . import api
+from concurrent.futures import ThreadPoolExecutor
+from physicsLab.typehint import Optional, Callable, numType
 
-def get_banned_messages(user: api.User,
-               start_time: numType,
-               user_id: Optional[str] = None,
-               end_time: Optional[numType] = None,
-               banned_message_callback: Optional[Callable] = None,
-               ) -> list:
+def get_banned_messages(start_time: numType,
+                        user: Optional[api.User] = None,
+                        user_id: Optional[str] = None,
+                        end_time: Optional[numType] = None,
+                        banned_message_callback: Optional[Callable] = None,
+                        ) -> list:
+    ''' 获取封禁记录
+        @param user: 查询者
+        @param user_id: 被查询者的id, None表示查询所有封禁记录
+        @param start_time: 开始时间
+        @param end_time: 结束时间, None为当前时间
+        @param banned_message_callback: 封禁记录回调函数
+        @return: 封禁记录列表
+    '''
     def _fetch_banned_messages(user: api.User,
                            start_time: numType,
                            end_time: numType,
@@ -46,7 +50,7 @@ def get_banned_messages(user: api.User,
                     if banned_message_callback is not None:
                         banned_message_callback(message)
 
-    if not isinstance(user, api.User) or \
+    if not isinstance(user, (api.User, type(None))) or \
             not isinstance(start_time, (int, float)) or \
             not isinstance(end_time, (int, float, type(None))) or \
             not isinstance(user_id, (str, type(None))):
@@ -57,6 +61,8 @@ def get_banned_messages(user: api.User,
 
     if end_time is None:
         end_time = time.time()
+    if user is None:
+        user = api.User()
 
     if start_time >= end_time:
         raise ValueError("start_time >= end_time")
@@ -85,13 +91,21 @@ def get_banned_messages(user: api.User,
         counter += 1
     return banned_messages
 
-def get_warned_messages(user: api.User,
-                       start_time: numType,
-                       user_id: str,
-                       end_time: Optional[numType] = None,
-                       warned_message_callback: Optional[Callable] = None,
-                       maybe_warned_message_callback: Optional[Callable] = None,
-                       ) -> list:
+def get_warned_messages(start_time: numType,
+                        user: api.User,
+                        user_id: str,
+                        end_time: Optional[numType] = None,
+                        warned_message_callback: Optional[Callable] = None,
+                        maybe_warned_message_callback: Optional[Callable] = None,
+                        ) -> list:
+    ''' 查询警告记录
+        @param user: 查询者
+        @param user_id: 被查询者的id, 但无法查询所有用户的警告记录
+        @param start_time: 开始时间
+        @param end_time: 结束时间, None为当前时间
+        @param banned_message_callback: 封禁记录回调函数
+        @return: 封禁记录列表
+    '''
     def _fetch_warned_messages(user_id: str, skip: int) -> int:
         assert end_time is not None, "internal error, please bug report"
 

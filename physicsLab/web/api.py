@@ -258,7 +258,7 @@ class User:
 
     def post_comment(self, target_id: str, content: str, target_type: str) -> dict:
         ''' 发表评论
-            @param target_id: 目标用户的ID
+            @param target_id: 目标用户/实验的ID
             @param content: 评论内容
             @param target_type: User, Discussion, Experiment
         '''
