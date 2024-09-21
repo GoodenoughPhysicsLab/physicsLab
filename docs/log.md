@@ -148,3 +148,5 @@
 2.  实装部分对天体物理实验的支持
 3.  电学原件新增`.rename`方法
 4.  电阻与电阻箱增加`set_resistor`
+5.  修复了`music`的鼓点生成规则的bug
+6.  新增`web.CommentsIter`

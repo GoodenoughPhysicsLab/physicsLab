@@ -242,7 +242,10 @@ class Midi:
 
             if msg.type == "note_on":
                 velocity: float = _format_velocity(msg.velocity / 127) # 音符的响度
-                ins: int = channels[msg.channel]
+                if msg.channel != 9:
+                    ins: int = channels[msg.channel]
+                else: # 鼓点
+                    ins = 128
 
                 if velocity == 0 \
                    or (fix_strange_note and ins == 0 and velocity >= 0.85) \
@@ -386,7 +389,7 @@ class Note:
             raise TypeError
 
         if isinstance(pitch, int):
-            if not 0 < pitch <= 127:
+            if not 0 < pitch <= 128:
                 raise ValueError
 
             self.pitch = pitch
