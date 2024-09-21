@@ -4,7 +4,7 @@ import time
 
 from . import api
 from concurrent.futures import ThreadPoolExecutor
-from physicsLab.typehint import Optional, Callable, numType
+from physicsLab.typehint import Optional, Callable, numType, Self
 
 def get_banned_messages(start_time: numType,
                         user: Optional[api.User] = None,
@@ -145,6 +145,8 @@ def get_warned_messages(start_time: numType,
             not isinstance(end_time, (int, float, type(None))) or \
             not isinstance(user_id, str):
         raise TypeError
+    if not user.is_anonymous:
+        raise ValueError("user must be anonymous")
 
     TAKE_MESSAGE_AMOUNT = 20
     warned_messages = []
@@ -160,3 +162,25 @@ def get_warned_messages(start_time: numType,
         counter2 += 1
 
     return warned_messages
+
+class CommentsIter:
+    TAKE: int = 20
+    skip_time: int = 0
+
+    def __init__(self, user: api.User, user_id: str) -> None:
+        self.user = user
+        self.user_id = user_id
+
+    def __iter__(self) -> Self:
+        skip_time = 0
+        return self
+
+    def __next__(self):
+        comments = self.user.get_comments(
+            self.user_id, "User", skip=self.skip_time, take=self.TAKE
+        )["Data"]["Comments"]
+        if len(comments) != 0:
+            self.skip_time = comments[-1]["Timestamp"]
+        elif len(comments) == 0 and self.skip_time != 0:
+            raise StopIteration
+        return comments
