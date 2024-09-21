@@ -354,15 +354,8 @@ class Experiment:
                 obj.data['Identifier'] = element['Identifier'] # type: ignore
 
             elif self.experiment_type == ExperimentType.Celestial:
-                velocity = eval(f"({element['Velocity']})")
-                acceleration = eval(f"({element['Acceleration']})")
-                # TODO 运行时信息还有个希尔球
-
-                obj = crt_Element(element["Model"], x, y, z)
-
-                obj.set_velocity(velocity[0], velocity[2], velocity[1]) # type: ignore -> has method
-                obj.set_acceleration(acceleration[0], acceleration[2], acceleration[1]) # type: ignore
-
+                obj = crt_Element(element["Model"].replace(' ', '_'), x, y, z)
+                obj.data = element
             elif self.experiment_type == ExperimentType.Electromagnetism:
                 raise RuntimeError("sorry, physicsLab don't ssupport electromagnetism experiment yet")
 

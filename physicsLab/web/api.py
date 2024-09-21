@@ -297,6 +297,8 @@ class User:
         ''' 获取留言板信息
             @param id: 物实用户的ID/实验的id
             @param target_type: User, Discussion, Experiment
+            @param take: 获取留言的数量
+            @param skip: 跳过的留言数量, 为(unix时间戳 * 1000)
         '''
         if not isinstance(self.token, str) or \
             not isinstance(self.auth_code, str) or \
