@@ -380,6 +380,15 @@ class Resistance_Box(CircuitBase):
     def r(self) -> Pin:
         return Pin(self, 1)
 
+    def set_resistor(self, num: numType) -> Self:
+        ''' 设置电阻值
+        '''
+        if not isinstance(num, (int, float)):
+            raise TypeError
+
+        self.data["Properties"]["电阻"] = num
+        return self
+
 class Simple_Ammeter(CircuitBase):
     ''' 直流安培表 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):

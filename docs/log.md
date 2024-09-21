@@ -146,3 +146,5 @@
 # 1.4.15
 1.  重命名`set_Position`为`set_position`, `set_Rotation`为`set_rotation`, `get_Position`为`get_position`, `get_Index`为`get_index` (不兼容更新)
 2.  实装部分对天体物理实验的支持
+3.  电学原件新增`.rename`方法
+4.  电阻与电阻箱增加`set_resistor`

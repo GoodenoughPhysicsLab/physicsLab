@@ -13,6 +13,7 @@
 ## 电学实验
 电学元件都有的`method`:
 * set_rotation # 设置元件的角度
+* rename # 重命名元件
 
 电学元件都有的`attribute`:
 * .is_bigElement # 是否是大体积元件
@@ -414,7 +415,7 @@
         <td>Resistor</td>
         <td>Resistor</td>
         <td>red, black</td>
-        <td>None</td>
+        <td>set_resistor # 设置电阻值</td>
     </tr>
     <tr>
         <td>保险丝</td>
@@ -456,7 +457,7 @@
         <td>Resistance_Box</td>
         <td>Resistance Box</td>
         <td>l, r</td>
-        <td>None</td>
+        <td>set_resistor # 设置电阻值</td>
     </tr>
     <tr>
         <td>直流安培表</td>

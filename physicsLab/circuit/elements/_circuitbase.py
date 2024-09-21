@@ -72,11 +72,9 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
 
     def set_rotation(self, xRotation: numType = 0, yRotation: numType = 0, zRotation: numType = 180) -> Self:
         ''' 设置原件的角度 '''
-        if not (
-                isinstance(xRotation, (int, float)) and
-                isinstance(yRotation, (int, float)) and
-                isinstance(zRotation, (int, float))
-        ):
+        if not isinstance(xRotation, (int, float)) or \
+                not isinstance(yRotation, (int, float)) or \
+                not isinstance(zRotation, (int, float)):
             raise TypeError
 
         self.data["Rotation"] = f"{roundData(xRotation)},{roundData(zRotation)},{roundData(yRotation)}"
@@ -143,8 +141,7 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
         if not isinstance(name, str):
             raise TypeError
 
-        self.data
-
+        self.data["Label"] = name
         return self
 
 
