@@ -33,13 +33,15 @@ class _logicBase(CircuitBase):
 class Logic_Input(_logicBase):
     ''' 逻辑输入 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Logic Input", "Identifier": Generate,
-                          "IsBroken": False, "IsLocked": False,
-                          "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0, "开关": 0},
-                          "Statistics": {"电流": 0.0, "电压": 0.0, "功率": 0.0},
-                          "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                          "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
-                          "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Logic Input", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0, "开关": 0},
+            "Statistics": {"电流": 0.0, "电压": 0.0, "功率": 0.0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+            "DiagramRotation": 0
+        }
 
     def __repr__(self) -> str:
         res = f"Logic_Input({self._position.x}, {self._position.y}, {self._position.z}, " \
@@ -61,12 +63,14 @@ class Logic_Input(_logicBase):
 class Logic_Output(_logicBase):
     ''' 逻辑输出 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Logic Output", "Identifier": Generate,
-                          "IsBroken": False, "IsLocked": False,
-                          "Properties": {"状态": 0.0, "高电平": 3.0, "低电平": 0.0, "锁定": 1.0}, "Statistics": {},
-                          "Position": Generate,
-                          "Rotation": "0,180,0", "DiagramCached": False,
-                          "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Logic Output", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"状态": 0.0, "高电平": 3.0, "低电平": 0.0, "锁定": 1.0}, "Statistics": {},
+            "Position": Generate,
+            "Rotation": "0,180,0", "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
+        }
 
     @property
     def i(self) -> InputPin:
@@ -75,11 +79,13 @@ class Logic_Output(_logicBase):
 class _2_pin_Gate(_logicBase):
     ''' 2引脚门电路基类 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": Generate, "Identifier": Generate, "IsBroken": False, "IsLocked": False,
-                          "Properties": {"高电平": 3.0, "低电平": 0.0, "最大电流": 0.1, "锁定": 1.0},
-                          "Statistics": {},
-                          "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                          "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": Generate, "Identifier": Generate,"IsBroken": False, "IsLocked": False,
+            "Properties": {"高电平": 3.0, "低电平": 0.0, "最大电流": 0.1, "锁定": 1.0},
+            "Statistics": {},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
+        }
 
     @property
     def i(self) -> InputPin:
@@ -104,11 +110,13 @@ class No_Gate(_2_pin_Gate):
 class _3_pin_Gate(_logicBase):
     ''' 3引脚门电路基类 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "", "Identifier": Generate, "IsBroken": False, "IsLocked": False,
-                          "Properties": {"高电平": 3.0, "低电平": 0.0, "最大电流": 0.1, "锁定": 1.0},
-                          "Statistics": {},
-                          "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                          "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "", "Identifier": Generate, "IsBroken": False, "IsLocked": False,
+            "Properties": {"高电平": 3.0, "低电平": 0.0, "最大电流": 0.1, "锁定": 1.0},
+            "Statistics": {},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
+        }
 
     @property
     def i_up(self) -> InputPin:
@@ -175,11 +183,13 @@ class _big_element(_logicBase):
     is_bigElement = True
 
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "", "Identifier": Generate, "IsBroken": False,
-                          "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0},
-                          "Statistics": {},
-                          "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                          "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "", "Identifier": Generate, "IsBroken": False,
+            "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0},
+            "Statistics": {},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
+        }
 
 class Half_Adder(_big_element):
     ''' 半加器 '''
@@ -424,12 +434,14 @@ class eight_bit_Input(_logicBase):
     is_bigElement = True
 
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "8bit Input", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"高电平": 3.0, "低电平": 0.0, "十进制": 0.0, "锁定": 1.0},
-                           "Statistics": {},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "8bit Input", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"高电平": 3.0, "低电平": 0.0, "十进制": 0.0, "锁定": 1.0},
+            "Statistics": {},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
+        }
 
     def __repr__(self) -> str:
         res = f"eight_bit_Input({self._position.x}, {self._position.y}, {self._position.z}, " \
@@ -482,13 +494,15 @@ class eight_bit_Display(_logicBase):
     is_bigElement = True
 
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "8bit Display", "Identifier": Generate,
-                          "IsBroken": False, "IsLocked": False,
-                          "Properties": {"高电平": 3.0, "低电平": 0.0, "状态": 0.0, "锁定": 1.0},
-                          "Statistics": {"7": 0.0, "6": 0.0, "5": 0.0, "4": 0.0,
-                                         "3": 0.0, "2": 0.0, "1": 0.0, "0": 0.0, "十进制": 0.0},
-                          "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                          "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "8bit Display", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"高电平": 3.0, "低电平": 0.0, "状态": 0.0, "锁定": 1.0},
+            "Statistics": {"7": 0.0, "6": 0.0, "5": 0.0, "4": 0.0,
+                            "3": 0.0, "2": 0.0, "1": 0.0, "0": 0.0, "十进制": 0.0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
+        }
 
     @property
     def i_up(self) -> InputPin:
@@ -525,13 +539,15 @@ class eight_bit_Display(_logicBase):
 class Schmitt_Trigger(CircuitBase):
     ''' 施密特触发器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Schmitt Trigger", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"工作模式": 0.0, "切变速率": 0.5, "高电准位": 5.0, "锁定": 1.0,
-                                          "正向阈值": 3.33333334, "低电准位": 0.0, "负向阈值": 1.66666666},
-                            "Statistics": {"输入电压": 0.0, "输出电压": 0.0, "1": 0.0},
-                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Schmitt Trigger", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"工作模式": 0.0, "切变速率": 0.5, "高电准位": 5.0, "锁定": 1.0,
+                            "正向阈值": 3.33333334, "低电准位": 0.0, "负向阈值": 1.66666666},
+            "Statistics": {"输入电压": 0.0, "输出电压": 0.0, "1": 0.0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
+        }
 
     @property
     def i(self) -> InputPin:

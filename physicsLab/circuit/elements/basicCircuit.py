@@ -6,11 +6,13 @@ from physicsLab.typehint import Optional, numType, CircuitElementData, Self, Gen
 class _switch_Base(CircuitBase):
     ''' 开关基类 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": Generate, "Identifier": Generate, "IsBroken": False,
-                          "IsLocked": False, "Properties": {"开关": 0, "锁定": 1.0},
-                          "Statistics": {}, "Position": Generate,
-                          "Rotation": Generate, "DiagramCached": False,
-                          "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": Generate, "Identifier": Generate, "IsBroken": False,
+            "IsLocked": False, "Properties": {"开关": 0, "锁定": 1.0},
+            "Statistics": {}, "Position": Generate,
+            "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Z": 0, "Magnitude": 0}, "DiagramRotation": 0
+        }
 
     def turn_off_switch(self) -> Self:
         ''' 断开开关 '''
@@ -127,22 +129,26 @@ class DPDT_Switch(_switch_Base):
 class Push_Switch(TwoPinMixIn):
     ''' 按钮开关 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Push Switch", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"开关": 0.0, "默认开关": 0.0, "锁定": 1.0},
-                           "Statistics": {"电流": 0.0},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Push Switch", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"开关": 0.0, "默认开关": 0.0, "锁定": 1.0},
+            "Statistics": {"电流": 0.0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
+        }
 
 class Air_Switch(TwoPinMixIn):
     ''' 空气开关 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Air Switch", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"开关": 0.0, "额定电流": 10.0, "锁定": 1.0},
-                           "Statistics": {},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Air Switch", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"开关": 0.0, "额定电流": 10.0, "锁定": 1.0},
+            "Statistics": {},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
+        }
 
     def __repr__(self) -> str:
         res = f"Air_Switch({self._position.x}, {self._position.y}, {self._position.z}, " \
@@ -165,39 +171,45 @@ class Air_Switch(TwoPinMixIn):
 class Incandescent_Lamp(TwoPinMixIn):
     ''' 白炽灯泡 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Incandescent Lamp", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"额定电压": 3.0, "额定功率": 0.85},
-                           "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
-                                          "功率": 0.0, "电压": 0.0, "电流": 0.0,
-                                          "灯泡温度": 300.0, "电阻": 0.5},
-                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
-                            "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Incandescent Lamp", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"额定电压": 3.0, "额定功率": 0.85},
+            "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
+                            "功率": 0.0, "电压": 0.0, "电流": 0.0,
+                            "灯泡温度": 300.0, "电阻": 0.5},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+            "DiagramRotation": 0
+        }
 
 class Battery_Source(TwoPinMixIn):
     ''' 一节电池 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Battery Source", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"最大功率": 16.2, "电压": 3.0, "内阻": 0.5},
-                           "Statistics": {"电流": 0, "功率": 0, "电压": 0},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Battery Source", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"最大功率": 16.2, "电压": 3.0, "内阻": 0.5},
+            "Statistics": {"电流": 0, "功率": 0, "电压": 0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
+        }
 
 class Student_Source(CircuitBase):
     ''' 学生电源 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Student Source", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"交流电压": 3.0, "直流电压": 3.0, "开关": 0.0, "频率": 50.0},
-                           "Statistics": {"瞬间功率": 0.0, "瞬间电压": 0.0, "瞬间电流": 0.0,
-                                          "瞬间电阻": 0.0, "功率": 0.0, "电阻": 0.0, "电流": 0.0,
-                                          "瞬间功率1": 0.0, "瞬间电压1": 0.0, "瞬间电流1": 0.0,
-                                          "瞬间电阻1": 0.0, "功率1": 0.0, "电阻1": 0.0, "电流1": 0.0},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
-                           "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Student Source", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"交流电压": 3.0, "直流电压": 3.0, "开关": 0.0, "频率": 50.0},
+            "Statistics": {"瞬间功率": 0.0, "瞬间电压": 0.0, "瞬间电流": 0.0,
+                            "瞬间电阻": 0.0, "功率": 0.0, "电阻": 0.0, "电流": 0.0,
+                            "瞬间功率1": 0.0, "瞬间电压1": 0.0, "瞬间电流1": 0.0,
+                            "瞬间电阻1": 0.0, "功率1": 0.0, "电阻1": 0.0, "电流1": 0.0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+            "DiagramRotation": 0
+        }
 
     @property
     def l(self) -> Pin:
@@ -218,13 +230,15 @@ class Student_Source(CircuitBase):
 class Resistor(TwoPinMixIn):
     ''' 电阻 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Resistor", "Identifier": Generate, "IsBroken": False,
-                           "IsLocked": False,
-                           "Properties": {"最大电阻": 1000_0000.0, "最小电阻": 0.1, "电阻": 10, "锁定": 1.0},
-                           "Statistics": {"瞬间功率": 0, "瞬间电流": 0, "瞬间电压": 0, "功率": 0,
-                                          "电压": 0, "电流": 0},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Resistor", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"最大电阻": 1000_0000.0, "最小电阻": 0.1, "电阻": 10, "锁定": 1.0},
+            "Statistics": {"瞬间功率": 0, "瞬间电流": 0, "瞬间电压": 0, "功率": 0,
+                            "电压": 0, "电流": 0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
+        }
 
     def set_resistor(self, resistor: numType) -> Self:
         ''' 设置电阻值 '''
@@ -237,27 +251,31 @@ class Resistor(TwoPinMixIn):
 class Fuse_Component(TwoPinMixIn):
     ''' 保险丝 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Fuse Component", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"开关": 1.0, "额定电流": 0.3, "熔断电流": 0.5, "锁定": 1.0},
-                           "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
-                                          "功率": 0.0, "电压": 0.0, "电流": 0.0},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Fuse Component", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"开关": 1.0, "额定电流": 0.3, "熔断电流": 0.5, "锁定": 1.0},
+            "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
+                            "功率": 0.0, "电压": 0.0, "电流": 0.0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
+        }
 
 class Slide_Rheostat(CircuitBase):
     ''' 滑动变阻器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Slide Rheostat", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"额定电阻": 10.0, "滑块位置": 0.0,
-                                          "电阻1": 10, "电阻2": 10.0, "锁定": 1.0},
-                           "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
-                                          "功率": 0.0, "电压": 0.0, "电流": 0.0,
-                                          "瞬间功率1": 0.0, "瞬间电流1": 0.0, "瞬间电压1": 0.0,
-                                          "功率1": 0.0, "电压1": 0.0, "电流1": 0.0},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Slide Rheostat", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"额定电阻": 10.0, "滑块位置": 0.0,
+                            "电阻1": 10, "电阻2": 10.0, "锁定": 1.0},
+            "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
+                            "功率": 0.0, "电压": 0.0, "电流": 0.0,
+                            "瞬间功率1": 0.0, "瞬间电流1": 0.0, "瞬间电压1": 0.0,
+                            "功率1": 0.0, "电压1": 0.0, "电流1": 0.0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
+        }
 
     @property
     def l_low(self) -> Pin:
@@ -278,25 +296,30 @@ class Slide_Rheostat(CircuitBase):
 class Multimeter(TwoPinMixIn):
     ''' 多用电表 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Multimeter", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"状态": 0.0, "锁定": 1.0},
-                           "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
-                                          "功率": 0.0, "电压": 0.0, "电流": 0.0},
-                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
-                            "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Multimeter", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"状态": 0.0, "锁定": 1.0},
+            "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
+                            "功率": 0.0, "电压": 0.0, "电流": 0.0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+            "DiagramRotation": 0
+        }
 
 class Galvanometer(CircuitBase):
     ''' 灵敏电流计 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Galvanometer", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"量程": 3.0, "锁定": 1.0},
-                           "Statistics": {"电流": 0.0, "功率": 0.0, "电压": 0.0, "刻度": 0.0},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
-                           "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Galvanometer", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"量程": 3.0, "锁定": 1.0},
+            "Statistics": {"电流": 0.0, "功率": 0.0, "电压": 0.0, "刻度": 0.0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+            "DiagramRotation": 0
+        }
+
     @property
     def l(self) -> Pin:
         return Pin(self, 0)
@@ -312,13 +335,15 @@ class Galvanometer(CircuitBase):
 class Microammeter(CircuitBase):
     ''' 微安表 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Microammeter", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"量程": 0.1, "锁定": 1.0},
-                           "Statistics": {"电流": 0.0, "功率": 0.0, "电压": 0.0, "刻度": 0.0},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
-                           "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Microammeter", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"量程": 0.1, "锁定": 1.0},
+            "Statistics": {"电流": 0.0, "功率": 0.0, "电压": 0.0, "刻度": 0.0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+            "DiagramRotation": 0
+        }
 
     @property
     def l(self) -> Pin:
@@ -335,13 +360,15 @@ class Microammeter(CircuitBase):
 class Electricity_Meter(CircuitBase):
     ''' 电能表 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Electricity Meter", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"示数": 0.0, "额定电流": 6.0, "锁定": 1.0},
-                           "Statistics": {"电流": 0.0, "电压": 0.0, "功率": 0.0},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
-                           "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Electricity Meter", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"示数": 0.0, "额定电流": 6.0, "锁定": 1.0},
+            "Statistics": {"电流": 0.0, "电压": 0.0, "功率": 0.0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+            "DiagramRotation": 0
+        }
 
     @property
     def l(self) -> Pin:
@@ -362,15 +389,17 @@ class Electricity_Meter(CircuitBase):
 class Resistance_Box(CircuitBase):
     ''' 电阻箱 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Resistance Box", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"最大电阻": 10000.0, "最小电阻": 0.1,
-                                          "电阻": 10.0, "锁定": 1.0},
-                           "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
-                                          "功率": 0.0, "电压": 0.0, "电流": 0.0},
-                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
-                            "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Resistance Box", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"最大电阻": 10000.0, "最小电阻": 0.1,
+                            "电阻": 10.0, "锁定": 1.0},
+            "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
+                            "功率": 0.0, "电压": 0.0, "电流": 0.0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+            "DiagramRotation": 0
+        }
 
     @property
     def l(self) -> Pin:
@@ -392,14 +421,16 @@ class Resistance_Box(CircuitBase):
 class Simple_Ammeter(CircuitBase):
     ''' 直流安培表 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Simple Ammeter", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"量程": 0.007, "内阻": 0.007,
-                                          "名义量程": 3.0, "锁定": 1.0},
-                           "Statistics": {"电流": 0.0, "功率": 0.0, "电压": 0.0, "刻度": 0.0},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
-                           "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Simple Ammeter", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"量程": 0.007, "内阻": 0.007,
+                            "名义量程": 3.0, "锁定": 1.0},
+            "Statistics": {"电流": 0.0, "功率": 0.0, "电压": 0.0, "刻度": 0.0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+            "DiagramRotation": 0
+        }
 
     @property
     def l(self) -> Pin:
@@ -416,13 +447,15 @@ class Simple_Ammeter(CircuitBase):
 class Simple_Voltmeter(CircuitBase):
     ''' 直流电压表 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Simple Voltmeter", "Identifier": Generate,
-                           "IsBroken": False, "IsLocked": False,
-                           "Properties": {"量程": 0.001, "名义量程": 15.0, "锁定": 1.0},
-                           "Statistics": {"电流": 0.0, "功率": 0.0, "电压": 0.0, "刻度": 0.0},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
-                           "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Simple Voltmeter", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"量程": 0.001, "名义量程": 15.0, "锁定": 1.0},
+            "Statistics": {"电流": 0.0, "功率": 0.0, "电压": 0.0, "刻度": 0.0},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
+            "DiagramRotation": 0
+        }
 
     @property
     def l(self) -> Pin:

@@ -8,7 +8,7 @@ def main():
             pass
 
         for file in files:
-            with open(f"{root}/{file}", encoding="utf-8") as f:
+            with open(os.path.join(root, file), encoding="utf-8") as f:
                 lines = f.read().splitlines()
 
             context: str = ""
@@ -21,6 +21,10 @@ def main():
 
                 context += line + '\n'
             context = context[:-1]
+            while context.endswith('\n'):
+                context = context[:-1]
+            if not context.endswith('\n'):
+                context += '\n'
             with open(f"{root}/{file}", "w", encoding="utf-8") as f:
                 f.write(context)
 

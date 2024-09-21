@@ -7,14 +7,16 @@ from physicsLab.typehint import Optional, numType, CircuitElementData, Generate
 class _mems_Base(CircuitBase):
     ''' 三引脚集成式传感器基类 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": Generate, "Identifier": Generate,
-                    "Label": None, "IsBroken": False, "IsLocked": False,
-                    "Properties": {"量程": Generate, "输出阻抗": 10000, "偏移": Generate,
-                                   "响应系数": Generate,"锁定": 1.0},
-                    "Statistics": {},
-                    "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                    "DiagramPosition": { "X": 0, "Y": 0, "Magnitude": 0 },
-                    "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": Generate, "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"量程": Generate, "输出阻抗": 10000, "偏移": Generate,
+                            "响应系数": Generate,"锁定": 1.0},
+            "Statistics": {},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": { "X": 0, "Y": 0, "Magnitude": 0 },
+            "DiagramRotation": 0
+        }
 
     @property
     def x(self) -> Pin:
@@ -40,13 +42,16 @@ class Accelerometer(_mems_Base):
 class Analog_Joystick(CircuitBase):
     ''' 模拟摇杆 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Analog Joystick", "Identifier": Generate,
-                           "Label": None, "IsBroken": False, "IsLocked": False,
-                           "Properties": {"额定电阻": 10000, "锁定": 1.0},
-                           "Statistics": {},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": { "X": 0, "Y": 0, "Magnitude": 0 },
-                           "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Analog Joystick", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"额定电阻": 10000, "锁定": 1.0},
+            "Statistics": {},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": { "X": 0, "Y": 0, "Magnitude": 0 },
+            "DiagramRotation": 0
+        }
+
     @property
     def x1(self) -> Pin:
         return Pin(self, 0)
@@ -119,37 +124,43 @@ class Magnetic_Field_Sensor(_mems_Base):
 class Photodiode(TwoPinMixIn):
     ''' 光电二极管 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Photodiode", "Identifier": Generate,
-                           "Label": None, "IsBroken": False, "IsLocked": False,
-                           "Properties": {"前向压降": 0.6, "击穿电压": 0, "额定电流": 1,
-                                          "响应系数": 0.1, "响应时间": 0.03, "锁定": 1.0},
-                           "Statistics": {},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": { "X": 0, "Y": 0, "Magnitude": 0 },
-                           "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Photodiode", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"前向压降": 0.6, "击穿电压": 0, "额定电流": 1,
+                            "响应系数": 0.1, "响应时间": 0.03, "锁定": 1.0},
+            "Statistics": {},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": { "X": 0, "Y": 0, "Magnitude": 0 },
+            "DiagramRotation": 0
+        }
 
 class Photoresistor(TwoPinMixIn):
     ''' 光敏电阻 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Photoresistor", "Identifier": Generate,
-                           "Label": None, "IsBroken": False, "IsLocked": False,
-                           "Properties": {"亮电阻": 10000, "暗电阻": 1000000, "响应时间": 0.03,
-                                          "最大电压": 150, "响应系数": 0.6, "锁定": 1.0},
-                           "Statistics": {},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": { "X": 0, "Y": 0, "Magnitude": 0 },
-                           "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Photoresistor", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"亮电阻": 10000, "暗电阻": 1000000, "响应时间": 0.03,
+                            "最大电压": 150, "响应系数": 0.6, "锁定": 1.0},
+            "Statistics": {},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": { "X": 0, "Y": 0, "Magnitude": 0 },
+            "DiagramRotation": 0
+        }
 
 class Proximity_Sensor(_logicBase):
     ''' 临近传感器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
-        self.data: CircuitElementData = {"ModelID": "Proximity Sensor", "Identifier": Generate,
-                           "Label": None, "IsBroken": False, "IsLocked": False,
-                           "Properties": {"高电平": 3, "低电平": 0, "输出阻抗": 10000, "锁定": 1.0},
-                           "Statistics": {},
-                           "Position": Generate, "Rotation": Generate, "DiagramCached": False,
-                           "DiagramPosition": { "X": 0, "Y": 0, "Magnitude": 0 },
-                           "DiagramRotation": 0}
+        self.data: CircuitElementData = {
+            "ModelID": "Proximity Sensor", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"高电平": 3, "低电平": 0, "输出阻抗": 10000, "锁定": 1.0},
+            "Statistics": {},
+            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
+            "DiagramPosition": { "X": 0, "Y": 0, "Magnitude": 0 },
+            "DiagramRotation": 0
+        }
 
     @property
     def o(self) -> Pin:
