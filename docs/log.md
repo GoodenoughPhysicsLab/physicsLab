@@ -150,3 +150,5 @@
 4.  电阻与电阻箱增加`set_resistor`
 5.  修复了`music`的鼓点生成规则的bug
 6.  新增`web.CommentsIter`
+
+# 1.4.16
