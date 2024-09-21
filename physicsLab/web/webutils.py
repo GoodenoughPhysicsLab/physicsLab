@@ -171,16 +171,17 @@ class CommentsIter:
         self.user = user
         self.user_id = user_id
 
-    def __iter__(self) -> Self:
-        skip_time = 0
-        return self
+    def __iter__(self):
+        return self._gen_comment()
 
-    def __next__(self):
-        comments = self.user.get_comments(
-            self.user_id, "User", skip=self.skip_time, take=self.TAKE
-        )["Data"]["Comments"]
-        if len(comments) != 0:
-            self.skip_time = comments[-1]["Timestamp"]
-        elif len(comments) == 0 and self.skip_time != 0:
-            raise StopIteration
-        return comments
+    def _gen_comment(self):
+        while True:
+            comments = self.user.get_comments(
+                self.user_id, "User", skip=self.skip_time, take=self.TAKE
+            )["Data"]["Comments"]
+            for comment in comments:
+                yield comment
+            if len(comments) != 0:
+                self.skip_time = comments[-1]["Timestamp"]
+            elif len(comments) == 0 and self.skip_time != 0:
+                return
