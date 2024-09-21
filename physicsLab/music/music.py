@@ -476,7 +476,7 @@ class Chord:
                 temp: elements.Simple_Instrument = elements.Simple_Instrument(
                     x, y, z + delta_z, elementXYZ=True,instrument=ins,
                     pitch=notes[0].pitch, is_ideal_model=True, velocity=self._get_velocity(notes, is_average=True)
-                ).set_Rotation(0, 0, 0)
+                ).set_rotation(0, 0, 0)
 
                 if first_ins is None:
                     first_ins = temp
@@ -493,7 +493,7 @@ class Chord:
                     temp = elements.Simple_Instrument(
                         x, y, z + delta_z, elementXYZ=True,instrument=ins,
                         pitch=a_note.pitch, is_ideal_model=True, velocity=a_note.velocity
-                    ).set_Rotation(0, 0, 0)
+                    ).set_rotation(0, 0, 0)
 
                     if first_ins is None:
                         first_ins = temp
@@ -776,7 +776,7 @@ class Player:
                     elementXYZ=True,
                     is_ideal_model=True,
                     velocity=a_note.velocity
-                ).set_Rotation(0, 0, 0) # type: ignore
+                ).set_rotation(0, 0, 0) # type: ignore
             # 连接x轴的d触的导线
             if xcor == 0:
                 yesGate.o - ins.i

@@ -16,6 +16,7 @@ from physicsLab import  _tools
 from physicsLab import errors
 from physicsLab import savTemplate
 from physicsLab import _colorUtils
+from .elementBase import ElementBase
 from .web import User, _check_response
 from .enums import Category, Tag
 from .savTemplate import Generate
@@ -92,8 +93,7 @@ class Experiment:
         # 通过坐标索引元件
         self.elements_Position: Dict[tuple, list] = {}  # key: self._position, value: List[self...]
         # 通过index（元件生成顺序）索引元件
-        from .circuit.elements._elementBase import CircuitBase
-        self.Elements: List[CircuitBase] = []
+        self.Elements: list = []
 
         if sav_name is not None:
             self.open_or_crt(sav_name, experiment_type)
@@ -141,6 +141,8 @@ class Experiment:
 
         elif self.experiment_type == ExperimentType.Electromagnetism:
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
+        else:
+            raise errors.ExperimentTypeError
 
     def open(self,
              sav_name : str,
@@ -250,6 +252,8 @@ class Experiment:
             }
             self.VisionCenter: _tools.position = _tools.position(0, 0 ,0.88)
             self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
+        else:
+            raise errors.ExperimentTypeError
 
         self.entitle(sav_name)
 
@@ -314,6 +318,8 @@ class Experiment:
         return self
 
     def __read_element(self, _elements: list) -> None:
+        assert isinstance(_elements, list)
+
         for element in _elements:
             position = eval(f"({element['Position']})")
             x, y, z = position[0], position[2], position[1]
@@ -338,28 +344,43 @@ class Experiment:
                             obj.add_note(int(val))
                 else:
                     obj = crt_Element(element["ModelID"], x, y, z, elementXYZ=False)
-                    obj.data["Properties"] = element["Properties"]
-                    obj.data["Properties"]["锁定"] = 1.0
-            else:
-                obj = crt_Element(element["ModelID"], x, y, z)
-                obj.data["Properties"] = element["Properties"]
+                    assert hasattr(obj, "data"), "internal error, please bug report"
+                    obj.data["Properties"] = element["Properties"] # type: ignore
+                    obj.data["Properties"]["锁定"] = 1.0 # type: ignore -> obj has attr "data"
+                # 设置角度信息
+                rotation = eval(f'({element["Rotation"]})')
+                r_x, r_y, r_z = rotation[0], rotation[2], rotation[1]
+                obj.set_rotation(r_x, r_y, r_z) # type: ignore -> obj has method "set_rotation"
+                obj.data['Identifier'] = element['Identifier'] # type: ignore
 
-            rotation = eval(f'({element["Rotation"]})')
-            r_x, r_y, r_z = rotation[0], rotation[2], rotation[1]
-            obj.set_Rotation(r_x, r_y, r_z)
-            obj.data['Identifier'] = element['Identifier']
+            elif self.experiment_type == ExperimentType.Celestial:
+                velocity = eval(f"({element['Velocity']})")
+                acceleration = eval(f"({element['Acceleration']})")
+                # TODO 运行时信息还有个希尔球
+
+                obj = crt_Element(element["Model"], x, y, z)
+
+                obj.set_velocity(velocity[0], velocity[2], velocity[1]) # type: ignore -> has method
+                obj.set_acceleration(acceleration[0], acceleration[2], acceleration[1]) # type: ignore
+
+            elif self.experiment_type == ExperimentType.Electromagnetism:
+                raise RuntimeError("sorry, physicsLab don't ssupport electromagnetism experiment yet")
+
+            else:
+                raise errors.ExperimentTypeError
 
     def __read_wire(self, _wires: list) -> None:
-        if self.experiment_type == ExperimentType.Circuit:
-            from .circuit.wire import Wire, Pin
-            for wire_dict in _wires:
-                self.Wires.add(
-                    Wire(
-                        Pin(self.get_element_from_identifier(wire_dict["Source"]), wire_dict["SourcePin"]),
-                        Pin(self.get_element_from_identifier(wire_dict["Target"]), wire_dict["TargetPin"]),
-                        wire_dict["ColorName"][0] # e.g. "蓝"
-                    )
+        assert self.experiment_type == ExperimentType.Circuit
+
+        from .circuit.wire import Wire, Pin
+        for wire_dict in _wires:
+            self.Wires.add(
+                Wire(
+                    Pin(self.get_element_from_identifier(wire_dict["Source"]), wire_dict["SourcePin"]),
+                    Pin(self.get_element_from_identifier(wire_dict["Target"]), wire_dict["TargetPin"]),
+                    wire_dict["ColorName"][0] # e.g. "蓝"
                 )
+            )
 
     def read(self, warning_status: Optional[bool] = None) -> Self:
         ''' 读取实验已有状态 '''
@@ -375,7 +396,15 @@ class Experiment:
 
         status_sav = json.loads(self.PlSav["Experiment"]["StatusSave"])
 
-        self.__read_element(status_sav["Elements"])
+        if self.experiment_type == ExperimentType.Circuit:
+            self.__read_element(status_sav["Elements"])
+        elif self.experiment_type == ExperimentType.Celestial:
+            self.__read_element(list(status_sav["Elements"].values()))
+        elif self.experiment_type == ExperimentType.Electromagnetism:
+            raise RuntimeError("sorry, physicsLab don't ssupport electromagnetism experiment yet")
+        else:
+            raise errors.ExperimentTypeError
+
         if self.experiment_type == ExperimentType.Circuit:
             self.__read_wire(status_sav["Wires"])
 
@@ -425,9 +454,17 @@ class Experiment:
         self.CameraSave["TargetRotation"] = f"{self.TargetRotation.x},{self.TargetRotation.z},{self.TargetRotation.y}"
         self.PlSav["Experiment"]["CameraSave"] = json.dumps(self.CameraSave)
 
-        self.StatusSave["Elements"] = [a_element.data for a_element in self.Elements]
         if self.experiment_type == ExperimentType.Circuit:
+            self.StatusSave["Elements"] = [a_element.data for a_element in self.Elements]
             self.StatusSave["Wires"] = [a_wire.release() for a_wire in self.Wires]
+        elif self.experiment_type == ExperimentType.Celestial:
+            self.StatusSave["Elements"] = {a_element.data["Identifier"] : a_element.data
+                                           for a_element in self.Elements}
+        elif self.experiment_type == ExperimentType.Electromagnetism:
+            raise RuntimeError("sorry, physicsLab don't ssupport electromagnetism experiment yet")
+        else:
+            raise errors.ExperimentTypeError
+
         self.PlSav["Experiment"]["StatusSave"] = json.dumps(self.StatusSave, ensure_ascii=False, separators=(',', ': '))
 
     def write(self,
@@ -445,6 +482,7 @@ class Experiment:
                 注意: 换行之后的结果不符合json语法(json无多行字符串)
                      但物实可以读取
                      因此, 仅用于调试
+                     暂时只支持电学存档
             '''
             stringJson = stringJson.replace( # format element json
                 "{\\\"ModelID", "\n      {\\\"ModelID"
@@ -475,7 +513,7 @@ class Experiment:
 
         self.__write()
 
-        context: str = json.dumps(self.PlSav, indent=2, ensure_ascii=False, separators=(',', ': '))
+        context: str = json.dumps(self.PlSav, indent=2, ensure_ascii=False, separators=(',', ':'))
         if ln:
             context = _format_StatusSave(context)
 
@@ -493,12 +531,15 @@ class Experiment:
                 f"{self.Elements.__len__()} elements, {self.Wires.__len__()} wires.",
                 color=_colorUtils.COLOR.GREEN
             )
-        else:
+        elif self.experiment_type == ExperimentType.Celestial \
+                or self.experiment_type == ExperimentType.Electromagnetism:
             _colorUtils.color_print(
                 f"Successfully {status} experiment \"{self.PlSav['InternalName']}\"! "
                 f"{self.Elements.__len__()} elements.",
                 color=_colorUtils.COLOR.GREEN
             )
+        else:
+            raise errors.ExperimentTypeError
 
         return self
 
@@ -873,14 +914,14 @@ class Experiment:
 
         for a_element in other.Elements:
             a_element = copy.deepcopy(a_element, memo={id(a_element.experiment): self})
-            e_x, e_y, e_z = a_element.get_Position()
+            e_x, e_y, e_z = a_element.get_position()
             if self.experiment_type == ExperimentType.Circuit:
                 from .circuit.elementXYZ import xyzTranslate, translateXYZ
                 if elementXYZ and not a_element.is_elementXYZ:
                     e_x, e_y, e_z = translateXYZ(e_x, e_y, e_z, a_element.is_bigElement)
                 elif not elementXYZ and a_element.is_elementXYZ:
                     e_x, e_y, e_z = xyzTranslate(e_x, e_y, e_z, a_element.is_bigElement)
-            a_element.set_Position(e_x + x, e_y + y, e_z + z, elementXYZ)
+            a_element.set_position(e_x + x, e_y + y, e_z + z, elementXYZ)
             # set_Position已处理与elements_Position有关的操作
             self.Elements.append(a_element)
 

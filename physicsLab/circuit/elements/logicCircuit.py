@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from ._elementBase import CircuitBase
+from ._circuitbase import CircuitBase
 from ..wire import InputPin, OutputPin
 from physicsLab.typehint import Optional, numType, CircuitElementData, Self, Generate
 

@@ -1,25 +1,34 @@
 # 所有元件 elements
 
-所有元件共有的attribute:  
-.is_bigElement # 是否是大体积元件  
-.is_elementXYZ # 是否是元件坐标系  
+所有元件共有的`attribute`:
+* .data # 元件的存档信息
+* .experiment # 元件所在的实验
 
-  
+所有元件都有的`method`:
+* set_position
+* get_position
+* get_index
 > Note: 如果表格没有***类独有的method***，说明该表格中的所有元件都没有类独有的method
 
-## 逻辑电路
+## 电学实验
+电学元件都有的`method`:
+* set_rotation # 设置元件的角度
+
+电学元件都有的`attribute`:
+* .is_bigElement # 是否是大体积元件
+* .is_elementXYZ # 是否是元件坐标系
+* .modelID # 存档信息中的`ModelID`
+
+### 逻辑电路
+
+逻辑电路元件都有的`method`:
+* set_HighLevelValue # 设置高电平的值
+* get_HighLevelValue # 获取高电平的值
+* set_LowLevelValue # 设置低电平的值
+* get_LowLevelValue # 获取高电平的值
 
 <table border="1">
 <thead>
-    <tr>
-        <td colspan=5>
-            逻电元件共有的method:<br>
-            set_HighLevelValue # 设置高电平的值<br>
-            get_HighLevelValue # 获取高电平的值<br>
-            set_LowLevelValue # 设置低电平的值<br>
-            get_LowLevelValue # 获取高电平的值<br>
-        </td>
-    </tr>
     <tr>
         <th>物实元件的中文名</th>
         <th>元件在physicsLab中对应的的类名</th>
@@ -199,7 +208,7 @@
 </tbody>
 </table>
 
-## 模拟电路
+### 模拟电路
 <table border="1">
     <tr>
         <th>物实元件的中文名</th>
@@ -335,7 +344,7 @@
     </tr>
 </table>
 
-## 基础电路
+### 基础电路
 <table border="1">
     <tr>
         <th>物实元件的中文名</th>
@@ -465,7 +474,7 @@
     </tr>
 </table>
 
-## 其他电路
+### 其他电路
 <table border="1">
     <tr>
         <th>物实元件的中文名</th>
@@ -540,3 +549,14 @@
         <td>red, black</td>
     </tr>
 </table>
+
+### 传感器
+
+## 天体物理实验
+天体物理元件都有的`method`:
+* set_velocity # 设置速度
+* set_acceleration # 设置加速度
+
+
+## 电磁学实验
+

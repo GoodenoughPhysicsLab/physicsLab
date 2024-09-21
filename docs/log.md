@@ -142,3 +142,7 @@
 ## 1.4.14
 1.  公开了`id_to_time`
 2.  新增`get_warned_messages`, `get_banned_messages`
+
+# 1.4.15
+1.  重命名`set_Position`为`set_position`, `set_Rotation`为`set_rotation`, `get_Position`为`get_position`, `get_Index`为`get_index` (不兼容更新)
+2.  实装部分对天体物理实验的支持

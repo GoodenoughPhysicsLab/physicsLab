@@ -171,19 +171,14 @@ with experiment("example"):
 
     # methods
     a.set_highLevel() # 将逻辑输入设置为输出为1（仅对逻辑输入有效）
-    a.get_Position() # 获取元件坐标
-    a.set_Position() # 设置元件坐标（暂时只支持元件坐标系）
-    a.get_Index() # 获取元件的Index（元件生成顺序）
+    a.set_position() # 设置元件坐标
+    a.get_index() # 获取元件的Index（index为元件生成顺序的计数器）
     a.set_HighLeaveValue() # 设置高电平的值，仅逻辑电路元件有效
-    a.set_LowLeaveValue() # 设置低电平的值，仅逻辑电路元件有效
-    a.get_HighLeaveValue() # 获取高电平的值，仅逻辑电路元件有效
-    a.get_LowLeaveValue() # 获取低电平的值，仅逻辑电路元件有效
     # attributes
     a.data # 获取元件在物实对应的dict
-    a.modelID # 获取元件的ModelID
     a.experiment # 获取元件对应的实验
 ```
-在[所有元件 elements](elements.md)中也介绍得有元件的方法
+在[所有元件 elements](elements.md)中介绍得更全面
 
 
 ## hook

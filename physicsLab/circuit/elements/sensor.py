@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from ..wire import Pin
-from ._elementBase import TwoPinMixIn, CircuitBase
+from ._circuitbase import TwoPinMixIn, CircuitBase
 from .logicCircuit import _logicBase
 from physicsLab.typehint import Optional, numType, CircuitElementData, Generate
 

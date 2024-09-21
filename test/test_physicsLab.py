@@ -24,7 +24,7 @@ class BasicTest(PLTestBase):
         exp: Experiment = Experiment().crt("__test__", force_crt=True)
         a = Yes_Gate(0, 0, 0)
         self.assertEqual(count_Elements(), 1)
-        self.assertEqual(a.get_Position(), (0, 0, 0))
+        self.assertEqual(a.get_position(), (0, 0, 0))
         crt_Wire(a.o, a.i)
         self.assertEqual(count_Wires(), 1)
         clear_Wires()

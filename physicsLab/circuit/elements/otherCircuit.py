@@ -3,7 +3,7 @@ import physicsLab.plAR as plar
 import physicsLab.errors as errors
 
 from ..wire import Pin
-from ._elementBase import TwoPinMixIn, CircuitBase
+from ._circuitbase import TwoPinMixIn, CircuitBase
 from physicsLab.typehint import Optional, numType, CircuitElementData, Self, Generate, Union, List
 
 class Buzzer(TwoPinMixIn):

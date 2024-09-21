@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from ..wire import Pin
-from ._elementBase import CircuitBase, TwoPinMixIn
+from ._circuitbase import CircuitBase, TwoPinMixIn
 from physicsLab.typehint import Optional, numType, CircuitElementData, Generate
 
 class NE555(CircuitBase):

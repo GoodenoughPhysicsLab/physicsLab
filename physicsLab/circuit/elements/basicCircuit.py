@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from ..wire import Pin
-from ._elementBase import CircuitBase, TwoPinMixIn
+from ._circuitbase import CircuitBase, TwoPinMixIn
 from physicsLab.typehint import Optional, numType, CircuitElementData, Self, Generate
 
 class _switch_Base(CircuitBase):
@@ -225,6 +225,14 @@ class Resistor(TwoPinMixIn):
                                           "电压": 0, "电流": 0},
                            "Position": Generate, "Rotation": Generate, "DiagramCached": False,
                            "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
+
+    def set_resistor(self, resistor: numType) -> Self:
+        ''' 设置电阻值 '''
+        if not isinstance(resistor, (int, float)):
+            raise TypeError
+
+        self.data["Properties"]["电阻"] = resistor
+        return self
 
 class Fuse_Component(TwoPinMixIn):
     ''' 保险丝 '''

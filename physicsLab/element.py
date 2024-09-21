@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-import physicsLab.circuit.elementXYZ as _elementXYZ
-
 from physicsLab import _tools
 from physicsLab import errors
-from physicsLab.circuit import elements
-
-from physicsLab.experiment import stack_Experiment
+from physicsLab import circuit
+from physicsLab import celestial
+from physicsLab.elementBase import ElementBase
+from physicsLab.enums import ExperimentType
+from physicsLab.experiment import get_Experiment
 from physicsLab.typehint import numType, Optional, Union, List
-from physicsLab.circuit.elements._elementBase import CircuitBase
 
 def crt_Element(name: str,
                 x: numType = 0,
@@ -16,7 +15,7 @@ def crt_Element(name: str,
                 elementXYZ: Optional[bool] = None,
                 *args,
                 **kwargs
-) -> CircuitBase:
+) -> ElementBase:
     ''' 创建原件，本质上仍然是实例化 '''
     if not (isinstance(name, str)
             and isinstance(x, (int, float))
@@ -27,31 +26,33 @@ def crt_Element(name: str,
 
     name = name.strip()
     x, y, z = _tools.roundData(x, y, z) # type: ignore
-    if (name == '555 Timer'):
-        return elements.NE555(x, y, z, elementXYZ)
-    elif (name == '8bit Input'):
-        return elements.eight_bit_Input(x, y, z, elementXYZ)
-    elif (name == '8bit Display'):
-        return elements.eight_bit_Display(x, y, z, elementXYZ)
-    else:
-        return eval(f"elements.{name.replace(' ', '_').replace('-', '_')}"
+    _Expe = get_Experiment()
+    if _Expe.experiment_type == ExperimentType.Circuit:
+        if (name == '555 Timer'):
+            return circuit.NE555(x, y, z, elementXYZ)
+        elif (name == '8bit Input'):
+            return circuit.eight_bit_Input(x, y, z, elementXYZ)
+        elif (name == '8bit Display'):
+            return circuit.eight_bit_Display(x, y, z, elementXYZ)
+        else:
+            return eval(f"circuit.{name.replace(' ', '_').replace('-', '_')}"
                     f"({x}, {y}, {z}, {elementXYZ}, *{args}, **{kwargs})")
+    elif _Expe.experiment_type == ExperimentType.Celestial:
+        return eval(f"celestial.{name}({x}, {y}, {z})")
 
 def get_Element(x: Optional[numType] = None,
                 y: Optional[numType] = None,
                 z: Optional[numType] = None,
                 *,
-                index: Optional[numType] = None,
+                index: Optional[int] = None,
                 **kwargs
-) -> Union[CircuitBase, List[CircuitBase]]:
+) -> Union[ElementBase, List[ElementBase]]:
     ''' 获取对应坐标的元件的reference '''
     # 通过坐标索引元件
     def position_get(x: numType, y: numType, z: numType):
-        if not (
-            isinstance(x, (int, float))
-            and isinstance(y, (int, float))
-            and isinstance(z, (int, float))
-        ):
+        if not isinstance(x, (int, float)) or \
+                not isinstance(y, (int, float)) or \
+                not isinstance(z, (int, float)):
             raise TypeError
 
         position = _tools.roundData(x, y, z)
@@ -60,7 +61,8 @@ def get_Element(x: Optional[numType] = None,
                 return kwargs["defualt"]
             raise errors.ElementNotFound(f"{position} do not exist")
 
-        result: list = _Expe.elements_Position[position]
+        result: list = _Expe.elements_Position[position] # type: ignore -> type(position) ==
+                                                         # Tuple[numType, numType, numType]
         return result[0] if len(result) == 1 else result
 
     # 通过index（元件生成顺序）索引元件
@@ -75,24 +77,24 @@ def get_Element(x: Optional[numType] = None,
                 return kwargs["defualt"]
             raise errors.ElementNotFound
 
-    _Expe = stack_Experiment.top()
-    if None not in [x, y, z]:
+    _Expe = get_Experiment()
+    if x is not None and y is not None and z is not None:
         return position_get(x, y, z)
     elif index is not None:
         return index_get(index)
     else:
         raise TypeError
 
-def del_Element(
-        self: CircuitBase # self是物实三大实验支持的所有元件
-) -> None:
-    ''' 删除原件 '''
-    if not isinstance(self, CircuitBase):
+def del_Element(element: ElementBase) -> None:
+    ''' 删除原件
+        @param element: 三大实验的元件
+    '''
+    if not isinstance(element, ElementBase):
         raise TypeError
 
-    identifier = self.data["Identifier"] # type: ignore
+    identifier = element.data["Identifier"] # type: ignore
 
-    _Expe = stack_Experiment.top()
+    _Expe = get_Experiment()
 
     res_Wires = set()
     for a_wire in _Expe.Wires:
@@ -105,23 +107,23 @@ def del_Element(
 
     # 删除elements_Position中的引用
     for elements in _Expe.elements_Position.values():
-        if self in elements:
-            elements.remove(self)
+        if element in elements:
+            elements.remove(element)
             break
 
     # 删除elements_Index中的引用
     for element in _Expe.Elements:
-        if element is self:
-            _Expe.Elements.remove(self)
+        if element is element:
+            _Expe.Elements.remove(element)
             break
 
 # 原件的数量
 def count_Elements() -> int:
-    return len(stack_Experiment.top().Elements)
+    return len(get_Experiment().Elements)
 
 # 清空原件
 def clear_Elements() -> None:
-    _Expe = stack_Experiment.top()
+    _Expe = get_Experiment()
     _Expe.Wires.clear()
     _Expe.Elements.clear()
     _Expe.elements_Position.clear()
