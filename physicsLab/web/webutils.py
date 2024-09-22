@@ -145,7 +145,7 @@ def get_warned_messages(start_time: numType,
             not isinstance(end_time, (int, float, type(None))) or \
             not isinstance(user_id, str):
         raise TypeError
-    if not user.is_anonymous:
+    if user.is_anonymous:
         raise ValueError("user must be anonymous")
 
     TAKE_MESSAGE_AMOUNT = 20
@@ -164,24 +164,30 @@ def get_warned_messages(start_time: numType,
     return warned_messages
 
 class CommentsIter:
-    TAKE: int = 20
-    skip_time: int = 0
+    ''' 获取评论的迭代器 '''
+    def __init__(self, user: api.User, id: str, category: str = "User") -> None:
+        if not isinstance(user, api.User) or \
+                not isinstance(id, str) or \
+                not isinstance(category, str) and \
+                category not in ("User", "Experiment", "Discussion"):
+            raise TypeError
+        if user.is_anonymous:
+            raise ValueError("user must be anonymous")
 
-    def __init__(self, user: api.User, user_id: str) -> None:
         self.user = user
-        self.user_id = user_id
+        self.id = id
+        self.category = category
 
     def __iter__(self):
-        return self._gen_comment()
-
-    def _gen_comment(self):
+        TAKE: int = 20
+        skip_time: int = 0
         while True:
             comments = self.user.get_comments(
-                self.user_id, "User", skip=self.skip_time, take=self.TAKE
+                self.id, self.category, skip=skip_time, take=TAKE
             )["Data"]["Comments"]
             for comment in comments:
                 yield comment
             if len(comments) != 0:
-                self.skip_time = comments[-1]["Timestamp"]
-            elif len(comments) == 0 and self.skip_time != 0:
+                skip_time = comments[-1]["Timestamp"]
+            elif len(comments) == 0 and skip_time != 0:
                 return
