@@ -221,7 +221,7 @@ class Midi:
     def _get_notes_list(self,
                         div_time: Optional[numType],
                         max_notes: Optional[int],
-                        fix_strange_note: bool,
+                        percussion_channel: Optional[int],
                         notes_filter: Optional[Callable],
                         ) -> List[Union["Note", "Chord"]]:
 
@@ -242,14 +242,12 @@ class Midi:
 
             if msg.type == "note_on":
                 velocity: float = _format_velocity(msg.velocity / 127) # 音符的响度
-                if msg.channel != 9:
-                    ins: int = channels[msg.channel]
-                else: # 鼓点
+                if percussion_channel is not None and msg.channel == percussion_channel - 1: # 打击乐
                     ins = 128
+                else:
+                    ins: int = channels[msg.channel]
 
-                if velocity == 0 \
-                   or (fix_strange_note and ins == 0 and velocity >= 0.85) \
-                   or (notes_filter is not None and notes_filter(ins, velocity)):
+                if velocity == 0 or notes_filter is not None and notes_filter(ins, velocity):
                     if msg.time != 0:
                         wait_time += msg.time
                     continue
@@ -278,13 +276,27 @@ class Midi:
     def to_piece(self,
                  div_time: Optional[numType] = None,
                  max_notes: Optional[int] = 800,
+                 percussion_channel: Optional[int] = 10,
                  is_optimize: bool = True, # 是否将多个音符优化为和弦
-                 fix_strange_note: bool = False, # 是否修正一些奇怪的音符
                  notes_filter: Optional[Callable] = None,
                  ) -> "Piece":
-        ''' 转换为Piece类 '''
+        ''' 转换为Piece类
+            @param div_time: 用来调控生成的音乐电路的节奏, 默认为None(自动计算)
+            @param max_notes: 最多的音符数量
+            @param percussion_channel: 打击乐的通道号, 默认为10
+            @param is_optimize: 是否将多个音符优化为和弦
+            @param notes_filter: 音符过滤函数, 默认为None
+        '''
+        if not isinstance(div_time, (int, float, type(None))) or \
+                not isinstance(max_notes, (int, type(None))) or \
+                not isinstance(percussion_channel, (int, type(None))) or \
+                not isinstance(is_optimize, bool) or \
+                notes_filter is not None and not callable(notes_filter):
+            raise TypeError
+        if percussion_channel is not None and not 1 <= percussion_channel <= 16:
+            raise ValueError
 
-        return Piece(self._get_notes_list(div_time, max_notes, fix_strange_note, notes_filter),
+        return Piece(self._get_notes_list(div_time, max_notes, percussion_channel, notes_filter),
                      is_optimize=is_optimize)
 
     ''' *.pl.py文件:
@@ -344,7 +356,7 @@ class Midi:
                   filepath: str = "temp.pl.py",
                   div_time: Optional[numType] = None, # midi的time的单位长度与Note的time的单位长度不同，支持用户手动调整
                   max_notes: Optional[int] = 800, # 最大的音符数，因为物实没法承受过多的元件
-                  fix_strange_note: bool = False,
+                  percussion_channel: Optional[int] = 10,
                   notes_filter: Optional[Callable] = None,
                   sav_name: str = "temp" # 产生的存档的名字, 也可直接在生成.pl.py中修改
     ) -> Self:
@@ -356,7 +368,7 @@ class Midi:
         if not filepath.endswith(".pl.py"):
             filepath += ".pl.py"
 
-        l_notes: List[Union[Note, Chord]] = self._get_notes_list(div_time, max_notes, fix_strange_note, notes_filter)
+        l_notes: List[Union[Note, Chord]] = self._get_notes_list(div_time, max_notes, percussion_channel, notes_filter)
         notes_str = ""
         for a_note in l_notes:
             notes_str += "        " + repr(a_note) + ",\n"
@@ -691,12 +703,10 @@ class Player:
         from physicsLab.element import count_Elements
         count_elements_start: int = count_Elements()
 
-        if not (
-                isinstance(x, (int, float)) and
-                isinstance(y, (int, float)) and
-                isinstance(z, (int, float)) and
-                isinstance(musicArray, Piece)
-        ):
+        if not isinstance(x, (int, float)) or \
+                not isinstance(y, (int, float)) or \
+                not isinstance(z, (int, float)) or \
+                not isinstance(musicArray, Piece):
             raise TypeError
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
