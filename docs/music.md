@@ -6,7 +6,7 @@ pip install mido
 ```
 
 ## 快速使用
-通常来说，music模块使用得最多的功能是将一个`midi`文件转化为一个对应的可以在物实运行的音乐电路。  
+通常来说，music模块使用得最多的功能是将一个`midi`文件转化为一个对应的可以在物实运行的音乐电路。
 
 下面给出代码模板：
 ```Python
@@ -22,8 +22,8 @@ with experiment("example"):
 * `div_time`: 用来调控生成的音乐电路的节奏。其原理大概是这样的：一个midi文件的时长是固定的，physicsLab以`div_time`的时长为最小的单位，如果有一堆音符的播放时长在`div_time`内，那么这些音符会被处理为一个和弦；后面的音符会以同样的原理被处理为下一个音符/和弦，或者下下个，下下下个音符/和弦...  
 因此，div_time的值越小，对midi的处理就越精细，但随之而来的影响是乐曲的播放速度变慢。  
 * `is_optimize`: 为`False`时将不会把多个音符优化为和弦。
-* `percussion_channel`: 设置打击乐的频道编号，默认为10，当`percussion_channel=None`时，默认midi中无打击乐音色。
-`release`对应的三个参数分别是x, y, z，个人感觉这`-1, -1, 0`就已经很好用了，没必要修改。  
+* `percussion_channel`: 设置打击乐的频道编号，默认为10，当`percussion_channel=None`时，表示midi中无打击乐音色。
+* `release`对应的三个参数分别是x, y, z，个人感觉这`-1, -1, 0`就已经很好用了，没必要修改。
 
 ## class Midi
 `Midi` 类是`Piece`与 *midi文件* 之间的桥梁  
