@@ -185,9 +185,10 @@ class CommentsIter:
             comments = self.user.get_comments(
                 self.id, self.category, skip=skip_time, take=TAKE
             )["Data"]["Comments"]
+
+            if len(comments) == 0:
+                return
+            skip_time = comments[-1]["Timestamp"]
+
             for comment in comments:
                 yield comment
-            if len(comments) != 0:
-                skip_time = comments[-1]["Timestamp"]
-            elif len(comments) == 0 and skip_time != 0:
-                return
