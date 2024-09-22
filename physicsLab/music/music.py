@@ -242,7 +242,7 @@ class Midi:
 
             if msg.type == "note_on":
                 velocity: float = _format_velocity(msg.velocity / 127) # 音符的响度
-                if percussion_channel != None and msg.channel == percussion_channel: # 打击乐
+                if percussion_channel != None and msg.channel == percussion_channel - 1: # 打击乐，减1是因为计数从0开始
                     ins = 128
                 else:
                     ins: int = channels[msg.channel]
