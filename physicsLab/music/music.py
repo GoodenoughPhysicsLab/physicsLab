@@ -293,7 +293,7 @@ class Midi:
                 not isinstance(is_optimize, bool) or \
                 notes_filter is not None and not callable(notes_filter):
             raise TypeError
-        if percussion_channel is not None and 1 <= percussion_channel <= 16:
+        if percussion_channel is not None and not 1 <= percussion_channel <= 16:
             raise ValueError
 
         return Piece(self._get_notes_list(div_time, max_notes, percussion_channel, notes_filter),
