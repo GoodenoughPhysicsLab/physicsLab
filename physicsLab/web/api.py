@@ -358,7 +358,7 @@ class User:
         return _check_response(response, callback)
 
     def get_derivatives(self, content_id: str, category: Category) -> dict:
-        ''' 获取作品的详细信息
+        ''' 获取作品的详细信息, 物实第一次读取作品是会使用此接口
             @param content_id: 实验ID
             @param category: 实验区还是黑洞区
         '''
