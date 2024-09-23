@@ -510,3 +510,40 @@ class User:
         )
 
         return _check_response(response)
+
+    def get_supporters(self,
+                       content_id: str,
+                       category: Category,
+                       skip: int = 0,
+                       take: int = 16,
+                       ) -> dict:
+        ''' 获取支持列表
+            @param category: .Experiment 或 .Discussion
+            @param skip: 传入一个时间戳, 跳过skip条消息
+            @param take: 取take条消息
+        '''
+        if not isinstance(content_id, str) or \
+                not isinstance(category, Category) or \
+                not isinstance(skip, int) or \
+                not isinstance(take, int):
+            raise TypeError
+
+        if take <= 0 or skip < 0:
+            raise ValueError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com/Contents/GetSupporters",
+            json={
+                "ContentID": content_id,
+                "Category": category.value,
+                "Skip": skip,
+                "Take": take,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            }
+        )
+
+        return _check_response(response)
