@@ -2,7 +2,6 @@
 from physicsLab import _tools
 from physicsLab import errors
 from physicsLab import circuit
-from physicsLab import celestial
 from physicsLab.elementBase import ElementBase
 from physicsLab.enums import ExperimentType
 from physicsLab.experiment import get_Experiment
@@ -24,21 +23,26 @@ def crt_Element(name: str,
     ):
         raise TypeError
 
-    name = name.strip()
+    name = name.strip().replace(' ', '_').replace('-', '_')
     x, y, z = _tools.roundData(x, y, z) # type: ignore
     _Expe = get_Experiment()
     if _Expe.experiment_type == ExperimentType.Circuit:
-        if (name == '555 Timer'):
+        if (name == '555_Timer'):
             return circuit.NE555(x, y, z, elementXYZ)
-        elif (name == '8bit Input'):
+        elif (name == '8bit_Input'):
             return circuit.eight_bit_Input(x, y, z, elementXYZ)
-        elif (name == '8bit Display'):
+        elif (name == '8bit_Display'):
             return circuit.eight_bit_Display(x, y, z, elementXYZ)
         else:
-            return eval(f"circuit.{name.replace(' ', '_').replace('-', '_')}"
-                    f"({x}, {y}, {z}, {elementXYZ}, *{args}, **{kwargs})")
+            return eval(f"circuit.{name}({x}, {y}, {z}, {elementXYZ}, *{args}, **{kwargs})")
     elif _Expe.experiment_type == ExperimentType.Celestial:
+        from physicsLab import celestial
         return eval(f"celestial.{name}({x}, {y}, {z})")
+    elif _Expe.experiment_type == ExperimentType.Electromagnetism:
+        from physicsLab import electromagnetism
+        return eval(f"electromagnetism.{name}({x}, {y}, {z})")
+    else:
+        raise errors.InternalError
 
 def get_Element(x: Optional[numType] = None,
                 y: Optional[numType] = None,

@@ -60,6 +60,11 @@ class BitnumError(Exception):
     def __str__(self):
         return "illegal bitLength number"
 
+class InternalError(Exception):
+    ''' physicsLab内部错误 '''
+    def __str__(self):
+        return "internal error, please bug report"
+
 class ExperimentHasOpenError(Exception):
     ''' 已打开实验 '''
     def __str__(self):
@@ -102,8 +107,10 @@ class ExperimentTypeError(Exception):
 
 # 用于get_Element 获取元件引用失败
 class ElementNotFound(Exception):
+    def __init__(self, err_msg: str = "Index out of range") -> None:
+        self.err_msg: str = err_msg
     def __str__(self):
-        return "Index out of range"
+        return self.err_msg
 
 # 类实例化异常 基类无法被实例化
 class instantiateError(Exception):

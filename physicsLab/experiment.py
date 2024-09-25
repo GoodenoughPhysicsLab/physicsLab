@@ -16,7 +16,6 @@ from physicsLab import  _tools
 from physicsLab import errors
 from physicsLab import savTemplate
 from physicsLab import _colorUtils
-from .elementBase import ElementBase
 from .web import User, _check_response
 from .enums import Category, Tag
 from .savTemplate import Generate
@@ -93,7 +92,8 @@ class Experiment:
         # 通过坐标索引元件
         self.elements_Position: Dict[tuple, list] = {}  # key: self._position, value: List[self...]
         # 通过index（元件生成顺序）索引元件
-        self.Elements: list = []
+        from .elementBase import ElementBase
+        self.Elements:List[ElementBase] = []
 
         if sav_name is not None:
             self.open_or_crt(sav_name, experiment_type)
@@ -101,7 +101,8 @@ class Experiment:
     def get_element_from_identifier(self, identifier: str):
         ''' 通过 原件的["Identifier"]获取元件的引用 '''
         for element in self.Elements:
-            if element.data["Identifier"] == identifier:
+            assert hasattr(element, "data")
+            if element.data["Identifier"] == identifier: # type: ignore -> has attr .data
                 return element
         raise errors.ExperimentError
 
@@ -116,16 +117,11 @@ class Experiment:
         self.is_opened = True
         self.__read_CameraSave(self.PlSav["Experiment"]["CameraSave"])
 
-        self.experiment_type: ExperimentType = {
-            ExperimentType.Circuit.value: ExperimentType.Circuit,
-            ExperimentType.Celestial.value: ExperimentType.Celestial,
-            ExperimentType.Electromagnetism.value: ExperimentType.Electromagnetism
-        }[self.PlSav["Experiment"]["Type"]]
-
         if self.PlSav["Summary"] is None:
             self.PlSav["Summary"] = savTemplate.Circuit["Summary"]
 
-        if self.experiment_type == ExperimentType.Circuit:
+        if self.PlSav["Experiment"]["Type"] == ExperimentType.Circuit.value:
+            self.experiment_type = ExperimentType.Circuit
             # 该实验是否是元件坐标系
             self.is_elementXYZ: bool = False
             # 元件坐标系的坐标原点
@@ -134,15 +130,17 @@ class Experiment:
             # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": Generate, "Wires": Generate}
 
-        elif self.experiment_type == ExperimentType.Celestial:
+        elif self.PlSav["Experiment"]["Type"] == ExperimentType.Celestial.value:
+            self.experiment_type = ExperimentType.Celestial
             self.StatusSave: dict = {"MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
                                     "ScalingName": "内太阳系", "LengthScale": 1.0, "SizeLinear": 0.0001,
                                     "SizeNonlinear": 0.5, "StarPresent": False, "Setting": None}
 
-        elif self.experiment_type == ExperimentType.Electromagnetism:
+        elif self.PlSav["Experiment"]["Type"] == ExperimentType.Electromagnetism.value:
+            self.experiment_type = ExperimentType.Electromagnetism
             self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
         else:
-            raise errors.ExperimentTypeError
+            raise errors.InternalError
 
     def open(self,
              sav_name : str,
@@ -188,7 +186,7 @@ class Experiment:
                 elif _temp["Type"] == ExperimentType.Electromagnetism.value:
                     self.PlSav = savTemplate.Electromagnetism
                 else:
-                    raise ValueError("invalid format issue of Type in .sav file")
+                    raise errors.InternalError
 
                 self.PlSav["Experiment"] = _temp
             self.__open()
@@ -253,7 +251,7 @@ class Experiment:
             self.VisionCenter: _tools.position = _tools.position(0, 0 ,0.88)
             self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
         else:
-            raise errors.ExperimentTypeError
+            raise errors.InternalError
 
         self.entitle(sav_name)
 
@@ -344,23 +342,22 @@ class Experiment:
                             obj.add_note(int(val))
                 else:
                     obj = crt_Element(element["ModelID"], x, y, z, elementXYZ=False)
-                    assert hasattr(obj, "data"), "internal error, please bug report"
-                    obj.data["Properties"] = element["Properties"] # type: ignore
-                    obj.data["Properties"]["锁定"] = 1.0 # type: ignore -> obj has attr "data"
+                    obj.data["Properties"] = element["Properties"]
+                    obj.data["Properties"]["锁定"] = 1.0
                 # 设置角度信息
                 rotation = eval(f'({element["Rotation"]})')
                 r_x, r_y, r_z = rotation[0], rotation[2], rotation[1]
-                obj.set_rotation(r_x, r_y, r_z) # type: ignore -> obj has method "set_rotation"
-                obj.data['Identifier'] = element['Identifier'] # type: ignore
+                obj.set_rotation(r_x, r_y, r_z)
+                obj.data['Identifier'] = element['Identifier']
 
             elif self.experiment_type == ExperimentType.Celestial:
-                obj = crt_Element(element["Model"].replace(' ', '_'), x, y, z)
+                obj = crt_Element(element["Model"], x, y, z)
                 obj.data = element
             elif self.experiment_type == ExperimentType.Electromagnetism:
-                raise RuntimeError("sorry, physicsLab don't ssupport electromagnetism experiment yet")
-
+                obj = crt_Element(element["ModelID"], x, y, z)
+                obj.data = element
             else:
-                raise errors.ExperimentTypeError
+                raise errors.InternalError
 
     def __read_wire(self, _wires: list) -> None:
         assert self.experiment_type == ExperimentType.Circuit
@@ -394,9 +391,9 @@ class Experiment:
         elif self.experiment_type == ExperimentType.Celestial:
             self.__read_element(list(status_sav["Elements"].values()))
         elif self.experiment_type == ExperimentType.Electromagnetism:
-            raise RuntimeError("sorry, physicsLab don't ssupport electromagnetism experiment yet")
+            self.__read_element(status_sav["Elements"])
         else:
-            raise errors.ExperimentTypeError
+            raise errors.InternalError
 
         if self.experiment_type == ExperimentType.Circuit:
             self.__read_wire(status_sav["Wires"])
@@ -454,9 +451,9 @@ class Experiment:
             self.StatusSave["Elements"] = {a_element.data["Identifier"] : a_element.data
                                            for a_element in self.Elements}
         elif self.experiment_type == ExperimentType.Electromagnetism:
-            raise RuntimeError("sorry, physicsLab don't ssupport electromagnetism experiment yet")
+            self.StatusSave["Elements"] = [a_element.data for a_element in self.Elements]
         else:
-            raise errors.ExperimentTypeError
+            raise errors.InternalError
 
         self.PlSav["Experiment"]["StatusSave"] = json.dumps(self.StatusSave, ensure_ascii=False, separators=(',', ': '))
 
@@ -532,7 +529,7 @@ class Experiment:
                 color=_colorUtils.COLOR.GREEN
             )
         else:
-            raise errors.ExperimentTypeError
+            raise errors.InternalError
 
         return self
 
@@ -894,9 +891,18 @@ class Experiment:
     ) -> Self:
         ''' 合并另一实验
             x, y, z, elementXYZ为重新设置要合并的实验的坐标系原点在self的坐标系的位置
+            不是电学实验时, elementXYZ参数无效
         '''
+        if not isinstance(other, Experiment) or \
+                not isinstance(x, (int, float)) or \
+                not isinstance(y, (int, float)) or \
+                not isinstance(z, (int, float)) or \
+                not isinstance(elementXYZ, (bool, type(bool))):
+            raise TypeError
         if not self.is_open_or_crt or not other.is_open_or_crt:
             raise errors.ExperimentNotOpenError
+        if self.experiment_type != other.experiment_type:
+            raise errors.ExperimentTypeError
 
         assert self.SAV_PATH is not None and other.SAV_PATH is not None
 

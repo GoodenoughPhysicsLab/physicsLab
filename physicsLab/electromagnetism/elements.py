@@ -1,117 +1,71 @@
-# coding=utf-8
-from physicsLab import _tools
-from physicsLab import errors
-
-from physicsLab.experiment import stack_Experiment
-from physicsLab.enums import ExperimentType
-from physicsLab.typehint import Callable, Optional, numType
-
-# 所有电与磁元件的父类
-class _elementBase:
-    # 设置原件的角度
-    def set_Rotation(self, xRotation: numType = 0, yRotation: numType = 0,
-                     zRotation: numType = 180):
-        if not (
-                isinstance(xRotation, (int, float)) and
-                isinstance(yRotation, (int, float)) and
-                isinstance(zRotation, (int, float))
-        ):
-            raise RuntimeError('illegal argument')
-
-        self.data["Rotation"] = \
-            f"{_tools.roundData(xRotation)},{_tools.roundData(zRotation)},{_tools.roundData(yRotation)}"
-        return self
-
-    # 重新设置元件的坐标
-    def set_Position(self, x: numType, y: numType, z: numType):
-        if not (isinstance(x, (int, float)) and isinstance(y, (int, float)) and isinstance(z, (int, float))):
-            raise RuntimeError('illegal argument')
-        x, y, z = _tools.roundData(x, y, z)
-        del stack_Experiment.top().elements_Position[self._position]
-        self._position = (x, y, z)
-        self.data['Position'] = f"{x},{z},{y}"
-        stack_Experiment.top().elements_Position[self._position] = self
-        return self
-
-    # 格式化坐标参数，主要避免浮点误差
-    def format_Position(self) -> tuple:
-        if not isinstance(self._position, tuple) or self._position.__len__() != 3:
-            raise RuntimeError("Position must be a tuple of length three but gets some other value")
-        self._position = _tools.roundData(self._position[0], self._position[1], self._position[2])
-        return self._position
+# -*- coding: utf-8 -*-
+from physicsLab.savTemplate import Generate
+from physicsLab.typehint import numType
+from ._electromagnetismBase import ElectromagnetismBase
 
 
-# __init__ 装饰器
-_index = 1
-
-
-def _element_Init_HEAD(func: Callable) -> Callable:
-    def result(
-            self,
-            x: numType = 0,
-            y: numType = 0,
-            z: numType = 0,
-            elementXYZ: Optional[bool] = None
-    ) -> None:
-        if not (
-                isinstance(x, (float, int)) and
-                isinstance(y, (float, int)) and
-                isinstance(z, (float, int))
-        ):
-            raise TypeError('illegal argument')
-        if stack_Experiment.top().experiment_type != ExperimentType.Electromagnetism:
-            raise errors.ExperimentTypeError
-
-        _Expe = stack_Experiment.top()
-
-        # 初始化全局变量
-        global is_big_Element
-        is_big_Element = False
-
-        x, y, z = _tools.roundData(x, y, z) # type: ignore
-        self._position = (x, y, z)
-
-        func(self, x, y, z)
-
-        self.data["Identifier"] = _tools.randString(32)
-        # x, z, y 物实采用欧拉坐标系
-        self.data["Position"] = f"{x},{z},{y}"
-
-        # 该坐标是否已存在，则存入列表
-        if self._position in _Expe.elements_Position.keys():
-            _Expe.elements_Position[self._position]['self'].append(self)
-        else:
-            elementDict: dict = {
-                'self': [self],
-                'elementXYZ': None,  # 电与磁实验不支持元件坐标系
-                'originPosition': None
-            }
-            _Expe.elements_Position[self._position] = elementDict
-        self.set_Rotation()
-        # 通过元件生成顺序来索引元件
-        global _index
-        self._index = _index
-        _Expe.Elements.append(self)
-        # 元件index索引加1
-        _index += 1
-
-    return result
-
-
-# 负电荷
-class Negative_Charge(_elementBase):
-    @_element_Init_HEAD
+class Negative_Charge(ElectromagnetismBase):
+    ''' 负电荷 '''
     def __init__(self, x: numType, y: numType, z: numType):
-        self.data = {'ModelID': 'Negative Charge', 'Identifier': '',
-                           'Properties': {'锁定': 1.0, '强度': -1e-07, '质量': 0.1},
-                           'Position': '', 'Rotation': '', 'Velocity': '0,0,0',
-                           'AngularVelocity': '0,0,0'}
+        self.data = {
+            "ModelID": "Negative Charge", "Identifier": Generate,
+            "Properties": {"锁定": 1.0, "强度": -1e-07, "质量": 0.1},
+            "Position": Generate, "Rotation": Generate, "Velocity": "0,0,0",
+            "AngularVelocity": "0,0,0"
+        }
 
 
-class Positive_Charge(_elementBase):
-    @_element_Init_HEAD
+class Positive_Charge(ElectromagnetismBase):
+    ''' 正电荷 '''
     def __init__(self, x: numType, y: numType, z: numType):
-        self.data = {'ModelID': 'Positive Charge', 'Identifier': '',
-                           'Properties': {'锁定': 1.0, '强度': 1e-07, '质量': 0.1},
-                           'Position': '', 'Rotation': '', 'Velocity': '0,0,0',
-                           'AngularVelocity': '0,0,0'}
+        self.data = {
+            "ModelID": "Positive Charge", "Identifier": Generate,
+            "Properties": {"锁定": 1.0, "强度": 1e-07, "质量": 0.1},
+            "Position": Generate, "Rotation": Generate, "Velocity": "0,0,0",
+            "AngularVelocity": "0,0,0"
+        }
+
+class Negative_Test_Charge(ElectromagnetismBase):
+    def __init__(self, x: numType, y: numType, z: numType):
+        self.data = {
+            'ModelID': 'Negative Test Charge', 'Identifier': Generate,
+            'Properties': {'锁定': 0.0, '强度': -1e-10, '质量': 5e-06},
+            'Position': Generate, 'Rotation': Generate, 'Velocity': '0,0,0',
+            'AngularVelocity': '0,0,0'
+        }
+
+class Positive_Test_Charge(ElectromagnetismBase):
+    def __init__(self, x: numType, y: numType, z: numType):
+        self.data = {
+            'ModelID': 'Positive Test Charge', 'Identifier': Generate,
+            'Properties': {'锁定': 0.0, '强度': -1e-10, '质量': 5e-06},
+            'Position': Generate, 'Rotation': Generate, 'Velocity': '0,0,0',
+            'AngularVelocity': '0,0,0'
+        }
+
+class Bar_Magnet(ElectromagnetismBase):
+    def __init__(self, x: numType, y: numType, z: numType):
+        self.data = {
+            'ModelID': 'Bar Magnet', 'Identifier': Generate,
+            'Properties': {'锁定': 1.0, '强度': 1.0, '质量': 10.0},
+            'Position': Generate, 'Rotation': Generate, 'Velocity': '0,0,0',
+            'AngularVelocity': '0,0,0'
+        }
+
+class Compass(ElectromagnetismBase):
+    def __init__(self, x: numType, y: numType, z: numType) -> None:
+        self.data = {
+            'ModelID': 'Compass', 'Identifier': Generate,
+            'Properties': {'锁定': 1.0},
+            'Position': Generate, 'Rotation': Generate,
+            'Velocity': '0,0,0', 'AngularVelocity': '0,0,0'
+        }
+
+class Uniform_Magnetic_Field(ElectromagnetismBase):
+    def __init__(self, x: numType, y: numType, z: numType) -> None:
+        self.data = {
+            'ModelID': 'Uniform Magnetic Field', 'Identifier': Generate,
+            'Properties': {'锁定': 0.0, '强度': 1000.0, '方向': 1.0},
+            'Position': Generate, 'Rotation': Generate,
+            'Velocity': '0,0,0', 'AngularVelocity': '0,0,0'
+        }
