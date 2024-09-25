@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup(
     name="physicsLab",
-    version="1.4.15",
+    version="1.4.16",
     license="MIT",
     author="Goodenough",
     author_email="2381642961@qq.com",

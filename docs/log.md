@@ -152,3 +152,5 @@
 6.  新增`web.CommentsIter`
 
 # 1.4.16
+1.  完善了`web.CommentsIter`
+2.  新增了电与磁实验的支持
