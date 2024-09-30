@@ -49,7 +49,7 @@ class User:
                 auth_code is not None and not isinstance(auth_code, str):
             raise TypeError
 
-        if token is not None and auth_code is not None:
+        if token is not None:
             self.token = token
             self.auth_code = auth_code
 
