@@ -85,8 +85,7 @@ def get_banned_messages(start_time: numType,
              for i in range(FETCH_AMOUNT):
                 executor.submit(
                     _fetch_banned_messages,
-                    user, start_time, end_time, user_id, i + counter * FETCH_AMOUNT,
-                    banned_template
+                    user, start_time, end_time, user_id, i + counter * FETCH_AMOUNT, banned_template
                 )
         counter += 1
     return banned_messages

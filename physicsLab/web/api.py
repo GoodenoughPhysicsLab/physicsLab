@@ -35,6 +35,40 @@ class _login_res(TypedDict):
     AuthCode: str
     Data: dict
 
+def get_avatars(id: str, index: int, category: str, size_category: str) -> bytes:
+    ''' 获取头像/实验封面
+        @param id: 用户id或实验id
+        @param index: 历史图片的索引
+        @param category: 只能为 "experiments" 或 "users"
+        @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
+    '''
+    if not isinstance(index, int) or \
+            not isinstance(category, str) or \
+            not isinstance(size_category, str):
+        raise TypeError
+    if category not in ("experiments", "users"):
+        raise ValueError
+    if size_category not in ("small.round", "thumbnail", "full"):
+        raise ValueError
+
+    if category == "users":
+        category += "/avatars"
+    elif category == "experiments":
+        category += "/images"
+
+    response = requests.get(
+        f"http://physics-static-cn.turtlesim.com:80/{category}"
+        f"/{id[0:4]}/{id[4:6]}/{id[6:8]}/{id[8:]}/{index}.jpg!{size_category}",
+        headers={
+            "Referer": "https://www.turtlesim.com/",
+            "Host": "physics-static-cn.turtlesim.com",
+        },
+    )
+
+    if b'<Error>' in response.content:
+        raise IndexError("index out of range")
+    return response.content
+
 class User:
     def __init__(self,
                  username: Optional[str] = None,
@@ -212,7 +246,7 @@ class User:
 
         return _check_response(response)
 
-    def get_experiment(self, content_id: str):
+    def get_experiment(self, content_id: str) -> dict:
         ''' 获取实验
             @param content_id: 不是实验的id, 可通过get_summary()["Data"]["ContentID"]获取
         '''
@@ -416,7 +450,7 @@ class User:
 
         return _check_response(response)
 
-    def star(self, content_id: str, category: Category, status: bool = True):
+    def star(self, content_id: str, category: Category, status: bool = True) -> dict:
         ''' 添加收藏
             @param content_id: 实验的ID
             @param category: 实验区, 黑洞区
