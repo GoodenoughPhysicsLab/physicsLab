@@ -2,7 +2,7 @@
 import os
 import requests
 
-from typing import Optional, List, TypedDict
+from typing import Optional, List, TypedDict, Dict, Union
 
 from physicsLab import plAR
 from physicsLab import errors
@@ -42,7 +42,8 @@ def get_avatars(id: str, index: int, category: str, size_category: str) -> bytes
         @param category: 只能为 "experiments" 或 "users"
         @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
     '''
-    if not isinstance(index, int) or \
+    if not isinstance(id, str) or \
+            not isinstance(index, int) or \
             not isinstance(category, str) or \
             not isinstance(size_category, str):
         raise TypeError
@@ -90,10 +91,10 @@ class User:
             tmp = self.__login()
             self.is_anonymous = False
 
-            self.user_id = tmp["Data"]["User"]["ID"]
-            self.nickname = tmp["Data"]["User"]["Nickname"]
+            self.user_id: str = tmp["Data"]["User"]["ID"]
+            self.nickname: Optional[str] = tmp["Data"]["User"]["Nickname"]
             self.signature = tmp["Data"]["User"]["Signature"]
-            self.avatar = tmp["Data"]["User"]["Avatar"]
+            self.avatar: Optional[int] = tmp["Data"]["User"]["Avatar"]
             self.avatar_region = tmp["Data"]["User"]["AvatarRegion"]
             self.decoration = tmp["Data"]["User"]["Decoration"]
             self.verification = tmp["Data"]["User"]["Verification"]
@@ -136,7 +137,7 @@ class User:
         else:
             version = 2411
 
-        headers = {
+        headers: Dict[str, Union[str, None]] = {
             "x-API-Version": str(version),
             "Accept": "application/json",
             "Content-Type": "application/json",
