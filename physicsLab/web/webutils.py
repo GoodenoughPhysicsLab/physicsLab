@@ -3,8 +3,8 @@ import copy
 import time
 
 from . import api
-from concurrent.futures import ThreadPoolExecutor
-from physicsLab.typehint import Optional, Callable, numType, Self
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from physicsLab.typehint import Optional, Callable, numType
 
 def get_banned_messages(start_time: numType,
                         user: Optional[api.User] = None,
@@ -191,3 +191,32 @@ class CommentsIter:
 
             for comment in comments:
                 yield comment
+
+def get_avatars(id: str,
+                category: str,
+                size_category: str,
+                user: Optional[api.User] = None,
+                ) -> list:
+        if not isinstance(id, str) or \
+                not isinstance(category, str) or \
+                not isinstance(size_category, str) or \
+                not isinstance(user, (api.User, type(None))):
+            raise TypeError
+
+        if user is None:
+            user = api.User()
+
+        res: list = []
+
+        with ThreadPoolExecutor(max_workers=150) as executor:
+            tasks = [
+                executor.submit(api.get_avatars, id, i + 1, category, size_category)
+                for i in range(user.get_user(id)["Data"]["User"]["Avatar"])
+            ]
+
+            for task in as_completed(tasks):
+                try:
+                    res.append(task.result())
+                except IndexError:
+                    pass
+        return res

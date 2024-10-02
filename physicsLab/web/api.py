@@ -63,7 +63,7 @@ def get_avatars(id: str, index: int, category: str, size_category: str) -> bytes
     )
 
     if b'<Error>' in response.content:
-        raise IndexError("index out of range")
+        raise IndexError("avatar not found")
     return response.content
 
 class User:
