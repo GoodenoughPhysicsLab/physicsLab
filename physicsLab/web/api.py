@@ -60,10 +60,6 @@ def get_avatars(id: str, index: int, category: str, size_category: str) -> bytes
     response = requests.get(
         f"http://physics-static-cn.turtlesim.com:80/{category}"
         f"/{id[0:4]}/{id[4:6]}/{id[6:8]}/{id[8:]}/{index}.jpg!{size_category}",
-        headers={
-            "Referer": "https://www.turtlesim.com/",
-            "Host": "physics-static-cn.turtlesim.com",
-        },
     )
 
     if b'<Error>' in response.content:
