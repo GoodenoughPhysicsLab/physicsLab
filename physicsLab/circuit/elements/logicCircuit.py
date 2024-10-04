@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from physicsLab import plAR
+from physicsLab import errors
 from ._circuitbase import CircuitBase
 from ..wire import InputPin, OutputPin
 from physicsLab.typehint import Optional, numType, CircuitElementData, Self, Generate
@@ -218,6 +220,64 @@ class Full_Adder(_big_element):
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Full Adder"
+
+    @property
+    def i_up(self) -> InputPin:
+        return InputPin(self, 2)
+
+    @property
+    def i_mid(self) -> InputPin:
+        return InputPin(self, 3)
+
+    @property
+    def i_low(self) -> InputPin:
+        return InputPin(self, 4)
+
+    @property
+    def o_up(self) -> OutputPin:
+        return OutputPin(self, 0)
+
+    @property
+    def o_low(self) -> OutputPin:
+        return OutputPin(self, 1)
+
+class Half_Subtractor(_big_element):
+    ''' 半减器 '''
+    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
+        plAR_version = plAR.get_plAR_version()
+        if plAR_version is not None:
+            _, mid, _ = eval(f"({plAR_version.replace('.', ',')})")
+            if mid < 5:
+                errors.warning("Physics-Lab-AR's version less than 2.5.0")
+        super().__init__(x, y, z, elementXYZ)
+        self.data["ModelID"] = "Half Subtractor"
+
+    @property
+    def i_up(self) -> InputPin:
+        return InputPin(self, 2)
+
+    @property
+    def i_low(self) -> InputPin:
+        return InputPin(self, 3)
+
+    @property
+    def o_up(self) -> OutputPin:
+        return OutputPin(self, 0)
+
+    @property
+    def o_low(self) -> OutputPin:
+        return OutputPin(self, 1)
+
+class Full_Subtractor(_big_element):
+    ''' 全减器 '''
+    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
+        plAR_version = plAR.get_plAR_version()
+        if plAR_version is not None:
+            _, mid, _ = eval(f"({plAR_version.replace('.', ',')})")
+            if mid < 5:
+                errors.warning("Physics-Lab-AR's version less than 2.5.0")
+        super().__init__(x, y, z, elementXYZ)
+        self.data["ModelID"] = "Full Subtractor"
 
     @property
     def i_up(self) -> InputPin:
