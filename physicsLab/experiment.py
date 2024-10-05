@@ -587,6 +587,7 @@ class Experiment:
             return self
 
         self.__write()
+
         with tempfile.NamedTemporaryFile("w", delete=False, encoding="utf-8") as f:
             f.write(json.dumps(self.PlSav, indent=2, ensure_ascii=False, separators=(',', ': ')))
 
@@ -669,12 +670,12 @@ class Experiment:
         if category is not None:
             _summary["Category"] = category.value
 
-        plar_ver = plAR.get_plAR_version()
-        if plar_ver is not None:
-            plar_ver = int(plar_ver.replace(".", ""))
+        plar_version = plAR.get_plAR_version()
+        if plar_version is not None:
+            plar_version = int(plar_version.replace(".", ""))
         else:
-            plar_ver = 2411
-        _summary["Version"] = plar_ver
+            plar_version = 2411
+        _summary["Version"] = plar_version
 
         # 请求更新实验
         submit_data = {
@@ -698,7 +699,7 @@ class Experiment:
             headers={
                 "x-API-Token": user.token,
                 "x-API-AuthCode": user.auth_code,
-                "x-API-Version": str(plar_ver),
+                "x-API-Version": str(plar_version),
                 "Accept-Encoding": "gzip",
                 "Content-Type": "gzipped/json",
             }
@@ -730,12 +731,14 @@ class Experiment:
             raise TypeError
         if self.PlSav["Summary"]["ID"] is not None:
             raise Exception(
-                "upload can only be used to upload a brand new experiment, try using update instead"
+                "upload can only be used to upload a brand new experiment, try using `.update` instead"
             )
 
         submit_response, submit_data = self.__upload(user, category, image_path, warning_status)
 
-        submit_data["Summary"]["Image"] += 1
+        if image_path is not None:
+            submit_data["Summary"]["Image"] += 1
+
         user.confirm_experiment(
             submit_response["Data"]["Summary"]["ID"], {
                 Category.Experiment.value: Category.Experiment,
@@ -761,12 +764,14 @@ class Experiment:
         '''
         if self.PlSav["Summary"]["ID"] is None:
             raise Exception(
-                "update can only be used to upload an exist experiment, try using upload instead"
+                "update can only be used to upload an exist experiment, try using `.upload` instead"
             )
 
         submit_response, submit_data = self.__upload(user, None, image_path, warning_status)
 
-        submit_data["Summary"]["Image"] += 1
+        if image_path is not None:
+            submit_data["Summary"]["Image"] += 1
+
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/SubmitExperiment",
             data=gzip.compress(json.dumps(submit_data).encode("utf-8")),
@@ -872,7 +877,7 @@ class Experiment:
         res: str = f"from physicsLab import *\nexp = Experiment('{sav_name}')\n"
 
         for a_element in self.Elements:
-            res += f"e{a_element.get_Index()} = {str(a_element)}\n"
+            res += f"e{a_element.get_index()} = {str(a_element)}\n"
         for a_wire in self.Wires:
             res += str(a_wire) + '\n'
         res += "\nexp.write()"

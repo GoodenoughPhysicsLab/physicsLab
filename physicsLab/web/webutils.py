@@ -3,6 +3,8 @@ import copy
 import time
 
 from . import api
+from physicsLab import errors
+from physicsLab.enums import Category
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from physicsLab.typehint import Optional, Callable, numType
 
@@ -53,7 +55,8 @@ def get_banned_messages(start_time: numType,
     if not isinstance(user, (api.User, type(None))) or \
             not isinstance(start_time, (int, float)) or \
             not isinstance(end_time, (int, float, type(None))) or \
-            not isinstance(user_id, (str, type(None))):
+            not isinstance(user_id, (str, type(None))) or \
+            banned_message_callback is not None and not callable(banned_message_callback):
         raise TypeError
 
     banned_messages = []
@@ -142,10 +145,12 @@ def get_warned_messages(start_time: numType,
     if not isinstance(user, api.User) or \
             not isinstance(start_time, (int, float)) or \
             not isinstance(end_time, (int, float, type(None))) or \
-            not isinstance(user_id, str):
+            not isinstance(user_id, str) or \
+            warned_message_callback is not None and not callable(warned_message_callback) or \
+            maybe_warned_message_callback is not None and not callable(maybe_warned_message_callback):
         raise TypeError
     if user.is_anonymous:
-        raise ValueError("user must be anonymous")
+        raise PermissionError("user must be anonymous")
 
     TAKE_MESSAGE_AMOUNT = 20
     warned_messages = []
@@ -171,7 +176,7 @@ class CommentsIter:
                 category not in ("User", "Experiment", "Discussion"):
             raise TypeError
         if user.is_anonymous:
-            raise ValueError("user must be anonymous")
+            raise PermissionError("user must be anonymous")
 
         self.user = user
         self.id = id
@@ -194,29 +199,49 @@ class CommentsIter:
 
 def get_avatars(id: str,
                 category: str,
-                size_category: str,
+                size_category: str = "full",
                 user: Optional[api.User] = None,
-                ) -> list:
+                ):
+        ''' 获取一位用户的头像
+            @param id: 用户id
+            @param category_avatar: 只能为 "Experiment" 或 "Discussion" 或 "User"
+            @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
+            @param user: 查询者, None为匿名用户
+            @return: 头像列表
+
+        '''
         if not isinstance(id, str) or \
                 not isinstance(category, str) or \
                 not isinstance(size_category, str) or \
                 not isinstance(user, (api.User, type(None))):
             raise TypeError
+        if category not in ("User", "Experiment", "Discussion") or \
+                size_category not in ("small.round", "thumbnail", "full"):
+            raise ValueError
 
         if user is None:
             user = api.User()
 
-        res: list = []
+        if category == "User":
+            max_img_counter = user.get_user(id)["Data"]["User"]["Avatar"]
+            category = "users"
+        elif category == "Experiment":
+            max_img_counter = user.get_summary(id, Category.Experiment)["Data"]["Image"]
+            category = "experiments"
+        elif category == "Discussion":
+            max_img_counter = user.get_summary(id, Category.Discussion)["Data"]["Image"]
+            category = "experiments"
+        else:
+            raise errors.InternalError
 
         with ThreadPoolExecutor(max_workers=150) as executor:
             tasks = [
-                executor.submit(api.get_avatars, id, i + 1, category, size_category)
-                for i in range(user.get_user(id)["Data"]["User"]["Avatar"])
+                executor.submit(api.get_avatar, id, i, category, size_category)
+                for i in range(max_img_counter + 1)
             ]
 
             for task in as_completed(tasks):
                 try:
-                    res.append(task.result())
+                    yield task.result()
                 except IndexError:
                     pass
-        return res

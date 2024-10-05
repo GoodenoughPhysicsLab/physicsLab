@@ -53,7 +53,7 @@ Circuit = {
         "Category": None,
         "Subject": "",
         "LocalizedSubject": None,
-        "Image": -1,
+        "Image": 0,
         "ImageRegion": 0,
         "User": {
             "ID": None, # 用户ID

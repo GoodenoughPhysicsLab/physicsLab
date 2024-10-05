@@ -2,7 +2,7 @@
 import os
 import requests
 
-from typing import Optional, List, TypedDict, Dict, Union
+from typing import Optional, List, TypedDict
 
 from physicsLab import plAR
 from physicsLab import errors
@@ -35,7 +35,7 @@ class _login_res(TypedDict):
     AuthCode: str
     Data: dict
 
-def get_avatars(id: str, index: int, category: str, size_category: str) -> bytes:
+def get_avatar(id: str, index: int, category: str, size_category: str) -> bytes:
     ''' 获取头像/实验封面
         @param id: 用户id或实验id
         @param index: 历史图片的索引
@@ -74,13 +74,14 @@ class User:
                  token: Optional[str] = None,
                  auth_code: Optional[str] = None,
                  ) -> None:
-        if username is not None and not isinstance(username, str) or \
-                passward is not None and not isinstance(passward, str) or \
-                token is not None and not isinstance(token, str) or \
-                auth_code is not None and not isinstance(auth_code, str):
+        if not isinstance(username, (str, type(None))) or \
+                not isinstance(passward, (str, type(None))) or \
+                not isinstance(token, (str, type(None))) or \
+                not isinstance(auth_code, (str, type(None))):
             raise TypeError
 
-        if token is not None:
+        if token is not None and auth_code is not None:
+            # 只有登录一定会返回auth_code, 其他api返回的AuthCode可能是无效的None
             self.token = token
             self.auth_code = auth_code
 
@@ -127,13 +128,15 @@ class User:
 
             通过返回字典的Token与AuthCode实现登陆
         '''
+        assert isinstance(username, (str, type(None))) and isinstance(passward, (str, type(None)))
+
         version = plAR.get_plAR_version()
         if version is not None:
             version = int(version.replace(".", ""))
         else:
             version = 2411
 
-        headers: Dict[str, Union[str, None]] = {
+        headers = {
             "x-API-Version": str(version),
             "Accept": "application/json",
             "Content-Type": "application/json",
