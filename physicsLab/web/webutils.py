@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import copy
 import time
+import urllib3
 
 from . import api
 from physicsLab import errors
@@ -241,7 +242,11 @@ def get_avatars(search_id: str,
             for task in as_completed(tasks):
                 try:
                     yield task.result()
-                except IndexError:
+                except (IndexError, TimeoutError,
+                        urllib3.exceptions.NewConnectionError,
+                        urllib3.exceptions.MaxRetryError,
+                        urllib3.exceptions.ConnectionError,
+                        ):
                     pass
 
 class Bot:
@@ -292,18 +297,18 @@ class Bot:
             self.start_index = comments[0]['ID'] if len(comments) != 0 else ""
 
     def run(self,
+            process_callback: Optional[Callable],
             catch_callback: Optional[Callable] = None,
-            process_callback: Optional[Callable] = None,
             reply_callback: Optional[Callable] = None,
             finish_callback: Optional[Callable] = None,
             ) -> None:
-        ''' @param catched: 当捕获到新消息时调用的函数
-            @param process_fn: 处理函数，用于处理捕获到的消息
-            @param replyed: 当回复消息时调用的函数
-            @param finnished: 当所有消息处理完成时调用的函数
+        ''' @param process_callback: 处理函数，用于处理捕获到的消息
+            @param catch_callbakc: 当捕获到新消息时调用的函数
+            @param reply_callback: 当回复消息时调用的函数
+            @param finnish_callback: 当所有消息处理完成时调用的函数
         '''
-        if catch_callback is not None and not callable(catch_callback) or \
-                process_callback is not None and not callable(process_callback) or \
+        if not callable(process_callback) or \
+                catch_callback is not None and not callable(catch_callback) or \
                 reply_callback is not None and not callable(reply_callback) or \
                 finish_callback is not None and not callable(finish_callback):
             raise TypeError
@@ -327,10 +332,9 @@ class Bot:
             if catch_callback is not None:
                 catch_callback(comment)
             pending.add(comment['ID'])
-            if process_callback is not None:
-                reply = process_callback(self, comment)
-                if reply == "":
-                    continue
+            reply = process_callback(self, comment)
+            if reply == "":
+                continue
 
             msg = f"回复@{comment['Nickname']}: {reply}"
             self.bind_user.post_comment(self.target_id, msg, self.target_type)
