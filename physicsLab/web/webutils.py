@@ -247,41 +247,42 @@ def get_avatars(search_id: str,
 class Bot:
     def __init__(self,
                 bind_user: api.User,
+                target_id: str,
+                target_type: str,
+                is_ignore_reply_to_others: bool = True,
+                is_read_history: bool = True,
+                is_reply_required: bool = True
                 ) -> None:
         ''' @param bind_user: 机器人要绑定的用户账号
+            @param target_id: 目标id
+            @param target_type: 目标类型, 只能为 "User" 或 "Experiment" 或 "Discussion"
+            @param is_ignore_reply_to_others: 如果出现回复@{非Bot的用户}，则忽略
+            @param is_read_history: 捕获Bot启动前的消息 (最多20条)
+            @param is_reply_required: 只捕获回复@{Bot}的消息
         '''
-        if not isinstance(bind_user, api.User):
+        if not isinstance(bind_user, api.User) or \
+                not isinstance(target_id, str) or \
+                not isinstance(target_type, str) or \
+                not isinstance(is_ignore_reply_to_others, bool) or \
+                not isinstance(is_read_history, bool) or \
+                not isinstance(is_reply_required, bool):
             raise TypeError
+        if target_type not in ("User", "Experiment", "Discussion"):
+            raise ValueError
         if bind_user.is_anonymous:
             raise PermissionError("user must be anonymous")
 
         # 生命周期 捕获－处理－回复－记录[－完成]
         self.bind_user = bind_user
-        self.reply_config = {
-            "ignoreReplyToOters": True, # 如果出现回复@{非Bot的用户}，则忽略
-            "readHistory": True, # 捕获Bot启动前的消息（最多20条）
-            "replyRequired": True, # 只捕获回复@{Bot}的消息
-        }
+        self.target_id = target_id
+        self.target_type = target_type
+        self.is_ignore_reply_to_others = is_ignore_reply_to_others
+        self.is_reply_required = is_reply_required
 
-    ''' 初始化
-
-        @param ID: (str) 序列号
-        @param type: (str) Discusion 或 Experiment
-        @param reply_config: (dict, 可选) 回复配置，包含不同的选项来控制机器人行为。
-            - ignoreReplyToOters: (bool) 是否忽略对其他用户的回复。
-            - readHistory: (bool) 是否读取历史消息。
-            - replyRequired: (bool) 是否需要回复用户的消息。
-    '''
-    def setConfig(self, ID: str, type: str, reply_config: Optional[dict] = None) -> None:
         self.bot_id = self.bind_user.user_id
-        self.target_id = ID
-        self.target_type = type
-
-        if reply_config is not None:
-            self.reply_config.update(reply_config)
 
         comments = self.bind_user.get_comments(self.target_id, self.target_type, 20)["Data"]["Comments"]
-        if self.reply_config['readHistory']:
+        if is_read_history:
             index = ""
             for comment in comments[::-1]:
                 if comment['UserID'] == self.bot_id:
@@ -318,12 +319,11 @@ class Bot:
                 continue
             if comment['ID'] in pending or comment['ID'] in finish:
                 continue
-            if ("回复<" in comment['Content'] and
-                self.reply_config['ignoreReplyToOters'] and
-                self.bot_id not in comment['Content']):
+            if "回复<" in comment['Content'] \
+                and self.is_ignore_reply_to_others \
+                and self.bot_id not in comment['Content']:
                 continue
-            if (self.bot_id not in comment['Content'] and
-                self.reply_config['replyRequired']):
+            if self.bot_id not in comment['Content'] and self.is_reply_required:
                 continue
 
             caught(comment)
