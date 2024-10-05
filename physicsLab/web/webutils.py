@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import copy
 import time
+import urllib3
 
 from . import api
 from physicsLab import errors
@@ -241,5 +242,106 @@ def get_avatars(search_id: str,
             for task in as_completed(tasks):
                 try:
                     yield task.result()
-                except IndexError:
+                except (IndexError, TimeoutError,
+                        urllib3.exceptions.NewConnectionError,
+                        urllib3.exceptions.MaxRetryError,
+                        urllib3.exceptions.ConnectionError,
+                        ):
                     pass
+
+class Bot:
+    def __init__(self,
+                bind_user: api.User,
+                target_id: str,
+                target_type: str,
+                is_ignore_reply_to_others: bool = True,
+                is_read_history: bool = True,
+                is_reply_required: bool = True
+                ) -> None:
+        ''' @param bind_user: 机器人要绑定的用户账号
+            @param target_id: 目标id
+            @param target_type: 目标类型, 只能为 "User" 或 "Experiment" 或 "Discussion"
+            @param is_ignore_reply_to_others: 如果出现回复@{非Bot的用户}，则忽略
+            @param is_read_history: 捕获Bot启动前的消息 (最多20条)
+            @param is_reply_required: 只捕获回复@{Bot}的消息
+        '''
+        if not isinstance(bind_user, api.User) or \
+                not isinstance(target_id, str) or \
+                not isinstance(target_type, str) or \
+                not isinstance(is_ignore_reply_to_others, bool) or \
+                not isinstance(is_read_history, bool) or \
+                not isinstance(is_reply_required, bool):
+            raise TypeError
+        if target_type not in ("User", "Experiment", "Discussion"):
+            raise ValueError
+        if bind_user.is_anonymous:
+            raise PermissionError("user must be anonymous")
+
+        # 生命周期 捕获－处理－回复－记录[－完成]
+        self.bind_user = bind_user
+        self.target_id = target_id
+        self.target_type = target_type
+        self.is_ignore_reply_to_others = is_ignore_reply_to_others
+        self.is_reply_required = is_reply_required
+
+        self.bot_id = self.bind_user.user_id
+
+        comments = self.bind_user.get_comments(target_id, target_type, 20)["Data"]["Comments"]
+        if is_read_history:
+            index = ""
+            for comment in comments[::-1]:
+                if comment['UserID'] == self.bot_id:
+                    index = comment['ID']
+            self.start_index = index
+        else:
+            self.start_index = comments[0]['ID'] if len(comments) != 0 else ""
+
+    def run(self,
+            process_callback: Optional[Callable],
+            catch_callback: Optional[Callable] = None,
+            reply_callback: Optional[Callable] = None,
+            finish_callback: Optional[Callable] = None,
+            ) -> None:
+        ''' @param process_callback: 处理函数，用于处理捕获到的消息
+            @param catch_callbakc: 当捕获到新消息时调用的函数
+            @param reply_callback: 当回复消息时调用的函数
+            @param finnish_callback: 当所有消息处理完成时调用的函数
+        '''
+        if not callable(process_callback) or \
+                catch_callback is not None and not callable(catch_callback) or \
+                reply_callback is not None and not callable(reply_callback) or \
+                finish_callback is not None and not callable(finish_callback):
+            raise TypeError
+
+        pending = set()
+        finish = set()
+
+        for comment in self.bind_user.get_comments(self.target_id, self.target_type, 20)['Data']['Comments']:
+            if comment['ID'] == self.start_index:
+                break
+            if comment['UserID'] == self.bot_id:
+                continue
+            if comment['ID'] in pending or comment['ID'] in finish:
+                continue
+            if not comment['Content'].startswith(f"回复<user={self.bot_id}") \
+                    and self.is_ignore_reply_to_others:
+                continue
+            if self.bot_id not in comment['Content'] and self.is_reply_required:
+                continue
+
+            if catch_callback is not None:
+                catch_callback(comment)
+            pending.add(comment['ID'])
+            reply = process_callback(self, comment)
+            if reply == "":
+                continue
+
+            msg = f"回复@{comment['Nickname']}: {reply}"
+            self.bind_user.post_comment(self.target_id, msg, self.target_type)
+            finish.add(comment['ID'])
+            pending.remove(comment['ID'])
+            if len(pending) == 0:
+                if finish_callback is not None:
+                    finish_callback(finish)
+            if reply_callback is not None:
+                reply_callback({**{"msg": msg}, **comment})
