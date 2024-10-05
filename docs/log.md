@@ -157,3 +157,4 @@
 
 # 1.4.17
 1.  新增`web.get_avatar`, `get_avatars`
+2.  `Experiment.write`新增`no_print_info`参数

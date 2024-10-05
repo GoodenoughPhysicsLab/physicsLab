@@ -461,6 +461,7 @@ class Experiment:
               extra_filepath: Optional[str] = None,
               ln: bool = False,
               no_pop: bool = False,
+              no_print_info: bool = False,
     ) -> Self:
         ''' 以物实存档的格式导出实验
             @param extra_filepath: 自定义保存存档的路径, 但仍会在 SAV_PATH_ROOT 下保存存档
@@ -484,13 +485,21 @@ class Experiment:
             stringJson = stringJson.replace("色导线\\\"}]}", "色导线\\\"}\n    ]}")
             return stringJson
 
+        if not isinstance(extra_filepath, (str, type(None))) or \
+                not isinstance(ln, bool) or \
+                not isinstance(no_pop, bool) or \
+                not isinstance(no_print_info, bool):
+            raise TypeError
+
         if self.is_open_or_crt is not True:
             raise errors.ExperimentError("write before open or crt")
 
         if self.is_opened:
             status: str = "update"
-        else: # self.is_crted
+        elif self.is_crted:
             status: str = "create"
+        else:
+            raise errors.InternalError
 
         if not no_pop:
             self.is_opened = False
@@ -515,21 +524,22 @@ class Experiment:
             with open(extra_filepath, "w", encoding="utf-8") as f:
                 f.write(context)
 
-        if self.experiment_type == ExperimentType.Circuit:
-            _colorUtils.color_print(
-                f"Successfully {status} experiment \"{self.PlSav['InternalName']}\"! "
-                f"{self.Elements.__len__()} elements, {self.Wires.__len__()} wires.",
-                color=_colorUtils.COLOR.GREEN
-            )
-        elif self.experiment_type == ExperimentType.Celestial \
-                or self.experiment_type == ExperimentType.Electromagnetism:
-            _colorUtils.color_print(
-                f"Successfully {status} experiment \"{self.PlSav['InternalName']}\"! "
-                f"{self.Elements.__len__()} elements.",
-                color=_colorUtils.COLOR.GREEN
-            )
-        else:
-            raise errors.InternalError
+        if not no_print_info:
+            if self.experiment_type == ExperimentType.Circuit:
+                _colorUtils.color_print(
+                    f"Successfully {status} experiment \"{self.PlSav['InternalName']}\"! "
+                    f"{self.Elements.__len__()} elements, {self.Wires.__len__()} wires.",
+                    color=_colorUtils.COLOR.GREEN
+                )
+            elif self.experiment_type == ExperimentType.Celestial \
+                    or self.experiment_type == ExperimentType.Electromagnetism:
+                _colorUtils.color_print(
+                    f"Successfully {status} experiment \"{self.PlSav['InternalName']}\"! "
+                    f"{self.Elements.__len__()} elements.",
+                    color=_colorUtils.COLOR.GREEN
+                )
+            else:
+                raise errors.InternalError
 
         return self
 
