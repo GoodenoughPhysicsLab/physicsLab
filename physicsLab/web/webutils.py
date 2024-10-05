@@ -197,20 +197,18 @@ class CommentsIter:
             for comment in comments:
                 yield comment
 
-def get_avatars(id: str,
+def get_avatars(search_id: str,
                 category: str,
                 size_category: str = "full",
                 user: Optional[api.User] = None,
                 ):
         ''' 获取一位用户的头像
-            @param id: 用户id
-            @param category_avatar: 只能为 "Experiment" 或 "Discussion" 或 "User"
+            @param search_id: 用户id
+            @param category: 只能为 "Experiment" 或 "Discussion" 或 "User"
             @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
             @param user: 查询者, None为匿名用户
-            @return: 头像列表
-
         '''
-        if not isinstance(id, str) or \
+        if not isinstance(search_id, str) or \
                 not isinstance(category, str) or \
                 not isinstance(size_category, str) or \
                 not isinstance(user, (api.User, type(None))):
@@ -223,20 +221,20 @@ def get_avatars(id: str,
             user = api.User()
 
         if category == "User":
-            max_img_counter = user.get_user(id)["Data"]["User"]["Avatar"]
+            max_img_counter = user.get_user(search_id)["Data"]["User"]["Avatar"]
             category = "users"
         elif category == "Experiment":
-            max_img_counter = user.get_summary(id, Category.Experiment)["Data"]["Image"]
+            max_img_counter = user.get_summary(search_id, Category.Experiment)["Data"]["Image"]
             category = "experiments"
         elif category == "Discussion":
-            max_img_counter = user.get_summary(id, Category.Discussion)["Data"]["Image"]
+            max_img_counter = user.get_summary(search_id, Category.Discussion)["Data"]["Image"]
             category = "experiments"
         else:
             raise errors.InternalError
 
         with ThreadPoolExecutor(max_workers=150) as executor:
             tasks = [
-                executor.submit(api.get_avatar, id, i, category, size_category)
+                executor.submit(api.get_avatar, search_id, i, category, size_category)
                 for i in range(max_img_counter + 1)
             ]
 
