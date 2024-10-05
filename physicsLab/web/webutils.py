@@ -281,7 +281,7 @@ class Bot:
 
         self.bot_id = self.bind_user.user_id
 
-        comments = self.bind_user.get_comments(self.target_id, self.target_type, 20)["Data"]["Comments"]
+        comments = self.bind_user.get_comments(target_id, target_type, 20)["Data"]["Comments"]
         if is_read_history:
             index = ""
             for comment in comments[::-1]:
@@ -292,50 +292,52 @@ class Bot:
             self.start_index = comments[0]['ID'] if len(comments) != 0 else ""
 
     def run(self,
-            caught: Callable,
-            process_fn: Callable,
-            replied: Callable,
-            finished: Callable,
+            catch_callback: Optional[Callable] = None,
+            process_callback: Optional[Callable] = None,
+            reply_callback: Optional[Callable] = None,
+            finish_callback: Optional[Callable] = None,
             ) -> None:
         ''' @param catched: 当捕获到新消息时调用的函数
             @param process_fn: 处理函数，用于处理捕获到的消息
             @param replyed: 当回复消息时调用的函数
             @param finnished: 当所有消息处理完成时调用的函数
         '''
-        if not callable(caught) or \
-                not callable(process_fn) or \
-                not callable(replied) or \
-                not callable(finished):
+        if catch_callback is not None and not callable(catch_callback) or \
+                process_callback is not None and not callable(process_callback) or \
+                reply_callback is not None and not callable(reply_callback) or \
+                finish_callback is not None and not callable(finish_callback):
             raise TypeError
 
         pending = set()
         finish = set()
 
-        re = self.bind_user.get_comments(self.target_id, self.target_type, 20)
-        for comment in re['Data']['Comments']:
+        for comment in self.bind_user.get_comments(self.target_id, self.target_type, 20)['Data']['Comments']:
             if comment['ID'] == self.start_index:
                 break
             if comment['UserID'] == self.bot_id:
                 continue
             if comment['ID'] in pending or comment['ID'] in finish:
                 continue
-            if "回复<" in comment['Content'] \
-                and self.is_ignore_reply_to_others \
-                and self.bot_id not in comment['Content']:
+            if not comment['Content'].startswith(f"回复<user={self.bot_id}") \
+                    and self.is_ignore_reply_to_others:
                 continue
             if self.bot_id not in comment['Content'] and self.is_reply_required:
                 continue
 
-            caught(comment)
+            if catch_callback is not None:
+                catch_callback(comment)
             pending.add(comment['ID'])
-            reply = process_fn(comment, self)
-            if reply == "":
-                continue
+            if process_callback is not None:
+                reply = process_callback(self, comment)
+                if reply == "":
+                    continue
 
             msg = f"回复@{comment['Nickname']}: {reply}"
             self.bind_user.post_comment(self.target_id, msg, self.target_type)
             finish.add(comment['ID'])
             pending.remove(comment['ID'])
-            if not pending:
-                finished(finish)
-            replied({**{"msg": msg}, **comment})
+            if len(pending) == 0:
+                if finish_callback is not None:
+                    finish_callback(finish)
+            if reply_callback is not None:
+                reply_callback({**{"msg": msg}, **comment})
