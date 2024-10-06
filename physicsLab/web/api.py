@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import re
 import requests
 
 from typing import Optional, List, TypedDict
@@ -295,7 +296,7 @@ class User:
             @param target_id: 目标用户/实验的ID
             @param content: 评论内容
             @param target_type: User, Discussion, Experiment
-            @param reply_id: 被回复的user的ID
+            @param reply_id: 被回复的user的ID (可被自动推导)
         '''
         if not isinstance(target_id, str) or \
                 not isinstance(content, str) or \
@@ -304,6 +305,11 @@ class User:
             raise TypeError
         if target_type not in ("User", "Discussion", "Experiment"):
             raise ValueError
+
+        # TODO: 多语言支持
+        _nickname = re.match(r"回复@.*:", content)
+        if _nickname is not None and reply_id == "":
+            reply_id = self.get_user(name=_nickname.group(0)[3:-1])["Data"]["User"]["ID"]
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Messages/PostComment",
