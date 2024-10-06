@@ -195,14 +195,14 @@ class User:
             @param take: 搜索数量
         '''
         if not isinstance(category, Category) or \
-            not isinstance(tags, (list, type(None))) or \
-            tags is not None and not all(isinstance(tag, Tag) for tag in tags) or \
-            not isinstance(exclude_tags, (list, type(None))) or \
-            exclude_tags is not None and not all(isinstance(tag, Tag) for tag in exclude_tags) or \
-            not isinstance(languages, (list, type(None))) or \
-            languages is not None and not all(isinstance(language, str) for language in languages) or \
-            not isinstance(take, int) or \
-            not isinstance(skip, int):
+                not isinstance(tags, (list, type(None))) or \
+                tags is not None and not all(isinstance(tag, Tag) for tag in tags) or \
+                not isinstance(exclude_tags, (list, type(None))) or \
+                exclude_tags is not None and not all(isinstance(tag, Tag) for tag in exclude_tags) or \
+                not isinstance(languages, (list, type(None))) or \
+                languages is not None and not all(isinstance(language, str) for language in languages) or \
+                not isinstance(take, int) or \
+                not isinstance(skip, int):
             raise TypeError
 
         if languages is None:
@@ -269,8 +269,8 @@ class User:
         ''' 确认发布实验
         '''
         if not isinstance(summary_id, str) or \
-            not isinstance(category, Category) or \
-            not isinstance(image_counter, int):
+                not isinstance(category, Category) or \
+                not isinstance(image_counter, int):
             raise TypeError
 
         response = requests.post(
@@ -337,10 +337,10 @@ class User:
             @param skip: 跳过的留言数量, 为(unix时间戳 * 1000)
         '''
         if not isinstance(self.token, str) or \
-            not isinstance(self.auth_code, str) or \
-            not isinstance(target_type, str) or \
-            not isinstance(take, int) or \
-            not isinstance(skip, int):
+                not isinstance(self.auth_code, str) or \
+                not isinstance(target_type, str) or \
+                not isinstance(take, int) or \
+                not isinstance(skip, int):
             raise TypeError
         if target_type not in ("User", "Discussion", "Experiment") or \
             take <= 0 or skip < 0:
@@ -459,8 +459,8 @@ class User:
             @param status: True: 收藏, False: 取消收藏
         '''
         if not isinstance(content_id, str) or \
-            not isinstance(category, Category) or \
-            not isinstance(status, bool):
+                not isinstance(category, Category) or \
+                not isinstance(status, bool):
             raise TypeError
 
         response = requests.post(
@@ -522,9 +522,9 @@ class User:
             @param take: 取take条消息
         '''
         if category_id not in (0, 1, 2, 3, 4, 5) or \
-            not isinstance(skip, int) or \
-            not isinstance(take, int) or \
-            not isinstance(no_templates, bool):
+                not isinstance(skip, int) or \
+                not isinstance(take, int) or \
+                not isinstance(no_templates, bool):
             raise TypeError
 
         if take <= 0 or skip < 0:
@@ -574,6 +574,43 @@ class User:
                 "Category": category.value,
                 "Skip": skip,
                 "Take": take,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            }
+        )
+
+        return _check_response(response)
+
+    def get_relations(self,
+                      user_id: str,
+                      display_type: str = "Follower",
+                      skip: int = 0,
+                      take: int = 20,
+                      ) -> dict:
+        if display_type not in ("Follower, Following") or \
+                not isinstance(user_id, str) or \
+                not isinstance(skip, int) or \
+                not isinstance(take, int):
+            raise TypeError
+
+        if display_type == "Follower":
+            display_type_ = 0
+        elif display_type == "Following":
+            display_type_ = 1
+        else:
+            raise errors.InternalError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com:443/Users/GetRelations",
+            json={
+                "UserID": user_id,
+                "DisplayType": display_type_,
+                "Skip": skip,
+                "Take": take,
+                "Query":"",
             },
             headers={
                 "Content-Type": "application/json",
