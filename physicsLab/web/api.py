@@ -416,17 +416,24 @@ class User:
 
         return _check_response(response)
 
-    def get_user(self, user_id: str) -> dict:
+    def get_user(self,
+                 user_id: Optional[str] = None,
+                 name: Optional[str] = None,
+                 ) -> dict:
         ''' 获取用户信息
             @param user_id: 用户ID
+            @param name: 用户名
         '''
-        if not isinstance(user_id, str):
+        if not isinstance(user_id, (str, type(None))) or \
+                    not isinstance(name, (str, type(None))) or \
+                    user_id is None and name is None:
             raise TypeError
 
         response = requests.post(
-            "https://physics-api-cn.turtlesim.com/Users/GetUser",
+            "https://physics-api-cn.turtlesim.com:443/Users/GetUser",
             json={
                 "ID": user_id,
+                "Name": name,
             },
             headers={
                 "Content-Type": "application/json",
@@ -590,6 +597,11 @@ class User:
                       skip: int = 0,
                       take: int = 20,
                       ) -> dict:
+        ''' 获取用户的关注/粉丝列表
+            @param display_type: 只能为 Follower: 粉丝, Following: 关注
+            @param skip: 传入一个时间戳, 跳过skip条消息
+            @param take: 取take条消息
+        '''
         if display_type not in ("Follower, Following") or \
                 not isinstance(user_id, str) or \
                 not isinstance(skip, int) or \

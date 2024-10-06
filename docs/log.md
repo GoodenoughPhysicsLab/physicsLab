@@ -158,3 +158,6 @@
 # 1.4.17
 1.  新增`web.get_avatar`, `get_avatars`
 2.  `Experiment.write`新增`no_print_info`参数
+3.  新增`User.get_relations`与`User.get_user`新增`name`参数
+
+# 1.4.18
