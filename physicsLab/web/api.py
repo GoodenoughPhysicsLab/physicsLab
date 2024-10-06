@@ -299,7 +299,7 @@ class User:
         '''
         if not isinstance(target_id, str) or \
                 not isinstance(content, str) or \
-                not isinstance(target_id, str) or \
+                not isinstance(target_type, str) or \
                 not isinstance(reply_id, str):
             raise TypeError
         if target_type not in ("User", "Discussion", "Experiment"):
