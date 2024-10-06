@@ -290,11 +290,12 @@ class User:
 
         return _check_response(response)
 
-    def post_comment(self, target_id: str, content: str, target_type: str) -> dict:
+    def post_comment(self, target_id: str, content: str, target_type: str, reply_id: Optional[str] = "") -> dict:
         ''' 发表评论
             @param target_id: 目标用户/实验的ID
             @param content: 评论内容
             @param target_type: User, Discussion, Experiment
+            @param reply_id: 被回复的user的ID
         '''
         if not isinstance(self.token, str) or \
             not isinstance(self.auth_code, str) or \
@@ -309,7 +310,7 @@ class User:
                 "TargetID": target_id,
                 "TargetType": target_type,
                 "Language": "Chinese",
-                "ReplyID": "",
+                "ReplyID": reply_id,
                 "Content": content,
                 "Special": None
             },
