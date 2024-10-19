@@ -198,6 +198,77 @@ class CommentsIter:
             for comment in comments:
                 yield comment
 
+class RelationsIter:
+    class _relate_user:
+        def __init__(self, data: dict) -> None:
+            self.data = data
+
+        def __eq__(self, other):
+            assert isinstance(other, RelationsIter._relate_user)
+
+            return self.data["User"]["ID"] == other.data["User"]["ID"]
+
+        def __hash__(self) -> int:
+            return hash(self.data["User"]["ID"])
+
+    def __init__(self, user: api.User, user_id: str, display_type: str = "Follower") -> None:
+        self.user = user
+        self.user_id = user_id
+        self.display_type = display_type
+
+    def wrapper(self,
+                user_id: str,
+                display_type: str = "Follower",
+                skip: int = 0,
+                take: int = 20,
+                ):
+        return skip, \
+            self.user.get_relations(user_id, display_type, skip=skip, take=take)["Data"]["$values"]
+
+    def __iter__(self):
+        if self.display_type == "Follower":
+            amount = self.user.get_user(self.user_id)['Data']['Statistic']['FollowerCount']
+        elif self.display_type == "Following":
+            amount = self.user.get_user(self.user_id)['Data']['Statistic']['FollowingCount']
+        else:
+            raise errors.InternalError
+
+        cache = set()
+        try_again = None
+        with ThreadPoolExecutor(max_workers=150) as pool:
+            tasks = [
+                pool.submit(
+                    self.wrapper, self.user_id, self.display_type, skip=i, take=20
+                ) for i in range(0, amount + 1, 20)
+            ]
+
+            for task in as_completed(tasks):
+                skip, results = task.result()
+
+                if len(results) == 0:
+                    if try_again is None or skip < try_again:
+                        try_again = skip
+                    continue
+
+                for relation in results:
+                    cache.add(self._relate_user(relation))
+                    yield relation
+
+            if try_again is not None:
+                tasks2 = [
+                    pool.submit(
+                        self.user.get_relations, self.user_id, self.display_type, skip=i, take=20
+                    ) for i in range(try_again - 20, try_again)
+                ]
+                for task2 in as_completed(tasks2):
+                    results2 = task2.result()["Data"]["$values"]
+
+                    for relation2 in results2:
+                        if self._relate_user(relation2) in cache:
+                            continue
+                        cache.add(self._relate_user(relation2))
+                        yield relation2
+
 def get_avatars(search_id: str,
                 category: str,
                 size_category: str = "full",

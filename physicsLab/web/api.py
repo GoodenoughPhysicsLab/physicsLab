@@ -602,11 +602,13 @@ class User:
                       display_type: str = "Follower",
                       skip: int = 0,
                       take: int = 20,
+                      query: str = "",
                       ) -> dict:
         ''' 获取用户的关注/粉丝列表
             @param display_type: 只能为 Follower: 粉丝, Following: 关注
-            @param skip: 传入一个时间戳, 跳过skip条消息
-            @param take: 取take条消息
+            @param skip: 跳过skip个用户
+            @param take: 取take个用户
+            @param query: 为用户id或昵称
         '''
         if display_type not in ("Follower, Following") or \
                 not isinstance(user_id, str) or \
@@ -628,7 +630,7 @@ class User:
                 "DisplayType": display_type_,
                 "Skip": skip,
                 "Take": take,
-                "Query":"",
+                "Query": query,
             },
             headers={
                 "Content-Type": "application/json",
