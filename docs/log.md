@@ -161,3 +161,6 @@
 3.  新增`User.get_relations`与`User.get_user`新增`name`参数
 
 # 1.4.18
+1.  新增`RelationsIter`
+
+# 1.4.19
