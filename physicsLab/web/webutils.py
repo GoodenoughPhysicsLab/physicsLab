@@ -258,7 +258,7 @@ class RelationsIter:
                 tasks2 = [
                     pool.submit(
                         self.user.get_relations, self.user_id, self.display_type, skip=i, take=20
-                    ) for i in range(try_again - 20, try_again)
+                    ) for i in range(max(0, try_again - 20), try_again)
                 ]
                 for task2 in as_completed(tasks2):
                     results2 = task2.result()["Data"]["$values"]
