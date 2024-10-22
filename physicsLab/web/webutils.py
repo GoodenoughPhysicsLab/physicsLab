@@ -10,6 +10,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from physicsLab.typehint import Optional, Callable, numType
 
 class BannedMsgIter:
+    ''' 获取一段时间的封禁信息 (可指定用户) '''
     def __init__(
             self,
             start_time: numType,
@@ -85,13 +86,12 @@ class BannedMsgIter:
             ):
         assert skip >= 0, "internal error, please bug report"
         assert end_time is not None, "internal error, please bug report"
+        assert banned_template is not None, "internal error, please bug report"
 
         TAKE_MESSAGES_AMOUNT = 20
         messages = user.get_messages(
             5, skip=skip * TAKE_MESSAGES_AMOUNT, take=TAKE_MESSAGES_AMOUNT,
         )["Data"]["Messages"]
-
-        assert banned_template is not None, "internal error, please bug report"
 
         res = []
         for message in messages:
@@ -105,79 +105,58 @@ class BannedMsgIter:
         return res
 
 
-def get_warned_messages(start_time: numType,
-                        user: api.User,
-                        user_id: str,
-                        end_time: Optional[numType] = None,
-                        warned_message_callback: Optional[Callable] = None,
-                        maybe_warned_message_callback: Optional[Callable] = None,
-                        ) -> list:
-    ''' 查询警告记录
-        @param user: 查询者
-        @param user_id: 被查询者的id, 但无法查询所有用户的警告记录
-        @param start_time: 开始时间
-        @param end_time: 结束时间, None为当前时间
-        @param banned_message_callback: 封禁记录回调函数
-        @return: 封禁记录列表
-    '''
-    def _fetch_warned_messages(user_id: str, skip: int) -> int:
-        assert end_time is not None, "internal error, please bug report"
+class WarnedMsgIter:
+    ''' 获取一段时间的指定用户的警告信息的迭代器 '''
+    def __init__(
+            self,
+            user: api.User,
+            user_id: str,
+            start_time: numType,
+            end_time: Optional[numType] = None,
+            maybe_warned_message_callback: Optional[Callable] = None,
+            ):
+        ''' 查询警告记录
+            @param user: 查询者
+            @param user_id: 被查询者的id, 但无法查询所有用户的警告记录
+            @param start_time: 开始时间
+            @param end_time: 结束时间, None为当前时间
+            @param banned_message_callback: 封禁记录回调函数
+            @return: 封禁记录列表
+        '''
+        if not isinstance(user, api.User) or \
+                not isinstance(user_id, str) or \
+                not isinstance(start_time, (int, float)) or \
+                not isinstance(end_time, (int, float, type(None))) or \
+                maybe_warned_message_callback is not None \
+                and not callable(maybe_warned_message_callback):
+            raise TypeError
+        if user.is_anonymous:
+            raise PermissionError("user must be anonymous")
 
-        nonlocal TAKE_MESSAGE_AMOUNT, is_fetching_end, warned_messages, \
-            warned_message_callback, maybe_warned_message_callback
+        if end_time is None:
+            end_time = time.time()
 
-        comments = user.get_comments(
-            user_id, "User", skip=skip, take=TAKE_MESSAGE_AMOUNT
-        )["Data"]["Comments"]
+        self.user = user
+        self.user_id = user_id
+        self.start_time = start_time
+        self.end_time = end_time
+        self.maybe_warned_message_callback = maybe_warned_message_callback
 
-        if len(comments) == 0:
-            is_fetching_end = True
-            return -1
+    def __iter__(self):
+        for comment in CommentsIter(self.user, self.user_id, "User"):
+            if comment["Timestamp"] < self.start_time * 1000:
+                return
 
-        for comment in comments:
-            if comment["Timestamp"] < start_time * 1000:
-                is_fetching_end = True
-                break
-
-            if start_time * 1000 <= comment["Timestamp"] <= end_time * 1000:
+            if self.start_time * 1000 <= comment["Timestamp"] <= self.end_time * 1000:
                 if comment["Flags"] is not None \
                         and "Locked" in comment["Flags"] \
-                        and "Reminder" in comment["Flags"] \
-                        and comment not in warned_messages:
-                    comment = copy.deepcopy(comment)
-                    warned_messages.append(comment)
-                    if warned_message_callback is not None:
-                        warned_message_callback(comment)
+                        and "Reminder" in comment["Flags"]:
+                    yield comment
                 elif "警告" in comment["Content"] \
-                        and comment["Verification"] in ("Volunteer", "Editor", "Emeritus", "Administrator"):
-                    if maybe_warned_message_callback is not None:
-                        maybe_warned_message_callback(comment)
-        return comments[-1]["Timestamp"]
-
-    if not isinstance(user, api.User) or \
-            not isinstance(start_time, (int, float)) or \
-            not isinstance(end_time, (int, float, type(None))) or \
-            not isinstance(user_id, str) or \
-            warned_message_callback is not None and not callable(warned_message_callback) or \
-            maybe_warned_message_callback is not None and not callable(maybe_warned_message_callback):
-        raise TypeError
-    if user.is_anonymous:
-        raise PermissionError("user must be anonymous")
-
-    TAKE_MESSAGE_AMOUNT = 20
-    warned_messages = []
-    is_fetching_end = False
-
-    if end_time is None:
-        end_time = time.time()
-
-    counter2 = 0
-    fetch_end_time = int(end_time * 1000)
-    while not is_fetching_end:
-        fetch_end_time = _fetch_warned_messages(user_id, fetch_end_time)
-        counter2 += 1
-
-    return warned_messages
+                        and comment["Verification"] in \
+                        ("Volunteer", "Editor", "Emeritus", "Administrator") \
+                        and self.maybe_warned_message_callback is not None:
+                    self.maybe_warned_message_callback(comment)
 
 class CommentsIter:
     ''' 获取评论的迭代器 '''
@@ -210,6 +189,7 @@ class CommentsIter:
                 yield comment
 
 class RelationsIter:
+    ''' 获取用户的关注/粉丝的迭代器 '''
     class _relate_user:
         def __init__(self, data: dict) -> None:
             self.data = data
@@ -281,6 +261,7 @@ class RelationsIter:
                         yield relation2
 
 class AvatarsIter:
+    ''' 获取头像的迭代器 '''
     def __init__(
             self,
             search_id: str,
@@ -342,6 +323,7 @@ class AvatarsIter:
                     pass
 
 class Bot:
+    ''' 由@故事里的人 贡献, 我也没用过() '''
     def __init__(self,
                 bind_user: api.User,
                 target_id: str,
