@@ -167,3 +167,4 @@
 1.  优化了`RelationsIter`
 
 # 1.4.20
+1.  重命名`get_avatars`为`AvatarsIter`, `get_banned_messages`为`BannedMsgIter` (不兼容更新)

@@ -9,27 +9,80 @@ from physicsLab.enums import Category
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from physicsLab.typehint import Optional, Callable, numType
 
-def get_banned_messages(start_time: numType,
-                        user: Optional[api.User] = None,
-                        user_id: Optional[str] = None,
-                        end_time: Optional[numType] = None,
-                        banned_message_callback: Optional[Callable] = None,
-                        ) -> list:
-    ''' 获取封禁记录
-        @param user: 查询者
-        @param user_id: 被查询者的id, None表示查询所有封禁记录
-        @param start_time: 开始时间
-        @param end_time: 结束时间, None为当前时间
-        @param banned_message_callback: 封禁记录回调函数
-        @return: 封禁记录列表
-    '''
-    def _fetch_banned_messages(user: api.User,
-                           start_time: numType,
-                           end_time: numType,
-                           user_id: Optional[str],
-                           skip: int,
-                           banned_template: dict,
-                           ) -> None:
+class BannedMsgIter:
+    def __init__(
+            self,
+            start_time: numType,
+            end_time: Optional[numType] = None,
+            user: Optional[api.User] = None,
+            user_id: Optional[str] = None,
+            ):
+        ''' 获取封禁记录
+            @param user: 查询者
+            @param user_id: 被查询者的id, None表示查询所有封禁记录
+            @param start_time: 开始时间
+            @param end_time: 结束时间, None为当前时间
+            @return: 封禁记录列表
+        '''
+
+        if not isinstance(user, (api.User, type(None))) or \
+                not isinstance(start_time, (int, float)) or \
+                not isinstance(end_time, (int, float, type(None))) or \
+                not isinstance(user_id, (str, type(None))):
+            raise TypeError
+
+        if end_time is None:
+            end_time = time.time()
+        if user is None:
+            user = api.User()
+
+        self.start_time = start_time
+        self.end_time = end_time
+        self.user = user
+        self.user_id = user_id
+
+    def __iter__(self):
+        self.is_fetching_end: bool = False
+
+        if self.start_time >= self.end_time:
+            raise ValueError("start_time >= end_time")
+
+        # fetch banned_template
+        banned_template = None
+        response = self.user.get_messages(5, take=1, no_templates=False)["Data"]
+
+        for template in response["Templates"]:
+            if template["Identifier"] == "User-Banned-Record":
+                banned_template = copy.deepcopy(template)
+                break
+        assert banned_template is not None, "internal error, please bug report"
+
+        # main
+        FETCH_AMOUNT = 100
+        counter: int = 0
+        while not self.is_fetching_end:
+            with ThreadPoolExecutor(max_workers=FETCH_AMOUNT + 50) as executor:
+                tasks = [executor.submit(
+                        self._fetch_banned_messages,
+                        self.user, self.start_time, self.end_time, self.user_id,
+                        i + counter * FETCH_AMOUNT, banned_template
+                    ) for i in range(FETCH_AMOUNT)
+                ]
+
+                for task in as_completed(tasks):
+                    for message in task.result():
+                        yield message
+            counter += 1
+
+    def _fetch_banned_messages(
+            self,
+            user: api.User,
+            start_time: numType,
+            end_time: numType,
+            user_id: Optional[str],
+            skip: int,
+            banned_template: dict,
+            ):
         assert skip >= 0, "internal error, please bug report"
         assert end_time is not None, "internal error, please bug report"
 
@@ -40,59 +93,17 @@ def get_banned_messages(start_time: numType,
 
         assert banned_template is not None, "internal error, please bug report"
 
-        nonlocal is_fetching_end, banned_messages, banned_message_callback
+        res = []
         for message in messages:
             if message["TimestampInitial"] < start_time * 1000:
-                is_fetching_end = True
+                self.is_fetching_end = True
                 break
             if start_time * 1000 <= message["TimestampInitial"] <= end_time * 1000:
                 if (user_id is None or user_id == message["Users"][0]) \
                         and message["TemplateID"] == banned_template["ID"]:
-                    message = copy.deepcopy(message)
-                    banned_messages.append(message)
-                    if banned_message_callback is not None:
-                        banned_message_callback(message)
+                    res.append(message)
+        return res
 
-    if not isinstance(user, (api.User, type(None))) or \
-            not isinstance(start_time, (int, float)) or \
-            not isinstance(end_time, (int, float, type(None))) or \
-            not isinstance(user_id, (str, type(None))) or \
-            banned_message_callback is not None and not callable(banned_message_callback):
-        raise TypeError
-
-    banned_messages = []
-    is_fetching_end: bool = False
-
-    if end_time is None:
-        end_time = time.time()
-    if user is None:
-        user = api.User()
-
-    if start_time >= end_time:
-        raise ValueError("start_time >= end_time")
-
-    # fetch_banned_template
-    banned_template = None
-    response = user.get_messages(5, take=1, no_templates=False)["Data"]
-
-    for template in response["Templates"]:
-        if template["Identifier"] == "User-Banned-Record":
-            banned_template = copy.deepcopy(template)
-            break
-    assert banned_template is not None, "internal error, please bug report"
-
-    # main
-    FETCH_AMOUNT = 100
-    counter: int = 0
-    while not is_fetching_end:
-        with ThreadPoolExecutor(max_workers=FETCH_AMOUNT + 50) as executor:
-             for i in range(FETCH_AMOUNT):
-                executor.submit(
-                    _fetch_banned_messages,
-                    user, start_time, end_time, user_id, i + counter * FETCH_AMOUNT, banned_template
-                )
-        counter += 1
-    return banned_messages
 
 def get_warned_messages(start_time: numType,
                         user: api.User,
@@ -269,11 +280,14 @@ class RelationsIter:
                         cache.add(self._relate_user(relation2))
                         yield relation2
 
-def get_avatars(search_id: str,
-                category: str,
-                size_category: str = "full",
-                user: Optional[api.User] = None,
-                ):
+class AvatarsIter:
+    def __init__(
+            self,
+            search_id: str,
+            category: str,
+            user: Optional[api.User] = None,
+            size_category: str = "full",
+            ):
         ''' 获取一位用户的头像
             @param search_id: 用户id
             @param category: 只能为 "Experiment" 或 "Discussion" 或 "User"
@@ -293,21 +307,28 @@ def get_avatars(search_id: str,
             user = api.User()
 
         if category == "User":
-            max_img_counter = user.get_user(search_id)["Data"]["User"]["Avatar"]
+            self.max_img_counter = user.get_user(search_id)["Data"]["User"]["Avatar"]
             category = "users"
         elif category == "Experiment":
-            max_img_counter = user.get_summary(search_id, Category.Experiment)["Data"]["Image"]
+            self.max_img_counter = user.get_summary(search_id, Category.Experiment)["Data"]["Image"]
             category = "experiments"
         elif category == "Discussion":
-            max_img_counter = user.get_summary(search_id, Category.Discussion)["Data"]["Image"]
+            self.max_img_counter = user.get_summary(search_id, Category.Discussion)["Data"]["Image"]
             category = "experiments"
         else:
             raise errors.InternalError
 
+        self.search_id = search_id
+        self.category = category
+        self.size_category = size_category
+        self.user = user
+
+    def __iter__(self):
+
         with ThreadPoolExecutor(max_workers=150) as executor:
             tasks = [
-                executor.submit(api.get_avatar, search_id, i, category, size_category)
-                for i in range(max_img_counter + 1)
+                executor.submit(api.get_avatar, self.search_id, i, self.category, self.size_category)
+                for i in range(self.max_img_counter + 1)
             ]
 
             for task in as_completed(tasks):
