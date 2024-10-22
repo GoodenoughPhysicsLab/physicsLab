@@ -35,7 +35,7 @@ if platform.system() == "Windows":
         raise RuntimeError("The folder does not exist, try launching Physics-Lab-AR and try it out")
 else:
     if not os.path.exists(Experiment.SAV_ROOT_DIR):
-        os.mkdir(Experiment.SAV_ROOT_DIR)
+        os.makedirs(Experiment.SAV_ROOT_DIR)
 
 plAR_version = get_plAR_version()
 if plAR_version is not None:
