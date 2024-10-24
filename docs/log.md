@@ -168,3 +168,4 @@
 
 # 1.4.20
 1.  改`get_avatars`为`AvatarsIter`, `get_banned_messages`为`BannedMsgIter`, `get_warned_messages`为`WarnedMsgIter` (不兼容更新)
+2.  优化`RelationsIter`
