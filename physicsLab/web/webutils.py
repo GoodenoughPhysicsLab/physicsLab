@@ -278,8 +278,7 @@ class AvatarsIter:
             user: Optional[api.User] = None,
             size_category: str = "full",
             ):
-        ''' 获取一位用户的头像
-            @param search_id: 用户id
+        ''' @param search_id: 用户id
             @param category: 只能为 "Experiment" 或 "Discussion" 或 "User"
             @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
             @param user: 查询者, None为匿名用户
@@ -314,7 +313,6 @@ class AvatarsIter:
         self.user = user
 
     def __iter__(self):
-
         with ThreadPoolExecutor(max_workers=150) as executor:
             tasks = [
                 executor.submit(api.get_avatar, self.search_id, i, self.category, self.size_category)
