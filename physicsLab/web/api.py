@@ -665,3 +665,25 @@ class User:
         )
 
         return _check_response(response)
+
+    def rename(self, nickname: str) -> dict:
+        ''' 修改用户昵称
+            @param nickname: 新昵称
+        '''
+        if not isinstance(nickname, str):
+            raise TypeError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com:443/Users/Rename",
+            json={
+                "Target": nickname,
+                "UserID": self.user_id,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            },
+       )
+
+        return _check_response(response)
