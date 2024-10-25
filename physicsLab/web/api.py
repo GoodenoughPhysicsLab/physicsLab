@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+from urllib import response
 import requests
 
 from typing import Optional, List, TypedDict
@@ -637,6 +638,30 @@ class User:
                 "x-API-Token": self.token,
                 "x-API-AuthCode": self.auth_code,
             }
+        )
+
+        return _check_response(response)
+
+    def follow(self, target_id: str, action: bool = True) -> dict:
+        ''' 关注用户
+            @param target_id: 被关注的用户的id
+            @param action: true为关注, false为取消关注
+        '''
+        if not isinstance(target_id, str) or \
+                not isinstance(action, bool):
+            raise TypeError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com:443/Users/Follow",
+            json={
+                "TargetID": target_id,
+                "Action": int(action),
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            },
         )
 
         return _check_response(response)
