@@ -687,3 +687,82 @@ class User:
        )
 
         return _check_response(response)
+
+    def receive_bonus(self) -> dict:
+        ''' 领取每日签到奖励
+        '''
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com:443/Users/ReceiveBonus",
+            json={
+                "ActivityID": "66d2103b8c1a9a5dbc238435",
+                "Index": 0,
+                "Statistic": {
+                    "ID": self.user_id,
+                    "PushToken": None,
+                    "PushRecord": 0,
+                    "UnreadMessages": 0,
+                    "UnreadLetters": 0,
+                    "LoginContinuity": 0,
+                    "LoginCounter": 4,
+                    "ResearchSurvey": None,
+                    "PushTags": [],
+                    "PushFrequency": 0,
+                    "Cover": None,
+                    "CommentCount": 1,
+                    "Activities": [
+                        {
+                            "ActivityID": "5efd54a9a533c76504c81ba9",
+                            "Counters": [0, 0, 0, 0, 0, 0, 0],
+                            "Gains": [0],
+                            "Avails": [],
+                            "Expiration": "2024-12-31T14:00:00+08:00",
+                            "LastModified": "2024-10-27T08:00:00+08:00",
+                            "Finished": False
+                        },{
+                            "ActivityID": "66d2103b8c1a9a5dbc238435",
+                            "Counters": [0, 0, 0],
+                            "Gains": [],
+                            "Avails": [0],
+                            "Expiration": "2025-01-01T14:00:00+08:00",
+                            "LastModified": "2024-10-27T08:00:00+08:00",
+                            "Finished": False
+                        },{
+                            "ActivityID": "5b63edc3795d574798950a82",
+                            "Counters": [0],
+                            "Gains": [],
+                            "Avails": [],
+                            "Expiration": "2030-12-31T14:00:00+08:00",
+                            "LastModified": "0001-01-01T08:00:00+08:00",
+                            "Finished": False
+                        },{
+                            "ActivityID": "65c289c78a2841c2ff426eeb",
+                            "Counters": [0],
+                            "Gains": [],
+                            "Avails": [],
+                            "Expiration": "2024-12-31T14:00:00+08:00",
+                            "LastModified": "0001-01-01T08:00:00+08:00",
+                            "Finished": False
+                        },{
+                            "ActivityID": "65ca49f3b061f3711a7237a8",
+                            "Counters": [0],
+                            "Gains": [],
+                            "Avails": [],
+                            "Expiration": "2024-12-31T14:00:00+08:00",
+                            "LastModified": "0001-01-01T08:00:00+08:00",
+                            "Finished": False
+                        }
+                    ],
+                    "Counters": {},
+                    "Surveys": {},
+                    "LastVersion": 2500,
+                    "LastLanguage": "Chinese",
+                }
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            },
+        )
+
+        return _check_response(response)
