@@ -493,6 +493,30 @@ class User:
 
         return _check_response(response)
 
+    def star_content(self, content_id: str, category: Category, status: bool = True) -> dict:
+        if not isinstance(content_id, str) or \
+                not isinstance(category, Category) or \
+                not isinstance(status, bool):
+            raise TypeError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com:443/Contents/StarContent",
+            json={
+                "ContentID": content_id,
+                "Status": status,
+                "Category": category.value,
+                "Status": status,
+                "Type": 1,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            }
+        )
+
+        return _check_response(response)
+
     def upload_image(self, policy: str, authorization: str, image_path: str) -> dict:
         ''' 上传实验图片
             @policy @authorization 可通过/Contents/SubmitExperiment获取
@@ -717,7 +741,7 @@ class User:
                             "Avails": [],
                             "Expiration": "2024-12-31T14:00:00+08:00",
                             "LastModified": "2024-10-27T08:00:00+08:00",
-                            "Finished": False
+                            "Finished": False,
                         },{
                             "ActivityID": "66d2103b8c1a9a5dbc238435",
                             "Counters": [0, 0, 0],
@@ -725,7 +749,7 @@ class User:
                             "Avails": [0],
                             "Expiration": "2025-01-01T14:00:00+08:00",
                             "LastModified": "2024-10-27T08:00:00+08:00",
-                            "Finished": False
+                            "Finished": False,
                         },{
                             "ActivityID": "5b63edc3795d574798950a82",
                             "Counters": [0],
@@ -733,7 +757,7 @@ class User:
                             "Avails": [],
                             "Expiration": "2030-12-31T14:00:00+08:00",
                             "LastModified": "0001-01-01T08:00:00+08:00",
-                            "Finished": False
+                            "Finished": False,
                         },{
                             "ActivityID": "65c289c78a2841c2ff426eeb",
                             "Counters": [0],
@@ -741,7 +765,7 @@ class User:
                             "Avails": [],
                             "Expiration": "2024-12-31T14:00:00+08:00",
                             "LastModified": "0001-01-01T08:00:00+08:00",
-                            "Finished": False
+                            "Finished": False,
                         },{
                             "ActivityID": "65ca49f3b061f3711a7237a8",
                             "Counters": [0],
@@ -749,14 +773,14 @@ class User:
                             "Avails": [],
                             "Expiration": "2024-12-31T14:00:00+08:00",
                             "LastModified": "0001-01-01T08:00:00+08:00",
-                            "Finished": False
-                        }
+                            "Finished": False,
+                        },
                     ],
                     "Counters": {},
                     "Surveys": {},
                     "LastVersion": 2500,
                     "LastLanguage": "Chinese",
-                }
+                },
             },
             headers={
                 "Content-Type": "application/json",
