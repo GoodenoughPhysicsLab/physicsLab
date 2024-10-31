@@ -73,12 +73,6 @@ sys.path.append("/your/path/of/physicsLab") # 将字符串替换为你想添加�
 其原理是python会在sys.path这个列表里面的路径去寻找python package，若未找到则会报错。因此该方法的原理就是把python找不到的路径加进去，python就找到了   
 注：每次运行的时候加入的path都是临时的，因此该方法必须让python在每次运行的时候都执行一遍   
 
-## 搭建开发环境
-切换至physicsLab根目录，输入以下指令 (仅限于`Windows`):
-```
-.\cmd\setup_project.bat
-```
-
 ## 经测试过的环境
 * Windows | Linux(Ubuntu): python 3.8, 3.9, 3.10, 3.11, 3.12  
 * Android: qpython(app) 3.11.0  

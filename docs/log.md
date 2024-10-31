@@ -171,3 +171,6 @@
 2.  优化`RelationsIter`
 
 # 1.4.21
+1.  新增`User.recive_bonus`, `User.rename`, `User.star_content`
+
+# 1.4.22
