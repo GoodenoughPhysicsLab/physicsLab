@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 import re
-from urllib import response
 import requests
 
 from typing import Optional, List, TypedDict
@@ -547,6 +546,24 @@ class User:
                                           f"{response.json()['message']}")
             return response.json()
 
+    def get_message(self, message_id: str) -> dict:
+        if not isinstance(message_id, str):
+            raise TypeError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com/Messages/GetMessage",
+            json={
+                "MessageID": message_id,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            },
+        )
+
+        return _check_response(response)
+
     def get_messages(self,
                      category_id: int = 0,
                      skip: int = 0,
@@ -555,8 +572,8 @@ class User:
                      ) -> dict:
         ''' 获取用户收到的消息
             @param category_id: 消息类型:
-                0: 全部, 1: 系统邮件, 2: 评论和回复, 3: 关注和粉丝, 4: 作品通知, 5: 管理记录
-            @param skip: 传入一个时间戳, 跳过skip条消息
+                0: 全部, 1: 系统邮件, 2: 关注和粉丝, 3: 评论和回复, 4: 作品通知, 5: 管理记录
+            @param skip: 跳过skip条消息
             @param take: 取take条消息
         '''
         if category_id not in (0, 1, 2, 3, 4, 5) or \
@@ -564,7 +581,6 @@ class User:
                 not isinstance(take, int) or \
                 not isinstance(no_templates, bool):
             raise TypeError
-
         if take <= 0 or skip < 0:
             raise ValueError
 
@@ -601,7 +617,6 @@ class User:
                 not isinstance(skip, int) or \
                 not isinstance(take, int):
             raise TypeError
-
         if take <= 0 or skip < 0:
             raise ValueError
 

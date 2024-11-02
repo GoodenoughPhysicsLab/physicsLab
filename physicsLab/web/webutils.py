@@ -166,7 +166,7 @@ class CommentsIter:
                 not isinstance(category, str) and \
                 category not in ("User", "Experiment", "Discussion"):
             raise TypeError
-        if user.is_anonymous:
+        if category == "User" and user.is_anonymous:
             raise PermissionError("user must be anonymous")
 
         self.user = user
