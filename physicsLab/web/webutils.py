@@ -9,27 +9,51 @@ from physicsLab.enums import Category
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from physicsLab.typehint import Optional, Callable, numType
 
-class BannedMsgIter:
-    ''' 获取一段时间的封禁信息 (可指定用户) '''
+def _force_success(is_force_success: bool, func: Callable) -> dict:
+    assert isinstance(is_force_success, bool) \
+            and callable(func) \
+        , "internal error, please bug report"
+
+    if is_force_success:
+        import urllib3
+
+        while True:
+            try:
+                return func()
+            except (
+                TimeoutError,
+                urllib3.exceptions.NewConnectionError,
+                urllib3.exceptions.MaxRetryError,
+                urllib3.exceptions.ConnectionError,
+                requests.exceptions.HTTPError,
+            ):
+                continue
+    else:
+        return func()
+
+class ManageMsgIter:
+    ''' 获取一段时间的管理记录 (可指定用户) '''
     def __init__(
             self,
             start_time: numType,
             end_time: Optional[numType] = None,
             user: Optional[api.User] = None,
             user_id: Optional[str] = None,
-            ):
+            force_success: bool = False,
+            ) -> None:
         ''' 获取封禁记录
             @param user: 查询者
             @param user_id: 被查询者的id, None表示查询所有封禁记录
             @param start_time: 开始时间
             @param end_time: 结束时间, None为当前时间
-            @return: 封禁记录列表
+            @param force_success: 强制成功, 即使请求失败也返回数据
         '''
 
         if not isinstance(user, (api.User, type(None))) or \
                 not isinstance(start_time, (int, float)) or \
                 not isinstance(end_time, (int, float, type(None))) or \
-                not isinstance(user_id, (str, type(None))):
+                not isinstance(user_id, (str, type(None))) or \
+                not isinstance(force_success, bool):
             raise TypeError
 
         if end_time is None:
@@ -41,6 +65,94 @@ class BannedMsgIter:
         self.end_time = end_time
         self.user = user
         self.user_id = user_id
+        self.force_success = force_success
+
+    def __iter__(self):
+        self.is_fetching_end: bool = False
+
+        if self.start_time >= self.end_time:
+            raise ValueError("start_time >= end_time")
+
+        # main
+        FETCH_AMOUNT = 100
+        counter: int = 0
+        while not self.is_fetching_end:
+            with ThreadPoolExecutor(max_workers=FETCH_AMOUNT + 50) as executor:
+                tasks = [executor.submit(
+                    _force_success, self.force_success,
+                    lambda: self._fetch_manage_msgs(
+                        self.user, self.start_time, self.end_time, self.user_id,
+                        i + counter * FETCH_AMOUNT
+                    )) for i in range(FETCH_AMOUNT)
+                ]
+
+                for task in as_completed(tasks):
+                    for message in task.result():
+                        yield message
+            counter += 1
+
+    def _fetch_manage_msgs(
+            self,
+            user: api.User,
+            start_time: numType,
+            end_time: numType,
+            user_id: Optional[str],
+            skip: int,
+            ):
+        assert skip >= 0, "internal error, please bug report"
+        assert end_time is not None, "internal error, please bug report"
+
+        TAKE_MESSAGES_AMOUNT = 20
+        messages = user.get_messages(
+            5, skip=skip * TAKE_MESSAGES_AMOUNT, take=TAKE_MESSAGES_AMOUNT,
+        )["Data"]["Messages"]
+
+        res = []
+        for message in messages:
+            # a month ~ 2629743 seconds
+            if message["TimestampInitial"] < (start_time - 2629743) * 1000:
+                self.is_fetching_end = True
+                break
+            if start_time * 1000 <= message["TimestampInitial"] <= end_time * 1000:
+                if user_id is None or user_id == message["Users"][0]:
+                    res.append(message)
+        return res
+
+class BannedMsgIter:
+    ''' 获取一段时间的封禁信息 (可指定用户) '''
+    def __init__(
+            self,
+            start_time: numType,
+            end_time: Optional[numType] = None,
+            user: Optional[api.User] = None,
+            user_id: Optional[str] = None,
+            force_success: bool = False,
+            ) -> None:
+        ''' 获取封禁记录
+            @param user: 查询者
+            @param user_id: 被查询者的id, None表示查询所有封禁记录
+            @param start_time: 开始时间
+            @param end_time: 结束时间, None为当前时间
+            @return: 封禁记录列表
+        '''
+
+        if not isinstance(user, (api.User, type(None))) or \
+                not isinstance(start_time, (int, float)) or \
+                not isinstance(end_time, (int, float, type(None))) or \
+                not isinstance(user_id, (str, type(None))) or \
+                not isinstance(force_success, bool):
+            raise TypeError
+
+        if end_time is None:
+            end_time = time.time()
+        if user is None:
+            user = api.User()
+
+        self.start_time = start_time
+        self.end_time = end_time
+        self.user = user
+        self.user_id = user_id
+        self.force_success = force_success
 
     def __iter__(self):
         self.is_fetching_end: bool = False
@@ -59,51 +171,15 @@ class BannedMsgIter:
         assert banned_template is not None, "internal error, please bug report"
 
         # main
-        FETCH_AMOUNT = 100
-        counter: int = 0
-        while not self.is_fetching_end:
-            with ThreadPoolExecutor(max_workers=FETCH_AMOUNT + 50) as executor:
-                tasks = [executor.submit(
-                        self._fetch_banned_messages,
-                        self.user, self.start_time, self.end_time, self.user_id,
-                        i + counter * FETCH_AMOUNT, banned_template
-                    ) for i in range(FETCH_AMOUNT)
-                ]
-
-                for task in as_completed(tasks):
-                    for message in task.result():
-                        yield message
-            counter += 1
-
-    def _fetch_banned_messages(
-            self,
-            user: api.User,
-            start_time: numType,
-            end_time: numType,
-            user_id: Optional[str],
-            skip: int,
-            banned_template: dict,
-            ):
-        assert skip >= 0, "internal error, please bug report"
-        assert end_time is not None, "internal error, please bug report"
-        assert banned_template is not None, "internal error, please bug report"
-
-        TAKE_MESSAGES_AMOUNT = 20
-        messages = user.get_messages(
-            5, skip=skip * TAKE_MESSAGES_AMOUNT, take=TAKE_MESSAGES_AMOUNT,
-        )["Data"]["Messages"]
-
-        res = []
-        for message in messages:
-            if message["TimestampInitial"] < start_time * 1000:
-                self.is_fetching_end = True
-                break
-            if start_time * 1000 <= message["TimestampInitial"] <= end_time * 1000:
-                if (user_id is None or user_id == message["Users"][0]) \
-                        and message["TemplateID"] == banned_template["ID"]:
-                    res.append(message)
-        return res
-
+        for manage_msg in ManageMsgIter(
+                self.start_time,
+                self.end_time,
+                self.user,
+                self.user_id,
+                self.force_success,
+                ):
+            if manage_msg["TemplateID"] == banned_template["ID"]:
+                yield manage_msg
 
 class WarnedMsgIter:
     ''' 获取一段时间的指定用户的警告信息的迭代器 '''
@@ -114,7 +190,7 @@ class WarnedMsgIter:
             start_time: numType,
             end_time: Optional[numType] = None,
             maybe_warned_message_callback: Optional[Callable] = None,
-            ):
+            ) -> None:
         ''' 查询警告记录
             @param user: 查询者
             @param user_id: 被查询者的id, 但无法查询所有用户的警告记录
@@ -227,39 +303,14 @@ class RelationsIter:
         else:
             self.amount = amount
 
-    def wrapper(
-            self,
-            user_id: str,
-            display_type,
-            skip: int,
-            take: int,
-            ):
-        if self.force_success:
-            import urllib3
-
-            while True:
-                try:
-                    return self.user.get_relations(
-                        user_id, display_type, skip=skip, take=take
-                    )["Data"]["$values"]
-                except (
-                    TimeoutError,
-                    urllib3.exceptions.NewConnectionError,
-                    urllib3.exceptions.MaxRetryError,
-                    urllib3.exceptions.ConnectionError,
-                    requests.exceptions.HTTPError,
-                ):
-                    continue
-        else:
-            return self.user.get_relations(
-                user_id, display_type, skip=skip, take=take
-            )["Data"]["$values"]
-
     def __iter__(self):
         with ThreadPoolExecutor(max_workers=150) as pool:
             tasks = [
                 pool.submit(
-                    self.wrapper, self.user_id, self.display_type, skip=i, take=24
+                    _force_success, self.force_success,
+                    lambda: self.user.get_relations(
+                        self.user_id, self.display_type, skip=i, take=24
+                    )["Data"]["$values"]
                 ) for i in range(0, self.amount + 24, 24)
             ]
 
@@ -277,7 +328,7 @@ class AvatarsIter:
             category: str,
             user: Optional[api.User] = None,
             size_category: str = "full",
-            ):
+            ) -> None:
         ''' @param search_id: 用户id
             @param category: 只能为 "Experiment" 或 "Discussion" 或 "User"
             @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"

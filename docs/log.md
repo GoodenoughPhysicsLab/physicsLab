@@ -174,3 +174,4 @@
 1.  新增`User.recive_bonus`, `User.rename`, `User.star_content`
 
 # 1.4.22
+1. 新增`web.ManageMsgIter`
