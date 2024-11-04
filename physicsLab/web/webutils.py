@@ -86,7 +86,7 @@ class ManageMsgIter:
                     )) for i in range(FETCH_AMOUNT)
                 ]
 
-                for task in as_completed(tasks):
+                for task in tasks:
                     for message in task.result():
                         yield message
             counter += 1
