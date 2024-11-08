@@ -370,7 +370,7 @@ class AvatarsIter:
                 for i in range(self.max_img_counter + 1)
             ]
 
-            for task in as_completed(tasks):
+            for task in tasks:
                 try:
                     yield task.result()
                 except IndexError:
