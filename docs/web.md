@@ -29,31 +29,39 @@
 
 ## 详细说明
 
-### 初始化用户信息
+### class User
+`User`类是对一个真实的物实用户的封装
+匿名用户登录:
 ```python
-self.avatar_region = None
-self.decoration = None
-
-#如果 tmp 存在且有数据，则初始化用户信息：
-
-self.nickname = tmp["Data"]["User"]["Nickname"]
-self.signature = tmp["Data"]["User"]["Signature"]
-self.avatar = tmp["Data"]["User"]["Avatar"]
-self.avatar_region = tmp["Data"]["User"]["AvatarRegion"]
-self.decoration = tmp["Data"]["User"]["Decoration"]
-self.verification = tmp["Data"]["User"]["Verification"]
+from physicsLab import web
+user = web.User()
+```
+通过邮箱密码登录:
+```python
+from physicsLab import web
+user = web.User(YOUR_EMAIL, YOUR_PASSWORD)
+```
+通过`Token`, `AuthCode`登录:
+```python
+from physicsLab import *
+user = web.User(
+    token=YOUR_TOKEN,
+    auth_code=YOUR_AUTH_CODE,
+)
 ```
 
-### 登录
-```python
-def __login(self,
-            username: Optional[str] = None,
-            passward: Optional[str] = None) -> _login_res:
-    ''' 登录, 默认为匿名登录
+一个`User`的对象有以下属性:
+* avatar_region
+* decoration
+* nickname: 用户昵称
+* signature
+* avatar: 当前头像的索引
+* avatar_region
+* decoration
+* verification
+<del>为什么有些属性没写是什么意思呢? 因为我也不知道()</del>
 
-        通过返回字典的Token与AuthCode实现登陆
-    '''
-```
+`User`还有一下方法, 对应着在物实中的真实的操作
 
 ### 获取社区作品列表
 ```python
