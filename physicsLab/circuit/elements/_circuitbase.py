@@ -49,8 +49,8 @@ class CircuitMeta(type):
 
         return self
 
-# 所有电学元件的父类
 class CircuitBase(ElementBase, metaclass=CircuitMeta):
+    ''' 所有电学元件的父类 '''
     is_bigElement = False # 该元件是否是逻辑电路的两体积元件
 
     def __init__(self) -> None:

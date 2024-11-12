@@ -78,12 +78,15 @@ class ManageMsgIter:
         counter: int = 0
         while not self.is_fetching_end:
             with ThreadPoolExecutor(max_workers=FETCH_AMOUNT + 50) as executor:
-                tasks = [executor.submit(
-                    _force_success, self.force_success,
-                    lambda: self._fetch_manage_msgs(
-                        self.user, self.start_time, self.end_time, self.user_id,
-                        i + counter * FETCH_AMOUNT
-                    )) for i in range(FETCH_AMOUNT)
+                tasks = [
+                    executor.submit(
+                        _force_success, self.force_success,
+                        lambda: self._fetch_manage_msgs(
+                            self.user, self.start_time,
+                            self.end_time, self.user_id,
+                            i + counter * FETCH_AMOUNT
+                        )
+                    ) for i in range(FETCH_AMOUNT)
                 ]
 
                 for task in tasks:
@@ -328,16 +331,19 @@ class AvatarsIter:
             category: str,
             user: Optional[api.User] = None,
             size_category: str = "full",
+            force_success: bool = False,
             ) -> None:
         ''' @param search_id: 用户id
             @param category: 只能为 "Experiment" 或 "Discussion" 或 "User"
             @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
             @param user: 查询者, None为匿名用户
+            @param force_success: 强制成功, 即重试直到成功
         '''
         if not isinstance(search_id, str) or \
                 not isinstance(category, str) or \
                 not isinstance(size_category, str) or \
-                not isinstance(user, (api.User, type(None))):
+                not isinstance(user, (api.User, type(None))) or \
+                not isinstance(force_success, bool):
             raise TypeError
         if category not in ("User", "Experiment", "Discussion") or \
                 size_category not in ("small.round", "thumbnail", "full"):
@@ -362,12 +368,17 @@ class AvatarsIter:
         self.category = category
         self.size_category = size_category
         self.user = user
+        self.force_success = force_success
 
     def __iter__(self):
         with ThreadPoolExecutor(max_workers=150) as executor:
             tasks = [
-                executor.submit(api.get_avatar, self.search_id, i, self.category, self.size_category)
-                for i in range(self.max_img_counter + 1)
+                executor.submit(
+                    _force_success, self.force_success,
+                    lambda: api.get_avatar(
+                        self.search_id, i, self.category, self.size_category
+                    )
+                ) for i in range(self.max_img_counter + 1)
             ]
 
             for task in tasks:
