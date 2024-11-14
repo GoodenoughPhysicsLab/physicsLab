@@ -175,3 +175,4 @@
 
 # 1.4.22
 1. 新增`web.ManageMsgIter`
+2. `web/api.py`几乎都增加了以`async_`开头的支持协程的风格的api
