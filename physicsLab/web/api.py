@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+''' 对物实网络api的封装
+    除了上传实验的api的封装在class Experiment的__upload
+    同时提供对多线程, 协程风格的api的调用方式的支持
+    所有以`async_`开头的函数/方法均为协程风格的api
+'''
+
 import os
 import re
 import requests
@@ -9,11 +15,13 @@ from physicsLab import plAR
 from physicsLab import errors
 from physicsLab.enums import Tag, Category
 
-def _check_response(response: requests.Response, callback = None) -> dict:
+def _check_response(response: requests.Response, err_callback: Optional[callable] = None) -> dict:
     ''' 检查返回的response
         @callback: 自定义物实返回的status对应的报错信息,
                     要求传入status_code(捕获物实返回体中的status_code), 无返回值
     '''
+    assert err_callback is None or callable(err_callback)
+
     response.raise_for_status()
 
     response_json = response.json()
@@ -21,15 +29,20 @@ def _check_response(response: requests.Response, callback = None) -> dict:
 
     if status_code == 200:
         return response_json
-    if callback is not None:
-        callback(status_code)
-    raise errors.ResponseFail(f"Physics-Lab-AR returned error code {status_code} : {response_json['Message']}")
+    if err_callback is not None:
+        err_callback(status_code)
+    raise errors.ResponseFail(
+        f"Physics-Lab-AR returned error code {status_code} : {response_json['Message']}"
+    )
 
 def get_start_page() -> dict:
     ''' 获取主页数据 '''
     response = requests.get("https://physics-api-cn.turtlesim.com/Users")
 
     return _check_response(response)
+
+async def async_get_start_page():
+    return get_start_page()
 
 class _login_res(TypedDict):
     Token: str
@@ -66,6 +79,9 @@ def get_avatar(id: str, index: int, category: str, size_category: str) -> bytes:
     if b'<Error>' in response.content:
         raise IndexError("avatar not found")
     return response.content
+
+async def async_get_avatar(id: str, index: int, category: str, size_category: str):
+    return get_avatar(id, index, category, size_category)
 
 class User:
     def __init__(self,
@@ -180,14 +196,18 @@ class User:
 
         return _check_response(response)
 
-    def query_experiment(self,
-                         tags: Optional[List[Tag]] = None,
-                         exclude_tags: Optional[List[Tag]] = None,
-                         category: Category = Category.Experiment,
-                         languages: Optional[List[str]] = None,
-                         take: int = 18,
-                         skip: int = 0,
-                        ) -> dict:
+    async def async_get_library(self):
+        return self.async_get_library()
+
+    def query_experiment(
+            self,
+            tags: Optional[List[Tag]] = None,
+            exclude_tags: Optional[List[Tag]] = None,
+            category: Category = Category.Experiment,
+            languages: Optional[List[str]] = None,
+            take: int = 18,
+            skip: int = 0,
+    ) -> dict:
         ''' 查询实验
             @param tags: 根据列表内的物实实验的标签进行对应的搜索
             @param exclude_tags: 除了列表内的标签的实验都会被搜索到
@@ -247,6 +267,17 @@ class User:
 
         return _check_response(response)
 
+    async def async_query_experiment(
+            self,
+            tags: Optional[List[Tag]] = None,
+            exclude_tags: Optional[List[Tag]] = None,
+            category: Category = Category.Experiment,
+            languages: Optional[List[str]] = None,
+            take: int = 18,
+            skip: int = 0,
+    ):
+        return self.query_experiment(tags, exclude_tags, category, languages, take, skip)
+
     def get_experiment(self, content_id: str) -> dict:
         ''' 获取实验
             @param content_id: 不是实验的id, 可通过get_summary()["Data"]["ContentID"]获取
@@ -265,6 +296,9 @@ class User:
         )
 
         return _check_response(response)
+
+    async def async_get_experiment(self, content_id: str):
+        return self.get_experiment(content_id)
 
     def confirm_experiment(self, summary_id: str, category: Category, image_counter: int) -> dict:
         ''' 确认发布实验
@@ -290,6 +324,9 @@ class User:
         )
 
         return _check_response(response)
+
+    async def async_confirm_experiment(self, summary_id: str, category: Category, image_counter: int):
+        return self.confirm_experiment(summary_id, category, image_counter)
 
     def post_comment(self, target_id: str, content: str, target_type: str, reply_id: str = "") -> dict:
         ''' 发表评论
@@ -330,12 +367,22 @@ class User:
 
         return _check_response(response)
 
-    def get_comments(self,
-                     id: str,
-                     target_type: str,
-                     take: int = 16,
-                     skip: int = 0,
-                     ) -> dict:
+    async def async_post_comment(
+            self,
+            target_id: str,
+            content: str,
+            target_type: str,
+            reply_id: str = "",
+    ):
+        return self.post_comment(target_id, content, target_type, reply_id)
+
+    def get_comments(
+            self,
+            id: str,
+            target_type: str,
+            take: int = 16,
+            skip: int = 0,
+    ) -> dict:
         ''' 获取留言板信息
             @param id: 物实用户的ID/实验的id
             @param target_type: User, Discussion, Experiment
@@ -370,6 +417,15 @@ class User:
 
         return _check_response(response)
 
+    async def async_get_comments(
+            self,
+            id: str,
+            target_type: str,
+            take: int = 16,
+            skip: int = 0,
+    ):
+        return self.get_comments(id, target_type, take, skip)
+
     def get_summary(self, content_id: str, category: Category) -> dict:
         ''' 获取实验介绍
             @param content_id: 实验ID
@@ -399,6 +455,9 @@ class User:
 
         return _check_response(response, callback)
 
+    async def async_get_summary(self, content_id: str, category: Category):
+        return self.get_summary(content_id, category)
+
     def get_derivatives(self, content_id: str, category: Category) -> dict:
         ''' 获取作品的详细信息, 物实第一次读取作品是会使用此接口
             @param content_id: 实验ID
@@ -422,10 +481,14 @@ class User:
 
         return _check_response(response)
 
-    def get_user(self,
-                 user_id: Optional[str] = None,
-                 name: Optional[str] = None,
-                 ) -> dict:
+    async def async_get_derivatives(self, content_id: str, category: Category):
+        return self.get_derivatives(content_id, category)
+
+    def get_user(
+            self,
+            user_id: Optional[str] = None,
+            name: Optional[str] = None,
+    ) -> dict:
         ''' 获取用户信息
             @param user_id: 用户ID
             @param name: 用户名
@@ -450,6 +513,13 @@ class User:
 
         return _check_response(response)
 
+    async def async_get_user(
+            self,
+            user_id: Optional[str] = None,
+            name: Optional[str] = None,
+    ):
+        return self.get_user(user_id, name)
+
     def get_profile(self) -> dict:
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Contents/GetProfile",
@@ -464,6 +534,9 @@ class User:
         )
 
         return _check_response(response)
+
+    async def async_get_profile(self):
+        return self.get_profile
 
     def star(self, content_id: str, category: Category, status: bool = True) -> dict:
         ''' 添加收藏
@@ -492,6 +565,9 @@ class User:
 
         return _check_response(response)
 
+    async def async_star(self, content_id: str, category: Category, status: bool = True):
+        return self.star(content_id, category, status)
+
     def star_content(self, content_id: str, category: Category, status: bool = True) -> dict:
         if not isinstance(content_id, str) or \
                 not isinstance(category, Category) or \
@@ -515,6 +591,9 @@ class User:
         )
 
         return _check_response(response)
+
+    async def async_star_content(self, content_id: str, category: Category, status: bool = True):
+        return self.star_content(content_id, category, status)
 
     def upload_image(self, policy: str, authorization: str, image_path: str) -> dict:
         ''' 上传实验图片
@@ -542,9 +621,14 @@ class User:
             )
             response.raise_for_status()
             if response.json()["code"] != 200:
-                raise errors.ResponseFail(f"error code {response.json()['code']}: "
-                                          f"{response.json()['message']}")
+                raise errors.ResponseFail(
+                    f"Physics-Lab-AR returned error code {response.json()['code']} : "
+                    f"{response.json()['message']}"
+                )
             return response.json()
+
+    async def async_upload_image(self, policy: str, authorization: str, image_path: str):
+        return self.upload_image(policy, authorization, image_path)
 
     def get_message(self, message_id: str) -> dict:
         if not isinstance(message_id, str):
@@ -564,12 +648,16 @@ class User:
 
         return _check_response(response)
 
-    def get_messages(self,
-                     category_id: int = 0,
-                     skip: int = 0,
-                     take: int = 16,
-                     no_templates: bool = True,
-                     ) -> dict:
+    async def async_get_message(self, message_id: str):
+        return self.get_message(message_id)
+
+    def get_messages(
+            self,
+            category_id: int = 0,
+            skip: int = 0,
+            take: int = 16,
+            no_templates: bool = True,
+    ) -> dict:
         ''' 获取用户收到的消息
             @param category_id: 消息类型:
                 0: 全部, 1: 系统邮件, 2: 关注和粉丝, 3: 评论和回复, 4: 作品通知, 5: 管理记录
@@ -601,12 +689,22 @@ class User:
 
         return _check_response(response)
 
-    def get_supporters(self,
-                       content_id: str,
-                       category: Category,
-                       skip: int = 0,
-                       take: int = 16,
-                       ) -> dict:
+    async def async_get_messages(
+            self,
+            category_id: int = 0,
+            skip: int = 0,
+            take: int = 16,
+            no_templates: bool = True,
+    ):
+        return self.get_messages(category_id, skip, take, no_templates)
+
+    def get_supporters(
+            self,
+            content_id: str,
+            category: Category,
+            skip: int = 0,
+            take: int = 16,
+    ) -> dict:
         ''' 获取支持列表
             @param category: .Experiment 或 .Discussion
             @param skip: 传入一个时间戳, 跳过skip条消息
@@ -637,13 +735,23 @@ class User:
 
         return _check_response(response)
 
-    def get_relations(self,
-                      user_id: str,
-                      display_type: str = "Follower",
-                      skip: int = 0,
-                      take: int = 20,
-                      query: str = "",
-                      ) -> dict:
+    async def async_get_supporters(
+            self,
+            content_id: str,
+            category: Category,
+            skip: int = 0,
+            take: int = 16,
+    ):
+        return self.get_supporters(content_id, category, skip, take)
+
+    def get_relations(
+            self,
+            user_id: str,
+            display_type: str = "Follower",
+            skip: int = 0,
+            take: int = 20,
+            query: str = "",
+    ) -> dict:
         ''' 获取用户的关注/粉丝列表
             @param display_type: 只能为 Follower: 粉丝, Following: 关注
             @param skip: 跳过skip个用户
@@ -681,6 +789,16 @@ class User:
 
         return _check_response(response)
 
+    async def async_get_relations(
+            self,
+            user_id: str,
+            display_type: str = "Follower",
+            skip: int = 0,
+            take: int = 20,
+            query: str = "",
+    ):
+        return self.get_relations(user_id, display_type, skip, take, query)
+
     def follow(self, target_id: str, action: bool = True) -> dict:
         ''' 关注用户
             @param target_id: 被关注的用户的id
@@ -705,6 +823,9 @@ class User:
 
         return _check_response(response)
 
+    async def async_follow(self, target_id: str, action: bool = True):
+        return self.follow(target_id, action)
+
     def rename(self, nickname: str) -> dict:
         ''' 修改用户昵称
             @param nickname: 新昵称
@@ -726,6 +847,9 @@ class User:
        )
 
         return _check_response(response)
+
+    async def async_rename(self, nickname: str):
+        return self.rename(nickname)
 
     def receive_bonus(self) -> dict:
         ''' 领取每日签到奖励
@@ -805,3 +929,6 @@ class User:
         )
 
         return _check_response(response)
+
+    async def async_receive_bonus(self):
+        return self.receive_bonus()
