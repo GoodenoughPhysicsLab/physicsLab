@@ -6,22 +6,27 @@
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![build](https://github.com/gaogaotiantian/viztracer/workflows/build/badge.svg)](https://github.com/GoodenoughPhysicsLab/physicsLab/actions)
-![support-version](https://img.shields.io/pypi/pyversions/viztracer)
+<!-- ![support-version](https://img.shields.io/pypi/pyversions/viztracer) -->
 
 ## 介绍
-在物理实验室做实验的时候，我们可能会苦恼于元件不够整齐，需要重复的搭建某些电路且重复地做测试，或元件无法浮空等问题。这些问题都可以通过改存档来轻易解决！然而，手动改存档操作麻烦且出错率高。于是我写了`physicsLab`，并在其中封装了一些常用功能，让你用`Python`也能够轻易地在物实做实验，而且***你甚至不需用知道存档在电脑的哪里！***
+当我们在[物理实验室AR](https://www.turtlesim.com/)纯手动做实验的时候，往往会遇到一些琐碎、麻烦但又不得不做的事情，比如：重复的搭建某些电路，调整元件的位置，电路内部结构的重复。这些问题都可以通过使用`physicsLab`生成这些电路结构来轻易解决！于是我写了`physicsLab`，让你能用`Python`在物实做实验。
 
 ## 部分方便且惊艳的功能展示
-*  同时支持通过存档的文件名与存档名访问存档
+*  同时支持通过存档的文件名与**存档名**访问存档
 *  不受实验室大小地随意摆放原件 (比如在实验室外悬空的元件)
 *  将midi转换为物实对应的电路
 *  修改物实的实验封面
 *  获取用户的所有头像或实验用过的所有封面
-*  e.t.c
+更多好用的功能等你来发现
+
+## 功能支持
+* 良好的平台兼容性，只要该平台能够运行Python与文件读写，比如`Windows`, `Linux`, `MacOS`, `Android`
+* 支持物实**所有**实验类型：电学，天体物理，电与磁
+* 支持物实**全部**元件
+* 大多数物实网络api封装的支持 (直接与物实服务器进行交互)
 
 ## 安装教程
-
-1.  请确保你的电脑有[Python](https://www.python.org)（大于等于3.8）与[物理实验室PC版](https://www.turtlesim.com/)（简称`物实`）（也可以联系[开发者Jone-Chen](https://gitee.com/civitasjohn)）
+1.  请确保你的电脑有[Python](https://www.python.org)（>=3.8）与[物理实验室AR](https://www.turtlesim.com/)（简称`物实`）（也可以联系物理实验室的开发者[Jone-Chen](https://gitee.com/civitasjohn)）
 
 2.  在cmd或shell输入以下载physicsLab：
 ```shell
@@ -31,24 +36,24 @@ pip install physicsLab
 ```shell
 python -m pip install physicsLab
 ```
-> Note: 在`Windows`下你可以输入`py`来使用`python`，`MacOS`下可能需要输入`python3`来使用`python`
+> Note: 在`Windows`下你可以输入`py`来使用`python`，`Linux, MacOS`下可能需要输入`python3`来使用`python`
 
-1.  有一个并非必需的功能：播放midi。你可以输入下面命令的任意一条：
+3.  有一个并非必需的功能：播放midi。你可以输入下面命令的任意一条：
 ```shell
 pip install plmidi
 pip install pygame
 ```
-点击跳转至[plmidi](https://github.com/GoodenoughPhysicsLab/plmidi)  
+点击跳转至[plmidi](https://github.com/GoodenoughPhysicsLab/plmidi)
 
-之所以没有做安装physicsLab的时候自动安装这两个库，是因为`Android`的`qpython`在下载含c的库的时候存在问题  
+之所以没有做安装physicsLab的时候自动安装这两个库，是因为`Android`的`qpython`在下载含c的库的时候存在问题
 
-4.  物实存档使用了中文字符，默认编码为`utf-8`。但在一些非正常情况，存档的编码可能被改变。虽然`physicsLab`有一定的处理存档编码问题的能力，但如果还是出现了问题，请输入该命令：  
+4.  物实存档使用了中文字符，默认编码为`utf-8`。但在一些非正常情况，存档的编码可能被改变。虽然`physicsLab`有一定的处理存档编码问题的能力，但如果还是出现了问题，请输入该命令：
 ```bash
 pip install chardet
 ```
-此时`physicsLab`会自动调用`chardet`来处理更加棘手的文件编码问题。  
+此时`physicsLab`会自动调用`chardet`来处理更加棘手的文件编码问题。
 
-5. 如果下载成功，请输入下面的代码以验证`physicsLab`已经可以使用了  
+5. 如果下载成功，请输入下面的代码以验证`physicsLab`已经可以使用了
 ```Python
 from physicsLab import *
 
@@ -69,13 +74,9 @@ pip安装的包会被放在`site-package`文件夹下
 import sys
 sys.path.append("/your/path/of/physicsLab") # 将字符串替换为你想添加的路径
 ```
-这个方法很丑陋但很简单好用，可以帮你快速解决问题，毕竟能跑起来就很不错了   
-其原理是python会在sys.path这个列表里面的路径去寻找python package，若未找到则会报错。因此该方法的原理就是把python找不到的路径加进去，python就找到了   
-注：每次运行的时候加入的path都是临时的，因此该方法必须让python在每次运行的时候都执行一遍   
-
-## 经测试过的环境
-* Windows | Linux(Ubuntu): python 3.8, 3.9, 3.10, 3.11, 3.12  
-* Android: qpython(app) 3.11.0  
+这个方法很丑陋但很简单好用，可以帮你快速解决问题，毕竟能跑起来就很不错了  
+其原理是python会在sys.path这个列表里面的路径去寻找python package，若未找到则会报错。因此该方法的原理就是把python找不到的路径加进去，python就找到了  
+注：每次运行的时候加入的path都是临时的，因此该方法必须让python在每次运行的时候都执行一遍  
 
 ## 使用说明
 > Note: 如果`physicsLab`抛出`TypeError`，请检查你自己的输入参数是否有问题，  
@@ -123,19 +124,19 @@ with experiment("example", read=True):
     o = Or_Gate()
     o.i_up - o.i_low # 连接导线
 ```
-上面两段代码产生的结果是一样的  
-  
-更详细的内容请在[文档](docs)中查看  
+上面两段代码产生的结果是一样的
+
+更详细的内容请在[文档](docs)中查看
 
 由于`physicsLab`使用中文注释而且物实的存档也使用了中文  
 因此我建议你手动在`Python`代码的第一行添加如下注释:
 ```Python
 # -*- coding: utf-8 -*-
-```  
+```
 不过由于编码导致问题的情况似乎很少
 
 ## 优点
-*  `physicsLab`拥有优秀的与物实存档交互的能力，你甚至可以使用程序完成部分工作之后你再继续完成或者让程序在你已完成的实验的基础上继续完成。  
+*  `physicsLab`拥有优秀的与物实存档交互的能力，你甚至可以使用程序完成部分工作之后你再继续完成或者让程序在你已完成的实验的基础上继续完成。
   如此灵活的功能使得physicsLab即使是在python shell上也能出色的完成工作！
 *  `physicsLab`为纯python库，其c拓展部分(与midi相关的)被放到了`plmidi`中，但`plmidi`不是必须需要的。纯Python库通常意味着更容易使用，更少的问题。
 *  封装了物实里的大量原件，即使是***未解锁的原件***也可以轻易用脚本生成，甚至一些常用的电路也被封装好了！
@@ -145,16 +146,12 @@ with experiment("example", read=True):
 *  程序有利于大型实验的创作
 *  改存档做出来的实验往往有十分惊艳的效果！
 
-## 不足
-1. 在物理实验室连接导线只需要点击两下，但用程序连接导线相对麻烦一些。
-2. 在物理实验室选择原件只需要点击一下，但用程序选择原件相对麻烦一些。
-
 ## 其他
-* 更多内容请在 [other physicsLab](https://gitee.com/script2000/temporary-warehouse/tree/master/other%20physicsLab) 中查看
+* 一些零七八碎的内容: [other physicsLab](https://gitee.com/script2000/temporary-warehouse/tree/master/other%20physicsLab)
 * 主仓库(github): https://github.com/GoodenoughPhysicsLab/physicsLab
 * 备份仓库(gitee): https://gitee.com/script2000/physicsLab
 
 ## contribute
-`physicsLab`没有强行要求代码风格，但需要注意与上下文保持一致  
+`physicsLab`没有强行要求代码风格，但需要注意与上下文保持一致
 
 你可以从更新文档、bugfix、写[测试代码](test)开始入手
