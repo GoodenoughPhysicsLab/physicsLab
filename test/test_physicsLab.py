@@ -1,53 +1,50 @@
 # -*- coding: utf-8 -*-
-from math import fabs
 import os
-
 from base import *
-
 from physicsLab.lib import *
-from physicsLab.experiment import stack_Experiment
+from physicsLab.experiment import _StackExperiment
 
 def my_test_dec(method: Callable):
     def result(*args, **kwarg):
         method(*args, **kwarg)
 
-        if len(stack_Experiment.data) != 0:
+        if len(_StackExperiment.data) != 0:
             print(f"File {os.path.abspath(__file__)}, line {method.__code__.co_firstlineno} : "
                   f"test fail due to len(stack_Experiment) != 0")
-            stack_Experiment.data.clear()
+            _StackExperiment.data.clear()
             raise TestError
     return result
 
 class BasicTest(PLTestBase):
     @my_test_dec
     def test_experiment1(self):
-        exp: Experiment = Experiment().crt("__test__", force_crt=True)
+        expe: Experiment = Experiment().crt("__test__", force_crt=True)
         a = Yes_Gate(0, 0, 0)
-        self.assertEqual(count_Elements(), 1)
+        self.assertEqual(expe.count_elements(), 1)
         self.assertEqual(a.get_position(), (0, 0, 0))
         crt_Wire(a.o, a.i)
         self.assertEqual(count_Wires(), 1)
         clear_Wires()
         self.assertEqual(count_Wires(), 0)
-        self.assertEqual(count_Elements(), 1)
+        self.assertEqual(expe.count_elements(), 1)
         crt_Wire(a.o, a.i)
-        crt_Element('Logic Input')
-        self.assertEqual(count_Elements(), 2)
-        get_Element(0, 0, 0)
-        exp.exit()
+        expe.crt_element('Logic Input')
+        self.assertEqual(expe.count_elements(), 2)
+        expe.get_element(0, 0, 0)
+        expe.exit()
 
     @my_test_dec
     def test_read_Experiment(self):
-        exp: Experiment = Experiment().crt("__test__", force_crt=True)
+        expe: Experiment = Experiment().crt("__test__", force_crt=True)
 
-        self.assertEqual(count_Elements(), 0)
+        self.assertEqual(expe.count_elements(), 0)
         self.assertEqual(count_Wires(), 0)
         Logic_Input(0, 0, 0)
-        exp.write()
+        expe.write()
 
         exp2: Experiment = Experiment().open("__test__")
         exp2.read()
-        self.assertEqual(count_Elements(), 1)
+        self.assertEqual(exp2.count_elements(), 1)
         exp2.delete()
 
     @my_test_dec
@@ -80,37 +77,37 @@ class BasicTest(PLTestBase):
 
     @my_test_dec
     def test_union_Sum(self):
-        exp: Experiment = Experiment().crt("__test__", force_crt=True)
+        expe: Experiment = Experiment().crt("__test__", force_crt=True)
         lib.Sum(0, -1, 0, bitnum=64)
-        self.assertEqual(count_Elements(), 64)
+        self.assertEqual(expe.count_elements(), 64)
         self.assertEqual(count_Wires(), 63)
-        clear_Elements()
+        expe.clear_elements()
         self.assertEqual(count_Wires(), 0)
-        self.assertEqual(count_Elements(), 0)
-        exp.exit()
+        self.assertEqual(expe.count_elements(), 0)
+        expe.exit()
 
     @my_test_dec
     def test_get_Element(self):
-        exp: Experiment = Experiment().crt("__test__", force_crt=True)
+        expe: Experiment = Experiment().crt("__test__", force_crt=True)
         Or_Gate(0, 0, 0)
         crt_Wire(
-            get_Element(0, 0, 0).o,
-            get_Element(index=1).i_up
+            expe.get_element(0, 0, 0).o,
+            expe.get_element(index=1).i_up
         )
-        crt_Wire(get_Element(0,0,0).i_low, get_Element(index=1).o)
+        crt_Wire(expe.get_element(0,0,0).i_low, expe.get_element(index=1).o)
         self.assertEqual(count_Wires(), 2)
-        exp.exit()
+        expe.exit()
 
     # 测逝用例未写完
     @my_test_dec
     def test_set_O(self):
-        exp: Experiment = Experiment().crt("__test__", force_crt=True)
+        expe: Experiment = Experiment().crt("__test__", force_crt=True)
         set_O(-1, -1, 0)
         for x in range(10):
             for y in range(10):
                 Yes_Gate(x, y, 0, True)
-        self.assertEqual(count_Elements(), 100)
-        exp.exit()
+        self.assertEqual(expe.count_elements(), 100)
+        expe.exit()
 
     @my_test_dec
     def test_errors(self):
@@ -126,7 +123,7 @@ class BasicTest(PLTestBase):
     # 测试元件坐标系2
     @my_test_dec
     def test_aTest(self):
-        exp: Experiment = Experiment().crt("__test__", force_crt=True)
+        expe: Experiment = Experiment().crt("__test__", force_crt=True)
         set_elementXYZ(True)
         set_O(-1, -1, 0)
         for x in range(10):
@@ -136,45 +133,45 @@ class BasicTest(PLTestBase):
             for y in [y * 2 + 10 for y in range(5)]:
                 Multiplier(x, y, 0)
 
-        crt_Wire(get_Element(index=1).o, get_Element(0, 1, 0).i)
-        get_Element(index=2).i - get_Element(index=3).o - get_Element(index=4).i
+        crt_Wire(expe.get_element(index=1).o, expe.get_element(0, 1, 0).i)
+        expe.get_element(index=2).i - expe.get_element(index=3).o - expe.get_element(index=4).i
         self.assertEqual(count_Wires(), 3)
-        self.assertEqual(count_Elements(), 150)
-        exp.exit()
+        self.assertEqual(expe.count_elements(), 150)
+        expe.exit()
 
     @my_test_dec
     def test_open_many_Experiment(self):
         exp: Experiment = Experiment().crt("__test__", force_crt=True)
-        with experiment('__test__', is_exit=True, force_crt=True):
+        with experiment('__test__', is_exit=True, force_crt=True) as expe:
             Logic_Input(0, 0, 0)
-            self.assertEqual(1, count_Elements())
+            self.assertEqual(1, expe.count_elements())
         exp.exit()
 
     @my_test_dec
     def test_with_and_coverPosition(self):
-        with experiment("__test__", is_exit=True, force_crt=True):
+        with experiment("__test__", is_exit=True, force_crt=True) as expe:
             Logic_Input(0, 0, 0)
             Or_Gate(0, 0, 0)
-            self.assertEqual(len(get_Element(0, 0, 0)), 2)
+            self.assertEqual(len(expe.get_element(0, 0, 0)), 2)
 
     @my_test_dec
     def test_del_Element(self):
-        with experiment("__test__", is_exit=True, force_crt=True):
+        with experiment("__test__", is_exit=True, force_crt=True) as expe:
             Logic_Input(0, 0, 0).o - Or_Gate(0, 0, 0).o
-            del_Element(get_Element(index=2))
-            self.assertEqual(count_Elements(), 1)
+            expe.del_element(expe.get_element(index=2))
+            self.assertEqual(expe.count_elements(), 1)
             self.assertEqual(count_Wires(), 0)
 
     # 测逝模块化电路连接导线
     @my_test_dec
     def test_wires(self):
-        with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
+        with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True) as expe:
             a = lib.Inputs(0, 0, 0, bitnum=8)
             b = lib.Outputs(0.6, 0, 0, bitnum=8, elementXYZ=False)
             Logic_Output(0.6, 0, 0.1, elementXYZ=False)
             c = lib.D_WaterLamp(1, 0, 0, bitnum=8)
             crt_Wires(b.inputs, c.outputs)
-            self.assertEqual(25, count_Elements())
+            self.assertEqual(25, expe.count_elements())
             self.assertEqual(23, count_Wires())
             del_Wires(c.outputs, b.inputs)
             self.assertEqual(15, count_Wires())
@@ -214,10 +211,10 @@ class BasicTest(PLTestBase):
 
     @my_test_dec
     def test_electromagnetism(self):
-        with experiment("__test__", is_exit=True, experiment_type=ExperimentType.Electromagnetism, force_crt=True):
+        with experiment("__test__", is_exit=True, experiment_type=ExperimentType.Electromagnetism, force_crt=True) as expe:
             Negative_Charge(-0.1, 0, 0)
             Positive_Charge(0.1, 0, 0)
-            self.assertEqual(count_Elements(), 2)
+            self.assertEqual(expe.count_elements(), 2)
             try:
                 count_Wires()
             except ExperimentTypeError:
@@ -227,12 +224,12 @@ class BasicTest(PLTestBase):
 
     @my_test_dec
     def test_union_Sub(self):
-        with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
+        with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True) as expe:
             a = lib.Sub(0, 0, 0, bitnum=8, fold=False)
             crt_Wires(lib.Inputs(-3, 0, 0, bitnum=8).outputs, a.minuend)
             crt_Wires(lib.Inputs(-2, 0, 0, bitnum=8).outputs, a.subtrahend)
             crt_Wires(lib.Outputs(2, 0, 0, bitnum=9).inputs, a.outputs)
-            self.assertEqual(count_Elements(), 42)
+            self.assertEqual(expe.count_elements(), 42)
             self.assertEqual(count_Wires(), 41)
 
             lib.Sub(-5, 0, 0, bitnum=4)
@@ -250,10 +247,10 @@ class BasicTest(PLTestBase):
 
     @my_test_dec
     def test_getElementError(self):
-        with experiment("__test__", is_exit=True, force_crt=True):
+        with experiment("__test__", is_exit=True, force_crt=True) as expe:
             Logic_Input(0, 0, 0)
             try:
-                get_Element(index=2)
+                expe.get_element(index=2)
             except ElementNotFound:
                 pass
             else:
@@ -299,20 +296,20 @@ class BasicTest(PLTestBase):
 
     @my_test_dec
     def test_merge_Experiment(self):
-        with experiment("__test__", force_crt=True, is_exit=True) as exp:
+        with experiment("__test__", force_crt=True, is_exit=True) as expe:
             Logic_Input(0, 0, 0).o - Logic_Output(1, 0, 0, elementXYZ=True).i
 
             with experiment("_Test", force_crt=True, is_exit=True) as exp2:
                 Logic_Output(0, 0, 0.1)
-                exp2.merge(exp, 1, 0, 0, elementXYZ=True)
+                exp2.merge(expe, 1, 0, 0, elementXYZ=True)
 
-                self.assertEqual(count_Elements(), 3)
+                self.assertEqual(exp2.count_elements(), 3)
 
     @my_test_dec
     def test_link_wire_in_two_experiment(self):
-        with experiment("__test__", force_crt=True, is_exit=True) as exp:
+        with experiment("__test__", force_crt=True, is_exit=True):
             a = Logic_Input(0, 0, 0)
-            with experiment("_Test", force_crt=True, is_exit=True) as exp2:
+            with experiment("_Test", force_crt=True, is_exit=True):
                 b = Logic_Output(0, 0, 0)
                 try:
                     a.o - b.i
@@ -330,10 +327,10 @@ class BasicTest(PLTestBase):
             with experiment("_Test", force_crt=True, is_exit=True) as exp2:
                 Logic_Output(0, 0, 0.1)
                 exp2.merge(exp, 1, 0, 0, elementXYZ=True)
-                a = get_Element(1, 0, 0)
+                a = exp2.get_element(1, 0, 0)
                 a.i - a.o
 
-                self.assertEqual(count_Elements(), 2)
+                self.assertEqual(exp2.count_elements(), 2)
                 self.assertEqual(count_Wires(), 1)
 
     @my_test_dec

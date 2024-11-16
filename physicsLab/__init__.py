@@ -6,7 +6,7 @@ import platform
 # 颜色打印
 from ._colorUtils import close_color_print
 # 操作实验
-from .experiment import Experiment, experiment, search_Experiment, get_Experiment, id_to_time
+from .experiment import Experiment, experiment, search_experiment, get_current_experiment, id_to_time
 # 实验, 标签类型
 from .enums import *
 # 电学实验
@@ -15,8 +15,6 @@ from .circuit import *
 from .celestial import *
 # 电与磁实验
 from .electromagnetism import *
-# 操作元件
-from .element import crt_Element, del_Element, count_Elements, get_Element, clear_Elements
 # `physicsLab`自定义异常类
 from .errors import *
 
@@ -32,7 +30,7 @@ from physicsLab import music
 # Win: 若存档对应文件夹不存在直接报错
 if platform.system() == "Windows":
     if not os.path.exists(Experiment.SAV_ROOT_DIR):
-        raise RuntimeError("The folder does not exist, try launching Physics-Lab-AR and try it out")
+        raise RuntimeError("Have you installed Physics-Lab-AR?")
 else:
     if not os.path.exists(Experiment.SAV_ROOT_DIR):
         os.makedirs(Experiment.SAV_ROOT_DIR)

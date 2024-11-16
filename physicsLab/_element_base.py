@@ -19,7 +19,7 @@ class ElementBase:
         assert hasattr(self, 'experiment')
         _Expe = self.experiment
 
-        for self_list in _Expe.elements_Position.values():
+        for self_list in _Expe._elements_position.values():
             if self in self_list:
                 self_list.remove(self)
 
@@ -27,10 +27,10 @@ class ElementBase:
         self.data['Position'] = f"{x},{z},{y}" # type: ignore -> has attr .data
 
         assert hasattr(self, '_position')
-        if self._position in _Expe.elements_Position.keys():
-            _Expe.elements_Position[self._position].append(self)
+        if self._position in _Expe._elements_position.keys():
+            _Expe._elements_position[self._position].append(self)
         else:
-            _Expe.elements_Position[self._position] = [self]
+            _Expe._elements_position[self._position] = [self]
 
         return self
 

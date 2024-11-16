@@ -16,7 +16,7 @@ class TestError(Exception):
 
     def __str__(self) -> str:
         if not self.no_pop:
-            get_Experiment().exit()
+            get_current_experiment().exit()
         return self.err_msg
 
 class PLTestBase(TestCase):

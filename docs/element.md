@@ -11,30 +11,35 @@ with experiment("example"):
     b = Or_Gate()  # 创建一个或门
 ```
 
-除此之外还有一个通用的函数`crt_Element()`用来创建所有`physicsLab`支持的元件
+除此之外`Experiment`类还有`crt_Element`方法，用来创建所有`physicsLab`支持的元件
 ```python
-def crt_Element(name: str, x=0, y=0, z=0, elementXYZ: Optional[bool] = None) -> CircuitBase
-```
-`name`参数不仅支持紫兰斋在存档中的`ModelID`对应的字符串，还支持`physicsLab`中类的名字  
+from physicsLab import *
 
+with experiment("example") as expe:
+    expe.crt_Element("Logic_Input", 0, 0, 0)
+```
+`name`参数不仅支持物实存档中的`ModelID`对应的字符串，还支持`physicsLab`中类的名字
 
 ## 获取元件
-`在物理实验室( Physics-Lab-AR )`, 我们要操作一个元件只需要点击就行了。但要在`physicsLab`中操作元件, 我们只能操作类的实例。  
-但当我们通过`read_Experiment`获取一些类的时候，我们难以获取其引用，此时需要知道元件的坐标或者那个元件是第多少个被创建的( 这个数字即是index )，然后使用`get_Element()`：  
+在物实, 我们要操作一个元件只需要点击就行了。但要在`physicsLab`中操作元件, 我们只能操作类的实例。  
+但当我们读取一些已有的实验的时候，我们需要知道元件的坐标或者那个元件是第多少个被创建的( 这个数字即是index )，然后使用`Experiment`类的`get_element`方法来获取那个元件的引用
 
-`get_Element`有两种获取元件的方式：  
-1.  通过元件的坐标进行索引
-2.  通过元件在物实中生成的先后顺序进行索引（即`index`）  
+`get_element`有两种获取元件的方式：
+* 通过元件的坐标进行索引
+* 通过元件在物实中生成的先后顺序进行索引（即`index`）
 
-`get_Element`的返回值是这个坐标对应的元件的引用，若不存在抛出Error  
+`get_element`的返回值是这个坐标对应的元件的引用，若不存在抛出Error
 ```python
-get_Element(0, 0, 0) # x, y, z
-get_Element(index=1) # 通过元件是第多少个被创建的来获取
+from physicsLab import *
+
+with experiment("example") as expe:
+  expe.get_Element(0, 0, 0) # x, y, z
+  expe.get_Element(index=1) # 通过元件是第多少个被创建的来获取
 ```
 
-> Note:   
-> 1.  当元件的坐标重叠时，此时会返回一个含所有位于该坐标的元件的list  
-> 2.  `get_Element`并不会区分索引的坐标是不是元件坐标系( elementXYZ )  
+> Note:
+> 1.  当元件的坐标重叠时，此时会返回一个含所有位于该坐标的元件的list
+> 2.  `get_element`并不会区分索引的坐标是不是元件坐标系 (elementXYZ)
 >     但你可以通过元件的`is_elementXYZ`属性来获取是否是元件坐标系
 
 元件的`index`会从1开始，每生成一个元件就会加1
@@ -44,23 +49,23 @@ from physicsLab import *
 with experiment("example"):
     No_Gate() # index = 1
     Or_Gate(0, 0, 0.1) # index = 2
-``` 
+```
 
-> Note: `get_Element`用来索引的坐标为创建元件时对应的坐标, 与是否为元件坐标系无关
+> Note: `get_element`用来索引的坐标为创建元件时对应的坐标, 与是否为元件坐标系无关
 
 用一个简单的例子来说明:
 ```Python
 from physicsLab import *
 
-with experiment("example"):
+with experiment("example") as expe:
    Logic_Input(1, 0, 0, elementXYZ=True)
    Logic_Output(1, 0, 0)
-   print(get_Element(1, 0, 0))
+   print(expe.get_element(1, 0, 0))
 
-with experiment("example", read=True):
+with experiment("example", read=True) as expe:
    Logic_Input(1, 0, 0, elementXYZ=True)
    Logic_Output(1, 0, 0)
-   print(get_Element(1, 0, 0))
+   print(expe.get_element(1, 0, 0))
 ```
 输出结果:
 ```
@@ -72,15 +77,15 @@ Successfully update experiment "example"! 4 elements, 0 wires.
 
 你能理解为什么第二次打印时输出的列表长度为3吗?  
 因为在上一次写入的时候会将元件坐标系自动转化为物实坐标系, 在第二次read的时候会直接读取存档内的物实坐标系, 那么上一次创建时的`Logic_Input(1, 0, 0elementXYZ=True)`自然就不会在后面read这次的坐标索引中被找到了  
-如果要索引第一次创建的元件坐标系的元件, 需要这样写`get_Element(xyzTranslate(1, 0, 0))`  
+如果要索引第一次创建的元件坐标系的元件, 需要这样写`get_element(xyzTranslate(1, 0, 0))`  
 详见`元件坐标系`  
-当`get_Element`索引元件失败时，会抛出`ElementNotFound`的Error  
+当`get_element`索引元件失败时，会抛出`ElementNotFound`的Error  
 如果你想在索引失败时不抛出error，需要使用default参数
 ```Python
 from physicsLab import *
 
-with experiment("example"):
-    get_Element(1, 0, 0, default=None)
+with experiment("example") as expe:
+    expe.get_element(1, 0, 0, default=None)
 ```
 
 ## 删除元件
@@ -88,10 +93,11 @@ with experiment("example"):
 ```python
 from physicsLab import *
 
-a = Logic_Input()
-del_Element(a) # input: element's self, output: None
+with experiment("example") as expe:
+  a = Logic_Input(0, 0, 0)
+  expe.del_element(a) # input: element's self, output: None
 ```
-`del_Element`需要传入元件的引用，所以必要时也需要用`get_Element`。
+`del_element`需要传入元件的引用，所以必要时也需要用`get_element`。
 
 ## 元件坐标系 elementXYZ
 `物实坐标系`即为物实默认的坐标系  

@@ -7,21 +7,21 @@
 from physicsLab import errors
 from physicsLab._tools import position
 from physicsLab.typehint import numType
-from physicsLab.experiment import get_Experiment
+from physicsLab.experiment import get_current_experiment
 from physicsLab.enums import ExperimentType
 
 # 是否将全局设置为元件坐标系
 def set_elementXYZ(boolen: bool) -> None:
-    if get_Experiment().experiment_type != ExperimentType.Circuit:
+    if get_current_experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
     if not isinstance(boolen, bool):
         raise TypeError
 
-    get_Experiment().is_elementXYZ = boolen
+    get_current_experiment().is_elementXYZ = boolen
 
 # 获取是否为元件坐标系
 def is_elementXYZ() -> bool:
-    return get_Experiment().is_elementXYZ
+    return get_current_experiment().is_elementXYZ
 
 # 物实坐标系x, y, z单位1
 _X_UNIT: float = 0.16
@@ -32,7 +32,7 @@ _Y_AMEND = 0.045
 
 def xyzTranslate(x: numType, y: numType, z: numType, is_bigElement: bool = False):
     ''' 将元件坐标系转换为物实的坐标系 '''
-    if get_Experiment().experiment_type != ExperimentType.Circuit:
+    if get_current_experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
 
     _xOrigin, _yOrigin, _zOrigin = get_OriginPosition()
@@ -50,7 +50,7 @@ def xyzTranslate(x: numType, y: numType, z: numType, is_bigElement: bool = False
 
 def translateXYZ(x: numType, y: numType, z: numType, is_bigElement: bool = False):
     ''' 将物实的坐标系转换为元件坐标系 '''
-    if get_Experiment().experiment_type != ExperimentType.Circuit:
+    if get_current_experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
 
     _xOrigin, _yOrigin, _zOrigin = get_OriginPosition()
@@ -73,7 +73,7 @@ def set_O(x: numType, y: numType, z: numType) -> None:
         isinstance(y, (int, float)) and
         isinstance(z, (int, float))
     ):
-        get_Experiment().elementXYZ_origin_position = position(x, y, z)
+        get_current_experiment().elementXYZ_origin_position = position(x, y, z)
     else:
         raise TypeError
 
@@ -83,7 +83,7 @@ def amend_big_Element(x: numType, y: numType, z: numType):
 
 # 获取坐标原点
 def get_OriginPosition() -> position:
-    return get_Experiment().elementXYZ_origin_position
+    return get_current_experiment().elementXYZ_origin_position
 
 def get_xyzUnit() -> tuple:
     ''' 获取元件坐标系下的单位长度对应着物实坐标系下的值

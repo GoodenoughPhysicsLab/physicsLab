@@ -549,7 +549,7 @@ class Loop:
     def __next__(self):
         pass
 
-class Rest_symbol:
+class Rest_symbol: # TODO 改一下
     ''' 休止符 '''
     __singleton: Optional[Self] = None
     def __new__(cls) -> Self:
@@ -691,6 +691,7 @@ class Piece:
         yield next(self.__iter)
 
 # 将piece的数据生成为物实的电路
+# TODO 没必要再保持Player是个类了, 完全可以改为一个方法了
 class Player:
     def __init__(self,
                  musicArray: Piece,
@@ -700,8 +701,6 @@ class Player:
                  elementXYZ = None,
                  is_optimize: bool = True,
                  ) -> None:
-        from physicsLab.element import count_Elements
-        count_elements_start: int = count_Elements()
 
         if not isinstance(x, (int, float)) or \
                 not isinstance(y, (int, float)) or \
@@ -803,10 +802,3 @@ class Player:
 
         stop.i_up - yPlayer[ycor // 2].o_up # type: ignore -> D_Flipflop must has attr o_up
         stop.i_low - xPlayer[side - 1].o_up # type: ignore -> D_Flipflop must has attr neg_data_Output
-
-        count_elements_end: int = count_Elements()
-        self._count_elements = count_elements_end - count_elements_start
-
-    # 返回Player创建的元件数量
-    def count_elements(self) -> int:
-        return self._count_elements

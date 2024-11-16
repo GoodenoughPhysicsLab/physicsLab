@@ -16,6 +16,7 @@ from physicsLab import  _tools
 from physicsLab import errors
 from physicsLab import savTemplate
 from physicsLab import _colorUtils
+from ._element_base import ElementBase
 from .web import User, _check_response
 from .enums import Category, Tag
 from .savTemplate import Generate
@@ -28,7 +29,7 @@ def id_to_time(id: str) -> datetime:
     seconds = int(id[0:8], 16)
     return datetime.fromtimestamp(seconds)
 
-class stack_Experiment:
+class _StackExperiment:
     data: List["Experiment"] = []
 
     def __new__(cls):
@@ -54,9 +55,9 @@ class stack_Experiment:
         cls.data.pop()
         return res
 
-def get_Experiment() -> "Experiment":
+def get_current_experiment() -> "Experiment":
     ''' 获取当前正在操作的存档 '''
-    return stack_Experiment.top()
+    return _StackExperiment.top()
 
 class Experiment:
     ''' 实验（存档）类 '''
@@ -90,9 +91,9 @@ class Experiment:
 
         self.SAV_PATH: Optional[str] = None # 存档的完整路径
         # 通过坐标索引元件
-        self.elements_Position: Dict[tuple, list] = {}  # key: self._position, value: List[self...]
+        self._elements_position: Dict[tuple, list] = {}  # key: self._position, value: List[self...]
         # 通过index（元件生成顺序）索引元件
-        from .elementBase import ElementBase
+        from ._element_base import ElementBase
         self.Elements:List[ElementBase] = []
 
         if sav_name is not None:
@@ -158,7 +159,7 @@ class Experiment:
             or not isinstance(path_load_mode, Experiment.PathLoadMode):
             raise TypeError
 
-        stack_Experiment.push(self)
+        _StackExperiment.push(self)
 
         # 直接通过文件路径进行导入
         if path_load_mode == Experiment.PathLoadMode.file_name \
@@ -169,7 +170,7 @@ class Experiment:
             self.SAV_PATH = os.path.abspath(sav_name)
 
             if not os.path.exists(self.SAV_PATH):
-                stack_Experiment.pop()
+                _StackExperiment.pop()
                 raise errors.ExperimentNotExistError(f"{self.SAV_PATH} not found")
 
             _temp = _open_sav(self.SAV_PATH)
@@ -191,14 +192,14 @@ class Experiment:
                 self.PlSav["Experiment"] = _temp
             self.__open()
         elif path_load_mode == Experiment.PathLoadMode.sav_name: # 通过存档名导入
-            filename = search_Experiment(sav_name)
+            filename = search_experiment(sav_name)
 
             if filename is None:
-                stack_Experiment.pop()
+                _StackExperiment.pop()
                 raise errors.ExperimentNotExistError(f'No such experiment "{sav_name}"')
 
             self.SAV_PATH = os.path.join(Experiment.SAV_ROOT_DIR, filename)
-            self.PlSav = search_Experiment.sav
+            self.PlSav = search_experiment.sav
             self.__open()
         else:
             raise AssertionError("Please bug report")
@@ -274,7 +275,7 @@ class Experiment:
             or not isinstance(force_crt, bool):
             raise TypeError
 
-        search = search_Experiment(sav_name)
+        search = search_experiment(sav_name)
         if not force_crt and search is not None:
             raise errors.ExperimentHasExistError
         elif force_crt and search is not None:
@@ -283,7 +284,7 @@ class Experiment:
             if os.path.exists(path.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
                 os.remove(path.replace(".sav", ".jpg"))
 
-        stack_Experiment.push(self)
+        _StackExperiment.push(self)
 
         self.__crt(sav_name, experiment_type)
         return self
@@ -304,12 +305,12 @@ class Experiment:
             or not isinstance(experiment_type, ExperimentType):
             raise TypeError
 
-        stack_Experiment.push(self)
+        _StackExperiment.push(self)
 
-        filename = search_Experiment(sav_name)
+        filename = search_experiment(sav_name)
         if filename is not None:
             self.SAV_PATH = os.path.join(Experiment.SAV_ROOT_DIR, filename)
-            self.PlSav = search_Experiment.sav
+            self.PlSav = search_experiment.sav
             self.__open()
         else:
             self.__crt(sav_name, experiment_type)
@@ -323,8 +324,6 @@ class Experiment:
             x, y, z = position[0], position[2], position[1]
 
             # 实例化对象
-            from physicsLab.element import crt_Element
-
             if self.experiment_type == ExperimentType.Circuit:
                 if element["ModelID"] == "Simple Instrument":
                     from .circuit.elements.otherCircuit import Simple_Instrument
@@ -341,7 +340,7 @@ class Experiment:
                         if attr.startswith("音高"):
                             obj.add_note(int(val))
                 else:
-                    obj = crt_Element(element["ModelID"], x, y, z, elementXYZ=False)
+                    obj = self.crt_element(element["ModelID"], x, y, z, elementXYZ=False)
                     obj.data["Properties"] = element["Properties"]
                     obj.data["Properties"]["锁定"] = 1.0
                 # 设置角度信息
@@ -351,10 +350,10 @@ class Experiment:
                 obj.data['Identifier'] = element['Identifier']
 
             elif self.experiment_type == ExperimentType.Celestial:
-                obj = crt_Element(element["Model"], x, y, z)
+                obj = self.crt_element(element["Model"], x, y, z)
                 obj.data = element
             elif self.experiment_type == ExperimentType.Electromagnetism:
-                obj = crt_Element(element["ModelID"], x, y, z)
+                obj = self.crt_element(element["ModelID"], x, y, z)
                 obj.data = element
             else:
                 raise errors.InternalError
@@ -508,7 +507,7 @@ class Experiment:
         assert self.SAV_PATH is not None
 
         if not no_pop:
-            stack_Experiment.pop()
+            _StackExperiment.pop()
 
         self.__write()
 
@@ -553,7 +552,7 @@ class Experiment:
         if os.path.exists(self.SAV_PATH): # 如果一个实验被创建但还未被写入, 就会触发错误
             os.remove(self.SAV_PATH)
             _colorUtils.color_print(
-                f"Successfully delete experiment {self.PlSav['InternalName']}({self.SAV_PATH})!",
+                f"Successfully delete experiment \"{self.PlSav['InternalName']}\"!({self.SAV_PATH})",
                 _colorUtils.COLOR.BLUE
             )
         elif not self.is_crted:
@@ -567,11 +566,11 @@ class Experiment:
         if os.path.exists(self.SAV_PATH.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
             os.remove(self.SAV_PATH.replace(".sav", ".jpg"))
 
-        stack_Experiment.pop()
+        _StackExperiment.pop()
 
     def exit(self) -> None:
         ''' 退出实验而不进行任何操作 '''
-        stack_Experiment.pop()
+        _StackExperiment.pop()
 
     def entitle(self, sav_name: str) -> Self:
         ''' 对存档名进行重命名 '''
@@ -936,7 +935,7 @@ class Experiment:
                 elif not elementXYZ and a_element.is_elementXYZ:
                     e_x, e_y, e_z = xyzTranslate(e_x, e_y, e_z, a_element.is_bigElement)
             a_element.set_position(e_x + x, e_y + y, e_z + z, elementXYZ)
-            # set_Position已处理与elements_Position有关的操作
+            # set_Position已处理与_elements_position有关的操作
             self.Elements.append(a_element)
 
             identifier_to_element[a_element.data["Identifier"]] = a_element
@@ -953,6 +952,132 @@ class Experiment:
                 self.Wires.add(a_wire)
 
         return self
+
+    def crt_element(
+            self,
+            name: str,
+            x: numType = 0,
+            y: numType = 0,
+            z: numType = 0,
+            elementXYZ: Optional[bool] = None,
+            *args,
+            **kwargs
+    ) -> ElementBase:
+        ''' 通过元件的ModelID或其类名创建原件 '''
+        if not isinstance(name, str) or \
+                not isinstance(x, (int, float)) or \
+                not isinstance(y, (int, float)) or \
+                not isinstance(z, (int, float)):
+            raise TypeError
+
+        from physicsLab import circuit
+
+        name = name.strip().replace(' ', '_').replace('-', '_')
+        x, y, z = _tools.roundData(x, y, z) # type: ignore
+
+        if self.experiment_type == ExperimentType.Circuit:
+            if (name == '555_Timer'):
+                return circuit.NE555(x, y, z, elementXYZ)
+            elif (name == '8bit_Input'):
+                return circuit.eight_bit_Input(x, y, z, elementXYZ)
+            elif (name == '8bit_Display'):
+                return circuit.eight_bit_Display(x, y, z, elementXYZ)
+            else:
+                return eval(f"circuit.{name}({x}, {y}, {z}, {elementXYZ}, *{args}, **{kwargs})")
+        elif self.experiment_type == ExperimentType.Celestial:
+            from physicsLab import celestial
+            return eval(f"celestial.{name}({x}, {y}, {z})")
+        elif self.experiment_type == ExperimentType.Electromagnetism:
+            from physicsLab import electromagnetism
+            return eval(f"electromagnetism.{name}({x}, {y}, {z})")
+        else:
+            raise errors.InternalError
+
+    def get_element(
+            self,
+            x: Optional[numType] = None,
+            y: Optional[numType] = None,
+            z: Optional[numType] = None,
+            *,
+            index: Optional[int] = None,
+            **kwargs
+    ) -> Union[ElementBase, List[ElementBase]]:
+        ''' 获取对应坐标的元件的reference '''
+        # 通过坐标索引元件
+        def _get_by_position(x: numType, y: numType, z: numType):
+            if not isinstance(x, (int, float)) or \
+                    not isinstance(y, (int, float)) or \
+                    not isinstance(z, (int, float)):
+                raise TypeError
+
+            position = _tools.roundData(x, y, z)
+            if position not in self._elements_position.keys():
+                if "defualt" in kwargs:
+                    return kwargs["defualt"]
+                raise errors.ElementNotFound(f"{position} do not exist")
+
+            result: list = self._elements_position[position] # type: ignore -> type(position) ==
+                                                            # Tuple[numType, numType, numType]
+            return result[0] if len(result) == 1 else result
+
+        # 通过index（元件生成顺序）索引元件
+        def _get_by_index(index: int):
+            if not isinstance(index, int):
+                raise TypeError
+
+            if 0 < index <= len(self.Elements):
+                return self.Elements[index - 1]
+            else:
+                if "defualt" in kwargs:
+                    return kwargs["defualt"]
+                raise errors.ElementNotFound
+
+        if x is not None and y is not None and z is not None:
+            return _get_by_position(x, y, z)
+        elif index is not None:
+            return _get_by_index(index)
+        else:
+            raise TypeError
+
+    def del_element(self, element: ElementBase) -> None:
+        ''' 删除原件
+            @param element: 三大实验的元件
+        '''
+        if not isinstance(element, ElementBase):
+            raise TypeError
+
+        identifier = element.data["Identifier"] # type: ignore
+
+        res_Wires = set()
+        for a_wire in self.Wires:
+            if a_wire.Source.element_self.data["Identifier"] == identifier or \
+            a_wire.Target.element_self.data["Identifier"] == identifier:
+                continue
+
+            res_Wires.add(a_wire)
+        self.Wires = res_Wires
+
+        # 删除_elements_position中的引用
+        for elements in self._elements_position.values():
+            if element in elements:
+                elements.remove(element)
+                break
+
+        # 删除elements_Index中的引用
+        for element in self.Elements:
+            if element is element:
+                self.Elements.remove(element)
+                break
+
+    # 原件的数量
+    def count_elements(self) -> int:
+        return len(self.Elements)
+
+    # 清空原件
+    def clear_elements(self) -> None:
+        self.Wires.clear()
+        self.Elements.clear()
+        self._elements_position.clear()
 
 class experiment:
     ''' 仅提供通过with操作存档的高层次api '''
@@ -1001,7 +1126,7 @@ class experiment:
             self._Experiment.read()
         if self.elementXYZ:
             if self._Experiment.experiment_type != ExperimentType.Circuit:
-                stack_Experiment.pop()
+                _StackExperiment.pop()
                 raise errors.ExperimentTypeError
             import physicsLab.circuit.elementXYZ as _elementXYZ
             _elementXYZ.set_elementXYZ(True)
@@ -1022,7 +1147,7 @@ class experiment:
             self._Experiment.delete()
             return
 
-def getAllSav() -> List[str]:
+def _get_all_pl_sav() -> List[str]:
     ''' 获取所有物实存档的文件名 '''
     from os import walk
     savs = [i for i in walk(Experiment.SAV_ROOT_DIR)][0]
@@ -1060,18 +1185,18 @@ def _open_sav(sav_path) -> Optional[dict]:
             encoding = chardet.detect(f.read())["encoding"]
         return encode_sav(sav_path, encoding)
 
-def search_Experiment(sav_name: str) -> Optional[str]:
+def search_experiment(sav_name: str) -> Optional[str]:
     ''' 检测实验是否存在
         @param sav_name: 存档名
 
         若存在则返回存档对应的文件名, 若不存在则返回None
     '''
-    for aSav in getAllSav():
+    for aSav in _get_all_pl_sav():
         sav = _open_sav(os.path.join(Experiment.SAV_ROOT_DIR, aSav))
         if sav is None:
             continue
         if sav["InternalName"] == sav_name:
-            search_Experiment.sav = sav
+            search_experiment.sav = sav
             return aSav
 
     return None

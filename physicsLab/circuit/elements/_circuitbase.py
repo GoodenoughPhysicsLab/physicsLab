@@ -4,13 +4,13 @@ import inspect
 from physicsLab import errors
 from physicsLab import _tools
 from physicsLab.circuit import wire
-from physicsLab.elementBase import ElementBase
+from physicsLab._element_base import ElementBase
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.enums import ExperimentType
 from physicsLab.typehint import Optional, Self, numType, CircuitElementData, Generate
 from physicsLab._tools import roundData, randString
-from physicsLab.experiment import Experiment, get_Experiment
+from physicsLab.experiment import Experiment, get_current_experiment
 
 # electricity class's metaClass
 class CircuitMeta(type):
@@ -27,7 +27,7 @@ class CircuitMeta(type):
                 not isinstance(elementXYZ, (bool, type(None))):
             raise TypeError
 
-        _Expe: Experiment = get_Experiment()
+        _Expe: Experiment = get_current_experiment()
         if _Expe.experiment_type != ExperimentType.Circuit:
             raise errors.ExperimentTypeError
 

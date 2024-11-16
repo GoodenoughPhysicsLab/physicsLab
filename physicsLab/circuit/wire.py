@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from physicsLab import errors
-from physicsLab.experiment import get_Experiment
+from physicsLab.experiment import get_current_experiment
 from physicsLab.enums import ExperimentType
 from physicsLab.typehint import Optional, Callable, Union
 
@@ -118,7 +118,7 @@ def _check_typeWire(func: Callable):
         ):
             raise TypeError
 
-        if get_Experiment().experiment_type != ExperimentType.Circuit:
+        if get_current_experiment().experiment_type != ExperimentType.Circuit:
             raise errors.ExperimentTypeError
 
         func(SourcePin, TargetPin, *args, **kwargs)
@@ -128,25 +128,25 @@ def _check_typeWire(func: Callable):
 # 连接导线
 @_check_typeWire
 def crt_Wire(SourcePin: Pin, TargetPin: Pin, color: str = "blue") -> None:
-    get_Experiment().Wires.add(Wire(SourcePin, TargetPin, color))
+    get_current_experiment().Wires.add(Wire(SourcePin, TargetPin, color))
 
 # 删除导线
 @_check_typeWire
 def del_Wire(SourcePin: Pin, TargetPin: Pin) -> None:
     temp = Wire(SourcePin, TargetPin)
-    if temp in get_Experiment().Wires:
-        get_Experiment().Wires.remove(temp)
+    if temp in get_current_experiment().Wires:
+        get_current_experiment().Wires.remove(temp)
     else:
-        get_Experiment().Wires.remove(Wire(TargetPin, SourcePin))
+        get_current_experiment().Wires.remove(Wire(TargetPin, SourcePin))
 
 # 删除所有导线
 def clear_Wires() -> None:
-    if get_Experiment().experiment_type != ExperimentType.Circuit:
+    if get_current_experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
-    get_Experiment().Wires.clear()
+    get_current_experiment().Wires.clear()
 
 # 获取当前导线数
 def count_Wires() -> int:
-    if get_Experiment().experiment_type != ExperimentType.Circuit:
+    if get_current_experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
-    return len(get_Experiment().Wires)
+    return len(get_current_experiment().Wires)

@@ -61,6 +61,7 @@ class ThreadsManager:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        self.tasks.put(_EndOfQueue)
         for worker in self.workers:
             while worker.is_alive():
                 worker.join(timeout=1)
@@ -75,6 +76,3 @@ class ThreadsManager:
             self.workers.add(worker)
             worker.start()
         return task
-
-    def submit_end(self) -> None:
-        self.tasks.put(_EndOfQueue)

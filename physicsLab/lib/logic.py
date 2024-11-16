@@ -6,7 +6,7 @@ from .wires import unitPin, crt_Wires
 from physicsLab._tools import roundData
 from physicsLab.circuit import elements
 from physicsLab.circuit.wire import crt_Wire, Pin
-from physicsLab.experiment import get_Experiment
+from physicsLab.experiment import get_current_experiment
 from physicsLab.enums import ExperimentType
 from physicsLab.typehint import numType, Optional, Self, Union, Type, List
 
@@ -557,7 +557,7 @@ class _Simple_Logic_Meta(type):
                  *args, **kwags
     ):
         self = cls.__new__(cls)
-        if get_Experiment().experiment_type != ExperimentType.Circuit:
+        if get_current_experiment().experiment_type != ExperimentType.Circuit:
             raise errors.ExperimentTypeError
 
         if foldMaxNum <= 0 or \

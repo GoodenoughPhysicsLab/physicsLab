@@ -176,3 +176,7 @@
 # 1.4.22
 1. 新增`web.ManageMsgIter`
 2. `web/api.py`几乎都增加了以`async_`开头的支持协程的风格的api
+3. 重命名`get_Experiment`为`get_current_experiment`
+4. 重命名`search_Experiment`为`search_experiment`
+5. 删除`get_Element`, `crt_Element`, `del_Element`, `count_Element`, `clear_Element`
+6. 新增`Experiment.get_element`, `Experiment.crt_element`, `Experiment.del_element`, `Experiment.count_element`, `Experiment.clear_element`

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from physicsLab.elementBase import ElementBase
+from physicsLab._element_base import ElementBase
 from physicsLab.typehint import numType, Self
 from physicsLab import _tools
 from physicsLab import errors
-from physicsLab.experiment import get_Experiment
+from physicsLab.experiment import get_current_experiment
 from physicsLab.enums import ExperimentType
 
 class _ElectromagnetismMeta(type):
@@ -19,7 +19,7 @@ class _ElectromagnetismMeta(type):
                 not isinstance(z, (int, float)):
             raise TypeError
 
-        _Expe = get_Experiment()
+        _Expe = get_current_experiment()
         if _Expe.experiment_type != ExperimentType.Electromagnetism:
             raise errors.ExperimentTypeError
 

@@ -81,11 +81,7 @@ class ManageMsgIter:
                 tasks = [
                     executor.submit(
                         _force_success, self.force_success,
-                        lambda: self._fetch_manage_msgs(
-                            self.user, self.start_time,
-                            self.end_time, self.user_id,
-                            i + counter * FETCH_AMOUNT
-                        )
+                        lambda: self._fetch_manage_msgs(i + counter * FETCH_AMOUNT)
                     ) for i in range(FETCH_AMOUNT)
                 ]
 
@@ -96,33 +92,31 @@ class ManageMsgIter:
 
     def _fetch_manage_msgs(
             self,
-            user: api.User,
-            start_time: numType,
-            end_time: numType,
-            user_id: Optional[str],
             skip: int,
             ):
-        assert skip >= 0, "internal error, please bug report"
-        assert end_time is not None, "internal error, please bug report"
+        assert skip >= 0, "InternalError: please bug-report"
+        assert self.end_time is not None, "InternalError: please bug-report"
 
         TAKE_MESSAGES_AMOUNT = 20
-        messages = user.get_messages(
+        messages = self.user.get_messages(
             5, skip=skip * TAKE_MESSAGES_AMOUNT, take=TAKE_MESSAGES_AMOUNT,
         )["Data"]["Messages"]
 
         res = []
         for message in messages:
             # a month ~ 2629743 seconds
-            if message["TimestampInitial"] < (start_time - 2629743) * 1000:
+            if message["TimestampInitial"] < (self.start_time - 2629743) * 1000:
                 self.is_fetching_end = True
                 break
-            if start_time * 1000 <= message["TimestampInitial"] <= end_time * 1000:
-                if user_id is None or user_id == message["Users"][0]:
+            if self.start_time * 1000 <= message["TimestampInitial"] <= self.end_time * 1000:
+                if self.user_id is None or self.user_id == message["Users"][0]:
                     res.append(message)
         return res
 
 class BannedMsgIter:
     ''' 获取一段时间的封禁信息 (可指定用户) '''
+    banned_template = None
+
     def __init__(
             self,
             start_time: numType,
@@ -164,14 +158,13 @@ class BannedMsgIter:
             raise ValueError("start_time >= end_time")
 
         # fetch banned_template
-        banned_template = None
-        response = self.user.get_messages(5, take=1, no_templates=False)["Data"]
+        if self.banned_template is None:
+            response = self.user.get_messages(5, take=1, no_templates=False)["Data"]
 
-        for template in response["Templates"]:
-            if template["Identifier"] == "User-Banned-Record":
-                banned_template = copy.deepcopy(template)
-                break
-        assert banned_template is not None, "internal error, please bug report"
+            for template in response["Templates"]:
+                if template["Identifier"] == "User-Banned-Record":
+                    self.banned_template = copy.deepcopy(template)
+                    break
 
         # main
         for manage_msg in ManageMsgIter(
@@ -181,7 +174,7 @@ class BannedMsgIter:
                 self.user_id,
                 self.force_success,
                 ):
-            if manage_msg["TemplateID"] == banned_template["ID"]:
+            if manage_msg["TemplateID"] == self.banned_template["ID"]:
                 yield manage_msg
 
 class WarnedMsgIter:
@@ -193,7 +186,7 @@ class WarnedMsgIter:
             start_time: numType,
             end_time: Optional[numType] = None,
             maybe_warned_message_callback: Optional[Callable] = None,
-            ) -> None:
+    ) -> None:
         ''' 查询警告记录
             @param user: 查询者
             @param user_id: 被查询者的id, 但无法查询所有用户的警告记录
@@ -276,7 +269,7 @@ class RelationsIter:
             display_type: str = "Follower",
             force_success: bool = False,
             amount: Optional[int] = None,
-            ) -> None:
+    ) -> None:
         ''' 查询用户关系
             @param user: 查询者
             @param user_id: 被查询者的id
@@ -332,7 +325,7 @@ class AvatarsIter:
             user: Optional[api.User] = None,
             size_category: str = "full",
             force_success: bool = False,
-            ) -> None:
+    ) -> None:
         ''' @param search_id: 用户id
             @param category: 只能为 "Experiment" 或 "Discussion" 或 "User"
             @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
@@ -389,14 +382,15 @@ class AvatarsIter:
 
 class Bot:
     ''' 由@故事里的人 贡献, 我也没用过() '''
-    def __init__(self,
-                bind_user: api.User,
-                target_id: str,
-                target_type: str,
-                is_ignore_reply_to_others: bool = True,
-                is_read_history: bool = True,
-                is_reply_required: bool = True
-                ) -> None:
+    def __init__(
+            self,
+            bind_user: api.User,
+            target_id: str,
+            target_type: str,
+            is_ignore_reply_to_others: bool = True,
+            is_read_history: bool = True,
+            is_reply_required: bool = True
+    ) -> None:
         ''' @param bind_user: 机器人要绑定的用户账号
             @param target_id: 目标id
             @param target_type: 目标类型, 只能为 "User" 或 "Experiment" 或 "Discussion"

@@ -236,7 +236,7 @@ with experiment("example") as exp:
 ## 多存档操作
 获取当前正在操作的存档:
 ```Python
-get_Experiment()
+get_current_experiment()
 ```
 使用`with experiment`也在多存档操作中被推荐：
 ```Python
@@ -261,6 +261,9 @@ Experiment.observe(
     rotation_z: Optional[numType] = None
 ):
 ```
+x, y, z为观察者位置
+distance为观察者距离物实实验室中心的距离
+rotation_x, rotation_y, rotation_z为观察者的角度
 
 ## 以physicsLab代码的形式导出实验
 ```Python

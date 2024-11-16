@@ -1,9 +1,9 @@
 from physicsLab import _tools
 from physicsLab import errors
-from physicsLab.elementBase import ElementBase
+from physicsLab._element_base import ElementBase
 from physicsLab.typehint import numType, Self
 from physicsLab.enums import ExperimentType
-from physicsLab.experiment import get_Experiment
+from physicsLab.experiment import get_current_experiment
 
 class _PlanetMeta(type):
     def __call__(cls, x:numType, y: numType, z:numType, *args, **kwargs):
@@ -12,7 +12,7 @@ class _PlanetMeta(type):
                 not isinstance(z, (int, float)):
             raise TypeError
 
-        _Expe = get_Experiment()
+        _Expe = get_current_experiment()
         if _Expe.experiment_type != ExperimentType.Celestial:
             raise errors.ExperimentTypeError
 
