@@ -430,7 +430,7 @@ class Bot:
             self.start_index = comments[0]['ID'] if len(comments) != 0 else ""
 
     def run(self,
-            process_callback: Optional[Callable],
+            process_callback: Callable,
             catch_callback: Optional[Callable] = None,
             reply_callback: Optional[Callable] = None,
             finish_callback: Optional[Callable] = None,

@@ -3,9 +3,9 @@ import setuptools
 
 setuptools.setup(
     name="physicsLab",
-    version="1.4.21",
+    version="1.5.0",
     license="MIT",
-    author="Goodenough",
+    author="Arendelle",
     author_email="2381642961@qq.com",
     description="Python API for Physics-Lab-AR",
     long_description="show description in [github](https://github.com/GoodenoughPhysicsLab/physicsLab)",

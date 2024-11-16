@@ -173,7 +173,7 @@
 # 1.4.21
 1.  新增`User.recive_bonus`, `User.rename`, `User.star_content`
 
-# 1.5.1
+# 1.5.0
 1. 新增`web.ManageMsgIter`
 2. `web/api.py`几乎都增加了以`async_`开头的支持协程的风格的api
 3. 重命名`get_Experiment`为`get_current_experiment`
@@ -183,3 +183,6 @@
 7. 删除`music.Player`，其功能完全由`music.Piece.release`代替
 8. 重命名`*_Wire`为`*_wire`, `*_Wires`为`*_wires`
 9. 重命名`set_HighLevelValue`为`set_high_level_value`, `set_HighLevel`为`set_high_level`，对lowLevel也同理
+
+## 1.5.1
+1. 
