@@ -106,10 +106,10 @@ o = Or_Gate()
   # 比如或门（Or_Gate），含有 i_up, i_low, o三个引脚属性
   # 通过引脚属性，就可以更方便的连接导线了
 
-  # crt_Wire()函数用来连接导线，有三个参数：SourcePin, TargetPin, color
+  # crt_wire()函数用来连接导线，有三个参数：SourcePin, TargetPin, color
   # SourcePin与TargetPin必须传入元件的引脚
   # color可以不写，默认为蓝色
-crt_Wire(o.i_up, o.i_low)
+crt_wire(o.i_up, o.i_low)
   # 将程序中生成的原件，导线等等写入存档
 e.write()
   # 然后用物实打开存档见证奇迹

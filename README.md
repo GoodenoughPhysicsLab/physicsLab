@@ -43,10 +43,10 @@ O=Or_Gate()
   # The component contains pin attributes, which encapsulate the original pin representation method of the physical object
   # For example, Or_Gate, which contains i_ Up, i_ Low, o three pin attributes
   # By using pin attributes, it is more convenient to connect wires
-  # Crt_ The Wire() function is used to connect wires and has three parameters: SourcePin, TargetPin, and color
+  # Crt_ The wire() function is used to connect wires and has three parameters: SourcePin, TargetPin, and color
   # SourcePin and TargetPin must be passed into the pin of the component
   # Color can be optional, default to blue
-crt_Wire(o.i_up, o.i_low)
+crt_wire(o.i_up, o.i_low)
   # Write the original components, wires, etc. generated in the program into the archive
 write_ Experiment()
   # Then open the archive with physical objects to witness miracles

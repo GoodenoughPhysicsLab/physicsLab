@@ -2,10 +2,10 @@
 from typing import Union, Callable, Tuple, Optional
 
 from physicsLab import errors
-from physicsLab.circuit.wire import crt_Wire, del_Wire, Pin
+from physicsLab.circuit.wire import crt_wire, del_wire, Pin
 
 # 模块化电路的“引脚”，输入输出都是数据
-class unitPin:
+class UnitPin:
     __slots__ = ("lib_self", "elementPins")
     def __init__(self, lib_self, *elementPins):
         self.lib_self = lib_self
@@ -16,12 +16,12 @@ class unitPin:
         if isinstance(item, int):
             return self.elementPins[item]
         elif isinstance(item, slice):
-            return unitPin(self.lib_self, *self.elementPins[item])
+            return UnitPin(self.lib_self, *self.elementPins[item])
         else:
             raise TypeError
 
-    def __sub__(self, other: Union[Pin, "unitPin"]):
-        crt_Wires(self, other)
+    def __sub__(self, other: Union[Pin, "UnitPin"]):
+        crt_wires(self, other)
         return other
 
     def __iter__(self):
@@ -33,17 +33,17 @@ class unitPin:
 
 def check_TypeUnionPin(func: Callable):
     def result(
-        sourcePin: Union[unitPin, Pin],
-        targetPin: Union[unitPin, Pin],
+        sourcePin: Union[UnitPin, Pin],
+        targetPin: Union[UnitPin, Pin],
         warning_status: Optional[bool] = None,
         *args, **kwargs
     ) -> None:
         if isinstance(sourcePin, Pin):
-            sourcePin = unitPin(sourcePin.element_self, sourcePin)
+            sourcePin = UnitPin(sourcePin.element_self, sourcePin)
         if isinstance(targetPin, Pin):
-            targetPin = unitPin(targetPin.element_self, targetPin)
+            targetPin = UnitPin(targetPin.element_self, targetPin)
 
-        if not isinstance(sourcePin, unitPin) or not isinstance(targetPin, unitPin):
+        if not isinstance(sourcePin, UnitPin) or not isinstance(targetPin, UnitPin):
             raise TypeError
 
         if len(sourcePin.elementPins) != len(targetPin.elementPins):
@@ -60,19 +60,19 @@ def check_TypeUnionPin(func: Callable):
 
 # 为unionPin连接导线，相当于自动对数据进行连接导线
 @check_TypeUnionPin
-def crt_Wires(sourcePin: Union[unitPin, Pin],
-              targetPin: Union[unitPin, Pin],
+def crt_wires(sourcePin: Union[UnitPin, Pin],
+              targetPin: Union[UnitPin, Pin],
               warning_status: Optional[bool] = None,
               color="蓝"
               ) -> None:
     for i, o in zip(sourcePin.elementPins, targetPin.elementPins):
-        crt_Wire(i, o, color)
+        crt_wire(i, o, color)
 
 # 删除unionPin的导线
 @check_TypeUnionPin
-def del_Wires(sourcePin: Union[unitPin, Pin],
-              targetPin: Union[unitPin, Pin],
+def del_wires(sourcePin: Union[UnitPin, Pin],
+              targetPin: Union[UnitPin, Pin],
               warning_status: Optional[bool] = None,
               ) -> None:
     for i, o in zip(sourcePin.elementPins, targetPin.elementPins):
-        del_Wire(i, o)
+        del_wire(i, o)

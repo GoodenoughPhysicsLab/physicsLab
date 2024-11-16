@@ -22,12 +22,12 @@ class BasicTest(PLTestBase):
         a = Yes_Gate(0, 0, 0)
         self.assertEqual(expe.count_elements(), 1)
         self.assertEqual(a.get_position(), (0, 0, 0))
-        crt_Wire(a.o, a.i)
-        self.assertEqual(count_Wires(), 1)
-        clear_Wires()
-        self.assertEqual(count_Wires(), 0)
+        crt_wire(a.o, a.i)
+        self.assertEqual(count_wires(), 1)
+        clear_wires()
+        self.assertEqual(count_wires(), 0)
         self.assertEqual(expe.count_elements(), 1)
-        crt_Wire(a.o, a.i)
+        crt_wire(a.o, a.i)
         expe.crt_element('Logic Input')
         self.assertEqual(expe.count_elements(), 2)
         expe.get_element(0, 0, 0)
@@ -38,7 +38,7 @@ class BasicTest(PLTestBase):
         expe: Experiment = Experiment().crt("__test__", force_crt=True)
 
         self.assertEqual(expe.count_elements(), 0)
-        self.assertEqual(count_Wires(), 0)
+        self.assertEqual(count_wires(), 0)
         Logic_Input(0, 0, 0)
         expe.write()
 
@@ -62,27 +62,27 @@ class BasicTest(PLTestBase):
     def test_crt_wire(self):
         with experiment("__test__", is_exit=True, force_crt=True):
             a = Or_Gate(0, 0, 0)
-            crt_Wire(a.o, a.i_up, "red")
-            self.assertEqual(count_Wires(), 1)
+            crt_wire(a.o, a.i_up, "red")
+            self.assertEqual(count_wires(), 1)
 
-            del_Wire(a.o, a.i_up)
-            self.assertEqual(count_Wires(), 0)
+            del_wire(a.o, a.i_up)
+            self.assertEqual(count_wires(), 0)
 
     def test_same_crt_wire(self):
         with experiment("__test__", is_exit=True, force_crt=True):
             a = Or_Gate(0, 0, 0)
-            crt_Wire(a.o, a.i_up, "red")
-            crt_Wire(a.i_up, a.o, "blue")
-            self.assertEqual(count_Wires(), 1)
+            crt_wire(a.o, a.i_up, "red")
+            crt_wire(a.i_up, a.o, "blue")
+            self.assertEqual(count_wires(), 1)
 
     @my_test_dec
     def test_union_Sum(self):
         expe: Experiment = Experiment().crt("__test__", force_crt=True)
         lib.Sum(0, -1, 0, bitnum=64)
         self.assertEqual(expe.count_elements(), 64)
-        self.assertEqual(count_Wires(), 63)
+        self.assertEqual(count_wires(), 63)
         expe.clear_elements()
-        self.assertEqual(count_Wires(), 0)
+        self.assertEqual(count_wires(), 0)
         self.assertEqual(expe.count_elements(), 0)
         expe.exit()
 
@@ -90,12 +90,12 @@ class BasicTest(PLTestBase):
     def test_get_Element(self):
         expe: Experiment = Experiment().crt("__test__", force_crt=True)
         Or_Gate(0, 0, 0)
-        crt_Wire(
+        crt_wire(
             expe.get_element(0, 0, 0).o,
             expe.get_element(index=1).i_up
         )
-        crt_Wire(expe.get_element(0,0,0).i_low, expe.get_element(index=1).o)
-        self.assertEqual(count_Wires(), 2)
+        crt_wire(expe.get_element(0,0,0).i_low, expe.get_element(index=1).o)
+        self.assertEqual(count_wires(), 2)
         expe.exit()
 
     # 测逝用例未写完
@@ -133,9 +133,9 @@ class BasicTest(PLTestBase):
             for y in [y * 2 + 10 for y in range(5)]:
                 Multiplier(x, y, 0)
 
-        crt_Wire(expe.get_element(index=1).o, expe.get_element(0, 1, 0).i)
+        crt_wire(expe.get_element(index=1).o, expe.get_element(0, 1, 0).i)
         expe.get_element(index=2).i - expe.get_element(index=3).o - expe.get_element(index=4).i
-        self.assertEqual(count_Wires(), 3)
+        self.assertEqual(count_wires(), 3)
         self.assertEqual(expe.count_elements(), 150)
         expe.exit()
 
@@ -160,7 +160,7 @@ class BasicTest(PLTestBase):
             Logic_Input(0, 0, 0).o - Or_Gate(0, 0, 0).o
             expe.del_element(expe.get_element(index=2))
             self.assertEqual(expe.count_elements(), 1)
-            self.assertEqual(count_Wires(), 0)
+            self.assertEqual(count_wires(), 0)
 
     # 测逝模块化电路连接导线
     @my_test_dec
@@ -170,11 +170,11 @@ class BasicTest(PLTestBase):
             b = lib.Outputs(0.6, 0, 0, bitnum=8, elementXYZ=False)
             Logic_Output(0.6, 0, 0.1, elementXYZ=False)
             c = lib.D_WaterLamp(1, 0, 0, bitnum=8)
-            crt_Wires(b.inputs, c.outputs)
+            crt_wires(b.inputs, c.outputs)
             self.assertEqual(25, expe.count_elements())
-            self.assertEqual(23, count_Wires())
-            del_Wires(c.outputs, b.inputs)
-            self.assertEqual(15, count_Wires())
+            self.assertEqual(23, count_wires())
+            del_wires(c.outputs, b.inputs)
+            self.assertEqual(15, count_wires())
 
     # 测逝模块化加法电路
     @my_test_dec
@@ -216,7 +216,7 @@ class BasicTest(PLTestBase):
             Positive_Charge(0.1, 0, 0)
             self.assertEqual(expe.count_elements(), 2)
             try:
-                count_Wires()
+                count_wires()
             except ExperimentTypeError:
                 pass
             else:
@@ -226,11 +226,11 @@ class BasicTest(PLTestBase):
     def test_union_Sub(self):
         with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True) as expe:
             a = lib.Sub(0, 0, 0, bitnum=8, fold=False)
-            crt_Wires(lib.Inputs(-3, 0, 0, bitnum=8).outputs, a.minuend)
-            crt_Wires(lib.Inputs(-2, 0, 0, bitnum=8).outputs, a.subtrahend)
-            crt_Wires(lib.Outputs(2, 0, 0, bitnum=9).inputs, a.outputs)
+            crt_wires(lib.Inputs(-3, 0, 0, bitnum=8).outputs, a.minuend)
+            crt_wires(lib.Inputs(-2, 0, 0, bitnum=8).outputs, a.subtrahend)
+            crt_wires(lib.Outputs(2, 0, 0, bitnum=9).inputs, a.outputs)
             self.assertEqual(expe.count_elements(), 42)
-            self.assertEqual(count_Wires(), 41)
+            self.assertEqual(count_wires(), 41)
 
             lib.Sub(-5, 0, 0, bitnum=4)
 
@@ -331,7 +331,7 @@ class BasicTest(PLTestBase):
                 a.i - a.o
 
                 self.assertEqual(exp2.count_elements(), 2)
-                self.assertEqual(count_Wires(), 1)
+                self.assertEqual(count_wires(), 1)
 
     @my_test_dec
     def test_crt_self_wire(self):

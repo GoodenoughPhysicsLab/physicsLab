@@ -28,7 +28,7 @@
 
 ## 导线 wires
 ## 连接模块化电路的导线
-调用`crt_Wires()`，参数支持传入元件/模块化电路的引脚
+调用`crt_wires()`，参数支持传入元件/模块化电路的引脚
 ```Python
 from physicsLab import *
 from physicsLab.union import *
@@ -36,8 +36,8 @@ from physicsLab.union import *
 with experiment("测逝"):
     a = D_WaterLamp(bitLength=8)
     b = Outputs(bigLength=8)
-    crt_Wires(a.data_Outputs, b.data_Inputs)
+    crt_wires(a.data_Outputs, b.data_Inputs)
 ```
 
 ## 删除模块化电路的导线
-调用`del_Wires()`，同上
+调用`del_wires()`，同上

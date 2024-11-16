@@ -2,7 +2,7 @@
 
 ## 连接导线
 连接导线提供了2种方式  
-第一种 :  
+1.
 ```Python
 from physicsLab import *
 
@@ -10,14 +10,14 @@ with experiment("example"):
     _input = Logic_Input()
     _output = Logic_Output()
 
-    crt_Wire(_input.o, _putput.i, color='红') # 连接导线
+    crt_wire(_input.o, _putput.i, color='红') # 连接导线
 # `o`是`_input`的引脚, 是output的缩写
 # `i`是`_output`的引脚, 是input的缩写
 # color暂时只支持中文的 "黑", "蓝", "红", "绿", "黄" 与 对应颜色的英文
 # 不传入color参数的话，color默认为蓝色
 ```
 
-另一种方法 :  
+2.
 之所以做了这个是因为我觉得`-`与导线很像  
 > Note: 有时候IDE会认为重载后的减法运算后没有变量去接受返回值, 因此会给出黄色波浪线
 ```Python
@@ -29,13 +29,13 @@ element.o - element2.i
 ```python
 from physicsLab import *
 a = Or_Gate(0.1, 0.1, 0)
-crt_Wire(a.o, a.i_up)
+crt_wire(a.o, a.i_up)
 ```
 
-引脚也可以在[所有元件.md](elements.md)中找到
+在[所有元件.md](elements.md)中记录得有所有引脚
 
 ## 删除导线
-除了创建导线外，也可以删除导线：  
+除了创建导线外，也可以删除导线：
 ```Python
 from physicsLab import *
 
@@ -43,14 +43,14 @@ with experiment("example"):
     element = Logic_Input()
     element2 = Logic_Output()
 
-    del_Wire(element.o, element2.i, color="red")
+    del_wire(element.o, element2.i, color="red")
 ```
-使用方法与crt_Wire一模一样  
+使用方法与crt_wire一模一样
 > Note: 目前删除导线时仍然需要提供绝对准确的颜色参数, 未来可能会考虑只需用提供两个引脚就行了
 
 ## others
 尽管我尽量避免讲一些实现, 但这个我还是忍不住想讲一下这个  
-在以前有另一个更原始的函数用来连接导线( 在`physicsLab v1.2.2`之后，该函数被移除 ) :
+在以前有另一个更原始的函数用来连接导线 (在`physicsLab v1.2.2`之后，该函数被移除):
 ```Python
 old_crt_wire(SourceLabel, SourcePin: int, TargetLabel, TargetPin: int, color = "蓝") -> None
 ```
@@ -63,12 +63,12 @@ D触发器：     两引脚门电路：    比较器:     三引脚门电路： 
 3    1                       0            1                4    1      2    3
 
 逻辑输入、逻辑输出：
-0  
-  
-二位乘法器：  
-4  0  
-5  1  
-6  2  
-7  3  
+0
+
+二位乘法器：
+4  0
+5  1
+6  2
+7  3
 ```
-很明显比第一种更麻烦  
+很明显比第一种更麻烦

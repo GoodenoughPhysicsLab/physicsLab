@@ -13,7 +13,7 @@ from enum import Enum, unique
 from physicsLab import errors
 from physicsLab.circuit import elements
 from physicsLab._tools import roundData
-from physicsLab.lib import crt_Wires, D_WaterLamp
+from physicsLab.lib import crt_wires, D_WaterLamp
 from physicsLab.circuit.elements.otherCircuit import majorSet_Tonality
 from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, numType, Callable, Type
 
@@ -733,7 +733,7 @@ class Piece:
         yesGate = elements.Yes_Gate(x + 2, y, z, True)
         xPlayer[0].o_low - yesGate.i
 
-        crt_Wires(xPlayer.outputs[0], yPlayer.inputs)
+        crt_wires(xPlayer.outputs[0], yPlayer.inputs)
 
         # 上升沿触发器
         no_gate = elements.No_Gate(x + 1, y, z + 1, True)
@@ -746,7 +746,7 @@ class Piece:
         or_gate = elements.Or_Gate(x + 3, y, z, True)
         or_gate.i_low - and_gate.o
         or_gate.i_up - counter.o_upmid
-        crt_Wires(or_gate.o, xPlayer.inputs)
+        crt_wires(or_gate.o, xPlayer.inputs)
 
         # main
         xcor, ycor = -1, 0

@@ -14,12 +14,12 @@ class Pin:
         self.pinLabel: int = pinLabel
 
     # 重载减法运算符作为连接导线的语法
-    def __sub__(self, obj: Union["Pin", "unitPin"]) -> Union["Pin", "unitPin"]: # type: ignore unitPin
-        from physicsLab.lib.wires import unitPin, crt_Wires
+    def __sub__(self, obj: Union["Pin", "UnitPin"]) -> Union["Pin", "UnitPin"]: # type: ignore UnitPin
+        from physicsLab.lib.wires import UnitPin, crt_wires
         if isinstance(obj, Pin):
-            crt_Wire(self, obj)
-        elif isinstance(obj, unitPin):
-            crt_Wires(self, obj)
+            crt_wire(self, obj)
+        elif isinstance(obj, UnitPin):
+            crt_wires(self, obj)
         else:
             raise TypeError
         return obj
@@ -110,7 +110,7 @@ class Wire:
         }
 
 # 检查函数参数是否是导线
-def _check_typeWire(func: Callable):
+def _check(func: Callable):
     def result(SourcePin: Pin, TargetPin: Pin, *args, **kwargs) -> None:
         if not (
                 isinstance(SourcePin, Pin) and
@@ -126,13 +126,13 @@ def _check_typeWire(func: Callable):
     return result
 
 # 连接导线
-@_check_typeWire
-def crt_Wire(SourcePin: Pin, TargetPin: Pin, color: str = "blue") -> None:
+@_check
+def crt_wire(SourcePin: Pin, TargetPin: Pin, color: str = "blue") -> None:
     get_current_experiment().Wires.add(Wire(SourcePin, TargetPin, color))
 
 # 删除导线
-@_check_typeWire
-def del_Wire(SourcePin: Pin, TargetPin: Pin) -> None:
+@_check
+def del_wire(SourcePin: Pin, TargetPin: Pin) -> None:
     temp = Wire(SourcePin, TargetPin)
     if temp in get_current_experiment().Wires:
         get_current_experiment().Wires.remove(temp)
@@ -140,13 +140,13 @@ def del_Wire(SourcePin: Pin, TargetPin: Pin) -> None:
         get_current_experiment().Wires.remove(Wire(TargetPin, SourcePin))
 
 # 删除所有导线
-def clear_Wires() -> None:
+def clear_wires() -> None:
     if get_current_experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
     get_current_experiment().Wires.clear()
 
 # 获取当前导线数
-def count_Wires() -> int:
+def count_wires() -> int:
     if get_current_experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
     return len(get_current_experiment().Wires)

@@ -2,10 +2,10 @@
 import physicsLab.errors as errors
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
-from .wires import unitPin, crt_Wires
+from .wires import UnitPin, crt_wires
 from physicsLab._tools import roundData
 from physicsLab.circuit import elements
-from physicsLab.circuit.wire import crt_Wire, Pin
+from physicsLab.circuit.wire import crt_wire, Pin
 from physicsLab.experiment import get_current_experiment
 from physicsLab.enums import ExperimentType
 from physicsLab.typehint import numType, Optional, Self, Union, Type, List
@@ -90,14 +90,14 @@ class Super_AndGate:
         if mod_num == 3:
             end_element = elements.Multiplier(x, y, z, elementXYZ=True)
             end_element.i_up - end_element.i_upmid
-            crt_Wires(unitPin(None, *(mul.o_up for mul in muls), end_element.o_up), tmp.inputs)
+            crt_wires(UnitPin(None, *(mul.o_up for mul in muls), end_element.o_up), tmp.inputs)
             for mul in muls:
                 self._inputs += [mul.i_low, mul.i_lowmid, mul.i_upmid, mul.i_up]
             self._inputs += [end_element.i_low, end_element.i_lowmid, end_element.i_upmid, end_element.i_up]
 
         elif mod_num == 2:
             end_element = elements.And_Gate(x, y, z, elementXYZ=True)
-            crt_Wires(unitPin(None, *(mul.o_up for mul in muls), end_element.o), tmp.inputs)
+            crt_wires(UnitPin(None, *(mul.o_up for mul in muls), end_element.o), tmp.inputs)
             for mul in muls:
                 self._inputs += [mul.i_low, mul.i_lowmid, mul.i_upmid, mul.i_up]
             self._inputs += [end_element.i_low, end_element.i_up]
@@ -110,15 +110,15 @@ class Super_AndGate:
             self._inputs += tmp._inputs[len(muls):]
 
         else: # end_num == 0
-            crt_Wires(unitPin(None, *(mul.o_up for mul in muls)), tmp.inputs)
+            crt_wires(UnitPin(None, *(mul.o_up for mul in muls)), tmp.inputs)
             for mul in muls:
                 self._inputs += [mul.i_low, mul.i_lowmid, mul.i_upmid, mul.i_up]
 
         self._outputs = tmp.output
 
     @property
-    def inputs(self) -> unitPin:
-        return unitPin(
+    def inputs(self) -> UnitPin:
+        return UnitPin(
             self,
             *self._inputs
         )
@@ -174,7 +174,7 @@ class Super_OrGate:
             next_orgates = Super_OrGate(x, y, z, len(self._outputs), True)
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
-                crt_Wire(input_, output_)
+                crt_wire(input_, output_)
         else: # num % 2 == 1
             num_copy = bitnum
             while num_copy != 1:
@@ -186,11 +186,11 @@ class Super_OrGate:
             self._inputs.append(next_orgates._inputs[-1])
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
-                crt_Wire(input_, output_)
+                crt_wire(input_, output_)
 
     @property
-    def inputs(self) -> unitPin:
-        return unitPin(
+    def inputs(self) -> UnitPin:
+        return UnitPin(
             self,
             *self._inputs
         )
@@ -246,7 +246,7 @@ class Super_NorGate:
             next_orgates = Super_NorGate(x, y, z, True, len(self._outputs))
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
-                crt_Wire(input_, output_)
+                crt_wire(input_, output_)
         else: # num % 2 == 1
             num_copy = bitnum
             while num_copy != 1:
@@ -258,11 +258,11 @@ class Super_NorGate:
             self._inputs.append(next_orgates._inputs[-1])
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
-                crt_Wire(input_, output_)
+                crt_wire(input_, output_)
 
     @property
-    def inputs(self) -> unitPin:
-        return unitPin(
+    def inputs(self) -> UnitPin:
+        return UnitPin(
             self,
             *self._inputs
         )
@@ -314,12 +314,12 @@ class Tick_Counter:
                 if a_bit:
                     _p = [self._output.o_low, self._output.o_lowmid, self._output.o_upmid, self._output.o_up][i]
                     output_pins.append(_p)
-                    self._o = unitPin(self, _p)
+                    self._o = UnitPin(self, _p)
 
             if len(output_pins) >= 2:
                 sa = Super_AndGate(x + 1, y, z, True, len(output_pins))
                 self._o = sa.output
-                crt_Wires(unitPin(None, *output_pins), sa.inputs)
+                crt_wires(UnitPin(None, *output_pins), sa.inputs)
 
             imp = elements.Imp_Gate(x, y + 1, z, True)
             or_gate = elements.Or_Gate(x, y, z, True)
@@ -327,19 +327,19 @@ class Tick_Counter:
             or_gate.o - imp.i_up
             or_gate.i_up - self._output.i_up
             imp.o - self._output.i_low
-            crt_Wires(self._o, imp.i_low)
+            crt_wires(self._o, imp.i_low)
 
     @property
-    def input(self) -> unitPin:
+    def input(self) -> UnitPin:
         if isinstance(self._output, elements.T_Flipflop):
-            return unitPin(self, self._output.i_low)
+            return UnitPin(self, self._output.i_low)
         else: # isinstance(self._output, elements.Counter)
-            return unitPin(self, self._output.i_up)
+            return UnitPin(self, self._output.i_up)
 
     @property
-    def output(self) -> unitPin:
+    def output(self) -> UnitPin:
         if isinstance(self._output, elements.T_Flipflop):
-            return unitPin(self, self._output.o_low)
+            return UnitPin(self, self._output.o_low)
         else: # isinstance(self._output, elements.Counter)
             return self._o
 
@@ -373,16 +373,16 @@ class Two_four_Decoder:
         self.nimp_gate2.i_low - self.and_gate.i_low
 
     @property
-    def inputs(self) -> unitPin:
-        return unitPin(
+    def inputs(self) -> UnitPin:
+        return UnitPin(
             self,
             self.nor_gate.i_low,
             self.and_gate.i_up,
         )
 
     @property
-    def outputs(self) -> unitPin:
-        return unitPin(
+    def outputs(self) -> UnitPin:
+        return UnitPin(
             self,
             self.nor_gate.o,
             self.nimp_gate1.o,
@@ -431,15 +431,15 @@ class Switched_Register:
         return self.register.clk
 
     @property
-    def inputs1(self) -> unitPin:
-        return unitPin(
+    def inputs1(self) -> UnitPin:
+        return UnitPin(
             self,
             *[e.i_low for e in self.switches]
         )
 
     @property
-    def inputs2(self) -> unitPin:
-        return unitPin(
+    def inputs2(self) -> UnitPin:
+        return UnitPin(
             self,
             *[e.i_upmid for e in self.switches]
         )
@@ -476,12 +476,12 @@ class Equal_to:
             self.xnorgates.append(xnorgate)
 
     @property
-    def inputs1(self) -> unitPin:
-        return unitPin(self, *[e.i_low for e in self.xnorgates])
+    def inputs1(self) -> UnitPin:
+        return UnitPin(self, *[e.i_low for e in self.xnorgates])
 
     @property
-    def inputs2(self) -> unitPin:
-        return unitPin(self, *[e.i_up for e in self.xnorgates])
+    def inputs2(self) -> UnitPin:
+        return UnitPin(self, *[e.i_up for e in self.xnorgates])
 
     @property
     def output(self) -> Pin:
@@ -521,11 +521,11 @@ class Signed_Sum:
         nimpgate.o - self.xorgate2.i_low
 
     @property
-    def inputs1(self) -> unitPin:
+    def inputs1(self) -> UnitPin:
         return self._inputs.inputs1
 
     @property
-    def inputs2(self) -> unitPin:
+    def inputs2(self) -> UnitPin:
         return self._inputs.inputs2
 
     @property
@@ -537,7 +537,7 @@ class Signed_Sum:
         return self.xorgate.i_low
 
     @property
-    def outputs(self) -> unitPin:
+    def outputs(self) -> UnitPin:
         return self._outputs.outputs[0:-1]
 
     @property
@@ -652,25 +652,25 @@ class Sum(_Base):
                 self._elements[i].o_low - self._elements[i + 1].i_low
 
     @property
-    def inputs1(self) -> unitPin:
+    def inputs1(self) -> UnitPin:
         ''' 加数1 '''
-        return unitPin(
+        return UnitPin(
             self,
             *(element.i_mid for element in self._elements)
         )
 
     @property
-    def inputs2(self) -> unitPin:
+    def inputs2(self) -> UnitPin:
         ''' 加数2 '''
-        return unitPin(
+        return UnitPin(
             self,
             *(element.i_up for element in self._elements)
         )
 
     @property
-    def outputs(self) -> unitPin:
+    def outputs(self) -> UnitPin:
         ''' 加法的结果 '''
-        return unitPin(
+        return UnitPin(
             self,
             *(element.o_up for element in self._elements),
             self._elements[-1].o_low
@@ -743,9 +743,9 @@ class Sub(_Base):
         self._elements.extend(self._fullAdders + self._noGates)
 
     @property
-    def minuend(self) -> unitPin:
+    def minuend(self) -> UnitPin:
         ''' 被减数 '''
-        return unitPin(
+        return UnitPin(
             self,
             *(e.i_up for e in self._fullAdders)
         )
@@ -754,7 +754,7 @@ class Sub(_Base):
     @property
     def subtrahend(self):
         ''' 减数 '''
-        return unitPin(
+        return UnitPin(
             self,
             *(e.i for e in self._noGates)
         )
@@ -762,7 +762,7 @@ class Sub(_Base):
     @property
     def outputs(self):
         ''' 减法的结果 '''
-        return unitPin(
+        return UnitPin(
             self,
             *(e.o_up for e in self._fullAdders),
             self._fullAdders[-1].o_low
@@ -836,25 +836,25 @@ class AU_SumSub(_Base):
         self._elements.extend(self._fullAdders + self._xorgates)
 
     @property
-    def inputs1(self) -> unitPin:
+    def inputs1(self) -> UnitPin:
         ''' 加数1 or 被减数 '''
-        return unitPin(
+        return UnitPin(
             self,
             *(e.i_up for e in self._fullAdders)
         )
 
     @property
-    def inputs2(self) -> unitPin:
+    def inputs2(self) -> UnitPin:
         ''' 加数2 or 减数 '''
-        return unitPin(
+        return UnitPin(
             self,
             *(e.i_up for e in self._xorgates)
         )
 
     @property
-    def outputs(self) -> unitPin:
+    def outputs(self) -> UnitPin:
         ''' 加法器的结果 '''
-        return unitPin(
+        return UnitPin(
             self,
             *(e.o_up for e in self._fullAdders),
             self._fullAdders[-1].o_low
@@ -939,22 +939,22 @@ class D_WaterLamp(_Base):
             orGate.i_low - firstElement.i_low
 
     @property
-    def inputs(self) -> unitPin:
-        return unitPin(
+    def inputs(self) -> UnitPin:
+        return UnitPin(
             self,
             self._elements[0].i_low
         )
 
     @property
-    def outputs(self) -> unitPin:
+    def outputs(self) -> UnitPin:
         if not self.is_bitlen_equal_to_2:
-            return unitPin(
+            return UnitPin(
                 self,
                 self._elements[0].o_low,
                 *(element.o_up for element in self._elements[1:])
             )
         else:
-            return unitPin(
+            return UnitPin(
                 self,
                 self._elements[0].o_up,
                 self._elements[0].o_low
@@ -962,8 +962,8 @@ class D_WaterLamp(_Base):
 
     # 与data_Output相反的引脚
     @property
-    def neg_outputs(self) -> unitPin:
-        return unitPin(
+    def neg_outputs(self) -> UnitPin:
+        return UnitPin(
             self,
             self._elements[0].o_up,
             *(element.o_low for element in self._elements[1:])
@@ -1023,22 +1023,22 @@ class Register(_Base):
         return self._elements[0].i_low
 
     @property
-    def inputs(self) -> unitPin:
-        return unitPin(
+    def inputs(self) -> UnitPin:
+        return UnitPin(
             self,
             *(element.i_up for element in self._elements)
         )
 
     @property
-    def outputs(self) -> unitPin:
-        return unitPin(
+    def outputs(self) -> UnitPin:
+        return UnitPin(
             self,
             *(element.o_up for element in self._elements)
         )
 
     @property
-    def neg_outputs(self) -> unitPin:
-        return unitPin(
+    def neg_outputs(self) -> UnitPin:
+        return UnitPin(
             self,
             *(element.o_low for element in self._elements)
         )
@@ -1105,7 +1105,7 @@ class MultiElements(_Base):
                         element(x, y + plus, z, True)
                     )
 
-    def pins(self, pin: Pin) -> unitPin:
+    def pins(self, pin: Pin) -> UnitPin:
         if not isinstance(pin, Pin):
             raise TypeError
 
@@ -1115,7 +1115,7 @@ class MultiElements(_Base):
                 p = eval(f"e.{p_name}")
                 if isinstance(p, Pin) and p.pinLabel == pin.pinLabel:
                     res.append(p)
-        return unitPin(self, *res)
+        return UnitPin(self, *res)
 
 class Outputs(MultiElements):
     def __init__(self,
@@ -1139,8 +1139,8 @@ class Outputs(MultiElements):
                          element=elements.Logic_Output)
 
     @property
-    def inputs(self) -> unitPin:
-        return unitPin(
+    def inputs(self) -> UnitPin:
+        return UnitPin(
             self,
             *(element.i for element in self._elements)
         )
@@ -1159,8 +1159,8 @@ class Inputs(MultiElements):
         super().__init__(x, y, z, bitnum, elementXYZ, heading, fold, foldMaxNum, elements.Logic_Input)
 
     @property
-    def outputs(self) -> unitPin:
-        return unitPin(
+    def outputs(self) -> UnitPin:
+        return UnitPin(
             self,
             *(element.o for element in self._elements)
         )
