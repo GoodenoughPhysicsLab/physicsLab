@@ -180,3 +180,4 @@
 4. 重命名`search_Experiment`为`search_experiment`
 5. 删除`get_Element`, `crt_Element`, `del_Element`, `count_Element`, `clear_Element`
 6. 新增`Experiment.get_element`, `Experiment.crt_element`, `Experiment.del_element`, `Experiment.count_element`, `Experiment.clear_element`
+7. 删除`music.Player`，其功能完全由`music.Piece.release`代替

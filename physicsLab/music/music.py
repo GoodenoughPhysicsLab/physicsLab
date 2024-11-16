@@ -10,13 +10,12 @@ import physicsLab.circuit.elementXYZ as _elementXYZ
 from math import ceil, sqrt
 from enum import Enum, unique
 
-from physicsLab import lib
 from physicsLab import errors
 from physicsLab.circuit import elements
 from physicsLab._tools import roundData
 from physicsLab.lib import crt_Wires, D_WaterLamp
 from physicsLab.circuit.elements.otherCircuit import majorSet_Tonality
-from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, numType, Callable
+from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, numType, Callable, Type
 
 def _format_velocity(velocity: float) -> float:
     velocity = min(1, velocity)
@@ -549,13 +548,10 @@ class Loop:
     def __next__(self):
         pass
 
-class Rest_symbol: # TODO 改一下
+class _RestSymbol:
     ''' 休止符 '''
-    __singleton: Optional[Self] = None
-    def __new__(cls) -> Self:
-        if cls.__singleton is None:
-            cls.__singleton = super().__new__(cls)
-        return cls.__singleton
+    def __new__(cls):
+        return _RestSymbol
 
 class Piece:
     ''' 乐曲类 '''
@@ -576,7 +572,7 @@ class Piece:
         if notes is None:
             self.notes = []
         else:
-            self.notes: List[Union[Note, Chord, Rest_symbol]] = []
+            self.notes: List[Union[Note, Chord, Type[_RestSymbol]]] = []
             for a_note in notes:
                 self.append(a_note)
 
@@ -586,7 +582,7 @@ class Piece:
             raise TypeError
 
         while other.time > 1:
-            self.notes.append(Rest_symbol())
+            self.notes.append(_RestSymbol)
             other.time -= 1
         self.notes.append(other)
         return self
@@ -631,7 +627,7 @@ class Piece:
          # 500_000 / 100, 500_000是Midi.tempo的默认数字，100是self.bpm的默认数字
         track.append(mido.MetaMessage("set_tempo", tempo=self.bpm * 5000, time=0))
         for a_note in self.notes:
-            if isinstance(a_note, Rest_symbol):
+            if a_note is _RestSymbol:
                 none_counter += 1
             elif isinstance(a_note, Chord):
                 for note_list in a_note.ins_notes.values():
@@ -655,10 +651,6 @@ class Piece:
         self.write_midi(filepath)
         return Midi(filepath)
 
-    # 将Piece转换为物实对应的电路
-    def release(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None) -> "Player":
-        return Player(self, x, y, z, elementXYZ, self.is_optimize)
-
     # Piece中所有Notes与Chord的数量
     def count_notes(self) -> int:
         res = 0
@@ -670,7 +662,7 @@ class Piece:
     def __len__(self) -> int:
         return len(self.notes)
 
-    def __getitem__(self, item: int) -> Union[Note, Chord, Rest_symbol]:
+    def __getitem__(self, item: int) -> Union[Note, Chord, Type[_RestSymbol]]:
         if not isinstance(item, int):
             raise TypeError
         return self.notes[item]
@@ -690,34 +682,27 @@ class Piece:
     def __next__(self):
         yield next(self.__iter)
 
-# 将piece的数据生成为物实的电路
-# TODO 没必要再保持Player是个类了, 完全可以改为一个方法了
-class Player:
-    def __init__(self,
-                 musicArray: Piece,
-                 x: numType = 0,
-                 y: numType = 0,
-                 z: numType = 0,
-                 elementXYZ = None,
-                 is_optimize: bool = True,
-                 ) -> None:
-
+    def release(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None) -> None:
+        ''' 将Piece转换为物实对应的电路
+            x, y, z: 电路最左下角的元件的坐标
+            elementXYZ: x, y, z是否是元件坐标系
+        '''
         if not isinstance(x, (int, float)) or \
                 not isinstance(y, (int, float)) or \
                 not isinstance(z, (int, float)) or \
-                not isinstance(musicArray, Piece):
+                not isinstance(self, Piece):
             raise TypeError
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
 
         # 给乐器增加休止符
-        while isinstance(musicArray.notes[-1], Rest_symbol):
-            musicArray.notes.pop()
-        while isinstance(musicArray.notes[0], Rest_symbol):
-            musicArray.notes.pop(0)
+        while self.notes[-1] is _RestSymbol:
+            self.notes.pop()
+        while self.notes[0] is _RestSymbol:
+            self.notes.pop(0)
 
-        len_musicArray: int = len(musicArray)
+        len_musicArray: int = len(self)
 
         # 计算音乐矩阵的长宽
         side = None
@@ -765,8 +750,8 @@ class Player:
 
         # main
         xcor, ycor = -1, 0
-        for a_note in musicArray:
-            if isinstance(a_note, Rest_symbol):
+        for a_note in self:
+            if a_note is _RestSymbol:
                 xcor += 1
                 if xcor == side:
                     xcor = 0
@@ -780,7 +765,7 @@ class Player:
                 xcor = 0
                 ycor += 2
             if isinstance(a_note, Chord):
-                ins = a_note.release(1 + x + xcor,  4 + y + ycor, z, elementXYZ=True, is_optimize=is_optimize)
+                ins = a_note.release(1 + x + xcor,  4 + y + ycor, z, elementXYZ=True, is_optimize=self.is_optimize)
             elif isinstance(a_note, Note):
                 ins = elements.Simple_Instrument(
                     1 + x + xcor, 4 + y + ycor, z, pitch=a_note.pitch,

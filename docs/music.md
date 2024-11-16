@@ -26,7 +26,7 @@ with experiment("example"):
 * `release`对应的三个参数分别是x, y, z，个人感觉这`-1, -1, 0`就已经很好用了，没必要修改。
 
 ## class Midi
-`Midi` 类是`Piece`与 *midi文件* 之间的桥梁  
+`Midi` 类是`Piece`与 *midi文件* 之间的桥梁
 ```Python
 from physicsLab import *
 
@@ -35,7 +35,7 @@ m.sound() # 播放该midi，此方法会尝试使用plmidi, pygame与系统调�
 m.sound(player=music.Midi.PLAYER.PYGAME) # 指定使用pygame播放midi
 # 共有PLAYER.plmidi, PLAYER.pygame, PLAYER.os三个参数
 
-m.translate_to_piece() # 将Midi类转换为Piece类
+m.to_piece() # 将Midi类转换为Piece类
 
 # Midi类有一种特殊的存储数据的类型: .mido.py
 # 这个文件导出的音符信息可以方便的进行修改，播放
