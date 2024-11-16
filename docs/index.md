@@ -9,10 +9,4 @@
 
 ## 其他
 ### 关闭打印的颜色
-因为`windows`的颜色打印很容易出问题，因此提供了关闭颜色打印的函数：`close_color_print()`  
-
-# 物实程序化3  
-我也曾试过xuzhengx的物实程序化3，发现爆了文件错误  
-与原作者（xuzhengx）沟通之后了解到：xuzhengx直接把冰如冷的教程拿来索引元件  
-这是个大坑，对感兴趣的同学应该有帮助  
-[点击查看物实程序化3](https://gitee.com/script2000/temp/blob/master/other%20physicsLab/%E7%89%A9%E5%AE%9E%E7%A8%8B%E5%BA%8F%E5%8C%963.py)
+如果颜色打印出现了问题，可以使用`close_color_print()`来关闭颜色打印

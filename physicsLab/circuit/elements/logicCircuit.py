@@ -6,29 +6,29 @@ from ..wire import InputPin, OutputPin
 from physicsLab.typehint import Optional, numType, CircuitElementData, Self, Generate
 
 class _logicBase(CircuitBase):
-    def set_HighLevelValue(self, num: numType) -> Self:
+    def set_high_level_value(self, num: numType) -> Self:
         ''' 设置高电平的值 '''
-        if not isinstance(num, (int, float)) or num < self.get_LowLevelValue():
+        if not isinstance(num, (int, float)) or num < self.get_low_level_value():
             raise TypeError
 
         self.data["Properties"]["高电平"] = num
 
         return self
 
-    def get_HighLevelValue(self) -> numType:
+    def get_high_level_value(self) -> numType:
         ''' 获取高电平的值 '''
         return self.data["Properties"]["高电平"]
 
-    def set_LowLevelValue(self, num: numType) -> Self:
+    def set_low_level_value(self, num: numType) -> Self:
         ''' 设置低电平的值 '''
-        if not isinstance(num, (int, float)) or num < self.get_LowLevelValue():
+        if not isinstance(num, (int, float)) or num < self.get_low_level_value():
             raise TypeError
 
         self.data["Properties"]["低电平"] = num
 
         return self
 
-    def get_LowLevelValue(self):
+    def get_low_level_value(self):
         ''' 获取低电平的值 '''
         return self.data["Properties"]["低电平"]
 
@@ -53,7 +53,7 @@ class Logic_Input(_logicBase):
             res += ".set_highLevel()"
         return res
 
-    def set_highLevel(self) -> "Logic_Input":
+    def set_high_level(self) -> "Logic_Input":
         ''' 将逻辑输入的状态设置为1 '''
         self.data["Properties"]["开关"] = 1.0
         return self

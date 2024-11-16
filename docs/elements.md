@@ -23,10 +23,10 @@
 ### 逻辑电路
 
 逻辑电路元件都有的`method`:
-* set_HighLevelValue # 设置高电平的值
-* get_HighLevelValue # 获取高电平的值
-* set_LowLevelValue # 设置低电平的值
-* get_LowLevelValue # 获取高电平的值
+* set_high_level_value # 设置高电平的值
+* get_high_level_value # 获取高电平的值
+* set_low_level_value # 设置低电平的值
+* get_low_level_value # 获取高电平的值
 
 <table border="1">
 <thead>
@@ -43,7 +43,7 @@
         <td>Logic_Input</td>
         <td>Logic Input</td>
         <td>o</td>
-        <td>set_highLevel # 将逻辑输入的状态设置为1</td>
+        <td>set_high_level # 将逻辑输入的状态设置为1</td>
     </tr>
     <tr>
         <td>逻辑输出</td>
