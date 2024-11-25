@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import copy
 import time
+import asyncio
 import requests
 
 from . import api
+from . import _async_tool
 from physicsLab import errors
 from physicsLab.enums import Category
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 from physicsLab.typehint import Optional, Callable, numType
 
 def _force_success(is_force_success: bool, func: Callable) -> dict:
@@ -30,6 +32,38 @@ def _force_success(is_force_success: bool, func: Callable) -> dict:
                 continue
     else:
         return func()
+
+async def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
+    ''' 运行func, 直到成功或达到max_retry的条件
+        @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
+    '''
+    assert (max_retry is None or max_retry >= 0) and callable(func), "internal error, please bug report"
+
+    import urllib3
+    if max_retry is None:
+        while True:
+            try:
+                return await func(*args, **kwargs)
+            except (
+                TimeoutError,
+                urllib3.exceptions.NewConnectionError,
+                urllib3.exceptions.MaxRetryError,
+                urllib3.exceptions.ConnectionError,
+                requests.exceptions.HTTPError,
+            ):
+                continue
+    else:
+        for _ in range(max_retry + 1):
+            try:
+                return await func(*args, **kwargs)
+            except (
+                TimeoutError,
+                urllib3.exceptions.NewConnectionError,
+                urllib3.exceptions.MaxRetryError,
+                urllib3.exceptions.ConnectionError,
+                requests.exceptions.HTTPError,
+            ):
+                continue
 
 class ManageMsgIter:
     ''' 获取一段时间的管理记录 (可指定用户) '''
@@ -260,35 +294,38 @@ class CommentsIter:
             for comment in comments:
                 yield comment
 
-class RelationsIter:
+class RelationsIter(_async_tool.AsyncTool):
     ''' 获取用户的关注/粉丝的迭代器 '''
     def __init__(
             self,
             user: api.User,
             user_id: str,
             display_type: str = "Follower",
-            force_success: bool = False,
+            max_retry: Optional[int] = 0,
             amount: Optional[int] = None,
     ) -> None:
         ''' 查询用户关系
             @param user: 查询者
             @param user_id: 被查询者的id
             @param display_type: 关系类型, "Follower"为粉丝, "Following"为关注
-            @param force_success: 强制成功, 即重试直到成功
+            @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
             @param amount: Follower/Following的数量, 为None时api将自动查询
         '''
         if not isinstance(user, api.User) or \
                 not isinstance(user_id, str) or \
                 not isinstance(display_type, str) or \
-                not isinstance(force_success, bool) or \
+                not isinstance(max_retry, (int, type(None))) or \
                 not isinstance(amount, (int, type(None))) or \
                 display_type not in ("Follower", "Following"):
             raise TypeError
+        if max_retry is not None and max_retry < 0:
+            raise ValueError
 
+        super().__init__()
         self.user = user
         self.user_id = user_id
         self.display_type = display_type
-        self.force_success = force_success
+        self.max_retry = max_retry
         if amount is None:
             if self.display_type == "Follower":
                 self.amount = self.user.get_user(self.user_id)['Data']['Statistic']['FollowerCount']
@@ -299,24 +336,22 @@ class RelationsIter:
         else:
             self.amount = amount
 
-    def __iter__(self):
-        with ThreadPoolExecutor(max_workers=150) as pool:
-            tasks = [
-                pool.submit(
-                    _force_success, self.force_success,
-                    lambda: self.user.get_relations(
-                        self.user_id, self.display_type, skip=i, take=24
-                    )["Data"]["$values"]
-                ) for i in range(0, self.amount + 24, 24)
-            ]
+    async def _async_main(self) -> None:
+        def _make_task(i: int):
+            return asyncio.create_task(
+                _run_task(
+                    self.max_retry,
+                    self.user.async_get_relations,
+                    self.user_id, self.display_type, skip=i, take=24,
+                )
+            )
+        tasks = [_make_task(i) for i in range(0, self.amount, 24)]
+        for task in tasks:
+            for res in (await task)["Data"]["$values"]:
+                self._put_res(res)
+        self._put_end()
 
-            for task in as_completed(tasks):
-                relations = task.result()
-
-                for relation in relations:
-                    yield relation
-
-class AvatarsIter:
+class AvatarsIter(_async_tool.AsyncTool):
     ''' 获取头像的迭代器 '''
     def __init__(
             self,
@@ -324,19 +359,19 @@ class AvatarsIter:
             category: str,
             user: Optional[api.User] = None,
             size_category: str = "full",
-            force_success: bool = False,
+            max_retry: Optional[int] = 0,
     ) -> None:
         ''' @param search_id: 用户id
             @param category: 只能为 "Experiment" 或 "Discussion" 或 "User"
             @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
             @param user: 查询者, None为匿名用户
-            @param force_success: 强制成功, 即重试直到成功
+            @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
         '''
         if not isinstance(search_id, str) or \
                 not isinstance(category, str) or \
                 not isinstance(size_category, str) or \
                 not isinstance(user, (api.User, type(None))) or \
-                not isinstance(force_success, bool):
+                not isinstance(max_retry, (int, type(None))):
             raise TypeError
         if category not in ("User", "Experiment", "Discussion") or \
                 size_category not in ("small.round", "thumbnail", "full"):
@@ -357,28 +392,31 @@ class AvatarsIter:
         else:
             raise errors.InternalError
 
+        super().__init__()
         self.search_id = search_id
         self.category = category
         self.size_category = size_category
         self.user = user
-        self.force_success = force_success
+        self.max_retry = max_retry
 
-    def __iter__(self):
-        with ThreadPoolExecutor(max_workers=150) as executor:
-            tasks = [
-                executor.submit(
-                    _force_success, self.force_success,
-                    lambda: api.get_avatar(
-                        self.search_id, i, self.category, self.size_category
-                    )
-                ) for i in range(self.max_img_counter + 1)
-            ]
-
-            for task in tasks:
-                try:
-                    yield task.result()
-                except IndexError:
-                    pass
+    async def _async_main(self) -> None:
+        def _make_task(i):
+            return asyncio.create_task(
+                _run_task(
+                    self.max_retry,
+                    api.async_get_avatar,
+                    self.search_id, i, self.category, self.size_category,
+                )
+            )
+        tasks = [_make_task(i) for i in range(self.max_img_counter + 1)]
+        for task in tasks:
+            try:
+                res = await task
+            except IndexError:
+                pass
+            else:
+                self._put_res(res)
+        self._put_end()
 
 class Bot:
     ''' 由@故事里的人 贡献, 我也没用过() '''

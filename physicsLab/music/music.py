@@ -551,7 +551,7 @@ class Loop:
 class _RestSymbol:
     ''' 休止符 '''
     def __new__(cls):
-        return _RestSymbol
+        return cls
 
 class Piece:
     ''' 乐曲类 '''
