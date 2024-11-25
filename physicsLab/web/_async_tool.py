@@ -9,7 +9,6 @@
 import asyncio
 import queue
 import threading
-from physicsLab.typehint import Optional, Callable, Set, Self
 
 class _EndOfQueue:
     def __new__(cls):
@@ -35,4 +34,4 @@ class AsyncTool:
                     break
                 yield res
         while t.is_alive():
-            t.join(timeout=2)
+            t.join(timeout=1)

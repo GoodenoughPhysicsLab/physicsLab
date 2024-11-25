@@ -8,30 +8,7 @@ from . import api
 from . import _async_tool
 from physicsLab import errors
 from physicsLab.enums import Category
-from concurrent.futures import ThreadPoolExecutor
 from physicsLab.typehint import Optional, Callable, numType
-
-def _force_success(is_force_success: bool, func: Callable) -> dict:
-    assert isinstance(is_force_success, bool) \
-            and callable(func) \
-        , "internal error, please bug report"
-
-    if is_force_success:
-        import urllib3
-
-        while True:
-            try:
-                return func()
-            except (
-                TimeoutError,
-                urllib3.exceptions.NewConnectionError,
-                urllib3.exceptions.MaxRetryError,
-                urllib3.exceptions.ConnectionError,
-                requests.exceptions.HTTPError,
-            ):
-                continue
-    else:
-        return func()
 
 async def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
     ''' 运行func, 直到成功或达到max_retry的条件
@@ -53,6 +30,8 @@ async def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
             ):
                 continue
     else:
+        if max_retry == 0:
+            return await func(*args, **kwargs)
         for _ in range(max_retry + 1):
             try:
                 return await func(*args, **kwargs)
@@ -65,7 +44,7 @@ async def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
             ):
                 continue
 
-class ManageMsgIter:
+class ManageMsgIter(_async_tool.AsyncTool):
     ''' 获取一段时间的管理记录 (可指定用户) '''
     def __init__(
             self,
@@ -73,68 +52,71 @@ class ManageMsgIter:
             end_time: Optional[numType] = None,
             user: Optional[api.User] = None,
             user_id: Optional[str] = None,
-            force_success: bool = False,
-            ) -> None:
+            max_retry: Optional[int] = 0,
+    ) -> None:
         ''' 获取封禁记录
             @param user: 查询者
             @param user_id: 被查询者的id, None表示查询所有封禁记录
             @param start_time: 开始时间
             @param end_time: 结束时间, None为当前时间
-            @param force_success: 强制成功, 即使请求失败也返回数据
+            @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
         '''
 
         if not isinstance(user, (api.User, type(None))) or \
                 not isinstance(start_time, (int, float)) or \
                 not isinstance(end_time, (int, float, type(None))) or \
                 not isinstance(user_id, (str, type(None))) or \
-                not isinstance(force_success, bool):
+                not isinstance(max_retry, (int, type(None))):
             raise TypeError
 
         if end_time is None:
             end_time = time.time()
         if user is None:
             user = api.User()
+        if start_time >= end_time:
+            raise ValueError
 
+        super().__init__()
         self.start_time = start_time
         self.end_time = end_time
         self.user = user
         self.user_id = user_id
-        self.force_success = force_success
+        self.max_retry = max_retry
 
-    def __iter__(self):
+    async def _async_main(self) -> None:
+        def _make_task(i):
+            return asyncio.create_task(
+                _run_task(
+                    self.max_retry,
+                    self._fetch_manage_msgs,
+                    i + counter * FETCH_AMOUNT
+                )
+            )
+
+        assert self.start_time < self.end_time
+
         self.is_fetching_end: bool = False
-
-        if self.start_time >= self.end_time:
-            raise ValueError("start_time >= end_time")
-
-        # main
         FETCH_AMOUNT = 100
         counter: int = 0
+
         while not self.is_fetching_end:
-            with ThreadPoolExecutor(max_workers=FETCH_AMOUNT + 50) as executor:
-                tasks = [
-                    executor.submit(
-                        _force_success, self.force_success,
-                        lambda: self._fetch_manage_msgs(i + counter * FETCH_AMOUNT)
-                    ) for i in range(FETCH_AMOUNT)
-                ]
+            tasks = [_make_task(i) for i in range(FETCH_AMOUNT)]
 
-                for task in tasks:
-                    for message in task.result():
-                        yield message
+            for task in tasks:
+                for message in await task:
+                    self._put_res(message)
             counter += 1
+        self._put_end()
 
-    def _fetch_manage_msgs(
-            self,
-            skip: int,
-            ):
+    async def _fetch_manage_msgs(self, skip: int):
         assert skip >= 0, "InternalError: please bug-report"
         assert self.end_time is not None, "InternalError: please bug-report"
 
         TAKE_MESSAGES_AMOUNT = 20
-        messages = self.user.get_messages(
+        messages = await self.user.async_get_messages(
             5, skip=skip * TAKE_MESSAGES_AMOUNT, take=TAKE_MESSAGES_AMOUNT,
-        )["Data"]["Messages"]
+        )
+        messages = messages["Data"]["Messages"]
 
         res = []
         for message in messages:
@@ -157,21 +139,21 @@ class BannedMsgIter:
             end_time: Optional[numType] = None,
             user: Optional[api.User] = None,
             user_id: Optional[str] = None,
-            force_success: bool = False,
-            ) -> None:
+            max_retry: Optional[int] = 0,
+    ) -> None:
         ''' 获取封禁记录
             @param user: 查询者
             @param user_id: 被查询者的id, None表示查询所有封禁记录
             @param start_time: 开始时间
             @param end_time: 结束时间, None为当前时间
-            @return: 封禁记录列表
+            @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
         '''
 
         if not isinstance(user, (api.User, type(None))) or \
                 not isinstance(start_time, (int, float)) or \
                 not isinstance(end_time, (int, float, type(None))) or \
                 not isinstance(user_id, (str, type(None))) or \
-                not isinstance(force_success, bool):
+                not isinstance(max_retry, (int, type(None))):
             raise TypeError
 
         if end_time is None:
@@ -183,7 +165,7 @@ class BannedMsgIter:
         self.end_time = end_time
         self.user = user
         self.user_id = user_id
-        self.force_success = force_success
+        self.max_retry = max_retry
 
     def __iter__(self):
         self.is_fetching_end: bool = False
@@ -206,7 +188,7 @@ class BannedMsgIter:
                 self.end_time,
                 self.user,
                 self.user_id,
-                self.force_success,
+                self.max_retry,
                 ):
             if manage_msg["TemplateID"] == self.banned_template["ID"]:
                 yield manage_msg
