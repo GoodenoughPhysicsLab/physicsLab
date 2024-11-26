@@ -9,7 +9,9 @@ import os
 import re
 import asyncio
 import requests
+import threading
 
+from concurrent.futures import thread
 from typing import Optional, List, TypedDict, Callable
 
 from physicsLab import plAR
@@ -37,7 +39,18 @@ def _check_response(response: requests.Response, err_callback: Optional[callable
     )
 
 async def _async_wrapper(func: Callable, *args, **kwargs):
-    return await asyncio.get_running_loop().run_in_executor(None, func, *args, **kwargs)
+    # run_in_executor会注册_python_exit到threading._threading_atexits
+    # 而_python_exit调用join会导致win上的异常无法及时被抛出
+    _res = await asyncio.get_running_loop().run_in_executor(None, func, *args, **kwargs)
+
+    # NOTE: 依赖于未公开api
+    _threading_atexits = []
+    for fn in threading._threading_atexits:
+        if fn.func is not thread._python_exit:
+            _threading_atexits.append(fn)
+    threading._threading_atexits = _threading_atexits
+
+    return _res
 
 def get_start_page() -> dict:
     ''' 获取主页数据 '''
