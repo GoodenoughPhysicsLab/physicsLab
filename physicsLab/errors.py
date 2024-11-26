@@ -1,49 +1,32 @@
 # -*- coding: utf-8 -*-
-# 用于存放自定义错误类
-# 由于有时在package外需要异常处理，故不为文件私有变量
+import warnings
 import inspect
 
 from physicsLab import _colorUtils
-from typing import Optional
 
-_warning_status: Optional[bool] = None
+class PhysicsLabWarning(Warning):
+    ''' physicsLab抛出的警告的类型 '''
 
-def set_warning_status(warning_status: bool) -> None:
-    ''' 设置警告状态
-        False: 不打印警告
-        None: 打印警告
-        True: 视警告为错误
-    '''
-    if not isinstance(warning_status, bool):
-        raise TypeError
+def _showwarning(message, category, filename, lineno, file=None, line=None):
+    if category is PhysicsLabWarning:
+        _colorUtils.color_print("Warning in", _colorUtils.COLOR.YELLOW)
 
-    global _warning_status
-    _warning_status = warning_status
+        for frame_info in inspect.stack()[::-1]:
+            module = inspect.getmodule(frame_info.frame)
+            if module is None or module.__name__.startswith("physicsLab") or module.__name__.startswith("warnings"):
+                continue
+            print(f"  File \"{frame_info.filename}\", line {frame_info.lineno}, in {frame_info.function}")
+            if frame_info.code_context is not None:
+                print(f"    {frame_info.code_context[0].strip()}")
+        _colorUtils.color_print(str(message), _colorUtils.COLOR.YELLOW)
+    else:
+        warnings.showwarning(message, category, filename, lineno, file, line)
 
-# 抛出警告, 当warning_status==None
-def warning(msg: str, warning_status: Optional[bool] = None) -> None:
-    if not isinstance(warning_status, (bool, type(None))):
-        raise TypeError
+warnings.showwarning = _showwarning
 
-    if _warning_status is not None:
-        warning_status = _warning_status
-
-    if warning_status is False:
-        return
-    if warning_status is True:
-        raise WarningError
-
-    # if warning_status is None:
-    _colorUtils.color_print("Warning in", _colorUtils.COLOR.YELLOW)
-
-    for frame_info in inspect.stack()[::-1]:
-        module = inspect.getmodule(frame_info.frame)
-        if module is None or module.__name__.startswith("physicsLab"):
-            continue
-        print(f"  File \"{frame_info.filename}\", line {frame_info.lineno}, in {frame_info.function}")
-        if frame_info.code_context is not None:
-            print(f"    {frame_info.code_context[0].strip()}")
-    _colorUtils.color_print(msg, _colorUtils.COLOR.YELLOW)
+def warning(msg: str):
+    assert isinstance(msg, str)
+    warnings.warn(msg, PhysicsLabWarning)
 
 # 导线颜色类型异常
 class WireColorError(Exception):
@@ -123,10 +106,6 @@ class ExperimentError(Exception):
 
     def __str__(self) -> str:
         return self.err_msg
-
-class WarningError(Exception):
-    def __str__(self) -> str:
-        return "see warning as error"
 
 class ElementNotExistError(Exception):
     pass

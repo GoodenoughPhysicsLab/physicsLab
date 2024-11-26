@@ -371,16 +371,16 @@ class Experiment:
                 )
             )
 
-    def read(self, warning_status: Optional[bool] = None) -> Self:
+    def read(self) -> Self:
         ''' 读取实验已有状态 '''
         if not self.is_open_or_crt:
             raise errors.ExperimentNotOpenError
         if self.is_readed:
-            errors.warning("experiment has been read", warning_status)
+            errors.warning("experiment has been read")
             return self
         self.is_readed = True
         if self.is_crted:
-            errors.warning("can not read because you create this experiment", warning_status)
+            errors.warning("can not read because you create this experiment")
             return self
 
         status_sav = json.loads(self.PlSav["Experiment"]["StatusSave"])
@@ -542,7 +542,7 @@ class Experiment:
 
         return self
 
-    def delete(self, warning_status: Optional[bool] = None) -> None:
+    def delete(self) -> None:
         ''' 删除存档 '''
         if not self.is_open_or_crt:
             raise errors.ExperimentNotOpenError
@@ -556,12 +556,7 @@ class Experiment:
                 _colorUtils.COLOR.BLUE
             )
         elif not self.is_crted:
-            if warning_status is None:
-                warning_status = errors._warning_status
-            errors.warning(
-                f"experiment {self.PlSav['InternalName']}({self.SAV_PATH}) do not exist.",
-                warning_status
-            )
+            errors.warning(f"experiment {self.PlSav['InternalName']}({self.SAV_PATH}) do not exist.")
 
         if os.path.exists(self.SAV_PATH.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
             os.remove(self.SAV_PATH.replace(".sav", ".jpg"))
@@ -650,7 +645,6 @@ class Experiment:
             user: User,
             category: Optional[Category],
             image_path: Optional[str],
-            warning_status: Optional[bool],
             ):
         if image_path is not None and not isinstance(image_path, str) or \
             category is not None and not isinstance(category, Category) or \
@@ -695,7 +689,7 @@ class Experiment:
         if image_path is not None:
             image_size = os.path.getsize(image_path)
             if image_size >= 1048576:
-                errors.warning("image size is bigger than 1MB", warning_status)
+                errors.warning("image size is bigger than 1MB")
                 image_size = -image_size # 利用物实bug发布大图片
             submit_data["Request"] = {
                 "FileSize": image_size,
@@ -728,7 +722,6 @@ class Experiment:
                 user: User,
                 category: Category,
                 image_path: Optional[str] = None,
-                warning_status: Optional[bool] = None,
                 ) -> Self:
         ''' 发布新实验
             @user: 不允许匿名登录
@@ -743,7 +736,7 @@ class Experiment:
                 "upload can only be used to upload a brand new experiment, try using `.update` instead"
             )
 
-        submit_response, submit_data = self.__upload(user, category, image_path, warning_status)
+        submit_response, submit_data = self.__upload(user, category, image_path)
 
         if image_path is not None:
             submit_data["Summary"]["Image"] += 1
@@ -765,7 +758,6 @@ class Experiment:
     def update(self,
                user: User,
                image_path: Optional[str] = None,
-               warning_status: Optional[bool] = None,
                ) -> Self:
         ''' 更新实验到物实
             @user: 不允许匿名登录
@@ -776,7 +768,7 @@ class Experiment:
                 "update can only be used to upload an exist experiment, try using `.upload` instead"
             )
 
-        submit_response, submit_data = self.__upload(user, None, image_path, warning_status)
+        submit_response, submit_data = self.__upload(user, None, image_path)
 
         if image_path is not None:
             submit_data["Summary"]["Image"] += 1

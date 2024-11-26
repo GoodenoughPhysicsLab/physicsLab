@@ -186,4 +186,5 @@
 
 ## 1.5.1
 1. 修复`User.async_*`的阻塞问题
-2. 修复`web.AvatarsIter`, `web.RelationsIter`ctrl+c无法退出的问题
+2. 修复`webutils.py`的大多数迭代器在ctrl+c时无法退出的问题
+3. 废弃`warning_status`, 改为支持`built-in warnings module`

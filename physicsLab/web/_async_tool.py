@@ -28,10 +28,13 @@ class AsyncTool:
         t = threading.Thread(target=asyncio.run, args=(self._async_main(),), daemon=True)
         t.start()
         while True:
-            if self._results.qsize() != 0:
-                res = self._results.get_nowait()
-                if res is _EndOfQueue:
-                    break
-                yield res
+            if self._results.qsize() == 0:
+                continue
+
+            res = self._results.get_nowait()
+            if res is _EndOfQueue:
+                break
+            yield res
+
         while t.is_alive():
-            t.join(timeout=1)
+            t.join(timeout=2)

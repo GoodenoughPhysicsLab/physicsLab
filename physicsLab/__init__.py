@@ -30,7 +30,7 @@ from physicsLab import music
 # Win: 若存档对应文件夹不存在直接报错
 if platform.system() == "Windows":
     if not os.path.exists(Experiment.SAV_ROOT_DIR):
-        raise RuntimeError("Have you installed Physics-Lab-AR?")
+        warning("Have you installed Physics-Lab-AR?")
 else:
     if not os.path.exists(Experiment.SAV_ROOT_DIR):
         os.makedirs(Experiment.SAV_ROOT_DIR)

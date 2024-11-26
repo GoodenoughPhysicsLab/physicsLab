@@ -54,7 +54,7 @@ class BasicTest(PLTestBase):
             exp.write()
             Experiment().crt("__test__") # will fail
         except ExperimentHasExistError:
-            Experiment("__test__").delete(warning_status=False)
+            Experiment("__test__").delete()
         else:
             raise TestError
 

@@ -1,4 +1,4 @@
-﻿# physicsLab 物实程序化
+﻿# physicsLab
 
 ![输入图片说明](./cover.jpg)
 

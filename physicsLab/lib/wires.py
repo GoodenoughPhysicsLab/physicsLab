@@ -4,8 +4,8 @@ from typing import Union, Callable, Tuple, Optional
 from physicsLab import errors
 from physicsLab.circuit.wire import crt_wire, del_wire, Pin
 
-# 模块化电路的“引脚”，输入输出都是数据
 class UnitPin:
+    ''' 模块化电路的"引脚", 输入输出都是数据 '''
     __slots__ = ("lib_self", "elementPins")
     def __init__(self, lib_self, *elementPins):
         self.lib_self = lib_self
@@ -35,7 +35,6 @@ def check_TypeUnionPin(func: Callable):
     def result(
         sourcePin: Union[UnitPin, Pin],
         targetPin: Union[UnitPin, Pin],
-        warning_status: Optional[bool] = None,
         *args, **kwargs
     ) -> None:
         if isinstance(sourcePin, Pin):
@@ -51,28 +50,25 @@ def check_TypeUnionPin(func: Callable):
                 f"The number of {sourcePin.lib_self.__class__.__name__}'s output pin "
                 f"is {len(sourcePin.elementPins)}, "
                 f"but the number of {targetPin.lib_self.__class__.__name__}'s input pin "
-                f"is {len(targetPin.elementPins)}.",
-                warning_status=warning_status
+                f"is {len(targetPin.elementPins)}."
             )
 
         func(sourcePin, targetPin, *args, **kwargs)
     return result
 
-# 为unionPin连接导线，相当于自动对数据进行连接导线
 @check_TypeUnionPin
 def crt_wires(sourcePin: Union[UnitPin, Pin],
               targetPin: Union[UnitPin, Pin],
-              warning_status: Optional[bool] = None,
               color="蓝"
               ) -> None:
+    ''' 为unionPin连接导线, 相当于自动对数据进行连接导线 '''
     for i, o in zip(sourcePin.elementPins, targetPin.elementPins):
         crt_wire(i, o, color)
 
-# 删除unionPin的导线
 @check_TypeUnionPin
 def del_wires(sourcePin: Union[UnitPin, Pin],
               targetPin: Union[UnitPin, Pin],
-              warning_status: Optional[bool] = None,
               ) -> None:
+    ''' 删除unionPin的导线 '''
     for i, o in zip(sourcePin.elementPins, targetPin.elementPins):
         del_wire(i, o)
