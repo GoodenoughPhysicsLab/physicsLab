@@ -43,6 +43,7 @@ async def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
                 requests.exceptions.HTTPError,
             ):
                 continue
+        raise urllib3.exceptions.MaxRetryError
 
 class ManageMsgIter(_async_tool.AsyncTool):
     ''' 获取一段时间的管理记录 (可指定用户) '''
