@@ -188,3 +188,5 @@
 1. 修复`User.async_*`的阻塞问题
 2. 修复`webutils.py`的大多数迭代器在ctrl+c时无法退出的问题
 3. 废弃`warning_status`, 改为支持`built-in warnings module`
+4. `get_plAR_version`改为返回`Tuple[int, int, int]`
+5. 为检测到安装物实时改为警告

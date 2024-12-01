@@ -5,23 +5,24 @@ import json
 import platform
 
 from getpass import getuser
-from typing import Optional
+from typing import Optional, Tuple
 
-def get_plAR_version() -> Optional[str]:
+def get_plAR_version() -> Tuple[int, int, int]:
     ''' 获取物实版本 '''
-    try:
-        if platform.system() == "Windows":
-            dir_l = tuple(os.walk(f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Unity/"))[0][1]
-            if len(dir_l) == 1:
-                version_file = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/" \
-                            f"Quantum Physics/Unity/{dir_l[0]}/Analytics/values"
-
-                with open(version_file) as f:
-                    version = json.load(f)["app_ver"]
-                    return version
-    except:
+    if platform.system() != "Windows":
         return None
-    else:
+
+    try:
+        a_dir = tuple(os.walk(f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Unity/"))[0][1]
+        if len(a_dir) != 1:
+            return None
+
+        a_file = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Unity/{a_dir[0]}/Analytics/values"
+
+        with open(a_file) as f:
+            ver_str: str = json.load(f)['app_ver']
+        return eval(f"({ver_str.replace('.', ',')})")
+    except:
         return None
 
 def get_plAR_path() -> Optional[str]:

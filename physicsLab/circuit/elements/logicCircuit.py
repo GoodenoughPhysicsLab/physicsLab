@@ -245,10 +245,9 @@ class Half_Subtractor(_big_element):
     ''' 半减器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         plAR_version = plAR.get_plAR_version()
-        if plAR_version is not None:
-            _, mid, _ = eval(f"({plAR_version.replace('.', ',')})")
-            if mid < 5:
-                errors.warning("Physics-Lab-AR's version less than 2.5.0")
+        if plAR_version is not None and plAR_version < (2, 5, 0):
+            errors.warning("Physics-Lab-AR's version less than 2.5.0")
+
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Half Subtractor"
 
@@ -272,10 +271,9 @@ class Full_Subtractor(_big_element):
     ''' 全减器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         plAR_version = plAR.get_plAR_version()
-        if plAR_version is not None:
-            _, mid, _ = eval(f"({plAR_version.replace('.', ',')})")
-            if mid < 5:
-                errors.warning("Physics-Lab-AR's version less than 2.5.0")
+        if plAR_version is not None and plAR_version < (2, 5, 0):
+            errors.warning("Physics-Lab-AR's version less than 2.5.0")
+
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Full Subtractor"
 

@@ -274,15 +274,13 @@ class Simple_Instrument(TwoPinMixIn):
                f").add_note({str(self.notes)[1:-2]})"
 
     def add_note(self, *pitchs: int) -> Self:
-        ''' 物实v2.4.7新功能: 简单乐器同时播放多个音符 '''
+        ''' 物实v2.4.7功能: 简单乐器同时播放多个音符 '''
         if not all(isinstance(a_pitch, int) and 0 <= a_pitch < 128 for a_pitch in pitchs):
             raise TypeError
 
-        version = plar.get_plAR_version()
-        if version is not None:
-            version = eval(f"{version.replace('.', ',')}")
-            if version[2] < 7 or version[1] < 4:
-                errors.warning("Physics-Lab-AR's version less than 2.4.7")
+        plar_version = plar.get_plAR_version()
+        if plar_version is not None and plar_version < (2, 4, 7):
+            errors.warning("Physics-Lab-AR's version less than 2.4.7")
 
         for a_pitch in pitchs:
             if a_pitch not in self.notes:

@@ -500,13 +500,11 @@ class Experiment:
         else:
             raise errors.InternalError
 
-        if not no_pop:
-            self.is_opened = False
-            self.is_crted = False
-
         assert self.SAV_PATH is not None
 
         if not no_pop:
+            self.is_opened = False
+            self.is_crted = False
             _StackExperiment.pop()
 
         self.__write()
@@ -675,7 +673,7 @@ class Experiment:
 
         plar_version = plAR.get_plAR_version()
         if plar_version is not None:
-            plar_version = int(plar_version.replace(".", ""))
+            plar_version = int(f"{plar_version[0]}{plar_version[1]}{plar_version[2]}")
         else:
             plar_version = 2411
         _summary["Version"] = plar_version

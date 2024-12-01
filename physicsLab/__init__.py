@@ -26,20 +26,10 @@ from physicsLab import web
 from physicsLab import lib
 from physicsLab import music
 
-# 检测操作系统
-# Win: 若存档对应文件夹不存在直接报错
-if platform.system() == "Windows":
-    if not os.path.exists(Experiment.SAV_ROOT_DIR):
+if not os.path.exists(Experiment.SAV_ROOT_DIR):
+    if platform.system() == "Windows":
         warning("Have you installed Physics-Lab-AR?")
-else:
-    if not os.path.exists(Experiment.SAV_ROOT_DIR):
-        os.makedirs(Experiment.SAV_ROOT_DIR)
-
-plAR_version = get_plAR_version()
-if plAR_version is not None:
-    _, mid, small = eval(f"({plAR_version.replace('.', ',')})")
-    if mid < 4 or mid == 4 and small < 7:
-        warning("the version of Physics-Lab-AR is less than v2.4.7")
+    os.makedirs(Experiment.SAV_ROOT_DIR)
 
 del os
 del platform

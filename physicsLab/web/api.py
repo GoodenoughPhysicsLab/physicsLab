@@ -164,14 +164,14 @@ class User:
         '''
         assert isinstance(username, (str, type(None))) and isinstance(passward, (str, type(None)))
 
-        version = plAR.get_plAR_version()
-        if version is not None:
-            version = int(version.replace(".", ""))
+        plar_version = plAR.get_plAR_version()
+        if plar_version is not None:
+            plar_version = int(f"{plar_version[0]}{plar_version[1]}{plar_version[2]}")
         else:
-            version = 2411
+            plar_version = 2411
 
         headers = {
-            "x-API-Version": str(version),
+            "x-API-Version": str(plar_version),
             "Accept": "application/json",
             "Content-Type": "application/json",
             "Accept-Language": "zh-CN",
@@ -185,7 +185,7 @@ class User:
             json={
                 "Login": username,
                 "Password": passward,
-                "Version": version,
+                "Version": plar_version,
                 "Device": {
                     "Identifier": "7db01528cf13e2199e141c402d79190e",
                     "Language": "Chinese"
