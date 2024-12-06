@@ -643,7 +643,7 @@ class Experiment:
             user: User,
             category: Optional[Category],
             image_path: Optional[str],
-            ):
+    ):
         if image_path is not None and not isinstance(image_path, str) or \
             category is not None and not isinstance(category, Category) or \
             not isinstance(user, User):
@@ -716,11 +716,12 @@ class Experiment:
 
         return submit_response.json(), submit_data
 
-    def upload(self,
-                user: User,
-                category: Category,
-                image_path: Optional[str] = None,
-                ) -> Self:
+    def upload(
+            self,
+            user: User,
+            category: Category,
+            image_path: Optional[str] = None,
+    ) -> Self:
         ''' 发布新实验
             @user: 不允许匿名登录
             @param category: 实验区还是黑洞区
@@ -753,10 +754,11 @@ class Experiment:
 
         return self
 
-    def update(self,
-               user: User,
-               image_path: Optional[str] = None,
-               ) -> Self:
+    def update(
+            self,
+            user: User,
+            image_path: Optional[str] = None,
+    ) -> Self:
         ''' 更新实验到物实
             @user: 不允许匿名登录
             @param image_path: 图片路径

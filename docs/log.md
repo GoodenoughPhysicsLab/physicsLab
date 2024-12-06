@@ -190,3 +190,6 @@
 3. 废弃`warning_status`, 改为支持`built-in warnings module`
 4. `get_plAR_version`改为返回`Tuple[int, int, int]`
 5. 为检测到安装物实时改为警告
+6. `User.post_comment`的自动探测回复增加多语言支持
+7. `User.get_experiment`现在可以自动执行`get_summary`
+8. 新增`User.remove_comment`, `User.modify_info`

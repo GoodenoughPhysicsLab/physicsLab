@@ -6,7 +6,6 @@
 '''
 
 import os
-import re
 import asyncio
 import requests
 import threading
@@ -43,7 +42,7 @@ async def _async_wrapper(func: Callable, *args, **kwargs):
     # 而_python_exit调用join会导致win上的异常无法及时被抛出
     _res = await asyncio.get_running_loop().run_in_executor(None, func, *args, **kwargs)
 
-    # NOTE: 依赖于未公开api
+    # NOTE: 依赖于asyncio与concurrent.futures.thread的实现细节
     _threading_atexits = []
     for fn in threading._threading_atexits:
         if fn.func is not thread._python_exit:
@@ -295,10 +294,24 @@ class User:
     ):
         return await _async_wrapper(self.query_experiment, tags, exclude_tags, category, languages, take, skip)
 
-    def get_experiment(self, content_id: str) -> dict:
+    def get_experiment(
+            self,
+            content_id: str,
+            category: Optional[Category] = None,
+    ) -> dict:
         ''' 获取实验
-            @param content_id: 不是实验的id, 可通过get_summary()["Data"]["ContentID"]获取
+            @param content_id: 当category不为None时, content_id为实验ID,
+                               否则会被识别为get_summary()["Data"]["ContentID"]的结果
+            @param category: 实验区还是黑洞区
         '''
+        if not isinstance(content_id, str) or \
+                not isinstance(category, (Category, type(None))):
+            raise TypeError
+
+        if category is not None:
+            # 如果传入的是实验ID, 先获取summary来得到ContentID
+            summary = self.get_summary(content_id, category)
+            content_id = summary["Data"]["ContentID"]
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Contents/GetExperiment",
@@ -314,8 +327,12 @@ class User:
 
         return _check_response(response)
 
-    async def async_get_experiment(self, content_id: str):
-        return await _async_wrapper(self.get_experiment, content_id)
+    async def async_get_experiment(
+            self,
+            content_id: str,
+            category: Optional[Category] = None,
+    ) -> dict:
+        return await _async_wrapper(self.get_experiment, content_id, category)
 
     def confirm_experiment(self, summary_id: str, category: Category, image_counter: int) -> dict:
         ''' 确认发布实验
@@ -345,7 +362,13 @@ class User:
     async def async_confirm_experiment(self, summary_id: str, category: Category, image_counter: int):
         return await _async_wrapper(self.confirm_experiment, summary_id, category, image_counter)
 
-    def post_comment(self, target_id: str, content: str, target_type: str, reply_id: str = "") -> dict:
+    def post_comment(
+            self,
+            target_id: str,
+            content: str,
+            target_type: str,
+            reply_id: Optional[str] = None,
+    ) -> dict:
         ''' 发表评论
             @param target_id: 目标用户/实验的ID
             @param content: 评论内容
@@ -355,15 +378,41 @@ class User:
         if not isinstance(target_id, str) or \
                 not isinstance(content, str) or \
                 not isinstance(target_type, str) or \
-                not isinstance(reply_id, str):
+                not isinstance(reply_id, (str, type(None))):
             raise TypeError
         if target_type not in ("User", "Discussion", "Experiment"):
             raise ValueError
 
-        # TODO: 多语言支持
-        _nickname = re.match(r"回复@.*:", content)
-        if _nickname is not None and reply_id == "":
-            reply_id = self.get_user(name=_nickname.group(0)[3:-1])["Data"]["User"]["ID"]
+        if reply_id is None:
+            reply_id = ""
+
+            # 物实支持多语: 中文、英文、法文、德文、西班牙文、日文、乌克兰文、波兰文
+            if content.startswith("回复@") \
+                    or content.startswith("Reply@") \
+                    or content.startswith("Répondre@") \
+                    or content.startswith("Antworten@") \
+                    or content.startswith("Respuesta@") \
+                    or content.startswith("応答@") \
+                    or content.startswith("Відповісти@") \
+                    or content.startswith("Odpowiadać@"):
+                _nickname = ""
+                is_match: bool = False
+                for chr in content:
+                    if chr in (':', ' '):
+                        break
+                    elif is_match:
+                        _nickname += chr
+                    elif chr == '@':
+                        is_match = True
+                        continue
+
+                if _nickname != "":
+                    try:
+                        reply_id = self.get_user(name=_nickname)["Data"]["User"]["ID"]
+                    except errors.ResponseFail:
+                        pass
+
+        assert isinstance(reply_id, str)
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Messages/PostComment",
@@ -389,9 +438,38 @@ class User:
             target_id: str,
             content: str,
             target_type: str,
-            reply_id: str = "",
-    ):
+            reply_id: Optional[str] = None,
+    ) -> dict:
         return await _async_wrapper(self.post_comment, target_id, content, target_type, reply_id)
+
+    def remove_comment(self, CommentID: str, target_type: str) -> dict:
+        ''' 删除评论
+            @param CommentID: 评论ID, 可以通过`get_comments`获取
+            @param target_type: User, Discussion, Experiment
+        '''
+        if not isinstance(CommentID, str) or \
+                not isinstance(target_type, str):
+            raise TypeError
+        if target_type not in ("User", "Discussion", "Experiment"):
+            raise ValueError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com:443/Messages/RemoveComment",
+            json={
+                "TargetType": target_type,
+                "CommentID": CommentID,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            }
+        )
+
+        return _check_response(response)
+
+    async def async_remove_comment(self, CommentID: str, target_type:str):
+        return await _async_wrapper(self.remove_comment, CommentID, target_type)
 
     def get_comments(
             self,
@@ -557,7 +635,7 @@ class User:
 
     def star(self, content_id: str, category: Category, status: bool = True) -> dict:
         ''' 添加收藏
-            @param content_id: 实验的ID
+            @param content_id: 实验ID
             @param category: 实验区, 黑洞区
             @param status: True: 收藏, False: 取消收藏
         '''
@@ -867,6 +945,31 @@ class User:
 
     async def async_rename(self, nickname: str):
         return await _async_wrapper(self.rename, nickname)
+
+    def modify_info(self, target: str) -> dict:
+        ''' 修改用户签名
+            @param target: 新签名
+        '''
+        if not isinstance(target, str):
+            raise TypeError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com:443/Users/ModifyInformation",
+            json={
+                "Target": target,
+                "Field":"Signature",
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            },
+       )
+
+        return _check_response(response)
+
+    async def async_modify_info(self, target: str):
+        return await _async_wrapper(self.modify_info, target)
 
     def receive_bonus(self) -> dict:
         ''' 领取每日签到奖励

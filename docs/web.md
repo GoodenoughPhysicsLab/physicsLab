@@ -1,6 +1,9 @@
 # 物理实验室 API 文档
 
-本文档提供了物理实验室 API 的详细说明，包括各个方法的参数、返回值和功能描述。
+本文档提供了物理实验室 网络API 的详细说明，包括各个方法的参数、返回值和功能描述。
+
+> 警告: 此文档源自于[api.py](../physicsLab/web/api.py)的注释, 但不保证与`api.py`保持同步
+> 也就是说, 调用api时, 更应该参考api.py的注释, 而不是此文档
 
 ## 目录
 
@@ -93,10 +96,16 @@ def query_experiment(self,
 
 ### 获取实验
 ```python
-def get_experiment(self, content_id: str) -> dict:
-    ''' 获取实验
-        @param content_id: 不是实验的id, 可通过get_summary()["Data"]["ContentID"]获取
-    '''
+    def get_experiment(
+            self,
+            content_id: str,
+            category: Optional[Category] = None,
+    ) -> dict:
+        ''' 获取实验
+            @param content_id: 当category不为None时, content_id为实验ID,
+                               否则会被识别为get_summary()["Data"]["ContentID"]的结果
+            @param category: 实验区还是黑洞区
+        '''
 ```
 
 ### 确认发布实验
