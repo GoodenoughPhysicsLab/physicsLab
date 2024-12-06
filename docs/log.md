@@ -193,3 +193,6 @@
 6. `User.post_comment`的自动探测回复增加多语言支持
 7. `User.get_experiment`现在可以自动执行`get_summary`
 8. 新增`User.remove_comment`, `User.modify_info`
+
+## 1.5.2
+1.
