@@ -117,13 +117,19 @@ def confirm_experiment(self, summary_id: str, category: Category, image_counter:
 
 ### 发表评论
 ```python
-def post_comment(self, target_id: str, content: str, target_type: str, reply_id: str = "") -> dict:
-    ''' 发表评论
-        @param target_id: 目标用户/实验的ID
-        @param content: 评论内容
-        @param target_type: User, Discussion, Experiment
-        @param reply_id: 被回复的user的ID (可被自动推导)
-    '''
+    def post_comment(
+            self,
+            target_id: str,
+            target_type: str,
+            content: str,
+            reply_id: Optional[str] = None,
+    ) -> dict:
+        ''' 发表评论
+            @param target_id: 目标用户/实验的ID
+            @param target_type: User, Discussion, Experiment
+            @param content: 评论内容
+            @param reply_id: 被回复的user的ID (可被自动推导)
+        '''
 ```
 
 ### 获取留言板信息

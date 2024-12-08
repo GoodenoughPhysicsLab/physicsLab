@@ -365,14 +365,14 @@ class User:
     def post_comment(
             self,
             target_id: str,
-            content: str,
             target_type: str,
+            content: str,
             reply_id: Optional[str] = None,
     ) -> dict:
         ''' 发表评论
             @param target_id: 目标用户/实验的ID
-            @param content: 评论内容
             @param target_type: User, Discussion, Experiment
+            @param content: 评论内容
             @param reply_id: 被回复的user的ID (可被自动推导)
         '''
         if not isinstance(target_id, str) or \
@@ -436,11 +436,11 @@ class User:
     async def async_post_comment(
             self,
             target_id: str,
-            content: str,
             target_type: str,
+            content: str,
             reply_id: Optional[str] = None,
     ) -> dict:
-        return await _async_wrapper(self.post_comment, target_id, content, target_type, reply_id)
+        return await _async_wrapper(self.post_comment, target_id, target_type, content, reply_id)
 
     def remove_comment(self, CommentID: str, target_type: str) -> dict:
         ''' 删除评论
@@ -473,22 +473,25 @@ class User:
 
     def get_comments(
             self,
-            id: str,
+            target_id: str,
             target_type: str,
             take: int = 16,
             skip: int = 0,
+            comment_id: Optional[str] = None,
     ) -> dict:
         ''' 获取留言板信息
             @param id: 物实用户的ID/实验的id
             @param target_type: User, Discussion, Experiment
             @param take: 获取留言的数量
             @param skip: 跳过的留言数量, 为(unix时间戳 * 1000)
+            @param comment_id: 从comment_id开始获取take条消息 (另一种skip的规则)
         '''
         if not isinstance(self.token, str) or \
                 not isinstance(self.auth_code, str) or \
                 not isinstance(target_type, str) or \
                 not isinstance(take, int) or \
-                not isinstance(skip, int):
+                not isinstance(skip, int) or \
+                not isinstance(comment_id, (str, type(None))):
             raise TypeError
         if target_type not in ("User", "Discussion", "Experiment") or \
             take <= 0 or skip < 0:
@@ -497,9 +500,9 @@ class User:
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Messages/GetComments",
             json={
-                "TargetID": id,
+                "TargetID": target_id,
                 "TargetType": target_type,
-                "CommentID": None,
+                "CommentID": comment_id,
                 "Take": take,
                 "Skip": skip,
             },

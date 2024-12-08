@@ -195,4 +195,5 @@
 8. 新增`User.remove_comment`, `User.modify_info`
 
 ## 1.5.2
-1.
+1.  重命名`web.ManageMsgIter`为`web.NotificationsMsgIter`
+2.  强化`web.Bot`

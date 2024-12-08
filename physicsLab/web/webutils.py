@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-import copy
+from sqlite3 import InternalError
 import time
 import asyncio
 import requests
+
+from abc import abstractmethod
 
 from . import api
 from . import _async_tool
@@ -45,7 +47,7 @@ async def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
                 continue
         raise urllib3.exceptions.MaxRetryError
 
-class ManageMsgIter(_async_tool.AsyncTool):
+class NotificationsMsgIter(_async_tool.AsyncTool):
     ''' 获取一段时间的管理记录 (可指定用户) '''
     def __init__(
             self,
@@ -54,6 +56,7 @@ class ManageMsgIter(_async_tool.AsyncTool):
             user: Optional[api.User] = None,
             user_id: Optional[str] = None,
             max_retry: Optional[int] = 0,
+            category_id: int = 0,
     ) -> None:
         ''' 获取封禁记录
             @param user: 查询者
@@ -61,14 +64,19 @@ class ManageMsgIter(_async_tool.AsyncTool):
             @param start_time: 开始时间
             @param end_time: 结束时间, None为当前时间
             @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
+            @param category_id: 消息类型:
+                0: 全部, 1: 系统邮件, 2: 关注和粉丝, 3: 评论和回复, 4: 作品通知, 5: 管理记录
         '''
 
         if not isinstance(user, (api.User, type(None))) or \
                 not isinstance(start_time, (int, float)) or \
                 not isinstance(end_time, (int, float, type(None))) or \
                 not isinstance(user_id, (str, type(None))) or \
-                not isinstance(max_retry, (int, type(None))):
+                not isinstance(max_retry, (int, type(None))) or \
+                not isinstance(category_id, int):
             raise TypeError
+        if category_id not in range(0, 6):
+            raise ValueError
 
         if end_time is None:
             end_time = time.time()
@@ -83,6 +91,7 @@ class ManageMsgIter(_async_tool.AsyncTool):
         self.user = user
         self.user_id = user_id
         self.max_retry = max_retry
+        self.category_id = category_id
 
     async def _async_main(self) -> None:
         def _make_task(i):
@@ -115,7 +124,7 @@ class ManageMsgIter(_async_tool.AsyncTool):
 
         TAKE_MESSAGES_AMOUNT = 20
         messages = await self.user.async_get_messages(
-            5, skip=skip * TAKE_MESSAGES_AMOUNT, take=TAKE_MESSAGES_AMOUNT,
+            self.category_id, skip=skip * TAKE_MESSAGES_AMOUNT, take=TAKE_MESSAGES_AMOUNT,
         )
         messages = messages["Data"]["Messages"]
 
@@ -141,6 +150,7 @@ class BannedMsgIter:
             user: Optional[api.User] = None,
             user_id: Optional[str] = None,
             max_retry: Optional[int] = 0,
+            get_banned_template: bool = False,
     ) -> None:
         ''' 获取封禁记录
             @param user: 查询者
@@ -148,13 +158,16 @@ class BannedMsgIter:
             @param start_time: 开始时间
             @param end_time: 结束时间, None为当前时间
             @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
+            @param get_banned_template: 是否获取封禁信息的模板, False则使用physicsLab提供的模板
+                    模板可能会被紫兰斋修改, 但消息模板基本都是稳定的
         '''
 
         if not isinstance(user, (api.User, type(None))) or \
                 not isinstance(start_time, (int, float)) or \
                 not isinstance(end_time, (int, float, type(None))) or \
                 not isinstance(user_id, (str, type(None))) or \
-                not isinstance(max_retry, (int, type(None))):
+                not isinstance(max_retry, (int, type(None))) or \
+                not isinstance(get_banned_template, bool):
             raise TypeError
 
         if end_time is None:
@@ -167,6 +180,7 @@ class BannedMsgIter:
         self.user = user
         self.user_id = user_id
         self.max_retry = max_retry
+        self.get_banned_template = get_banned_template
 
     def __iter__(self):
         self.is_fetching_end: bool = False
@@ -176,20 +190,27 @@ class BannedMsgIter:
 
         # fetch banned_template
         if self.banned_template is None:
-            response = self.user.get_messages(5, take=1, no_templates=False)["Data"]
+            if self.get_banned_template:
+                response = self.user.get_messages(5, take=1, no_templates=False)["Data"]
 
-            for template in response["Templates"]:
-                if template["Identifier"] == "User-Banned-Record":
-                    self.banned_template = copy.deepcopy(template)
-                    break
+                for template in response["Templates"]:
+                    if template["Identifier"] == "User-Banned-Record":
+                        self.banned_template = template
+                        break
+            else:
+                self.banned_template = {
+                    'ID': '5d57f3c139523f0f640c2211',
+                    'Identifier': 'User-Banned-Record',
+                }
 
         # main
-        for manage_msg in ManageMsgIter(
+        for manage_msg in NotificationsMsgIter(
                 self.start_time,
                 self.end_time,
                 self.user,
                 self.user_id,
                 self.max_retry,
+                category_id=5,
                 ):
             if manage_msg["TemplateID"] == self.banned_template["ID"]:
                 yield manage_msg
@@ -402,100 +423,127 @@ class AvatarsIter(_async_tool.AsyncTool):
         self._put_end()
 
 class Bot:
-    ''' 由@故事里的人 贡献, 我也没用过() '''
     def __init__(
             self,
             bind_user: api.User,
-            target_id: str,
-            target_type: str,
-            is_ignore_reply_to_others: bool = True,
-            is_read_history: bool = True,
-            is_reply_required: bool = True
     ) -> None:
-        ''' @param bind_user: 机器人要绑定的用户账号
-            @param target_id: 目标id
-            @param target_type: 目标类型, 只能为 "User" 或 "Experiment" 或 "Discussion"
-            @param is_ignore_reply_to_others: 如果出现回复@{非Bot的用户}，则忽略
-            @param is_read_history: 捕获Bot启动前的消息 (最多20条)
-            @param is_reply_required: 只捕获回复@{Bot}的消息
-        '''
-        if not isinstance(bind_user, api.User) or \
-                not isinstance(target_id, str) or \
-                not isinstance(target_type, str) or \
-                not isinstance(is_ignore_reply_to_others, bool) or \
-                not isinstance(is_read_history, bool) or \
-                not isinstance(is_reply_required, bool):
+        if not isinstance(bind_user, api.User):
             raise TypeError
-        if target_type not in ("User", "Experiment", "Discussion"):
-            raise ValueError
+
         if bind_user.is_anonymous:
-            raise PermissionError("user must be anonymous")
+            raise PermissionError
 
-        # 生命周期 捕获－处理－回复－记录[－完成]
         self.bind_user = bind_user
-        self.target_id = target_id
-        self.target_type = target_type
-        self.is_ignore_reply_to_others = is_ignore_reply_to_others
-        self.is_reply_required = is_reply_required
+        self._latest_msg_timestamp: int = 0
+        self._target_id = None
+        self._target_type = None
+        self._user_name = None
+        self._reply_id = None
 
-        self.bot_id = self.bind_user.user_id
-
-        comments = self.bind_user.get_comments(target_id, target_type, 20)["Data"]["Comments"]
-        if is_read_history:
-            index = ""
-            for comment in comments[::-1]:
-                if comment['UserID'] == self.bot_id:
-                    index = comment['ID']
-            self.start_index = index
-        else:
-            self.start_index = comments[0]['ID'] if len(comments) != 0 else ""
-
-    def run(self,
-            process_callback: Callable,
-            catch_callback: Optional[Callable] = None,
-            reply_callback: Optional[Callable] = None,
-            finish_callback: Optional[Callable] = None,
-            ) -> None:
-        ''' @param process_callback: 处理函数，用于处理捕获到的消息
-            @param catch_callbakc: 当捕获到新消息时调用的函数
-            @param reply_callback: 当回复消息时调用的函数
-            @param finnish_callback: 当所有消息处理完成时调用的函数
-        '''
-        if not callable(process_callback) or \
-                catch_callback is not None and not callable(catch_callback) or \
-                reply_callback is not None and not callable(reply_callback) or \
-                finish_callback is not None and not callable(finish_callback):
-            raise TypeError
-
-        pending = set()
-        finish = set()
-
-        for comment in self.bind_user.get_comments(self.target_id, self.target_type, 20)['Data']['Comments']:
-            if comment['ID'] == self.start_index:
-                break
-            if comment['UserID'] == self.bot_id:
-                continue
-            if comment['ID'] in pending or comment['ID'] in finish:
-                continue
-            if not comment['Content'].startswith(f"回复<user={self.bot_id}") \
-                    and self.is_ignore_reply_to_others:
-                continue
-            if self.bot_id not in comment['Content'] and self.is_reply_required:
+    @abstractmethod # 可以继承Bot并重载此方法来实现自定义获取消息
+    def catch(self) -> Optional[list]:
+        ''' 捕获 回复@BOT 的消息 '''
+        for msg in self.bind_user.get_messages(take=10)["Data"]["Messages"][::-1]:
+            _timestamp = msg["Timestamp"]
+            if _timestamp  <= self._latest_msg_timestamp \
+                or msg["TemplateID"] not in (
+                    "5ce0092f64f5021d74bed1ff",
+                    "5ca8a56f3707367078f962cf",
+                ) and self.bind_user.user_id == msg["TargetID"]:
                 continue
 
-            if catch_callback is not None:
-                catch_callback(comment)
-            pending.add(comment['ID'])
-            reply = process_callback(self, comment)
-            if reply == "":
+            self._reply_id = msg["Users"][0]
+            self._user_name = msg["UserNames"][0]
+            self._latest_msg_timestamp = _timestamp
+            fields: dict = msg["Fields"]
+            if "User" in fields.keys():
+                self._target_id = fields["UserID"]
+                self._target_type = "User"
+            elif "Experiment" in fields.keys():
+                self._target_id = fields["ExperimentID"]
+                self._target_type = "Experiment"
+                self._experiment_id = fields["ExperimentID"]
+            elif "Discussion" in fields.keys():
+                self._target_id = fields["DiscussionID"]
+                self._target_type = "Discussion"
+                self._discussion_id = fields["DiscussionID"]
+            else:
+                raise errors.InternalError
+
+            return self.bind_user.get_comments(
+                self._target_id, self._target_type, comment_id=fields["CommentID"]
+            )["Data"]["Comments"]
+
+    @abstractmethod
+    def reply(self, msg: str) -> str:
+        ''' 回复消息 '''
+        response = requests.post(
+            url="https://aichat-wbots-1-32-mini.api.ecylt.top/",
+            json={
+                "q": f"{msg}\n",
+                "prompt": "用中文回复\n",
+            },
+        )
+
+        return response.json()["response"]["response"]
+
+    def run(self, is_read_history: bool = False) -> None:
+        while True:
+            msgs = self.catch()
+            if msgs is None:
                 continue
 
-            msg = f"回复@{comment['Nickname']}: {reply}"
-            self.bind_user.post_comment(self.target_id, msg, self.target_type)
-            finish.add(comment['ID'])
-            pending.remove(comment['ID'])
-            if len(pending) == 0:
-                if finish_callback is not None:
-                    finish_callback(finish)
-            if reply_callback is not None:
-                reply_callback({**{"msg": msg}, **comment})
+            msg = ""
+            if is_read_history:
+                for tmp in msgs[::-1]:
+                    content: str = tmp["Content"]
+                    if self.bind_user.user_id in content:
+                        while len(content) > 1 and not content.startswith(':'):
+                            content = content[1:]
+                        msg += content[1:] + '\n'
+            else:
+                content: str = msgs[0]["Content"]
+                while len(content) > 1 and not content.startswith(':'):
+                    content = content[1:]
+                msg += content[1:] + '\n'
+
+            is_gen_summary: bool = False
+            if msg.strip() == "/生成总结" and self._target_type in ("Experiment", "Discussion"):
+                is_gen_summary = True
+                if self._target_type == "Experiment":
+                    descriptions = self.bind_user.get_summary(
+                        self._experiment_id, Category.Experiment
+                    )["Data"]["Description"]
+                elif self._target_type == "Discussion":
+                    descriptions = self.bind_user.get_summary(
+                        self._discussion_id, Category.Discussion
+                    )["Data"]["Description"]
+                else:
+                    raise InternalError
+
+                msg = ""
+                for description in descriptions:
+                    msg += description + '\n'
+                msg += " 麻烦生成一下总结\n"
+
+            assert self._target_id is not None \
+                and self._target_type is not None \
+                and self._user_name is not None \
+                and self._reply_id is not None
+
+            _reply = f"回复@{self._user_name}: "
+            if is_gen_summary:
+                _reply += " 以下是生成的总结: \n\n"
+            _reply += f"{self.reply(msg)} \n\n <discussion=67559f9b8c54132a83274e59>关于本Bot</discussion> \n"
+            self.bind_user.post_comment(
+                self._target_id,
+                self._target_type,
+                _reply,
+                self._reply_id,
+            )
+
+            print(
+                f"[{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}], in "
+                f"\"{self._target_type}\" \"{self._target_id}\", replied to "
+                f"\"{self._user_name}\"({self._reply_id})"
+            )

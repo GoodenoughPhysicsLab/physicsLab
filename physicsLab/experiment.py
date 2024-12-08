@@ -8,7 +8,6 @@ import requests
 import platform
 import tempfile
 
-from datetime import datetime
 from enum import unique, Enum
 
 from physicsLab import plAR
@@ -22,12 +21,6 @@ from .enums import Category, Tag
 from .savTemplate import Generate
 from .enums import ExperimentType
 from .typehint import Union, Optional, List, Dict, numType, Self
-
-def id_to_time(id: str) -> datetime:
-    ''' 从 用户id/实验id 中获取其对应的时间
-    '''
-    seconds = int(id[0:8], 16)
-    return datetime.fromtimestamp(seconds)
 
 class _StackExperiment:
     data: List["Experiment"] = []
