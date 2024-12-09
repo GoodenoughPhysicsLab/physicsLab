@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import Union, Callable, Tuple, Optional
+from typing import Union, Callable, Tuple
 
 from physicsLab import errors
 from physicsLab.circuit.wire import crt_wire, del_wire, Pin

@@ -3,6 +3,11 @@
 ## class Experiment
 > Note: 该类不要与`experiment`混淆，`class experiment`仅仅提供了用with操作存档的更好用的api，本质上还是对Experiment类的封装  
 
+`Experiment`类的实例有一些attr:
+* `PlSav`: 物实存档json对应的dict
+* `is_crt`: 存档本来不存在, 是被创建的
+* `is_open`: 存档存在, 是被打开的
+
 1个Experiment类的实例用于操作1个实验存档  
 Experiment类的方法会在后面依次介绍
 
@@ -43,7 +48,8 @@ with experiment('example') as exp:
 
 > Note: 任何尝试重复导入实验（不论是读取实验还是创建实验）都会导致抛出错误
 ## 打开存档
-***低级api，慎用***  
+***低级api***
+
 你必须指明你要打开的是哪个存档：
 ```Python
 Experiment().open('example.sav') # 根据存档的文件名（也就是xxxx.sav）进行导入
@@ -57,7 +63,8 @@ Experiment().open('example') # 根据存档的实验名（也就是你在物实�
 > Note: 当open的实验不存在，会抛出错误；
 
 ## 创建存档
-***低级api，慎用***  
+***低级api***
+
 如果你想要创建一个实验：
 ```python
 Experiment.crt('example')
@@ -77,7 +84,8 @@ Experiment.open_or_crt("example")
 ***但使用这些api的效果都不如使用`with experiment()`方便***
 
 ## 搜索存档&判断存档是否存在
-***低级api，慎用***  
+***低级api***
+
 调用`search_Experiment()`判断存档是否存在  
 如果存档存在，则会返回存档的文件名  
 如果存档不存在，则返回`None`
@@ -96,17 +104,17 @@ with experiment("example", read=True):
 from physicsLab import *
 
 with experiment("example") as exp:
-    exp.read()
+    read_plsav(exp)
     # do something
 ```
 
 ## 读取已发布到物实的实验
-你可以使用`Experiment.read_from_web()`获取已发布到物实上的实验
+你可以使用`read_plsav_from_web()`获取已发布到物实上的实验
 ```Python
 from physicsLab import *
 
 with experiment("example") as exp:
-    exp.read_from_web("642cf37a494746375aae306a", Category.Discussion)
+    read_plsav_from_web(exp, "642cf37a494746375aae306a", Category.Discussion)
 ```
 
 ## 向物实发布新的实验
@@ -129,7 +137,7 @@ from physicsLab import *
 user = web.User(YOUR_UESRNAME, YOUR_PASSWORD)
 
 with experiment("example") as exp:
-    exp.read_from_web("642cf37a494746375aae306a", Category.Discussion)
+    read_plsav_from_web(exp, "642cf37a494746375aae306a", Category.Discussion)
     # do something
     exp.update(user, YOUR_IMAGE_PATH)
 ```
@@ -187,7 +195,7 @@ from physicsLab import *
 with experiment("example", delete=True):
     # maybe do something
 ```
-你也可以加上`write=False`，不过没必要  
+你也可以加上`write=False`，不过没必要
 
 更原始的方式是：
 ```Python
@@ -280,7 +288,7 @@ export有2个参数：
 ## 合并其他实验
 ```
 Experiment.merge(other: Experiment, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None)
-```  
+```
 `other`为要合并的实验  
 `x, y, z, elementXYZ`为重新设置要合并的实验的坐标系原点在self的坐标系的位置  
 ```Python
@@ -295,9 +303,9 @@ with experiment("example1") as exp:
 ## 手动设置输出路径
 你可以使用`os.environ["PHYSICSLAB_HOME_PATH"] = "xxx"`来设置`physicsLab`读写存档的默认文件夹
 
-该功能主要为非`Windows`系统设计, 但`Windows`上也可以用，不过谨慎
+该功能主要为非`Windows`系统设计, 虽然`Windows`上也可以用
 
-该方法也是另一种导入任意路径的存档的一种方法(另一种是直接调用`Experiment.read`)
+该方法也是另一种导入任意路径的存档的一种方法(另一种是直接调用`read_plsav`)
 
 ## 暂停实验
 你可以使用`Experiment.paused(status: bool)`来暂停实验

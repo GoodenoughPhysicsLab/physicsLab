@@ -1,9 +1,9 @@
 from physicsLab import _tools
 from physicsLab import errors
 from physicsLab._element_base import ElementBase
-from physicsLab.typehint import numType, Self
+from physicsLab.typehint import numType, Self, final
 from physicsLab.enums import ExperimentType
-from physicsLab.experiment import get_current_experiment
+from physicsLab.Experiment import get_current_experiment
 
 class _PlanetMeta(type):
     def __call__(cls, x:numType, y: numType, z:numType, *args, **kwargs):
@@ -46,6 +46,7 @@ class PlanetBase(ElementBase, metaclass=_PlanetMeta):
         '''
         self.data: dict = data
 
+    @final
     def set_position(self, x: numType, y: numType, z: numType) -> Self:
         ''' 设置位置坐标 '''
         if not isinstance(x, (int, float)) or \

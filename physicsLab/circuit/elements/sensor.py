@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from ..wire import Pin
 from ._circuitbase import TwoPinMixIn, CircuitBase
-from .logicCircuit import _logicBase
+from .logicCircuit import _LogicBase
 from physicsLab.typehint import Optional, numType, CircuitElementData, Generate
 
 class _mems_Base(CircuitBase):
@@ -149,7 +149,7 @@ class Photoresistor(TwoPinMixIn):
             "DiagramRotation": 0
         }
 
-class Proximity_Sensor(_logicBase):
+class Proximity_Sensor(_LogicBase):
     ''' 临近传感器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {

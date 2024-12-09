@@ -23,6 +23,10 @@
 * 支持物实**全部**元件
 * 大多数物实网络api封装的支持 (直接与物实服务器进行交互)
 
+## stable?
+鉴于目前用户较少, 深度使用该库的用户几乎没有, 因此不考虑稳定兼容。
+并且哪怕用户多了, 也会优先考虑标注弃用, 并推荐转移到新api的模式, 而不是无意义的兼容。
+
 ## 安装教程
 1.  请确保你的电脑有[Python](https://www.python.org)（>=3.8）与[物理实验室AR](https://www.turtlesim.com/)（简称`物实`）（也可以联系物理实验室的开发者[Jone-Chen](https://gitee.com/civitasjohn)）
 
@@ -95,7 +99,7 @@ from physicsLab import *
   # 也支持输入存档的文件名（也就是xxx.sav）
 e = Experiment("example")
   # 如果你希望程序不覆盖掉存档中已有的实验状态，需要这样写
-e.read()
+read_plsav(e)
   # 创建一个逻辑输入，坐标为(0, 0, 0.1)
 Logic_Input(0, 0, 0.1)
   # 你也可以不写坐标，默认是(0,0,0)

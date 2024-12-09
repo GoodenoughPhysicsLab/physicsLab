@@ -7,7 +7,7 @@
 from physicsLab import errors
 from physicsLab._tools import position
 from physicsLab.typehint import numType
-from physicsLab.experiment import get_current_experiment
+from physicsLab.Experiment import get_current_experiment
 from physicsLab.enums import ExperimentType
 
 # 是否将全局设置为元件坐标系
@@ -21,7 +21,7 @@ def set_elementXYZ(boolen: bool) -> None:
 
 # 获取是否为元件坐标系
 def is_elementXYZ() -> bool:
-    return get_current_experiment().is_elementXYZ
+    return get_current_experiment().is_elementXYZ # TODO: 将电学专有的attr放在支持3大实验的Experiment中是否合适?
 
 # 物实坐标系x, y, z单位1
 _X_UNIT: float = 0.16

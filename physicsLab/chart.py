@@ -1,5 +1,7 @@
 import base64
 
+from physicsLab import errors
+from physicsLab.experiment import Experiment
 from physicsLab.circuit.elements import CircuitBase
 from physicsLab.typehint import TypedDict, Self, List, Optional
 
@@ -39,3 +41,17 @@ class Plot:
             "SourceType": 0
         })
         return self
+
+def add_graph_to(experiment: Experiment) -> Optional[List[Plot]]:
+    ''' 获取物实示波器图表的封装类 '''
+    if not isinstance(experiment, Experiment):
+        raise TypeError
+
+    if not experiment.is_open_or_crt:
+        raise errors.ExperimentNotOpenError
+
+    if experiment.PlSav["Plots"] is None:
+        return None
+
+    res = [Plot(a_graph) for a_graph in experiment.PlSav["Plots"]]
+    return res

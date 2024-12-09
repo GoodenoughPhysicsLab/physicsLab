@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from physicsLab import errors
-from physicsLab.experiment import get_current_experiment
+from physicsLab.Experiment import Experiment, get_current_experiment
 from physicsLab.enums import ExperimentType
 from physicsLab.typehint import Optional, Callable, Union
 
@@ -150,3 +150,15 @@ def count_wires() -> int:
     if get_current_experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
     return len(get_current_experiment().Wires)
+
+def _read_wires(experiment: Experiment, _wires: list) -> None:
+    assert experiment.experiment_type == ExperimentType.Circuit
+
+    for wire_dict in _wires:
+        experiment.Wires.add(
+            Wire(
+                Pin(experiment.get_element_from_identifier(wire_dict["Source"]), wire_dict["SourcePin"]),
+                Pin(experiment.get_element_from_identifier(wire_dict["Target"]), wire_dict["TargetPin"]),
+                wire_dict["ColorName"][0] # e.g. "蓝"
+            )
+        )

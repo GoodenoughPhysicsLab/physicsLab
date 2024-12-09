@@ -8,9 +8,9 @@ from physicsLab._element_base import ElementBase
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.enums import ExperimentType
-from physicsLab.typehint import Optional, Self, numType, CircuitElementData, Generate
 from physicsLab._tools import roundData, randString
-from physicsLab.experiment import Experiment, get_current_experiment
+from physicsLab.Experiment import Experiment, get_current_experiment
+from physicsLab.typehint import Optional, Self, numType, CircuitElementData, Generate, final
 
 # electricity class's metaClass
 class CircuitMeta(type):
@@ -70,11 +70,12 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
                 f"({self._position.x}, {self._position.y}, {self._position.z}, " \
                 f"elementXYZ={self.is_elementXYZ})"
 
-    def set_rotation(self,
-                     x_r: numType = 0,
-                     y_r: numType = 0,
-                     z_r: numType = 180,
-                     ) -> Self:
+    def set_rotation(
+            self,
+            x_r: numType = 0,
+            y_r: numType = 0,
+            z_r: numType = 180,
+    ) -> Self:
         ''' 设置原件的角度 '''
         if not isinstance(x_r, (int, float)) or \
                 not isinstance(y_r, (int, float)) or \
@@ -85,6 +86,7 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
         self.data["Rotation"] = f"{x_r},{z_r},{y_r}"
         return self
 
+    @final
     def set_position(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> Self:
         ''' 设置原件的位置
         '''
@@ -110,9 +112,9 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
     def get_index(self) -> int:
         return self.experiment.Elements.index(self) + 1
 
-    # 获取子类的类型
     @property
     def modelID(self) -> str:
+        ''' 存档的modelID '''
         assert not isinstance(self.data['ModelID'], type(Generate))
         return self.data['ModelID']
 
@@ -126,6 +128,7 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
 
     def rename(self, name: str) -> Self:
         ''' 重命名元件
+            @param name: 将元件重命名为name
         '''
         if not isinstance(name, str):
             raise TypeError
@@ -134,9 +137,8 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
         self.data["Label"] = name
         return self
 
-
-# 双引脚模拟电路原件的基类
 class TwoPinMixIn(CircuitBase):
+    ''' 双引脚模拟电路原件的基类 '''
     @property
     def red(self) -> wire.Pin:
         return wire.Pin(self, 0)

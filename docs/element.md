@@ -11,18 +11,19 @@ with experiment("example"):
     b = Or_Gate()  # 创建一个或门
 ```
 
-除此之外`Experiment`类还有`crt_Element`方法，用来创建所有`physicsLab`支持的元件
+除此之外还有`crt_element`函数，用来创建所有`physicsLab`支持的元件
 ```python
 from physicsLab import *
 
 with experiment("example") as expe:
-    expe.crt_Element("Logic_Input", 0, 0, 0)
+    crt_element(expe, "Logic Input", 0, 0, 0) # Model ID
+    crt_element(expe, "Logic_Input", 0, 0, 0) # class name
 ```
 `name`参数不仅支持物实存档中的`ModelID`对应的字符串，还支持`physicsLab`中类的名字
 
 ## 获取元件
 在物实, 我们要操作一个元件只需要点击就行了。但要在`physicsLab`中操作元件, 我们只能操作类的实例。  
-但当我们读取一些已有的实验的时候，我们需要知道元件的坐标或者那个元件是第多少个被创建的( 这个数字即是index )，然后使用`Experiment`类的`get_element`方法来获取那个元件的引用
+但当我们读取一些已有的实验的时候，我们需要知道元件的坐标或者那个元件是第多少个被创建的( 这个数字即是index )，然后使用`get_element`函数来获取那个元件的引用
 
 `get_element`有两种获取元件的方式：
 * 通过元件的坐标进行索引
@@ -33,8 +34,8 @@ with experiment("example") as expe:
 from physicsLab import *
 
 with experiment("example") as expe:
-  expe.get_Element(0, 0, 0) # x, y, z
-  expe.get_Element(index=1) # 通过元件是第多少个被创建的来获取
+  get_Element(expe, 0, 0, 0) # x, y, z
+  get_Element(expe, index=1) # 通过元件是第多少个被创建的来获取
 ```
 
 > Note:
@@ -60,17 +61,17 @@ from physicsLab import *
 with experiment("example") as expe:
    Logic_Input(1, 0, 0, elementXYZ=True)
    Logic_Output(1, 0, 0)
-   print(expe.get_element(1, 0, 0))
+   print(get_element(expe, 1, 0, 0))
 
 with experiment("example", read=True) as expe:
    Logic_Input(1, 0, 0, elementXYZ=True)
    Logic_Output(1, 0, 0)
-   print(expe.get_element(1, 0, 0))
+   print(get_element(expe, 1, 0, 0))
 ```
 输出结果:
 ```
 [Logic_Input(1, 0, 0, elementXYZ=True), Logic_Output(1, 0, 0, elementXYZ=False)]
-Successfully create experiment "example"! 2 elements, 0 wires.
+Successfully update experiment "example"! 2 elements, 0 wires.
 [Logic_Output(1, 0, 0, elementXYZ=False), Logic_Input(1, 0, 0, elementXYZ=True), Logic_Output(1, 0, 0, elementXYZ=False)]
 Successfully update experiment "example"! 4 elements, 0 wires.
 ```
@@ -95,9 +96,9 @@ from physicsLab import *
 
 with experiment("example") as expe:
   a = Logic_Input(0, 0, 0)
-  expe.del_element(a) # input: element's self, output: None
+  del_element(expe, a) # input: element's self, output: None
 ```
-`del_element`需要传入元件的引用，所以必要时也需要用`get_element`。
+`del_element`需要传入元件的引用，所以必要时也需要配合使用`get_element`。
 
 ## 元件坐标系 elementXYZ
 `物实坐标系`即为物实默认的坐标系  
@@ -166,7 +167,6 @@ with experiment("example"):
 `translateXYZ`将物实坐标系转换为元件坐标系（包括2体积元件坐标修正）  
 `xyzTranslate`将元件坐标系转换为物实坐标系（默认不支持2体积元件坐标修正）, 但你可以通过传入元件的`is_bigElement`属性来进行2体积元件修正
 
-
 ## methods & attributes
 所有的元件都有一些方法来操作
 ```python
@@ -185,16 +185,3 @@ with experiment("example"):
     a.experiment # 获取元件对应的实验
 ```
 在[所有元件 elements](elements.md)中介绍得更全面
-
-
-## hook
-`physicsLab`暂未支持定义元件的`hook`
-```Python
-from physicsLab import *
-
-def f():
-    pass
-
-with experiment("example"):
-    set_hook(f) # 初始化元件的hook
-```

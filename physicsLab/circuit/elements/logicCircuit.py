@@ -5,7 +5,7 @@ from ._circuitbase import CircuitBase
 from ..wire import InputPin, OutputPin
 from physicsLab.typehint import Optional, numType, CircuitElementData, Self, Generate
 
-class _logicBase(CircuitBase):
+class _LogicBase(CircuitBase):
     def set_high_level_value(self, num: numType) -> Self:
         ''' 设置高电平的值 '''
         if not isinstance(num, (int, float)) or num < self.get_low_level_value():
@@ -32,7 +32,7 @@ class _logicBase(CircuitBase):
         ''' 获取低电平的值 '''
         return self.data["Properties"]["低电平"]
 
-class Logic_Input(_logicBase):
+class Logic_Input(_LogicBase):
     ''' 逻辑输入 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {
@@ -62,7 +62,7 @@ class Logic_Input(_logicBase):
     def o(self) -> OutputPin:
         return OutputPin(self, 0)
 
-class Logic_Output(_logicBase):
+class Logic_Output(_LogicBase):
     ''' 逻辑输出 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {
@@ -78,7 +78,7 @@ class Logic_Output(_logicBase):
     def i(self) -> InputPin:
             return InputPin(self, 0)
 
-class _2_pin_Gate(_logicBase):
+class _2_Pin_Gate(_LogicBase):
     ''' 2引脚门电路基类 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {
@@ -97,19 +97,19 @@ class _2_pin_Gate(_logicBase):
     def o(self) -> OutputPin:
         return OutputPin(self, 1)
 
-class Yes_Gate(_2_pin_Gate):
+class Yes_Gate(_2_Pin_Gate):
     ''' 是门 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Yes Gate"
 
-class No_Gate(_2_pin_Gate):
+class No_Gate(_2_Pin_Gate):
     ''' 非门 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "No Gate"
 
-class _3_pin_Gate(_logicBase):
+class _3_Pin_Gate(_LogicBase):
     ''' 3引脚门电路基类 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {
@@ -132,55 +132,55 @@ class _3_pin_Gate(_logicBase):
     def o(self) -> OutputPin:
         return OutputPin(self, 2)
 
-class Or_Gate(_3_pin_Gate):
+class Or_Gate(_3_Pin_Gate):
     ''' 或门 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Or Gate"
 
-class And_Gate(_3_pin_Gate):
+class And_Gate(_3_Pin_Gate):
     ''' 与门 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "And Gate"
 
-class Nor_Gate(_3_pin_Gate):
+class Nor_Gate(_3_Pin_Gate):
     ''' 或非门 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Nor Gate"
 
-class Nand_Gate(_3_pin_Gate):
+class Nand_Gate(_3_Pin_Gate):
     ''' 与非门 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Nand Gate"
 
-class Xor_Gate(_3_pin_Gate):
+class Xor_Gate(_3_Pin_Gate):
     ''' 异或门 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Xor Gate"
 
-class Xnor_Gate(_3_pin_Gate):
+class Xnor_Gate(_3_Pin_Gate):
     ''' 同或门 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Xnor Gate"
 
-class Imp_Gate(_3_pin_Gate):
+class Imp_Gate(_3_Pin_Gate):
     ''' 蕴含门 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Imp Gate"
 
-class Nimp_Gate(_3_pin_Gate):
+class Nimp_Gate(_3_Pin_Gate):
     ''' 蕴含非门 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Nimp Gate"
 
-class _big_element(_logicBase):
+class _BigElement(_LogicBase):
     ''' 2体积元件父类 '''
     is_bigElement = True
 
@@ -193,7 +193,7 @@ class _big_element(_logicBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-class Half_Adder(_big_element):
+class Half_Adder(_BigElement):
     ''' 半加器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
@@ -215,7 +215,7 @@ class Half_Adder(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-class Full_Adder(_big_element):
+class Full_Adder(_BigElement):
     ''' 全加器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
@@ -241,7 +241,7 @@ class Full_Adder(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-class Half_Subtractor(_big_element):
+class Half_Subtractor(_BigElement):
     ''' 半减器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         plAR_version = plAR.get_plAR_version()
@@ -267,7 +267,7 @@ class Half_Subtractor(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-class Full_Subtractor(_big_element):
+class Full_Subtractor(_BigElement):
     ''' 全减器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         plAR_version = plAR.get_plAR_version()
@@ -297,7 +297,7 @@ class Full_Subtractor(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-class Multiplier(_big_element):
+class Multiplier(_BigElement):
     ''' 二位乘法器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
@@ -335,7 +335,7 @@ class Multiplier(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 3)
 
-class D_Flipflop(_big_element):
+class D_Flipflop(_BigElement):
     ''' D触发器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
@@ -357,7 +357,7 @@ class D_Flipflop(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-class T_Flipflop(_big_element):
+class T_Flipflop(_BigElement):
     ''' T'触发器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
@@ -379,7 +379,7 @@ class T_Flipflop(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-class Real_T_Flipflop(_big_element):
+class Real_T_Flipflop(_BigElement):
     ''' T触发器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
@@ -401,7 +401,7 @@ class Real_T_Flipflop(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-class JK_Flipflop(_big_element):
+class JK_Flipflop(_BigElement):
     ''' JK触发器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
@@ -427,7 +427,7 @@ class JK_Flipflop(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-class Counter(_big_element):
+class Counter(_BigElement):
     ''' 计数器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
@@ -457,7 +457,7 @@ class Counter(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 3)
 
-class Random_Generator(_big_element):
+class Random_Generator(_BigElement):
     ''' 随机数发生器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
@@ -487,7 +487,7 @@ class Random_Generator(_big_element):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 3)
 
-class eight_bit_Input(_logicBase):
+class eight_bit_Input(_LogicBase):
     ''' 八位输入器 '''
     is_bigElement = True
 
@@ -547,7 +547,7 @@ class eight_bit_Input(_logicBase):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 7)
 
-class eight_bit_Display(_logicBase):
+class eight_bit_Display(_LogicBase):
     ''' 八位显示器 '''
     is_bigElement = True
 

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from physicsLab._element_base import ElementBase
-from physicsLab.typehint import numType, Self
+from physicsLab.typehint import numType, Self, final
 from physicsLab import _tools
 from physicsLab import errors
-from physicsLab.experiment import get_current_experiment
+from physicsLab.Experiment import get_current_experiment
 from physicsLab.enums import ExperimentType
 
 class _ElectromagnetismMeta(type):
@@ -42,6 +42,7 @@ class ElectromagnetismBase(ElementBase, metaclass=_ElectromagnetismMeta):
     def __init__(self) -> None:
         raise NotImplementedError
 
+    @final
     def set_position(self, x: numType, y: numType, z: numType) -> Self:
         if not isinstance(x, (int, float)) or \
                 not isinstance(y, (int, float)) or \
@@ -52,11 +53,12 @@ class ElectromagnetismBase(ElementBase, metaclass=_ElectromagnetismMeta):
         self._position = _tools.position(x, y, z)
         return super().set_position(x, y, z)
 
-    def set_rotation(self,
-                     x_r: numType,
-                     y_r: numType,
-                     z_r: numType,
-                     ) -> Self:
+    def set_rotation(
+            self,
+            x_r: numType,
+            y_r: numType,
+            z_r: numType,
+    ) -> Self:
         ''' 设置原件的角度 '''
         if not isinstance(x_r, (int, float)) or \
                 not isinstance(y_r, (int, float)) or \
