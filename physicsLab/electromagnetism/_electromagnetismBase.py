@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from physicsLab._element_base import ElementBase
-from physicsLab.typehint import numType, Self, final
+from physicsLab.typehint import numType, Self, override
 from physicsLab import _tools
 from physicsLab import errors
 from physicsLab.Experiment import get_current_experiment
@@ -42,7 +42,7 @@ class ElectromagnetismBase(ElementBase, metaclass=_ElectromagnetismMeta):
     def __init__(self) -> None:
         raise NotImplementedError
 
-    @final
+    @override
     def set_position(self, x: numType, y: numType, z: numType) -> Self:
         if not isinstance(x, (int, float)) or \
                 not isinstance(y, (int, float)) or \

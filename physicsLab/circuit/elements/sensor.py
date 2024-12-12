@@ -4,7 +4,7 @@ from ._circuitbase import TwoPinMixIn, CircuitBase
 from .logicCircuit import _LogicBase
 from physicsLab.typehint import Optional, numType, CircuitElementData, Generate
 
-class _mems_Base(CircuitBase):
+class _MemsBase(CircuitBase):
     ''' 三引脚集成式传感器基类 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         self.data: CircuitElementData = {
@@ -30,7 +30,7 @@ class _mems_Base(CircuitBase):
     def z(self) -> Pin:
         return Pin(self, 2)
 
-class Accelerometer(_mems_Base):
+class Accelerometer(_MemsBase):
     ''' 加速度计 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
@@ -76,7 +76,7 @@ class Analog_Joystick(CircuitBase):
     def y3(self) -> Pin:
         return Pin(self, 5)
 
-class Attitude_Sensor(_mems_Base):
+class Attitude_Sensor(_MemsBase):
     ''' 姿态传感器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
@@ -85,7 +85,7 @@ class Attitude_Sensor(_mems_Base):
         self.data["Properties"]["偏移"] = 2.5
         self.data["Properties"]["响应系数"] = 0.012500000186264515
 
-class Gravity_Sensor(_mems_Base):
+class Gravity_Sensor(_MemsBase):
     ''' 重力加速计 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
@@ -94,7 +94,7 @@ class Gravity_Sensor(_mems_Base):
         self.data["Properties"]["偏移"] = 0.75
         self.data["Properties"]["响应系数"] = 0.2290000021457672
 
-class Gyroscope(_mems_Base):
+class Gyroscope(_MemsBase):
     ''' 陀螺仪传感器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
@@ -103,7 +103,7 @@ class Gyroscope(_mems_Base):
         self.data["Properties"]["偏移"] = 2.5
         self.data["Properties"]["响应系数"] = 0.012500000186264515
 
-class Linear_Accelerometer(_mems_Base):
+class Linear_Accelerometer(_MemsBase):
     ''' 线性加速度计 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)
@@ -112,7 +112,7 @@ class Linear_Accelerometer(_mems_Base):
         self.data["Properties"]["偏移"] = 0.75
         self.data["Properties"]["响应系数"] = 0.2290000021457672
 
-class Magnetic_Field_Sensor(_mems_Base):
+class Magnetic_Field_Sensor(_MemsBase):
     ''' 磁场传感器 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None):
         super().__init__(x, y, z, elementXYZ)

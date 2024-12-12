@@ -4,7 +4,7 @@ import physicsLab.errors as errors
 
 from ..wire import Pin
 from ._circuitbase import TwoPinMixIn, CircuitBase
-from physicsLab.typehint import Optional, numType, CircuitElementData, Self, Generate, Union, List
+from physicsLab.typehint import Optional, numType, CircuitElementData, Self, Generate, Union, List, override
 
 class Buzzer(TwoPinMixIn):
     ''' 蜂鸣器 '''
@@ -263,6 +263,7 @@ class Simple_Instrument(TwoPinMixIn):
     def o(self) -> Pin:
         return Pin(self, 1)
 
+    @override
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({self._position.x}, {self._position.y}, {self._position.z}, " \
                f"elementXYZ={self.is_elementXYZ}, instrument={self.data['Properties']['乐器']}, " \

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import copy
 
-from physicsLab.typehint import numType, Self
+from physicsLab.typehint import numType, Self, final
 from physicsLab import _tools
 
 class ElementBase:
@@ -34,6 +34,7 @@ class ElementBase:
 
         return self
 
+    @final
     def get_position(self) -> tuple:
         ''' 获取原件的坐标 '''
         assert hasattr(self, '_position')

@@ -1,7 +1,7 @@
 from physicsLab import _tools
 from physicsLab import errors
 from physicsLab._element_base import ElementBase
-from physicsLab.typehint import numType, Self, final
+from physicsLab.typehint import numType, Self, override, final
 from physicsLab.enums import ExperimentType
 from physicsLab.Experiment import get_current_experiment
 
@@ -47,6 +47,7 @@ class PlanetBase(ElementBase, metaclass=_PlanetMeta):
         self.data: dict = data
 
     @final
+    @override
     def set_position(self, x: numType, y: numType, z: numType) -> Self:
         ''' 设置位置坐标 '''
         if not isinstance(x, (int, float)) or \

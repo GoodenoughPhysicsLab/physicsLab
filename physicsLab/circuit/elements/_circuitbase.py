@@ -10,7 +10,7 @@ import physicsLab.circuit.elementXYZ as _elementXYZ
 from physicsLab.enums import ExperimentType
 from physicsLab._tools import roundData, randString
 from physicsLab.Experiment import Experiment, get_current_experiment
-from physicsLab.typehint import Optional, Self, numType, CircuitElementData, Generate, final
+from physicsLab.typehint import Optional, Self, numType, CircuitElementData, Generate, override, final
 
 # electricity class's metaClass
 class CircuitMeta(type):
@@ -70,6 +70,7 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
                 f"({self._position.x}, {self._position.y}, {self._position.z}, " \
                 f"elementXYZ={self.is_elementXYZ})"
 
+    @final
     def set_rotation(
             self,
             x_r: numType = 0,
@@ -86,7 +87,7 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
         self.data["Rotation"] = f"{x_r},{z_r},{y_r}"
         return self
 
-    @final
+    @override
     def set_position(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> Self:
         ''' 设置原件的位置
         '''
@@ -108,17 +109,20 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
 
         return super().set_position(x, y, z)
 
-    # 获取元件的index（每创建一个元件，index就加1）
+    @final
     def get_index(self) -> int:
+        ''' 获取元件的index (每创建一个元件, index就加1) '''
         return self.experiment.Elements.index(self) + 1
 
     @property
+    @final
     def modelID(self) -> str:
         ''' 存档的modelID '''
         assert not isinstance(self.data['ModelID'], type(Generate))
         return self.data['ModelID']
 
     @classmethod
+    @final
     def _get_property(cls) -> list:
         res: list = []
         for name, _ in inspect.getmembers(cls, lambda i: isinstance(i, property)):
@@ -126,6 +130,7 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
 
         return res
 
+    @final
     def rename(self, name: str) -> Self:
         ''' 重命名元件
             @param name: 将元件重命名为name
