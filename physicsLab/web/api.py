@@ -17,7 +17,7 @@ from physicsLab import plAR
 from physicsLab import errors
 from physicsLab.enums import Tag, Category
 
-def _check_response(response: requests.Response, err_callback: Optional[callable] = None) -> dict:
+def _check_response(response: requests.Response, err_callback: Optional[Callable] = None) -> dict:
     ''' 检查返回的response
         @callback: 自定义物实返回的status对应的报错信息,
                     要求传入status_code(捕获物实返回体中的status_code), 无返回值
@@ -100,13 +100,14 @@ async def async_get_avatar(id: str, index: int, category: str, size_category: st
     return await _async_wrapper(get_avatar, id, index, category, size_category)
 
 class User:
-    def __init__(self,
-                 username: Optional[str] = None,
-                 passward: Optional[str] = None,
-                 *,
-                 token: Optional[str] = None,
-                 auth_code: Optional[str] = None,
-                 ) -> None:
+    def __init__(
+            self,
+            username: Optional[str] = None,
+            passward: Optional[str] = None,
+            *,
+            token: Optional[str] = None,
+            auth_code: Optional[str] = None,
+    ) -> None:
         if not isinstance(username, (str, type(None))) or \
                 not isinstance(passward, (str, type(None))) or \
                 not isinstance(token, (str, type(None))) or \
@@ -154,9 +155,13 @@ class User:
                 self.decoration = tmp["Data"]["User"]["Decoration"]
                 self.verification = tmp["Data"]["User"]["Verification"]
 
-    def __login(self,
-                username: Optional[str] = None,
-                passward: Optional[str] = None) -> _login_res:
+        assert isinstance(self.token, str) and isinstance(self.auth_code, str)
+
+    def __login(
+            self,
+            username: Optional[str] = None,
+            passward: Optional[str] = None
+    ) -> _login_res:
         ''' 登录, 默认为匿名登录
 
             通过返回字典的Token与AuthCode实现登陆
@@ -188,7 +193,7 @@ class User:
                 "Device": {
                     "Identifier": "7db01528cf13e2199e141c402d79190e",
                     "Language": "Chinese"
-                    },
+                },
             },
             headers=headers,
         )
@@ -197,12 +202,12 @@ class User:
 
     def get_library(self) -> dict:
         ''' 获取社区作品列表 '''
-        if not isinstance(self.token, str) or not isinstance(self.auth_code, str):
-            raise TypeError
-
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/GetLibrary",
-            json={"Identifier": "Discussions", "Language": "Chinese"},
+            json={
+                "Identifier": "Discussions",
+                "Language": "Chinese"
+            },
             headers={
                 "Content-Type": "application/json",
                 "x-API-Token": self.token,
@@ -215,7 +220,7 @@ class User:
     async def async_get_library(self):
         return await _async_wrapper(self.get_library)
 
-    def query_experiment(
+    def query_experiments(
             self,
             tags: Optional[List[Tag]] = None,
             exclude_tags: Optional[List[Tag]] = None,
@@ -245,9 +250,9 @@ class User:
         if languages is None:
             languages = []
         if tags is not None:
-            tags2 = [tag.value for tag in tags]
+            _tags = [tag.value for tag in tags]
         else:
-            tags2 = None
+            _tags = None
 
         if exclude_tags is not None:
             exclude_tags = [tag.value for tag in exclude_tags] # type: ignore
@@ -259,7 +264,7 @@ class User:
                     "Category": category.value,
                     "Languages": languages,
                     "ExcludeLanguages": None,
-                    "Tags": tags2,
+                    "Tags": _tags,
                     "ModelTags": None,
                     "ExcludeTags": exclude_tags,
                     "ModelID": None,
@@ -271,19 +276,19 @@ class User:
                     "Take": take,
                     "Days": 0,
                     "Sort": 0,
-                    "ShowAnnouncement": False
+                    "ShowAnnouncement": False,
                 }
             },
             headers={
                 "Content-Type": "application/json",
                 "x-API-Token": self.token,
                 "x-API-AuthCode": self.auth_code,
-            }
+            },
         )
 
         return _check_response(response)
 
-    async def async_query_experiment(
+    async def async_query_experiments(
             self,
             tags: Optional[List[Tag]] = None,
             exclude_tags: Optional[List[Tag]] = None,
@@ -292,7 +297,7 @@ class User:
             take: int = 18,
             skip: int = 0,
     ):
-        return await _async_wrapper(self.query_experiment, tags, exclude_tags, category, languages, take, skip)
+        return await _async_wrapper(self.query_experiments, tags, exclude_tags, category, languages, take, skip)
 
     def get_experiment(
             self,
@@ -701,8 +706,8 @@ class User:
         if policy is None or authorization is None:
             raise RuntimeError("Sorry, Physics-Lab-AR can't upload this iamge")
         if not isinstance(policy, str) or \
-            not isinstance(authorization, str) or \
-            not isinstance(image_path, str):
+                not isinstance(authorization, str) or \
+                not isinstance(image_path, str):
             raise TypeError
         if not os.path.exists(image_path) or not os.path.isfile(image_path):
             raise FileNotFoundError

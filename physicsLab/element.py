@@ -3,7 +3,7 @@ import json
 from . import _tools
 from . import errors
 from .enums import Category, ExperimentType
-from .Experiment import Experiment, _StackExperiment
+from .Experiment import Experiment, _ExperimentStack
 from .web.api import User
 from .circuit.wire import _read_wires
 from ._element_base import ElementBase
@@ -272,7 +272,7 @@ class experiment:
             read_plsav(self._Experiment)
         if self.elementXYZ:
             if self._Experiment.experiment_type != ExperimentType.Circuit:
-                _StackExperiment.pop()
+                _ExperimentStack.pop()
                 raise errors.ExperimentTypeError
             import physicsLab.circuit.elementXYZ as _elementXYZ
             _elementXYZ.set_elementXYZ(True)

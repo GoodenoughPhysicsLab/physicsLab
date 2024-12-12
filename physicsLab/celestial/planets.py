@@ -265,7 +265,19 @@ class Blackhole(PlanetBase):
 class Fantasy_Star(PlanetBase):
     def __init__(self, x: numType, y: numType, z: numType) -> None:
         self.data = {
-            "Identifier": Generate, "Model": "Fantasy Star", "Override": None, "Name": "幻想恒星", "Parent": None, "Type": 0, "Changed": False, "Extras": {}, "Radius": 651325.063, "RadiusVisible": 4.353841, "RotationPeriod": 0.0, "RotationPhase": 0.0, "AxialTilt": 0.0, "Mass": 2762263.0, "OrbitType": 0, "OrbitEstimation": 3, "Density": 2.3866187453169605, "Gravity": 434.5711132851481, "Luminosity": 3.719063854941033, "Temperature": 8284.134151462116, "Albedo": 0.0, "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate, "Velocity": Generate, "Acceleration": Generate, "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False}
+            "Identifier": Generate, "Model": "Fantasy Star", "Override": None,
+            "Name": "幻想恒星", "Parent": None, "Type": 0, "Changed": False,
+            "Extras": {}, "Radius": 651325.063, "RadiusVisible": 4.353841,
+            "RotationPeriod": 0.0, "RotationPhase": 0.0, "AxialTilt": 0.0,
+            "Mass": 2762263.0, "OrbitType": 0, "OrbitEstimation": 3,
+            "Density": 2.3866187453169605, "Gravity": 434.5711132851481,
+            "Luminosity": 3.719063854941033, "Temperature": 8284.134151462116,
+            "Albedo": 0.0, "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0,
+            "Position": Generate, "Velocity": Generate, "Acceleration": Generate,
+            "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN",
+            "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN",
+            "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False
+        }
 
 class Moon(PlanetBase):
     def __init__(self, x: numType, y: numType, z: numType) -> None:

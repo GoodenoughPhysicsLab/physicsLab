@@ -13,16 +13,17 @@ def get_plAR_version() -> Tuple[int, int, int]:
         return None
 
     try:
-        a_dir = tuple(os.walk(f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Unity/"))[0][1]
+        a_dir = tuple(os.walk(f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Unity/"))
         if len(a_dir) != 1:
             return None
+        a_dir = a_dir[0][1]
 
         a_file = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Unity/{a_dir[0]}/Analytics/values"
 
         with open(a_file) as f:
             ver_str: str = json.load(f)['app_ver']
         return eval(f"({ver_str.replace('.', ',')})")
-    except:
+    except (json.decoder.JSONDecodeError, UnicodeDecodeError, FileNotFoundError):
         return None
 
 def get_plAR_path() -> Optional[str]:
@@ -33,7 +34,6 @@ def get_plAR_path() -> Optional[str]:
             f.readline()
             res = os.path.dirname(os.path.dirname(f.readline()[25:-2]))
 
-        if res == "":
-            return None
-        return res
+        if res != "":
+            return res
     return None

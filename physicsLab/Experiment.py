@@ -24,7 +24,7 @@ from .savTemplate import Generate
 from .enums import ExperimentType
 from .typehint import Union, Optional, List, Dict, numType, Self
 
-class _StackExperiment:
+class _ExperimentStack:
     data: List["Experiment"] = []
 
     def __new__(cls):
@@ -52,7 +52,7 @@ class _StackExperiment:
 
 def get_current_experiment() -> "Experiment":
     ''' 获取当前正在操作的存档 '''
-    return _StackExperiment.top()
+    return _ExperimentStack.top()
 
 # TODO: 将Experiment作为基类, 子类为三大类型的实验?
 class Experiment:
@@ -155,7 +155,7 @@ class Experiment:
             or not isinstance(path_load_mode, Experiment.PathLoadMode):
             raise TypeError
 
-        _StackExperiment.push(self)
+        _ExperimentStack.push(self)
 
         # 直接通过文件路径进行导入
         if path_load_mode == Experiment.PathLoadMode.file_name \
@@ -166,7 +166,7 @@ class Experiment:
             self.SAV_PATH = os.path.abspath(sav_name)
 
             if not os.path.exists(self.SAV_PATH):
-                _StackExperiment.pop()
+                _ExperimentStack.pop()
                 raise errors.ExperimentNotExistError(f"{self.SAV_PATH} not found")
 
             _temp = _open_sav(self.SAV_PATH)
@@ -191,7 +191,7 @@ class Experiment:
             filename = search_experiment(sav_name)
 
             if filename is None:
-                _StackExperiment.pop()
+                _ExperimentStack.pop()
                 raise errors.ExperimentNotExistError(f'No such experiment "{sav_name}"')
 
             self.SAV_PATH = os.path.join(Experiment.SAV_ROOT_DIR, filename)
@@ -281,7 +281,7 @@ class Experiment:
             if os.path.exists(path.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
                 os.remove(path.replace(".sav", ".jpg"))
 
-        _StackExperiment.push(self)
+        _ExperimentStack.push(self)
 
         self.__crt(sav_name, experiment_type)
         return self
@@ -302,7 +302,7 @@ class Experiment:
             or not isinstance(experiment_type, ExperimentType):
             raise TypeError
 
-        _StackExperiment.push(self)
+        _ExperimentStack.push(self)
 
         filename = search_experiment(sav_name)
         if filename is not None:
@@ -384,7 +384,7 @@ class Experiment:
         if not no_pop:
             self.is_opened = False
             self.is_crted = False
-            _StackExperiment.pop()
+            _ExperimentStack.pop()
 
         self.__write()
 
@@ -438,11 +438,11 @@ class Experiment:
         if os.path.exists(self.SAV_PATH.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
             os.remove(self.SAV_PATH.replace(".sav", ".jpg"))
 
-        _StackExperiment.pop()
+        _ExperimentStack.pop()
 
     def exit(self) -> None:
         ''' 立刻退出对该存档的操作, 对该存档的任何改动都会失效 '''
-        _StackExperiment.pop()
+        _ExperimentStack.pop()
 
     def entitle(self, sav_name: str) -> Self:
         ''' 对存档名进行重命名 '''

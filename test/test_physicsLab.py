@@ -2,16 +2,16 @@
 import os
 from base import *
 from physicsLab.lib import *
-from physicsLab.Experiment import _StackExperiment
+from physicsLab.Experiment import _ExperimentStack
 
 def my_test_dec(method: Callable):
     def result(*args, **kwarg):
         method(*args, **kwarg)
 
-        if len(_StackExperiment.data) != 0:
+        if len(_ExperimentStack.data) != 0:
             print(f"File {os.path.abspath(__file__)}, line {method.__code__.co_firstlineno} : "
                   f"test fail due to len(stack_Experiment) != 0")
-            _StackExperiment.data.clear()
+            _ExperimentStack.data.clear()
             raise TestError
     return result
 
@@ -242,9 +242,9 @@ class BasicTest(PLTestBase):
     def test_Simple_Instrument(self):
         with experiment("__test__", is_exit=True, elementXYZ=True, force_crt=True):
             a = Simple_Instrument(0, 0, 0, pitch=48)
-            a = Simple_Instrument(0, 0, 0).set_Tonality(48)
+            a = Simple_Instrument(0, 0, 0).set_tonality(48)
             a = Simple_Instrument(0, 0, 0, pitch="C3")
-            a = Simple_Instrument(0, 0, 0).set_Tonality("C3")
+            a = Simple_Instrument(0, 0, 0).set_tonality("C3")
             Logic_Input(-1, 0, 0).o - a.i
             a.o - Ground_Component(1, 0, 0).i
 
