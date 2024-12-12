@@ -204,3 +204,4 @@
 7.  新增`clear_elements`函数, 移除`Experiment.clear_elements`
 8.  新增`read_plsav`函数, 移除`Experiment.read`
 9.  新增`read_plsav_from_web`函数, 移除`Experiment.read_from_web`
+10. 废弃`get_element`, 新增`get_element_from_positon`, `get_element_from_index`

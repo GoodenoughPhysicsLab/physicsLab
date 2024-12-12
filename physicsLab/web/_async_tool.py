@@ -9,6 +9,7 @@
 import asyncio
 import queue
 import threading
+from abc import abstractmethod
 
 class _EndOfQueue:
     def __new__(cls):
@@ -23,6 +24,10 @@ class AsyncTool:
 
     def _put_end(self):
         self._results.put_nowait(_EndOfQueue)
+
+    @abstractmethod
+    async def _async_main(self):
+        raise NotImplementedError
 
     def __iter__(self):
         t = threading.Thread(target=asyncio.run, args=(self._async_main(),), daemon=True)

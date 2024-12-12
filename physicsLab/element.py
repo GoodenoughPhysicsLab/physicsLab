@@ -49,12 +49,12 @@ def crt_element(
     else:
         raise errors.InternalError
 
-def _get_by_position(
+def get_element_from_position(
         experiment: Experiment,
         x: numType,
         y: numType,
         z: numType,
-        kwargs: dict,
+        **kwargs: dict,
 ):
     ''' 通过坐标索引元件 '''
     if not isinstance(x, (int, float)) or \
@@ -68,11 +68,10 @@ def _get_by_position(
             return kwargs["defualt"]
         raise errors.ElementNotFound(f"{position} do not exist")
 
-    result: list = experiment._elements_position[position] # type: ignore -> type(position) ==
-                                                    # Tuple[numType, numType, numType]
+    result: list = experiment._elements_position[position]
     return result[0] if len(result) == 1 else result
 
-def _get_by_index(experiment: Experiment, index: int, kwargs: dict):
+def get_element_from_index(experiment: Experiment, index: int, **kwargs: dict):
     ''' 通过index (元件生成顺序) 索引元件 '''
     if not isinstance(index, int):
         raise TypeError
@@ -83,26 +82,6 @@ def _get_by_index(experiment: Experiment, index: int, kwargs: dict):
         if "defualt" in kwargs:
             return kwargs["defualt"]
         raise errors.ElementNotFound
-
-# TODO: 废弃该函数, 增加 get_element_from_position, get_element_from_index
-def get_element(
-        experiment: Experiment,
-        x: Optional[numType] = None,
-        y: Optional[numType] = None,
-        z: Optional[numType] = None,
-        *,
-        index: Optional[int] = None,
-        **kwargs
-) -> Union[ElementBase, List[ElementBase]]:
-    ''' 获取对应 坐标/index 的元件 '''
-    if x is not None and y is not None and z is not None:
-        return _get_by_position(experiment, x, y, z, kwargs)
-    elif index is not None:
-        return _get_by_index(experiment, index, kwargs)
-    else:
-        raise TypeError
-
-Experiment.get_element = get_element
 
 def del_element(experiment: Experiment, element: ElementBase) -> None:
     ''' 删除元件
@@ -262,17 +241,15 @@ class experiment:
                  force_crt: bool = False, # 强制创建一个实验, 若已存在则覆盖已有实验
                  is_exit: bool = False, # 退出试验
                  ):
-        if not (
-            isinstance(sav_name, str) and
-            isinstance(read, bool) and
-            isinstance(delete, bool) and
-            isinstance(elementXYZ, bool) and
-            isinstance(write, bool) and
-            isinstance(experiment_type, ExperimentType) and
-            isinstance(force_crt, bool) and
-            isinstance(is_exit, bool) and
-            isinstance(extra_filepath, (str, type(None)))
-        ):
+        if not isinstance(sav_name, str) or \
+                not isinstance(read, bool) or \
+                not isinstance(delete, bool) or \
+                not isinstance(elementXYZ, bool) or \
+                not isinstance(write, bool) or \
+                not isinstance(experiment_type, ExperimentType) or \
+                not isinstance(force_crt, bool) or \
+                not isinstance(is_exit, bool) or \
+                not isinstance(extra_filepath, (str, type(None))):
             raise TypeError
 
         self.savName: str = sav_name
@@ -286,11 +263,10 @@ class experiment:
         self.is_exit: bool = is_exit
 
     def __enter__(self) -> Experiment:
-        if not self.force_crt:
-            self._Experiment: Experiment = Experiment() \
-                .open_or_crt(self.savName, self.ExperimentType)
+        if self.force_crt:
+            self._Experiment: Experiment = Experiment().crt(self.savName, self.ExperimentType, force_crt=True)
         else:
-            self._Experiment: Experiment = Experiment().crt(self.savName, self.ExperimentType, self.force_crt)
+            self._Experiment: Experiment = Experiment().open_or_crt(self.savName, self.ExperimentType)
 
         if self.read:
             read_plsav(self._Experiment)

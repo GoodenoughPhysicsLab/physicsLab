@@ -30,7 +30,7 @@ class BasicTest(PLTestBase):
         crt_wire(a.o, a.i)
         crt_element(expe, 'Logic Input')
         self.assertEqual(count_elements(expe), 2)
-        get_element(expe, 0, 0, 0)
+        get_element_from_position(expe, 0, 0, 0)
         expe.exit()
 
     @my_test_dec
@@ -91,10 +91,13 @@ class BasicTest(PLTestBase):
         expe: Experiment = Experiment().crt("__test__", force_crt=True)
         Or_Gate(0, 0, 0)
         crt_wire(
-            get_element(expe, 0, 0, 0).o,
-            get_element(expe, index=1).i_up
+            get_element_from_position(expe, 0, 0, 0).o,
+            get_element_from_index(expe, index=1).i_up
         )
-        crt_wire(get_element(expe, 0,0,0).i_low, get_element(expe, index=1).o)
+        crt_wire(
+            get_element_from_position(expe, 0, 0, 0).i_low,
+            get_element_from_index(expe, index=1).o
+        )
         self.assertEqual(count_wires(), 2)
         expe.exit()
 
@@ -133,8 +136,8 @@ class BasicTest(PLTestBase):
             for y in [y * 2 + 10 for y in range(5)]:
                 Multiplier(x, y, 0)
 
-        crt_wire(get_element(expe, index=1).o, get_element(expe, 0, 1, 0).i)
-        get_element(expe, index=2).i - get_element(expe, index=3).o - get_element(expe, index=4).i
+        crt_wire(get_element_from_index(expe, 1).o, get_element_from_position(expe, 0, 1, 0).i)
+        get_element_from_index(expe, 2).i - get_element_from_index(expe, 3).o - get_element_from_index(expe, 4).i
         self.assertEqual(count_wires(), 3)
         self.assertEqual(count_elements(expe), 150)
         expe.exit()
@@ -152,13 +155,13 @@ class BasicTest(PLTestBase):
         with experiment("__test__", is_exit=True, force_crt=True) as expe:
             Logic_Input(0, 0, 0)
             Or_Gate(0, 0, 0)
-            self.assertEqual(len(get_element(expe, 0, 0, 0)), 2)
+            self.assertEqual(len(get_element_from_position(expe, 0, 0, 0)), 2)
 
     @my_test_dec
     def test_del_Element(self):
         with experiment("__test__", is_exit=True, force_crt=True) as expe:
             Logic_Input(0, 0, 0).o - Or_Gate(0, 0, 0).o
-            del_element(expe, get_element(expe, index=2))
+            del_element(expe, get_element_from_index(expe, 2))
             self.assertEqual(count_elements(expe), 1)
             self.assertEqual(count_wires(), 0)
 
@@ -250,7 +253,7 @@ class BasicTest(PLTestBase):
         with experiment("__test__", is_exit=True, force_crt=True) as expe:
             Logic_Input(0, 0, 0)
             try:
-                get_element(expe, index=2)
+                get_element_from_index(expe, 2)
             except ElementNotFound:
                 pass
             else:
@@ -327,7 +330,7 @@ class BasicTest(PLTestBase):
             with experiment("_Test", force_crt=True, is_exit=True) as exp2:
                 Logic_Output(0, 0, 0.1)
                 exp2.merge(exp, 1, 0, 0, elementXYZ=True)
-                a = get_element(exp2, 1, 0, 0)
+                a = get_element_from_position(exp2, 1, 0, 0)
                 a.i - a.o
 
                 self.assertEqual(count_elements(exp2), 2)
