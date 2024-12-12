@@ -196,7 +196,7 @@
 
 ## 1.6.0
 1.  重命名`web.ManageMsgIter`为`web.NotificationsMsgIter`
-2.  强化`web.Bot`
+2.  移除`web.Bot`
 3.  新增`add_graph_to`函数， 移除`Experiment.graph`
 4.  新增`crt_element`函数, 移除`Experiment.crt_element`
 5.  新增`del_element`函数, 移除`Experiment.del_element`
@@ -205,3 +205,5 @@
 8.  新增`read_plsav`函数, 移除`Experiment.read`
 9.  新增`read_plsav_from_web`函数, 移除`Experiment.read_from_web`
 10. 废弃`get_element`, 新增`get_element_from_positon`, `get_element_from_index`
+
+## 1.6.1
