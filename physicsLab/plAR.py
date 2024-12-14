@@ -8,7 +8,7 @@ from getpass import getuser
 from typing import Optional, Tuple
 
 if platform.system() == "Windows":
-    WIN_PLAR_HOME_DIR = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics"
+    WIN_PLAR_HOME_DIR = f"C:\\Users\\{getuser()}\\AppData\\LocalLow\\CIVITAS\\Quantum Physics"
 
 def get_plAR_version() -> Tuple[int, int, int]:
     ''' 获取物实版本 '''
@@ -30,12 +30,14 @@ def get_plAR_version() -> Tuple[int, int, int]:
 
 def get_plAR_path() -> Optional[str]:
     ''' 获取物实路径 '''
-    if platform.system() == "Windows":
-        with open(f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Player-prev.log") as f:
-            f.readline()
-            f.readline()
-            res = os.path.dirname(os.path.dirname(f.readline()[25:-2]))
+    if platform.system() != "Windows":
+        return None
 
-        if res != "":
-            return res
-    return None
+    with open(os.path.join(WIN_PLAR_HOME_DIR, "Player-prev.log")) as f:
+        f.readline()
+        f.readline()
+        res = os.path.dirname(os.path.dirname(f.readline()[25:-2]))
+
+    if res == "":
+        return None
+    return res

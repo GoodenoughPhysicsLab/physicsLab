@@ -206,7 +206,7 @@ class User:
             "https://physics-api-cn.turtlesim.com/Contents/GetLibrary",
             json={
                 "Identifier": "Discussions",
-                "Language": "Chinese"
+                "Language": "Chinese",
             },
             headers={
                 "Content-Type": "application/json",

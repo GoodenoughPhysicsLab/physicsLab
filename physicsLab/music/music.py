@@ -189,7 +189,7 @@ class Midi:
             if player is not None:
                 f = (sound_by_plmidi, sound_by_pygame, sound_by_os)[player.value]
                 if not f():
-                    errors.warning(f"can not use {f.__name__} to sound midi.")
+                    errors.warning(f"can not use {f.__name__} to play midi.")
                 return self
 
             if sound_by_plmidi():
@@ -199,7 +199,7 @@ class Midi:
             elif sound_by_os():
                 pass
             else:
-                errors.warning("can not use sound methods")
+                errors.warning("no sound method can be used")
         finally:
             if use_tempfile:
                 os.remove(midifile)
@@ -223,7 +223,6 @@ class Midi:
                         percussion_channel: Optional[int],
                         notes_filter: Optional[Callable],
                         ) -> List[Union["Note", "Chord"]]:
-
         res: List[Union[Note, Chord]] = []
         wait_time: int = 0
         len_res: int = 0

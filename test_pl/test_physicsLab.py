@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from base import *
+from .base import *
 from physicsLab.lib import *
 from physicsLab.Experiment import _ExperimentStack
 

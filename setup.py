@@ -7,7 +7,7 @@ setuptools.setup(
     license="MIT",
     author="Arendelle",
     author_email="2381642961@qq.com",
-    description="Python API for Physics-Lab-AR",
+    description="Python API for Quantum-Physics App",
     long_description="show description in [github](https://github.com/GoodenoughPhysicsLab/physicsLab)",
     long_description_content_type="text/markdown",
     url="https://github.com/GoodenoughPhysicsLab/physicsLab",
