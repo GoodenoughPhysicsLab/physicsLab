@@ -61,8 +61,7 @@ class Experiment:
         SAV_ROOT_DIR = os.environ["PHYSICSLAB_HOME_PATH"]
     else:
         if platform.system() == "Windows":
-            from getpass import getuser
-            SAV_ROOT_DIR = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Circuit"
+            SAV_ROOT_DIR = os.path.join(plAR.WIN_PLAR_HOME_DIR, "Circuit")
         else:
             SAV_ROOT_DIR = "physicsLabSav"
 

@@ -7,18 +7,20 @@ import platform
 from getpass import getuser
 from typing import Optional, Tuple
 
+if platform.system() == "Windows":
+    WIN_PLAR_HOME_DIR = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics"
+
 def get_plAR_version() -> Tuple[int, int, int]:
     ''' 获取物实版本 '''
     if platform.system() != "Windows":
         return None
 
     try:
-        a_dir = tuple(os.walk(f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Unity/"))
+        a_dir = os.listdir(os.path.join(WIN_PLAR_HOME_DIR, "Unity"))
         if len(a_dir) != 1:
             return None
-        a_dir = a_dir[0][1]
 
-        a_file = f"C:/Users/{getuser()}/AppData/LocalLow/CIVITAS/Quantum Physics/Unity/{a_dir[0]}/Analytics/values"
+        a_file = os.path.join(WIN_PLAR_HOME_DIR, "Unity", a_dir[0], "Analytics", "values")
 
         with open(a_file) as f:
             ver_str: str = json.load(f)['app_ver']
