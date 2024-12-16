@@ -103,13 +103,13 @@ class User:
     def __init__(
             self,
             username: Optional[str] = None,
-            passward: Optional[str] = None,
+            password: Optional[str] = None,
             *,
             token: Optional[str] = None,
             auth_code: Optional[str] = None,
     ) -> None:
         if not isinstance(username, (str, type(None))) or \
-                not isinstance(passward, (str, type(None))) or \
+                not isinstance(password, (str, type(None))) or \
                 not isinstance(token, (str, type(None))) or \
                 not isinstance(auth_code, (str, type(None))):
             raise TypeError
@@ -131,7 +131,7 @@ class User:
             self.verification = tmp["Data"]["User"]["Verification"]
 
         else:
-            tmp = self.__login(username, passward)
+            tmp = self.__login(username, password)
 
             self.token = tmp["Token"]
             self.auth_code = tmp["AuthCode"]
@@ -160,13 +160,13 @@ class User:
     def __login(
             self,
             username: Optional[str] = None,
-            passward: Optional[str] = None
+            password: Optional[str] = None
     ) -> _login_res:
         ''' 登录, 默认为匿名登录
 
             通过返回字典的Token与AuthCode实现登陆
         '''
-        assert isinstance(username, (str, type(None))) and isinstance(passward, (str, type(None)))
+        assert isinstance(username, (str, type(None))) and isinstance(password, (str, type(None)))
 
         plar_version = plAR.get_plAR_version()
         if plar_version is not None:
@@ -188,7 +188,7 @@ class User:
             "http://physics-api-cn.turtlesim.com/Users/Authenticate",
             json={
                 "Login": username,
-                "Password": passward,
+                "Password": password,
                 "Version": plar_version,
                 "Device": {
                     "Identifier": "7db01528cf13e2199e141c402d79190e",
