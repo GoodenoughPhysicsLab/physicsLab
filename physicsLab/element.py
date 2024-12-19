@@ -7,7 +7,7 @@ from .Experiment import Experiment, _ExperimentStack
 from .web.api import User
 from .circuit.wire import _read_wires
 from ._element_base import ElementBase
-from .typehint import numType, Union, Optional, List
+from .typehint import numType, Optional
 
 def crt_element(
         experiment: Experiment,
@@ -219,7 +219,7 @@ def read_plsav_from_web(
     if not no_read_experiment_status:
         _experiment = user.get_experiment(_summary["ContentID"])["Data"]
         _StatusSave = json.loads(_experiment["StatusSave"])
-        experiment.__read_CameraSave(_experiment["CameraSave"])
+        experiment._read_CameraSave(_experiment["CameraSave"])
         _read_elements(experiment, _StatusSave["Elements"])
         _read_wires(experiment, _StatusSave["Wires"])
 

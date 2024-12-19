@@ -11,6 +11,9 @@ def main():
             with open(os.path.join(root, file), encoding="utf-8") as f:
                 lines = f.read().splitlines()
 
+            if len(lines) == 0 or lines[0] != "# -*- coding: utf-8 -*-":
+                lines.insert(0, "# -*- coding: utf-8 -*-")
+
             context: str = ""
             for line_num, line in enumerate(lines):
                 while line.endswith(' '):

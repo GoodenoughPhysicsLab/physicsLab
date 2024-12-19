@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 import base64
 
 from physicsLab import errors
-from physicsLab.experiment import Experiment
+from physicsLab.Experiment import Experiment
 from physicsLab.circuit.elements import CircuitBase
 from physicsLab.typehint import TypedDict, Self, List, Optional
 

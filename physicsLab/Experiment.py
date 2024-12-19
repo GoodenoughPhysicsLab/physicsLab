@@ -102,7 +102,7 @@ class Experiment:
                 return element
         raise errors.ExperimentError
 
-    def __read_CameraSave(self, camera_save: str) -> None:
+    def _read_CameraSave(self, camera_save: str) -> None:
         self.CameraSave = json.loads(camera_save)
         temp = eval(f"({self.CameraSave['VisionCenter']})")
         self.VisionCenter: _tools.position = _tools.position(temp[0], temp[2], temp[1]) # x, z, y
@@ -111,7 +111,7 @@ class Experiment:
 
     def __open(self) -> None:
         self.is_opened = True
-        self.__read_CameraSave(self.PlSav["Experiment"]["CameraSave"])
+        self._read_CameraSave(self.PlSav["Experiment"]["CameraSave"])
 
         if self.PlSav["Summary"] is None:
             self.PlSav["Summary"] = savTemplate.Circuit["Summary"]

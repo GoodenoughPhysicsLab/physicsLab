@@ -11,6 +11,7 @@ class WebTest(PLTestBase):
             auth_code="nENz1xlrueQUmkqjYZKtCG9SI53vF8Xc"
         )
 
+    # TODO: 异步跑这些测试
     def test_get_start_page(self):
         web.get_start_page()
 

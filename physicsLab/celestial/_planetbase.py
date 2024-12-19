@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from physicsLab import _tools
 from physicsLab import errors
 from physicsLab._element_base import ElementBase
