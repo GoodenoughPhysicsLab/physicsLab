@@ -10,26 +10,24 @@ import asyncio
 import queue
 import threading
 from abc import abstractmethod
+from physicsLab.typehint import Generator
 
 class _EndOfQueue:
     def __new__(cls):
         return cls
 
 class AsyncTool:
-    def __init__(self):
-        self._results = queue.SimpleQueue()
-
-    def _put_res(self, res):
-        self._results.put_nowait(res)
-
-    def _put_end(self):
-        self._results.put_nowait(_EndOfQueue)
-
     @abstractmethod
-    async def _async_main(self):
+    async def __aiter__(self):
         raise NotImplementedError
 
-    def __iter__(self):
+    async def _async_main(self):
+        async for res in self:
+            self._results.put_nowait(res)
+        self._results.put_nowait(_EndOfQueue)
+
+    def __iter__(self) -> Generator[dict]:
+        self._results = queue.SimpleQueue()
         t = threading.Thread(target=asyncio.run, args=(self._async_main(),), daemon=True)
         t.start()
         while True:

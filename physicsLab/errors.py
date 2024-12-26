@@ -116,3 +116,11 @@ class ResponseFail(Exception):
         self.err_msg: str = err_msg
     def __str__(self):
         return self.err_msg
+
+class MaxRetryError(Exception):
+    ''' 重试次数过多 '''
+    def __init__(self, err_msg: str):
+        self.err_msg: str = err_msg
+
+    def __str__(self):
+        return self.err_msg

@@ -42,7 +42,7 @@ async def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
                 requests.exceptions.HTTPError,
             ):
                 continue
-        raise TimeoutError("max retry reached")
+        raise errors.MaxRetryError("max retry reached")
 
 #TODO 所有现有的迭代器添加反向迭代器
 class NotificationsMsgIter(_async_tool.AsyncTool):
@@ -83,7 +83,6 @@ class NotificationsMsgIter(_async_tool.AsyncTool):
         if start_time >= end_time:
             raise ValueError
 
-        super().__init__()
         self.start_time = start_time
         self.end_time = end_time
         self.user = user
@@ -92,7 +91,7 @@ class NotificationsMsgIter(_async_tool.AsyncTool):
         self.category_id = category_id
 
     @override
-    async def _async_main(self) -> None:
+    async def __aiter__(self):
         def _make_task(i):
             return asyncio.create_task(
                 _run_task(
@@ -113,9 +112,8 @@ class NotificationsMsgIter(_async_tool.AsyncTool):
 
             for task in tasks:
                 for message in await task:
-                    self._put_res(message)
+                    yield message
             counter += 1
-        self._put_end()
 
     async def _fetch_manage_msgs(self, skip: int):
         assert skip >= 0, "InternalError: please bug-report"
@@ -211,6 +209,7 @@ class BannedMsgIter:
                 self.max_retry,
                 category_id=5,
                 ):
+            assert self.banned_template is not None
             if manage_msg["TemplateID"] == self.banned_template["ID"]:
                 yield manage_msg
 
@@ -324,7 +323,6 @@ class RelationsIter(_async_tool.AsyncTool):
         if max_retry is not None and max_retry < 0:
             raise ValueError
 
-        super().__init__()
         self.user = user
         self.user_id = user_id
         self.display_type = display_type
@@ -339,21 +337,21 @@ class RelationsIter(_async_tool.AsyncTool):
         else:
             self.amount = amount
 
-    @override
-    async def _async_main(self) -> None:
-        def _make_task(i: int):
-            return asyncio.create_task(
-                _run_task(
-                    self.max_retry,
-                    self.user.async_get_relations,
-                    self.user_id, self.display_type, skip=i, take=24,
-                )
+    def _make_task(self, i: int):
+        return asyncio.create_task(
+            _run_task(
+                self.max_retry,
+                self.user.async_get_relations,
+                self.user_id, self.display_type, skip=i, take=24,
             )
-        tasks = [_make_task(i) for i in range(0, self.amount, 24)]
+        )
+
+    @override
+    async def __aiter__(self):
+        tasks = [self._make_task(i) for i in range(0, self.amount, 24)]
         for task in tasks:
             for res in (await task)["Data"]["$values"]:
-                self._put_res(res)
-        self._put_end()
+                yield res
 
 class AvatarsIter(_async_tool.AsyncTool):
     ''' 获取头像的迭代器 '''
@@ -396,29 +394,28 @@ class AvatarsIter(_async_tool.AsyncTool):
         else:
             raise errors.InternalError
 
-        super().__init__()
         self.search_id = search_id
         self.category = category
         self.size_category = size_category
         self.user = user
         self.max_retry = max_retry
 
-    @override
-    async def _async_main(self) -> None:
-        def _make_task(i):
-            return asyncio.create_task(
-                _run_task(
-                    self.max_retry,
-                    api.async_get_avatar,
-                    self.search_id, i, self.category, self.size_category,
-                )
+    def _make_task(self, i):
+        return asyncio.create_task(
+            _run_task(
+                self.max_retry,
+                api.async_get_avatar,
+                self.search_id, i, self.category, self.size_category,
             )
-        tasks = [_make_task(i) for i in range(self.max_img_counter + 1)]
+        )
+
+    @override
+    async def __aiter__(self):
+        tasks = [self._make_task(i) for i in range(self.max_img_counter + 1)]
         for task in tasks:
             try:
                 res = await task
             except IndexError:
                 pass
             else:
-                self._put_res(res)
-        self._put_end()
+                yield res

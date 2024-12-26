@@ -207,3 +207,4 @@
 10. 废弃`get_element`, 新增`get_element_from_positon`, `get_element_from_index`
 
 ## 1.6.1
+1.  `web`的部分迭代器增加`async for`支持
