@@ -15,7 +15,7 @@ def my_test_dec(method: Callable):
             raise TestError
     return result
 
-class BasicTest(PLTestBase):
+class BasicTest(TestCase, ViztracerTool):
     @my_test_dec
     def test_experiment1(self):
         expe: Experiment = Experiment().crt("__test__", force_crt=True)

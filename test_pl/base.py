@@ -16,7 +16,7 @@ class TestError(Exception):
             get_current_experiment().exit()
         return self.err_msg
 
-class PLTestBase(TestCase):
+class ViztracerTool:
     if USE_VIZTRACER:
         @classmethod
         def setUpClass(cls):
