@@ -6,8 +6,11 @@
 '''
 
 import os
+import sys
+import types
 import asyncio
 import requests
+import functools
 import threading
 
 from concurrent.futures import thread
@@ -38,16 +41,21 @@ def _check_response(response: requests.Response, err_callback: Optional[Callable
     )
 
 async def _async_wrapper(func: Callable, *args, **kwargs):
-    # run_in_executor会注册_python_exit到threading._threading_atexits
-    # 而_python_exit调用join会导致win上的异常无法及时被抛出
+    # run_in_executor 会注册 _python_exit 到 threading._threading_atexits
     _res = await asyncio.get_running_loop().run_in_executor(None, func, *args, **kwargs)
 
-    # NOTE: 依赖于asyncio与concurrent.futures.thread的实现细节
-    _threading_atexits = []
-    for fn in threading._threading_atexits:
-        if fn.func is not thread._python_exit:
-            _threading_atexits.append(fn)
-    threading._threading_atexits = _threading_atexits
+    # python3.14之前, threading.Thread.join 在 Windows 上会阻塞异常的传播
+    # 也就是说, 在join结束之前, Python无法及时抛出 KeyboardInterrupt
+    # 而 python 并未提供公开的方法操作 threading._threading_atexit
+    # NOTE: 依赖于 asyncio 与 concurrent.futures.thread 的实现细节
+    if sys.version_info < (3, 14) and hasattr(threading, "_threading_atexits"):
+        _threading_atexits = []
+        for fn in threading._threading_atexits:
+            if isinstance(fn, types.FunctionType) and fn is not thread._python_exit:
+                _threading_atexits.append(fn)
+            elif isinstance(fn, functools.partial) and fn.func is not thread._python_exit:
+                _threading_atexits.append(fn)
+        threading._threading_atexits = _threading_atexits
 
     return _res
 

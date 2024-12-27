@@ -11,7 +11,7 @@ setuptools.setup(
     long_description="show description in [github](https://github.com/GoodenoughPhysicsLab/physicsLab)",
     long_description_content_type="text/markdown",
     url="https://github.com/GoodenoughPhysicsLab/physicsLab",
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(include=["physicsLab", "physicsLab.*"]),
     install_requires=["mido", "typing-extensions", "requests", "colorama"],
     classifiers=[
         "Programming Language :: Python :: 3",

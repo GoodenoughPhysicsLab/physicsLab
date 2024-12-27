@@ -211,4 +211,4 @@
 2.  some bug-fix
 
 ## 1.6.2
-
+1.  修复test_pl被意外打包进pip的问题
