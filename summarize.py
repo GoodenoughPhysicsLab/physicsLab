@@ -1,10 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-from typing import List
-
-ignores: List[str] = [
-    #
-]
 
 if __name__ == "__main__":
     ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -12,11 +7,11 @@ if __name__ == "__main__":
     count_line: int = 0
 
     for root, dirs, files in os.walk(os.path.join(ROOT, "physicsLab")):
-        dirs.remove("__pycache__")
+        if "__pycache__" in dirs:
+            dirs.remove("__pycache__")
+        if "mido" in dirs:
+            dirs.remove("mido")
         for file in files:
-            if file in ignores:
-                continue
-
             len_py_file += 1
             with open(os.path.join(root, file), encoding="utf-8") as f:
                 count_line += len(f.read().splitlines())
