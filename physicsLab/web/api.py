@@ -6,19 +6,34 @@
 '''
 
 import os
-import sys
-import types
 import asyncio
 import requests
-import functools
-import threading
 
-from concurrent.futures import thread
 from typing import Optional, List, TypedDict, Callable
 
 from physicsLab import plAR
 from physicsLab import errors
 from physicsLab.enums import Tag, Category
+
+# 从 threading._threading_atexits 中注销掉 furure._python_exit
+import sys
+import types
+import functools
+import threading
+from concurrent.futures import thread
+
+# python3.14之前, threading.Thread.join 在 Windows 上会阻塞异常的传播
+# 也就是说, 在join结束之前, Python无法及时抛出 KeyboardInterrupt
+# 而 python 并未提供公开的方法操作 threading._threading_atexit
+# NOTE: 依赖于 asyncio 与 concurrent.futures.thread 的实现细节
+if sys.version_info < (3, 14) and hasattr(threading, "_threading_atexits"):
+    _threading_atexits = []
+    for fn in threading._threading_atexits:
+        if isinstance(fn, types.FunctionType) and fn is not thread._python_exit:
+            _threading_atexits.append(fn)
+        elif isinstance(fn, functools.partial) and fn.func is not thread._python_exit:
+            _threading_atexits.append(fn)
+    threading._threading_atexits = _threading_atexits
 
 def _check_response(response: requests.Response, err_callback: Optional[Callable] = None) -> dict:
     ''' 检查返回的response
@@ -41,23 +56,7 @@ def _check_response(response: requests.Response, err_callback: Optional[Callable
     )
 
 async def _async_wrapper(func: Callable, *args, **kwargs):
-    # run_in_executor 会注册 _python_exit 到 threading._threading_atexits
-    _res = await asyncio.get_running_loop().run_in_executor(None, func, *args, **kwargs)
-
-    # python3.14之前, threading.Thread.join 在 Windows 上会阻塞异常的传播
-    # 也就是说, 在join结束之前, Python无法及时抛出 KeyboardInterrupt
-    # 而 python 并未提供公开的方法操作 threading._threading_atexit
-    # NOTE: 依赖于 asyncio 与 concurrent.futures.thread 的实现细节
-    if sys.version_info < (3, 14) and hasattr(threading, "_threading_atexits"):
-        _threading_atexits = []
-        for fn in threading._threading_atexits:
-            if isinstance(fn, types.FunctionType) and fn is not thread._python_exit:
-                _threading_atexits.append(fn)
-            elif isinstance(fn, functools.partial) and fn.func is not thread._python_exit:
-                _threading_atexits.append(fn)
-        threading._threading_atexits = _threading_atexits
-
-    return _res
+    return await asyncio.get_running_loop().run_in_executor(None, func, *args, **kwargs)
 
 def get_start_page() -> dict:
     ''' 获取主页数据 '''
