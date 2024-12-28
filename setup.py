@@ -12,7 +12,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/GoodenoughPhysicsLab/physicsLab",
     packages=setuptools.find_packages(include=["physicsLab", "physicsLab.*"]),
-    install_requires=["mido", "typing-extensions", "requests", "colorama"],
+    install_requires=["typing-extensions", "requests", "colorama"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

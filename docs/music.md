@@ -1,9 +1,7 @@
 # music
-`physicsLab.music`本来是`physicsLab`的模块化电路的其中一个组成部分，不过由于其引入了`mido`这个依赖，所以我单独将其分离出来。  
-正常情况下，下载physicsLab时会自动下载mido。如果无法使用mido的话只会无法使用`physicsLab.music`，此时你需要输入该命令下载mido这个依赖：
-```bash
-pip install mido
-```
+`physicsLab.music`本来是`physicsLab`的模块化电路的其中一个组成部分，不过由于其引入了`mido`这个依赖，所以我单独将其分离出来。
+
+`physicsLab`已自带轻量版的mido, 无需用户手动安装mido。
 
 ## 快速使用
 通常来说，music模块使用得最多的功能是将一个`midi`文件转化为一个对应的可以在物实运行的音乐电路。
@@ -70,7 +68,10 @@ music.Midi("/your/path/of/midi").sound()
 
 > Note: 参数的作用之类的在源码的注释中可以找到  
 请注意，`Note`, `Chord`, `Piece`为数据类（只用来存储数据），要转变为物实对应的电路结构需要使用`Piece.release()`方法
+
 ## class Note
+理论上，你也可以使用`Note`, `Chord`来手动编写一首音乐。
+
 `Note`是音符类  
 其中的`time`参数的含义是***距离播放该音符需要等待多少midi时间(为整数, 即int)***
 

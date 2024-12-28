@@ -4,10 +4,11 @@
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![build](https://github.com/gaogaotiantian/viztracer/workflows/build/badge.svg)](https://github.com/GoodenoughPhysicsLab/physicsLab/actions)
-<!-- ![support-version](https://img.shields.io/pypi/pyversions/viztracer) -->
+<!-- ![support-version](https://img.shields.io/pypi/pyversions/viztracer) 支持3.8及以上版本 -->
 
 ## 介绍
 当我们在[物理实验室AR](https://www.turtlesim.com/)纯手动做实验的时候，往往会遇到一些琐碎、麻烦但又不得不做的事情，比如：重复的搭建某些电路，调整元件的位置，电路内部结构的重复。这些问题都可以通过使用`physicsLab`生成这些电路结构来轻易解决！于是我写了`physicsLab`，让你能用`Python`在物实做实验。
+而在参与物实社区的时候, 有时候又会遇到一些手动很麻烦的情况, 我们就可以使用`physicsLab.web`来通过网络api操作物实社区。
 
 ## 部分方便且惊艳的功能展示
 *  同时支持通过存档的文件名与**存档名**访问存档
@@ -42,22 +43,20 @@ python -m pip install physicsLab
 ```
 > Note: 在`Windows`下你可以输入`py`来使用`python`，`Linux, MacOS`下可能需要输入`python3`来使用`python`
 
-3.  有一个并非必需的功能：播放midi。你可以输入下面命令的任意一条：
+3.  有一个并非必需的功能：播放midi（仅在Windows下可用）。你可以输入下面命令的任意一条：
 ```shell
 pip install plmidi
 pip install pygame
 ```
 点击跳转至[plmidi](https://github.com/GoodenoughPhysicsLab/plmidi)
 
-之所以没有做安装physicsLab的时候自动安装这两个库，是因为`Android`的`qpython`在下载含c的库的时候存在问题
-
-4.  物实存档使用了中文字符，默认编码为`utf-8`。但在一些非正常情况，存档的编码可能被改变。虽然`physicsLab`有一定的处理存档编码问题的能力，但如果还是出现了问题，请输入该命令：
+1.  物实存档使用了中文字符，默认编码为`utf-8`。但在一些非正常情况，存档的编码可能被改变。虽然`physicsLab`有一定的处理存档编码问题的能力，但如果还是出现了问题，请输入该命令：
 ```bash
 pip install chardet
 ```
 此时`physicsLab`会自动调用`chardet`来处理更加棘手的文件编码问题。
 
-5. 如果下载成功，请输入下面的代码以验证`physicsLab`已经可以使用了
+1. 如果下载成功，请输入下面的代码以验证`physicsLab`已经可以使用了
 ```Python
 from physicsLab import *
 
@@ -86,9 +85,9 @@ sys.path.append("/your/path/of/physicsLab") # 将字符串替换为你想添加�
 > Note: 如果`physicsLab`抛出`TypeError`，请检查你自己的输入参数是否有问题，  
 >       如果抛出`AssertionError`，请**报告bug**
 
-*目前`physicsLab`在`windows`上的支持最好，在`Android`上仅支持手动导入/导出存档（默认在`physicsLabSav`文件夹中）。*  
-其他操作系统上的行为与在`Android`上应该一致。  
+目前`physicsLab`在`windows`上的支持最好，在其他操作系统上仅支持手动导入/导出存档（默认在`physicsLabSav`文件夹中）。
 
+> 在安卓上要使用`physicsLab`的话，可以下载`qpython`或者`Termux`
 > 在`qpython v3.2.5`中大大削减了python在文件路径操作方面的权限，这意味着在qpython上使用physicsLab生成的存档将很难被物实导入，因为物实没权限访问不了。
 > 但此问题在[qpython v3.2.3](https://github.com/qpython-android/qpython/releases/tag/v3.2.3)中不存在，推荐下载该版本。
 > 不过由于安卓权限的问题，用起来肯定没有电脑上方便。
@@ -142,7 +141,7 @@ with experiment("example", read=True):
 ## 优点
 *  `physicsLab`拥有优秀的与物实存档交互的能力，你甚至可以使用程序完成部分工作之后你再继续完成或者让程序在你已完成的实验的基础上继续完成。
   如此灵活的功能使得physicsLab即使是在python shell上也能出色的完成工作！
-*  `physicsLab`为纯python库，其c拓展部分(与midi相关的)被放到了`plmidi`中，但`plmidi`不是必须需要的。纯Python库通常意味着更容易使用，更少的问题。
+*  `physicsLab`为纯python库，其c拓展部分(播放midi的部分)被放到了`plmidi`中，但`plmidi`不是必须需要的。纯Python库通常意味着更容易使用，更少的问题。
 *  封装了物实里的大量原件，即使是***未解锁的原件***也可以轻易用脚本生成，甚至一些常用的电路也被封装好了！
 *  物理实验室存档的位置有点隐蔽，但用该脚本生成实验时，你无须亲自寻找这个文件在哪里。
 *  外部依赖少

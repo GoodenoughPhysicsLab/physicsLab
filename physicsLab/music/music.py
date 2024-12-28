@@ -3,13 +3,13 @@ import os
 import io
 import tempfile
 
-import mido
 import physicsLab._colorUtils as colorUtils
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from math import ceil, sqrt
 from enum import Enum, unique
 
+from . import mido
 from physicsLab import errors
 from physicsLab.circuit import elements
 from physicsLab._tools import roundData

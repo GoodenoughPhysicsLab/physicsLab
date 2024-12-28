@@ -215,3 +215,4 @@
 2.  修复由于Python更新导致_async_wrapper报错的问题
 
 ## 1.6.3
+1.  不再需要从pip中下载`mido`依赖
