@@ -179,6 +179,7 @@ def read_plsav(experiment: Experiment) -> Experiment:
 
     status_sav = json.loads(experiment.PlSav["Experiment"]["StatusSave"])
 
+    # TODO 需要 read_CameraSave 吗?
     if experiment.experiment_type == ExperimentType.Circuit:
         _read_elements(experiment, status_sav["Elements"])
         _read_wires(experiment, status_sav["Wires"])
@@ -218,10 +219,18 @@ def read_plsav_from_web(
     _summary = user.get_summary(id, category)["Data"]
     if not no_read_experiment_status:
         _experiment = user.get_experiment(_summary["ContentID"])["Data"]
-        _StatusSave = json.loads(_experiment["StatusSave"])
+        status_sav = json.loads(_experiment["StatusSave"])
         experiment._read_CameraSave(_experiment["CameraSave"])
-        _read_elements(experiment, _StatusSave["Elements"])
-        _read_wires(experiment, _StatusSave["Wires"])
+
+        if experiment.experiment_type == ExperimentType.Circuit:
+            _read_elements(experiment, status_sav["Elements"])
+            _read_wires(experiment, status_sav["Wires"])
+        elif experiment.experiment_type == ExperimentType.Celestial:
+            _read_elements(experiment, list(status_sav["Elements"].values()))
+        elif experiment.experiment_type == ExperimentType.Electromagnetism:
+            _read_elements(experiment, status_sav["Elements"])
+        else:
+            raise errors.InternalError
 
     del _summary["$type"]
     _summary["Category"] = category.value
