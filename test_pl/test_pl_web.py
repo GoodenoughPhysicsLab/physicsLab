@@ -184,6 +184,3 @@ class WebTest(TestCase, ViztracerTool):
         asyncio.run(test_web_main())
         end = time.time()
         print(f"{WebTest.test_web_impl.__name__} takes {end - start}", end='')
-
-if __name__ == '__main__':
-    unittest.main()
