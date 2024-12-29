@@ -48,8 +48,8 @@ def add_graph_to(experiment: Experiment) -> Optional[List[Plot]]:
     if not isinstance(experiment, Experiment):
         raise TypeError
 
-    if not experiment.is_open_or_crt:
-        raise errors.ExperimentNotOpenError
+    if not experiment._is_closed():
+        raise errors.ExperimentClosedError
 
     if experiment.PlSav["Plots"] is None:
         return None

@@ -12,6 +12,7 @@ from physicsLab.enums import ExperimentType
 
 # 是否将全局设置为元件坐标系
 def set_elementXYZ(boolen: bool) -> None:
+    # 这玩意是否也有必要塞进构造函数里?
     if get_current_experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
     if not isinstance(boolen, bool):
@@ -69,6 +70,8 @@ def translateXYZ(x: numType, y: numType, z: numType, is_bigElement: bool = False
 
 # 设置元件坐标系原点O，输入值为物实坐标系
 def set_O(x: numType, y: numType, z: numType) -> None:
+    # TODO 如果多次, 重复地set_O的话情况会很糟糕吧，会有很多反直觉的事情发生
+    # 或许这个可以移除了?
     if (isinstance(x, (int, float)) and
         isinstance(y, (int, float)) and
         isinstance(z, (int, float))

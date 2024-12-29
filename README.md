@@ -29,7 +29,7 @@
 鉴于目前用户较少, 深度使用该库的用户几乎没有, 因此不考虑稳定&兼容。
 并且哪怕用户多了, 也会优先考虑标注弃用, 并推荐转移到新api的模式, 而不是无意义的兼容。
 
-不过就目前的情况来看, `class experiment` 是事实上稳定的api
+受此影响, `physicsLab`的版本发布采取快照的方式
 
 ## 安装教程
 1.  请确保你的电脑有[Python](https://www.python.org)（>=3.8）与[物理实验室AR](https://www.turtlesim.com/)（简称`物实`）（也可以联系物理实验室的开发者[Jone-Chen](https://gitee.com/civitasjohn)）

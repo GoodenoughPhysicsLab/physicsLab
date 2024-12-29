@@ -3,6 +3,7 @@ import os
 
 if __name__ == "__main__":
     ROOT = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(ROOT)
     len_py_file: int = 0
     count_line: int = 0
 

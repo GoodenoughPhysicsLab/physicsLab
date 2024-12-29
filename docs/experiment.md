@@ -22,6 +22,13 @@ ExperimentType是枚举类，用于指定实验类型。目前支持三种类型
 * Discussion 讨论区(黑洞区)
 * BlackHole 讨论区(黑洞区)
 
+## enum class OpenMode
+用Experiment打开存档的模式
+*   load_by_sav_name : 存档的名字 (在物实内给存档取的名字)
+*   load_by_abs_path : 用户自己提供的存档的完整路径
+*   load_by_plar_app : 通过网络请求从物实读取的存档
+*   crt : 新建存档
+
 ## 打开存档
 这是***最推荐的方式***。你可以用with语句打开一个存档
 ```python
@@ -34,7 +41,7 @@ with experiment('example') as exp:
 ```
 `exp`是一个`Experiment`类的实例，因此你可以是使用exp来轻易地使用`Experiment`类的所有方法
 
-`experiment`还有很多其他参数：  
+`experiment`还有很多其他参数：
 *  `read`: 是否读取存档已有状态
 *  `delete`: 是否删除实验存档
 *  `write`: 是否写入存档
@@ -42,7 +49,7 @@ with experiment('example') as exp:
 *  `experiment_type`: 若创建实验，支持传入指定实验类型
 *  `extra_filepath`: 将存档写入额外的路径
 *  `force_crt`: 强制创建一个实验, 若已存在则覆盖已有实验
-*  `is_exit`: 是否调用`Experiment.exit`退出实验而不是调用`Experiment.write`或者`Experiment.delete`
+*  `is_exit`: 是否调用`Experiment.exit`退出实验而不是调用`Experiment.save`或者`Experiment.delete`
 
 > Note: 当你使用`Experiment`导入一个实验而不调用`read`时，你仅仅只会损失实验所有原件的信息，而`force_crt`则会覆盖掉实验的所有信息
 
@@ -52,36 +59,47 @@ with experiment('example') as exp:
 
 你必须指明你要打开的是哪个存档：
 ```Python
-Experiment().open('example.sav') # 根据存档的文件名（也就是xxxx.sav）进行导入
+from physicsLab import *
+Experiment(OpenMode.load_by_abs_path, "/your/path/of/sav") # 根据存档的文件名（也就是xxxx.sav）进行导入
                                #（e.g. e229d7fe-7fa3-4efa-9190-dcb4558a385a.sav）
-Experiment().open('example') # 根据存档的实验名（也就是你在物实导入本地实验时看到的实验的名字）进行导入实验
+Experiment(OpenMode.load_by_sav_name, "example") # 根据存档的实验名（也就是你在物实导入本地实验时看到的实验的名字）进行导入实验
+Experiment(OpenMode.load_by_plar_app, "642cf37a494746375aae306a", Category.Discussion)
 ```
 但该方法支持读取字符串的形式最完善, 共支持3种:
 1.  存档名（在物实保存的实验的名字）
-2.  文件名 (默认的存档所在的路径)
-3.  自定义存档的路径
+2.  自定义存档的路径
+3.  读取物实服务器上的实验
 > Note: 当open的实验不存在，会抛出错误；
 
 ## 创建存档
 ***低级api***
 
 如果你想要创建一个实验：
+
+函数原型：
 ```python
-Experiment.crt('example')
-Experiment.crt("example", experiment_type=ExperimentType.Circuit) # 指定实验类型
+def __init__(self, open_mode: OpenMode, sav_name: str, experiment_type: ExperimentType, force_crt: bool) -> None:
+```
+
+```python
+from physicsLab import *
+Experiment(OpenMode.crt, "example", ExperimentType.Circuit, False)
 ```
 
 `experiment_type`参数用于指定创建实验的类型  
-如果要创建的实验已经存在，那么该函数会抛出错误  
+`force_crt`：
+* `True`时，如果要创建的实验已经存在，则会删除那个实验并创建一个新实验
+* `False`时，如果要创建的实验已经存在，那么该函数会抛出错误
 
 如果你希望打开存档失败不报错而是创建存档，你可以使用
 ```Python
-Experiment("example") # 该写法等价于下面的写法
-Experiment.open_or_crt("example")
+try:
+    expe = Experiment(OpenMode.load_by_sav_name, "example")
+except ExperimentNotExistError:
+    expe = Experiment(OpenMode.crt, "example", ExperimentType.Circuit, False)
 ```
-该函数与`crt_Experiment`传参相同，但`ExperimentType`参数仅在尝试创建存档时有效
 
-***但使用这些api的效果都不如使用`with experiment()`方便***
+***但使用这些api的效果都不如使用`with experiment()`稳定且方便***
 
 ## 搜索存档&判断存档是否存在
 ***低级api***
@@ -106,15 +124,6 @@ from physicsLab import *
 with experiment("example") as exp:
     read_plsav(exp)
     # do something
-```
-
-## 读取已发布到物实的实验
-你可以使用`read_plsav_from_web()`获取已发布到物实上的实验
-```Python
-from physicsLab import *
-
-with experiment("example") as exp:
-    read_plsav_from_web(exp, "642cf37a494746375aae306a", Category.Discussion)
 ```
 
 ## 向物实发布新的实验
@@ -157,32 +166,32 @@ with experiment("example") as exp:
 ```Python
 from physicsLab import *
 
-exp = Experiment("example")
+exp = Experiment(OpenMode.load_by_sav_name, "example")
 # do something
-exp.write()
+exp.save()
 ```
-`Experiment.write`也有一些参数：
+`Experiment.save`也有一些参数：
 *  `extra_filepath`: 将存档写入额外的路径
 *  `ln`: 输出存档的元件字符串是否换行
-*  `no_pop`: Experiment在write执行完了之后是否不再操作该存档
+*  `no_pop`: Experiment在save执行完了之后是否不再操作该存档
 
 我将用一个例子解释`no_pop`的作用：
 ```Python
 from physicsLab import *
 
-exp = Experiment("example")
+exp = Experiment(OpenMode.load_by_sav_name, "example")
 # do something
-exp.write(no_pop=True)
+exp.save(no_pop=True)
 
 Logic_Input() # ok, create a Logic_Input in experiment "example"
-exp.write()
+exp.save()
 ```
 ``` python
 from physicsLab import *
 
-exp = Experiment("example")
+exp = Experiment(OpenMode.load_by_sav_name, "example")
 # do something
-exp.write()
+exp.save()
 
 Logic_Input() # error: 不可以在没有实验打开的情况下创建元件
 ```
@@ -201,13 +210,13 @@ with experiment("example", delete=True):
 ```Python
 from physicsLab import *
 
-exp = Experiment("example")
+exp = Experiment(OpenMode.load_by_sav_name, "example")
 # maybe do something
 exp.delete()
 ```
 
 ## 停止操作存档
-`Experiment.write()`与`Experiment.delete()`都会停止操作存档，但如果你只想放弃本次用程序操作存档(所有对存档的修改都放弃)，你可以调用`Experiment.exit`:
+`Experiment.save()`与`Experiment.delete()`都会停止操作存档，但如果你只想放弃本次用程序操作存档(所有对存档的修改都放弃)，你可以调用`Experiment.exit`:
 ```Python
 from physicsLab import *
 
@@ -219,7 +228,7 @@ with experiment("example", is_exit=True):
 ```Python
 from physicsLab import *
 
-exp = Experiment("example")
+exp = Experiment(OpenMode.load_by_sav_name, "example")
 # do something, 但不会改变存档的状态
 exp.exit()
 ```
@@ -232,14 +241,6 @@ from physicsLab import *
 with experiment("example") as exp:
     exp.edit_publish_info(title="new_title", description="new_description", wx=True)
 ```
-
-## 用记事本打开存档文件
-你也可以打开存档查看：
-```Python
-with experiment("example") as exp:
-    exp.show()
-```
-仅`Windows`上有效
 
 ## 多存档操作
 获取当前正在操作的存档:

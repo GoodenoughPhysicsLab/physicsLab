@@ -2,9 +2,8 @@
 import json
 from . import _tools
 from . import errors
-from .enums import Category, ExperimentType
-from .Experiment import Experiment, _ExperimentStack
-from .web.api import User
+from .enums import ExperimentType
+from .Experiment import Experiment, _ExperimentStack, OpenMode, _check_method
 from .circuit.wire import _read_wires
 from ._element_base import ElementBase
 from .typehint import numType, Optional
@@ -71,7 +70,7 @@ def get_element_from_position(
     result: list = experiment._elements_position[position]
     return result[0] if len(result) == 1 else result
 
-def get_element_from_index(experiment: Experiment, index: int, **kwargs: dict):
+def get_element_from_index(experiment: Experiment, index: int, **kwargs: dict) -> ElementBase:
     ''' 通过index (元件生成顺序) 索引元件 '''
     if not isinstance(index, int):
         raise TypeError
@@ -165,21 +164,19 @@ def _read_elements(experiment: Experiment, _elements: list) -> None:
         else:
             raise errors.InternalError
 
+@_check_method
 def read_plsav(experiment: Experiment) -> Experiment:
     ''' 读取实验已有状态 '''
-    if not experiment.is_open_or_crt:
-        raise errors.ExperimentNotOpenError
     if experiment.is_readed:
         errors.warning("experiment has been read")
         return experiment
     experiment.is_readed = True
-    if experiment.is_crted:
+    if experiment.open_mode == OpenMode.crt:
         errors.warning("can not read because you create this experiment")
         return experiment
 
     status_sav = json.loads(experiment.PlSav["Experiment"]["StatusSave"])
 
-    # TODO 需要 read_CameraSave 吗?
     if experiment.experiment_type == ExperimentType.Circuit:
         _read_elements(experiment, status_sav["Elements"])
         _read_wires(experiment, status_sav["Wires"])
@@ -192,64 +189,20 @@ def read_plsav(experiment: Experiment) -> Experiment:
 
     return experiment
 
-def read_plsav_from_web(
-        experiment: Experiment,
-        id: str,
-        category: Category,
-        user: Optional[User] = None,
-        no_read_experiment_status: bool = False,
-) -> Experiment:
-    ''' 获取已经发布到物实的实验的实验状态(包括元件, 导线, 发布后的标题, 实验介绍)
-
-        由于存档名与发布后的标题可以不同, 因此该方法只会修改发布后的标题, 不会修改存档名
-        @sav_name: 获取到的实验保存到本地存档的名字
-        @id: 物实实验的id
-        @category: 实验区还是黑洞区
-    '''
-    if not experiment.is_open_or_crt:
-        raise errors.ExperimentHasOpenError
-    if not isinstance(id, str) or \
-        not isinstance(category, Category) or \
-        not isinstance(no_read_experiment_status, bool):
-        raise TypeError
-
-    if user is None:
-        user = User()
-
-    _summary = user.get_summary(id, category)["Data"]
-    if not no_read_experiment_status:
-        _experiment = user.get_experiment(_summary["ContentID"])["Data"]
-        status_sav = json.loads(_experiment["StatusSave"])
-        experiment._read_CameraSave(_experiment["CameraSave"])
-
-        if experiment.experiment_type == ExperimentType.Circuit:
-            _read_elements(experiment, status_sav["Elements"])
-            _read_wires(experiment, status_sav["Wires"])
-        elif experiment.experiment_type == ExperimentType.Celestial:
-            _read_elements(experiment, list(status_sav["Elements"].values()))
-        elif experiment.experiment_type == ExperimentType.Electromagnetism:
-            _read_elements(experiment, status_sav["Elements"])
-        else:
-            raise errors.InternalError
-
-    del _summary["$type"]
-    _summary["Category"] = category.value
-    experiment.PlSav["Summary"] = _summary
-    return experiment
-
 class experiment:
     ''' 仅提供通过with操作存档的高层次api '''
-    def __init__(self,
-                 sav_name: str, # 实验名(非存档文件名)
-                 read: bool = False, # 是否读取存档原有状态
-                 delete: bool = False, # 是否删除实验
-                 write: bool = True, # 是否写入实验
-                 elementXYZ: bool = False, # 元件坐标系
-                 experiment_type: ExperimentType = ExperimentType.Circuit, # 若创建实验，支持传入指定实验类型
-                 extra_filepath: Optional[str] = None, # 将存档写入额外的路径
-                 force_crt: bool = False, # 强制创建一个实验, 若已存在则覆盖已有实验
-                 is_exit: bool = False, # 退出试验
-                 ):
+    def __init__(
+            self,
+            sav_name: str, # 实验名(非存档文件名)
+            read: bool = False, # 是否读取存档原有状态
+            delete: bool = False, # 是否删除实验
+            write: bool = True, # 是否写入实验
+            elementXYZ: bool = False, # 元件坐标系
+            experiment_type: ExperimentType = ExperimentType.Circuit, # 若创建实验，支持传入指定实验类型
+            extra_filepath: Optional[str] = None, # 将存档写入额外的路径
+            force_crt: bool = False, # 强制创建一个实验, 若已存在则覆盖已有实验
+            is_exit: bool = False, # 退出试验而不保存修改
+    ) -> None:
         if not isinstance(sav_name, str) or \
                 not isinstance(read, bool) or \
                 not isinstance(delete, bool) or \
@@ -261,7 +214,7 @@ class experiment:
                 not isinstance(extra_filepath, (str, type(None))):
             raise TypeError
 
-        self.savName: str = sav_name
+        self.sav_name: str = sav_name
         self.read: bool = read
         self.delete: bool = delete
         self.write: bool = write
@@ -273,12 +226,14 @@ class experiment:
 
     def __enter__(self) -> Experiment:
         if self.force_crt:
-            self._Experiment: Experiment = Experiment().crt(self.savName, self.ExperimentType, force_crt=True)
+            self._Experiment: Experiment = Experiment(OpenMode.crt, self.sav_name, self.ExperimentType, True)
         else:
-            self._Experiment: Experiment = Experiment().open_or_crt(self.savName, self.ExperimentType)
+            try:
+                self._Experiment: Experiment = Experiment(OpenMode.load_by_sav_name, self.sav_name)
+            except errors.ExperimentNotExistError:
+                self._Experiment: Experiment = Experiment(OpenMode.crt, self.sav_name, self.ExperimentType, False)
 
-        if self.read:
-            read_plsav(self._Experiment)
+        # 也许改为先判断是否为电学实验更好?
         if self.elementXYZ:
             if self._Experiment.experiment_type != ExperimentType.Circuit:
                 _ExperimentStack.pop()
@@ -297,7 +252,7 @@ class experiment:
             self._Experiment.exit()
             return
         if self.write and not self.delete:
-            self._Experiment.write(extra_filepath=self.extra_filepath)
+            self._Experiment.save(extra_filepath=self.extra_filepath)
         if self.delete:
             self._Experiment.delete()
             return

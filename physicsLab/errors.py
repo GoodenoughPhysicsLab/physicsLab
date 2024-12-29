@@ -46,19 +46,24 @@ class BitnumError(Exception):
 class InternalError(Exception):
     ''' physicsLab内部错误 '''
     def __str__(self):
-        return "internal error, please bug report"
+        return "please bug report"
 
-class ExperimentHasOpenError(Exception):
+class InvalidSavError(Exception):
+    ''' 存档文件错误 '''
+    def __str__(self):
+        return "The archive file is incorrect"
+
+class ExperimentOpenedError(Exception):
     ''' 已打开实验 '''
     def __str__(self):
         return "The experiment has been opened"
 
-class ExperimentNotOpenError(Exception):
+class ExperimentClosedError(Exception):
     ''' 未打开实验 '''
     def __str__(self):
-        return "The experiment has not been opened"
+        return "The experiment has been closed"
 
-class ExperimentHasExistError(Exception):
+class ExperimentExistError(Exception):
     ''' 实验已存在 '''
     def __str__(self):
         return 'Duplicate name archives are forbidden'

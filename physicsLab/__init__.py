@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 ''' Python API for Physics-Lab-AR '''
-import os
-import platform
 
 # 颜色打印
 from ._colorUtils import close_color_print
 # 操作实验
 from .element import *
-from .Experiment import Experiment, search_experiment, get_current_experiment
+from .Experiment import OpenMode, Experiment, search_experiment, get_current_experiment
 # 实验, 标签类型
 from .enums import *
 # 电学实验
@@ -28,10 +26,13 @@ from physicsLab import web
 from physicsLab import lib
 from physicsLab import music
 
-if not os.path.exists(Experiment.SAV_ROOT_DIR):
+import os
+import platform
+
+if not os.path.exists(Experiment.SAV_PATH_DIR):
     if platform.system() == "Windows":
         warning("Have you installed Physics-Lab-AR?")
-    os.makedirs(Experiment.SAV_ROOT_DIR)
+    os.makedirs(Experiment.SAV_PATH_DIR)
 
 del os
 del platform

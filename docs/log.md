@@ -218,5 +218,8 @@
 1.  不再需要从pip中下载`mido`依赖
 2.  修复`read_plsav_from_web`无法读取天体实验与电与磁实验的问题
 
-## 1.6.4
-
+## 1.7.0
+1.  移除`Experiment.show`
+2.  废弃`read_plsav_from_web`, `Experiment.open`, `Experiment.open_or_crt`, `Experiment.crt`, 相似功能直接由`Experiment`提供
+3.  新增`enum class OpenMode`
+4.  重命名`Experiment.write`为`Experiment.save`

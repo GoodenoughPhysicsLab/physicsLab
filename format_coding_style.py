@@ -1,6 +1,8 @@
 import os
 
 def main():
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
     for root, dirs, files in os.walk("physicsLab"):
         try:
             dirs.remove("__pycache__")

@@ -17,8 +17,19 @@ def my_test_dec(method: Callable):
 
 class BasicTest(TestCase, ViztracerTool):
     @my_test_dec
-    def test_experiment1(self):
-        expe: Experiment = Experiment().crt("__test__", force_crt=True)
+    def test_experiment_stack(self):
+        expe1 = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
+        self.assertTrue(_ExperimentStack.inside(expe1))
+        expe2 = Experiment(OpenMode.crt, "_Test", ExperimentType.Circuit, True)
+        self.assertTrue(_ExperimentStack.inside(expe2))
+        expe1.exit()
+        self.assertFalse(_ExperimentStack.inside(expe1))
+        expe2.exit()
+        self.assertFalse(_ExperimentStack.inside(expe2))
+
+    @my_test_dec
+    def test_normal_circuit_usage(self):
+        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
         a = Yes_Gate(0, 0, 0)
         self.assertEqual(count_elements(expe), 1)
         self.assertEqual(a.get_position(), (0, 0, 0))
@@ -28,21 +39,21 @@ class BasicTest(TestCase, ViztracerTool):
         self.assertEqual(count_wires(), 0)
         self.assertEqual(count_elements(expe), 1)
         crt_wire(a.o, a.i)
-        crt_element(expe, 'Logic Input')
+        crt_element(expe, "Logic Input")
         self.assertEqual(count_elements(expe), 2)
         get_element_from_position(expe, 0, 0, 0)
         expe.exit()
 
     @my_test_dec
     def test_read_Experiment(self):
-        expe: Experiment = Experiment().crt("__test__", force_crt=True)
+        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
 
         self.assertEqual(count_elements(expe), 0)
         self.assertEqual(count_wires(), 0)
         Logic_Input(0, 0, 0)
-        expe.write()
+        expe.save()
 
-        exp2: Experiment = Experiment().open("__test__")
+        exp2: Experiment = Experiment(OpenMode.load_by_sav_name, "__test__")
         read_plsav(exp2)
         self.assertEqual(count_elements(exp2), 1)
         exp2.delete()
@@ -50,11 +61,11 @@ class BasicTest(TestCase, ViztracerTool):
     @my_test_dec
     def test_crt_Experiment(self):
         try:
-            exp: Experiment = Experiment().crt("__test__", force_crt=True)
-            exp.write()
-            Experiment().crt("__test__") # will fail
-        except ExperimentHasExistError:
-            Experiment("__test__").delete()
+            exp: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
+            exp.save()
+            Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, False) # will fail
+        except ExperimentExistError:
+            Experiment(OpenMode.load_by_sav_name, "__test__").delete()
         else:
             raise TestError
 
@@ -77,7 +88,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_union_Sum(self):
-        expe: Experiment = Experiment().crt("__test__", force_crt=True)
+        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
         lib.Sum(0, -1, 0, bitnum=64)
         self.assertEqual(count_elements(expe), 64)
         self.assertEqual(count_wires(), 63)
@@ -88,7 +99,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_get_Element(self):
-        expe: Experiment = Experiment().crt("__test__", force_crt=True)
+        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
         Or_Gate(0, 0, 0)
         crt_wire(
             get_element_from_position(expe, 0, 0, 0).o,
@@ -101,32 +112,20 @@ class BasicTest(TestCase, ViztracerTool):
         self.assertEqual(count_wires(), 2)
         expe.exit()
 
-    # 测逝用例未写完
-    @my_test_dec
-    def test_set_O(self):
-        expe: Experiment = Experiment().crt("__test__", force_crt=True)
-        set_O(-1, -1, 0)
-        for x in range(10):
-            for y in range(10):
-                Yes_Gate(x, y, 0, True)
-        self.assertEqual(count_elements(expe), 100)
-        expe.exit()
-
     @my_test_dec
     def test_errors(self):
+        with experiment("__test__", delete=True, force_crt=True):
+            ''' 确保__test__实验不存在 '''
         try:
-            with experiment("__test__", delete=True, force_crt=True):
-                pass # 确保__test__实验不存在
-            Experiment().open('__test__') # do not exist
+            Experiment(OpenMode.load_by_sav_name, '__test__') # do not exist
         except ExperimentNotExistError:
             pass
         else:
             raise TestError
 
-    # 测试元件坐标系2
     @my_test_dec
-    def test_aTest(self):
-        expe: Experiment = Experiment().crt("__test__", force_crt=True)
+    def test_elementXYZ_2(self):
+        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
         set_elementXYZ(True)
         set_O(-1, -1, 0)
         for x in range(10):
@@ -144,7 +143,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_open_many_Experiment(self):
-        exp: Experiment = Experiment().crt("__test__", force_crt=True)
+        exp: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
         with experiment('__test__', is_exit=True, force_crt=True) as expe:
             Logic_Input(0, 0, 0)
             self.assertEqual(1, count_elements(expe))
@@ -316,7 +315,7 @@ class BasicTest(TestCase, ViztracerTool):
                 b = Logic_Output(0, 0, 0)
                 try:
                     a.o - b.i
-                except ExperimentError:
+                except ExperimentError: # 也许改为InvalidLinkError更好?
                     pass
                 else:
                     raise TestError
