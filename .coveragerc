@@ -1,0 +1,9 @@
+[run]
+source = physicsLab/
+omit = */mido/*
+
+[report]
+show_missing = False
+
+[json]
+output = coverage.json
