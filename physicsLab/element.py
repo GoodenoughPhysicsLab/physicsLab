@@ -126,8 +126,8 @@ def _load_elements(experiment: Experiment, _elements: list) -> None:
     assert isinstance(_elements, list)
 
     for element in _elements:
-        position = eval(f"({element['Position']})")
-        x, y, z = position[0], position[2], position[1]
+        # Unity 采用左手坐标系
+        x, z, y = eval(f"({element['Position']})")
 
         # 实例化对象
         if experiment.experiment_type == ExperimentType.Circuit:
@@ -135,7 +135,7 @@ def _load_elements(experiment: Experiment, _elements: list) -> None:
                 from .circuit.elements.otherCircuit import Simple_Instrument
                 obj = Simple_Instrument(
                     x, y, z, elementXYZ=False,
-                    instrument=int(element["Properties"]["乐器"]),
+                    instrument=int(element["Properties"].get("乐器", 0)),
                     pitch=int(element["Properties"]["音高"]),
                     velocity=element["Properties"]["音量"],
                     rated_oltage=element["Properties"]["额定电压"],
@@ -194,7 +194,7 @@ class experiment:
     def __init__(
             self,
             sav_name: str, # 实验名(非存档文件名)
-            load_elements: bool = False, # 是否导入存档的元件信息
+            load_elements: bool = False, # 是否导入存档的元件信息 # TODO 改为默认为True
             delete: bool = False, # 是否删除实验
             write: bool = True, # 是否写入实验
             elementXYZ: bool = False, # 元件坐标系
@@ -232,6 +232,9 @@ class experiment:
                 self._Experiment: Experiment = Experiment(OpenMode.load_by_sav_name, self.sav_name)
             except errors.ExperimentNotExistError:
                 self._Experiment: Experiment = Experiment(OpenMode.crt, self.sav_name, self.ExperimentType, False)
+
+        if self.load_elements:
+            load_elements(self._Experiment)
 
         # 也许改为先判断是否为电学实验更好?
         if self.elementXYZ:

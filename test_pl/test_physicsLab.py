@@ -28,6 +28,39 @@ class BasicTest(TestCase, ViztracerTool):
         self.assertFalse(_ExperimentStack.inside(expe2))
 
     @my_test_dec
+    def test_load_all_elements(self):
+        # 物实导出存档与保存到本地的格式不一样, 因此每种类型的实验都有两种格式的测试数据
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DIR, "All-Circuit-Elements.sav"))
+        load_elements(expe)
+        self.assertTrue(count_elements(expe) == 91)
+        expe.exit(delete=False)
+
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DIR, "Export-All-Circuit-Elements.sav"))
+        load_elements(expe)
+        self.assertTrue(count_elements(expe) == 91)
+        expe.exit()
+
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DIR, "All-Celestial-Elements.sav"))
+        load_elements(expe)
+        self.assertTrue(count_elements(expe) == 27)
+        expe.exit()
+
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DIR, "Export-All-Celestial-Elements.sav"))
+        load_elements(expe)
+        self.assertTrue(count_elements(expe) == 27)
+        expe.exit()
+
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DIR, "All-Electromagnetism-Elements.sav"))
+        load_elements(expe)
+        self.assertTrue(count_elements(expe) == 7)
+        expe.exit()
+
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DIR, "Export-All-Electromagnetism-Elements.sav"))
+        load_elements(expe)
+        self.assertTrue(count_elements(expe) == 7)
+        expe.exit()
+
+    @my_test_dec
     def test_normal_circuit_usage(self):
         expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
         a = Yes_Gate(0, 0, 0)
@@ -194,7 +227,7 @@ class BasicTest(TestCase, ViztracerTool):
     # 测试打开实验类型与文件不吻合
     @my_test_dec
     def test_ExperimentType(self):
-        with experiment("__test__", experiment_type=ExperimentType.Electromagnetism, is_exit=True, force_crt=True):
+        with experiment("__test__", load_elements=False, experiment_type=ExperimentType.Electromagnetism, is_exit=True, force_crt=True):
             try:
                 Positive_Charge(0, 0, 0)
                 Logic_Input(0, 0, 0)

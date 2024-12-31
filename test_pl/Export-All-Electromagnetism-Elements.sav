@@ -1,0 +1,13 @@
+{
+  "ID": null,
+  "Type": 4,
+  "Components": 8,
+  "Subject": null,
+  "StatusSave": "{\"SimulationSpeed\":1.0,\"Elements\":[{\"ModelID\":\"Negative Charge\",\"Identifier\":\"3a3aecc0a6e74306a48605126a5f25af\",\"Properties\":{\"锁定\":1.0,\"强度\":-1E-07,\"质量\":0.1},\"Position\":\"-0.5437173,0.0009999871,-0.05036633\",\"Rotation\":\"0,0,0\",\"Velocity\":\"0,0,0\",\"AngularVelocity\":\"0,0,0\"},{\"ModelID\":\"Negative Test Charge\",\"Identifier\":\"f6da2e9b73ae440a85a9c86f94dcdc90\",\"Properties\":{\"锁定\":0.0,\"强度\":-1E-10,\"质量\":5E-06},\"Position\":\"-0.1954492,0.0150001,-0.04432035\",\"Rotation\":\"359.9461,0.000854291,358.2369\",\"Velocity\":\"0.02020764,-2.766683E-09,-0.0005454706\",\"AngularVelocity\":\"-0.000811184,3.135436E-08,-0.03031308\"},{\"ModelID\":\"Positive Charge\",\"Identifier\":\"e221908a6157456eb5c3ebcb136ade4b\",\"Properties\":{\"锁定\":1.0,\"强度\":1E-07,\"质量\":0.1},\"Position\":\"0.006410735,0.0009999871,-0.04398881\",\"Rotation\":\"0,0,0\",\"Velocity\":\"0,0,0\",\"AngularVelocity\":\"0,0,0\"},{\"ModelID\":\"Positive Test Charge\",\"Identifier\":\"cbfec2fcda41444b84a5304929a2c4ab\",\"Properties\":{\"锁定\":0.0,\"强度\":1E-10,\"质量\":5E-06},\"Position\":\"0.2645883,0.0009999871,-0.05021066\",\"Rotation\":\"0,0,0\",\"Velocity\":\"0,0,0\",\"AngularVelocity\":\"0,0,0\"},{\"ModelID\":\"Bar Magnet\",\"Identifier\":\"4c3e4cff2d404778973170e5c0d7cc64\",\"Properties\":{\"锁定\":1.0,\"强度\":1.0,\"质量\":10.0},\"Position\":\"-0.5642747,0.0009999871,-0.4662421\",\"Rotation\":\"0,0,0\",\"Velocity\":\"0,0,0\",\"AngularVelocity\":\"0,0,0\"},{\"ModelID\":\"Compass\",\"Identifier\":\"9f3c576c727a48c7ace9d95e8e9034cb\",\"Properties\":{\"锁定\":1.0},\"Position\":\"-0.2167804,0.0009999871,-0.4487085\",\"Rotation\":\"0,0,0\",\"Velocity\":\"0,0,0\",\"AngularVelocity\":\"0,0,0\"},{\"ModelID\":\"Uniform Magnetic Field\",\"Identifier\":\"21d5d398c056424a8a0514dd3a6a976b\",\"Properties\":{\"锁定\":0.0,\"强度\":1000.0,\"方向\":1.0},\"Position\":\"0,0,0\",\"Rotation\":\"0,0,0\",\"Velocity\":\"0,0,0\",\"AngularVelocity\":\"0,0,0\"}]}",
+  "CameraSave": "{\"Mode\":1,\"Distance\":4.0,\"VisionCenter\":\"-0.167372,0.88,-0.1546185\",\"TargetRotation\":\"90,0,0\"}",
+  "Version": 2500,
+  "CreationDate": 1735658789598,
+  "Paused": true,
+  "Summary": null,
+  "Plots": null
+}

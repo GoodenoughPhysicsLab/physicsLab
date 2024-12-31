@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 ''' `physicsLab` 操作存档的核心文件
     该文件提供操作存档的核心: class `Experiment`
+    该文件仅会对存档进行文件读写方面的操作, 这也是为什么需要显示调用`load_elements`的原因
 '''
 import os
 import json

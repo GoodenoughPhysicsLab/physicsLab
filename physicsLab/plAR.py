@@ -10,7 +10,7 @@ from typing import Optional, Tuple
 if platform.system() == "Windows":
     WIN_PLAR_HOME_DIR = f"C:\\Users\\{getuser()}\\AppData\\LocalLow\\CIVITAS\\Quantum Physics"
 
-def get_plAR_version() -> Tuple[int, int, int]:
+def get_plAR_version() -> Optional[Tuple[int, int, int]]:
     ''' 获取物实版本 '''
     if platform.system() != "Windows":
         return None

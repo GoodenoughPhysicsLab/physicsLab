@@ -1,5 +1,8 @@
+import os
 from unittest import TestCase
 from physicsLab import *
+
+TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 
 USE_VIZTRACER: bool = False
 
