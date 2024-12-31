@@ -223,3 +223,6 @@
 2.  废弃`read_plsav_from_web`, `Experiment.open`, `Experiment.open_or_crt`, `Experiment.crt`, 相似功能直接由`Experiment`提供
 3.  新增`enum class OpenMode`
 4.  重命名`Experiment.write`为`Experiment.save`
+5.  重命名`read_plsav`为`load_elements`
+6.  移除`Experiment.save`的`no_pop`参数
+7.  移除`Experiment.delete`, `Experiment.exit`增加`delete`参数

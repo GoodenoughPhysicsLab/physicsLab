@@ -52,11 +52,12 @@ class BasicTest(TestCase, ViztracerTool):
         self.assertEqual(count_wires(), 0)
         Logic_Input(0, 0, 0)
         expe.save()
+        expe.exit()
 
         exp2: Experiment = Experiment(OpenMode.load_by_sav_name, "__test__")
-        read_plsav(exp2)
+        load_elements(exp2)
         self.assertEqual(count_elements(exp2), 1)
-        exp2.delete()
+        exp2.exit(delete=True)
 
     @my_test_dec
     def test_crt_Experiment(self):
@@ -65,7 +66,7 @@ class BasicTest(TestCase, ViztracerTool):
             exp.save()
             Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, False) # will fail
         except ExperimentExistError:
-            Experiment(OpenMode.load_by_sav_name, "__test__").delete()
+            exp.exit(delete=True)
         else:
             raise TestError
 

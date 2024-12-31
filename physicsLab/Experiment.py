@@ -76,7 +76,7 @@ def _check_method(method: Callable) -> Callable:
 class OpenMode(Enum):
     ''' 用Experiment打开存档的模式 '''
     load_by_sav_name = 0 # 存档的名字 (在物实内给存档取的名字)
-    load_by_abs_path = 1 # 用户自己提供的存档的完整路径
+    load_by_filepath = 1 # 用户自己提供的存档的完整路径
     load_by_plar_app = 2 # 通过网络请求从物实读取的存档
     crt = 3 # 新建存档
 
@@ -132,18 +132,18 @@ class Experiment:
         self._elements_position: Dict[tuple, list] = {}
         # 通过index（元件生成顺序）索引元件
         self.Elements:List[ElementBase] = []
-        # 是否读取过实验的元件状态 (也就是是否调用过 read_plsav)
-        self.is_readed: bool = False
+        # 是否读取过实验的元件状态 (也就是是否调用过 load_elements)
+        self.is_load_elements: bool = False
 
-        # 尽管读取存档时会将元件的字符串一并读入, 但只有在调用 read_plsav 将元件的信息
-        # 导入self.Elements与self._element_position之后, 这些信息才会生效
-        if open_mode == OpenMode.load_by_sav_name or open_mode == OpenMode.load_by_abs_path:
+        # 尽管读取存档时会将元件的字符串一并读入, 但只有在调用 load_elements 将元件的信息
+        # 导入self.Elements与self._element_position之后, 元件信息才被完全导入
+        if open_mode == OpenMode.load_by_sav_name or open_mode == OpenMode.load_by_filepath:
             sav_name, *rest = args
 
             if not isinstance(sav_name, str) or len(rest) != 0:
                 raise TypeError
 
-            if open_mode == OpenMode.load_by_abs_path:
+            if open_mode == OpenMode.load_by_filepath:
                 self.SAV_PATH = os.path.abspath(sav_name)
 
                 if not os.path.exists(self.SAV_PATH):
@@ -339,16 +339,16 @@ class Experiment:
         self.PlSav["Experiment"]["StatusSave"] = json.dumps(self.StatusSave, ensure_ascii=False, separators=(',', ': '))
 
     @_check_method
-    def save(self,
-              extra_filepath: Optional[str] = None, # 改为target_output_path: str | List[str], 默认是SAV_PATH_ROOT
-              ln: bool = False,
-              no_pop: bool = False,
-              no_print_info: bool = False,
+    def save(
+            self,
+            extra_filepath: Optional[str] = None, # 改为target_output_path: str | List[str], 默认是SAV_PATH_ROOT
+            ln: bool = False,
+            no_print_info: bool = False,
     ) -> Self:
         ''' 以物实存档的格式导出实验
             @param extra_filepath: 自定义保存存档的路径, 但仍会在 SAV_PATH_ROOT 下保存存档
-            @param ln: 是否将StatusSave字符串换行
-            @param no_pop: save 之后不退出对该存档的操作
+            @param ln: 是否将StatusSave字符串换行 (便于查看存档, 但会导致不符合标准json的格式, 虽然物实可以读取)
+            @param no_print_info: 是否打印写入存档的元件数, 导线数(如果是电学实验的话)
         '''
         def _format_StatusSave(json_str: str) -> str:
             ''' 将StatusSave字符串换行
@@ -369,10 +369,10 @@ class Experiment:
 
         if not isinstance(extra_filepath, (str, type(None))) or \
                 not isinstance(ln, bool) or \
-                not isinstance(no_pop, bool) or \
                 not isinstance(no_print_info, bool):
             raise TypeError
-        if self.open_mode in (OpenMode.load_by_sav_name, OpenMode.load_by_abs_path, OpenMode.load_by_plar_app):
+
+        if self.open_mode in (OpenMode.load_by_sav_name, OpenMode.load_by_filepath, OpenMode.load_by_plar_app):
             status: str = "update"
         elif self.open_mode == OpenMode.crt:
             status: str = "create"
@@ -380,9 +380,6 @@ class Experiment:
             raise errors.InternalError
 
         assert self.SAV_PATH is not None
-
-        if not no_pop:
-            _ExperimentStack.remove(self)
 
         self.__write()
 
@@ -418,22 +415,22 @@ class Experiment:
         return self
 
     @_check_method
-    def delete(self) -> None:
-        ''' 删除存档 '''
-        if os.path.exists(self.SAV_PATH): # 之所以判断路径是否存在是因为一个实验可能被创建但还未被写入就调用了delete
-            os.remove(self.SAV_PATH)
-            _colorUtils.color_print(
-                f"Successfully delete experiment \"{self.PlSav['InternalName']}\"!({self.SAV_PATH})",
-                _colorUtils.COLOR.BLUE
-            )
-        if os.path.exists(self.SAV_PATH.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
-            os.remove(self.SAV_PATH.replace(".sav", ".jpg"))
+    def exit(self, delete: bool = False) -> None:
+        ''' 立刻退出对该存档的操作
+            Note: 如果没有在调用Experiment.exit前调用Experiment.save, 会丢失对存档的修改
+        '''
+        if delete:
+            if os.path.exists(self.SAV_PATH): # 之所以判断路径是否存在是因为一个实验可能被创建但还未被写入就调用了delete
+                os.remove(self.SAV_PATH)
+                _colorUtils.color_print(
+                    f"Successfully delete experiment \"{self.PlSav['InternalName']}\"!({self.SAV_PATH})",
+                    _colorUtils.COLOR.BLUE
+                )
+            elif self.open_mode != OpenMode.crt:
+                raise InterruptedError
+            if os.path.exists(self.SAV_PATH.replace(".sav", ".jpg")): # 用存档生成的实验无图片
+                os.remove(self.SAV_PATH.replace(".sav", ".jpg"))
 
-        _ExperimentStack.remove(self)
-
-    @_check_method
-    def exit(self) -> None:
-        ''' 立刻退出对该存档的操作, 对该存档的任何改动都会失效 '''
         _ExperimentStack.remove(self)
 
     @_check_method

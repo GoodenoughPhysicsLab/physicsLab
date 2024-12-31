@@ -151,7 +151,7 @@ def count_wires() -> int:
         raise errors.ExperimentTypeError
     return len(get_current_experiment().Wires)
 
-def _read_wires(experiment: Experiment, _wires: list) -> None:
+def _load_wires(experiment: Experiment, _wires: list) -> None:
     assert experiment.experiment_type == ExperimentType.Circuit
 
     for wire_dict in _wires:

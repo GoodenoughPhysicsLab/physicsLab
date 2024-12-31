@@ -4,7 +4,7 @@ from . import _tools
 from . import errors
 from .enums import ExperimentType
 from .Experiment import Experiment, _ExperimentStack, OpenMode, _check_method
-from .circuit.wire import _read_wires
+from .circuit.wire import _load_wires
 from ._element_base import ElementBase
 from .typehint import numType, Optional
 
@@ -122,7 +122,7 @@ def clear_elements(experiment: Experiment) -> None:
     experiment.Elements.clear()
     experiment._elements_position.clear()
 
-def _read_elements(experiment: Experiment, _elements: list) -> None:
+def _load_elements(experiment: Experiment, _elements: list) -> None:
     assert isinstance(_elements, list)
 
     for element in _elements:
@@ -165,12 +165,12 @@ def _read_elements(experiment: Experiment, _elements: list) -> None:
             raise errors.InternalError
 
 @_check_method
-def read_plsav(experiment: Experiment) -> Experiment:
+def load_elements(experiment: Experiment) -> Experiment:
     ''' 读取实验已有状态 '''
-    if experiment.is_readed:
+    if experiment.is_load_elements:
         errors.warning("experiment has been read")
         return experiment
-    experiment.is_readed = True
+    experiment.is_load_elements = True
     if experiment.open_mode == OpenMode.crt:
         errors.warning("can not read because you create this experiment")
         return experiment
@@ -178,12 +178,12 @@ def read_plsav(experiment: Experiment) -> Experiment:
     status_sav = json.loads(experiment.PlSav["Experiment"]["StatusSave"])
 
     if experiment.experiment_type == ExperimentType.Circuit:
-        _read_elements(experiment, status_sav["Elements"])
-        _read_wires(experiment, status_sav["Wires"])
+        _load_elements(experiment, status_sav["Elements"])
+        _load_wires(experiment, status_sav["Wires"])
     elif experiment.experiment_type == ExperimentType.Celestial:
-        _read_elements(experiment, list(status_sav["Elements"].values()))
+        _load_elements(experiment, list(status_sav["Elements"].values()))
     elif experiment.experiment_type == ExperimentType.Electromagnetism:
-        _read_elements(experiment, status_sav["Elements"])
+        _load_elements(experiment, status_sav["Elements"])
     else:
         raise errors.InternalError
 
@@ -194,7 +194,7 @@ class experiment:
     def __init__(
             self,
             sav_name: str, # 实验名(非存档文件名)
-            read: bool = False, # 是否读取存档原有状态
+            load_elements: bool = False, # 是否导入存档的元件信息
             delete: bool = False, # 是否删除实验
             write: bool = True, # 是否写入实验
             elementXYZ: bool = False, # 元件坐标系
@@ -204,7 +204,7 @@ class experiment:
             is_exit: bool = False, # 退出试验而不保存修改
     ) -> None:
         if not isinstance(sav_name, str) or \
-                not isinstance(read, bool) or \
+                not isinstance(load_elements, bool) or \
                 not isinstance(delete, bool) or \
                 not isinstance(elementXYZ, bool) or \
                 not isinstance(write, bool) or \
@@ -215,7 +215,7 @@ class experiment:
             raise TypeError
 
         self.sav_name: str = sav_name
-        self.read: bool = read
+        self.load_elements: bool = load_elements
         self.delete: bool = delete
         self.write: bool = write
         self.elementXYZ: bool = elementXYZ
@@ -236,7 +236,7 @@ class experiment:
         # 也许改为先判断是否为电学实验更好?
         if self.elementXYZ:
             if self._Experiment.experiment_type != ExperimentType.Circuit:
-                _ExperimentStack.pop()
+                _ExperimentStack.remove(self._Experiment)
                 raise errors.ExperimentTypeError
             import physicsLab.circuit.elementXYZ as _elementXYZ
             _elementXYZ.set_elementXYZ(True)
@@ -253,6 +253,4 @@ class experiment:
             return
         if self.write and not self.delete:
             self._Experiment.save(extra_filepath=self.extra_filepath)
-        if self.delete:
-            self._Experiment.delete()
-            return
+        self._Experiment.exit(delete=self.delete)
