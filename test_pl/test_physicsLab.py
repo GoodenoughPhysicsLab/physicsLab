@@ -61,6 +61,23 @@ class BasicTest(TestCase, ViztracerTool):
         expe.exit()
 
     @my_test_dec
+    def test_load_from_app(self):
+        expe = Experiment(OpenMode.load_by_plar_app, "6774ffb4c45f930f41ccedf8", Category.Discussion, user)
+        load_elements(expe)
+        self.assertTrue(count_elements(expe) == 91)
+        expe.exit()
+
+        expe = Experiment(OpenMode.load_by_plar_app, "677500138c54132a83289f9c", Category.Discussion, user)
+        load_elements(expe)
+        self.assertTrue(count_elements(expe) == 27)
+        expe.exit()
+
+        expe = Experiment(OpenMode.load_by_plar_app, "67750037c45f930f41ccee02", Category.Discussion, user)
+        load_elements(expe)
+        self.assertTrue(count_elements(expe) == 7)
+        expe.exit()
+
+    @my_test_dec
     def test_double_load_error(self):
         expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav"))
         try:
