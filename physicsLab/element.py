@@ -4,9 +4,9 @@ from . import _tools
 from . import errors
 from .enums import ExperimentType
 from .Experiment import Experiment, _ExperimentStack, OpenMode, _check_method
-from .circuit.wire import _read_wires
+from .circuit.wire import Wire, Pin
 from ._element_base import ElementBase
-from .typehint import numType, Optional
+from .typehint import numType, Optional, Union, List
 
 def crt_element(
         experiment: Experiment,
@@ -53,8 +53,7 @@ def get_element_from_position(
         x: numType,
         y: numType,
         z: numType,
-        **kwargs: dict,
-):
+) -> Union[ElementBase, List[ElementBase]]:
     ''' 通过坐标索引元件 '''
     if not isinstance(x, (int, float)) or \
             not isinstance(y, (int, float)) or \
@@ -63,14 +62,12 @@ def get_element_from_position(
 
     position = _tools.roundData(x, y, z)
     if position not in experiment._elements_position.keys():
-        if "defualt" in kwargs:
-            return kwargs["defualt"]
         raise errors.ElementNotFound(f"{position} do not exist")
 
     result: list = experiment._elements_position[position]
     return result[0] if len(result) == 1 else result
 
-def get_element_from_index(experiment: Experiment, index: int, **kwargs: dict) -> ElementBase:
+def get_element_from_index(experiment: Experiment, index: int) -> ElementBase:
     ''' 通过index (元件生成顺序) 索引元件 '''
     if not isinstance(index, int):
         raise TypeError
@@ -78,9 +75,15 @@ def get_element_from_index(experiment: Experiment, index: int, **kwargs: dict) -
     if 0 < index <= len(experiment.Elements):
         return experiment.Elements[index - 1]
     else:
-        if "defualt" in kwargs:
-            return kwargs["defualt"]
         raise errors.ElementNotFound
+
+def get_element_from_identifier(experiment: Experiment, identifier: str) -> ElementBase:
+    ''' 通过原件的id获取元件的引用 '''
+    for element in experiment.Elements:
+        assert hasattr(element, "data")
+        if element.data["Identifier"] == identifier:
+            return element
+    raise errors.ElementNotFound
 
 def del_element(experiment: Experiment, element: ElementBase) -> None:
     ''' 删除元件
@@ -89,7 +92,7 @@ def del_element(experiment: Experiment, element: ElementBase) -> None:
     if not isinstance(element, ElementBase):
         raise TypeError
 
-    identifier = element.data["Identifier"] # type: ignore
+    identifier = element.data["Identifier"]
 
     res_Wires = set()
     for a_wire in experiment.Wires:
@@ -122,12 +125,12 @@ def clear_elements(experiment: Experiment) -> None:
     experiment.Elements.clear()
     experiment._elements_position.clear()
 
-def _read_elements(experiment: Experiment, _elements: list) -> None:
+def _load_elements(experiment: Experiment, _elements: list) -> None:
     assert isinstance(_elements, list)
 
     for element in _elements:
-        position = eval(f"({element['Position']})")
-        x, y, z = position[0], position[2], position[1]
+        # Unity 采用左手坐标系
+        x, z, y = eval(f"({element['Position']})")
 
         # 实例化对象
         if experiment.experiment_type == ExperimentType.Circuit:
@@ -135,7 +138,7 @@ def _read_elements(experiment: Experiment, _elements: list) -> None:
                 from .circuit.elements.otherCircuit import Simple_Instrument
                 obj = Simple_Instrument(
                     x, y, z, elementXYZ=False,
-                    instrument=int(element["Properties"]["乐器"]),
+                    instrument=int(element["Properties"].get("乐器", 0)),
                     pitch=int(element["Properties"]["音高"]),
                     velocity=element["Properties"]["音量"],
                     rated_oltage=element["Properties"]["额定电压"],
@@ -164,13 +167,25 @@ def _read_elements(experiment: Experiment, _elements: list) -> None:
         else:
             raise errors.InternalError
 
+def _load_wires(experiment: Experiment, _wires: list) -> None:
+    assert experiment.experiment_type == ExperimentType.Circuit
+
+    for wire_dict in _wires:
+        experiment.Wires.add(
+            Wire(
+                Pin(get_element_from_identifier(experiment, wire_dict["Source"]), wire_dict["SourcePin"]),
+                Pin(get_element_from_identifier(wire_dict["Target"]), wire_dict["TargetPin"]),
+                wire_dict["ColorName"][0] # e.g. "蓝"
+            )
+        )
+
 @_check_method
-def read_plsav(experiment: Experiment) -> Experiment:
+def load_elements(experiment: Experiment) -> Experiment:
     ''' 读取实验已有状态 '''
-    if experiment.is_readed:
+    if experiment.is_load_elements:
         errors.warning("experiment has been read")
         return experiment
-    experiment.is_readed = True
+    experiment.is_load_elements = True
     if experiment.open_mode == OpenMode.crt:
         errors.warning("can not read because you create this experiment")
         return experiment
@@ -178,12 +193,12 @@ def read_plsav(experiment: Experiment) -> Experiment:
     status_sav = json.loads(experiment.PlSav["Experiment"]["StatusSave"])
 
     if experiment.experiment_type == ExperimentType.Circuit:
-        _read_elements(experiment, status_sav["Elements"])
-        _read_wires(experiment, status_sav["Wires"])
+        _load_elements(experiment, status_sav["Elements"])
+        _load_wires(experiment, status_sav["Wires"])
     elif experiment.experiment_type == ExperimentType.Celestial:
-        _read_elements(experiment, list(status_sav["Elements"].values()))
+        _load_elements(experiment, list(status_sav["Elements"].values()))
     elif experiment.experiment_type == ExperimentType.Electromagnetism:
-        _read_elements(experiment, status_sav["Elements"])
+        _load_elements(experiment, status_sav["Elements"])
     else:
         raise errors.InternalError
 
@@ -194,7 +209,7 @@ class experiment:
     def __init__(
             self,
             sav_name: str, # 实验名(非存档文件名)
-            read: bool = False, # 是否读取存档原有状态
+            load_elements: bool = False, # 是否导入存档的元件信息 # TODO 改为默认为True
             delete: bool = False, # 是否删除实验
             write: bool = True, # 是否写入实验
             elementXYZ: bool = False, # 元件坐标系
@@ -204,7 +219,7 @@ class experiment:
             is_exit: bool = False, # 退出试验而不保存修改
     ) -> None:
         if not isinstance(sav_name, str) or \
-                not isinstance(read, bool) or \
+                not isinstance(load_elements, bool) or \
                 not isinstance(delete, bool) or \
                 not isinstance(elementXYZ, bool) or \
                 not isinstance(write, bool) or \
@@ -215,28 +230,31 @@ class experiment:
             raise TypeError
 
         self.sav_name: str = sav_name
-        self.read: bool = read
+        self.load_elements: bool = load_elements
         self.delete: bool = delete
         self.write: bool = write
         self.elementXYZ: bool = elementXYZ
-        self.ExperimentType: ExperimentType = experiment_type
+        self.experiment_type: ExperimentType = experiment_type
         self.extra_filepath: Optional[str] = extra_filepath
         self.force_crt: bool = force_crt
         self.is_exit: bool = is_exit
 
     def __enter__(self) -> Experiment:
         if self.force_crt:
-            self._Experiment: Experiment = Experiment(OpenMode.crt, self.sav_name, self.ExperimentType, True)
+            self._Experiment: Experiment = Experiment(OpenMode.crt, self.sav_name, self.experiment_type, True)
         else:
             try:
                 self._Experiment: Experiment = Experiment(OpenMode.load_by_sav_name, self.sav_name)
             except errors.ExperimentNotExistError:
-                self._Experiment: Experiment = Experiment(OpenMode.crt, self.sav_name, self.ExperimentType, False)
+                self._Experiment: Experiment = Experiment(OpenMode.crt, self.sav_name, self.experiment_type, False)
+
+        if self.load_elements:
+            load_elements(self._Experiment)
 
         # 也许改为先判断是否为电学实验更好?
         if self.elementXYZ:
             if self._Experiment.experiment_type != ExperimentType.Circuit:
-                _ExperimentStack.pop()
+                _ExperimentStack.remove(self._Experiment)
                 raise errors.ExperimentTypeError
             import physicsLab.circuit.elementXYZ as _elementXYZ
             _elementXYZ.set_elementXYZ(True)
@@ -253,6 +271,4 @@ class experiment:
             return
         if self.write and not self.delete:
             self._Experiment.save(extra_filepath=self.extra_filepath)
-        if self.delete:
-            self._Experiment.delete()
-            return
+        self._Experiment.exit(delete=self.delete)

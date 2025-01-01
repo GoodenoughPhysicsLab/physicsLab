@@ -28,6 +28,60 @@ class BasicTest(TestCase, ViztracerTool):
         self.assertFalse(_ExperimentStack.inside(expe2))
 
     @my_test_dec
+    def test_load_all_elements(self):
+        # 物实导出存档与保存到本地的格式不一样, 因此每种类型的实验都有两种格式的测试数据
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav"))
+        load_elements(expe)
+        self.assertTrue(count_elements(expe) == 91)
+        expe.exit(delete=False)
+
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Circuit-Elements.sav"))
+        load_elements(expe)
+        self.assertTrue(count_elements(expe) == 91)
+        expe.exit()
+
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Celestial-Elements.sav"))
+        load_elements(expe)
+        self.assertTrue(count_elements(expe) == 27)
+        expe.exit()
+
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Celestial-Elements.sav"))
+        load_elements(expe)
+        self.assertTrue(count_elements(expe) == 27)
+        expe.exit()
+
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Electromagnetism-Elements.sav"))
+        load_elements(expe)
+        self.assertTrue(count_elements(expe) == 7)
+        expe.exit()
+
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Electromagnetism-Elements.sav"))
+        load_elements(expe)
+        self.assertTrue(count_elements(expe) == 7)
+        expe.exit()
+
+    @my_test_dec
+    def test_double_load_error(self):
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav"))
+        try:
+            Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav"))
+        except ExperimentOpenedError:
+            pass
+        else:
+            raise TestError
+        finally:
+            expe.exit()
+
+    @my_test_dec
+    def test_load_invalid_sav(self):
+        try:
+            Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "invalid.sav"))
+        except InvalidSavError:
+            pass
+        else:
+            raise TestError
+
+    @my_test_dec
     def test_normal_circuit_usage(self):
         expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
         a = Yes_Gate(0, 0, 0)
@@ -52,22 +106,25 @@ class BasicTest(TestCase, ViztracerTool):
         self.assertEqual(count_wires(), 0)
         Logic_Input(0, 0, 0)
         expe.save()
+        expe.exit()
 
         exp2: Experiment = Experiment(OpenMode.load_by_sav_name, "__test__")
-        read_plsav(exp2)
+        load_elements(exp2)
         self.assertEqual(count_elements(exp2), 1)
-        exp2.delete()
+        exp2.exit(delete=True)
 
     @my_test_dec
     def test_crt_Experiment(self):
+        exp: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
+        exp.save()
         try:
-            exp: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
-            exp.save()
             Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, False) # will fail
         except ExperimentExistError:
-            Experiment(OpenMode.load_by_sav_name, "__test__").delete()
+            pass
         else:
             raise TestError
+        finally:
+            exp.exit(delete=True)
 
     @my_test_dec
     def test_crt_wire(self):
@@ -193,7 +250,7 @@ class BasicTest(TestCase, ViztracerTool):
     # 测试打开实验类型与文件不吻合
     @my_test_dec
     def test_ExperimentType(self):
-        with experiment("__test__", experiment_type=ExperimentType.Electromagnetism, is_exit=True, force_crt=True):
+        with experiment("__test__", load_elements=False, experiment_type=ExperimentType.Electromagnetism, is_exit=True, force_crt=True):
             try:
                 Positive_Charge(0, 0, 0)
                 Logic_Input(0, 0, 0)
@@ -295,6 +352,13 @@ class BasicTest(TestCase, ViztracerTool):
     def test_mutiple_notes_in_Simple_Instrument(self):
         with experiment("__test__", force_crt=True, is_exit=True):
             Simple_Instrument(0, 0, 0).add_note(67) # type: ignore
+
+    @my_test_dec
+    def test_load_midi(self):
+        expe = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
+        music.Midi(os.path.join(TEST_DATA_DIR, "鼓哥.mid")).to_piece(max_notes=None).release(-1, -1, 0)
+        self.assertTrue(count_elements(expe) == 4268)
+        expe.exit()
 
     @my_test_dec
     def test_merge_Experiment(self):

@@ -25,6 +25,7 @@ physicsLabSav/
 
 # special file of physicsLab
 *.sav
+!test_pl/data/*.sav
 *.mido.py
 *.pl.py
 *.test.*

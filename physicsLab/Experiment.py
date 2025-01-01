@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 ''' `physicsLab` 操作存档的核心文件
     该文件提供操作存档的核心: class `Experiment`
+    该文件仅会对存档进行文件读写方面的操作, 这也是为什么需要显示调用`load_elements`的原因
 '''
 import os
 import json
@@ -76,7 +77,7 @@ def _check_method(method: Callable) -> Callable:
 class OpenMode(Enum):
     ''' 用Experiment打开存档的模式 '''
     load_by_sav_name = 0 # 存档的名字 (在物实内给存档取的名字)
-    load_by_abs_path = 1 # 用户自己提供的存档的完整路径
+    load_by_filepath = 1 # 用户自己提供的存档的完整路径
     load_by_plar_app = 2 # 通过网络请求从物实读取的存档
     crt = 3 # 新建存档
 
@@ -91,7 +92,17 @@ class Experiment:
         else:
             SAV_PATH_DIR = "physicsLabSav"
 
-    SAV_PATH: str # 存档的完整路径
+    open_mode: OpenMode
+    _elements_position: Dict[tuple, list]
+    Elements: List[ElementBase]
+    is_load_elements: bool
+    SAV_PATH: str
+    PlSav: dict
+    StatusSave: dict
+    CameraSave: dict
+    VisionCenter: _tools.position
+    TargetRotation: _tools.position
+    experiment_type: ExperimentType
 
     @overload
     def __init__(self, open_mode: OpenMode, sav_name: str) -> None:
@@ -120,6 +131,9 @@ class Experiment:
     def __init__(self, open_mode: OpenMode, sav_name: str, experiment_type: ExperimentType, force_crt: bool) -> None:
         ''' 创建一个新实验
             @open_mode = OpenMode.crt
+            @sav_name: 存档的名字
+            @experiment_type: 实验类型
+            @force_crt: 强制创建一个实验, 若已存在则覆盖已有实验
         '''
 
     #TODO support **kwargs
@@ -131,30 +145,26 @@ class Experiment:
         # 通过坐标索引元件; key: self._position, value: List[self...]
         self._elements_position: Dict[tuple, list] = {}
         # 通过index（元件生成顺序）索引元件
-        self.Elements:List[ElementBase] = []
-        # 是否读取过实验的元件状态 (也就是是否调用过 read_plsav)
-        self.is_readed: bool = False
+        self.Elements: List[ElementBase] = []
+        # 是否读取过实验的元件状态 (也就是是否调用过 load_elements)
+        self.is_load_elements: bool = False
 
-        # 尽管读取存档时会将元件的字符串一并读入, 但只有在调用 read_plsav 将元件的信息
-        # 导入self.Elements与self._element_position之后, 这些信息才会生效
-        if open_mode == OpenMode.load_by_sav_name or open_mode == OpenMode.load_by_abs_path:
-            sav_name, *rest = args
+        # 尽管读取存档时会将元件的字符串一并读入, 但只有在调用 load_elements 将元件的信息
+        # 导入self.Elements与self._element_position之后, 元件信息才被完全导入
+        if open_mode == OpenMode.load_by_sav_name or open_mode == OpenMode.load_by_filepath or open_mode == OpenMode.load_by_plar_app:
+            if open_mode == OpenMode.load_by_filepath:
+                sav_name, *rest = args
+                if not isinstance(sav_name, str) or len(rest) != 0:
+                    raise TypeError
 
-            if not isinstance(sav_name, str) or len(rest) != 0:
-                raise TypeError
-
-            if open_mode == OpenMode.load_by_abs_path:
                 self.SAV_PATH = os.path.abspath(sav_name)
 
                 if not os.path.exists(self.SAV_PATH):
-                    raise errors.ExperimentNotExistError(f"{self.SAV_PATH} not found")
+                    raise FileNotFoundError(f"\"{self.SAV_PATH}\" not found")
                 if _ExperimentStack.inside(self):
                     raise errors.ExperimentOpenedError
 
-                _ExperimentStack.push(self)
                 _temp = _open_sav(self.SAV_PATH)
-
-                assert _temp is not None # ??? 万一就是用户的输入不对呢
 
                 if "Experiment" in _temp.keys():
                     self.PlSav = _temp
@@ -169,7 +179,13 @@ class Experiment:
                         raise errors.InternalError
 
                     self.PlSav["Experiment"] = _temp
+
+                _ExperimentStack.push(self)
             elif open_mode == OpenMode.load_by_sav_name:
+                sav_name, *rest = args
+                if not isinstance(sav_name, str) or len(rest) != 0:
+                    raise TypeError
+
                 filename = search_experiment(sav_name)
                 if filename is None:
                     raise errors.ExperimentNotExistError(f'No such experiment "{sav_name}"')
@@ -178,13 +194,51 @@ class Experiment:
                 if _ExperimentStack.inside(self):
                     raise errors.ExperimentOpenedError
 
-                _ExperimentStack.push(self)
+                _ExperimentStack.push(self) # TODO 所有的_Experiment.push都应该在构造函数快完成的时候才执行
 
                 self.PlSav = search_experiment.sav
+            elif open_mode == OpenMode.load_by_plar_app:
+                content_id, category, *rest = args
+
+                if not isinstance(content_id, str) or not isinstance(category, Category):
+                    raise TypeError
+                if len(rest) == 0:
+                    user = User()
+                elif len(rest) == 1:
+                    if not isinstance(rest[0], User):
+                        raise TypeError
+                    user = rest[0]
+                else:
+                    raise TypeError
+
+                self.SAV_PATH = os.path.join(Experiment.SAV_PATH_DIR, f"{content_id}.sav")
+                if _ExperimentStack.inside(self):
+                        raise errors.ExperimentOpenedError
+
+                _summary = user.get_summary(content_id, category)["Data"]
+                del _summary["$type"]
+                _experiment = user.get_experiment(_summary["ContentID"])["Data"]
+                del _experiment["$type"]
+
+                if _experiment["Type"] == ExperimentType.Circuit.value:
+                    self.experiment_type = ExperimentType.Circuit
+                    self.PlSav = copy.deepcopy(savTemplate.Circuit)
+                elif _experiment["Type"] == ExperimentType.Celestial.value:
+                    self.experiment_type = ExperimentType.Celestial
+                    self.PlSav = copy.deepcopy(savTemplate.Celestial)
+                elif _experiment["Type"] == ExperimentType.Electromagnetism.value:
+                    self.experiment_type = ExperimentType.Electromagnetism
+                    self.PlSav = copy.deepcopy(savTemplate.Electromagnetism)
+                else:
+                    assert False
+
+                self.PlSav["Experiment"] = _experiment
+                self.PlSav["Summary"] = _summary
+                _ExperimentStack.push(self)
             else:
                 raise errors.InternalError
 
-            self._read_CameraSave(self.PlSav["Experiment"]["CameraSave"])
+            self._load_CameraSave(self.PlSav["Experiment"]["CameraSave"])
 
             if self.PlSav["Summary"] is None:
                 self.PlSav["Summary"] = savTemplate.Circuit["Summary"]
@@ -210,30 +264,6 @@ class Experiment:
                 self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
             else:
                 raise errors.InternalError
-        elif open_mode == OpenMode.load_by_plar_app:
-            content_id, category, *rest = args
-
-            if not isinstance(content_id, str) or not isinstance(category, Category):
-                raise TypeError
-            if len(rest) == 0:
-                user = User()
-            elif len(rest) == 1:
-                if not isinstance(rest[0], User):
-                    raise TypeError
-                user = rest[0]
-            else:
-                raise TypeError
-
-            self.SAV_PATH = os.path.join(Experiment.SAV_PATH_DIR, f"{content_id}.sav")
-            if _ExperimentStack.inside(self):
-                    raise errors.ExperimentOpenedError
-
-            _ExperimentStack.push(self)
-
-            _summary = user.get_summary(content_id, category)["Data"]
-            del _summary["$type"]
-            _summary["Category"] = category.value
-            self.PlSav["Summary"] = _summary # 此处应该有问题, 存档不完整
         elif open_mode == OpenMode.crt:
             sav_name, experiment_type, force_crt, *rest = args
 
@@ -292,24 +322,31 @@ class Experiment:
                 self.VisionCenter: _tools.position = _tools.position(0, 0 ,0.88)
                 self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
             else:
-                raise errors.InternalError
+                assert False
 
             self.entitle(sav_name)
         else:
-            raise errors.InternalError
+            assert False
 
+        assert isinstance(self.open_mode, OpenMode)
+        assert isinstance(self._elements_position, dict)
+        assert isinstance(self.Elements, list)
+        assert isinstance(self.is_load_elements, bool)
         assert isinstance(self.SAV_PATH, str)
+        assert isinstance(self.PlSav, dict)
+        assert isinstance(self.StatusSave, dict)
+        assert isinstance(self.CameraSave, dict)
+        assert isinstance(self.VisionCenter, _tools.position)
+        assert isinstance(self.TargetRotation, _tools.position)
+        assert isinstance(self.experiment_type, ExperimentType)
+        if self.experiment_type == ExperimentType.Circuit:
+            assert isinstance(self.Wires, set)
+            assert isinstance(self.is_elementXYZ, bool)
+            assert isinstance(self.elementXYZ_origin_position, _tools.position)
 
-    # TODO 将该函数放到elements.py中
-    def get_element_from_identifier(self, identifier: str):
-        ''' 通过 原件的["Identifier"]获取元件的引用 '''
-        for element in self.Elements:
-            assert hasattr(element, "data")
-            if element.data["Identifier"] == identifier: # type: ignore -> has attr .data
-                return element
-        raise errors.ElementNotFound
+    def _load_CameraSave(self, camera_save: str) -> None:
+        assert isinstance(camera_save, str)
 
-    def _read_CameraSave(self, camera_save: str) -> None:
         self.CameraSave = json.loads(camera_save)
         temp = eval(f"({self.CameraSave['VisionCenter']})")
         self.VisionCenter: _tools.position = _tools.position(temp[0], temp[2], temp[1]) # x, z, y
@@ -339,16 +376,16 @@ class Experiment:
         self.PlSav["Experiment"]["StatusSave"] = json.dumps(self.StatusSave, ensure_ascii=False, separators=(',', ': '))
 
     @_check_method
-    def save(self,
-              extra_filepath: Optional[str] = None, # 改为target_output_path: str | List[str], 默认是SAV_PATH_ROOT
-              ln: bool = False,
-              no_pop: bool = False,
-              no_print_info: bool = False,
+    def save(
+            self,
+            target_path: Optional[str] = None,
+            ln: bool = False,
+            no_print_info: bool = False,
     ) -> Self:
         ''' 以物实存档的格式导出实验
-            @param extra_filepath: 自定义保存存档的路径, 但仍会在 SAV_PATH_ROOT 下保存存档
-            @param ln: 是否将StatusSave字符串换行
-            @param no_pop: save 之后不退出对该存档的操作
+            @param target_path: 将存档保存在此路径 (要求必须是file), 默认为 SAV_PATH
+            @param ln: 是否将StatusSave字符串换行 (便于查看存档, 但会导致不符合标准json的格式, 虽然物实可以读取)
+            @param no_print_info: 是否打印写入存档的元件数, 导线数(如果是电学实验的话)
         '''
         def _format_StatusSave(json_str: str) -> str:
             ''' 将StatusSave字符串换行
@@ -367,22 +404,19 @@ class Experiment:
             json_str = json_str.replace("色导线\\\"}]}", "色导线\\\"}\n    ]}")
             return json_str
 
-        if not isinstance(extra_filepath, (str, type(None))) or \
+        if not isinstance(target_path, (str, type(None))) or \
                 not isinstance(ln, bool) or \
-                not isinstance(no_pop, bool) or \
                 not isinstance(no_print_info, bool):
             raise TypeError
-        if self.open_mode in (OpenMode.load_by_sav_name, OpenMode.load_by_abs_path, OpenMode.load_by_plar_app):
+        if target_path is None:
+            target_path = self.SAV_PATH
+
+        if self.open_mode in (OpenMode.load_by_sav_name, OpenMode.load_by_filepath, OpenMode.load_by_plar_app):
             status: str = "update"
         elif self.open_mode == OpenMode.crt:
             status: str = "create"
         else:
-            raise errors.InternalError
-
-        assert self.SAV_PATH is not None
-
-        if not no_pop:
-            _ExperimentStack.remove(self)
+            assert False
 
         self.__write()
 
@@ -390,13 +424,8 @@ class Experiment:
         if ln:
             context = _format_StatusSave(context)
 
-        with open(self.SAV_PATH, "w", encoding="utf-8") as f:
+        with open(target_path, "w", encoding="utf-8") as f:
             f.write(context)
-        if extra_filepath is not None:
-            if not extra_filepath.endswith(".sav"):
-                extra_filepath += ".sav"
-            with open(extra_filepath, "w", encoding="utf-8") as f:
-                f.write(context)
 
         if not no_print_info:
             if self.experiment_type == ExperimentType.Circuit:
@@ -418,22 +447,22 @@ class Experiment:
         return self
 
     @_check_method
-    def delete(self) -> None:
-        ''' 删除存档 '''
-        if os.path.exists(self.SAV_PATH): # 之所以判断路径是否存在是因为一个实验可能被创建但还未被写入就调用了delete
-            os.remove(self.SAV_PATH)
-            _colorUtils.color_print(
-                f"Successfully delete experiment \"{self.PlSav['InternalName']}\"!({self.SAV_PATH})",
-                _colorUtils.COLOR.BLUE
-            )
-        if os.path.exists(self.SAV_PATH.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
-            os.remove(self.SAV_PATH.replace(".sav", ".jpg"))
+    def exit(self, delete: bool = False) -> None:
+        ''' 立刻退出对该存档的操作
+            Note: 如果没有在调用Experiment.exit前调用Experiment.save, 会丢失对存档的修改
+        '''
+        if delete:
+            if os.path.exists(self.SAV_PATH): # 之所以判断路径是否存在是因为一个实验可能被创建但还未被写入就调用了delete
+                os.remove(self.SAV_PATH)
+                _colorUtils.color_print(
+                    f"Successfully delete experiment \"{self.PlSav['InternalName']}\"!({self.SAV_PATH})",
+                    _colorUtils.COLOR.BLUE
+                )
+            elif self.open_mode != OpenMode.crt:
+                raise InterruptedError
+            if os.path.exists(self.SAV_PATH.replace(".sav", ".jpg")): # 用存档生成的实验无图片
+                os.remove(self.SAV_PATH.replace(".sav", ".jpg"))
 
-        _ExperimentStack.remove(self)
-
-    @_check_method
-    def exit(self) -> None:
-        ''' 立刻退出对该存档的操作, 对该存档的任何改动都会失效 '''
         _ExperimentStack.remove(self)
 
     @_check_method
@@ -786,7 +815,8 @@ def _get_all_pl_sav() -> List[str]:
     savs = savs[savs.__len__() - 1]
     return [aSav for aSav in savs if aSav.endswith('sav')]
 
-def _open_sav(sav_path) -> Optional[dict]:
+# TODO 不再返回None, 而是直接走异常传播路径
+def _open_sav(sav_path) -> dict:
     ''' 打开一个存档, 返回存档对应的dict
         @param sav_path: 存档的绝对路径
     '''
@@ -815,7 +845,11 @@ def _open_sav(sav_path) -> Optional[dict]:
     else:
         with open(sav_path, "rb") as f:
             encoding = chardet.detect(f.read())["encoding"]
-        return encode_sav(sav_path, encoding)
+        res = encode_sav(sav_path, encoding)
+        if res is not None:
+            return res
+
+    raise errors.InvalidSavError
 
 def search_experiment(sav_name: str) -> Optional[str]:
     ''' 检测实验是否存在
@@ -824,8 +858,9 @@ def search_experiment(sav_name: str) -> Optional[str]:
         若存在则返回存档对应的文件名, 若不存在则返回None
     '''
     for aSav in _get_all_pl_sav():
-        sav = _open_sav(os.path.join(Experiment.SAV_PATH_DIR, aSav))
-        if sav is None:
+        try:
+            sav = _open_sav(os.path.join(Experiment.SAV_PATH_DIR, aSav))
+        except errors.InvalidSavError:
             continue
         if sav["InternalName"] == sav_name:
             search_experiment.sav = sav

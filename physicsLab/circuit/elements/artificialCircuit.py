@@ -394,8 +394,19 @@ class P_MOSFET(CircuitBase):
     def D(self) -> Pin:
         return Pin(self, 1)
 
+class Current_Source(CircuitBase):
+    ''' 电流源 '''
+    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+        self.data: CircuitElementData = {
+            "ModelID": "Current Source", "Identifier": Generate, "IsBroken": False, "IsLocked": False,
+            "Properties": {"电流": 0.0099999997764825821, "内阻": 1000000000.0, "锁定": 1.0},
+            "Statistics": {},
+            "Position": Generate, "Rotation":Generate, "DiagramCached":False,
+            "DiagramPosition": {"X": 0,"Y": 0,"Magnitude": 0.0}, "DiagramRotation":0
+        }
+
 class _source_electricity(TwoPinMixIn):
-    """ 波形发生器基类 """
+    ''' 波形发生器基类 '''
     def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": Generate, "Identifier": Generate, "IsBroken": False, "IsLocked": False,
