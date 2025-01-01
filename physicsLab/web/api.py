@@ -27,7 +27,7 @@ from concurrent.futures import thread
 # 而 python 并未提供公开的方法操作 threading._threading_atexit
 # NOTE: 依赖于 asyncio 与 concurrent.futures.thread 的实现细节
 if sys.version_info < (3, 14) and hasattr(threading, "_threading_atexits"):
-    _threading_atexits = []
+    _threading_atexits = [] # TODO unregister是否会导致一些问题 ?
     for fn in threading._threading_atexits:
         if isinstance(fn, types.FunctionType) and fn is not thread._python_exit:
             _threading_atexits.append(fn)
@@ -56,7 +56,10 @@ def _check_response(response: requests.Response, err_callback: Optional[Callable
     )
 
 async def _async_wrapper(func: Callable, *args, **kwargs):
-    return await asyncio.get_running_loop().run_in_executor(None, func, *args, **kwargs)
+    if sys.version_info < (3, 9):
+        return await asyncio.get_running_loop().run_in_executor(None, func, *args, **kwargs)
+    else:
+        return await asyncio.to_thread(func, *args, **kwargs)
 
 def get_start_page() -> dict:
     ''' 获取主页数据 '''
