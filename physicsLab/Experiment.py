@@ -98,7 +98,6 @@ class Experiment:
     is_load_elements: bool
     SAV_PATH: str
     PlSav: dict
-    StatusSave: dict
     CameraSave: dict
     VisionCenter: _tools.position
     TargetRotation: _tools.position
@@ -250,20 +249,12 @@ class Experiment:
                 # 元件坐标系的坐标原点
                 self.elementXYZ_origin_position: _tools.position = _tools.position(0, 0, 0)
                 self.Wires: set = set() # Set[Wire] # 存档对应的导线
-                # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
-                self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": Generate, "Wires": Generate}
             elif self.PlSav["Experiment"]["Type"] == ExperimentType.Celestial.value:
                 self.experiment_type = ExperimentType.Celestial
-                self.StatusSave: dict = {
-                    "MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
-                    "ScalingName": "内太阳系", "LengthScale": 1.0, "SizeLinear": 0.0001,
-                    "SizeNonlinear": 0.5, "StarPresent": False, "Setting": None,
-                }
             elif self.PlSav["Experiment"]["Type"] == ExperimentType.Electromagnetism.value:
                 self.experiment_type = ExperimentType.Electromagnetism
-                self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
             else:
-                raise errors.InternalError
+                assert False
         elif open_mode == OpenMode.crt:
             sav_name, experiment_type, force_crt, *rest = args
 
@@ -295,7 +286,6 @@ class Experiment:
                 self.PlSav: dict = copy.deepcopy(savTemplate.Circuit)
                 self.Wires: set = set() # Set[Wire] # 存档对应的导线
                 # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
-                self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": Generate, "Wires": Generate}
                 self.CameraSave: dict = {
                     "Mode": 0, "Distance": 2.7, "VisionCenter": Generate, "TargetRotation": Generate
                 }
@@ -303,11 +293,6 @@ class Experiment:
                 self.TargetRotation: _tools.position = _tools.position(50, 0, 0)
             elif self.experiment_type == ExperimentType.Celestial:
                 self.PlSav: dict = copy.deepcopy(savTemplate.Celestial)
-                self.StatusSave: dict = {
-                    "MainIdentifier": None, "Elements": {}, "WorldTime": 0.0,
-                    "ScalingName": "内太阳系", "LengthScale": 1.0, "SizeLinear": 0.0001,
-                    "SizeNonlinear": 0.5, "StarPresent": False, "Setting": None
-                }
                 self.CameraSave: dict = {
                     "Mode": 2, "Distance": 2.75, "VisionCenter": Generate, "TargetRotation": Generate
                 }
@@ -315,7 +300,6 @@ class Experiment:
                 self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
             elif self.experiment_type == ExperimentType.Electromagnetism:
                 self.PlSav: dict = copy.deepcopy(savTemplate.Electromagnetism)
-                self.StatusSave: dict = {"SimulationSpeed": 1.0, "Elements": []}
                 self.CameraSave: dict = {
                     "Mode": 0, "Distance": 3.25, "VisionCenter": Generate, "TargetRotation": Generate,
                 }
@@ -334,7 +318,6 @@ class Experiment:
         assert isinstance(self.is_load_elements, bool)
         assert isinstance(self.SAV_PATH, str)
         assert isinstance(self.PlSav, dict)
-        assert isinstance(self.StatusSave, dict)
         assert isinstance(self.CameraSave, dict)
         assert isinstance(self.VisionCenter, _tools.position)
         assert isinstance(self.TargetRotation, _tools.position)
@@ -354,6 +337,32 @@ class Experiment:
         self.TargetRotation: _tools.position = _tools.position(temp[0], temp[2], temp[1]) # x, z, y
 
     def __write(self) -> None:
+        if self.experiment_type == ExperimentType.Circuit:
+            status_save: dict = {
+                "SimulationSpeed": 1.0,
+                "Elements": [a_element.data for a_element in self.Elements],
+                "Wires": [a_wire.release() for a_wire in self.Wires],
+            }
+        elif self.experiment_type == ExperimentType.Celestial:
+            status_save: dict = {
+                "MainIdentifier": None,
+                "Elements": {a_element.data["Identifier"] : a_element.data for a_element in self.Elements},
+                "WorldTime": 0.0,
+                "ScalingName": "内太阳系",
+                "LengthScale": 1.0,
+                "SizeLinear": 0.0001,
+                "SizeNonlinear": 0.5,
+                "StarPresent": False,
+                "Setting": None,
+            }
+        elif self.experiment_type == ExperimentType.Electromagnetism:
+            status_save: dict = {
+                "SimulationSpeed": 1.0,
+                "Elements": [a_element.data for a_element in self.Elements],
+            }
+        else:
+            assert False
+
         self.PlSav["Experiment"]["CreationDate"] = int(time.time() * 1000)
         self.PlSav["Summary"]["CreationDate"] = int(time.time() * 1000)
 
@@ -361,52 +370,19 @@ class Experiment:
         self.CameraSave["TargetRotation"] = f"{self.TargetRotation.x},{self.TargetRotation.z},{self.TargetRotation.y}"
         self.PlSav["Experiment"]["CameraSave"] = json.dumps(self.CameraSave)
 
-        if self.experiment_type == ExperimentType.Circuit:
-            self.StatusSave["Elements"] = [a_element.data for a_element in self.Elements]
-            self.StatusSave["Wires"] = [a_wire.release() for a_wire in self.Wires]
-        elif self.experiment_type == ExperimentType.Celestial:
-            self.StatusSave["Elements"] = {
-                a_element.data["Identifier"] : a_element.data for a_element in self.Elements
-            }
-        elif self.experiment_type == ExperimentType.Electromagnetism:
-            self.StatusSave["Elements"] = [a_element.data for a_element in self.Elements]
-        else:
-            raise errors.InternalError
-
-        self.PlSav["Experiment"]["StatusSave"] = json.dumps(self.StatusSave, ensure_ascii=False, separators=(',', ': '))
+        self.PlSav["Experiment"]["StatusSave"] = json.dumps(status_save, ensure_ascii=True, separators=(',', ': '))
 
     @_check_method
     def save(
             self,
             target_path: Optional[str] = None,
-            ln: bool = False,
             no_print_info: bool = False,
     ) -> Self:
         ''' 以物实存档的格式导出实验
             @param target_path: 将存档保存在此路径 (要求必须是file), 默认为 SAV_PATH
-            @param ln: 是否将StatusSave字符串换行 (便于查看存档, 但会导致不符合标准json的格式, 虽然物实可以读取)
             @param no_print_info: 是否打印写入存档的元件数, 导线数(如果是电学实验的话)
         '''
-        def _format_StatusSave(json_str: str) -> str:
-            ''' 将StatusSave字符串换行
-                注意: 换行之后的结果不符合json语法(json无多行字符串)
-                     但物实可以读取
-                     因此, 仅用于调试
-                     暂时只支持电学存档
-            '''
-            json_str = json_str.replace( # format element json
-                "{\\\"ModelID", "\n      {\\\"ModelID"
-            )
-            json_str = json_str.replace( # format end element json
-                "DiagramRotation\\\": 0}]", "DiagramRotation\\\": 0}\n    ]"
-            )
-            json_str = json_str.replace("{\\\"Source", "\n      {\\\"Source")
-            json_str = json_str.replace("色导线\\\"}]}", "色导线\\\"}\n    ]}")
-            return json_str
-
-        if not isinstance(target_path, (str, type(None))) or \
-                not isinstance(ln, bool) or \
-                not isinstance(no_print_info, bool):
+        if not isinstance(target_path, (str, type(None))) or not isinstance(no_print_info, bool):
             raise TypeError
         if target_path is None:
             target_path = self.SAV_PATH
@@ -421,8 +397,6 @@ class Experiment:
         self.__write()
 
         context: str = json.dumps(self.PlSav, indent=2, ensure_ascii=False, separators=(',', ':'))
-        if ln:
-            context = _format_StatusSave(context)
 
         with open(target_path, "w", encoding="utf-8") as f:
             f.write(context)
