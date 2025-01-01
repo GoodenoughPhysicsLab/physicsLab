@@ -72,14 +72,14 @@ class _login_res(TypedDict):
     AuthCode: str
     Data: dict
 
-def get_avatar(id: str, index: int, category: str, size_category: str) -> bytes:
+def get_avatar(target_id: str, index: int, category: str, size_category: str) -> bytes:
     ''' 获取头像/实验封面
-        @param id: 用户id或实验id
+        @param target_id: 用户id或实验id
         @param index: 历史图片的索引
         @param category: 只能为 "experiments" 或 "users"
         @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
     '''
-    if not isinstance(id, str) or \
+    if not isinstance(target_id, str) or \
             not isinstance(index, int) or \
             not isinstance(category, str) or \
             not isinstance(size_category, str):
@@ -96,15 +96,15 @@ def get_avatar(id: str, index: int, category: str, size_category: str) -> bytes:
 
     response = requests.get(
         f"http://physics-static-cn.turtlesim.com:80/{category}"
-        f"/{id[0:4]}/{id[4:6]}/{id[6:8]}/{id[8:]}/{index}.jpg!{size_category}",
+        f"/{target_id[0:4]}/{target_id[4:6]}/{target_id[6:8]}/{target_id[8:]}/{index}.jpg!{size_category}",
     )
 
     if b'<Error>' in response.content:
         raise IndexError("avatar not found")
     return response.content
 
-async def async_get_avatar(id: str, index: int, category: str, size_category: str):
-    return await _async_wrapper(get_avatar, id, index, category, size_category)
+async def async_get_avatar(target_id: str, index: int, category: str, size_category: str):
+    return await _async_wrapper(get_avatar, target_id, index, category, size_category)
 
 class User:
     def __init__(
@@ -491,8 +491,8 @@ class User:
             skip: int = 0,
             comment_id: Optional[str] = None,
     ) -> dict:
-        ''' 获取留言板信息
-            @param id: 物实用户的ID/实验的id
+        ''' 获取评论板信息
+            @param target_id: 物实用户的ID/实验的id
             @param target_type: User, Discussion, Experiment
             @param take: 获取留言的数量
             @param skip: 跳过的留言数量, 为(unix时间戳 * 1000)
@@ -529,12 +529,12 @@ class User:
 
     async def async_get_comments(
             self,
-            id: str,
+            target_id: str,
             target_type: str,
             take: int = 16,
             skip: int = 0,
     ):
-        return await _async_wrapper(self.get_comments, id, target_type, take, skip)
+        return await _async_wrapper(self.get_comments, target_id, target_type, take, skip)
 
     def get_summary(self, content_id: str, category: Category) -> dict:
         ''' 获取实验介绍
@@ -707,7 +707,7 @@ class User:
 
     def upload_image(self, policy: str, authorization: str, image_path: str) -> dict:
         ''' 上传实验图片
-            @policy @authorization 可通过/Contents/SubmitExperiment获取
+            @param authorization： 可通过/Contents/SubmitExperiment获取
             @param image_path: 待上传的图片在本地的路径
         '''
         if policy is None or authorization is None:
