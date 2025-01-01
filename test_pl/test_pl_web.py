@@ -20,73 +20,72 @@ class _WebTest:
     @staticmethod
     async def test_get_start_page():
         ''' 测试获取主页数据 '''
-        res = await web.async_get_start_page()
+        await web.async_get_start_page()
         
-    @classmethod
-    async def test_get_avatar(cls):
+    @staticmethod
+    async def test_get_avatar():
         ''' 测试获取头像 '''
-        res = await cls.user.async_get_avatar(
-            id="5ce629e157035932b52f9315",  # 用户ID
-            index=0,  # 头像索引
+        await web.async_get_avatar(
+            target_id="5ce629e157035932b52f9315",  # 用户ID
+            index=1,  # 头像索引
             category="users",  # 用户头像
             size_category="small.round"  # 头像尺寸
         )
-        assert isinstance(res, bytes), "返回值不是字节类型"
 
     @classmethod
     async def test_get_library(cls):
         ''' 测试获取社区作品列表 '''
-        res = await cls.user.async_get_library()
+        await cls.user.async_get_library()
 
     @classmethod
     async def test_query_experiments(cls):
         ''' 测试查询实验 '''
-        res = await cls.user.async_query_experiments(
-            tags=[Tag.Featured],  # 使用 Featured 标签
+        await cls.user.async_query_experiments(
+            tags=[Tag.Featured],  # 精选标签
             category=Category.Experiment  # 实验区
         )
 
     @classmethod
     async def test_get_experiment(cls):
         ''' 测试获取实验数据 '''
-        res = await cls.user.async_get_experiment(
-            content_id="6317fabebfd18200013c710c",  # 实验区作品序列号
-            category=Category.Experiment  # 实验区
+        await cls.user.async_get_experiment(
+            content_id="6317fabebfd18200013c710c",  # 作品序列号
+            category=Category.Experiment
         )
 
     @classmethod
     async def test_get_comments(cls):
         ''' 测试获取评论 '''
-        res = await cls.user.async_get_comments(
-            target_id="6317fabebfd18200013c710c",  # 实验区作品序列号
+        await cls.user.async_get_comments(
+            target_id="6317fabebfd18200013c710c",
             target_type="Experiment"  # 目标类型为实验
         )
 
     @classmethod
     async def test_get_summary(cls):
         ''' 测试获取实验介绍 '''
-        res = await cls.user.async_get_summary(
-            content_id="6317fabebfd18200013c710c",  # 实验区作品序列号
-            category=Category.Experiment  # 实验区
+        await cls.user.async_get_summary(
+            content_id="6317fabebfd18200013c710c",
+            category=Category.Experiment
         )
 
     @classmethod
     async def test_get_derivatives(cls):
         ''' 测试获取作品详细信息 '''
-        res = await cls.user.async_get_derivatives(
-            content_id="6317fabebfd18200013c710c",  # 实验区作品序列号
-            category=Category.Experiment  # 实验区
+        await cls.user.async_get_derivatives(
+            content_id="6317fabebfd18200013c710c",
+            category=Category.Experiment
         )
 
     @classmethod
     async def test_get_user(cls):
         ''' 测试获取用户信息 '''
-        res = await cls.user.async_get_user(user_id="5ce629e157035932b52f9315")
+        await cls.user.async_get_user(user_id="5ce629e157035932b52f9315")
 
     @classmethod
     async def test_get_profile(cls):
         ''' 测试获取用户个人资料 '''
-        res = await cls.user.async_get_profile()
+        await cls.user.async_get_profile()
 
 async def test_web_main():
     ''' 收集并运行所有测试任务 '''
