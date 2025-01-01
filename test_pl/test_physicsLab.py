@@ -354,6 +354,13 @@ class BasicTest(TestCase, ViztracerTool):
             Simple_Instrument(0, 0, 0).add_note(67) # type: ignore
 
     @my_test_dec
+    def test_load_midi(self):
+        expe = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
+        music.Midi(os.path.join(TEST_DATA_DIR, "鼓哥.mid")).to_piece(max_notes=None).release(-1, -1, 0)
+        self.assertTrue(count_elements(expe) == 4268)
+        expe.exit()
+
+    @my_test_dec
     def test_merge_Experiment(self):
         with experiment("__test__", force_crt=True, is_exit=True) as expe:
             Logic_Input(0, 0, 0).o - Logic_Output(1, 0, 0, elementXYZ=True).i
