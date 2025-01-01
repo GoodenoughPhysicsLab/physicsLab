@@ -22,25 +22,28 @@ with experiment("example") as expe:
 `name`参数不仅支持物实存档中的`ModelID`对应的字符串，还支持`physicsLab`中类的名字
 
 ## 获取元件
-在物实, 我们要操作一个元件只需要点击就行了。但要在`physicsLab`中操作元件, 我们只能操作类的实例。  
-但当我们读取一些已有的实验的时候，我们需要知道元件的坐标或者那个元件是第多少个被创建的( 这个数字即是index )，然后使用`get_element`函数来获取那个元件的引用
+在物实, 我们要操作一个元件只需要点击就行了。但要在`physicsLab`中操作元件, 我们只能操作元件类的实例。  
+这意味着，当我们导入已有的实验的时候，只能通过一些间接的方法来获取元件的引用
 
-`get_element`有两种获取元件的方式：
-* 通过元件的坐标进行索引
-* 通过元件在物实中生成的先后顺序进行索引（即`index`）
+`physicsLab`提供以下间接获取元件的引用的方式：
+* 通过元件的坐标
+* 通过元件在物实中生成的先后顺序进行索引（这个生成的顺序被称为`index`）
+* 通过元件的`Identifier`
 
-`get_element`的返回值是这个坐标对应的元件的引用，若不存在抛出Error
+若未能找到符合条件的元件的话, 会抛出`ElementNotFound`
+
 ```python
 from physicsLab import *
 
 with experiment("example") as expe:
-  get_Element(expe, 0, 0, 0) # x, y, z
-  get_Element(expe, index=1) # 通过元件是第多少个被创建的来获取
+    get_element_from_position(expe, 0, 0, 0) # x, y, z
+    get_element_from_index(expe, index=1) # 通过元件是第多少个被创建的来获取
+    get_element_from_identifier(expe, "fe089d7e37114de394918a261c53df00") # 通过元件的Identifier来获取
 ```
 
 > Note:
 > 1.  当元件的坐标重叠时，此时会返回一个含所有位于该坐标的元件的list
-> 2.  `get_element`并不会区分索引的坐标是不是元件坐标系 (elementXYZ)
+> 2.  对于电学实验而言，`get_element_*`并不会区分索引的坐标是不是元件坐标系 (elementXYZ)
 >     但你可以通过元件的`is_elementXYZ`属性来获取是否是元件坐标系
 
 元件的`index`会从1开始，每生成一个元件就会加1
@@ -52,21 +55,21 @@ with experiment("example"):
     Or_Gate(0, 0, 0.1) # index = 2
 ```
 
-> Note: `get_element`用来索引的坐标为创建元件时对应的坐标, 与是否为元件坐标系无关
+> Note: `get_element_*`用来索引的坐标为创建元件时对应的坐标, 与是否为元件坐标系无关
 
 用一个简单的例子来说明:
 ```Python
 from physicsLab import *
 
-with experiment("example") as expe:
+with experiment("example", force_crt=True) as expe:
    Logic_Input(1, 0, 0, elementXYZ=True)
    Logic_Output(1, 0, 0)
-   print(get_element(expe, 1, 0, 0))
+   print(get_element_from_position(expe, 1, 0, 0))
 
-with experiment("example", read=True) as expe:
+with experiment("example", load_elements=True) as expe:
    Logic_Input(1, 0, 0, elementXYZ=True)
    Logic_Output(1, 0, 0)
-   print(get_element(expe, 1, 0, 0))
+   print(get_element_from_position(expe, 1, 0, 0))
 ```
 输出结果:
 ```
@@ -78,16 +81,8 @@ Successfully update experiment "example"! 4 elements, 0 wires.
 
 你能理解为什么第二次打印时输出的列表长度为3吗?  
 因为在上一次写入的时候会将元件坐标系自动转化为物实坐标系, 在第二次read的时候会直接读取存档内的物实坐标系, 那么上一次创建时的`Logic_Input(1, 0, 0elementXYZ=True)`自然就不会在后面read这次的坐标索引中被找到了  
-如果要索引第一次创建的元件坐标系的元件, 需要这样写`get_element(xyzTranslate(1, 0, 0))`  
-详见`元件坐标系`  
-当`get_element`索引元件失败时，会抛出`ElementNotFound`的Error  
-如果你想在索引失败时不抛出error，需要使用default参数
-```Python
-from physicsLab import *
-
-with experiment("example") as expe:
-    expe.get_element(1, 0, 0, default=None)
-```
+如果要索引第一次创建的元件坐标系的元件, 需要用`xyzTranslate(1, 0, 0)`来执行元件坐标系与物实坐标系之间的转换
+详见[元件坐标系](#元件坐标系-elementXYZ)
 
 ## 删除元件
 我们也可以删除元件：
@@ -98,12 +93,13 @@ with experiment("example") as expe:
   a = Logic_Input(0, 0, 0)
   del_element(expe, a) # input: element's self, output: None
 ```
-`del_element`需要传入元件的引用，所以必要时也需要配合使用`get_element`。
+`del_element`需要传入元件的引用，所以必要时也需要配合`get_element_*`使用。
 
 ## 元件坐标系 elementXYZ
 `物实坐标系`即为物实默认的坐标系  
 物实坐标系的单位长度与元件尺寸出入较大，因此physicsLab提供了专门为元件尺寸定制的`元件坐标系`。  
-元件坐标系的x, y单位长度为1个是门的长、宽，z的单位长度为物实坐标系的0.1  
+元件坐标系的x, y单位长度为1个是门的长、宽，z的单位长度为物实坐标系的0.1
+
 ### 设置为元件坐标系
 此函数将从调用该函数之后到打开下一个存档之前的作用域的坐标系设置为元件坐标系
 ```Python

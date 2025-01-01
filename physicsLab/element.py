@@ -4,9 +4,9 @@ from . import _tools
 from . import errors
 from .enums import ExperimentType
 from .Experiment import Experiment, _ExperimentStack, OpenMode, _check_method
-from .circuit.wire import _load_wires
+from .circuit.wire import Wire, Pin
 from ._element_base import ElementBase
-from .typehint import numType, Optional
+from .typehint import numType, Optional, Union, List
 
 def crt_element(
         experiment: Experiment,
@@ -53,8 +53,7 @@ def get_element_from_position(
         x: numType,
         y: numType,
         z: numType,
-        **kwargs: dict,
-):
+) -> Union[ElementBase, List[ElementBase]]:
     ''' 通过坐标索引元件 '''
     if not isinstance(x, (int, float)) or \
             not isinstance(y, (int, float)) or \
@@ -63,14 +62,12 @@ def get_element_from_position(
 
     position = _tools.roundData(x, y, z)
     if position not in experiment._elements_position.keys():
-        if "defualt" in kwargs:
-            return kwargs["defualt"]
         raise errors.ElementNotFound(f"{position} do not exist")
 
     result: list = experiment._elements_position[position]
     return result[0] if len(result) == 1 else result
 
-def get_element_from_index(experiment: Experiment, index: int, **kwargs: dict) -> ElementBase:
+def get_element_from_index(experiment: Experiment, index: int) -> ElementBase:
     ''' 通过index (元件生成顺序) 索引元件 '''
     if not isinstance(index, int):
         raise TypeError
@@ -78,9 +75,15 @@ def get_element_from_index(experiment: Experiment, index: int, **kwargs: dict) -
     if 0 < index <= len(experiment.Elements):
         return experiment.Elements[index - 1]
     else:
-        if "defualt" in kwargs:
-            return kwargs["defualt"]
         raise errors.ElementNotFound
+
+def get_element_from_identifier(experiment: Experiment, identifier: str) -> ElementBase:
+    ''' 通过原件的id获取元件的引用 '''
+    for element in experiment.Elements:
+        assert hasattr(element, "data")
+        if element.data["Identifier"] == identifier:
+            return element
+    raise errors.ElementNotFound
 
 def del_element(experiment: Experiment, element: ElementBase) -> None:
     ''' 删除元件
@@ -89,7 +92,7 @@ def del_element(experiment: Experiment, element: ElementBase) -> None:
     if not isinstance(element, ElementBase):
         raise TypeError
 
-    identifier = element.data["Identifier"] # type: ignore
+    identifier = element.data["Identifier"]
 
     res_Wires = set()
     for a_wire in experiment.Wires:
@@ -164,6 +167,18 @@ def _load_elements(experiment: Experiment, _elements: list) -> None:
         else:
             raise errors.InternalError
 
+def _load_wires(experiment: Experiment, _wires: list) -> None:
+    assert experiment.experiment_type == ExperimentType.Circuit
+
+    for wire_dict in _wires:
+        experiment.Wires.add(
+            Wire(
+                Pin(get_element_from_identifier(experiment, wire_dict["Source"]), wire_dict["SourcePin"]),
+                Pin(get_element_from_identifier(wire_dict["Target"]), wire_dict["TargetPin"]),
+                wire_dict["ColorName"][0] # e.g. "蓝"
+            )
+        )
+
 @_check_method
 def load_elements(experiment: Experiment) -> Experiment:
     ''' 读取实验已有状态 '''
@@ -219,19 +234,19 @@ class experiment:
         self.delete: bool = delete
         self.write: bool = write
         self.elementXYZ: bool = elementXYZ
-        self.ExperimentType: ExperimentType = experiment_type
+        self.experiment_type: ExperimentType = experiment_type
         self.extra_filepath: Optional[str] = extra_filepath
         self.force_crt: bool = force_crt
         self.is_exit: bool = is_exit
 
     def __enter__(self) -> Experiment:
         if self.force_crt:
-            self._Experiment: Experiment = Experiment(OpenMode.crt, self.sav_name, self.ExperimentType, True)
+            self._Experiment: Experiment = Experiment(OpenMode.crt, self.sav_name, self.experiment_type, True)
         else:
             try:
                 self._Experiment: Experiment = Experiment(OpenMode.load_by_sav_name, self.sav_name)
             except errors.ExperimentNotExistError:
-                self._Experiment: Experiment = Experiment(OpenMode.crt, self.sav_name, self.ExperimentType, False)
+                self._Experiment: Experiment = Experiment(OpenMode.crt, self.sav_name, self.experiment_type, False)
 
         if self.load_elements:
             load_elements(self._Experiment)

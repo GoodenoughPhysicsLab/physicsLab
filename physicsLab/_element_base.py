@@ -5,6 +5,8 @@ from physicsLab.typehint import numType, Self, final
 from physicsLab import _tools
 
 class ElementBase:
+    data: dict
+
     def __init__(self) -> None:
         raise NotImplementedError
 
@@ -24,7 +26,7 @@ class ElementBase:
                 self_list.remove(self)
 
         assert hasattr(self, 'data')
-        self.data['Position'] = f"{x},{z},{y}" # type: ignore -> has attr .data
+        self.data['Position'] = f"{x},{z},{y}"
 
         assert hasattr(self, '_position')
         if self._position in _Expe._elements_position.keys():

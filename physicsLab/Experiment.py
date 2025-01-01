@@ -92,6 +92,18 @@ class Experiment:
         else:
             SAV_PATH_DIR = "physicsLabSav"
 
+    open_mode: OpenMode
+    _elements_position: Dict[tuple, list]
+    Elements: List[ElementBase]
+    is_load_elements: bool
+    SAV_PATH: str
+    PlSav: dict
+    StatusSave: dict
+    CameraSave: dict
+    VisionCenter: _tools.position
+    TargetRotation: _tools.position
+    experiment_type: ExperimentType
+
     @overload
     def __init__(self, open_mode: OpenMode, sav_name: str) -> None:
         ''' 根据存档名打开存档
@@ -130,7 +142,7 @@ class Experiment:
         # 通过坐标索引元件; key: self._position, value: List[self...]
         self._elements_position: Dict[tuple, list] = {}
         # 通过index（元件生成顺序）索引元件
-        self.Elements:List[ElementBase] = []
+        self.Elements: List[ElementBase] = []
         # 是否读取过实验的元件状态 (也就是是否调用过 load_elements)
         self.is_load_elements: bool = False
 
@@ -328,15 +340,6 @@ class Experiment:
             assert isinstance(self.Wires, set)
             assert isinstance(self.is_elementXYZ, bool)
             assert isinstance(self.elementXYZ_origin_position, _tools.position)
-
-    # TODO 将该函数放到elements.py中
-    def get_element_from_identifier(self, identifier: str):
-        ''' 通过原件的id获取元件的引用 '''
-        for element in self.Elements:
-            assert hasattr(element, "data")
-            if element.data["Identifier"] == identifier: # type: ignore -> has attr .data
-                return element
-        raise errors.ElementNotFound
 
     def _read_CameraSave(self, camera_save: str) -> None:
         assert isinstance(camera_save, str)
