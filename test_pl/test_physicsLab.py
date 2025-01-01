@@ -30,35 +30,56 @@ class BasicTest(TestCase, ViztracerTool):
     @my_test_dec
     def test_load_all_elements(self):
         # 物实导出存档与保存到本地的格式不一样, 因此每种类型的实验都有两种格式的测试数据
-        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DIR, "All-Circuit-Elements.sav"))
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav"))
         load_elements(expe)
         self.assertTrue(count_elements(expe) == 91)
         expe.exit(delete=False)
 
-        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DIR, "Export-All-Circuit-Elements.sav"))
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Circuit-Elements.sav"))
         load_elements(expe)
         self.assertTrue(count_elements(expe) == 91)
         expe.exit()
 
-        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DIR, "All-Celestial-Elements.sav"))
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Celestial-Elements.sav"))
         load_elements(expe)
         self.assertTrue(count_elements(expe) == 27)
         expe.exit()
 
-        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DIR, "Export-All-Celestial-Elements.sav"))
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Celestial-Elements.sav"))
         load_elements(expe)
         self.assertTrue(count_elements(expe) == 27)
         expe.exit()
 
-        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DIR, "All-Electromagnetism-Elements.sav"))
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Electromagnetism-Elements.sav"))
         load_elements(expe)
         self.assertTrue(count_elements(expe) == 7)
         expe.exit()
 
-        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DIR, "Export-All-Electromagnetism-Elements.sav"))
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Electromagnetism-Elements.sav"))
         load_elements(expe)
         self.assertTrue(count_elements(expe) == 7)
         expe.exit()
+
+    @my_test_dec
+    def test_double_load_error(self):
+        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav"))
+        try:
+            Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav"))
+        except ExperimentOpenedError:
+            pass
+        else:
+            raise TestError
+        finally:
+            expe.exit()
+
+    @my_test_dec
+    def test_load_invalid_sav(self):
+        try:
+            Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "invalid.sav"))
+        except InvalidSavError:
+            pass
+        else:
+            raise TestError
 
     @my_test_dec
     def test_normal_circuit_usage(self):
@@ -94,14 +115,16 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_crt_Experiment(self):
+        exp: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
+        exp.save()
         try:
-            exp: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
-            exp.save()
             Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, False) # will fail
         except ExperimentExistError:
-            exp.exit(delete=True)
+            pass
         else:
             raise TestError
+        finally:
+            exp.exit(delete=True)
 
     @my_test_dec
     def test_crt_wire(self):

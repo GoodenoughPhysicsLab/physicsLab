@@ -100,11 +100,6 @@ class ElementNotFound(Exception):
     def __str__(self):
         return self.err_msg
 
-# 类实例化异常 基类无法被实例化
-class instantiateError(Exception):
-    def __str__(self):
-        return "This class cannot be instantiated"
-
 class ExperimentError(Exception):
     def __init__(self, string: str = "") -> None:
         self.err_msg: str = string

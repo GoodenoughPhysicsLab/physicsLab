@@ -282,7 +282,19 @@ class Fantasy_Star(PlanetBase):
 class Moon(PlanetBase):
     def __init__(self, x: numType, y: numType, z: numType) -> None:
         self.data = {
-            "Identifier": Generate, "Model": "Moon", "Override": None, "Name": "月球", "Parent": None, "Type": 2, "Changed": False, "Extras": {}, "Radius": 1737.1, "RadiusVisible": 0.0116118016, "RotationPeriod": 27.3, "RotationPhase": 0.0, "AxialTilt": 0.0, "Mass": 0.073477, "OrbitType": 0, "OrbitEstimation": 3, "Density": 3.346481005246245, "Gravity": 1.625149040802321, "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.12300000339746475, "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate, "Velocity": Generate, "Acceleration": Generate, "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False}
+            "Identifier": Generate, "Model": "Moon", "Override": None,
+            "Name": "月球", "Parent": None, "Type": 2, "Changed": False,
+            "Extras": {}, "Radius": 1737.1, "RadiusVisible": 0.0116118016,
+            "RotationPeriod": 27.3, "RotationPhase": 0.0, "AxialTilt": 0.0,
+            "Mass": 0.073477, "OrbitType": 0, "OrbitEstimation": 3,
+            "Density": 3.346481005246245, "Gravity": 1.625149040802321,
+            "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.12300000339746475,
+            "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate,
+            "Velocity": Generate, "Acceleration": Generate, "Period": 0.0,
+            "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN",
+            "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN",
+            "Aphelion": "NaN", "LeavingKepler": False
+        }
 
 class Chocolate_Ball(PlanetBase):
     def __init__(self, x: numType, y: numType, z: numType) -> None:
