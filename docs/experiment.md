@@ -49,7 +49,7 @@ with experiment('example') as exp:
 *  `experiment_type`: 若创建实验，支持传入指定实验类型
 *  `extra_filepath`: 将存档写入额外的路径
 *  `force_crt`: 强制创建一个实验, 若已存在则覆盖已有实验
-*  `is_exit`: 是否调用`Experiment.exit`退出实验而不是调用`Experiment.save`或者`Experiment.delete`
+*  `is_exit`: 若为True, 则不保存实验
 
 > Note: 当你使用`Experiment`导入一个实验而不调用`read`时，你仅仅只会损失实验所有原件的信息，而`force_crt`则会覆盖掉实验的所有信息
 
@@ -173,7 +173,7 @@ exp.save()
 exp.exit()
 ```
 `Experiment.save`也有一些参数：
-*  `extra_filepath`: 将存档写入额外的路径
+*  `target_path`: 将存档写入自己指定的路径
 *  `ln`: 输出存档的元件字符串是否换行
 *  `no_print_info`: 是否打印写入存档的元件数, 导线数(如果是电学实验的话)
 

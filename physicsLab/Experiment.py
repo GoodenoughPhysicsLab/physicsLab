@@ -131,6 +131,9 @@ class Experiment:
     def __init__(self, open_mode: OpenMode, sav_name: str, experiment_type: ExperimentType, force_crt: bool) -> None:
         ''' 创建一个新实验
             @open_mode = OpenMode.crt
+            @sav_name: 存档的名字
+            @experiment_type: 实验类型
+            @force_crt: 强制创建一个实验, 若已存在则覆盖已有实验
         '''
 
     #TODO support **kwargs
@@ -235,7 +238,7 @@ class Experiment:
             else:
                 raise errors.InternalError
 
-            self._read_CameraSave(self.PlSav["Experiment"]["CameraSave"])
+            self._load_CameraSave(self.PlSav["Experiment"]["CameraSave"])
 
             if self.PlSav["Summary"] is None:
                 self.PlSav["Summary"] = savTemplate.Circuit["Summary"]
@@ -341,7 +344,7 @@ class Experiment:
             assert isinstance(self.is_elementXYZ, bool)
             assert isinstance(self.elementXYZ_origin_position, _tools.position)
 
-    def _read_CameraSave(self, camera_save: str) -> None:
+    def _load_CameraSave(self, camera_save: str) -> None:
         assert isinstance(camera_save, str)
 
         self.CameraSave = json.loads(camera_save)
@@ -375,12 +378,12 @@ class Experiment:
     @_check_method
     def save(
             self,
-            extra_filepath: Optional[str] = None, # 改为target_output_path: str | List[str], 默认是SAV_PATH_ROOT
+            target_path: Optional[str] = None,
             ln: bool = False,
             no_print_info: bool = False,
     ) -> Self:
         ''' 以物实存档的格式导出实验
-            @param extra_filepath: 自定义保存存档的路径, 但仍会在 SAV_PATH_ROOT 下保存存档
+            @param target_path: 将存档保存在此路径 (要求必须是file), 默认为 SAV_PATH
             @param ln: 是否将StatusSave字符串换行 (便于查看存档, 但会导致不符合标准json的格式, 虽然物实可以读取)
             @param no_print_info: 是否打印写入存档的元件数, 导线数(如果是电学实验的话)
         '''
@@ -401,19 +404,19 @@ class Experiment:
             json_str = json_str.replace("色导线\\\"}]}", "色导线\\\"}\n    ]}")
             return json_str
 
-        if not isinstance(extra_filepath, (str, type(None))) or \
+        if not isinstance(target_path, (str, type(None))) or \
                 not isinstance(ln, bool) or \
                 not isinstance(no_print_info, bool):
             raise TypeError
+        if target_path is None:
+            target_path = self.SAV_PATH
 
         if self.open_mode in (OpenMode.load_by_sav_name, OpenMode.load_by_filepath, OpenMode.load_by_plar_app):
             status: str = "update"
         elif self.open_mode == OpenMode.crt:
             status: str = "create"
         else:
-            raise errors.InternalError
-
-        assert self.SAV_PATH is not None
+            assert False
 
         self.__write()
 
@@ -421,13 +424,8 @@ class Experiment:
         if ln:
             context = _format_StatusSave(context)
 
-        with open(self.SAV_PATH, "w", encoding="utf-8") as f:
+        with open(target_path, "w", encoding="utf-8") as f:
             f.write(context)
-        if extra_filepath is not None:
-            if not extra_filepath.endswith(".sav"):
-                extra_filepath += ".sav"
-            with open(extra_filepath, "w", encoding="utf-8") as f:
-                f.write(context)
 
         if not no_print_info:
             if self.experiment_type == ExperimentType.Circuit:

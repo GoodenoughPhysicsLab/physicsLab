@@ -227,3 +227,4 @@
 6.  移除`Experiment.save`的`no_pop`参数
 7.  移除`Experiment.delete`, `Experiment.exit`增加`delete`参数
 8.  移除`Experiment.get_element_from_identifier`，新增`get_element_from_identifier`函数
+9.  将`Experiment.save`的`extra_filepath`改为`target_path`
