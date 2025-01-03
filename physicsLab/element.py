@@ -3,9 +3,8 @@ import json
 from . import _tools
 from . import errors
 from .enums import ExperimentType
-from ._experiment import _Experiment, _ExperimentStack, OpenMode, _check_method
+from ._experiment import _Experiment, _ExperimentStack, OpenMode, _check_method, _ElementBase
 from .circuit.wire import Wire, Pin
-from ._element_base import ElementBase
 from .typehint import num_type, Optional, Union, List, Self
 
 def crt_element(
@@ -17,7 +16,7 @@ def crt_element(
         elementXYZ: Optional[bool] = None,
         *args,
         **kwargs
-) -> ElementBase:
+) -> _ElementBase:
     ''' 通过元件的ModelID或其类名创建元件 '''
     if not isinstance(name, str) or \
             not isinstance(x, (int, float)) or \
@@ -53,7 +52,7 @@ def get_element_from_position(
         x: num_type,
         y: num_type,
         z: num_type,
-) -> Union[ElementBase, List[ElementBase]]:
+) -> Union[_ElementBase, List[_ElementBase]]:
     ''' 通过坐标索引元件 '''
     if not isinstance(x, (int, float)) or \
             not isinstance(y, (int, float)) or \
@@ -67,7 +66,7 @@ def get_element_from_position(
     result: list = experiment._elements_position[position]
     return result[0] if len(result) == 1 else result
 
-def get_element_from_index(experiment: _Experiment, index: int) -> ElementBase:
+def get_element_from_index(experiment: _Experiment, index: int) -> _ElementBase:
     ''' 通过index (元件生成顺序) 索引元件 '''
     if not isinstance(index, int):
         raise TypeError
@@ -77,7 +76,7 @@ def get_element_from_index(experiment: _Experiment, index: int) -> ElementBase:
     else:
         raise errors.ElementNotFound
 
-def get_element_from_identifier(experiment: _Experiment, identifier: str) -> ElementBase:
+def get_element_from_identifier(experiment: _Experiment, identifier: str) -> _ElementBase:
     ''' 通过原件的id获取元件的引用 '''
     for element in experiment.Elements:
         assert hasattr(element, "data")
@@ -85,11 +84,11 @@ def get_element_from_identifier(experiment: _Experiment, identifier: str) -> Ele
             return element
     raise errors.ElementNotFound
 
-def del_element(experiment: _Experiment, element: ElementBase) -> None:
+def del_element(experiment: _Experiment, element: _ElementBase) -> None:
     ''' 删除元件
         @param element: 三大实验的元件
     '''
-    if not isinstance(element, ElementBase):
+    if not isinstance(element, _ElementBase):
         raise TypeError
 
     identifier = element.data["Identifier"]

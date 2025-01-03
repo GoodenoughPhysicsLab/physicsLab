@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ''' `physicsLab` 操作存档的核心文件
-    该文件提供操作存档的核心: class `_Experiment`
+    该文件提供操作存档的核心: `class _Experiment` 与所有元件的基类: class `_ElementBase`
     为了避免在physicsLab内出现大量的cyclic import
     该文件仅会对存档进行文件读写方面的操作, 这也是为什么需要显示调用`load_elements`的原因
     `class Experiment`提供了更加用户友好的接口
@@ -24,8 +24,7 @@ from .web import User, _check_response
 from .enums import Category, Tag
 from .savTemplate import Generate
 from .enums import ExperimentType
-from ._element_base import ElementBase
-from .typehint import Union, Optional, List, Dict, num_type, Self, overload, Callable
+from .typehint import Union, Optional, List, Dict, num_type, Self, overload, Callable, Tuple, final
 
 class _ExperimentStack:
     data: List["_Experiment"] = []
@@ -100,7 +99,7 @@ class _Experiment:
 
     open_mode: OpenMode
     _elements_position: Dict[tuple, list]
-    Elements: List[ElementBase]
+    Elements: List["_ElementBase"]
     is_load_elements: bool
     SAV_PATH: str
     PlSav: dict
@@ -157,7 +156,7 @@ class _Experiment:
         # 通过坐标索引元件; key: self._position, value: List[self...]
         self._elements_position: Dict[tuple, list] = {}
         # 通过index（元件生成顺序）索引元件
-        self.Elements: List[ElementBase] = []
+        self.Elements: List["_ElementBase"] = []
         # 是否读取过实验的元件状态 (也就是是否调用过 load_elements)
         self.is_load_elements: bool = False
 
@@ -196,7 +195,7 @@ class _Experiment:
             if not isinstance(sav_name, str) or len(rest) != 0:
                 raise TypeError
 
-            filename = search_experiment(sav_name)
+            filename, _plsav = search_experiment(sav_name)
             if filename is None:
                 raise errors.ExperimentNotExistError(f'No such experiment "{sav_name}"')
 
@@ -204,7 +203,8 @@ class _Experiment:
             if _ExperimentStack.inside(self):
                 raise errors.ExperimentOpenedError
 
-            self.PlSav = search_experiment.sav
+            assert _plsav is not None
+            self.PlSav = _plsav
             self.__load()
         elif open_mode == OpenMode.load_by_plar_app:
             content_id, category, *rest = args
@@ -247,12 +247,12 @@ class _Experiment:
             if not isinstance(force_crt, bool):
                 raise TypeError
 
-            search = search_experiment(sav_name)
-            if not force_crt and search is not None:
+            filepath, _ = search_experiment(sav_name)
+            if not force_crt and filepath is not None:
                 raise errors.ExperimentExistError
-            elif force_crt and search is not None:
+            elif force_crt and filepath is not None:
                 # TODO 要是在一个force_crt的实验中又force_crt这个实验呢？
-                path = os.path.join(_Experiment.SAV_PATH_DIR, search)
+                path = os.path.join(_Experiment.SAV_PATH_DIR, filepath)
                 os.remove(path)
                 if os.path.exists(path.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
                     os.remove(path.replace(".sav", ".jpg"))
@@ -785,14 +785,12 @@ class _Experiment:
                 self.Wires.add(a_wire)
 
         return self
+
 def _get_all_pl_sav() -> List[str]:
     ''' 获取所有物实存档的文件名 '''
-    from os import walk
-    savs = [i for i in walk(_Experiment.SAV_PATH_DIR)][0]
-    savs = savs[savs.__len__() - 1]
-    return [aSav for aSav in savs if aSav.endswith('sav')]
+    savs = [i for i in os.walk(_Experiment.SAV_PATH_DIR)][0][-1]
+    return [aSav for aSav in savs if aSav.endswith('.sav')]
 
-# TODO 不再返回None, 而是直接走异常传播路径
 def _open_sav(sav_path) -> dict:
     ''' 打开一个存档, 返回存档对应的dict
         @param sav_path: 存档的绝对路径
@@ -828,8 +826,7 @@ def _open_sav(sav_path) -> dict:
 
     raise errors.InvalidSavError
 
-# TODO 不再返回None, 而是直接走异常传播路径
-def search_experiment(sav_name: str) -> Optional[str]:
+def search_experiment(sav_name: str) -> Tuple[Optional[str], Optional[dict]]:
     ''' 检测实验是否存在
         @param sav_name: 存档名
 
@@ -841,7 +838,51 @@ def search_experiment(sav_name: str) -> Optional[str]:
         except errors.InvalidSavError:
             continue
         if sav["InternalName"] == sav_name:
-            search_experiment.sav = sav
-            return aSav
+            return aSav, sav
 
-    return None
+    return None, None
+
+class _ElementBase:
+    data: dict
+    experiment: _Experiment
+    _position: _tools.position
+
+    def __init__(self) -> None:
+        raise NotImplementedError
+
+    def set_position(self, x: num_type, y: num_type, z: num_type) -> Self:
+        ''' 设置原件的位置 '''
+        if not isinstance(x, (int, float)) or \
+                not isinstance(y, (int, float)) or \
+                not isinstance(z, (int, float)):
+            raise TypeError
+
+        x, y, z = _tools.roundData(x, y, z) # type: ignore -> result type: tuple
+        assert hasattr(self, 'experiment')
+        _Expe = self.experiment
+
+        for self_list in _Expe._elements_position.values():
+            if self in self_list:
+                self_list.remove(self)
+
+        assert hasattr(self, 'data')
+        self.data['Position'] = f"{x},{z},{y}"
+
+        assert hasattr(self, '_position')
+        if self._position in _Expe._elements_position.keys():
+            _Expe._elements_position[self._position].append(self)
+        else:
+            _Expe._elements_position[self._position] = [self]
+
+        return self
+
+    @final
+    def get_position(self) -> tuple:
+        ''' 获取原件的坐标 '''
+        assert hasattr(self, '_position')
+        return copy.deepcopy(self._position)
+
+    @final
+    def get_index(self) -> int:
+        ''' 获取元件的index (每创建一个元件, index就加1 (index从1开始)) '''
+        return self.experiment.Elements.index(self) + 1

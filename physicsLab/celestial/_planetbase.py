@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 from physicsLab import _tools
 from physicsLab import errors
-from physicsLab._element_base import ElementBase
 from physicsLab.typehint import num_type, Self, override, final
 from physicsLab.enums import ExperimentType
-from physicsLab._experiment import get_current_experiment
+from physicsLab._experiment import get_current_experiment, _Experiment, _ElementBase
 
 class _PlanetMeta(type):
     def __call__(cls, x:num_type, y: num_type, z:num_type, *args, **kwargs):
@@ -17,13 +16,13 @@ class _PlanetMeta(type):
         if _Expe.experiment_type != ExperimentType.Celestial:
             raise errors.ExperimentTypeError
 
-        self = cls.__new__(cls) # type: ignore -> create subclass
+        self: "PlanetBase" = cls.__new__(cls) # type: ignore -> create subclass
         self.experiment = _Expe
 
         x, y, z = _tools.roundData(x, y, z) # type: ignore -> return Tuple[numType, numType, numType]
 
         self.__init__(x, y, z, *args, **kwargs)
-        assert hasattr(self, "data") and isinstance(self.data, dict)
+        assert isinstance(self.data, dict)
 
         self.data["Identifier"] = _tools.randString(32)
         self.set_position(x, y, z)
@@ -34,9 +33,9 @@ class _PlanetMeta(type):
 
         return self
 
-class PlanetBase(ElementBase, metaclass=_PlanetMeta):
+class PlanetBase(_ElementBase, metaclass=_PlanetMeta):
     ''' 星球基类 '''
-    data: dict
+    experiment: _Experiment
 
     def __init__(self) -> None:
         raise NotImplementedError

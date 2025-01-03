@@ -4,12 +4,11 @@ import inspect
 from physicsLab import errors
 from physicsLab import _tools
 from physicsLab.circuit import wire
-from physicsLab._element_base import ElementBase
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.enums import ExperimentType
 from physicsLab._tools import roundData, randString
-from physicsLab._experiment import _Experiment, get_current_experiment
+from physicsLab._experiment import _Experiment, get_current_experiment, _ElementBase
 from physicsLab.typehint import Optional, Self, num_type, CircuitElementData, Generate, override, final
 
 # electricity class's metaClass
@@ -49,9 +48,8 @@ class CircuitMeta(type):
 
         return self
 
-class CircuitBase(ElementBase, metaclass=CircuitMeta):
+class CircuitBase(_ElementBase, metaclass=CircuitMeta):
     ''' 所有电学元件的父类 '''
-    data: CircuitElementData # 元件在存档中的信息
     experiment: _Experiment # 元件所属的实验
 
     is_bigElement = False # 该元件是否是逻辑电路的两体积元件
@@ -97,11 +95,6 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
             self.is_elementXYZ = False
 
         return super().set_position(x, y, z)
-
-    @final
-    def get_index(self) -> int:
-        ''' 获取元件的index (每创建一个元件, index就加1) '''
-        return self.experiment.Elements.index(self) + 1
 
     @property
     @final
