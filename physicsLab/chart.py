@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+''' 操作物实电学实验的示波器 '''
 import base64
 
 from physicsLab import errors
-from physicsLab.Experiment import Experiment
+from physicsLab._experiment import _Experiment
 from physicsLab.circuit.elements import CircuitBase
 from physicsLab.typehint import TypedDict, Self, List, Optional
 
@@ -12,6 +13,7 @@ class _PlotDataDict(TypedDict):
     LabelY: str
     Series: List[dict]
 
+# TODO 把这玩意写完
 class Plot:
     def __init__(self, data: _PlotDataDict):
         if not isinstance(data, dict):
@@ -43,9 +45,9 @@ class Plot:
         })
         return self
 
-def add_graph_to(experiment: Experiment) -> Optional[List[Plot]]:
+def add_graph_to(experiment: _Experiment) -> Optional[List[Plot]]:
     ''' 获取物实示波器图表的封装类 '''
-    if not isinstance(experiment, Experiment):
+    if not isinstance(experiment, _Experiment):
         raise TypeError
 
     if not experiment._is_closed():

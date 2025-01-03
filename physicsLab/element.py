@@ -3,13 +3,13 @@ import json
 from . import _tools
 from . import errors
 from .enums import ExperimentType
-from .Experiment import Experiment, _ExperimentStack, OpenMode, _check_method
+from ._experiment import _Experiment, _ExperimentStack, OpenMode, _check_method
 from .circuit.wire import Wire, Pin
 from ._element_base import ElementBase
 from .typehint import numType, Optional, Union, List
 
 def crt_element(
-        experiment: Experiment,
+        experiment: _Experiment,
         name: str,
         x: numType = 0,
         y: numType = 0,
@@ -49,7 +49,7 @@ def crt_element(
         raise errors.InternalError
 
 def get_element_from_position(
-        experiment: Experiment,
+        experiment: _Experiment,
         x: numType,
         y: numType,
         z: numType,
@@ -67,7 +67,7 @@ def get_element_from_position(
     result: list = experiment._elements_position[position]
     return result[0] if len(result) == 1 else result
 
-def get_element_from_index(experiment: Experiment, index: int) -> ElementBase:
+def get_element_from_index(experiment: _Experiment, index: int) -> ElementBase:
     ''' 通过index (元件生成顺序) 索引元件 '''
     if not isinstance(index, int):
         raise TypeError
@@ -77,7 +77,7 @@ def get_element_from_index(experiment: Experiment, index: int) -> ElementBase:
     else:
         raise errors.ElementNotFound
 
-def get_element_from_identifier(experiment: Experiment, identifier: str) -> ElementBase:
+def get_element_from_identifier(experiment: _Experiment, identifier: str) -> ElementBase:
     ''' 通过原件的id获取元件的引用 '''
     for element in experiment.Elements:
         assert hasattr(element, "data")
@@ -85,7 +85,7 @@ def get_element_from_identifier(experiment: Experiment, identifier: str) -> Elem
             return element
     raise errors.ElementNotFound
 
-def del_element(experiment: Experiment, element: ElementBase) -> None:
+def del_element(experiment: _Experiment, element: ElementBase) -> None:
     ''' 删除元件
         @param element: 三大实验的元件
     '''
@@ -115,17 +115,17 @@ def del_element(experiment: Experiment, element: ElementBase) -> None:
             experiment.Elements.remove(element)
             break
 
-def count_elements(experiment: Experiment) -> int:
+def count_elements(experiment: _Experiment) -> int:
     ''' 元件的数量 '''
     return len(experiment.Elements)
 
-def clear_elements(experiment: Experiment) -> None:
+def clear_elements(experiment: _Experiment) -> None:
     ''' 清空元件 '''
     experiment.Wires.clear()
     experiment.Elements.clear()
     experiment._elements_position.clear()
 
-def _load_elements(experiment: Experiment, _elements: list) -> None:
+def _load_elements(experiment: _Experiment, _elements: list) -> None:
     assert isinstance(_elements, list)
 
     for element in _elements:
@@ -167,7 +167,7 @@ def _load_elements(experiment: Experiment, _elements: list) -> None:
         else:
             raise errors.InternalError
 
-def _load_wires(experiment: Experiment, _wires: list) -> None:
+def _load_wires(experiment: _Experiment, _wires: list) -> None:
     assert experiment.experiment_type == ExperimentType.Circuit
 
     for wire_dict in _wires:
@@ -180,7 +180,7 @@ def _load_wires(experiment: Experiment, _wires: list) -> None:
         )
 
 @_check_method
-def load_elements(experiment: Experiment) -> Experiment:
+def load_elements(experiment: _Experiment) -> _Experiment:
     ''' 读取实验已有状态 '''
     if experiment.is_load_elements:
         errors.warning("experiment has been read")
@@ -204,20 +204,32 @@ def load_elements(experiment: Experiment) -> Experiment:
 
     return experiment
 
+class Experiment(_Experiment):
+    def __enter__(self) -> _Experiment:
+        if self.open_mode != OpenMode.crt:
+            load_elements(self)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        # 如果无异常抛出且用户未在with语句里调用过.exit(), 则保存存档并退出实验
+        if exc_type is None and _ExperimentStack.inside(self):
+            self.save()
+            self.exit(delete=False)
+
 class experiment:
-    ''' 仅提供通过with操作存档的高层次api '''
     def __init__(
             self,
-            sav_name: str, # 实验名(非存档文件名)
-            load_elements: bool = False, # 是否导入存档的元件信息 # TODO 改为默认为True
-            delete: bool = False, # 是否删除实验
-            write: bool = True, # 是否写入实验
-            elementXYZ: bool = False, # 元件坐标系
-            experiment_type: ExperimentType = ExperimentType.Circuit, # 若创建实验，支持传入指定实验类型
-            extra_filepath: Optional[str] = None, # 将存档写入额外的路径
-            force_crt: bool = False, # 强制创建一个实验, 若已存在则覆盖已有实验
-            is_exit: bool = False, # 退出试验而不保存修改
+            sav_name: str,
+            load_elements: bool = False,
+            delete: bool = False,
+            write: bool = True,
+            elementXYZ: bool = False,
+            experiment_type: ExperimentType = ExperimentType.Circuit,
+            extra_filepath: Optional[str] = None,
+            force_crt: bool = False,
+            is_exit: bool = False,
     ) -> None:
+        errors.warning("`with experiment` is deprecated, use `with Experiment` instead")
         if not isinstance(sav_name, str) or \
                 not isinstance(load_elements, bool) or \
                 not isinstance(delete, bool) or \
@@ -239,19 +251,18 @@ class experiment:
         self.force_crt: bool = force_crt
         self.is_exit: bool = is_exit
 
-    def __enter__(self) -> Experiment:
+    def __enter__(self) -> _Experiment:
         if self.force_crt:
-            self._Experiment: Experiment = Experiment(OpenMode.crt, self.sav_name, self.experiment_type, True)
+            self._Experiment: _Experiment = _Experiment(OpenMode.crt, self.sav_name, self.experiment_type, True)
         else:
             try:
-                self._Experiment: Experiment = Experiment(OpenMode.load_by_sav_name, self.sav_name)
+                self._Experiment: _Experiment = _Experiment(OpenMode.load_by_sav_name, self.sav_name)
             except errors.ExperimentNotExistError:
-                self._Experiment: Experiment = Experiment(OpenMode.crt, self.sav_name, self.experiment_type, False)
+                self._Experiment: _Experiment = _Experiment(OpenMode.crt, self.sav_name, self.experiment_type, False)
 
         if self.load_elements:
             load_elements(self._Experiment)
 
-        # 也许改为先判断是否为电学实验更好?
         if self.elementXYZ:
             if self._Experiment.experiment_type != ExperimentType.Circuit:
                 _ExperimentStack.remove(self._Experiment)

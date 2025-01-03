@@ -6,7 +6,7 @@ from .wires import UnitPin, crt_wires
 from physicsLab._tools import roundData
 from physicsLab.circuit import elements
 from physicsLab.circuit.wire import crt_wire, Pin
-from physicsLab.Experiment import get_current_experiment
+from physicsLab._experiment import get_current_experiment
 from physicsLab.enums import ExperimentType
 from physicsLab.typehint import numType, Optional, Self, Union, Type, List
 

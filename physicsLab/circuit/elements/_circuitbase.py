@@ -9,7 +9,7 @@ import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.enums import ExperimentType
 from physicsLab._tools import roundData, randString
-from physicsLab.Experiment import Experiment, get_current_experiment
+from physicsLab._experiment import _Experiment, get_current_experiment
 from physicsLab.typehint import Optional, Self, numType, CircuitElementData, Generate, override, final
 
 # electricity class's metaClass
@@ -27,9 +27,9 @@ class CircuitMeta(type):
                 not isinstance(elementXYZ, (bool, type(None))):
             raise TypeError
 
-        _Expe: Experiment = get_current_experiment()
+        _Expe: _Experiment = get_current_experiment()
         if _Expe.experiment_type != ExperimentType.Circuit:
-            raise errors.ExperimentTypeError
+            raise errors.ExperimentTypeError # TODO 更详尽的报错信息: 什么类型的实验不能创建什么元件
 
         self = cls.__new__(cls) # type: ignore -> create subclass
         self.experiment = _Expe
@@ -51,19 +51,13 @@ class CircuitMeta(type):
 
 class CircuitBase(ElementBase, metaclass=CircuitMeta):
     ''' 所有电学元件的父类 '''
+    data: CircuitElementData # 元件在存档中的信息
+    experiment: _Experiment # 元件所属的实验
+
     is_bigElement = False # 该元件是否是逻辑电路的两体积元件
 
     def __init__(self) -> None:
         raise NotImplementedError
-
-    def __define_virtual_var_to_let_ide_show(self,
-                                             data: CircuitElementData,
-                                             exp: Experiment):
-        ''' useless
-            这些变量的定义在CircuitMeta中
-        '''
-        self.data: CircuitElementData = data
-        self.experiment: Experiment = exp
 
     def __repr__(self) -> str:
         return  f"{self.__class__.__name__}" \
@@ -71,12 +65,7 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
                 f"elementXYZ={self.is_elementXYZ})"
 
     @final
-    def set_rotation(
-            self,
-            x_r: numType = 0,
-            y_r: numType = 0,
-            z_r: numType = 180,
-    ) -> Self:
+    def set_rotation(self, x_r: numType = 0, y_r: numType = 0, z_r: numType = 180) -> Self:
         ''' 设置原件的角度 '''
         if not isinstance(x_r, (int, float)) or \
                 not isinstance(y_r, (int, float)) or \

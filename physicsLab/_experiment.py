@@ -26,14 +26,14 @@ from ._element_base import ElementBase
 from .typehint import Union, Optional, List, Dict, numType, Self, overload, Callable
 
 class _ExperimentStack:
-    data: List["Experiment"] = []
+    data: List["_Experiment"] = []
 
     def __new__(cls):
         return cls
 
     @classmethod
-    def inside(cls, item: "Experiment") -> bool:
-        assert isinstance(item, Experiment)
+    def inside(cls, item: "_Experiment") -> bool:
+        assert isinstance(item, _Experiment)
 
         for a_expe in cls.data:
             if a_expe.SAV_PATH == item.SAV_PATH:
@@ -41,32 +41,36 @@ class _ExperimentStack:
         return False
 
     @classmethod
-    def remove(cls, data: "Experiment"):
-        assert isinstance(data, Experiment)
+    def remove(cls, data: "_Experiment"):
+        assert isinstance(data, _Experiment)
 
         cls.data.remove(data)
 
     @classmethod
-    def push(cls, data: "Experiment") -> None:
-        if not isinstance(data, Experiment):
+    def clear(cls) -> None:
+        cls.data.clear()
+
+    @classmethod
+    def push(cls, data: "_Experiment") -> None:
+        if not isinstance(data, _Experiment):
             raise TypeError
 
         cls.data.append(data)
 
     @classmethod
-    def top(cls) -> "Experiment":
+    def top(cls) -> "_Experiment":
         if len(cls.data) == 0:
             raise errors.ExperimentError("no experiment can be operated (experiment stack is empty)")
 
         return cls.data[-1]
 
-def get_current_experiment() -> "Experiment":
+def get_current_experiment() -> "_Experiment":
     ''' 获取当前正在操作的存档 '''
     return _ExperimentStack.top()
 
 def _check_method(method: Callable) -> Callable:
-    def res(self: "Experiment", *args, **kwargs):
-        assert isinstance(self, Experiment)
+    def res(self: "_Experiment", *args, **kwargs):
+        assert isinstance(self, _Experiment)
         if not _ExperimentStack.inside(self): # 存档已被关闭
             raise errors.ExperimentClosedError
 
@@ -81,7 +85,7 @@ class OpenMode(Enum):
     load_by_plar_app = 2 # 通过网络请求从物实读取的存档
     crt = 3 # 新建存档
 
-class Experiment:
+class _Experiment:
     ''' 物实实验 (支持物实的三种实验类型) '''
 
     if "PHYSICSLAB_HOME_PATH" in os.environ.keys():
@@ -150,7 +154,6 @@ class Experiment:
 
         # 尽管读取存档时会将元件的字符串一并读入, 但只有在调用 load_elements 将元件的信息
         # 导入self.Elements与self._element_position之后, 元件信息才被完全导入
-
         if open_mode == OpenMode.load_by_filepath:
             sav_name, *rest = args
             if not isinstance(sav_name, str) or len(rest) != 0:
@@ -188,7 +191,7 @@ class Experiment:
             if filename is None:
                 raise errors.ExperimentNotExistError(f'No such experiment "{sav_name}"')
 
-            self.SAV_PATH = os.path.join(Experiment.SAV_PATH_DIR, filename)
+            self.SAV_PATH = os.path.join(_Experiment.SAV_PATH_DIR, filename)
             if _ExperimentStack.inside(self):
                 raise errors.ExperimentOpenedError
 
@@ -208,7 +211,7 @@ class Experiment:
             else:
                 raise TypeError
 
-            self.SAV_PATH = os.path.join(Experiment.SAV_PATH_DIR, f"{content_id}.sav")
+            self.SAV_PATH = os.path.join(_Experiment.SAV_PATH_DIR, f"{content_id}.sav")
             if _ExperimentStack.inside(self):
                     raise errors.ExperimentOpenedError
 
@@ -243,13 +246,13 @@ class Experiment:
                 raise errors.ExperimentExistError
             elif force_crt and search is not None:
                 # TODO 要是在一个force_crt的实验中又force_crt这个实验呢？
-                path = os.path.join(Experiment.SAV_PATH_DIR, search)
+                path = os.path.join(_Experiment.SAV_PATH_DIR, search)
                 os.remove(path)
                 if os.path.exists(path.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
                     os.remove(path.replace(".sav", ".jpg"))
 
             self.experiment_type = experiment_type
-            self.SAV_PATH = os.path.join(Experiment.SAV_PATH_DIR, f"{_tools.randString(34)}.sav")
+            self.SAV_PATH = os.path.join(_Experiment.SAV_PATH_DIR, f"{_tools.randString(34)}.sav")
 
             if self.experiment_type == ExperimentType.Circuit:
                 self.is_elementXYZ: bool = False
@@ -723,7 +726,7 @@ class Experiment:
     @_check_method
     def merge(
             self,
-            other: "Experiment",
+            other: "_Experiment",
             x: numType = 0,
             y: numType = 0,
             z: numType = 0,
@@ -733,7 +736,7 @@ class Experiment:
             x, y, z, elementXYZ为重新设置要合并的实验的坐标系原点在self的坐标系的位置
             不是电学实验时, elementXYZ参数无效
         '''
-        if not isinstance(other, Experiment) or \
+        if not isinstance(other, _Experiment) or \
                 not isinstance(x, (int, float)) or \
                 not isinstance(y, (int, float)) or \
                 not isinstance(z, (int, float)) or \
@@ -779,7 +782,7 @@ class Experiment:
 def _get_all_pl_sav() -> List[str]:
     ''' 获取所有物实存档的文件名 '''
     from os import walk
-    savs = [i for i in walk(Experiment.SAV_PATH_DIR)][0]
+    savs = [i for i in walk(_Experiment.SAV_PATH_DIR)][0]
     savs = savs[savs.__len__() - 1]
     return [aSav for aSav in savs if aSav.endswith('sav')]
 
@@ -827,7 +830,7 @@ def search_experiment(sav_name: str) -> Optional[str]:
     '''
     for aSav in _get_all_pl_sav():
         try:
-            sav = _open_sav(os.path.join(Experiment.SAV_PATH_DIR, aSav))
+            sav = _open_sav(os.path.join(_Experiment.SAV_PATH_DIR, aSav))
         except errors.InvalidSavError:
             continue
         if sav["InternalName"] == sav_name:

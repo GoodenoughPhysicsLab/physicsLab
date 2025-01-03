@@ -7,7 +7,7 @@
 from physicsLab import errors
 from physicsLab._tools import position
 from physicsLab.typehint import numType
-from physicsLab.Experiment import get_current_experiment
+from physicsLab._experiment import get_current_experiment
 from physicsLab.enums import ExperimentType
 
 # 是否将全局设置为元件坐标系
