@@ -25,7 +25,7 @@ from .enums import Category, Tag
 from .savTemplate import Generate
 from .enums import ExperimentType
 from ._element_base import ElementBase
-from .typehint import Union, Optional, List, Dict, numType, Self, overload, Callable
+from .typehint import Union, Optional, List, Dict, num_type, Self, overload, Callable
 
 class _ExperimentStack:
     data: List["_Experiment"] = []
@@ -653,13 +653,13 @@ class _Experiment:
 
     def observe(
             self,
-            x: Optional[numType] = None,
-            y: Optional[numType] = None,
-            z: Optional[numType] = None,
-            distance: Optional[numType] = None,
-            rotation_x: Optional[numType] = None,
-            rotation_y: Optional[numType] = None,
-            rotation_z: Optional[numType] = None
+            x: Optional[num_type] = None,
+            y: Optional[num_type] = None,
+            z: Optional[num_type] = None,
+            distance: Optional[num_type] = None,
+            rotation_x: Optional[num_type] = None,
+            rotation_y: Optional[num_type] = None,
+            rotation_z: Optional[num_type] = None
     ) -> Self:
         ''' 设置实验者的视角
             x, y, z : 实验者观察的坐标
@@ -733,9 +733,9 @@ class _Experiment:
     def merge(
             self,
             other: "_Experiment",
-            x: numType = 0,
-            y: numType = 0,
-            z: numType = 0,
+            x: num_type = 0,
+            y: num_type = 0,
+            z: num_type = 0,
             elementXYZ: Optional[bool] = None
     ) -> Self:
         ''' 合并另一实验

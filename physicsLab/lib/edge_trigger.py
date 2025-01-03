@@ -3,10 +3,10 @@ import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.circuit import elements
 from physicsLab.circuit.wire import InputPin, OutputPin
-from physicsLab.typehint import numType, Optional, Self
+from physicsLab.typehint import num_type, Optional, Self
 
 class _TriggerMeta(type):
-    def __call__(cls, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None) -> Self:
+    def __call__(cls, x: num_type = 0, y: num_type = 0, z: num_type = 0, elementXYZ: Optional[bool] = None) -> Self:
         self = cls.__new__(cls)
         if not (
                 isinstance(x, (float, int)) and
@@ -25,7 +25,7 @@ class _TriggerMeta(type):
 
 class Rising_edge_trigger(metaclass=_TriggerMeta):
     ''' 上升沿触发器 '''
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type = 0, y: num_type = 0, z: num_type = 0, elementXYZ: Optional[bool] = None) -> None:
         self.no_gate = elements.No_Gate(x, y, z, True)
         self.and_gate = elements.And_Gate(x, y + 1, z, True)
         self.no_gate.o - self.and_gate.i_low
@@ -41,7 +41,7 @@ class Rising_edge_trigger(metaclass=_TriggerMeta):
 
 class Falling_edge_trigger(metaclass=_TriggerMeta):
     ''' 下降沿触发器 '''
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type = 0, y: num_type = 0, z: num_type = 0, elementXYZ: Optional[bool] = None) -> None:
         self.yes_gate = elements.Yes_Gate(x, y, z, True)
         self.nimp_gate = elements.Nimp_Gate(x, y + 1, z, True)
         self.yes_gate.o - self.nimp_gate.i_up
@@ -57,7 +57,7 @@ class Falling_edge_trigger(metaclass=_TriggerMeta):
 
 class Edge_trigger(metaclass=_TriggerMeta):
     ''' 边沿触发器 (同时可以在上升沿与下降沿触发) '''
-    def __init__(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type = 0, y: num_type = 0, z: num_type = 0, elementXYZ: Optional[bool] = None) -> None:
         self.yes_gate = elements.Yes_Gate(x, y, z, True)
         self.xor_gate = elements.Xor_Gate(x, y + 1, z, True)
         self.yes_gate.o - self.xor_gate.i_up

@@ -10,14 +10,14 @@ import physicsLab.circuit.elementXYZ as _elementXYZ
 from physicsLab.enums import ExperimentType
 from physicsLab._tools import roundData, randString
 from physicsLab._experiment import _Experiment, get_current_experiment
-from physicsLab.typehint import Optional, Self, numType, CircuitElementData, Generate, override, final
+from physicsLab.typehint import Optional, Self, num_type, CircuitElementData, Generate, override, final
 
 # electricity class's metaClass
 class CircuitMeta(type):
     def __call__(cls,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  elementXYZ: Optional[bool] = None,
                  *args, **kwargs
                 ):
@@ -65,7 +65,7 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
                 f"elementXYZ={self.is_elementXYZ})"
 
     @final
-    def set_rotation(self, x_r: numType = 0, y_r: numType = 0, z_r: numType = 180) -> Self:
+    def set_rotation(self, x_r: num_type = 0, y_r: num_type = 0, z_r: num_type = 180) -> Self:
         ''' 设置原件的角度 '''
         if not isinstance(x_r, (int, float)) or \
                 not isinstance(y_r, (int, float)) or \
@@ -77,7 +77,7 @@ class CircuitBase(ElementBase, metaclass=CircuitMeta):
         return self
 
     @override
-    def set_position(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> Self:
+    def set_position(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> Self:
         ''' 设置原件的位置
         '''
         if not isinstance(x, (int, float)) or \

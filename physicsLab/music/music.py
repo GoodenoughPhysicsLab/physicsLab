@@ -15,7 +15,7 @@ from physicsLab.circuit import elements
 from physicsLab._tools import roundData
 from physicsLab.lib import crt_wires, D_WaterLamp
 from physicsLab.circuit.elements.otherCircuit import majorSet_Tonality
-from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, numType, Callable, Type
+from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, num_type, Callable, Type
 
 def _format_velocity(velocity: float) -> float:
     velocity = min(1, velocity)
@@ -112,7 +112,7 @@ class Midi:
 
     def __get_midi_messages(self) -> mido.MidiTrack:
         ''' 使用mido打开一个midi文件并获取其messages '''
-        wait_time: numType = 0
+        wait_time: num_type = 0
         res = mido.MidiTrack()
         for msg in self.midofile.merged_track:
             if msg.type in ("note_on", "note_off", "program_change", "set_tempo"):
@@ -206,7 +206,7 @@ class Midi:
 
         return self
 
-    def set_tempo(self, num: numType = 1) -> Self:
+    def set_tempo(self, num: num_type = 1) -> Self:
         ''' 将time重设为原来的num倍 '''
         if not isinstance(num, (int, float)):
             raise TypeError
@@ -218,7 +218,7 @@ class Midi:
 
     # 返回 [Note(...), Chord(...), ...]
     def _get_notes_list(self,
-                        div_time: Optional[numType],
+                        div_time: Optional[num_type],
                         max_notes: Optional[int],
                         percussion_channel: Optional[int],
                         notes_filter: Optional[Callable],
@@ -272,7 +272,7 @@ class Midi:
         return res
 
     def to_piece(self,
-                 div_time: Optional[numType] = None,
+                 div_time: Optional[num_type] = None,
                  max_notes: Optional[int] = 800,
                  percussion_channel: Optional[int] = 10,
                  is_optimize: bool = True, # 是否将多个音符优化为和弦
@@ -352,7 +352,7 @@ class Midi:
 
     def write_plpy(self,
                   filepath: str = "temp.pl.py",
-                  div_time: Optional[numType] = None, # midi的time的单位长度与Note的time的单位长度不同，支持用户手动调整
+                  div_time: Optional[num_type] = None, # midi的time的单位长度与Note的time的单位长度不同，支持用户手动调整
                   max_notes: Optional[int] = 800, # 最大的音符数，因为物实没法承受过多的元件
                   percussion_channel: Optional[int] = 10,
                   notes_filter: Optional[Callable] = None,
@@ -471,9 +471,9 @@ class Chord:
 
     # 将Chord存储的数据转变为对应的物实的电路
     def release(self,
-                x: numType = 0,
-                y: numType = 0,
-                z: numType = 0,
+                x: num_type = 0,
+                y: num_type = 0,
+                z: num_type = 0,
                 elementXYZ: Optional[bool] = None,
                 is_optimize: bool = True,
                 ) -> elements.Simple_Instrument:
@@ -681,7 +681,7 @@ class Piece:
     def __next__(self):
         yield next(self.__iter)
 
-    def release(self, x: numType = 0, y: numType = 0, z: numType = 0, elementXYZ = None) -> None:
+    def release(self, x: num_type = 0, y: num_type = 0, z: num_type = 0, elementXYZ = None) -> None:
         ''' 将Piece转换为物实对应的电路
             x, y, z: 电路最左下角的元件的坐标
             elementXYZ: x, y, z是否是元件坐标系

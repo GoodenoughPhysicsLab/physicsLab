@@ -6,14 +6,14 @@ from .enums import ExperimentType
 from ._experiment import _Experiment, _ExperimentStack, OpenMode, _check_method
 from .circuit.wire import Wire, Pin
 from ._element_base import ElementBase
-from .typehint import numType, Optional, Union, List, Self
+from .typehint import num_type, Optional, Union, List, Self
 
 def crt_element(
         experiment: _Experiment,
         name: str,
-        x: numType = 0,
-        y: numType = 0,
-        z: numType = 0,
+        x: num_type = 0,
+        y: num_type = 0,
+        z: num_type = 0,
         elementXYZ: Optional[bool] = None,
         *args,
         **kwargs
@@ -50,9 +50,9 @@ def crt_element(
 
 def get_element_from_position(
         experiment: _Experiment,
-        x: numType,
-        y: numType,
-        z: numType,
+        x: num_type,
+        y: num_type,
+        z: num_type,
 ) -> Union[ElementBase, List[ElementBase]]:
     ''' 通过坐标索引元件 '''
     if not isinstance(x, (int, float)) or \

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import copy
 
-from physicsLab.typehint import numType, Self, final
+from physicsLab.typehint import num_type, Self, final
 from physicsLab import _tools
 
 class ElementBase:
@@ -10,7 +10,7 @@ class ElementBase:
     def __init__(self) -> None:
         raise NotImplementedError
 
-    def set_position(self, x: numType, y: numType, z: numType) -> Self:
+    def set_position(self, x: num_type, y: num_type, z: num_type) -> Self:
         ''' 设置原件的位置 '''
         if not isinstance(x, (int, float)) or \
                 not isinstance(y, (int, float)) or \

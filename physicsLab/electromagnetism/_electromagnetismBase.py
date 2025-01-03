@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from physicsLab._element_base import ElementBase
-from physicsLab.typehint import numType, Self, override
+from physicsLab.typehint import num_type, Self, override
 from physicsLab import _tools
 from physicsLab import errors
 from physicsLab._experiment import get_current_experiment
@@ -8,9 +8,9 @@ from physicsLab.enums import ExperimentType
 
 class _ElectromagnetismMeta(type):
     def __call__(cls,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  *args,
                  **kwargs
                  ):
@@ -39,11 +39,13 @@ class _ElectromagnetismMeta(type):
 
 class ElectromagnetismBase(ElementBase, metaclass=_ElectromagnetismMeta):
     ''' 所有电与磁元件的父类 '''
+    data: dict
+
     def __init__(self) -> None:
         raise NotImplementedError
 
     @override
-    def set_position(self, x: numType, y: numType, z: numType) -> Self:
+    def set_position(self, x: num_type, y: num_type, z: num_type) -> Self:
         if not isinstance(x, (int, float)) or \
                 not isinstance(y, (int, float)) or \
                 not isinstance(z, (int, float)):
@@ -55,9 +57,9 @@ class ElectromagnetismBase(ElementBase, metaclass=_ElectromagnetismMeta):
 
     def set_rotation(
             self,
-            x_r: numType,
-            y_r: numType,
-            z_r: numType,
+            x_r: num_type,
+            y_r: num_type,
+            z_r: num_type,
     ) -> Self:
         ''' 设置原件的角度 '''
         if not isinstance(x_r, (int, float)) or \

@@ -2,12 +2,12 @@
 from physicsLab import _tools
 from physicsLab import errors
 from physicsLab._element_base import ElementBase
-from physicsLab.typehint import numType, Self, override, final
+from physicsLab.typehint import num_type, Self, override, final
 from physicsLab.enums import ExperimentType
 from physicsLab._experiment import get_current_experiment
 
 class _PlanetMeta(type):
-    def __call__(cls, x:numType, y: numType, z:numType, *args, **kwargs):
+    def __call__(cls, x:num_type, y: num_type, z:num_type, *args, **kwargs):
         if not isinstance(x, (int, float)) or \
                 not isinstance(y, (int, float)) or \
                 not isinstance(z, (int, float)):
@@ -36,20 +36,14 @@ class _PlanetMeta(type):
 
 class PlanetBase(ElementBase, metaclass=_PlanetMeta):
     ''' 星球基类 '''
+    data: dict
+
     def __init__(self) -> None:
         raise NotImplementedError
 
-    def __define_virtual_var_to_let_ide_show(
-            self, data: dict,
-    ):
-        ''' useless
-            这些变量的定义在CircuitMeta中
-        '''
-        self.data: dict = data
-
     @final
     @override
-    def set_position(self, x: numType, y: numType, z: numType) -> Self:
+    def set_position(self, x: num_type, y: num_type, z: num_type) -> Self:
         ''' 设置位置坐标 '''
         if not isinstance(x, (int, float)) or \
                 not isinstance(y, (int, float)) or \
@@ -60,7 +54,7 @@ class PlanetBase(ElementBase, metaclass=_PlanetMeta):
         self._position = _tools.position(x, y, z)
         return super().set_position(x, y, z)
 
-    def set_velocity(self, x_v: numType, y_v: numType, z_v: numType) -> Self:
+    def set_velocity(self, x_v: num_type, y_v: num_type, z_v: num_type) -> Self:
         ''' 设置速度
         '''
         if not isinstance(x_v, (int, float)) or \
@@ -70,7 +64,7 @@ class PlanetBase(ElementBase, metaclass=_PlanetMeta):
         self.data["Velocity"] = f"{x_v},{z_v},{y_v}"
         return self
 
-    def set_acceleration(self, x_a: numType, y_a: numType, z_a: numType) -> Self:
+    def set_acceleration(self, x_a: num_type, y_a: num_type, z_a: num_type) -> Self:
         ''' 设置加速度
         '''
         if not isinstance(x_a, (int, float)) or \

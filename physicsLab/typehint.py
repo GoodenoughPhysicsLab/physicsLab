@@ -4,7 +4,7 @@ from typing_extensions import *
 
 from physicsLab.savTemplate import Generate
 
-numType: TypeAlias = Union[int, float]
+num_type: TypeAlias = Union[int, float]
 
 class CircuitElementData(TypedDict):
     ModelID: Union[str, Type[Generate]]

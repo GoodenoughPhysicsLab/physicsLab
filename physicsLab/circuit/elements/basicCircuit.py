@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from ..wire import Pin
 from ._circuitbase import CircuitBase, TwoPinMixIn
-from physicsLab.typehint import Optional, numType, CircuitElementData, Self, Generate
+from physicsLab.typehint import Optional, num_type, CircuitElementData, Self, Generate
 
 class _switch_Base(CircuitBase):
     ''' 开关基类 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": Generate, "Identifier": Generate, "IsBroken": False,
             "IsLocked": False, "Properties": {"开关": 0, "锁定": 1.0},
@@ -21,7 +21,7 @@ class _switch_Base(CircuitBase):
 
 class Simple_Switch(_switch_Base, TwoPinMixIn):
     ''' 简单开关 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Simple Switch"
 
@@ -40,7 +40,7 @@ class Simple_Switch(_switch_Base, TwoPinMixIn):
 
 class SPDT_Switch(_switch_Base):
     ''' 单刀双掷开关 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "SPDT Switch"
 
@@ -78,7 +78,7 @@ class SPDT_Switch(_switch_Base):
 
 class DPDT_Switch(_switch_Base):
     ''' 双刀双掷开关 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "DPDT Switch"
 
@@ -128,7 +128,7 @@ class DPDT_Switch(_switch_Base):
 
 class Push_Switch(TwoPinMixIn):
     ''' 按钮开关 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Push Switch", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -140,7 +140,7 @@ class Push_Switch(TwoPinMixIn):
 
 class Air_Switch(TwoPinMixIn):
     ''' 空气开关 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Air Switch", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -170,7 +170,7 @@ class Air_Switch(TwoPinMixIn):
 
 class Incandescent_Lamp(TwoPinMixIn):
     ''' 白炽灯泡 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Incandescent Lamp", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -185,7 +185,7 @@ class Incandescent_Lamp(TwoPinMixIn):
 
 class Battery_Source(TwoPinMixIn):
     ''' 一节电池 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Battery Source", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -197,7 +197,7 @@ class Battery_Source(TwoPinMixIn):
 
 class Student_Source(CircuitBase):
     ''' 学生电源 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Student Source", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -229,7 +229,7 @@ class Student_Source(CircuitBase):
 
 class Resistor(TwoPinMixIn):
     ''' 电阻 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Resistor", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -240,7 +240,7 @@ class Resistor(TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    def set_resistor(self, resistor: numType) -> Self:
+    def set_resistor(self, resistor: num_type) -> Self:
         ''' 设置电阻值 '''
         if not isinstance(resistor, (int, float)):
             raise TypeError
@@ -250,7 +250,7 @@ class Resistor(TwoPinMixIn):
 
 class Fuse_Component(TwoPinMixIn):
     ''' 保险丝 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Fuse Component", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -263,7 +263,7 @@ class Fuse_Component(TwoPinMixIn):
 
 class Slide_Rheostat(CircuitBase):
     ''' 滑动变阻器 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Slide Rheostat", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -295,7 +295,7 @@ class Slide_Rheostat(CircuitBase):
 
 class Multimeter(TwoPinMixIn):
     ''' 多用电表 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Multimeter", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -309,7 +309,7 @@ class Multimeter(TwoPinMixIn):
 
 class Galvanometer(CircuitBase):
     ''' 灵敏电流计 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Galvanometer", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -334,7 +334,7 @@ class Galvanometer(CircuitBase):
 
 class Microammeter(CircuitBase):
     ''' 微安表 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Microammeter", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -359,7 +359,7 @@ class Microammeter(CircuitBase):
 
 class Electricity_Meter(CircuitBase):
     ''' 电能表 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Electricity Meter", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -388,7 +388,7 @@ class Electricity_Meter(CircuitBase):
 
 class Resistance_Box(CircuitBase):
     ''' 电阻箱 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Resistance Box", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -409,7 +409,7 @@ class Resistance_Box(CircuitBase):
     def r(self) -> Pin:
         return Pin(self, 1)
 
-    def set_resistor(self, num: numType) -> Self:
+    def set_resistor(self, num: num_type) -> Self:
         ''' 设置电阻值
         '''
         if not isinstance(num, (int, float)):
@@ -420,7 +420,7 @@ class Resistance_Box(CircuitBase):
 
 class Simple_Ammeter(CircuitBase):
     ''' 直流安培表 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Simple Ammeter", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -446,7 +446,7 @@ class Simple_Ammeter(CircuitBase):
 
 class Simple_Voltmeter(CircuitBase):
     ''' 直流电压表 '''
-    def __init__(self, x: numType, y: numType, z: numType, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Simple Voltmeter", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,

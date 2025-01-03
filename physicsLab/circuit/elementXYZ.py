@@ -6,7 +6,7 @@
 
 from physicsLab import errors
 from physicsLab._tools import position
-from physicsLab.typehint import numType
+from physicsLab.typehint import num_type
 from physicsLab._experiment import get_current_experiment
 from physicsLab.enums import ExperimentType
 
@@ -31,7 +31,7 @@ _Z_UNIT: float = 0.1
 # big_element坐标修正
 _Y_AMEND = 0.045
 
-def xyzTranslate(x: numType, y: numType, z: numType, is_bigElement: bool = False):
+def xyzTranslate(x: num_type, y: num_type, z: num_type, is_bigElement: bool = False):
     ''' 将元件坐标系转换为物实的坐标系 '''
     if get_current_experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
@@ -49,7 +49,7 @@ def xyzTranslate(x: numType, y: numType, z: numType, is_bigElement: bool = False
         x, y, z = amend_big_Element(x, y, z)
     return x, y, z
 
-def translateXYZ(x: numType, y: numType, z: numType, is_bigElement: bool = False):
+def translateXYZ(x: num_type, y: num_type, z: num_type, is_bigElement: bool = False):
     ''' 将物实的坐标系转换为元件坐标系 '''
     if get_current_experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
@@ -69,7 +69,7 @@ def translateXYZ(x: numType, y: numType, z: numType, is_bigElement: bool = False
     return x, y, z
 
 # 设置元件坐标系原点O，输入值为物实坐标系
-def set_O(x: numType, y: numType, z: numType) -> None:
+def set_O(x: num_type, y: num_type, z: num_type) -> None:
     # TODO 如果多次, 重复地set_O的话情况会很糟糕吧，会有很多反直觉的事情发生
     # 或许这个可以移除了?
     if (isinstance(x, (int, float)) and
@@ -81,7 +81,7 @@ def set_O(x: numType, y: numType, z: numType) -> None:
         raise TypeError
 
 # 修正bigElement的坐标
-def amend_big_Element(x: numType, y: numType, z: numType):
+def amend_big_Element(x: num_type, y: num_type, z: num_type):
     return x, y + _Y_AMEND, z
 
 # 获取坐标原点

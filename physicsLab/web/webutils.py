@@ -7,7 +7,7 @@ from . import api
 from . import _async_tool
 from physicsLab import errors
 from physicsLab.enums import Category
-from physicsLab.typehint import Optional, Callable, numType, override
+from physicsLab.typehint import Optional, Callable, num_type, override
 
 async def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
     ''' 运行func, 直到成功或达到max_retry的条件
@@ -49,8 +49,8 @@ class NotificationsMsgIter(_async_tool.AsyncTool):
     ''' 获取一段时间的管理记录 (可指定用户) '''
     def __init__(
             self,
-            start_time: numType,
-            end_time: Optional[numType] = None,
+            start_time: num_type,
+            end_time: Optional[num_type] = None,
             user: Optional[api.User] = None,
             user_id: Optional[str] = None,
             max_retry: Optional[int] = 0,
@@ -142,8 +142,8 @@ class BannedMsgIter:
 
     def __init__(
             self,
-            start_time: numType,
-            end_time: Optional[numType] = None,
+            start_time: num_type,
+            end_time: Optional[num_type] = None,
             user: Optional[api.User] = None,
             user_id: Optional[str] = None,
             max_retry: Optional[int] = 0,
@@ -219,8 +219,8 @@ class WarnedMsgIter:
             self,
             user: api.User,
             user_id: str,
-            start_time: numType,
-            end_time: Optional[numType] = None,
+            start_time: num_type,
+            end_time: Optional[num_type] = None,
             maybe_warned_message_callback: Optional[Callable] = None,
     ) -> None:
         ''' 查询警告记录

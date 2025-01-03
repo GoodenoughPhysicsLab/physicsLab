@@ -8,7 +8,7 @@ from physicsLab.circuit import elements
 from physicsLab.circuit.wire import crt_wire, Pin
 from physicsLab._experiment import get_current_experiment
 from physicsLab.enums import ExperimentType
-from physicsLab.typehint import numType, Optional, Self, Union, Type, List
+from physicsLab.typehint import num_type, Optional, Self, Union, Type, List
 
 class Const_NoGate:
     ''' 只读非门，若没有则创建一个只读非门，若已存在则不会创建新的元件 '''
@@ -16,9 +16,9 @@ class Const_NoGate:
     __singleton_NoGate = None
 
     def __new__(cls,
-                x: numType,
-                y: numType,
-                z: numType,
+                x: num_type,
+                y: num_type,
+                z: num_type,
                 elementXYZ: Optional[bool] = None,
                 ):
         if Const_NoGate.__singleton_NoGate is None:
@@ -36,9 +36,9 @@ class Const_NoGate:
 class Super_AndGate:
     ''' 多引脚与门, 引脚数为num '''
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,
                  ) -> None:
@@ -130,9 +130,9 @@ class Super_AndGate:
 class Super_OrGate:
     ''' 多引脚或门, 引脚数为num '''
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,
                  ) -> None:
@@ -202,9 +202,9 @@ class Super_OrGate:
 class Super_NorGate:
     ''' 多引脚或非门, 引脚数为num '''
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,
                  ) -> None:
@@ -277,9 +277,9 @@ class Tick_Counter:
         如果输出为1, 则进入下一个周期, 在下一次输入了num次时输出为1, 否则为0
     '''
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,
                  ) -> None:
@@ -346,9 +346,9 @@ class Tick_Counter:
 class Two_four_Decoder:
     ''' 2-4译码器 '''
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  elementXYZ: Optional[bool] = None,
                  ) -> None:
         if not isinstance(x, (int, float)) or \
@@ -394,9 +394,9 @@ class Switched_Register:
     ''' 可以切换输入的寄存器
     '''
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  ) -> None:
@@ -450,9 +450,9 @@ class Switched_Register:
 
 class Equal_to:
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  ) -> None:
@@ -489,9 +489,9 @@ class Equal_to:
 
 class Signed_Sum:
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  ) -> None:
@@ -546,9 +546,9 @@ class Signed_Sum:
 
 class _Simple_Logic_Meta(type):
     def __call__(cls,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
@@ -598,13 +598,13 @@ class _Base(metaclass=_Simple_Logic_Meta):
 
         return self._elements[item]
 
-    def set_HighLevelValue(self, num: numType) -> Self:
+    def set_HighLevelValue(self, num: num_type) -> Self:
         ''' 设置高电平的值 '''
         for element in self._elements:
             element.set_HighLeaveValue(num)
         return self
 
-    def set_LowLevelValue(self, num: numType) -> Self:
+    def set_LowLevelValue(self, num: num_type) -> Self:
         ''' 设置低电平的值 '''
         for element in self._elements:
             element.set_LowLeaveValue(num)
@@ -613,9 +613,9 @@ class _Base(metaclass=_Simple_Logic_Meta):
 class Sum(_Base):
     ''' 模块化加法电路 '''
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
@@ -679,9 +679,9 @@ class Sum(_Base):
 class Sub(_Base):
     ''' 模块化减法电路 '''
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int, # 减法器的最大计算比特数
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
@@ -771,9 +771,9 @@ class Sub(_Base):
 class AU_SumSub(_Base):
     ''' 无符号加减器 '''
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
@@ -868,9 +868,9 @@ class AU_SumSub(_Base):
 class D_WaterLamp(_Base):
     ''' D触发器流水灯 '''
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int,
                  elementXYZ: Optional[bool] = None, # x, y, z是否为元件坐标系
                  heading: bool = False, # False: 生成的元件为竖直方向，否则为横方向
@@ -972,9 +972,9 @@ class D_WaterLamp(_Base):
 class Register(_Base):
     ''' 寄存器 '''
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int,
                  elementXYZ: Optional[bool] = None, # x, y, z是否为元件坐标系
                  heading: bool = False, # False: 生成的元件为竖直方向，否则为横方向
@@ -1046,9 +1046,9 @@ class Register(_Base):
 class MultiElements(_Base):
     ''' 创建多个元件 '''
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
@@ -1119,9 +1119,9 @@ class MultiElements(_Base):
 
 class Outputs(MultiElements):
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
@@ -1147,9 +1147,9 @@ class Outputs(MultiElements):
 
 class Inputs(MultiElements):
     def __init__(self,
-                 x: numType,
-                 y: numType,
-                 z: numType,
+                 x: num_type,
+                 y: num_type,
+                 z: num_type,
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  heading: bool = False,  # False: 生成的元件为竖直方向，否则为横方向
