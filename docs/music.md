@@ -10,7 +10,7 @@
 ```Python
 from physicsLab import *
 
-with experiment("example"):
+with Experiment(OpenMode.load_by_sav_name, "example"):
     music.Midi("/your/path/of/midi.mid").to_piece(max_notes=2000).release(-1, -1, 0)
 ```
 
@@ -93,7 +93,7 @@ music.Midi("/your/path/of/midi").sound()
 ```Python
 from physicsLab import *
 
-with experiment("example"):
+with Experiment(OpenMode.load_by_sav_name, "example"):
     p = Piece([Note(time=1), Note(time=2)])
 
     p.release() # 转化为物实的音乐电路

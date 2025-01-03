@@ -1,12 +1,10 @@
 # 操作本地实验（存档） experiment
 
 ## class Experiment
-> Note: 该类不要与`experiment`混淆，`class experiment`仅仅提供了用with操作存档的更好用的api，本质上还是对Experiment类的封装
-
 `Experiment`类的实例有一些attr:
 * `PlSav`: 物实存档json对应的dict
 
-1个Experiment类的实例用于操作1个实验存档  
+1个Experiment类的实例仅用于操作1个实验存档,  无法同时创建2个对应同一个实验的Experiment实例。
 Experiment类的方法会在后面依次介绍
 
 ## enum class ExperimentType
@@ -30,35 +28,19 @@ ExperimentType是枚举类，用于指定实验类型。目前支持三种类型
 ## 打开存档
 这是***最推荐的方式***。你可以用with语句打开一个存档
 ```python
-with experiment('example') as exp:
-    # to do something
-    # 该方式会自动打开存档
-    # 若打开失败会自动创建存档
-    # 而且`Experiment`类在导入存档后默认不会导入元件信息, 需要调用`load_elements`；
-    # 但`with experiment`默认会导入存档的元件信息
-    # 执行完代码之后会自动写入存档
-    ...
+# 参数含义: 打开模式为打开已经存在的存档，存档名为example
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
+    # 使用with Experiment会自动导入元件信息 (也就是默认调用 load_elements)
+    # 执行完代码之后会自动保存存档并使expe退出对存档的操作（无法再操作存档）
+    ''' do something '''
 ```
-`exp`是一个`Experiment`类的实例，因此你可以是使用exp来轻易地使用`Experiment`类的所有方法
+`expe`是一个`Experiment`类的实例，因此你可以通过`expe`来轻易地使用`Experiment`类的所有方法来操作存档
 
-`experiment`还有很多其他参数：
-*  `load_elements`: 是否读取存档的元件信息, 默认为`True`
-*  `delete`: 是否删除实验存档
-*  `write`: 是否写入存档
-*  `elementXYZ`: 是否将该实验设定为元件坐标系
-*  `experiment_type`: 若创建实验，支持传入指定实验类型
-*  `extra_filepath`: 将存档写入额外的路径
-*  `force_crt`: 强制创建一个实验, 若已存在则覆盖已有实验
-*  `is_exit`: 若为True, 则不保存实验
-
-> Note: 当你使用`Experiment`导入一个实验而不调用`read`时，你仅仅只会损失实验所有原件的信息，而`force_crt`则会覆盖掉实验的所有信息
+> Note: 当你使用`Experiment`导入一个实验而不调用`load_elements`时，你仅仅只会损失实验所有原件的信息，而`force_crt`则会覆盖掉实验的所有信息
 
 > Note: 任何尝试重复导入实验（不论是读取实验还是创建实验）都会导致抛出错误
 
-## 打开存档
-***低级api***
-
-你必须指明你要打开的是哪个存档：
+更底层的使用方式是，你必须指明你要打开的是哪个存档：
 ```Python
 from physicsLab import *
 Experiment(OpenMode.load_by_filepath, "/your/path/of/sav") # 根据存档的文件名（也就是xxxx.sav）进行导入
@@ -80,31 +62,33 @@ Experiment(OpenMode.load_by_plar_app, "642cf37a494746375aae306a", Category.Discu
 ***低级api***
 
 如果你想要创建一个实验：
-
-函数原型：
 ```python
-def __init__(self, open_mode: OpenMode, sav_name: str, experiment_type: ExperimentType, force_crt: bool) -> None:
+# 参数含义: 打开模式为创建新存档；存档名为example；实验的类型为电学实验；如果要创建的实验已经存在，将会抛出异常
+with Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=False) as expe:
+    # 使用with Experiment的话，执行完代码之后会自动保存存档并使expe退出对存档的操作（无法再操作存档）
+    ...
 ```
-
+上面代码等价于:
 ```python
 from physicsLab import *
-Experiment(OpenMode.crt, "example", ExperimentType.Circuit, False)
+expe = Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=False)
+# do something
+expe.save()
+expe.exit()
 ```
 
 * `experiment_type`参数用于指定创建实验的类型
-* `force_crt`：
+* `force_crt` (默认为`False`)：
   * `True`时，如果要创建的实验已经存在，则会删除那个实验并创建一个新实验
-  * `False`时，如果要创建的实验已经存在，那么该函数会抛出错误
+  * `False`时，如果要创建的实验已经存在，将会抛出异常
 
-如果你希望打开存档失败不报错而是创建存档，你可以使用
+如果你希望打开存档失败后创建存档，你可以使用
 ```Python
 try:
     expe = Experiment(OpenMode.load_by_sav_name, "example")
 except ExperimentNotExistError:
-    expe = Experiment(OpenMode.crt, "example", ExperimentType.Circuit, False)
+    expe = Experiment(OpenMode.crt, "example", ExperimentType.Circuit)
 ```
-
-***但使用这些api的效果都不如使用`with experiment()`稳定且方便***
 
 ## 搜索存档&判断存档是否存在
 ***低级api***
@@ -118,24 +102,27 @@ except ExperimentNotExistError:
 ```Python
 from physicsLab import *
 
-with experiment("example") as exp:
-    load_elements(exp)
-    # do something
+expe = Experiment(OpenMode.load_by_sav_name, "example")
+load_elements(expe)
+# do something
+expe.save()
+expe.exit()
 ```
 
-> Note: with experiment()默认会导入存档的元件信息, 因此更加方便好用
+> Note: with Experiment()默认会导入存档的元件信息, 因此更加方便好用
 
 ## 向物实发布新的实验
-如果需要修改实验的tag, 需要手动改`Experiment().PlSav["Summary"]["Tags"]`
+如果需要修改实验的tag, 可以使用`Experiment.edit_tags`
 ```Python
 from physicsLab import *
 
 user = web.User(YOUR_UESRNAME, YOUR_PASSWORD)
 # 也可使用 web.User(token=YOUR_TOKEN, auth_code=YOUR_AUTH_CODE)
 
-with experiment("example") as exp:
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
     # do something
-    exp.upload(user, Category.Discussion, YOUR_IMAGE_PATH)
+    # 参数含义：上传该实验到物实的哪个用户, 是实验区还是讨论区, 封面图片的路径
+    expe.upload(user, Category.Discussion, YOUR_IMAGE_PATH)
 ```
 
 ## 向物实上传已发布的实验
@@ -144,11 +131,10 @@ from physicsLab import *
 
 user = web.User(YOUR_UESRNAME, YOUR_PASSWORD)
 
-expe = Experiment(OpenMode.load_by_plar_app, "642cf37a494746375aae306a", Category.Discussion)
-load_elements(expe)
-expe.update(user, YOUR_IMAGE_PATH)
-expe.exit()
-
+with Experiment(OpenMode.load_by_plar_app, "642cf37a494746375aae306a", Category.Discussion) as expe:
+  expe.update(user, YOUR_IMAGE_PATH)
+  expe.exit() # 这里手动调用了expe.exit()之后, `with Experiment`在退出的时候就不会执行默认的保存存档并退出的操作了
+              # 也就是说，这样写，Experiment.save() 不会被调用
 ```
 
 ## 对存档名进行重命名
@@ -156,13 +142,12 @@ expe.exit()
 ```Python
 from physicsLab import *
 
-with experiment("example") as exp:
-    exp.entitle("new_name")
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
+    expe.entitle("new_name")
 ```
 
 ## 保存存档的状态
-如果你使用的是`with experiment()`的话，你不需要自己操心这一步骤  
-如果你使用的是低级api的话，最后你需要调用该函数往存档里写入程序运行之后的结果：
+如果你使用的是`with Experiment`的话，你通常不需要自己操心这一步骤
 
 ```Python
 from physicsLab import *
@@ -177,23 +162,33 @@ exp.exit()
 *  `ln`: 输出存档的元件字符串是否换行
 *  `no_print_info`: 是否打印写入存档的元件数, 导线数(如果是电学实验的话)
 
+不过请注意，`with Experiment`支持自定义退出的方式:
+```Python
+from physicsLab import *
+
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
+    # do something
+    expe.exit() # expe已经退出对存档的操作了, 就不会再在退出with的时候调用expe.save()了
+```
+
 ## 删除存档
 除了创建存档，你也可以删除存档：
 ```Python
 from physicsLab import *
 
-with experiment("example", delete=True):
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
     # maybe do something
+    expe.exit(delete=True) # 在退出操作存档的时候执行删除存档的操作
+    # 并且由于已经手动调用了expe.exit(), 在退出with的时候不会调用expe.save()了
 ```
-你也可以加上`write=False`，不过没必要
 
 更原始的方式是：
 ```Python
 from physicsLab import *
 
-exp = Experiment(OpenMode.load_by_sav_name, "example")
+expe = Experiment(OpenMode.load_by_sav_name, "example")
 # maybe do something
-exp.delete()
+expe.exit(delete=True)
 ```
 
 ## 停止操作存档
@@ -219,13 +214,23 @@ exp.exit()
 Logic_Input() # error: 不可以在没有实验打开的情况下创建元件
 ```
 
+``` python
+from physicsLab import *
+
+expe = Experiment(OpenMode.load_by_sav_name, "example")
+# do something
+expe.exit()
+# expe.save() # 无法对已经退出操作的存档调用任何Experiment的方法进行操作
+# expe.exit() # 无法重复调用.exit
+```
+
 ## 编辑存档的发布信息
 使用`edit_publish_info`方法, `title`参数修改发布标题，`description`参数定义发布描述，`wx`参数为是否续写`description`的内容
 ```python
 from physicsLab import *
 
-with experiment("example") as exp:
-    exp.edit_publish_info(title="new_title", description="new_description", wx=True)
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
+    expe.edit_publish_info(title="new_title", description="new_description", wx=True)
 ```
 
 ## 多存档操作
@@ -233,13 +238,14 @@ with experiment("example") as exp:
 ```Python
 get_current_experiment()
 ```
-使用`with experiment`也在多存档操作中被推荐：
+
+使用`with Experiment`也在多存档操作中被推荐：
 ```Python
 from physicsLab import *
 
-with experiment("example") as exp1:
+with Experiment(OpenMode.load_by_sav_name, "example") as exp1:
     # do something in example
-    with experiment("example2") as exp2:
+    with Experiment(OpenMode.load_by_sav_name, "example2") as exp2:
         # do something in example2
 ```
 
@@ -264,10 +270,11 @@ rotation_x, rotation_y, rotation_z为观察者的角度
 ```Python
 from physicslab import *
 
-with experiment("example") as exp:
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
     # do something
-    exp.export()
+    eexp.export()
 ```
+
 export有2个参数：
 * `output_path`: 导出的文件路径
 * `sav_name`: 导出的存档名（即在物实可以直接看到的存档的名字）
@@ -279,12 +286,12 @@ Experiment.merge(other: Experiment, x: numType, y: numType, z: numType, elementX
 `other`为要合并的实验  
 `x, y, z, elementXYZ`为重新设置要合并的实验的坐标系原点在self的坐标系的位置  
 ```Python
-with experiment("example1") as exp:
+with Experiment(OpenMode.load_by_sav_name, "example1") as expe:
     Logic_Input().o - Logic_Output(1, 0, 0, elementXYZ=True).i
 
-    with experiment("example2") as exp2:
+    with Experiment(OpenMode.load_by_sav_name, "example2") as exp2:
         Logic_Output(0, 0, 0.1)
-        exp2.merge(exp, 1, 0, 0, elementXYZ=True)
+        exp2.merge(expe, 1, 0, 0, elementXYZ=True)
 ```
 
 ## 手动设置输出路径
@@ -299,8 +306,8 @@ with experiment("example1") as exp:
 ```Python
 from physicsLab import *
 
-with experiment("example") as exp:
-    exp.paused()
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
+    expe.paused()
     # 如果要解除暂停实验，请使用exp.paused(False)
     ...
 ```

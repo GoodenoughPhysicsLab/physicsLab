@@ -18,9 +18,9 @@ def my_test_dec(method: Callable):
 class BasicTest(TestCase, ViztracerTool):
     @my_test_dec
     def test_experiment_stack(self):
-        expe1 = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
+        expe1 = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         self.assertTrue(_ExperimentStack.inside(expe1))
-        expe2 = Experiment(OpenMode.crt, "_Test", ExperimentType.Circuit, True)
+        expe2 = Experiment(OpenMode.crt, "_Test", ExperimentType.Circuit, force_crt=True)
         self.assertTrue(_ExperimentStack.inside(expe2))
         expe1.exit()
         self.assertFalse(_ExperimentStack.inside(expe1))
@@ -61,17 +61,17 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_load_from_app(self):
-        expe = Experiment(OpenMode.load_by_plar_app, "6774ffb4c45f930f41ccedf8", Category.Discussion, user)
+        expe = Experiment(OpenMode.load_by_plar_app, "6774ffb4c45f930f41ccedf8", Category.Discussion, user=user)
         load_elements(expe)
         self.assertTrue(count_elements(expe) == 91)
         expe.exit()
 
-        expe = Experiment(OpenMode.load_by_plar_app, "677500138c54132a83289f9c", Category.Discussion, user)
+        expe = Experiment(OpenMode.load_by_plar_app, "677500138c54132a83289f9c", Category.Discussion, user=user)
         load_elements(expe)
         self.assertTrue(count_elements(expe) == 27)
         expe.exit()
 
-        expe = Experiment(OpenMode.load_by_plar_app, "67750037c45f930f41ccee02", Category.Discussion, user)
+        expe = Experiment(OpenMode.load_by_plar_app, "67750037c45f930f41ccee02", Category.Discussion, user=user)
         load_elements(expe)
         self.assertTrue(count_elements(expe) == 7)
         expe.exit()
@@ -99,7 +99,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_normal_circuit_usage(self):
-        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
+        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         a = Yes_Gate(0, 0, 0)
         self.assertEqual(count_elements(expe), 1)
         self.assertEqual(a.get_position(), (0, 0, 0))
@@ -116,7 +116,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_readExperiment(self):
-        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
+        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
 
         self.assertEqual(count_elements(expe), 0)
         self.assertEqual(count_wires(), 0)
@@ -131,10 +131,10 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_crtExperiment(self):
-        exp: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
+        exp: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         exp.save()
         try:
-            Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, False) # will fail
+            Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit) # will fail
         except ExperimentExistError:
             pass
         else:
@@ -144,7 +144,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_crt_wire(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             a = Or_Gate(0, 0, 0)
             crt_wire(a.o, a.i_up, "red")
             self.assertEqual(count_wires(), 1)
@@ -154,7 +154,7 @@ class BasicTest(TestCase, ViztracerTool):
             expe.exit()
 
     def test_same_crt_wire(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             a = Or_Gate(0, 0, 0)
             crt_wire(a.o, a.i_up, "red")
             crt_wire(a.i_up, a.o, "blue")
@@ -163,7 +163,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_union_Sum(self):
-        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
+        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         lib.Sum(0, -1, 0, bitnum=64)
         self.assertEqual(count_elements(expe), 64)
         self.assertEqual(count_wires(), 63)
@@ -174,7 +174,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_get_Element(self):
-        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
+        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         Or_Gate(0, 0, 0)
         crt_wire(
             get_element_from_position(expe, 0, 0, 0).o,
@@ -189,7 +189,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_errors(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             ''' 确保__test__实验不存在 '''
             expe.exit(delete=True)
         try:
@@ -201,7 +201,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_elementXYZ_2(self):
-        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
+        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         set_elementXYZ(True)
         set_O(-1, -1, 0)
         for x in range(10):
@@ -219,8 +219,8 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_open_manyExperiment(self):
-        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as exp2:
+        expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as exp2:
             Logic_Input(0, 0, 0)
             self.assertEqual(1, count_elements(exp2))
             exp2.exit()
@@ -228,7 +228,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_with_and_coverPosition(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             Logic_Input(0, 0, 0)
             Or_Gate(0, 0, 0)
             self.assertEqual(len(get_element_from_position(expe, 0, 0, 0)), 2)
@@ -236,7 +236,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_del_Element(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             Logic_Input(0, 0, 0).o - Or_Gate(0, 0, 0).o
             del_element(expe, get_element_from_index(expe, 2))
             self.assertEqual(count_elements(expe), 1)
@@ -246,7 +246,7 @@ class BasicTest(TestCase, ViztracerTool):
     # 测逝模块化电路连接导线
     @my_test_dec
     def test_wires(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             a = lib.Inputs(0, 0, 0, bitnum=8)
             b = lib.Outputs(0.6, 0, 0, bitnum=8, elementXYZ=False)
             Logic_Output(0.6, 0, 0.1, elementXYZ=False)
@@ -261,7 +261,7 @@ class BasicTest(TestCase, ViztracerTool):
     # 测逝模块化加法电路
     @my_test_dec
     def test_union_Sum2(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             a = lib.Inputs(-1, 0, 0, bitnum=8)
             b = lib.Inputs(-2, 0, 0, bitnum=8)
             c = lib.Sum(0, 0, 0, bitnum=8)
@@ -274,7 +274,7 @@ class BasicTest(TestCase, ViztracerTool):
     # 测试打开实验类型与文件不吻合
     @my_test_dec
     def test_ExperimentType(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Electromagnetism, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Electromagnetism, force_crt=True) as expe:
             try:
                 Positive_Charge(0, 0, 0)
                 Logic_Input(0, 0, 0)
@@ -287,7 +287,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_electromagnetism(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Electromagnetism, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Electromagnetism, force_crt=True) as expe:
             Negative_Charge(-0.1, 0, 0)
             Positive_Charge(0.1, 0, 0)
             self.assertEqual(count_elements(expe), 2)
@@ -302,7 +302,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_union_Sub(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             set_elementXYZ(True)
             a = lib.Sub(0, 0, 0, bitnum=8, fold=False)
             crt_wires(lib.Inputs(-3, 0, 0, bitnum=8).outputs, a.minuend)
@@ -317,7 +317,7 @@ class BasicTest(TestCase, ViztracerTool):
     # 测试简单乐器设置音高的三种方法
     @my_test_dec
     def test_Simple_Instrument(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             a = Simple_Instrument(0, 0, 0, pitch=48)
             a = Simple_Instrument(0, 0, 0).set_tonality(48)
             a = Simple_Instrument(0, 0, 0, pitch="C3")
@@ -328,7 +328,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_getElementError(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             Logic_Input(0, 0, 0)
             try:
                 get_element_from_index(expe, 2)
@@ -351,7 +351,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_is_bigElement(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             self.assertEqual(Logic_Output.is_bigElement, False)
             self.assertEqual(Multiplier.is_bigElement, True)
             self.assertEqual(Or_Gate.is_bigElement, False)
@@ -362,7 +362,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_musicPlayer(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             l = (0, 2, 4, 5, 7, 9, 11)
 
             t = music.Piece()
@@ -376,23 +376,23 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_mutiple_notes_in_Simple_Instrument(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             Simple_Instrument(0, 0, 0).add_note(67) # type: ignore
             expe.exit()
 
     @my_test_dec
     def test_load_midi(self):
-        expe = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True)
+        expe = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         music.Midi(os.path.join(TEST_DATA_DIR, "鼓哥.mid")).to_piece(max_notes=None).release(-1, -1, 0)
         self.assertTrue(count_elements(expe) == 4268)
         expe.exit()
 
     @my_test_dec
     def test_mergeExperiment(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             Logic_Input(0, 0, 0).o - Logic_Output(1, 0, 0, elementXYZ=True).i
 
-            with Experiment(OpenMode.crt, "_Test", ExperimentType.Circuit, True) as exp2:
+            with Experiment(OpenMode.crt, "_Test", ExperimentType.Circuit, force_crt=True) as exp2:
                 Logic_Output(0, 0, 0.1)
                 exp2.merge(expe, 1, 0, 0, elementXYZ=True)
 
@@ -402,9 +402,9 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_link_wire_in_twoExperiment(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             a = Logic_Input(0, 0, 0)
-            with Experiment(OpenMode.crt, "_Test", ExperimentType.Circuit, True) as exp2:
+            with Experiment(OpenMode.crt, "_Test", ExperimentType.Circuit, force_crt=True) as exp2:
                 b = Logic_Output(0, 0, 0)
                 try:
                     a.o - b.i
@@ -418,11 +418,11 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_merge_Experiment2(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             e = Yes_Gate(0, 0, 0)
             e.i - e.o
 
-            with Experiment(OpenMode.crt, "_Test", ExperimentType.Circuit, True) as exp2:
+            with Experiment(OpenMode.crt, "_Test", ExperimentType.Circuit, force_crt=True) as exp2:
                 Logic_Output(0, 0, 0.1)
                 exp2.merge(expe, 1, 0, 0, elementXYZ=True)
                 a = get_element_from_position(exp2, 1, 0, 0)
@@ -430,11 +430,12 @@ class BasicTest(TestCase, ViztracerTool):
 
                 self.assertEqual(count_elements(exp2), 2)
                 self.assertEqual(count_wires(), 1)
+                exp2.exit()
             expe.exit()
 
     @my_test_dec
     def test_crt_self_wire(self):
-        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, True) as expe:
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             e = Logic_Output(0, 0, 0)
             try:
                 e.i - e.i

@@ -5,7 +5,7 @@
 物实元件与其相应的类名在[所有元件.md](elements.md)中查看  
 例：
 ```python
-with experiment("example"):
+with Experiment(OpenMode.load_by_sav_name, "example"):
     Logic_Input()  # 创建一个逻辑输入
     Logic_Output() # 创建一个逻辑输出
     b = Or_Gate()  # 创建一个或门
@@ -15,7 +15,7 @@ with experiment("example"):
 ```python
 from physicsLab import *
 
-with experiment("example") as expe:
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
     crt_element(expe, "Logic Input", 0, 0, 0) # Model ID
     crt_element(expe, "Logic_Input", 0, 0, 0) # class name
 ```
@@ -35,7 +35,7 @@ with experiment("example") as expe:
 ```python
 from physicsLab import *
 
-with experiment("example") as expe:
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
     get_element_from_position(expe, 0, 0, 0) # x, y, z
     get_element_from_index(expe, index=1) # 通过元件是第多少个被创建的来获取
     get_element_from_identifier(expe, "fe089d7e37114de394918a261c53df00") # 通过元件的Identifier来获取
@@ -50,7 +50,7 @@ with experiment("example") as expe:
 ```Python
 from physicsLab import *
 
-with experiment("example"):
+with Experiment(OpenMode.load_by_sav_name, "example"):
     No_Gate() # index = 1
     Or_Gate(0, 0, 0.1) # index = 2
 ```
@@ -61,12 +61,12 @@ with experiment("example"):
 ```Python
 from physicsLab import *
 
-with experiment("example", force_crt=True) as expe:
+with Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=True) as expe:
    Logic_Input(1, 0, 0, elementXYZ=True)
    Logic_Output(1, 0, 0)
    print(get_element_from_position(expe, 1, 0, 0))
 
-with experiment("example", load_elements=True) as expe:
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
    Logic_Input(1, 0, 0, elementXYZ=True)
    Logic_Output(1, 0, 0)
    print(get_element_from_position(expe, 1, 0, 0))
@@ -89,7 +89,7 @@ Successfully update experiment "example"! 4 elements, 0 wires.
 ```python
 from physicsLab import *
 
-with experiment("example") as expe:
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
   a = Logic_Input(0, 0, 0)
   del_element(expe, a) # input: element's self, output: None
 ```
@@ -105,16 +105,16 @@ with experiment("example") as expe:
 ```Python
 from physicsLab import *
 
-expe = Experiment("example")
+expe = Experiment(OpenMode.load_by_sav_name, "example")
 set_elementXYZ(True) # 将expe设置为原件坐标系
 # do something
-expe.write()
+expe.save()
 ```
 当你只希望某个元件是元件坐标系，而其他元件不受影响时，你可以在创建元件时传入对应参数
 ```Python
 from physicsLab import *
 
-with experiment("example"):
+with Experiment(OpenMode.load_by_sav_name, "example"):
     And_Gate(0, 0, 0.1) # 这个或门的坐标为物实坐标系
     Or_Gate(0, 1, 0, elementXYZ=True) # 这个或门的坐标为元件坐标系
 ```
@@ -124,14 +124,14 @@ with experiment("example"):
 ```python
 from physicsLab import *
 
-with experiment("example"):
+with Experiment(OpenMode.load_by_sav_name, "example"):
     print(is_elementXYZ())
 ```
 如果你想查看某个元件是否为元件坐标系，可以通过元件属性`is_elementXYZ`查看：
 ```Python
 from physicsLab import *
 
-with experiment("example"):
+with Experiment(OpenMode.load_by_sav_name, "example"):
   a = Logic_Input()
   print(a.is_elementXYZ)
 ```
@@ -141,7 +141,7 @@ with experiment("example"):
 ```Python
 from physicsLab import *
 
-with experiment("example"):
+with Experiment(OpenMode.load_by_sav_name, "example"):
     set_O(0.2, 0.2, 0.1)
     print(get_OriginPosition()) # 获取坐标原点
 ```
@@ -155,7 +155,7 @@ with experiment("example"):
 ```Python
 from physicsLab import *
 
-with experiment("example"):
+with Experiment(OpenMode.load_by_sav_name, "example"):
     print(get_xyzUnit())
 ```
 
@@ -168,7 +168,7 @@ with experiment("example"):
 ```python
 from physicsLab import *
 
-with experiment("example"):
+with Experiment(OpenMode.load_by_sav_name, "example"):
     a = Logic_Input()
 
     # methods

@@ -989,6 +989,7 @@ class User:
     async def async_modify_info(self, target: str):
         return await _async_wrapper(self.modify_info, target)
 
+    # TODO 该api有问题, 应该让用户指定ActivityID
     def receive_bonus(self) -> dict:
         ''' 领取每日签到奖励
         '''

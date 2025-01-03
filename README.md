@@ -26,10 +26,13 @@
 * 大多数物实网络api封装的支持 (直接与物实服务器进行交互)
 
 ## 稳定&兼容
-鉴于目前用户较少, 深度使用该库的用户几乎没有, 因此不考虑稳定&兼容。
-并且哪怕用户多了, 也会优先考虑标注弃用, 并推荐转移到新api的模式, 而不是无意义的兼容。
+自版本`2.0.0`及之后, `physicsLab`会逐步增加兼容的考虑与支持
+但这并不意味着无意义的兼容。通常来说，会采用标注弃用, 并推荐转移到新api的模式。
 
-受此影响, `physicsLab`的版本发布采取快照的方式
+* v2.0.0: `clsss Experiment`实验性地加入`stable`支持
+
+## 版本发布
+`physicsLab`的版本发布采取快照的方式, `physicsLab`仅会维护`trunk`
 
 ## 安装教程
 1.  请确保你的电脑有[Python](https://www.python.org)（>=3.8）与[物理实验室AR](https://www.turtlesim.com/)（简称`物实`）（也可以联系物理实验室的开发者[Jone-Chen](https://gitee.com/civitasjohn)）

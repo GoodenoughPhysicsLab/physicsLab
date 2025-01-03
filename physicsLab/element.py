@@ -6,7 +6,7 @@ from .enums import ExperimentType
 from ._experiment import _Experiment, _ExperimentStack, OpenMode, _check_method
 from .circuit.wire import Wire, Pin
 from ._element_base import ElementBase
-from .typehint import numType, Optional, Union, List
+from .typehint import numType, Optional, Union, List, Self
 
 def crt_element(
         experiment: _Experiment,
@@ -205,7 +205,7 @@ def load_elements(experiment: _Experiment) -> _Experiment:
     return experiment
 
 class Experiment(_Experiment):
-    def __enter__(self) -> _Experiment:
+    def __enter__(self) -> Self:
         if self.open_mode != OpenMode.crt:
             load_elements(self)
         return self
@@ -253,12 +253,12 @@ class experiment:
 
     def __enter__(self) -> _Experiment:
         if self.force_crt:
-            self._Experiment: _Experiment = _Experiment(OpenMode.crt, self.sav_name, self.experiment_type, True)
+            self._Experiment: _Experiment = _Experiment(OpenMode.crt, self.sav_name, self.experiment_type, force_crt=True)
         else:
             try:
                 self._Experiment: _Experiment = _Experiment(OpenMode.load_by_sav_name, self.sav_name)
             except errors.ExperimentNotExistError:
-                self._Experiment: _Experiment = _Experiment(OpenMode.crt, self.sav_name, self.experiment_type, False)
+                self._Experiment: _Experiment = _Experiment(OpenMode.crt, self.sav_name, self.experiment_type)
 
         if self.load_elements:
             load_elements(self._Experiment)

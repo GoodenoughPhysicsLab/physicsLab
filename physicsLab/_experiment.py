@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 ''' `physicsLab` 操作存档的核心文件
-    该文件提供操作存档的核心: class `Experiment`
+    该文件提供操作存档的核心: class `_Experiment`
+    为了避免在physicsLab内出现大量的cyclic import
     该文件仅会对存档进行文件读写方面的操作, 这也是为什么需要显示调用`load_elements`的原因
+    `class Experiment`提供了更加用户友好的接口
 '''
 import os
 import json
@@ -122,7 +124,7 @@ class _Experiment:
         '''
 
     @overload
-    def __init__(self, open_mode: OpenMode, content_id: str, category: Category, user: User = User()) -> None:
+    def __init__(self, open_mode: OpenMode, content_id: str, category: Category, /, *, user: User = User()) -> None:
         ''' 从物实服务器中获取存档
             @open_mode = OpenMode.open_from_plar_app
             @content_id: 物实 实验/讨论 的id
@@ -131,7 +133,14 @@ class _Experiment:
         '''
 
     @overload
-    def __init__(self, open_mode: OpenMode, sav_name: str, experiment_type: ExperimentType, force_crt: bool) -> None:
+    def __init__(
+            self,
+            open_mode: OpenMode,
+            sav_name: str,
+            experiment_type: ExperimentType,
+            /, *,
+            force_crt: bool = False
+    ) -> None:
         ''' 创建一个新实验
             @open_mode = OpenMode.crt
             @sav_name: 存档的名字
@@ -140,7 +149,7 @@ class _Experiment:
         '''
 
     #TODO support **kwargs
-    def __init__(self, open_mode: OpenMode, *args) -> None:
+    def __init__(self, open_mode: OpenMode, *args, **kwargs) -> None:
         if not isinstance(open_mode, OpenMode) or len(args) == 0:
             raise TypeError
 
@@ -200,15 +209,10 @@ class _Experiment:
         elif open_mode == OpenMode.load_by_plar_app:
             content_id, category, *rest = args
 
-            if not isinstance(content_id, str) or not isinstance(category, Category):
+            if not isinstance(content_id, str) or not isinstance(category, Category) or len(rest) != 0:
                 raise TypeError
-            if len(rest) == 0:
-                user = User()
-            elif len(rest) == 1:
-                if not isinstance(rest[0], User):
-                    raise TypeError
-                user = rest[0]
-            else:
+            user = kwargs.get("user", User())
+            if not isinstance(user, User):
                 raise TypeError
 
             self.SAV_PATH = os.path.join(_Experiment.SAV_PATH_DIR, f"{content_id}.sav")
@@ -233,12 +237,14 @@ class _Experiment:
             self.PlSav["Summary"] = _summary
             self.__load()
         elif open_mode == OpenMode.crt:
-            sav_name, experiment_type, force_crt, *rest = args
+            sav_name, experiment_type, *rest = args
 
             if not isinstance(sav_name, str) or \
                     not isinstance(experiment_type, ExperimentType) or \
-                    not isinstance(force_crt, bool) or \
                     len(rest) != 0:
+                raise TypeError
+            force_crt = kwargs.get("force_crt", False)
+            if not isinstance(force_crt, bool):
                 raise TypeError
 
             search = search_experiment(sav_name)
@@ -422,7 +428,7 @@ class _Experiment:
             if os.path.exists(self.SAV_PATH): # 之所以判断路径是否存在是因为一个实验可能被创建但还未被写入就调用了delete
                 os.remove(self.SAV_PATH)
                 _colorUtils.color_print(
-                    f"Successfully delete experiment \"{self.PlSav['InternalName']}\"!({self.SAV_PATH})",
+                    f"Successfully delete experiment \"{self.PlSav['InternalName']}\"(\"{self.SAV_PATH}\")",
                     _colorUtils.COLOR.BLUE
                 )
             elif self.open_mode != OpenMode.crt:
@@ -822,6 +828,7 @@ def _open_sav(sav_path) -> dict:
 
     raise errors.InvalidSavError
 
+# TODO 不再返回None, 而是直接走异常传播路径
 def search_experiment(sav_name: str) -> Optional[str]:
     ''' 检测实验是否存在
         @param sav_name: 存档名
