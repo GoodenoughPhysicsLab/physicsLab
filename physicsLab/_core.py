@@ -415,7 +415,7 @@ class _Experiment:
                     color=_colorUtils.COLOR.GREEN
                 )
             else:
-                raise errors.InternalError
+                assert False
 
         return self
 
@@ -758,6 +758,7 @@ class _Experiment:
 
         identifier_to_element: dict = {}
 
+        # TODO 对天体与电学实验的支持可能不太好吧
         for a_element in other.Elements:
             a_element = copy.deepcopy(a_element, memo={id(a_element.experiment): self})
             e_x, e_y, e_z = a_element.get_position()

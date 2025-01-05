@@ -10,7 +10,7 @@ from .element import (
     count_elements, clear_elements, load_elements,
     Experiment, experiment
 )
-from ._experiment import OpenMode, search_experiment, get_current_experiment
+from ._core import OpenMode, search_experiment, get_current_experiment
 # 实验, 标签类型
 from .enums import *
 # 电学实验

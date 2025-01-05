@@ -3,7 +3,7 @@
 import base64
 
 from physicsLab import errors
-from physicsLab._experiment import _Experiment
+from physicsLab._core import _Experiment
 from physicsLab.circuit.elements import CircuitBase
 from physicsLab.typehint import TypedDict, Self, List, Optional
 

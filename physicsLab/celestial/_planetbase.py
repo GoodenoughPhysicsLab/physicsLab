@@ -3,7 +3,7 @@ from physicsLab import _tools
 from physicsLab import errors
 from physicsLab.typehint import num_type, Self, override, final
 from physicsLab.enums import ExperimentType
-from physicsLab._experiment import get_current_experiment, _Experiment, _ElementBase
+from physicsLab._core import get_current_experiment, _Experiment, _ElementBase
 
 class _PlanetMeta(type):
     def __call__(cls, x:num_type, y: num_type, z:num_type, *args, **kwargs):

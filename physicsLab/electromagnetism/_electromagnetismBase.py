@@ -2,7 +2,7 @@
 from physicsLab.typehint import num_type, Self, override
 from physicsLab import _tools
 from physicsLab import errors
-from physicsLab._experiment import get_current_experiment, _Experiment, _ElementBase
+from physicsLab._core import get_current_experiment, _Experiment, _ElementBase
 from physicsLab.enums import ExperimentType
 
 class _ElectromagnetismMeta(type):

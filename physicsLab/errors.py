@@ -43,11 +43,6 @@ class BitnumError(Exception):
     def __str__(self):
         return "illegal bitLength number"
 
-class InternalError(Exception):
-    ''' physicsLab内部错误 '''
-    def __str__(self):
-        return "please bug report"
-
 class InvalidSavError(Exception):
     ''' 存档文件错误 '''
     def __str__(self):

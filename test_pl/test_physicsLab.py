@@ -2,7 +2,7 @@
 import os
 from .base import *
 from physicsLab.lib import *
-from physicsLab._experiment import _ExperimentStack
+from physicsLab._core import _ExperimentStack
 
 def my_test_dec(method: Callable):
     def result(*args, **kwarg):

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from physicsLab import errors
-from physicsLab._experiment import _Experiment, get_current_experiment
+from physicsLab._core import _Experiment, get_current_experiment
 from physicsLab.enums import ExperimentType
 from physicsLab.typehint import Optional, Callable, Union
 

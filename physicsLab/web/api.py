@@ -882,7 +882,7 @@ class User:
         elif display_type == "Following":
             display_type_ = 1
         else:
-            raise errors.InternalError
+            assert False
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Users/GetRelations",

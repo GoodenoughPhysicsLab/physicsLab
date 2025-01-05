@@ -3,7 +3,7 @@ import json
 from . import _tools
 from . import errors
 from .enums import ExperimentType
-from ._experiment import _Experiment, _ExperimentStack, OpenMode, _check_method, _ElementBase
+from ._core import _Experiment, _ExperimentStack, OpenMode, _check_method, _ElementBase
 from .circuit.wire import Wire, Pin
 from .typehint import num_type, Optional, Union, List, Self
 
@@ -45,7 +45,7 @@ def crt_element(
         from physicsLab import electromagnetism
         return eval(f"electromagnetism.{name}({x}, {y}, {z})")
     else:
-        raise errors.InternalError
+        assert False
 
 def get_element_from_position(
         experiment: _Experiment,
@@ -164,7 +164,7 @@ def _load_elements(experiment: _Experiment, _elements: list) -> None:
             obj = crt_element(experiment, element["ModelID"], x, y, z)
             obj.data = element
         else:
-            raise errors.InternalError
+            assert False
 
 def _load_wires(experiment: _Experiment, _wires: list) -> None:
     assert experiment.experiment_type == ExperimentType.Circuit
@@ -199,7 +199,7 @@ def load_elements(experiment: _Experiment) -> _Experiment:
     elif experiment.experiment_type == ExperimentType.Electromagnetism:
         _load_elements(experiment, status_sav["Elements"])
     else:
-        raise errors.InternalError
+        assert False
 
     return experiment
 
@@ -219,7 +219,7 @@ class experiment:
     def __init__(
             self,
             sav_name: str,
-            load_elements: bool = False,
+            read: bool = False,
             delete: bool = False,
             write: bool = True,
             elementXYZ: bool = False,
@@ -230,7 +230,7 @@ class experiment:
     ) -> None:
         errors.warning("`with experiment` is deprecated, use `with Experiment` instead")
         if not isinstance(sav_name, str) or \
-                not isinstance(load_elements, bool) or \
+                not isinstance(read, bool) or \
                 not isinstance(delete, bool) or \
                 not isinstance(elementXYZ, bool) or \
                 not isinstance(write, bool) or \
@@ -241,7 +241,7 @@ class experiment:
             raise TypeError
 
         self.sav_name: str = sav_name
-        self.load_elements: bool = load_elements
+        self.read: bool = read
         self.delete: bool = delete
         self.write: bool = write
         self.elementXYZ: bool = elementXYZ
@@ -259,7 +259,7 @@ class experiment:
             except errors.ExperimentNotExistError:
                 self._Experiment: _Experiment = _Experiment(OpenMode.crt, self.sav_name, self.experiment_type)
 
-        if self.load_elements:
+        if self.read:
             load_elements(self._Experiment)
 
         if self.elementXYZ:

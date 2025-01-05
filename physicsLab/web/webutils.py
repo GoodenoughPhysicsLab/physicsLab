@@ -333,7 +333,7 @@ class RelationsIter(_async_tool.AsyncTool):
             elif self.display_type == "Following":
                 self.amount = self.user.get_user(self.user_id)['Data']['Statistic']['FollowingCount']
             else:
-                raise errors.InternalError
+                assert False
         else:
             self.amount = amount
 
@@ -392,7 +392,7 @@ class AvatarsIter(_async_tool.AsyncTool):
             self.max_img_counter = user.get_summary(search_id, Category.Discussion)["Data"]["Image"]
             category = "experiments"
         else:
-            raise errors.InternalError
+            assert False
 
         self.search_id = search_id
         self.category = category
