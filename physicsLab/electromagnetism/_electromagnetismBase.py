@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
-from physicsLab.typehint import num_type, Self, override
+from physicsLab.typehint import num_type, Self, override, NoReturn
 from physicsLab import _tools
 from physicsLab import errors
 from physicsLab._core import get_current_experiment, _Experiment, _ElementBase
 from physicsLab.enums import ExperimentType
 
 class _ElectromagnetismMeta(type):
-    def __call__(cls,
-                 x: num_type,
-                 y: num_type,
-                 z: num_type,
-                 *args,
-                 **kwargs
-                 ):
+    def __call__(
+            cls,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            *args,
+            **kwargs
+    ):
         if not isinstance(x, (int, float)) or \
                 not isinstance(y, (int, float)) or \
                 not isinstance(z, (int, float)):
@@ -40,7 +41,7 @@ class ElectromagnetismBase(_ElementBase, metaclass=_ElectromagnetismMeta):
     ''' 所有电与磁元件的父类 '''
     experiment: _Experiment
 
-    def __init__(self) -> None:
+    def __init__(*args, **kwargs) -> NoReturn:
         raise NotImplementedError
 
     @override

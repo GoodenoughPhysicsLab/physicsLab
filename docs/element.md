@@ -1,9 +1,9 @@
 # 元件 element
 
 ## 创建元件
-物实中所有的元件都被封装为`physicsLab`中对应的类（暂未支持物实中的全部元件）  
-物实元件与其相应的类名在[所有元件.md](elements.md)中查看  
-例：
+物实中所有的元件都被封装为`physicsLab`中对应的类，详见[所有元件.md](elements.md)
+
+创建元件对应的类的实例，就会在存档中创建该元件
 ```python
 with Experiment(OpenMode.load_by_sav_name, "example"):
     Logic_Input()  # 创建一个逻辑输入
@@ -11,7 +11,7 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
     b = Or_Gate()  # 创建一个或门
 ```
 
-除此之外还有`crt_element`函数，用来创建所有`physicsLab`支持的元件
+除此之外还有`crt_element`函数
 ```python
 from physicsLab import *
 
@@ -105,11 +105,11 @@ with Experiment(OpenMode.load_by_sav_name, "example") as expe:
 ```Python
 from physicsLab import *
 
-expe = Experiment(OpenMode.load_by_sav_name, "example")
-set_elementXYZ(True) # 将expe设置为原件坐标系
-# do something
-expe.save()
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
+  set_elementXYZ(True) # 将expe设置为原件坐标系
+  # do something
 ```
+
 当你只希望某个元件是元件坐标系，而其他元件不受影响时，你可以在创建元件时传入对应参数
 ```Python
 from physicsLab import *

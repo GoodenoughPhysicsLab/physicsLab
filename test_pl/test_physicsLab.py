@@ -30,49 +30,41 @@ class BasicTest(TestCase, ViztracerTool):
     @my_test_dec
     def test_load_all_elements(self):
         # 物实导出存档与保存到本地的格式不一样, 因此每种类型的实验都有两种格式的测试数据
-        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav"))
-        load_elements(expe)
-        self.assertTrue(count_elements(expe) == 91)
-        expe.exit()
+        with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav")) as expe:
+            self.assertTrue(count_elements(expe) == 91)
+            expe.exit()
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Circuit-Elements.sav")) as expe:
             self.assertTrue(count_elements(expe) == 91)
             expe.exit()
 
-        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Celestial-Elements.sav"))
-        load_elements(expe)
-        self.assertTrue(count_elements(expe) == 27)
-        expe.exit()
+        with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Celestial-Elements.sav")) as expe:
+            self.assertTrue(count_elements(expe) == 27)
+            expe.exit()
 
-        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Celestial-Elements.sav"))
-        load_elements(expe)
-        self.assertTrue(count_elements(expe) == 27)
-        expe.exit()
+        with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Celestial-Elements.sav")) as expe:
+            self.assertTrue(count_elements(expe) == 27)
+            expe.exit()
 
         expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Electromagnetism-Elements.sav"))
-        load_elements(expe)
         self.assertTrue(count_elements(expe) == 7)
         expe.exit()
 
         expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Electromagnetism-Elements.sav"))
-        load_elements(expe)
         self.assertTrue(count_elements(expe) == 7)
         expe.exit()
 
     @my_test_dec
     def test_load_from_app(self):
         expe = Experiment(OpenMode.load_by_plar_app, "6774ffb4c45f930f41ccedf8", Category.Discussion, user=user)
-        load_elements(expe)
         self.assertTrue(count_elements(expe) == 91)
         expe.exit()
 
         expe = Experiment(OpenMode.load_by_plar_app, "677500138c54132a83289f9c", Category.Discussion, user=user)
-        load_elements(expe)
         self.assertTrue(count_elements(expe) == 27)
         expe.exit()
 
         expe = Experiment(OpenMode.load_by_plar_app, "67750037c45f930f41ccee02", Category.Discussion, user=user)
-        load_elements(expe)
         self.assertTrue(count_elements(expe) == 7)
         expe.exit()
 
@@ -125,7 +117,6 @@ class BasicTest(TestCase, ViztracerTool):
         expe.exit()
 
         exp2: Experiment = Experiment(OpenMode.load_by_sav_name, "__test__")
-        load_elements(exp2)
         self.assertEqual(count_elements(exp2), 1)
         exp2.exit(delete=True)
 

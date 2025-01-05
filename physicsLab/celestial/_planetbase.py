@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from physicsLab import _tools
 from physicsLab import errors
-from physicsLab.typehint import num_type, Self, override, final
+from physicsLab.typehint import num_type, Self, override, final, NoReturn
 from physicsLab.enums import ExperimentType
 from physicsLab._core import get_current_experiment, _Experiment, _ElementBase
 
 class _PlanetMeta(type):
-    def __call__(cls, x:num_type, y: num_type, z:num_type, *args, **kwargs):
+    def __call__(cls, x: num_type, y: num_type, z:num_type, *args, **kwargs):
         if not isinstance(x, (int, float)) or \
                 not isinstance(y, (int, float)) or \
                 not isinstance(z, (int, float)):
@@ -37,7 +37,7 @@ class PlanetBase(_ElementBase, metaclass=_PlanetMeta):
     ''' 星球基类 '''
     experiment: _Experiment
 
-    def __init__(self) -> None:
+    def __init__(*args, **kwargs) -> NoReturn:
         raise NotImplementedError
 
     @final

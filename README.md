@@ -54,28 +54,21 @@ pip install pygame
 ```
 点击跳转至[plmidi](https://github.com/GoodenoughPhysicsLab/plmidi)
 
-1.  物实存档使用了中文字符，默认编码为`utf-8`。但在一些非正常情况，存档的编码可能被改变。虽然`physicsLab`有一定的处理存档编码问题的能力，但如果还是出现了问题，请输入该命令：
+4.  物实存档使用了中文字符，默认编码为`utf-8`。但在一些非正常情况，存档的编码可能被改变。虽然`physicsLab`有一定的处理存档编码问题的能力，但如果还是出现了问题，请输入该命令：
 ```bash
 pip install chardet
 ```
 此时`physicsLab`会自动调用`chardet`来处理更加棘手的文件编码问题。
 
-1. 如果下载成功，请输入下面的代码以验证`physicsLab`已经可以使用了
-```Python
-from physicsLab import *
-
-with experiment("example"):
-    Logic_Input(0, 0, 0.1)
-```
-然后打开物实，点击`从本地读取`，点击一个名为`example`的实验。如果出现了一个悬空的逻辑输入，则说明一切都成功了。
-> Note:  每次运行`physicsLab`后都需要重新加载物实的本地存档，即点击`从本地读取`，再次点击对应存档，使物实重新加载该存档
+5.  如果下载成功，就可以查看[快速开始](docs/quick_start.md)，开始你的使用了
+> Note: 每次通过`physicsLab`生成了一个新的存档之后，都需要重新加载物实的本地存档，即点击`从本地读取`，再次点击进入对应存档
 
 ### 新手解惑: 为什么我明明安装了physicsLab, python却告诉我无法找到？
 pip安装的包会被放在`site-package`文件夹下  
 这大概率是因为pip安装的包所对应的`site-package`与你使用的`python`对应的`site-package`不一样导致的  
 解决方案：找到ide调用的`python`对应的`site-package`，然后把`physicsLab`与`physicsLab.egg-info`复制过去  
 同时我推荐去学一下`python`的虚拟环境`venv`，有效解决此问题  
-  
+
 如果此方法失效了，虽然这一定不是这个方法的问题，但你还可以在python的开头写上这两行代码来解决这个问题：  
 ```python
 import sys
@@ -85,58 +78,17 @@ sys.path.append("/your/path/of/physicsLab") # 将字符串替换为你想添加�
 其原理是python会在sys.path这个列表里面的路径去寻找python package，若未找到则会报错。因此该方法的原理就是把python找不到的路径加进去，python就找到了  
 注：每次运行的时候加入的path都是临时的，因此该方法必须让python在每次运行的时候都执行一遍  
 
-## 使用说明
-> Note: 如果`physicsLab`抛出`TypeError`，请检查你自己的输入参数是否有问题，  
->       如果抛出`AssertionError`，请**报告bug**
+## 特殊说明事项
+* 如果`physicsLab`抛出`AssertionError`，请**报告 bug** (请在issue中附上最小复现)
 
-目前`physicsLab`在`windows`上的支持最好，在其他操作系统上仅支持手动导入/导出存档（默认在`physicsLabSav`文件夹中）。
+* 目前`physicsLab`在`windows`上的支持最好，在其他操作系统上仅支持手动导入/导出存档（默认在`physicsLabSav`文件夹中）。
 
-> 在安卓上要使用`physicsLab`的话，可以下载`qpython`或者`Termux`
-> 在`qpython v3.2.5`中大大削减了python在文件路径操作方面的权限，这意味着在qpython上使用physicsLab生成的存档将很难被物实导入，因为物实没权限访问不了。
-> 但此问题在[qpython v3.2.3](https://github.com/qpython-android/qpython/releases/tag/v3.2.3)中不存在，推荐下载该版本。
-> 不过由于安卓权限的问题，用起来肯定没有电脑上方便。
+* 在安卓上要使用`physicsLab`的话，可以通过`qpython`或者`Termux`(推荐) 进行使用
+  * 在`qpython v3.2.5`中大大削减了python在文件路径操作方面的权限，这意味着在qpython上使用physicsLab生成的存档将很难被物实导入，因为物实没权限访问不了， 但此问题在[qpython v3.2.3](https://github.com/qpython-android/qpython/releases/tag/v3.2.3)中不存在，推荐下载该版本。
+  * `Termux`的话，需要设置输出存档的路径到`/storage/emulated/0/` (不同安卓设备路径可能不同), 或者手动`mv`一下生成的存档，这样才能让物实访问对应的存档。
+  * 不过由于安卓权限的问题，用起来肯定没有电脑上方便。
 
-下面给出一个简单的例子（该例子仅用于讲解，你大概率无法运行）：
-```Python
-from physicsLab import *
-
-  # 打开存档
-  # 也支持输入存档的文件名（也就是xxx.sav）
-e = Experiment("example")
-  # 如果你希望程序不覆盖掉存档中已有的实验状态，需要这样写
-read_plsav(e)
-  # 创建一个逻辑输入，坐标为(0, 0, 0.1)
-Logic_Input(0, 0, 0.1)
-  # 你也可以不写坐标，默认是(0,0,0)
-o = Or_Gate()
-  # 元件含有引脚属性，是对物实原始的引脚表示方法的封装
-  # 比如或门（Or_Gate），含有 i_up, i_low, o三个引脚属性
-  # 通过引脚属性，就可以更方便的连接导线了
-
-  # crt_wire()函数用来连接导线，有三个参数：SourcePin, TargetPin, color
-  # SourcePin与TargetPin必须传入元件的引脚
-  # color可以不写，默认为蓝色
-crt_wire(o.i_up, o.i_low)
-  # 将程序中生成的原件，导线等等写入存档
-e.write()
-  # 然后用物实打开存档见证奇迹
-```
-
-`physicsLab`还支持等价但更优雅的方式 (这也是我最推荐的方式):
-```python
-from physicsLab import *
-
-with experiment("example", read=True):
-    Logic_Input(0, 0, 0.1)
-    o = Or_Gate()
-    o.i_up - o.i_low # 连接导线
-```
-上面两段代码产生的结果是一样的
-
-更详细的内容请在[文档](docs)中查看
-
-由于`physicsLab`使用中文注释而且物实的存档也使用了中文  
-因此我建议你手动在`Python`代码的第一行添加如下注释:
+* 由于`physicsLab`使用中文注释而且物实的存档也使用了中文，因此我建议你手动在`Python`代码的第一行添加如下注释:
 ```Python
 # -*- coding: utf-8 -*-
 ```

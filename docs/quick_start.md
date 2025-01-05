@@ -1,4 +1,5 @@
 # quick start
+
 ## 第一个程序
 元件浮空几乎成为了修改存档的代名词，因此，就让我们从创建一个悬空的逻辑输入开始吧：
 ```Python
@@ -14,7 +15,7 @@ with Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=True)
 `with`对应的缩进内写的代码会被视为是对实验`example`的操作，比如`Logic_Input(0, 0, 0.1)`对应着创建一个坐标为`x=0, y=0, z=0.1`的逻辑输入
 
 除此之外也可以只创建实验(若实验存在则抛出异常), 只打开实验(若实验不存在则抛出异常)，通过捕获异常开可以实现打开的实验不存在就创建实验
-Experiment一共有4种打开存档的方式，请查看[experiment.md](experiment.md)
+`class Experiment`一共有4种打开存档的方式，请查看[experiment.md](experiment.md)
 
 ## 创建元件
 创建元件非常简单：
@@ -49,3 +50,5 @@ with Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=True)
 ```
 更多引脚的信息请查看[elements.md](./elements.md)
 更多用法请查看[wire.md](./wire.md)
+
+## 通过网络api与物实交互

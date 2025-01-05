@@ -7,10 +7,10 @@ from ._colorUtils import close_color_print
 from .element import (
     crt_element, del_element,
     get_element_from_identifier, get_element_from_index, get_element_from_position,
-    count_elements, clear_elements, load_elements,
+    count_elements, clear_elements, search_experiment,
     Experiment, experiment
 )
-from ._core import OpenMode, search_experiment, get_current_experiment
+from ._core import OpenMode, get_current_experiment
 # 实验, 标签类型
 from .enums import *
 # 电学实验

@@ -9,7 +9,7 @@ import physicsLab.circuit.elementXYZ as _elementXYZ
 from physicsLab.enums import ExperimentType
 from physicsLab._tools import roundData, randString
 from physicsLab._core import _Experiment, get_current_experiment, _ElementBase
-from physicsLab.typehint import Optional, Self, num_type, CircuitElementData, Generate, override, final
+from physicsLab.typehint import Optional, Self, num_type, NoReturn, Generate, override, final
 
 # electricity class's metaClass
 class CircuitMeta(type):
@@ -54,7 +54,7 @@ class CircuitBase(_ElementBase, metaclass=CircuitMeta):
     is_elementXYZ: bool
     is_bigElement = False # 该元件是否是逻辑电路的两体积元件
 
-    def __init__(self) -> None:
+    def __init__(*args, **kwargs) -> NoReturn:
         raise NotImplementedError
 
     def __repr__(self) -> str:

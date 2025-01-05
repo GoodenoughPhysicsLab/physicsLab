@@ -25,26 +25,40 @@ ExperimentType是枚举类，用于指定实验类型。目前支持三种类型
 *   load_by_plar_app : 通过网络请求从物实读取的存档
 *   crt : 新建存档
 
-## 打开存档
-这是***最推荐的方式***。你可以用with语句打开一个存档
+## 打开已有存档
+创建一个`Experiment`类的实例的时候，就会导入对应存档的信息
 ```python
 # 参数含义: 打开模式为打开已经存在的存档，存档名为example
 with Experiment(OpenMode.load_by_sav_name, "example") as expe:
-    # 使用with Experiment会自动导入元件信息 (也就是默认调用 load_elements)
     # 执行完代码之后会自动保存存档并使expe退出对存档的操作（无法再操作存档）
-    ''' do something '''
+    ...
 ```
+
+上面的代码等价于:
+```python
+from physicsLab import *
+
+expe = Experiment(OpenMode.load_by_sav_name, "example")
+expe.save()
+expe.exit()
+```
+也就是说, with语句作用是自动帮你保存存档（但如果在with内部有异常发生，是不会保存存档的）
+
 `expe`是一个`Experiment`类的实例，因此你可以通过`expe`来轻易地使用`Experiment`类的所有方法来操作存档
 
-> Note: 当你使用`Experiment`导入一个实验而不调用`load_elements`时，你仅仅只会损失实验所有原件的信息，而`force_crt`则会覆盖掉实验的所有信息
+> Note: 任何尝试重复导入同一个实验的行为，会抛出异常
+```python
+from physicsLab import *
 
-> Note: 任何尝试重复导入实验（不论是读取实验还是创建实验）都会导致抛出错误
+expe = Experiment(OpenMode.load_by_sav_name, "example")
+expe2 = Experiment(OpenMode.load_by_sav_name, "example") # error
+```
 
-更底层的使用方式是，你必须指明你要打开的是哪个存档：
+`Experiment`类一共提供了3种导入存档的方式：
 ```Python
 from physicsLab import *
 Experiment(OpenMode.load_by_filepath, "/your/path/of/sav") # 根据存档的文件名（也就是xxxx.sav）进行导入
-                               #（e.g. e229d7fe-7fa3-4efa-9190-dcb4558a385a.sav）
+                                                        #（e.g. e229d7fe-7fa3-4efa-9190-dcb4558a385a.sav）
 Experiment(OpenMode.load_by_sav_name, "example") # 根据存档的实验名（也就是你在物实导入本地实验时看到的实验的名字）进行导入实验
 Experiment(OpenMode.load_by_plar_app, "642cf37a494746375aae306a", Category.Discussion)
 ```
@@ -54,13 +68,9 @@ Experiment(OpenMode.load_by_plar_app, "642cf37a494746375aae306a", Category.Discu
 2.  自定义存档的路径
 3.  读取物实服务器上的实验
 
-> Note: 当open的实验不存在，会抛出错误；
-
-> Note: 该低级api不会导入元件信息，需要手动调用`load_elements`
+> Note: 如果导入的实验不存在，则会抛出`ExperimentNotExistError`异常
 
 ## 创建存档
-***低级api***
-
 如果你想要创建一个实验：
 ```python
 # 参数含义: 打开模式为创建新存档；存档名为example；实验的类型为电学实验；如果要创建的实验已经存在，将会抛出异常
@@ -68,6 +78,7 @@ with Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=False
     # 使用with Experiment的话，执行完代码之后会自动保存存档并使expe退出对存档的操作（无法再操作存档）
     ...
 ```
+
 上面代码等价于:
 ```python
 from physicsLab import *
@@ -94,24 +105,9 @@ except ExperimentNotExistError:
 ***低级api***
 
 调用`search_Experiment()`判断存档是否存在  
-如果存档存在，则会返回存档的文件名  
-如果存档不存在，则返回`None`
-
-## 读取存档的内容
-被打开的存档不会读取实验的元件与导线的状态。如果你不希望原实验的状态被覆盖，需要调用该方法：
-```Python
-from physicsLab import *
-
-expe = Experiment(OpenMode.load_by_sav_name, "example")
-load_elements(expe)
-# do something
-expe.save()
-expe.exit()
-```
-
-> Note: with Experiment()默认会导入存档的元件信息, 因此更加方便好用
 
 ## 向物实发布新的实验
+
 如果需要修改实验的tag, 可以使用`Experiment.edit_tags`
 ```Python
 from physicsLab import *
