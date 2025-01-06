@@ -51,7 +51,7 @@ with Experiment(OpenMode.load_by_sav_name, "example") as expe:
 from physicsLab import *
 
 with Experiment(OpenMode.load_by_sav_name, "example"):
-    No_Gate() # index = 1
+    No_Gate(0, 0, 0) # index = 1
     Or_Gate(0, 0, 0.1) # index = 2
 ```
 
