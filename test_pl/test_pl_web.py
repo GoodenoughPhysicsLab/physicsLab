@@ -84,7 +84,8 @@ class _WebTest:
                 user=user, max_retry=4, category_id=5
         ):
             counter += 1
-        assert counter == 96
+        if counter != 96:
+            raise TestFail
 
 async def test_web_main():
     ''' 收集并运行所有测试任务 '''

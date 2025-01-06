@@ -1,8 +1,7 @@
 # 导线 wire
 
 ## 连接导线
-连接导线提供了2种方式  
-1. 调用`crt_wire`函数
+通过`crt_wire`，可以连接导线
 ```Python
 from physicsLab import *
 
@@ -16,6 +15,8 @@ with experiment(OpenMode.load_by_sav_name, "example"):
 # color暂时只支持中文的 "黑", "蓝", "红", "绿", "黄" 与 对应颜色的英文
 # 不传入color参数的话，color默认为蓝色
 ```
+
+> Note: 连接的导线必须是在同一个实验中的两个不同的引脚，否则会抛出`InvalidWireError`异常
 
 2. 使用减号
 之所以做了这个是因为我觉得`-`与导线很像

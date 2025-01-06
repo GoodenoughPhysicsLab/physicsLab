@@ -12,7 +12,7 @@ def my_test_dec(method: Callable):
             print(f"File {os.path.abspath(__file__)}, line {method.__code__.co_firstlineno} : "
                   f"test fail due to len(stack_Experiment) != 0")
             _ExperimentStack.clear()
-            raise TestError
+            raise TestFail
     return result
 
 class BasicTest(TestCase, ViztracerTool):
@@ -76,7 +76,7 @@ class BasicTest(TestCase, ViztracerTool):
         except ExperimentOpenedError:
             pass
         else:
-            raise TestError
+            raise TestFail
         finally:
             expe.exit()
 
@@ -87,7 +87,7 @@ class BasicTest(TestCase, ViztracerTool):
         except InvalidSavError:
             pass
         else:
-            raise TestError
+            raise TestFail
 
     @my_test_dec
     def test_normal_circuit_usage(self):
@@ -129,7 +129,7 @@ class BasicTest(TestCase, ViztracerTool):
         except ExperimentExistError:
             pass
         else:
-            raise TestError
+            raise TestFail
         finally:
             exp.exit(delete=True)
 
@@ -188,7 +188,7 @@ class BasicTest(TestCase, ViztracerTool):
         except ExperimentNotExistError:
             pass
         else:
-            raise TestError
+            raise TestFail
 
     @my_test_dec
     def test_elementXYZ_2(self):
@@ -228,7 +228,7 @@ class BasicTest(TestCase, ViztracerTool):
     @my_test_dec
     def test_del_element(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
-            Logic_Input(0, 0, 0).o - Or_Gate(0, 0, 0).o
+            crt_wire(Logic_Input(0, 0, 0).o, Or_Gate(0, 0, 0).o)
             expe.del_element(expe.get_element_from_index(2))
             self.assertEqual(expe.get_elements_count(), 1)
             self.assertEqual(count_wires(), 0)
@@ -272,9 +272,9 @@ class BasicTest(TestCase, ViztracerTool):
             b = lib.Inputs(-2, 0, 0, bitnum=8)
             c = lib.Sum(0, 0, 0, bitnum=8)
             d = lib.Outputs(1, 0, 0, bitnum=8)
-            a.outputs - c.inputs1
-            b.outputs - c.inputs2
-            c.outputs - d.inputs
+            crt_wires(a.outputs, c.inputs1)
+            crt_wires(b.outputs, c.inputs2)
+            crt_wires(c.outputs, d.inputs)
             expe.exit(delete=True)
 
     # 测试打开实验类型与文件不吻合
@@ -287,7 +287,7 @@ class BasicTest(TestCase, ViztracerTool):
             except ExperimentTypeError:
                 pass
             else:
-                raise TestError
+                raise TestFail
             finally:
                 expe.exit(delete=True)
 
@@ -302,7 +302,7 @@ class BasicTest(TestCase, ViztracerTool):
             except ExperimentTypeError:
                 pass
             else:
-                raise TestError
+                raise TestFail
             finally:
                 expe.exit(delete=True)
 
@@ -328,8 +328,8 @@ class BasicTest(TestCase, ViztracerTool):
             a = Simple_Instrument(0, 0, 0).set_tonality(48)
             a = Simple_Instrument(0, 0, 0, pitch="C3")
             a = Simple_Instrument(0, 0, 0).set_tonality("C3")
-            Logic_Input(-1, 0, 0).o - a.i
-            a.o - Ground_Component(1, 0, 0).i
+            crt_wire(Logic_Input(-1, 0, 0).o, a.i)
+            crt_wire(a.o, Ground_Component(1, 0, 0).i)
             expe.exit(delete=True)
 
     @my_test_dec
@@ -341,7 +341,7 @@ class BasicTest(TestCase, ViztracerTool):
             except ElementNotFound:
                 pass
             else:
-                raise TestError
+                raise TestFail
             finally:
                 expe.exit(delete=True)
 
@@ -353,7 +353,7 @@ class BasicTest(TestCase, ViztracerTool):
         except TypeError: # TODO 应该改为ValueError
             pass
         else:
-            raise TestError
+            raise TestFail
 
     @my_test_dec
     def test_is_bigElement(self):
@@ -396,7 +396,7 @@ class BasicTest(TestCase, ViztracerTool):
     @my_test_dec
     def test_mergeExperiment(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
-            Logic_Input(0, 0, 0).o - Logic_Output(1, 0, 0, elementXYZ=True).i
+            crt_wire(Logic_Input(0, 0, 0).o, Logic_Output(1, 0, 0, elementXYZ=True).i)
 
             with Experiment(OpenMode.crt, "_Test", ExperimentType.Circuit, force_crt=True) as exp2:
                 Logic_Output(0, 0, 0.1)
@@ -413,11 +413,11 @@ class BasicTest(TestCase, ViztracerTool):
             with Experiment(OpenMode.crt, "_Test", ExperimentType.Circuit, force_crt=True) as exp2:
                 b = Logic_Output(0, 0, 0)
                 try:
-                    a.o - b.i
-                except ExperimentError: # 也许改为InvalidLinkError更好?
+                    crt_wire(a.o, b.i)
+                except InvalidWireError:
                     pass
                 else:
-                    raise TestError
+                    raise TestFail
                 finally:
                     exp2.exit(delete=True)
             expe.exit(delete=True)
@@ -426,13 +426,13 @@ class BasicTest(TestCase, ViztracerTool):
     def test_merge_Experiment2(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             e = Yes_Gate(0, 0, 0)
-            e.i - e.o
+            crt_wire(e.i, e.o)
 
             with Experiment(OpenMode.crt, "_Test", ExperimentType.Circuit, force_crt=True) as exp2:
                 Logic_Output(0, 0, 0.1)
                 exp2.merge(expe, 1, 0, 0, elementXYZ=True)
                 a = exp2.get_element_from_position(1, 0, 0)
-                a.i - a.o
+                crt_wire(a.i, a.o)
 
                 self.assertEqual(exp2.get_elements_count(), 2)
                 self.assertEqual(count_wires(), 1)
@@ -444,10 +444,10 @@ class BasicTest(TestCase, ViztracerTool):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             e = Logic_Output(0, 0, 0)
             try:
-                e.i - e.i
-            except ExperimentError: # TODO 改进此报错的类型
+                crt_wire(e.i, e.i)
+            except InvalidWireError:
                 pass
             else:
-                raise TestError
+                raise TestFail
             finally:
                 expe.exit(delete=True)

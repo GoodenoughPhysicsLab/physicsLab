@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from physicsLab import errors
 from physicsLab._core import get_current_experiment
-from physicsLab.enums import ExperimentType
+from physicsLab.enums import ExperimentType, WireColor
 from physicsLab.typehint import Optional, Callable, Union
 
 # 电学元件引脚类, 模电元件引脚无明确的输入输出之分, 因此用这个
@@ -24,7 +24,7 @@ class Pin:
             raise TypeError
         return obj
 
-    def __eq__(self, other: "Pin") -> bool:
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Pin):
             return False
 
@@ -63,15 +63,10 @@ class Wire:
             raise TypeError
 
         if Source.element_self.experiment is not Target.element_self.experiment:
-            raise errors.ExperimentError("can't link wire in two experiment")
+            raise errors.InvalidWireError("can't link wire in two experiment")
 
         if Source == Target:
-            raise errors.ExperimentError()
-
-        if color in ("black", "blue", "red", "green", "yellow"):
-            color = {"black": "黑", "blue": "蓝", "red": "红", "green": "绿", "yellow": "黄"}[color]
-        if color not in ('蓝', '绿', '黄', '红', '黑'):
-            raise errors.WireColorError
+            raise errors.InvalidWireError("can't link wire to itself")
 
         self.Source: Pin = Source
         self.Target: Pin = Target
@@ -84,7 +79,7 @@ class Wire:
             (self.Target.element_self, self.Target.pinLabel, self.Source.element_self, self.Source.pinLabel)
         )
 
-    def __eq__(self, other: "Wire") -> bool:
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Wire):
             return False
 
@@ -95,10 +90,7 @@ class Wire:
             return False
 
     def __repr__(self) -> str:
-        if self.color == "蓝":
-            return f"{self.Source.export_str()} - {self.Target.export_str()}"
-        else:
-            return f"crt_Wire({self.Source.export_str()}, {self.Target.export_str()}, '{self.color}')"
+        return f"crt_wire({self.Source.export_str()}, {self.Target.export_str()}, '{self.color}')"
 
     def release(self) -> dict:
         return {
@@ -112,10 +104,7 @@ class Wire:
 # 检查函数参数是否是导线
 def _check(func: Callable):
     def result(SourcePin: Pin, TargetPin: Pin, *args, **kwargs) -> None:
-        if not (
-                isinstance(SourcePin, Pin) and
-                isinstance(TargetPin, Pin)
-        ):
+        if not isinstance(SourcePin, Pin) or not isinstance(TargetPin, Pin):
             raise TypeError
 
         if get_current_experiment().experiment_type != ExperimentType.Circuit:

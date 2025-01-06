@@ -1,5 +1,5 @@
 import os
-from unittest import TestCase
+from unittest import TestCase, IsolatedAsyncioTestCase
 from physicsLab import *
 
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -10,7 +10,7 @@ USE_VIZTRACER: bool = False
 if USE_VIZTRACER:
     from viztracer import VizTracer
 
-class TestError(Exception):
+class TestFail(Exception):
     def __init__(self, err_msg: str = "Test fail", no_pop: bool=False) -> None:
         self.err_msg: str = err_msg
         self.no_pop = no_pop
@@ -45,4 +45,4 @@ user = web.User(
 
 # 验证用户ID是否为测试用户
 if user.user_id != "5ce629e157035932b52f9315":
-    raise TestError("User ID does not match")
+    raise TestFail("User ID does not match")

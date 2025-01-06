@@ -51,3 +51,11 @@ class Tag(Enum):
     AC_Circuit = "交流电路"
     Electronic = "电子电路"
     Interest = "兴趣"
+
+@unique
+class WireColor(Enum):
+    black = "黑"
+    blue = "蓝"
+    red = "红"
+    green = "绿"
+    yellow = "黄"

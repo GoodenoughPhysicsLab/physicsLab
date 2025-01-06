@@ -28,10 +28,13 @@ def warning(msg: str):
     assert isinstance(msg, str)
     warnings.warn(msg, PhysicsLabWarning)
 
-# 导线颜色类型异常
-class WireColorError(Exception):
+class InvalidWireError(Exception):
+    def __init__(self, msg: str):
+        assert isinstance(msg, str)
+        self.msg = msg
+
     def __str__(self):
-        return "illegal wire color."
+        return self.msg
 
 # 未找到导线异常
 class WireNotFoundError(Exception):
