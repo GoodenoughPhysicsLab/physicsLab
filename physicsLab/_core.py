@@ -153,6 +153,48 @@ class _Experiment:
                 self.Elements.remove(element)
                 break
 
+    # TODO 统一返回的行为，即始终返回列表之类的
+    @_check_not_closed
+    def get_element_from_position(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+    ) -> Union["_ElementBase", List["_ElementBase"]]:
+        ''' 通过坐标索引元件 '''
+        if not isinstance(x, (int, float)) or \
+                not isinstance(y, (int, float)) or \
+                not isinstance(z, (int, float)):
+            raise TypeError
+
+        position = (_tools.round_data(x), _tools.round_data(y), _tools.round_data(z))
+        if position not in self._elements_position.keys():
+            raise errors.ElementNotFound(f"{position} do not exist")
+
+        result: list = self._elements_position[position]
+        return result[0] if len(result) == 1 else result
+
+    @_check_not_closed
+    def get_element_from_index(self, index: int) -> "_ElementBase":
+        ''' 通过index (元件生成顺序) 索引元件, index从1开始 '''
+        if not isinstance(index, int):
+            raise TypeError
+
+        if 0 < index <= self.get_elements_count():
+            return self.Elements[index - 1]
+        else:
+            raise errors.ElementNotFound
+
+    @_check_not_closed
+    def get_element_from_identifier(self, identifier: str) -> "_ElementBase":
+        ''' 通过原件的id获取元件的引用 '''
+        for element in self.Elements:
+            assert hasattr(element, "data")
+            if element.data["Identifier"] == identifier:
+                return element
+        raise errors.ElementNotFound
+
+
     def __write(self) -> None:
         if self.experiment_type == ExperimentType.Circuit:
             status_save: dict = {

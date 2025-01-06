@@ -53,47 +53,6 @@ def crt_element(
     else:
         assert False
 
-# TODO 统一返回的行为，即始终返回列表之类的
-@_check_not_closed
-def get_element_from_position(
-        experiment: _Experiment,
-        x: num_type,
-        y: num_type,
-        z: num_type,
-) -> Union[_ElementBase, List[_ElementBase]]:
-    ''' 通过坐标索引元件 '''
-    if not isinstance(x, (int, float)) or \
-            not isinstance(y, (int, float)) or \
-            not isinstance(z, (int, float)):
-        raise TypeError
-
-    position = _tools.roundData(x, y, z)
-    if position not in experiment._elements_position.keys():
-        raise errors.ElementNotFound(f"{position} do not exist")
-
-    result: list = experiment._elements_position[position]
-    return result[0] if len(result) == 1 else result
-
-@_check_not_closed
-def get_element_from_index(experiment: _Experiment, index: int) -> _ElementBase:
-    ''' 通过index (元件生成顺序) 索引元件 '''
-    if not isinstance(index, int):
-        raise TypeError
-
-    if 0 < index <= experiment.get_elements_count():
-        return experiment.Elements[index - 1]
-    else:
-        raise errors.ElementNotFound
-
-@_check_not_closed
-def get_element_from_identifier(experiment: _Experiment, identifier: str) -> _ElementBase:
-    ''' 通过原件的id获取元件的引用 '''
-    for element in experiment.Elements:
-        assert hasattr(element, "data")
-        if element.data["Identifier"] == identifier:
-            return element
-    raise errors.ElementNotFound
-
 def _get_all_pl_sav() -> List[str]:
     ''' 获取所有物实存档的文件名 '''
     savs = [i for i in os.walk(_Experiment.SAV_PATH_DIR)][0][-1]
@@ -119,7 +78,7 @@ def _open_sav(sav_path) -> dict:
         return res
 
     try:
-        import chardet
+        import chardet # type: ignore
     except ImportError:
         for encoding in ("utf-8-sig", "gbk"):
             res = encode_sav(sav_path, encoding)
@@ -395,8 +354,8 @@ class Experiment(_Experiment):
         for wire_dict in _wires:
             self.Wires.add(
                 Wire(
-                    Pin(get_element_from_identifier(self, wire_dict["Source"]), wire_dict["SourcePin"]),
-                    Pin(get_element_from_identifier(self, wire_dict["Target"]), wire_dict["TargetPin"]),
+                    Pin(self.get_element_from_identifier(wire_dict["Source"]), wire_dict["SourcePin"]),
+                    Pin(self.get_element_from_identifier(wire_dict["Target"]), wire_dict["TargetPin"]),
                     wire_dict["ColorName"][0] # e.g. "蓝"
                 )
             )

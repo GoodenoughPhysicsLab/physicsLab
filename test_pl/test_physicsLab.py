@@ -103,7 +103,7 @@ class BasicTest(TestCase, ViztracerTool):
         crt_wire(a.o, a.i)
         crt_element(expe, "Logic Input")
         self.assertEqual(expe.get_elements_count(), 2)
-        get_element_from_position(expe, 0, 0, 0)
+        expe.get_element_from_position(0, 0, 0)
         expe.exit(delete=True)
 
     @my_test_dec
@@ -168,12 +168,12 @@ class BasicTest(TestCase, ViztracerTool):
         expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         Or_Gate(0, 0, 0)
         crt_wire(
-            get_element_from_position(expe, 0, 0, 0).o,
-            get_element_from_index(expe, index=1).i_up
+            expe.get_element_from_position(0, 0, 0).o,
+            expe.get_element_from_index(1).i_up
         )
         crt_wire(
-            get_element_from_position(expe, 0, 0, 0).i_low,
-            get_element_from_index(expe, index=1).o
+            expe.get_element_from_position(0, 0, 0).i_low,
+            expe.get_element_from_index(1).o
         )
         self.assertEqual(count_wires(), 2)
         expe.exit(delete=True)
@@ -202,8 +202,8 @@ class BasicTest(TestCase, ViztracerTool):
             for y in [y * 2 + 10 for y in range(5)]:
                 Multiplier(x, y, 0)
 
-        crt_wire(get_element_from_index(expe, 1).o, get_element_from_position(expe, 0, 1, 0).i)
-        get_element_from_index(expe, 2).i - get_element_from_index(expe, 3).o - get_element_from_index(expe, 4).i
+        crt_wire(expe.get_element_from_index(1).o, expe.get_element_from_position(0, 1, 0).i)
+        expe.get_element_from_index(2).i - expe.get_element_from_index(3).o - expe.get_element_from_index(4).i
         self.assertEqual(count_wires(), 3)
         self.assertEqual(expe.get_elements_count(), 150)
         expe.exit(delete=True)
@@ -222,30 +222,30 @@ class BasicTest(TestCase, ViztracerTool):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             Logic_Input(0, 0, 0)
             Or_Gate(0, 0, 0)
-            self.assertEqual(len(get_element_from_position(expe, 0, 0, 0)), 2)
+            self.assertEqual(len(expe.get_element_from_position(0, 0, 0)), 2)
             expe.exit(delete=True)
 
     @my_test_dec
     def test_del_element(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             Logic_Input(0, 0, 0).o - Or_Gate(0, 0, 0).o
-            expe.del_element(get_element_from_index(expe, 2))
+            expe.del_element(expe.get_element_from_index(2))
             self.assertEqual(expe.get_elements_count(), 1)
             self.assertEqual(count_wires(), 0)
             expe.exit(delete=True)
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav")) as expe:
-            expe.del_element(get_element_from_index(expe, 1))
+            expe.del_element(expe.get_element_from_index(1))
             self.assertEqual(expe.get_elements_count(), 90)
             expe.exit()
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Celestial-Elements.sav")) as expe:
-            expe.del_element(get_element_from_index(expe, 1))
+            expe.del_element(expe.get_element_from_index(1))
             self.assertEqual(expe.get_elements_count(), 26)
             expe.exit()
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Electromagnetism-Elements.sav")) as expe:
-            expe.del_element(get_element_from_index(expe, 1))
+            expe.del_element(expe.get_element_from_index(1))
             self.assertEqual(expe.get_elements_count(), 6)
             expe.exit()
 
@@ -337,7 +337,7 @@ class BasicTest(TestCase, ViztracerTool):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             Logic_Input(0, 0, 0)
             try:
-                get_element_from_index(expe, 2)
+                expe.get_element_from_index(2)
             except ElementNotFound:
                 pass
             else:
@@ -431,7 +431,7 @@ class BasicTest(TestCase, ViztracerTool):
             with Experiment(OpenMode.crt, "_Test", ExperimentType.Circuit, force_crt=True) as exp2:
                 Logic_Output(0, 0, 0.1)
                 exp2.merge(expe, 1, 0, 0, elementXYZ=True)
-                a = get_element_from_position(exp2, 1, 0, 0)
+                a = exp2.get_element_from_position(1, 0, 0)
                 a.i - a.o
 
                 self.assertEqual(exp2.get_elements_count(), 2)

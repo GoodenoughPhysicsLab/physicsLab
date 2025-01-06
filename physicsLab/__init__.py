@@ -6,13 +6,13 @@ from ._colorUtils import close_color_print
 # 操作实验
 from .element import (
     crt_element,
-    get_element_from_identifier, get_element_from_index, get_element_from_position,
     search_experiment,
-    Experiment, experiment
+    Experiment,
+    experiment
 )
 from ._core import OpenMode, get_current_experiment
 # 实验, 标签类型
-from .enums import *
+from .enums import ExperimentType, Category, Tag
 # 电学实验
 from .circuit import *
 # 天体物理实验

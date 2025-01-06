@@ -36,9 +36,9 @@ with Experiment(OpenMode.load_by_sav_name, "example") as expe:
 from physicsLab import *
 
 with Experiment(OpenMode.load_by_sav_name, "example") as expe:
-    get_element_from_position(expe, 0, 0, 0) # x, y, z
-    get_element_from_index(expe, index=1) # 通过元件是第多少个被创建的来获取
-    get_element_from_identifier(expe, "fe089d7e37114de394918a261c53df00") # 通过元件的Identifier来获取
+    expe.get_element_from_position(0, 0, 0) # x, y, z
+    expe.get_element_from_index(index=1) # 通过元件是第多少个被创建的来获取
+    expe.get_element_from_identifier("fe089d7e37114de394918a261c53df00") # 通过元件的Identifier来获取
 ```
 
 > Note:
@@ -64,12 +64,12 @@ from physicsLab import *
 with Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=True) as expe:
    Logic_Input(1, 0, 0, elementXYZ=True)
    Logic_Output(1, 0, 0)
-   print(get_element_from_position(expe, 1, 0, 0))
+   print(expe.get_element_from_position(1, 0, 0))
 
 with Experiment(OpenMode.load_by_sav_name, "example") as expe:
    Logic_Input(1, 0, 0, elementXYZ=True)
    Logic_Output(1, 0, 0)
-   print(get_element_from_position(expe, 1, 0, 0))
+   print(expe.get_element_from_position(1, 0, 0))
 ```
 输出结果:
 ```
