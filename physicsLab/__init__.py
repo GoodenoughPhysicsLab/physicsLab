@@ -5,9 +5,9 @@
 from ._colorUtils import close_color_print
 # 操作实验
 from .element import (
-    crt_element, del_element,
+    crt_element,
     get_element_from_identifier, get_element_from_index, get_element_from_position,
-    count_elements, clear_elements, search_experiment,
+    search_experiment,
     Experiment, experiment
 )
 from ._core import OpenMode, get_current_experiment

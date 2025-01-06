@@ -90,10 +90,32 @@ Successfully update experiment "example"! 4 elements, 0 wires.
 from physicsLab import *
 
 with Experiment(OpenMode.load_by_sav_name, "example") as expe:
-  a = Logic_Input(0, 0, 0)
-  del_element(expe, a) # input: element's self, output: None
+    a = Logic_Input(0, 0, 0)
+    expe.del_element(a) # input: element's self, output: None
 ```
 `del_element`需要传入元件的引用，所以必要时也需要配合`get_element_*`使用。
+
+## 获取元件的数量
+
+physicsLab提供了`get_elements_count`来获取元件的数量：
+
+```python
+from physicsLab import *
+
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
+    print(self.get_elements_count())
+```
+
+## 清空实验的元件
+
+physicsLab提供了`clear_elements`来清空实验的元件：
+
+```python
+from physicsLab import *
+
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
+    expe.clear_elements()
+```
 
 ## 元件坐标系 elementXYZ
 `物实坐标系`即为物实默认的坐标系  

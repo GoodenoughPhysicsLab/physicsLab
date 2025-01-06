@@ -108,6 +108,51 @@ class _Experiment:
     def __init__(*args, **kwargs) -> NoReturn:
         raise NotImplementedError
 
+    @_check_not_closed
+    def get_elements_count(self) -> int:
+        ''' 该实验的元件的数量 '''
+        return len(self.Elements)
+
+    @_check_not_closed
+    def clear_elements(self) -> None:
+        ''' 清空该实验的所有元件 '''
+        if self.experiment_type == ExperimentType.Circuit:
+            self.Wires.clear()
+        self.Elements.clear()
+        self._elements_position.clear()
+
+    @_check_not_closed
+    def del_element(self, element: "_ElementBase") -> None:
+        ''' 删除元件
+            @param element: 三大实验的元件
+        '''
+        if not isinstance(element, _ElementBase):
+            raise TypeError
+
+        identifier = element.data["Identifier"]
+
+        if self.experiment_type == ExperimentType.Circuit:
+            res_Wires = set()
+            for a_wire in self.Wires:
+                if a_wire.Source.element_self.data["Identifier"] == identifier \
+                        or a_wire.Target.element_self.data["Identifier"] == identifier:
+                    continue
+
+                res_Wires.add(a_wire)
+            self.Wires = res_Wires
+
+        for position, elements in self._elements_position.items():
+            if element in elements:
+                elements.remove(element)
+                break
+            if len(elements) == 0:
+                del self._elements_position[position]
+
+        for element in self.Elements:
+            if element is element:
+                self.Elements.remove(element)
+                break
+
     def __write(self) -> None:
         if self.experiment_type == ExperimentType.Circuit:
             status_save: dict = {
@@ -177,14 +222,14 @@ class _Experiment:
             if self.experiment_type == ExperimentType.Circuit:
                 _colorUtils.color_print(
                     f"Successfully {status} experiment \"{self.PlSav['InternalName']}\"! "
-                    f"{self.Elements.__len__()} elements, {self.Wires.__len__()} wires.",
+                    f"{self.get_elements_count()} elements, {self.Wires.__len__()} wires.",
                     color=_colorUtils.COLOR.GREEN
                 )
             elif self.experiment_type == ExperimentType.Celestial \
                     or self.experiment_type == ExperimentType.Electromagnetism:
                 _colorUtils.color_print(
                     f"Successfully {status} experiment \"{self.PlSav['InternalName']}\"! "
-                    f"{self.Elements.__len__()} elements.",
+                    f"{self.get_elements_count()} elements.",
                     color=_colorUtils.COLOR.GREEN
                 )
             else:
@@ -193,7 +238,7 @@ class _Experiment:
         return self
 
     @_check_not_closed
-    def exit(self, delete: bool = False) -> None:
+    def exit(self, *, delete: bool = False) -> None:
         ''' 立刻退出对该存档的操作
             Note: 如果没有在调用Experiment.exit前调用Experiment.save, 会丢失对存档的修改
         '''
@@ -204,8 +249,6 @@ class _Experiment:
                     f"Successfully delete experiment \"{self.PlSav['InternalName']}\"(\"{self.SAV_PATH}\")",
                     _colorUtils.COLOR.BLUE
                 )
-            elif self.open_mode != OpenMode.crt:
-                assert False
             if os.path.exists(self.SAV_PATH.replace(".sav", ".jpg")): # 用存档生成的实验无图片
                 os.remove(self.SAV_PATH.replace(".sav", ".jpg"))
 

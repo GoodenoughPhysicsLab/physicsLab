@@ -80,7 +80,7 @@ def get_element_from_index(experiment: _Experiment, index: int) -> _ElementBase:
     if not isinstance(index, int):
         raise TypeError
 
-    if 0 < index <= len(experiment.Elements):
+    if 0 < index <= experiment.get_elements_count():
         return experiment.Elements[index - 1]
     else:
         raise errors.ElementNotFound
@@ -94,67 +94,6 @@ def get_element_from_identifier(experiment: _Experiment, identifier: str) -> _El
             return element
     raise errors.ElementNotFound
 
-@_check_not_closed
-def del_element(experiment: _Experiment, element: _ElementBase) -> None:
-    ''' 删除元件
-        @param element: 三大实验的元件
-    '''
-    if not isinstance(experiment, _Experiment) or not isinstance(element, _ElementBase):
-        raise TypeError
-
-    identifier = element.data["Identifier"]
-
-    if experiment.experiment_type == ExperimentType.Circuit:
-        res_Wires = set()
-        for a_wire in experiment.Wires:
-            if a_wire.Source.element_self.data["Identifier"] == identifier \
-                    or a_wire.Target.element_self.data["Identifier"] == identifier:
-                continue
-
-            res_Wires.add(a_wire)
-        experiment.Wires = res_Wires
-
-    for position, elements in experiment._elements_position.items():
-        if element in elements:
-            elements.remove(element)
-            break
-        if len(elements) == 0:
-            del experiment._elements_position[position]
-
-    for element in experiment.Elements:
-        if element is element:
-            experiment.Elements.remove(element)
-            break
-
-@_check_not_closed
-def count_elements(experiment: _Experiment) -> int:
-    ''' 元件的数量 '''
-    if not isinstance(experiment, _Experiment):
-        raise TypeError
-
-    return len(experiment.Elements)
-
-def clear_elements(experiment: _Experiment) -> None:
-    ''' 清空元件 '''
-    if not isinstance(experiment, _Experiment):
-        raise TypeError
-
-    if experiment.experiment_type == ExperimentType.Circuit:
-        experiment.Wires.clear()
-    experiment.Elements.clear()
-    experiment._elements_position.clear()
-
-def _load_wires(experiment: _Experiment, _wires: list) -> None:
-    assert experiment.experiment_type == ExperimentType.Circuit
-
-    for wire_dict in _wires:
-        experiment.Wires.add(
-            Wire(
-                Pin(get_element_from_identifier(experiment, wire_dict["Source"]), wire_dict["SourcePin"]),
-                Pin(get_element_from_identifier(experiment, wire_dict["Target"]), wire_dict["TargetPin"]),
-                wire_dict["ColorName"][0] # e.g. "蓝"
-            )
-        )
 def _get_all_pl_sav() -> List[str]:
     ''' 获取所有物实存档的文件名 '''
     savs = [i for i in os.walk(_Experiment.SAV_PATH_DIR)][0][-1]
@@ -417,7 +356,7 @@ class Experiment(_Experiment):
 
             if self.experiment_type == ExperimentType.Circuit:
                 self.__load_elements(status_sav["Elements"])
-                _load_wires(self, status_sav["Wires"])
+                self.__load_wires(status_sav["Wires"])
             elif self.experiment_type == ExperimentType.Celestial:
                 self.__load_elements(list(status_sav["Elements"].values()))
             elif self.experiment_type == ExperimentType.Electromagnetism:
@@ -449,6 +388,18 @@ class Experiment(_Experiment):
             self.experiment_type = ExperimentType.Electromagnetism
         else:
             assert False
+
+    def __load_wires(self, _wires: list) -> None:
+        assert self.experiment_type == ExperimentType.Circuit
+
+        for wire_dict in _wires:
+            self.Wires.add(
+                Wire(
+                    Pin(get_element_from_identifier(self, wire_dict["Source"]), wire_dict["SourcePin"]),
+                    Pin(get_element_from_identifier(self, wire_dict["Target"]), wire_dict["TargetPin"]),
+                    wire_dict["ColorName"][0] # e.g. "蓝"
+                )
+            )
 
     def __load_elements(self, _elements: list) -> None:
         assert isinstance(_elements, list)
@@ -548,7 +499,7 @@ class experiment:
                 self._Experiment: _Experiment = _Experiment(OpenMode.crt, self.sav_name, self.experiment_type)
 
         if not self.read:
-            clear_elements(self._Experiment)
+            self._Experiment.clear_elements()
 
         if self.elementXYZ:
             if self._Experiment.experiment_type != ExperimentType.Circuit:

@@ -189,6 +189,8 @@ expe = Experiment(OpenMode.load_by_sav_name, "example")
 expe.exit(delete=True)
 ```
 
+> Note: `expe.exit(True)`这种写法会报错，因为这是一个`Keyword-Only argument`
+
 ## 停止操作存档
 ***低级api***
 `Experiment.exit`会立刻停止对存档的操作:
