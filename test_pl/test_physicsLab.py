@@ -46,13 +46,13 @@ class BasicTest(TestCase, ViztracerTool):
             self.assertTrue(count_elements(expe) == 27)
             expe.exit()
 
-        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Electromagnetism-Elements.sav"))
-        self.assertTrue(count_elements(expe) == 7)
-        expe.exit()
+        with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Electromagnetism-Elements.sav")) as expe:
+            self.assertTrue(count_elements(expe) == 7)
+            expe.exit()
 
-        expe = Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Electromagnetism-Elements.sav"))
-        self.assertTrue(count_elements(expe) == 7)
-        expe.exit()
+        with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Electromagnetism-Elements.sav")) as expe:
+            self.assertTrue(count_elements(expe) == 7)
+            expe.exit()
 
     @my_test_dec
     def test_load_from_app(self):
@@ -226,7 +226,7 @@ class BasicTest(TestCase, ViztracerTool):
             expe.exit()
 
     @my_test_dec
-    def test_del_Element(self):
+    def test_del_element(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             Logic_Input(0, 0, 0).o - Or_Gate(0, 0, 0).o
             del_element(expe, get_element_from_index(expe, 2))
@@ -234,7 +234,22 @@ class BasicTest(TestCase, ViztracerTool):
             self.assertEqual(count_wires(), 0)
             expe.exit()
 
-    # 测逝模块化电路连接导线
+        with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav")) as expe:
+            del_element(expe, get_element_from_index(expe, 1))
+            self.assertEqual(count_elements(expe), 90)
+            expe.exit()
+
+        with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Celestial-Elements.sav")) as expe:
+            del_element(expe, get_element_from_index(expe, 1))
+            self.assertEqual(count_elements(expe), 26)
+            expe.exit()
+
+        with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Electromagnetism-Elements.sav")) as expe:
+            del_element(expe, get_element_from_index(expe, 1))
+            self.assertEqual(count_elements(expe), 6)
+            expe.exit()
+
+    # 测试模块化电路连接导线
     @my_test_dec
     def test_wires(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
@@ -249,7 +264,7 @@ class BasicTest(TestCase, ViztracerTool):
             self.assertEqual(15, count_wires())
             expe.exit()
 
-    # 测逝模块化加法电路
+    # 测试模块化加法电路
     @my_test_dec
     def test_union_Sum2(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
