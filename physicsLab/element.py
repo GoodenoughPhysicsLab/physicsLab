@@ -10,7 +10,7 @@ from .web import User
 from .savTemplate import Generate
 from .circuit.wire import Wire, Pin
 from .enums import ExperimentType, Category
-from ._core import _Experiment, _ExperimentStack, OpenMode, _check_method, _ElementBase
+from ._core import _Experiment, _ExperimentStack, OpenMode, _check_not_closed, _ElementBase
 from .typehint import num_type, Optional, Union, List, overload, Tuple, Dict, Self
 
 def crt_element(
@@ -53,6 +53,8 @@ def crt_element(
     else:
         assert False
 
+# TODO 统一返回的行为，即始终返回列表之类的
+@_check_not_closed
 def get_element_from_position(
         experiment: _Experiment,
         x: num_type,
@@ -72,6 +74,7 @@ def get_element_from_position(
     result: list = experiment._elements_position[position]
     return result[0] if len(result) == 1 else result
 
+@_check_not_closed
 def get_element_from_index(experiment: _Experiment, index: int) -> _ElementBase:
     ''' 通过index (元件生成顺序) 索引元件 '''
     if not isinstance(index, int):
@@ -82,6 +85,7 @@ def get_element_from_index(experiment: _Experiment, index: int) -> _ElementBase:
     else:
         raise errors.ElementNotFound
 
+@_check_not_closed
 def get_element_from_identifier(experiment: _Experiment, identifier: str) -> _ElementBase:
     ''' 通过原件的id获取元件的引用 '''
     for element in experiment.Elements:
@@ -90,87 +94,55 @@ def get_element_from_identifier(experiment: _Experiment, identifier: str) -> _El
             return element
     raise errors.ElementNotFound
 
+@_check_not_closed
 def del_element(experiment: _Experiment, element: _ElementBase) -> None:
     ''' 删除元件
         @param element: 三大实验的元件
     '''
-    if not isinstance(element, _ElementBase):
+    if not isinstance(experiment, _Experiment) or not isinstance(element, _ElementBase):
         raise TypeError
 
     identifier = element.data["Identifier"]
 
-    res_Wires = set()
-    for a_wire in experiment.Wires:
-        if a_wire.Source.element_self.data["Identifier"] == identifier or \
-        a_wire.Target.element_self.data["Identifier"] == identifier:
-            continue
+    if experiment.experiment_type == ExperimentType.Circuit:
+        res_Wires = set()
+        for a_wire in experiment.Wires:
+            if a_wire.Source.element_self.data["Identifier"] == identifier \
+                    or a_wire.Target.element_self.data["Identifier"] == identifier:
+                continue
 
-        res_Wires.add(a_wire)
-    experiment.Wires = res_Wires
+            res_Wires.add(a_wire)
+        experiment.Wires = res_Wires
 
-    # 删除_elements_position中的引用
-    for elements in experiment._elements_position.values():
+    for position, elements in experiment._elements_position.items():
         if element in elements:
             elements.remove(element)
             break
+        if len(elements) == 0:
+            del experiment._elements_position[position]
 
-    # 删除elements_Index中的引用
     for element in experiment.Elements:
         if element is element:
             experiment.Elements.remove(element)
             break
 
+@_check_not_closed
 def count_elements(experiment: _Experiment) -> int:
     ''' 元件的数量 '''
+    if not isinstance(experiment, _Experiment):
+        raise TypeError
+
     return len(experiment.Elements)
 
 def clear_elements(experiment: _Experiment) -> None:
     ''' 清空元件 '''
-    experiment.Wires.clear()
+    if not isinstance(experiment, _Experiment):
+        raise TypeError
+
+    if experiment.experiment_type == ExperimentType.Circuit:
+        experiment.Wires.clear()
     experiment.Elements.clear()
     experiment._elements_position.clear()
-
-def __load_elements(experiment: _Experiment, _elements: list) -> None:
-    assert isinstance(_elements, list)
-
-    for element in _elements:
-        # Unity 采用左手坐标系
-        x, z, y = eval(f"({element['Position']})")
-
-        # 实例化对象
-        if experiment.experiment_type == ExperimentType.Circuit:
-            if element["ModelID"] == "Simple Instrument":
-                from .circuit.elements.otherCircuit import Simple_Instrument
-                obj = Simple_Instrument(
-                    x, y, z, elementXYZ=False,
-                    instrument=int(element["Properties"].get("乐器", 0)),
-                    pitch=int(element["Properties"]["音高"]),
-                    velocity=element["Properties"]["音量"],
-                    rated_oltage=element["Properties"]["额定电压"],
-                    is_ideal_model=bool(element["Properties"]["理想模式"]),
-                    is_single=bool(element["Properties"]["脉冲"])
-                )
-                for attr, val in element["Properties"].items():
-                    if attr.startswith("音高"):
-                        obj.add_note(int(val))
-            else:
-                obj = crt_element(experiment, element["ModelID"], x, y, z, elementXYZ=False)
-                obj.data["Properties"] = element["Properties"]
-                obj.data["Properties"]["锁定"] = 1.0
-            # 设置角度信息
-            rotation = eval(f'({element["Rotation"]})')
-            r_x, r_y, r_z = rotation[0], rotation[2], rotation[1]
-            obj.set_rotation(r_x, r_y, r_z)
-            obj.data['Identifier'] = element['Identifier']
-
-        elif experiment.experiment_type == ExperimentType.Celestial:
-            obj = crt_element(experiment, element["Model"], x, y, z)
-            obj.data = element
-        elif experiment.experiment_type == ExperimentType.Electromagnetism:
-            obj = crt_element(experiment, element["ModelID"], x, y, z)
-            obj.data = element
-        else:
-            assert False
 
 def _load_wires(experiment: _Experiment, _wires: list) -> None:
     assert experiment.experiment_type == ExperimentType.Circuit
@@ -183,27 +155,6 @@ def _load_wires(experiment: _Experiment, _wires: list) -> None:
                 wire_dict["ColorName"][0] # e.g. "蓝"
             )
         )
-
-def _load_elements(experiment: _Experiment) -> _Experiment:
-    ''' 读取实验已有状态 '''
-    if experiment.open_mode == OpenMode.crt:
-        errors.warning("can not read because you create this experiment")
-        return experiment
-
-    status_sav = json.loads(experiment.PlSav["Experiment"]["StatusSave"])
-
-    if experiment.experiment_type == ExperimentType.Circuit:
-        __load_elements(experiment, status_sav["Elements"])
-        _load_wires(experiment, status_sav["Wires"])
-    elif experiment.experiment_type == ExperimentType.Celestial:
-        __load_elements(experiment, list(status_sav["Elements"].values()))
-    elif experiment.experiment_type == ExperimentType.Electromagnetism:
-        __load_elements(experiment, status_sav["Elements"])
-    else:
-        assert False
-
-    return experiment
-
 def _get_all_pl_sav() -> List[str]:
     ''' 获取所有物实存档的文件名 '''
     savs = [i for i in os.walk(_Experiment.SAV_PATH_DIR)][0][-1]
@@ -462,7 +413,17 @@ class Experiment(_Experiment):
         if self.open_mode == OpenMode.load_by_sav_name \
                 or self.open_mode == OpenMode.load_by_filepath \
                 or self.open_mode == OpenMode.load_by_plar_app:
-            _load_elements(self)
+            status_sav = json.loads(self.PlSav["Experiment"]["StatusSave"])
+
+            if self.experiment_type == ExperimentType.Circuit:
+                self.__load_elements(status_sav["Elements"])
+                _load_wires(self, status_sav["Wires"])
+            elif self.experiment_type == ExperimentType.Celestial:
+                self.__load_elements(list(status_sav["Elements"].values()))
+            elif self.experiment_type == ExperimentType.Electromagnetism:
+                self.__load_elements(status_sav["Elements"])
+            else:
+                assert False
 
     def __load(self) -> None:
         assert isinstance(self.PlSav["Experiment"]["CameraSave"], str)
@@ -488,6 +449,48 @@ class Experiment(_Experiment):
             self.experiment_type = ExperimentType.Electromagnetism
         else:
             assert False
+
+    def __load_elements(self, _elements: list) -> None:
+        assert isinstance(_elements, list)
+
+        for element in _elements:
+            # Unity 采用左手坐标系
+            x, z, y = eval(f"({element['Position']})")
+
+            # 实例化对象
+            if self.experiment_type == ExperimentType.Circuit:
+                if element["ModelID"] == "Simple Instrument":
+                    from .circuit.elements.otherCircuit import Simple_Instrument
+                    obj = Simple_Instrument(
+                        x, y, z, elementXYZ=False,
+                        instrument=int(element["Properties"].get("乐器", 0)),
+                        pitch=int(element["Properties"]["音高"]),
+                        velocity=element["Properties"]["音量"],
+                        rated_oltage=element["Properties"]["额定电压"],
+                        is_ideal_model=bool(element["Properties"]["理想模式"]),
+                        is_single=bool(element["Properties"]["脉冲"])
+                    )
+                    for attr, val in element["Properties"].items():
+                        if attr.startswith("音高"):
+                            obj.add_note(int(val))
+                else:
+                    obj = crt_element(self, element["ModelID"], x, y, z, elementXYZ=False)
+                    obj.data["Properties"] = element["Properties"]
+                    obj.data["Properties"]["锁定"] = 1.0
+                # 设置角度信息
+                rotation = eval(f'({element["Rotation"]})')
+                r_x, r_y, r_z = rotation[0], rotation[2], rotation[1]
+                obj.set_rotation(r_x, r_y, r_z)
+                obj.data['Identifier'] = element['Identifier']
+
+            elif self.experiment_type == ExperimentType.Celestial:
+                obj = crt_element(self, element["Model"], x, y, z)
+                obj.data = element
+            elif self.experiment_type == ExperimentType.Electromagnetism:
+                obj = crt_element(self, element["ModelID"], x, y, z)
+                obj.data = element
+            else:
+                assert False
 
     def __enter__(self) -> Self:
         return self
@@ -542,8 +545,8 @@ class experiment:
             except errors.ExperimentNotExistError:
                 self._Experiment: _Experiment = _Experiment(OpenMode.crt, self.sav_name, self.experiment_type)
 
-        if self.read:
-            _load_elements(self._Experiment)
+        if not self.read:
+            clear_elements(self._Experiment)
 
         if self.elementXYZ:
             if self._Experiment.experiment_type != ExperimentType.Circuit:

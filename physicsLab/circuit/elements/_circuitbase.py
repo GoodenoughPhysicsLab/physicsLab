@@ -12,7 +12,7 @@ from physicsLab._core import _Experiment, get_current_experiment, _ElementBase
 from physicsLab.typehint import Optional, Self, num_type, NoReturn, Generate, override, final
 
 # electricity class's metaClass
-class CircuitMeta(type):
+class _CircuitMeta(type):
     def __call__(cls,
                  x: num_type,
                  y: num_type,
@@ -48,7 +48,7 @@ class CircuitMeta(type):
 
         return self
 
-class CircuitBase(_ElementBase, metaclass=CircuitMeta):
+class CircuitBase(_ElementBase, metaclass=_CircuitMeta):
     ''' 所有电学元件的父类 '''
     experiment: _Experiment # 元件所属的实验
     is_elementXYZ: bool

@@ -67,7 +67,7 @@ def get_current_experiment() -> "_Experiment":
     ''' 获取当前正在操作的存档 '''
     return _ExperimentStack.top()
 
-def _check_method(method: Callable) -> Callable:
+def _check_not_closed(method: Callable) -> Callable:
     def res(self: "_Experiment", *args, **kwargs):
         assert isinstance(self, _Experiment)
         if not _ExperimentStack.inside(self): # 存档已被关闭
@@ -144,7 +144,7 @@ class _Experiment:
 
         self.PlSav["Experiment"]["StatusSave"] = json.dumps(status_save, ensure_ascii=True, separators=(',', ': '))
 
-    @_check_method
+    @_check_not_closed
     def save(
             self,
             target_path: Optional[str] = None,
@@ -192,7 +192,7 @@ class _Experiment:
 
         return self
 
-    @_check_method
+    @_check_not_closed
     def exit(self, delete: bool = False) -> None:
         ''' 立刻退出对该存档的操作
             Note: 如果没有在调用Experiment.exit前调用Experiment.save, 会丢失对存档的修改
@@ -217,7 +217,7 @@ class _Experiment:
         self.PlSav["Summary"]["Subject"] = sav_name
         self.PlSav["InternalName"] = sav_name
 
-    @_check_method
+    @_check_not_closed
     def entitle(self, sav_name: str) -> Self:
         ''' 对存档名进行重命名 '''
         if not isinstance(sav_name, str):
@@ -226,7 +226,7 @@ class _Experiment:
         self.__entitle(sav_name)
         return self
 
-    @_check_method
+    @_check_not_closed
     def edit_publish_info(
             self,
             title: Optional[str] = None,
@@ -258,7 +258,7 @@ class _Experiment:
 
         return self
 
-    @_check_method
+    @_check_not_closed
     def edit_tags(self, *tags: Tag) -> Self:
         if not all(isinstance(tag, Tag) for tag in tags):
             raise TypeError
@@ -345,7 +345,7 @@ class _Experiment:
 
         return submit_response.json(), submit_data
 
-    @_check_method
+    @_check_not_closed
     def upload(
             self,
             user: User,
@@ -384,7 +384,7 @@ class _Experiment:
 
         return self
 
-    @_check_method
+    @_check_not_closed
     def update(
             self,
             user: User,
@@ -475,7 +475,7 @@ class _Experiment:
 
         return self
 
-    @_check_method
+    @_check_not_closed
     def paused(self, status: bool = True) -> Self:
         ''' 暂停或解除暂停实验 '''
         if not isinstance(status, bool):
@@ -486,7 +486,7 @@ class _Experiment:
 
         return self
 
-    @_check_method
+    @_check_not_closed
     def export(self, output_path: str = "temp.pl.py", sav_name: str = "temp") -> Self:
         ''' 以physicsLab代码的形式导出实验 '''
         res: str = f"from physicsLab import *\nexp = Experiment('{sav_name}')\n"
@@ -502,7 +502,7 @@ class _Experiment:
 
         return self
 
-    @_check_method
+    @_check_not_closed
     def merge(
             self,
             other: "_Experiment",
