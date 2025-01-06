@@ -3,7 +3,7 @@
 ## 第一个程序
 元件浮空几乎成为了修改存档的代名词，因此，就让我们从创建一个悬空的逻辑输入开始吧：
 ```Python
-from physicsLab import *
+from physicsLab import Experiment, Logic_Input
 
 with Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=True):
     Logic_Input(0, 0, 0.1)
