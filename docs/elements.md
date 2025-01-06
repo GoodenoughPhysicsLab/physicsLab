@@ -293,7 +293,7 @@
         <td>运算放大器</td>
         <td>Operational_Amplifier</td>
         <td>Operational Amplifier</td>
-        <td>i_up, i_low, o</td>
+        <td>i_neg, i_pos, o</td>
     </tr>
     <tr>
         <td>继电器</td>

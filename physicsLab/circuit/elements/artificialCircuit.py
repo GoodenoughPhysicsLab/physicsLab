@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from ._circuitbase import CircuitBase, TwoPinMixIn, Pin
-from physicsLab.typehint import Optional, num_type, CircuitElementData, Generate
+from physicsLab.typehint import Optional, num_type, CircuitElementData, Generate, Self
 
 class NE555(CircuitBase):
     ''' 555定时器 '''
@@ -299,12 +299,27 @@ class Operational_Amplifier(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
+    def initialize(self, gain: num_type = 10000000, max: num_type = 1000, min: num_type = -1000) -> Self:
+        ''' 初始化运算放大器 '''
+        if not isinstance(gain, (int, float)) or \
+                not isinstance(max, (int, float)) or \
+                not isinstance(min, (int, float)):
+            raise TypeError
+
+        if max <= min:
+            raise ValueError("Maximun voltage must be greater than minimum voltage")
+
+        self.data["Properties"]["增益系数"] = gain
+        self.data["Properties"]["最大电压"] = max
+        self.data["Properties"]["最小电压"] = min
+        return self
+
     @property
-    def i_up(self) -> Pin:
+    def i_neg(self) -> Pin:
         return Pin(self, 0)
 
     @property
-    def i_low(self) -> Pin:
+    def i_pos(self) -> Pin:
         return Pin(self, 1)
 
     @property
