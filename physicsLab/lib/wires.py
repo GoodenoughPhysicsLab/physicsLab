@@ -7,29 +7,25 @@ from physicsLab.circuit.wire import crt_wire, del_wire, Pin
 
 class UnitPin:
     ''' 模块化电路的"引脚", 输入输出都是数据 '''
-    __slots__ = ("lib_self", "elementPins")
-    def __init__(self, lib_self, *elementPins):
+    __slots__ = ("lib_self", "pins")
+    def __init__(self, lib_self, *pins):
         self.lib_self = lib_self
-        self.elementPins: Tuple[Pin] = tuple(elementPins)
+        self.pins: Tuple[Pin] = tuple(pins)
 
     # 通过unionPin[num]来索引单个bit
-    def __getitem__(self, item: Union[int, slice]) -> Pin:
+    def __getitem__(self, item: Union[int, slice]) -> Union[Pin, "UnitPin"]:
         if isinstance(item, int):
-            return self.elementPins[item]
+            return self.pins[item]
         elif isinstance(item, slice):
-            return UnitPin(self.lib_self, *self.elementPins[item])
+            return UnitPin(self.lib_self, *self.pins[item])
         else:
             raise TypeError
 
-    def __sub__(self, other: Union[Pin, "UnitPin"]):
-        crt_wires(self, other)
-        return other
-
     def __iter__(self):
-        return iter(self.elementPins)
+        return iter(self.pins)
 
     def __next__(self):
-        for i in self.elementPins:
+        for i in self.pins:
             yield i
 
 def check_TypeUnionPin(func: Callable):
@@ -46,12 +42,12 @@ def check_TypeUnionPin(func: Callable):
         if not isinstance(sourcePin, UnitPin) or not isinstance(targetPin, UnitPin):
             raise TypeError
 
-        if len(sourcePin.elementPins) != len(targetPin.elementPins):
+        if len(sourcePin.pins) != len(targetPin.pins):
             errors.warning(
                 f"The number of {sourcePin.lib_self.__class__.__name__}'s output pin "
-                f"is {len(sourcePin.elementPins)}, "
+                f"is {len(sourcePin.pins)}, "
                 f"but the number of {targetPin.lib_self.__class__.__name__}'s input pin "
-                f"is {len(targetPin.elementPins)}."
+                f"is {len(targetPin.pins)}."
             )
 
         func(sourcePin, targetPin, *args, **kwargs)
@@ -63,7 +59,7 @@ def crt_wires(sourcePin: Union[UnitPin, Pin],
               color: WireColor = WireColor.blue,
               ) -> None:
     ''' 为unionPin连接导线, 相当于自动对数据进行连接导线 '''
-    for i, o in zip(sourcePin.elementPins, targetPin.elementPins):
+    for i, o in zip(sourcePin.pins, targetPin.pins):
         crt_wire(i, o, color=color)
 
 @check_TypeUnionPin
@@ -71,5 +67,5 @@ def del_wires(sourcePin: Union[UnitPin, Pin],
               targetPin: Union[UnitPin, Pin],
               ) -> None:
     ''' 删除unionPin的导线 '''
-    for i, o in zip(sourcePin.elementPins, targetPin.elementPins):
+    for i, o in zip(sourcePin.pins, targetPin.pins):
         del_wire(i, o)

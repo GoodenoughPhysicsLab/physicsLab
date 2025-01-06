@@ -3,7 +3,7 @@ import physicsLab.errors as errors
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from .wires import UnitPin, crt_wires
-from physicsLab._tools import roundData
+from physicsLab._tools import round_data
 from physicsLab.circuit import elements
 from physicsLab.circuit.wire import crt_wire, Pin
 from physicsLab._core import get_current_experiment
@@ -51,7 +51,7 @@ class Super_AndGate:
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = roundData(x, y, z)
+        x, y, z = (round_data(x), round_data(y), round_data(z))
         self.bitnum = bitnum
 
         if bitnum == 2:
@@ -64,12 +64,12 @@ class Super_AndGate:
             self._inputs = [m.i_low, m.i_lowmid, m.i_upmid, m.i_up]
             self._outputs = m.o_up
             if bitnum == 3:
-                m.i_up - m.i_upmid
+                crt_wires(m.i_up, m.i_upmid)
             return
         if bitnum == 5:
             m = elements.Multiplier(x, y, z, elementXYZ=True)
             a = elements.And_Gate(x, y, z, elementXYZ=True)
-            m.o_up - a.i_low
+            crt_wires(m.o_up, a.i_low)
             self._inputs = [m.i_low, m.i_lowmid, m.i_upmid, m.i_up, a.i_up]
             self._outputs = a.o
             return
@@ -89,7 +89,7 @@ class Super_AndGate:
 
         if mod_num == 3:
             end_element = elements.Multiplier(x, y, z, elementXYZ=True)
-            end_element.i_up - end_element.i_upmid
+            crt_wires(end_element.i_up, end_element.i_upmid)
             crt_wires(UnitPin(None, *(mul.o_up for mul in muls), end_element.o_up), tmp.inputs)
             for mul in muls:
                 self._inputs += [mul.i_low, mul.i_lowmid, mul.i_upmid, mul.i_up]
@@ -104,7 +104,7 @@ class Super_AndGate:
 
         elif mod_num == 1:
             for mul, i in zip(muls, tmp._inputs):
-                mul.o_up - i
+                crt_wires(mul.o_up, i)
             for mul in muls:
                 self._inputs += [mul.i_low, mul.i_lowmid, mul.i_upmid, mul.i_up]
             self._inputs += tmp._inputs[len(muls):]
@@ -144,7 +144,7 @@ class Super_OrGate:
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = roundData(x, y, z)
+        x, y, z = (round_data(x), round_data(y), round_data(z))
         self.bitnum = bitnum
 
         if bitnum == 2:
@@ -156,7 +156,7 @@ class Super_OrGate:
         elif bitnum == 3:
             tmp = elements.Or_Gate(x, y, z, True)
             tmp2 = elements.Or_Gate(x, y + 1, z, True)
-            tmp2.o - tmp.i_up
+            crt_wires(tmp2.o, tmp.i_up)
             self._inputs = [tmp.i_low, tmp2.i_low, tmp2.i_up]
             self._outputs = [tmp.o]
             self._output = tmp.o
@@ -174,7 +174,7 @@ class Super_OrGate:
             next_orgates = Super_OrGate(x, y, z, len(self._outputs), True)
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
-                crt_wire(input_, output_)
+                crt_wires(input_, output_)
         else: # num % 2 == 1
             num_copy = bitnum
             while num_copy != 1:
@@ -186,7 +186,7 @@ class Super_OrGate:
             self._inputs.append(next_orgates._inputs[-1])
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
-                crt_wire(input_, output_)
+                crt_wires(input_, output_)
 
     @property
     def inputs(self) -> UnitPin:
@@ -216,7 +216,7 @@ class Super_NorGate:
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = roundData(x, y, z)
+        x, y, z = (round_data(x), round_data(y), round_data(z))
         self.bitnum = bitnum
 
         if bitnum == 2:
@@ -228,7 +228,7 @@ class Super_NorGate:
         elif bitnum == 3:
             tmp = elements.Nor_Gate(x, y, z, True)
             tmp2 = elements.Or_Gate(x, y + 1, z, True)
-            tmp2.o - tmp.i_up
+            crt_wires(tmp2.o, tmp.i_up)
             self._inputs = [tmp.i_low, tmp2.i_low, tmp2.i_up]
             self._outputs = [tmp.o]
             self._output = tmp.o
@@ -246,7 +246,7 @@ class Super_NorGate:
             next_orgates = Super_NorGate(x, y, z, True, len(self._outputs))
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
-                crt_wire(input_, output_)
+                crt_wires(input_, output_)
         else: # num % 2 == 1
             num_copy = bitnum
             while num_copy != 1:
@@ -258,7 +258,7 @@ class Super_NorGate:
             self._inputs.append(next_orgates._inputs[-1])
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
-                crt_wire(input_, output_)
+                crt_wires(input_, output_)
 
     @property
     def inputs(self) -> UnitPin:
@@ -292,7 +292,7 @@ class Tick_Counter:
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = roundData(x, y, z)
+        x, y, z = (round_data(x), round_data(y), round_data(z))
         self.bitnum = bitnum
 
         if bitnum == 2:
@@ -323,10 +323,10 @@ class Tick_Counter:
 
             imp = elements.Imp_Gate(x, y + 1, z, True)
             or_gate = elements.Or_Gate(x, y, z, True)
-            or_gate.i_low - or_gate.o
-            or_gate.o - imp.i_up
-            or_gate.i_up - self._output.i_up
-            imp.o - self._output.i_low
+            crt_wires(or_gate.i_low, or_gate.o)
+            crt_wires(or_gate.o, imp.i_up)
+            crt_wires(or_gate.i_up, self._output.i_up)
+            crt_wires(imp.o, self._output.i_low)
             crt_wires(self._o, imp.i_low)
 
     @property
@@ -359,18 +359,18 @@ class Two_four_Decoder:
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = roundData(x, y, z)
+        x, y, z = (round_data(x), round_data(y), round_data(z))
 
         self.nor_gate = elements.Nor_Gate(x, y, z, True)
         self.nimp_gate1 = elements.Nimp_Gate(x + 1, y, z, True)
         self.nimp_gate2 = elements.Nimp_Gate(x + 1, y + 1, z, True)
         self.and_gate = elements.And_Gate(x, y + 1, z, True)
-        self.nor_gate.i_up - self.nimp_gate1.i_low
-        self.nimp_gate1.i_low - self.nimp_gate2.i_up
-        self.nimp_gate2.i_up - self.and_gate.i_up
-        self.nor_gate.i_low - self.nimp_gate1.i_up
-        self.nimp_gate1.i_up - self.nimp_gate2.i_low
-        self.nimp_gate2.i_low - self.and_gate.i_low
+        crt_wires(self.nor_gate.i_up, self.nimp_gate1.i_low)
+        crt_wires(self.nimp_gate1.i_low, self.nimp_gate2.i_up)
+        crt_wires(self.nimp_gate2.i_up, self.and_gate.i_up)
+        crt_wires(self.nor_gate.i_low, self.nimp_gate1.i_up)
+        crt_wires(self.nimp_gate1.i_up, self.nimp_gate2.i_low)
+        crt_wires(self.nimp_gate2.i_low, self.and_gate.i_low)
 
     @property
     def inputs(self) -> UnitPin:
@@ -409,7 +409,7 @@ class Switched_Register:
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = roundData(x, y, z)
+        x, y, z = (round_data(x), round_data(y), round_data(z))
         self.bitnum = bitnum
 
         self.register = Register(x + 1, y, z, bitnum, elementXYZ=True, heading=False)
@@ -417,9 +417,9 @@ class Switched_Register:
         self.switches = []
         for delta_y in range(bitnum):
             m = elements.Multiplier(x, y + delta_y * 2, z, True)
-            m.o_lowmid - self.register.inputs[delta_y]
-            m.i_up - self.switch_nogate.o
-            m.i_lowmid - self.switch_nogate.i
+            crt_wires(m.o_lowmid, self.register.inputs[delta_y])
+            crt_wires(m.i_up, self.switch_nogate.o)
+            crt_wires(m.i_lowmid, self.switch_nogate.i)
             self.switches.append(m)
 
     @property
@@ -465,14 +465,14 @@ class Equal_to:
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = roundData(x, y, z)
+        x, y, z = (round_data(x), round_data(y), round_data(z))
         self.bitnum = bitnum
 
         self.xnorgates = []
         self.andgate = Super_AndGate(x, y, z, bitnum=bitnum, elementXYZ=True)
         for delta_y in range(bitnum):
             xnorgate = elements.Xnor_Gate(x, y + delta_y, z, True)
-            self.andgate.inputs[delta_y] - xnorgate.o
+            crt_wires(self.andgate.inputs[delta_y], xnorgate.o)
             self.xnorgates.append(xnorgate)
 
     @property
@@ -504,21 +504,21 @@ class Signed_Sum:
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = roundData(x, y, z)
+        x, y, z = (round_data(x), round_data(y), round_data(z))
         self.bitnum = bitnum
 
         self._inputs = AU_SumSub(x, y, z, bitnum=bitnum, elementXYZ=True)
         self._outputs = AU_SumSub(x + 2, y, z, bitnum=bitnum, elementXYZ=True)
-        self._inputs.outputs[:-1] - self._outputs.inputs2
+        crt_wires(self._inputs.outputs[:-1], self._outputs.inputs2)
         self.xorgate = elements.Xor_Gate(x, y + bitnum * 2, z, True)
         nimpgate = elements.Nimp_Gate(x + 1, y + bitnum * 2, z, True)
         self.xorgate2 = elements.Xor_Gate(x + 2, y + bitnum * 2, z, True)
-        self.xorgate.o - self._inputs.switch
-        nimpgate.o - self._outputs.switch
-        self.xorgate.i_up - self.xorgate2.i_up
-        self.xorgate.o - nimpgate.i_up
-        nimpgate.i_low - self._inputs.outputs[-1]
-        nimpgate.o - self.xorgate2.i_low
+        crt_wires(self.xorgate.o, self._inputs.switch)
+        crt_wires(nimpgate.o, self._outputs.switch)
+        crt_wires(self.xorgate.i_up, self.xorgate2.i_up)
+        crt_wires(self.xorgate.o, nimpgate.i_up)
+        crt_wires(nimpgate.i_low, self._inputs.outputs[-1])
+        crt_wires(nimpgate.o, self.xorgate2.i_low)
 
     @property
     def inputs1(self) -> UnitPin:
@@ -576,7 +576,7 @@ class _Simple_Logic_Meta(type):
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
+        x, y, z = (round_data(x), round_data(y), round_data(z))
 
         self.__init__(x=x,
                       y=y,
@@ -649,7 +649,7 @@ class Sum(_Base):
 
         # 连接导线
         for i in range(self._elements.__len__() - 1):
-                self._elements[i].o_low - self._elements[i + 1].i_low
+                crt_wires(self._elements[i].o_low, self._elements[i + 1].i_low)
 
     @property
     def inputs1(self) -> UnitPin:
@@ -733,12 +733,11 @@ class Sub(_Base):
                         elements.No_Gate(x, y + increase * 2 + 1, z, True)
                     )
 
-        # 连接导线
-        self._elements[0].o - self._fullAdders[0].i_low
+        crt_wires(self._elements[0].o, self._fullAdders[0].i_low)
         for i in range(self._fullAdders.__len__() - 1):
-            self._fullAdders[i].o_low - self._fullAdders[i + 1].i_low
-            self._noGates[i].o - self._fullAdders[i].i_mid
-        self._noGates[-1].o - self._fullAdders[-1].i_mid
+            crt_wires(self._fullAdders[i].o_low, self._fullAdders[i + 1].i_low)
+            crt_wires(self._noGates[i].o, self._fullAdders[i].i_mid)
+        crt_wires(self._noGates[-1].o, self._fullAdders[-1].i_mid)
 
         self._elements.extend(self._fullAdders + self._noGates)
 
@@ -827,11 +826,11 @@ class AU_SumSub(_Base):
 
         # 连接导线
         for i in range(self._fullAdders.__len__() - 1):
-            self._fullAdders[i].o_low - self._fullAdders[i + 1].i_low
-            self._xorgates[i].o - self._fullAdders[i].i_mid
-            self._xorgates[i].i_low - self._xorgates[i + 1].i_low
-        self._xorgates[-1].o - self._fullAdders[-1].i_mid
-        self._xorgates[0].i_low - self._fullAdders[0].i_low
+            crt_wires(self._fullAdders[i].o_low, self._fullAdders[i + 1].i_low)
+            crt_wires(self._xorgates[i].o, self._fullAdders[i].i_mid)
+            crt_wires(self._xorgates[i].i_low, self._xorgates[i + 1].i_low)
+        crt_wires(self._xorgates[-1].o, self._fullAdders[-1].i_mid)
+        crt_wires(self._xorgates[0].i_low, self._fullAdders[0].i_low)
 
         self._elements.extend(self._fullAdders + self._xorgates)
 
@@ -923,20 +922,20 @@ class D_WaterLamp(_Base):
 
         # 连接clk
         for i in range(len(self._elements) - 1):
-            self._elements[i].i_low - self._elements[i + 1].i_low
+            crt_wires(self._elements[i].i_low, self._elements[i + 1].i_low)
         # 连接数据传输导线
-        self._elements[0].o_low - self._elements[1].i_up
+        crt_wires(self._elements[0].o_low, self._elements[1].i_up)
         for i in range(1, len(self._elements) - 1):
-            self._elements[i].o_up - self._elements[i + 1].i_up
+            crt_wires(self._elements[i].o_up, self._elements[i + 1].i_up)
         # 流水灯循环导线
         if is_loop:
-            self._elements[-1].o_low - self._elements[0].i_up
+            crt_wires(self._elements[-1].o_low, self._elements[0].i_up)
         else:
             firstElement = self._elements[0]
             orGate = elements.Or_Gate(*firstElement.get_Position(), True)
-            orGate.i_up - orGate.o
-            orGate.o - firstElement.i_up
-            orGate.i_low - firstElement.i_low
+            crt_wires(orGate.i_up, orGate.o)
+            crt_wires(orGate.o, firstElement.i_up)
+            crt_wires(orGate.i_low, firstElement.i_low)
 
     @property
     def inputs(self) -> UnitPin:
@@ -1015,7 +1014,7 @@ class Register(_Base):
         last_element = None
         for element in self._elements:
             if last_element is not None:
-                element.i_low - last_element.i_low
+                crt_wires(element.i_low, last_element.i_low)
             last_element = element
 
     @property

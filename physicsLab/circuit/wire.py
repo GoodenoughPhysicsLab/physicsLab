@@ -13,17 +13,6 @@ class Pin:
         self.element_self = input_self
         self.pinLabel: int = pinLabel
 
-    # 重载减法运算符作为连接导线的语法
-    def __sub__(self, obj: Union["Pin", "UnitPin"]) -> Union["Pin", "UnitPin"]:
-        from physicsLab.lib.wires import UnitPin, crt_wires
-        if isinstance(obj, Pin):
-            crt_wire(self, obj)
-        elif isinstance(obj, UnitPin):
-            crt_wires(self, obj)
-        else:
-            raise TypeError
-        return obj
-
     def __eq__(self, other) -> bool:
         if not isinstance(other, Pin):
             return False
