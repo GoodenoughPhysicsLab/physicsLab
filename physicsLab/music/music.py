@@ -469,18 +469,25 @@ class Chord:
 
         return self
 
-    # 将Chord存储的数据转变为对应的物实的电路
-    def release(self,
-                x: num_type = 0,
-                y: num_type = 0,
-                z: num_type = 0,
-                elementXYZ: Optional[bool] = None,
-                is_optimize: bool = True,
-                ) -> elements.Simple_Instrument:
+    def release(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            elementXYZ: Optional[bool] = None,
+            is_optimize: bool = True,
+    ) -> elements.Simple_Instrument:
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(elementXYZ, (bool, type(None))) \
+                or not isinstance(is_optimize, bool):
+            raise TypeError
+
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
+        x, y, z = roundData(x, y, z)
 
         first_ins: Optional[elements.Simple_Instrument] = None # 第一个音符
         if is_optimize:
@@ -681,15 +688,15 @@ class Piece:
     def __next__(self):
         yield next(self.__iter)
 
-    def release(self, x: num_type = 0, y: num_type = 0, z: num_type = 0, elementXYZ = None) -> None:
+    def release(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         ''' 将Piece转换为物实对应的电路
             x, y, z: 电路最左下角的元件的坐标
             elementXYZ: x, y, z是否是元件坐标系
         '''
-        if not isinstance(x, (int, float)) or \
-                not isinstance(y, (int, float)) or \
-                not isinstance(z, (int, float)) or \
-                not isinstance(self, Piece):
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(elementXYZ, (bool, type(None))):
             raise TypeError
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
