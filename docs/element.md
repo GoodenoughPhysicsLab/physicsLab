@@ -16,8 +16,8 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
 from physicsLab import *
 
 with Experiment(OpenMode.load_by_sav_name, "example") as expe:
-    crt_element(expe, "Logic Input", 0, 0, 0) # Model ID
-    crt_element(expe, "Logic_Input", 0, 0, 0) # class name
+    expe.crt_element("Logic Input", 0, 0, 0) # Model ID
+    expe.crt_element("Logic_Input", 0, 0, 0) # class name
 ```
 `name`参数不仅支持物实存档中的`ModelID`对应的字符串，还支持`physicsLab`中类的名字
 

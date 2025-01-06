@@ -108,7 +108,7 @@ class BasicTest(TestCase, ViztracerTool):
         self.assertEqual(expe.get_wires_count(), 0)
         self.assertEqual(expe.get_elements_count(), 1)
         crt_wire(a.o, a.i)
-        crt_element(expe, "Logic Input")
+        expe.crt_element("Logic Input", 0, 0, 0)
         self.assertEqual(expe.get_elements_count(), 2)
         expe.get_element_from_position(0, 0, 0)
         expe.exit(delete=True)

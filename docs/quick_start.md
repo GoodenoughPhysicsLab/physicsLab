@@ -46,7 +46,7 @@ from physicsLab import *
 with Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=True):
     a = Logic_Input(-1, 0, 0, elementXYZ=True)
     b = Logic_Output(1, 0, 0, elementXYZ=True)
-    a.o - b.i # a的输出引脚 与 b的输入引脚 连接导线
+    crt_wire(a.o, b.i) # a的输出引脚 与 b的输入引脚 连接导线
 ```
 更多引脚的信息请查看[elements.md](./elements.md)
 更多用法请查看[wire.md](./wire.md)

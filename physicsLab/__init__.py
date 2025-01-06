@@ -4,15 +4,10 @@
 # 颜色打印
 from ._colorUtils import close_color_print
 # 操作实验
-from .element import (
-    crt_element,
-    search_experiment,
-    Experiment,
-    experiment
-)
-from ._core import OpenMode, get_current_experiment
+from .element import search_experiment, Experiment, experiment
+from ._core import get_current_experiment
 # 实验, 标签类型
-from .enums import ExperimentType, Category, Tag, WireColor
+from .enums import ExperimentType, Category, Tag, OpenMode, WireColor
 # 电学实验
 from .circuit import *
 # 天体物理实验

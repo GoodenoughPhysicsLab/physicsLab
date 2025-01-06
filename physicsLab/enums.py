@@ -53,6 +53,14 @@ class Tag(Enum):
     Interest = "兴趣"
 
 @unique
+class OpenMode(Enum):
+    ''' 用Experiment打开存档的模式 '''
+    load_by_sav_name = 0 # 存档的名字 (在物实内给存档取的名字)
+    load_by_filepath = 1 # 用户自己提供的存档的完整路径
+    load_by_plar_app = 2 # 通过网络请求从物实读取的存档
+    crt = 3 # 新建存档
+
+@unique
 class WireColor(Enum):
     black = "黑"
     blue = "蓝"

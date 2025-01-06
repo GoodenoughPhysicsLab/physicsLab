@@ -232,4 +232,4 @@
 11. 支持`with Experiment`，废弃`with experiment`
 12. `class Experiment` 实验性地加入`stable`支持, 未来`class Experiment`会更加谨慎地做出不兼容更新
 13. `class Experiment`的构造函数支持默认导入元件了，`load_elements`函数被废弃
-14. `clear_elements`, `del_element`, `count_elements`, `get_element_from_position`, `get_element_from_index`, `get_element_from_identifier`改为`Experiment.clear_elements`, `Experiment.del_element`, `Experiment.get_elements_count`, `Experiment.get_element_from_position`, `Experiment.get_element_from_index`, `Experiment.get_element_from_identifier`
+14. `clear_elements`, `del_element`, `count_elements`, `get_element_from_position`, `get_element_from_index`, `get_element_from_identifier`, `crt_element`改为`Experiment.clear_elements`, `Experiment.del_element`, `Experiment.get_elements_count`, `Experiment.get_element_from_position`, `Experiment.get_element_from_index`, `Experiment.get_element_from_identifier`, `Experiment.crt_element`

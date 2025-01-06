@@ -9,49 +9,9 @@ from . import savTemplate
 from .web import User
 from .savTemplate import Generate
 from .circuit.wire import _Wire, Pin
-from .enums import ExperimentType, Category, WireColor
-from ._core import _Experiment, _ExperimentStack, OpenMode, _check_not_closed, _ElementBase
+from .enums import ExperimentType, Category, OpenMode, WireColor
+from ._core import _Experiment, _ExperimentStack, _check_not_closed, _ElementBase
 from .typehint import num_type, Optional, Union, List, overload, Tuple, Dict, Self
-
-def crt_element(
-        experiment: _Experiment,
-        name: str,
-        x: num_type = 0,
-        y: num_type = 0,
-        z: num_type = 0,
-        elementXYZ: Optional[bool] = None,
-        *args,
-        **kwargs
-) -> _ElementBase:
-    ''' 通过元件的ModelID或其类名创建元件 '''
-    if not isinstance(name, str) or \
-            not isinstance(x, (int, float)) or \
-            not isinstance(y, (int, float)) or \
-            not isinstance(z, (int, float)):
-        raise TypeError
-
-    from physicsLab import circuit
-
-    name = name.strip().replace(' ', '_').replace('-', '_')
-    x, y, z = _tools.roundData(x, y, z) # type: ignore
-
-    if experiment.experiment_type == ExperimentType.Circuit:
-        if (name == '555_Timer'):
-            return circuit.NE555(x, y, z, elementXYZ)
-        elif (name == '8bit_Input'):
-            return circuit.eight_bit_Input(x, y, z, elementXYZ)
-        elif (name == '8bit_Display'):
-            return circuit.eight_bit_Display(x, y, z, elementXYZ)
-        else:
-            return eval(f"circuit.{name}({x}, {y}, {z}, {elementXYZ}, *{args}, **{kwargs})")
-    elif experiment.experiment_type == ExperimentType.Celestial:
-        from physicsLab import celestial
-        return eval(f"celestial.{name}({x}, {y}, {z})")
-    elif experiment.experiment_type == ExperimentType.Electromagnetism:
-        from physicsLab import electromagnetism
-        return eval(f"electromagnetism.{name}({x}, {y}, {z})")
-    else:
-        assert False
 
 def _get_all_pl_sav() -> List[str]:
     ''' 获取所有物实存档的文件名 '''
@@ -397,7 +357,7 @@ class Experiment(_Experiment):
                         if attr.startswith("音高"):
                             obj.add_note(int(val))
                 else:
-                    obj = crt_element(self, element["ModelID"], x, y, z, elementXYZ=False)
+                    obj = self.crt_element(element["ModelID"], x, y, z, elementXYZ=False)
                     obj.data["Properties"] = element["Properties"]
                     obj.data["Properties"]["锁定"] = 1.0
                 # 设置角度信息
@@ -407,10 +367,10 @@ class Experiment(_Experiment):
                 obj.data['Identifier'] = element['Identifier']
 
             elif self.experiment_type == ExperimentType.Celestial:
-                obj = crt_element(self, element["Model"], x, y, z)
+                obj = self.crt_element(element["Model"], x, y, z)
                 obj.data = element
             elif self.experiment_type == ExperimentType.Electromagnetism:
-                obj = crt_element(self, element["ModelID"], x, y, z)
+                obj = self.crt_element(element["ModelID"], x, y, z)
                 obj.data = element
             else:
                 assert False
@@ -423,6 +383,47 @@ class Experiment(_Experiment):
         if exc_type is None and _ExperimentStack.inside(self):
             self.save()
             self.exit(delete=False)
+
+    @_check_not_closed
+    def crt_element(
+            self,
+            name: str,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            elementXYZ: Optional[bool] = None,
+            *args,
+            **kwargs
+    ) -> _ElementBase:
+        ''' 通过元件的ModelID或其类名创建元件 '''
+        if not isinstance(name, str) or \
+                not isinstance(x, (int, float)) or \
+                not isinstance(y, (int, float)) or \
+                not isinstance(z, (int, float)):
+            raise TypeError
+
+        name = name.strip().replace(' ', '_').replace('-', '_')
+        x, y, z = (_tools.round_data(x), _tools.round_data(y), _tools.round_data(z))
+
+        if self.experiment_type == ExperimentType.Circuit:
+            from physicsLab import circuit
+
+            if (name == '555_Timer'):
+                return circuit.NE555(x, y, z, elementXYZ)
+            elif (name == '8bit_Input'):
+                return circuit.eight_bit_Input(x, y, z, elementXYZ)
+            elif (name == '8bit_Display'):
+                return circuit.eight_bit_Display(x, y, z, elementXYZ)
+            else:
+                return eval(f"circuit.{name}({x}, {y}, {z}, {elementXYZ}, *{args}, **{kwargs})")
+        elif self.experiment_type == ExperimentType.Celestial:
+            from physicsLab import celestial
+            return eval(f"celestial.{name}({x}, {y}, {z})")
+        elif self.experiment_type == ExperimentType.Electromagnetism:
+            from physicsLab import electromagnetism
+            return eval(f"electromagnetism.{name}({x}, {y}, {z})")
+        else:
+            assert False
 
 class experiment:
     def __init__(

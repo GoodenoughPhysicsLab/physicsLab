@@ -13,15 +13,12 @@ import gzip
 import requests
 import platform
 
-from enum import unique, Enum
-
 from physicsLab import plAR
 from physicsLab import  _tools
 from physicsLab import errors
 from physicsLab import _colorUtils
 from .web import User, _check_response
-from .enums import Category, Tag
-from .enums import ExperimentType
+from .enums import Category, Tag, ExperimentType, OpenMode
 from .typehint import Union, Optional, List, Dict, num_type, Self, Callable, Tuple, final, NoReturn
 
 class _ExperimentStack:
@@ -75,14 +72,6 @@ def _check_not_closed(method: Callable) -> Callable:
 
         return method(self, *args, **kwargs)
     return res
-
-@unique
-class OpenMode(Enum):
-    ''' 用Experiment打开存档的模式 '''
-    load_by_sav_name = 0 # 存档的名字 (在物实内给存档取的名字)
-    load_by_filepath = 1 # 用户自己提供的存档的完整路径
-    load_by_plar_app = 2 # 通过网络请求从物实读取的存档
-    crt = 3 # 新建存档
 
 class _Experiment:
     ''' 物实实验 (支持物实的三种实验类型) '''
