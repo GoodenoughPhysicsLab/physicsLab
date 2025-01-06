@@ -90,15 +90,22 @@ class BasicTest(TestCase, ViztracerTool):
             raise TestFail
 
     @my_test_dec
+    def test_float32_t_sav(self):
+        with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "float32_t.sav")) as expe:
+            self.assertEqual(expe.get_elements_count(), 652)
+            self.assertEqual(expe.get_wires_count(), 1385)
+            expe.exit()
+
+    @my_test_dec
     def test_normal_circuit_usage(self):
         expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         a = Yes_Gate(0, 0, 0)
         self.assertEqual(expe.get_elements_count(), 1)
         self.assertEqual(a.get_position(), (0, 0, 0))
         crt_wire(a.o, a.i)
-        self.assertEqual(count_wires(), 1)
-        clear_wires()
-        self.assertEqual(count_wires(), 0)
+        self.assertEqual(expe.get_wires_count(), 1)
+        expe.clear_wires()
+        self.assertEqual(expe.get_wires_count(), 0)
         self.assertEqual(expe.get_elements_count(), 1)
         crt_wire(a.o, a.i)
         crt_element(expe, "Logic Input")
@@ -107,11 +114,11 @@ class BasicTest(TestCase, ViztracerTool):
         expe.exit(delete=True)
 
     @my_test_dec
-    def test_readExperiment(self):
+    def test_read_experiment(self):
         expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
 
         self.assertEqual(expe.get_elements_count(), 0)
-        self.assertEqual(count_wires(), 0)
+        self.assertEqual(expe.get_wires_count(), 0)
         Logic_Input(0, 0, 0)
         expe.save()
         expe.exit()
@@ -121,7 +128,7 @@ class BasicTest(TestCase, ViztracerTool):
         exp2.exit(delete=True)
 
     @my_test_dec
-    def test_crtExperiment(self):
+    def test_crt_experiment(self):
         exp: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         exp.save()
         try:
@@ -137,19 +144,19 @@ class BasicTest(TestCase, ViztracerTool):
     def test_crt_wire(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             a = Or_Gate(0, 0, 0)
-            crt_wire(a.o, a.i_up, "red")
-            self.assertEqual(count_wires(), 1)
+            crt_wire(a.o, a.i_up, a.i_low, color=WireColor.red)
+            self.assertEqual(expe.get_wires_count(), 2)
 
             del_wire(a.o, a.i_up)
-            self.assertEqual(count_wires(), 0)
+            self.assertEqual(expe.get_wires_count(), 1)
             expe.exit(delete=True)
 
     def test_same_crt_wire(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             a = Or_Gate(0, 0, 0)
-            crt_wire(a.o, a.i_up, "red")
-            crt_wire(a.i_up, a.o, "blue")
-            self.assertEqual(count_wires(), 1)
+            crt_wire(a.o, a.i_up, color=WireColor.red)
+            crt_wire(a.i_up, a.o)
+            self.assertEqual(expe.get_wires_count(), 1)
             expe.exit(delete=True)
 
     @my_test_dec
@@ -157,9 +164,9 @@ class BasicTest(TestCase, ViztracerTool):
         expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         lib.Sum(0, -1, 0, bitnum=64)
         self.assertEqual(expe.get_elements_count(), 64)
-        self.assertEqual(count_wires(), 63)
+        self.assertEqual(expe.get_wires_count(), 63)
         expe.clear_elements()
-        self.assertEqual(count_wires(), 0)
+        self.assertEqual(expe.get_wires_count(), 0)
         self.assertEqual(expe.get_elements_count(), 0)
         expe.exit(delete=True)
 
@@ -175,7 +182,7 @@ class BasicTest(TestCase, ViztracerTool):
             expe.get_element_from_position(0, 0, 0).i_low,
             expe.get_element_from_index(1).o
         )
-        self.assertEqual(count_wires(), 2)
+        self.assertEqual(expe.get_wires_count(), 2)
         expe.exit(delete=True)
 
     @my_test_dec
@@ -203,8 +210,12 @@ class BasicTest(TestCase, ViztracerTool):
                 Multiplier(x, y, 0)
 
         crt_wire(expe.get_element_from_index(1).o, expe.get_element_from_position(0, 1, 0).i)
-        expe.get_element_from_index(2).i - expe.get_element_from_index(3).o - expe.get_element_from_index(4).i
-        self.assertEqual(count_wires(), 3)
+        crt_wire(
+            expe.get_element_from_index(2).i,
+            expe.get_element_from_index(3).o,
+            expe.get_element_from_index(4).i
+        )
+        self.assertEqual(expe.get_wires_count(), 3)
         self.assertEqual(expe.get_elements_count(), 150)
         expe.exit(delete=True)
 
@@ -231,7 +242,7 @@ class BasicTest(TestCase, ViztracerTool):
             crt_wire(Logic_Input(0, 0, 0).o, Or_Gate(0, 0, 0).o)
             expe.del_element(expe.get_element_from_index(2))
             self.assertEqual(expe.get_elements_count(), 1)
-            self.assertEqual(count_wires(), 0)
+            self.assertEqual(expe.get_wires_count(), 0)
             expe.exit(delete=True)
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav")) as expe:
@@ -259,9 +270,9 @@ class BasicTest(TestCase, ViztracerTool):
             c = lib.D_WaterLamp(1, 0, 0, bitnum=8)
             crt_wires(b.inputs, c.outputs)
             self.assertEqual(25, expe.get_elements_count())
-            self.assertEqual(23, count_wires())
+            self.assertEqual(23, expe.get_wires_count())
             del_wires(c.outputs, b.inputs)
-            self.assertEqual(15, count_wires())
+            self.assertEqual(15, expe.get_wires_count())
             expe.exit(delete=True)
 
     # 测试模块化加法电路
@@ -298,7 +309,7 @@ class BasicTest(TestCase, ViztracerTool):
             Positive_Charge(0.1, 0, 0)
             self.assertEqual(expe.get_elements_count(), 2)
             try:
-                count_wires()
+                expe.get_wires_count()
             except ExperimentTypeError:
                 pass
             else:
@@ -315,7 +326,7 @@ class BasicTest(TestCase, ViztracerTool):
             crt_wires(lib.Inputs(-2, 0, 0, bitnum=8).outputs, a.subtrahend)
             crt_wires(lib.Outputs(2, 0, 0, bitnum=9).inputs, a.outputs)
             self.assertEqual(expe.get_elements_count(), 42)
-            self.assertEqual(count_wires(), 41)
+            self.assertEqual(expe.get_wires_count(), 41)
 
             lib.Sub(-5, 0, 0, bitnum=4)
             expe.exit(delete=True)
@@ -435,7 +446,7 @@ class BasicTest(TestCase, ViztracerTool):
                 crt_wire(a.i, a.o)
 
                 self.assertEqual(exp2.get_elements_count(), 2)
-                self.assertEqual(count_wires(), 1)
+                self.assertEqual(expe.get_wires_count(), 1)
                 exp2.exit(delete=True)
             expe.exit(delete=True)
 

@@ -12,7 +12,7 @@ from .element import (
 )
 from ._core import OpenMode, get_current_experiment
 # 实验, 标签类型
-from .enums import ExperimentType, Category, Tag
+from .enums import ExperimentType, Category, Tag, WireColor
 # 电学实验
 from .circuit import *
 # 天体物理实验

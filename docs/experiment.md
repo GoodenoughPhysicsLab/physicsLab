@@ -70,6 +70,8 @@ Experiment(OpenMode.load_by_plar_app, "642cf37a494746375aae306a", Category.Discu
 
 > Note: 如果导入的实验不存在，则会抛出`ExperimentNotExistError`异常
 
+`load_by_plar_app`还有一个`Keyword-Only argument`: `user`, 默认为`None`, 表示创建一个匿名账号来从物实读取实验
+
 ## 创建存档
 如果你想要创建一个实验：
 ```python

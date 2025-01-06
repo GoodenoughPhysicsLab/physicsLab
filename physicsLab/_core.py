@@ -114,15 +114,16 @@ class _Experiment:
         return len(self.Elements)
 
     @_check_not_closed
-    def clear_elements(self) -> None:
+    def clear_elements(self) -> Self:
         ''' 清空该实验的所有元件 '''
         if self.experiment_type == ExperimentType.Circuit:
             self.Wires.clear()
         self.Elements.clear()
         self._elements_position.clear()
+        return self
 
     @_check_not_closed
-    def del_element(self, element: "_ElementBase") -> None:
+    def del_element(self, element: "_ElementBase") -> Self:
         ''' 删除元件
             @param element: 三大实验的元件
         '''
@@ -152,6 +153,8 @@ class _Experiment:
             if element is element:
                 self.Elements.remove(element)
                 break
+
+        return self
 
     # TODO 统一返回的行为，即始终返回列表之类的
     @_check_not_closed
@@ -194,6 +197,22 @@ class _Experiment:
                 return element
         raise errors.ElementNotFound
 
+    @_check_not_closed
+    def clear_wires(self) -> Self:
+        ''' 删除所有导线 '''
+        if self.experiment_type != ExperimentType.Circuit:
+            raise errors.ExperimentTypeError
+
+        self.Wires.clear()
+        return self
+
+    @_check_not_closed
+    def get_wires_count(self) -> int:
+        ''' 获取当前导线数 '''
+        if self.experiment_type != ExperimentType.Circuit:
+            raise errors.ExperimentTypeError
+
+        return len(self.Wires)
 
     def __write(self) -> None:
         if self.experiment_type == ExperimentType.Circuit:
@@ -243,6 +262,7 @@ class _Experiment:
         '''
         if not isinstance(target_path, (str, type(None))) or not isinstance(no_print_info, bool):
             raise TypeError
+
         if target_path is None:
             target_path = self.SAV_PATH
 
@@ -264,7 +284,7 @@ class _Experiment:
             if self.experiment_type == ExperimentType.Circuit:
                 _colorUtils.color_print(
                     f"Successfully {status} experiment \"{self.PlSav['InternalName']}\"! "
-                    f"{self.get_elements_count()} elements, {self.Wires.__len__()} wires.",
+                    f"{self.get_elements_count()} elements, {self.get_wires_count()} wires.",
                     color=_colorUtils.COLOR.GREEN
                 )
             elif self.experiment_type == ExperimentType.Celestial \

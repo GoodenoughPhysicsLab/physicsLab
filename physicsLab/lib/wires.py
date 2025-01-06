@@ -2,6 +2,7 @@
 from typing import Union, Callable, Tuple
 
 from physicsLab import errors
+from physicsLab.enums import WireColor
 from physicsLab.circuit.wire import crt_wire, del_wire, Pin
 
 class UnitPin:
@@ -59,11 +60,11 @@ def check_TypeUnionPin(func: Callable):
 @check_TypeUnionPin
 def crt_wires(sourcePin: Union[UnitPin, Pin],
               targetPin: Union[UnitPin, Pin],
-              color="蓝"
+              color: WireColor = WireColor.blue,
               ) -> None:
     ''' 为unionPin连接导线, 相当于自动对数据进行连接导线 '''
     for i, o in zip(sourcePin.elementPins, targetPin.elementPins):
-        crt_wire(i, o, color)
+        crt_wire(i, o, color=color)
 
 @check_TypeUnionPin
 def del_wires(sourcePin: Union[UnitPin, Pin],

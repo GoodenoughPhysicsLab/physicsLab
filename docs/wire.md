@@ -6,19 +6,32 @@
 from physicsLab import *
 
 with experiment(OpenMode.load_by_sav_name, "example"):
-    _input = Logic_Input()
-    _output = Logic_Output()
+    e1 = Yes_Gate() # 是门
+    e2 = Yes_Gate()
 
-    crt_wire(_input.o, _putput.i, color="red") # 连接导线
-# `o`是`_input`的引脚, 是output的缩写
-# `i`是`_output`的引脚, 是input的缩写
-# color暂时只支持中文的 "黑", "蓝", "红", "绿", "黄" 与 对应颜色的英文
-# 不传入color参数的话，color默认为蓝色
+    crt_wire(e1.o, e2.i, color=WireColor.red) # 连接导线
+    crt_wire(e1.i, e2.o) # color默认为蓝色
+```
+`i, o`都是引脚的名字。元件的引脚的名字详见[elements.md](elements.md)
+
+> Note:
+> * `color`参数为`Keyword-Only argument`
+> * 连接的导线必须是在同一个实验中的两个不同的引脚，否则会抛出`InvalidWireError`异常
+> * 重复连接的导线会被忽略
+
+```python
+from physicsLab import *
+
+with experiment(OpenMode.load_by_sav_name, "example"):
+    e1 = Yes_Gate() # 是门
+    e2 = Yes_Gate()
+
+    crt_wire(e1.o, e2.i)
+    crt_wire(e1.i, e2.o) # 重复连接, 该导线会被忽略
+    crt_wire(e1.o, e2.i, color=WireColor.red) # 虽然导线颜色不同，但还是重复连接的导线，会被忽略
 ```
 
-> Note: 连接的导线必须是在同一个实验中的两个不同的引脚，否则会抛出`InvalidWireError`异常
-
-2. 使用减号
+1. 使用减号
 之所以做了这个是因为我觉得`-`与导线很像
 
 > Note: 有时候IDE会认为重载后的减法运算后没有变量去接受返回值, 因此会给出警告
@@ -41,3 +54,19 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
     del_wire(element.o, element2.i)
 ```
 删除导线时不需要提供颜色参数
+
+## 清空导线
+```python
+from physicsLab import *
+
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
+    expe.clear_wires()
+```
+
+## 导线的数量
+```python
+from physicsLab import *
+
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
+    print(expe.get_wires_count())
+```

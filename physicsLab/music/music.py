@@ -11,8 +11,8 @@ from enum import Enum, unique
 
 from . import mido
 from physicsLab import errors
-from physicsLab.circuit import elements
-from physicsLab._tools import roundData
+from physicsLab.circuit import elements, crt_wire
+from physicsLab._tools import round_data
 from physicsLab.lib import crt_wires, D_WaterLamp
 from physicsLab.circuit.elements.otherCircuit import majorSet_Tonality
 from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, num_type, Callable, Type
@@ -66,11 +66,10 @@ class Midi:
             program: midi音色
             tempo: 播放速度
         '''
-
         self.__use_tmpfile: bool = False
 
         if isinstance(midifile, (io.IOBase, tempfile._TemporaryFileWrapper)):
-            self.midifile: str = midifile.name # type: ignore # midi文件名
+            self.midifile: str = midifile.name # midi文件名
             self.midofile = mido.MidiFile(file=midifile, clip=True)
             self.messages: mido.MidiTrack = self.__get_midi_messages()
         else:
@@ -487,7 +486,7 @@ class Chord:
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = roundData(x, y, z)
+        x, y, z = (round_data(x), round_data(y), round_data(z))
 
         first_ins: Optional[elements.Simple_Instrument] = None # 第一个音符
         if is_optimize:
@@ -501,8 +500,8 @@ class Chord:
                 if first_ins is None:
                     first_ins = temp
                 else:
-                    temp.i - first_ins.i
-                    temp.o - first_ins.o
+                    crt_wire(temp.i, first_ins.i)
+                    crt_wire(temp.o, first_ins.o)
 
                 for a_note in notes:
                     temp.add_note(a_note.pitch)
@@ -518,8 +517,8 @@ class Chord:
                     if first_ins is None:
                         first_ins = temp
                     else:
-                        temp.i - first_ins.i
-                        temp.o - first_ins.o
+                        crt_wire(temp.i, first_ins.i)
+                        crt_wire(temp.o, first_ins.o)
 
                     delta_z += 1
 
@@ -732,26 +731,26 @@ class Piece:
         tick = elements.Nimp_Gate(x + 1, y, z, True)
         counter = elements.Counter(x, y + 1, z, True)
         l_input = elements.Logic_Input(x, y, z, True)
-        l_input.o - tick.i_up
-        tick.o - tick.i_low
-        tick.o - counter.i_up
+        crt_wire(l_input.o, tick.i_up)
+        crt_wire(tick.o, tick.i_low)
+        crt_wire(tick.o, counter.i_up)
 
         yesGate = elements.Yes_Gate(x + 2, y, z, True)
-        xPlayer[0].o_low - yesGate.i
+        crt_wire(xPlayer[0].o_low, yesGate.i)
 
         crt_wires(xPlayer.outputs[0], yPlayer.inputs)
 
         # 上升沿触发器
         no_gate = elements.No_Gate(x + 1, y, z + 1, True)
         and_gate = elements.And_Gate(x + 2, y, z + 1, True)
-        no_gate.o - and_gate.i_low
-        no_gate.i - and_gate.i_up
+        crt_wire(no_gate.o, and_gate.i_low)
+        crt_wire(no_gate.i, and_gate.i_up)
 
-        l_input.o - no_gate.i
+        crt_wire(l_input.o, no_gate.i)
 
         or_gate = elements.Or_Gate(x + 3, y, z, True)
-        or_gate.i_low - and_gate.o
-        or_gate.i_up - counter.o_upmid
+        crt_wire(or_gate.i_low, and_gate.o)
+        crt_wire(or_gate.i_up, counter.o_upmid)
         crt_wires(or_gate.o, xPlayer.inputs)
 
         # main
@@ -782,14 +781,14 @@ class Piece:
                 ).set_rotation(0, 0, 0) # type: ignore
             # 连接x轴的d触的导线
             if xcor == 0:
-                yesGate.o - ins.i
+                crt_wire(yesGate.o, ins.i)
             else:
-                ins.i - xPlayer.outputs[xcor]
+                crt_wire(ins.i, xPlayer.outputs[xcor])
             # 连接y轴的d触的导线
-            ins.o - yPlayer.neg_outputs[ycor // 2] # type: ignore -> yPlayer must has attr neg_data_Output
+            crt_wire(ins.o, yPlayer.neg_outputs[ycor // 2])
 
         stop = elements.And_Gate(x + 1, y + ycor + 3, z, True)
-        stop.o - counter.i_low
+        crt_wire(stop.o, counter.i_low)
 
-        stop.i_up - yPlayer[ycor // 2].o_up # type: ignore -> D_Flipflop must has attr o_up
-        stop.i_low - xPlayer[side - 1].o_up # type: ignore -> D_Flipflop must has attr neg_data_Output
+        crt_wire(stop.i_up, yPlayer[ycor // 2].o_up)
+        crt_wire(stop.i_low, xPlayer[side - 1].o_up)
