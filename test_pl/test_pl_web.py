@@ -2,6 +2,7 @@
 import inspect
 import asyncio
 import time
+from datetime import datetime
 from .base import *
 
 class _WebTest:
@@ -74,6 +75,16 @@ class _WebTest:
     async def test_get_profile(cls):
         ''' 测试获取用户个人资料 '''
         await user.async_get_profile()
+
+    @classmethod
+    def test_notifications_msg_iter(cls):
+        counter = 0
+        for _ in web.NotificationsMsgIter(
+                datetime(2025, 1, 1).timestamp(), datetime(2025, 1, 2).timestamp(),
+                user=user, max_retry=4, category_id=5
+        ):
+            counter += 1
+        assert counter == 96
 
 async def test_web_main():
     ''' 收集并运行所有测试任务 '''

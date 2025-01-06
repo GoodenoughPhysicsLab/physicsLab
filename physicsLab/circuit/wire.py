@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from physicsLab import errors
-from physicsLab._core import _Experiment, get_current_experiment
+from physicsLab._core import get_current_experiment
 from physicsLab.enums import ExperimentType
 from physicsLab.typehint import Optional, Callable, Union
 
@@ -10,7 +10,7 @@ class Pin:
     is_input = False
     is_output = False
     def __init__(self, input_self, pinLabel: int) -> None:
-        self.element_self = input_self # CircuitBase
+        self.element_self = input_self
         self.pinLabel: int = pinLabel
 
     # 重载减法运算符作为连接导线的语法
@@ -35,7 +35,7 @@ class Pin:
         pin_name = self._get_pin_name_of_class()
         if pin_name is None:
             raise errors.ExperimentError("Pin is not belong to any element")
-        return f"e{self.element_self.get_Index()}.{pin_name}"
+        return f"e{self.element_self.get_index()}.{pin_name}"
 
     def _get_pin_name_of_class(self) -> Optional[str]:
         for method in self.element_self._get_property():
