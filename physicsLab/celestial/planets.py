@@ -299,12 +299,35 @@ class Moon(PlanetBase):
 class Chocolate_Ball(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type) -> None:
         self.data = {
-            "Identifier": Generate, "Model": "Chocolate Ball", "Override": None, "Name": "巧克力球", "Parent": None, "Type": 2, "Changed": False, "Extras": {}, "Radius": 60268.0, "RadiusVisible": 0.40286687, "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0, "Mass": 568.46, "OrbitType": 0, "OrbitEstimation": 3, "Density": 0.6199418849015184, "Gravity": 10.445224444042164, "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.10000000149011612, "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate, "Velocity": Generate, "Acceleration": Generate, "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False}
+            "Identifier": Generate, "Model": "Chocolate Ball", "Override": None,
+            "Name": "巧克力球", "Parent": None, "Type": 2, "Changed": False, "Extras": {},
+            "Radius": 60268.0, "RadiusVisible": 0.40286687, "RotationPeriod": 1.0,
+            "RotationPhase": 0.0, "AxialTilt": 0.0, "Mass": 568.46, "OrbitType": 0,
+            "OrbitEstimation": 3, "Density": 0.6199418849015184, "Gravity": 10.445224444042164,
+            "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.10000000149011612,
+            "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate,
+            "Velocity": Generate, "Acceleration": Generate, "Period": 0.0, "Eccentricity": "NaN",
+            "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN", "Phase": 0.0,
+            "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN",
+            "Aphelion": "NaN", "LeavingKepler": False
+        }
 
 class Continential(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type) -> None:
         self.data = {
-            "Identifier": Generate, "Model": "Continential", "Override": None, "Name": "大陆行星", "Parent": None, "Type": 1, "Changed": False, "Extras": {}, "Radius": 7789.734, "RadiusVisible": 0.0520711765, "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0, "Mass": 10.6000118, "OrbitType": 0, "OrbitEstimation": 0, "Density": 5.353648773443054, "Gravity": 11.658764094408177, "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.2449134993567892, "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate, "Velocity": Generate, "Acceleration": Generate, "Period": 0.0, "Eccentricity": 0.0, "OmegaUC": 0.0, "OmegaLC": 0.0, "Inclination": 0.0, "Phase": 0.0, "PhaseCurrent": 0.0, "AxisSemi": 10.0, "Perihelion": 10.0, "Aphelion": 10.0, "LeavingKepler": False}
+            "Identifier": Generate, "Model": "Continential", "Override": None,
+            "Name": "大陆行星", "Parent": None, "Type": 1, "Changed": False,
+            "Extras": {}, "Radius": 7789.734, "RadiusVisible": 0.0520711765,
+            "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0,
+            "Mass": 10.6000118, "OrbitType": 0, "OrbitEstimation": 0,
+            "Density": 5.353648773443054, "Gravity": 11.658764094408177,
+            "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.2449134993567892,
+            "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate,
+            "Velocity": Generate, "Acceleration": Generate, "Period": 0.0,
+            "Eccentricity": 0.0, "OmegaUC": 0.0, "OmegaLC": 0.0, "Inclination": 0.0,
+            "Phase": 0.0, "PhaseCurrent": 0.0, "AxisSemi": 10.0, "Perihelion": 10.0,
+            "Aphelion": 10.0, "LeavingKepler": False
+        }
 
 class Arctic(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type) -> None:

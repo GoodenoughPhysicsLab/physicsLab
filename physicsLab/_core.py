@@ -205,7 +205,7 @@ class _Experiment:
                     _colorUtils.COLOR.BLUE
                 )
             elif self.open_mode != OpenMode.crt:
-                raise InterruptedError
+                assert False
             if os.path.exists(self.SAV_PATH.replace(".sav", ".jpg")): # 用存档生成的实验无图片
                 os.remove(self.SAV_PATH.replace(".sav", ".jpg"))
 
@@ -454,19 +454,13 @@ class _Experiment:
         if rotation_z is None:
             rotation_z = self.TargetRotation.z
 
-        if not isinstance(x, (int, float)):
-            raise TypeError
-        if not isinstance(y, (int, float)):
-            raise TypeError
-        if not isinstance(z, (int, float)):
-            raise TypeError
-        if not isinstance(distance, (int, float)):
-            raise TypeError
-        if not isinstance(rotation_x, (int, float)):
-            raise TypeError
-        if not isinstance(rotation_y, (int, float)):
-            raise TypeError
-        if not isinstance(rotation_z, (int, float)):
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(distance, (int, float)) \
+                or not isinstance(rotation_x, (int, float)) \
+                or not isinstance(rotation_y, (int, float)) \
+                or not isinstance(rotation_z, (int, float)):
             raise TypeError
 
         self.VisionCenter = _tools.position(x, y, z)

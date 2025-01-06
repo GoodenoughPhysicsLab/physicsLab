@@ -538,7 +538,9 @@ class experiment:
 
     def __enter__(self) -> _Experiment:
         if self.force_crt:
-            self._Experiment: _Experiment = _Experiment(OpenMode.crt, self.sav_name, self.experiment_type, force_crt=True)
+            self._Experiment: _Experiment = _Experiment(
+                OpenMode.crt, self.sav_name, self.experiment_type, force_crt=True
+            )
         else:
             try:
                 self._Experiment: _Experiment = _Experiment(OpenMode.load_by_sav_name, self.sav_name)

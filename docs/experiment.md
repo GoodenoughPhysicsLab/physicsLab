@@ -93,6 +93,8 @@ expe.exit()
   * `True`时，如果要创建的实验已经存在，则会删除那个实验并创建一个新实验
   * `False`时，如果要创建的实验已经存在，将会抛出异常
 
+> Note: `force_crt`必须通过 keyword argument的方式传入
+
 如果你希望打开存档失败后创建存档，你可以使用
 ```Python
 try:
