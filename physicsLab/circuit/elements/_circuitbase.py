@@ -3,13 +3,129 @@ import inspect
 
 from physicsLab import errors
 from physicsLab import _tools
-from physicsLab.circuit import wire
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
-from physicsLab.enums import ExperimentType
+from physicsLab.enums import ExperimentType, WireColor
 from physicsLab._tools import roundData, randString
 from physicsLab._core import _Experiment, get_current_experiment, _ElementBase
-from physicsLab.typehint import Optional, Self, num_type, NoReturn, Generate, override, final
+from physicsLab.typehint import Optional, Self, num_type, NoReturn, Generate, override, final, List
+
+# 对于逻辑电路，应该使用`InputPin` 和 `OutputPin`
+class Pin:
+    ''' 电学元件引脚 '''
+    __slots__ = ("element_self", "_pin_label")
+
+    def __init__(self, input_self: "CircuitBase", _pin_label: int) -> None:
+        self.element_self: "CircuitBase" = input_self
+        self._pin_label: int = _pin_label
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Pin):
+            return False
+
+        return self.element_self == other.element_self and self._pin_label == other._pin_label
+
+    # 将self转换为 CircuitBase.a_pin的形式
+    def export_str(self) -> str:
+        pin_name = self._get_pin_name_of_class()
+        if pin_name is None:
+            raise errors.ExperimentError("Pin is not belong to any element")
+        return f"e{self.element_self.get_index()}.{pin_name}"
+
+    def _get_pin_name_of_class(self) -> Optional[str]:
+        for method in self.element_self._get_property():
+            if eval(f"self.element_self.{method}") == self:
+                return method
+        return None
+
+class InputPin(Pin):
+    ''' 仅用于逻辑电路的输入引脚 '''
+    def __init__(self, input_self, pinLabel: int) -> None:
+        super().__init__(input_self, pinLabel)
+
+class OutputPin(Pin):
+    ''' 仅用于逻辑电路的输出引脚 '''
+    def __init__(self, input_self, pinLabel: int) -> None:
+        super().__init__(input_self, pinLabel)
+
+class Wire:
+    ''' 导线 '''
+    __slots__ = ("Source", "Target", "color")
+
+    def __init__(self, source_pin: Pin, target_pin: Pin, color: WireColor = WireColor.blue) -> None:
+        if not isinstance(source_pin, Pin) \
+                or not isinstance(target_pin, Pin) \
+                or not isinstance(color, WireColor):
+            raise TypeError
+
+        if source_pin.element_self.experiment is not target_pin.element_self.experiment:
+            raise errors.InvalidWireError("can't link wire in two experiment")
+
+        if source_pin == target_pin:
+            raise errors.InvalidWireError("can't link wire to itself")
+
+        self.Source: Pin = source_pin
+        self.Target: Pin = target_pin
+        self.color: WireColor = color
+
+    def __hash__(self) -> int:
+        return hash(
+            (self.Source.element_self, self.Source._pin_label, self.Target.element_self, self.Target._pin_label)
+        ) + hash(
+            (self.Target.element_self, self.Target._pin_label, self.Source.element_self, self.Source._pin_label)
+        )
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Wire):
+            return False
+
+        # 判断两个导线是否相等与导线的颜色无关
+        if self.Source == other.Source and self.Target == other.Target \
+                or self.Source == other.Target and self.Target == other.Source:
+            return True
+        else:
+            return False
+
+    def __repr__(self) -> str:
+        return f"crt_wire({self.Source.export_str()}, {self.Target.export_str()}, '{self.color}')"
+
+    def release(self) -> dict:
+        return {
+            "Source": self.Source.element_self.data["Identifier"],
+            "SourcePin": self.Source._pin_label,
+            "Target": self.Target.element_self.data["Identifier"],
+            "TargetPin": self.Target._pin_label,
+            "ColorName": f"{self.color.value}色导线"
+        }
+
+def crt_wire(*pins: Pin, color: WireColor = WireColor.blue) -> List[Wire]:
+    ''' 连接导线 '''
+    if not all(isinstance(a_pin, Pin) for a_pin in pins) or not isinstance(color, WireColor):
+        raise TypeError
+
+    _expe = get_current_experiment()
+    if _expe.experiment_type != ExperimentType.Circuit:
+        raise errors.ExperimentTypeError
+
+    res: List[Wire] = []
+    for i in range(len(pins) - 1):
+        source_pin, target_pin = pins[i], pins[i + 1]
+        a_wire = Wire(source_pin, target_pin, color)
+        res.append(a_wire)
+        _expe.Wires.add(a_wire)
+
+    return res
+
+def del_wire(source_pin: Pin, target_pin: Pin) -> None:
+    ''' 删除导线'''
+    if not isinstance(source_pin, Pin) or not isinstance(target_pin, Pin):
+        raise TypeError
+
+    _expe = get_current_experiment()
+    if _expe.experiment_type != ExperimentType.Circuit:
+        raise errors.ExperimentTypeError
+
+    _expe.Wires.remove(Wire(source_pin, target_pin))
 
 # electricity class's metaClass
 class _CircuitMeta(type):
@@ -127,9 +243,9 @@ class CircuitBase(_ElementBase, metaclass=_CircuitMeta):
 class TwoPinMixIn(CircuitBase):
     ''' 双引脚模拟电路原件的基类 '''
     @property
-    def red(self) -> wire.Pin:
-        return wire.Pin(self, 0)
+    def red(self) -> Pin:
+        return Pin(self, 0)
 
     @property
-    def black(self) -> wire.Pin:
-        return wire.Pin(self, 1)
+    def black(self) -> Pin:
+        return Pin(self, 1)

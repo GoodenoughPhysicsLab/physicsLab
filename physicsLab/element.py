@@ -8,7 +8,7 @@ from . import errors
 from . import savTemplate
 from .web import User
 from .savTemplate import Generate
-from .circuit.wire import _Wire, Pin
+from .circuit.elements._circuitbase import Wire, Pin
 from .enums import ExperimentType, Category, OpenMode, WireColor
 from ._core import _Experiment, _ExperimentStack, _check_not_closed, _ElementBase
 from .typehint import num_type, Optional, Union, List, overload, Tuple, Dict, Self
@@ -326,7 +326,7 @@ class Experiment(_Experiment):
                 assert False
 
             self.Wires.add(
-                _Wire(
+                Wire(
                     Pin(self.get_element_from_identifier(wire_dict["Source"]), wire_dict["SourcePin"]),
                     Pin(self.get_element_from_identifier(wire_dict["Target"]), wire_dict["TargetPin"]),
                     color=color,

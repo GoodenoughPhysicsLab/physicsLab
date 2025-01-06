@@ -5,7 +5,7 @@ import physicsLab.circuit.elementXYZ as _elementXYZ
 from .wires import UnitPin, crt_wires
 from physicsLab._tools import round_data
 from physicsLab.circuit import elements
-from physicsLab.circuit.wire import crt_wire, Pin
+from physicsLab.circuit.elements._circuitbase import Pin
 from physicsLab._core import get_current_experiment
 from physicsLab.enums import ExperimentType
 from physicsLab.typehint import num_type, Optional, Self, Union, Type, List
@@ -1112,7 +1112,7 @@ class MultiElements(_Base):
         for e in self._elements:
             for p_name in e._get_property():
                 p = eval(f"e.{p_name}")
-                if isinstance(p, Pin) and p.pinLabel == pin.pinLabel:
+                if isinstance(p, Pin) and p._pin_label == pin._pin_label:
                     res.append(p)
         return UnitPin(self, *res)
 

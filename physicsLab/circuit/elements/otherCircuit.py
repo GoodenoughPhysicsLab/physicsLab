@@ -2,8 +2,7 @@
 import physicsLab.plAR as plar
 import physicsLab.errors as errors
 
-from ..wire import Pin
-from ._circuitbase import TwoPinMixIn, CircuitBase
+from ._circuitbase import TwoPinMixIn, CircuitBase, Pin
 from physicsLab.typehint import Optional, num_type, CircuitElementData, Self, Generate, Union, List, override
 
 class Buzzer(TwoPinMixIn):

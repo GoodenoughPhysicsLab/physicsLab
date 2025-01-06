@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+from ._circuitbase import *
 # 基础电路
-from physicsLab.circuit.elements.basicCircuit import *
+from .basicCircuit import *
 # 逻辑电路
-from physicsLab.circuit.elements.logicCircuit import *
+from .logicCircuit import *
 # 模拟电路
-from physicsLab.circuit.elements.artificialCircuit import *
+from .artificialCircuit import *
 # 传感器
-from physicsLab.circuit.elements.sensor import *
+from .sensor import *
 # 其他电路
-from physicsLab.circuit.elements.otherCircuit import *
+from .otherCircuit import *

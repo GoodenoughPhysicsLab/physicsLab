@@ -1,4 +1,27 @@
-# 导线 wire
+# 导线 & 引脚
+
+## class Wire
+导线
+
+Wire的实例有以下属性：
+* Source: 一个引脚
+* Target: 另一个引脚
+
+> 之所以叫`Source`, `Target`, 是因为在物实连接导线都是点击一个引脚，然后点击或者拖向另一个引脚。第一个引脚就是`Source`，第二个引脚即为`Target`。
+
+## class Pin
+引脚
+
+Pin的实例有以下属性：
+*  element_self: 该引脚所属的元件
+
+## enum class WireColor
+导线颜色:
+* red
+* blue
+* green
+* yellow
+* black
 
 ## 连接导线
 通过`crt_wire`，可以连接导线

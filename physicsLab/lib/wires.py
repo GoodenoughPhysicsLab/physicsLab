@@ -3,7 +3,7 @@ from typing import Union, Callable, Tuple
 
 from physicsLab import errors
 from physicsLab.enums import WireColor
-from physicsLab.circuit.wire import crt_wire, del_wire, Pin
+from physicsLab.circuit.elements._circuitbase import crt_wire, del_wire, Pin
 
 class UnitPin:
     ''' 模块化电路的"引脚", 输入输出都是数据 '''
@@ -53,6 +53,7 @@ def check_TypeUnionPin(func: Callable):
         func(sourcePin, targetPin, *args, **kwargs)
     return result
 
+# TODO 支持传入多个 Pin / UnitPin
 @check_TypeUnionPin
 def crt_wires(sourcePin: Union[UnitPin, Pin],
               targetPin: Union[UnitPin, Pin],

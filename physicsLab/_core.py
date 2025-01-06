@@ -37,7 +37,7 @@ class _ExperimentStack:
         return False
 
     @classmethod
-    def remove(cls, data: "_Experiment"):
+    def remove(cls, data: "_Experiment") -> None:
         assert isinstance(data, _Experiment)
 
         cls.data.remove(data)
@@ -644,7 +644,7 @@ class _Experiment:
                         id(a_wire.Target.element_self):
                             identifier_to_element[a_wire.Target.element_self.data["Identifier"]],
                 })
-                self.Wires.add(a_wire)
+                self.Wires.add(a_wire) # TODO 这里wire不深拷贝，通过wire拿到的element不对吧
 
         return self
 
