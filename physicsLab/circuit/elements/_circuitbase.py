@@ -6,7 +6,7 @@ from physicsLab import _tools
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.enums import ExperimentType, WireColor
-from physicsLab._tools import roundData, randString
+from physicsLab._tools import round_data, randString
 from physicsLab._core import _Experiment, get_current_experiment, _ElementBase
 from physicsLab.typehint import Optional, Self, num_type, NoReturn, Generate, override, final, List
 
@@ -151,7 +151,7 @@ class _CircuitMeta(type):
 
         self.is_elementXYZ = False # 元件坐标系
 
-        x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
+        x, y, z = round_data(x), round_data(y), round_data(z)
 
         self.__init__(x, y, z, elementXYZ, *args, **kwargs)
         assert hasattr(self, "data") and isinstance(self.data, dict)
@@ -186,7 +186,7 @@ class CircuitBase(_ElementBase, metaclass=_CircuitMeta):
                 not isinstance(z_r, (int, float)):
             raise TypeError
 
-        x_r, y_r, z_r = roundData(x_r, y_r, z_r) # type: ignore -> result type: tuple
+        x_r, y_r, z_r = round_data(x_r), round_data(y_r), round_data(z_r)
         self.data["Rotation"] = f"{x_r},{z_r},{y_r}"
         return self
 
@@ -200,7 +200,7 @@ class CircuitBase(_ElementBase, metaclass=_CircuitMeta):
                 not isinstance(elementXYZ, (bool, type(None))):
             raise TypeError
 
-        x, y, z = roundData(x, y, z) # type: ignore -> result type: tuple
+        x, y, z = round_data(x), round_data(y), round_data(z)
         self._position = _tools.position(x, y, z)
 
         # 元件坐标系

@@ -663,7 +663,7 @@ class _ElementBase:
                 not isinstance(z, (int, float)):
             raise TypeError
 
-        x, y, z = _tools.roundData(x, y, z) # type: ignore -> result type: tuple
+        x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
         assert hasattr(self, 'experiment')
         _Expe = self.experiment
 

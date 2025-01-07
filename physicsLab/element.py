@@ -403,7 +403,7 @@ class Experiment(_Experiment):
             raise TypeError
 
         name = name.strip().replace(' ', '_').replace('-', '_')
-        x, y, z = (_tools.round_data(x), _tools.round_data(y), _tools.round_data(z))
+        x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
 
         if self.experiment_type == ExperimentType.Circuit:
             from physicsLab import circuit

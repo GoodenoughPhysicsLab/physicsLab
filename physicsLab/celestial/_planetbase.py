@@ -19,7 +19,7 @@ class _PlanetMeta(type):
         self: "PlanetBase" = cls.__new__(cls) # type: ignore -> create subclass
         self.experiment = _Expe
 
-        x, y, z = _tools.roundData(x, y, z) # type: ignore -> return Tuple[numType, numType, numType]
+        x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
 
         self.__init__(x, y, z, *args, **kwargs)
         assert isinstance(self.data, dict)
@@ -49,7 +49,7 @@ class PlanetBase(_ElementBase, metaclass=_PlanetMeta):
                 not isinstance(z, (int, float)):
             raise TypeError
 
-        x, y, z = _tools.roundData(x, y, z) # type: ignore -> return Tuple[numType, numType, numType]
+        x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
         self._position = _tools.position(x, y, z)
         return super().set_position(x, y, z)
 

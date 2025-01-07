@@ -51,7 +51,7 @@ class ElectromagnetismBase(_ElementBase, metaclass=_ElectromagnetismMeta):
                 not isinstance(z, (int, float)):
             raise TypeError
 
-        x, y, z= _tools.roundData(x, y, z) # type: ignore
+        x, y, z= _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
         self._position = _tools.position(x, y, z)
         return super().set_position(x, y, z)
 
@@ -68,6 +68,6 @@ class ElectromagnetismBase(_ElementBase, metaclass=_ElectromagnetismMeta):
             raise TypeError
 
         assert hasattr(self, "data")
-        x_r, y_r, z_r = _tools.roundData(x_r, y_r, z_r) # type: ignore -> return tuple
+        x_r, y_r, z_r = _tools.round_data(x_r), _tools.round_data(y_r), _tools.round_data(z_r)
         self.data["Rotation"] = f"{x_r},{z_r},{y_r}"
         return self

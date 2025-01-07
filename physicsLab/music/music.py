@@ -486,7 +486,7 @@ class Chord:
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = (round_data(x), round_data(y), round_data(z))
+        x, y, z = round_data(x), round_data(y), round_data(z)
 
         first_ins: Optional[elements.Simple_Instrument] = None # 第一个音符
         if is_optimize:

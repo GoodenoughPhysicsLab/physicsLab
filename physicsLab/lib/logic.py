@@ -51,7 +51,7 @@ class Super_AndGate:
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = (round_data(x), round_data(y), round_data(z))
+        x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
         if bitnum == 2:
@@ -144,7 +144,7 @@ class Super_OrGate:
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = (round_data(x), round_data(y), round_data(z))
+        x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
         if bitnum == 2:
@@ -216,7 +216,7 @@ class Super_NorGate:
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = (round_data(x), round_data(y), round_data(z))
+        x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
         if bitnum == 2:
@@ -292,7 +292,7 @@ class Tick_Counter:
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = (round_data(x), round_data(y), round_data(z))
+        x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
         if bitnum == 2:
@@ -359,7 +359,7 @@ class Two_four_Decoder:
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = (round_data(x), round_data(y), round_data(z))
+        x, y, z = round_data(x), round_data(y), round_data(z)
 
         self.nor_gate = elements.Nor_Gate(x, y, z, True)
         self.nimp_gate1 = elements.Nimp_Gate(x + 1, y, z, True)
@@ -409,7 +409,7 @@ class Switched_Register:
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = (round_data(x), round_data(y), round_data(z))
+        x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
         self.register = Register(x + 1, y, z, bitnum, elementXYZ=True, heading=False)
@@ -465,7 +465,7 @@ class Equal_to:
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = (round_data(x), round_data(y), round_data(z))
+        x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
         self.xnorgates = []
@@ -504,7 +504,7 @@ class Signed_Sum:
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = (round_data(x), round_data(y), round_data(z))
+        x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
         self._inputs = AU_SumSub(x, y, z, bitnum=bitnum, elementXYZ=True)
@@ -576,7 +576,7 @@ class _Simple_Logic_Meta(type):
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
-        x, y, z = (round_data(x), round_data(y), round_data(z))
+        x, y, z = round_data(x), round_data(y), round_data(z)
 
         self.__init__(x=x,
                       y=y,
