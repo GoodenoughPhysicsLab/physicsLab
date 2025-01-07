@@ -70,6 +70,8 @@ def search_experiment(sav_name: str) -> Tuple[Optional[str], Optional[dict]]:
     return None, None
 
 class Experiment(_Experiment):
+    _user: Optional[User] = None
+
     @overload
     def __init__(self, open_mode: OpenMode, sav_name: str) -> None:
         ''' 根据存档名打开存档
@@ -85,7 +87,14 @@ class Experiment(_Experiment):
         '''
 
     @overload
-    def __init__(self, open_mode: OpenMode, content_id: str, category: Category, /, *, user: User = User()) -> None:
+    def __init__(
+            self,
+            open_mode: OpenMode,
+            content_id: str,
+            category: Category,
+            /, *,
+            user: Optional[User] = None
+    ) -> None:
         ''' 从物实服务器中获取存档
             @open_mode = OpenMode.open_from_plar_app
             @content_id: 物实 实验/讨论 的id
@@ -170,14 +179,20 @@ class Experiment(_Experiment):
 
             if not isinstance(content_id, str) or not isinstance(category, Category) or len(rest) != 0:
                 raise TypeError
-            user = kwargs.get("user", User())
-            if not isinstance(user, User):
+            user = kwargs.get("user")
+            if not isinstance(user, (User, type(None))):
                 raise TypeError
+
+            if user is None:
+                if Experiment._user is None:
+                    Experiment._user = User()
+                user = Experiment._user
 
             self.SAV_PATH = os.path.join(_Experiment.SAV_PATH_DIR, f"{content_id}.sav")
             if _ExperimentStack.inside(self):
                     raise errors.ExperimentOpenedError
 
+            assert user is not None
             _summary = user.get_summary(content_id, category)["Data"]
             del _summary["$type"]
             _experiment = user.get_experiment(_summary["ContentID"])["Data"]

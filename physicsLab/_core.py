@@ -577,13 +577,14 @@ class _Experiment:
     @_check_not_closed
     def export(self, output_path: str = "temp.pl.py", sav_name: str = "temp") -> Self:
         ''' 以physicsLab代码的形式导出实验 '''
-        res: str = f"from physicsLab import *\nexp = Experiment('{sav_name}')\n"
+        res: str = f"from physicsLab import *\n\n" \
+                f"expe = Experiment(OpenMode.crt, '{sav_name}', {self.experiment_type}, force_crt=True)\n"
 
         for a_element in self.Elements:
             res += f"e{a_element.get_index()} = {str(a_element)}\n"
         for a_wire in self.Wires:
             res += str(a_wire) + '\n'
-        res += "\nexp.write()"
+        res += "expe.save()\nexpe.exit()\n"
 
         with open(output_path, "w", encoding="utf-8") as f:
             f.write(res)

@@ -87,7 +87,7 @@ class Wire:
             return False
 
     def __repr__(self) -> str:
-        return f"crt_wire({self.Source.export_str()}, {self.Target.export_str()}, '{self.color}')"
+        return f"crt_wire({self.Source.export_str()}, {self.Target.export_str()}, color={self.color})"
 
     def release(self) -> dict:
         return {
