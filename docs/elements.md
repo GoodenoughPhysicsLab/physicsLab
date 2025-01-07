@@ -216,6 +216,7 @@
         <th>元件在physicsLab中对应的的类名</th>
         <th>元件在物实存档中对应的名称（即ModelID）</th>
         <th>引脚</th>
+        <th>类独有的method</th>
     </tr>
     <tr>
         <td>555定时器</td>
@@ -282,24 +283,28 @@
         <td>Transistor</td>
         <td>Transistor</td>
         <td>B, C, E</td>
+        <td>None</td>
     </tr>
     <tr>
         <td>比较器</td>
         <td>Comparator</td>
         <td>Comparator</td>
         <td>i_up, i_low, o</td>
+        <td>None</td>
     </tr>
     <tr>
         <td>运算放大器</td>
         <td>Operational_Amplifier</td>
         <td>Operational Amplifier</td>
         <td>i_neg, i_pos, o</td>
+        <td>set_properties</td>
     </tr>
     <tr>
         <td>继电器</td>
         <td>Relay_Component</td>
         <td>Relay Component</td>
         <td>i_up, i_low, o</td>
+        <td>None</td>
     </tr>
     <tr>
         <td>N-MOSFET</td>
