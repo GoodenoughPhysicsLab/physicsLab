@@ -38,6 +38,13 @@ class Pin:
                 return method
         return None
 
+    def get_wires(self) -> List["Wire"]:
+        res = []
+        for a_wire in self.element_self.experiment.Wires:
+            if a_wire.Source == self or a_wire.Target == self:
+                res.append(a_wire)
+        return res
+
 class InputPin(Pin):
     ''' 仅用于逻辑电路的输入引脚 '''
     def __init__(self, input_self, pinLabel: int) -> None:
