@@ -54,17 +54,6 @@ with experiment(OpenMode.load_by_sav_name, "example"):
     crt_wire(e1.o, e2.i, color=WireColor.red) # 虽然导线颜色不同，但还是重复连接的导线，会被忽略
 ```
 
-1. 使用减号
-之所以做了这个是因为我觉得`-`与导线很像
-
-> Note: 有时候IDE会认为重载后的减法运算后没有变量去接受返回值, 因此会给出警告
-```Python
-element.o - element2.i
-```
-通过这种方法连接的导线只能为蓝色，但该用法还可以和`lib.Wires`的导线类型混合使用，因此功能更加强大
-
-所有元件都定义得有自己的引脚名称，在[elements.md](elements.md)中记录得有所有引脚
-
 ## 删除导线
 除了创建导线外，也可以删除导线：
 ```Python

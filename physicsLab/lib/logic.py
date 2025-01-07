@@ -5,7 +5,7 @@ import physicsLab.circuit.elementXYZ as _elementXYZ
 from .wires import UnitPin, crt_wires
 from physicsLab._tools import round_data
 from physicsLab.circuit import elements
-from physicsLab.circuit.elements._circuitbase import Pin
+from physicsLab.circuit._circuit_core import Pin
 from physicsLab._core import get_current_experiment
 from physicsLab.enums import ExperimentType
 from physicsLab.typehint import num_type, Optional, Self, Union, Type, List

@@ -2,7 +2,7 @@
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.circuit import elements
-from physicsLab.circuit.elements._circuitbase import InputPin, OutputPin
+from physicsLab.circuit._circuit_core import InputPin, OutputPin
 from physicsLab.typehint import num_type, Optional, Self
 
 class _TriggerMeta(type):

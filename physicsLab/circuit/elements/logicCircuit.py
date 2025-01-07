@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from physicsLab import plAR
 from physicsLab import errors
-from ._circuitbase import CircuitBase, InputPin, OutputPin
+from .._circuit_core import CircuitBase, InputPin, OutputPin
 from physicsLab.typehint import Optional, num_type, CircuitElementData, Self, Generate, final
 
 class _LogicBase(CircuitBase):

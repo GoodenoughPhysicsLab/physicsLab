@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from ._circuitbase import CircuitBase, TwoPinMixIn, Pin
+from .._circuit_core import CircuitBase, TwoPinMixIn, Pin
 from physicsLab.typehint import Optional, num_type, CircuitElementData, Self, Generate
 
 class _switch_Base(CircuitBase):

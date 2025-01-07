@@ -8,7 +8,7 @@ from . import errors
 from . import savTemplate
 from .web import User
 from .savTemplate import Generate
-from .circuit.elements._circuitbase import Wire, Pin
+from .circuit._circuit_core import Wire, Pin
 from .enums import ExperimentType, Category, OpenMode, WireColor
 from ._core import _Experiment, _ExperimentStack, _check_not_closed, _ElementBase
 from .typehint import num_type, Optional, Union, List, overload, Tuple, Dict, Self
@@ -59,13 +59,13 @@ def search_experiment(sav_name: str) -> Tuple[Optional[str], Optional[dict]]:
 
         若存在则返回存档对应的文件名, 若不存在则返回None
     '''
-    for aSav in _get_all_pl_sav():
+    for a_sav in _get_all_pl_sav():
         try:
-            sav = _open_sav(os.path.join(_Experiment.SAV_PATH_DIR, aSav))
+            sav = _open_sav(os.path.join(_Experiment.SAV_PATH_DIR, a_sav))
         except errors.InvalidSavError:
             continue
         if sav["InternalName"] == sav_name:
-            return aSav, sav
+            return a_sav, sav
 
     return None, None
 
@@ -79,7 +79,7 @@ class Experiment(_Experiment):
             @sav_name: 存档的名字
         '''
 
-    @overload
+    @overload # TODO support pathlib
     def __init__(self, open_mode: OpenMode, filepath: str) -> None:
         ''' 根据存档对应的文件路径打开存档
             @open_mode = OpenMode.open_from_abs_path

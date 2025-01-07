@@ -25,6 +25,9 @@ class Pin:
 
         return self.element_self == other.element_self and self._pin_label == other._pin_label
 
+    def __hash__(self) -> int:
+        return hash(self.element_self) + hash(self._pin_label)
+
     # 将self转换为 CircuitBase.a_pin的形式
     def export_str(self) -> str:
         pin_name = self._get_pin_name_of_class()
@@ -76,11 +79,7 @@ class Wire:
         self.color: WireColor = color
 
     def __hash__(self) -> int:
-        return hash(
-            (self.Source.element_self, self.Source._pin_label, self.Target.element_self, self.Target._pin_label)
-        ) + hash(
-            (self.Target.element_self, self.Target._pin_label, self.Source.element_self, self.Source._pin_label)
-        )
+        return hash(self.Source) + hash(self.Target)
 
     def __eq__(self, other) -> bool:
         if not isinstance(other, Wire):
