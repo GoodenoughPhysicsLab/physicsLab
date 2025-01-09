@@ -234,3 +234,4 @@
 13. `class Experiment`的构造函数支持默认导入元件了，`load_elements`函数被废弃
 14. `clear_elements`, `del_element`, `count_elements`, `get_element_from_position`, `get_element_from_index`, `get_element_from_identifier`, `crt_element`改为`Experiment.clear_elements`, `Experiment.del_element`, `Experiment.get_elements_count`, `Experiment.get_element_from_position`, `Experiment.get_element_from_index`, `Experiment.get_element_from_identifier`, `Experiment.crt_element`
 15. `pin1 - pin2`被废弃，`crt_wire`现在支持多个参数了
+16. `class experiment`被废弃

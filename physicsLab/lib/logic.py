@@ -23,7 +23,7 @@ class Const_NoGate:
                 ):
         if Const_NoGate.__singleton_NoGate is None:
             Const_NoGate.__singleton = object.__new__(cls)
-            Const_NoGate.__singleton_NoGate = elements.No_Gate(x, y, z, elementXYZ)
+            Const_NoGate.__singleton_NoGate = elements.No_Gate(x, y, z, elementXYZ=elementXYZ)
 
         assert Const_NoGate.__singleton is not None
         return Const_NoGate.__singleton
@@ -79,13 +79,13 @@ class Super_AndGate:
 
         if mod_num == 2 or mod_num == 3:
             muls = [elements.Multiplier(x, y, z, elementXYZ=True) for _ in range(muls)]
-            tmp = Super_AndGate(x, y, z, len(muls) + 1, True)
+            tmp = Super_AndGate(x, y, z, len(muls) + 1, elementXYZ=True)
         elif mod_num == 1:
             muls = [elements.Multiplier(x, y, z, elementXYZ=True) for _ in range(muls - 1)]
-            tmp = Super_AndGate(x, y, z, len(muls) + 5, True)
+            tmp = Super_AndGate(x, y, z, len(muls) + 5, elementXYZ=True)
         else: # end_num == 0
             muls = [elements.Multiplier(x, y, z, elementXYZ=True) for _ in range(muls)]
-            tmp = Super_AndGate(x, y, z, len(muls), True)
+            tmp = Super_AndGate(x, y, z, len(muls), elementXYZ=True)
 
         if mod_num == 3:
             end_element = elements.Multiplier(x, y, z, elementXYZ=True)
@@ -136,11 +136,14 @@ class Super_OrGate:
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,
                  ) -> None:
-        if not isinstance(x, (int, float)) or not isinstance(y, (int, float)) or \
-           not isinstance(z, (int, float)) or \
-           not isinstance(elementXYZ, (bool, type(None))) or \
-           not isinstance(bitnum, int) or bitnum <= 1:
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(elementXYZ, (bool, type(None))) \
+                or not isinstance(bitnum, int):
             raise TypeError
+        if bitnum <= 1:
+            raise ValueError
 
         if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
@@ -148,14 +151,14 @@ class Super_OrGate:
         self.bitnum = bitnum
 
         if bitnum == 2:
-            tmp = elements.Or_Gate(x, y, z, True)
+            tmp = elements.Or_Gate(x, y, z, elementXYZ=True)
             self._inputs = [tmp.i_low, tmp.i_up]
             self._outputs = [tmp.o]
             self._output = tmp.o
             return
         elif bitnum == 3:
-            tmp = elements.Or_Gate(x, y, z, True)
-            tmp2 = elements.Or_Gate(x, y + 1, z, True)
+            tmp = elements.Or_Gate(x, y, z, elementXYZ=True)
+            tmp2 = elements.Or_Gate(x, y + 1, z, elementXYZ=True)
             crt_wires(tmp2.o, tmp.i_up)
             self._inputs = [tmp.i_low, tmp2.i_low, tmp2.i_up]
             self._outputs = [tmp.o]
@@ -167,22 +170,22 @@ class Super_OrGate:
         if bitnum % 2 == 0:
             num_copy = bitnum
             while num_copy != 0:
-                tmp = elements.Or_Gate(x, y + (bitnum - num_copy) / 2, z, True)
+                tmp = elements.Or_Gate(x, y + (bitnum - num_copy) / 2, z, elementXYZ=True)
                 self._inputs += [tmp.i_low, tmp.i_up]
                 self._outputs.append(tmp.o)
                 num_copy -= 2
-            next_orgates = Super_OrGate(x, y, z, len(self._outputs), True)
+            next_orgates = Super_OrGate(x, y, z, len(self._outputs), elementXYZ=True)
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
                 crt_wires(input_, output_)
         else: # num % 2 == 1
             num_copy = bitnum
             while num_copy != 1:
-                tmp = elements.Or_Gate(x, y + (bitnum - num_copy) / 2, z, True)
+                tmp = elements.Or_Gate(x, y + (bitnum - num_copy) / 2, z, elementXYZ=True)
                 self._inputs += [tmp.i_low, tmp.i_up]
                 self._outputs.append(tmp.o)
                 num_copy -= 2
-            next_orgates = Super_OrGate(x, y, z, len(self._outputs) + 1, True)
+            next_orgates = Super_OrGate(x, y, z, len(self._outputs) + 1, elementXYZ=True)
             self._inputs.append(next_orgates._inputs[-1])
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
@@ -220,14 +223,14 @@ class Super_NorGate:
         self.bitnum = bitnum
 
         if bitnum == 2:
-            tmp = elements.Nor_Gate(x, y, z, True)
+            tmp = elements.Nor_Gate(x, y, z, elementXYZ=True)
             self._inputs = [tmp.i_low, tmp.i_up]
             self._outputs = [tmp.o]
             self._output = tmp.o
             return
         elif bitnum == 3:
-            tmp = elements.Nor_Gate(x, y, z, True)
-            tmp2 = elements.Or_Gate(x, y + 1, z, True)
+            tmp = elements.Nor_Gate(x, y, z, elementXYZ=True)
+            tmp2 = elements.Or_Gate(x, y + 1, z, elementXYZ=True)
             crt_wires(tmp2.o, tmp.i_up)
             self._inputs = [tmp.i_low, tmp2.i_low, tmp2.i_up]
             self._outputs = [tmp.o]
@@ -239,22 +242,22 @@ class Super_NorGate:
         if bitnum % 2 == 0:
             num_copy = bitnum
             while num_copy != 0:
-                tmp = elements.Or_Gate(x, y + (bitnum - num_copy) / 2, z, True)
+                tmp = elements.Or_Gate(x, y + (bitnum - num_copy) / 2, z, elementXYZ=True)
                 self._inputs += [tmp.i_low, tmp.i_up]
                 self._outputs.append(tmp.o)
                 num_copy -= 2
-            next_orgates = Super_NorGate(x, y, z, True, len(self._outputs))
+            next_orgates = Super_NorGate(x, y, z, len(self._outputs), elementXYZ=True)
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
                 crt_wires(input_, output_)
         else: # num % 2 == 1
             num_copy = bitnum
             while num_copy != 1:
-                tmp = elements.Or_Gate(x, y + (bitnum - num_copy) / 2, z, True)
+                tmp = elements.Or_Gate(x, y + (bitnum - num_copy) / 2, z, elementXYZ=True)
                 self._inputs += [tmp.i_low, tmp.i_up]
                 self._outputs.append(tmp.o)
                 num_copy -= 2
-            next_orgates = Super_NorGate(x, y, z, True, len(self._outputs) + 1)
+            next_orgates = Super_NorGate(x, y, z, len(self._outputs) + 1, elementXYZ=True)
             self._inputs.append(next_orgates._inputs[-1])
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
@@ -296,12 +299,12 @@ class Tick_Counter:
         self.bitnum = bitnum
 
         if bitnum == 2:
-            self._output = elements.T_Flipflop(x, y, z, True)
+            self._output = elements.T_Flipflop(x, y, z, elementXYZ=True)
         else:
             if bitnum >= 16:
                 raise Exception("Do not support num >= 16 in this version")
 
-            self._output = elements.Counter(x + 1, y, z, True)
+            self._output = elements.Counter(x + 1, y, z, elementXYZ=True)
 
             bitlist = []
             bitnum -= 1
@@ -317,12 +320,12 @@ class Tick_Counter:
                     self._o = UnitPin(self, _p)
 
             if len(output_pins) >= 2:
-                sa = Super_AndGate(x + 1, y, z, True, len(output_pins))
+                sa = Super_AndGate(x + 1, y, z, len(output_pins), elementXYZ=True)
                 self._o = sa.output
                 crt_wires(UnitPin(None, *output_pins), sa.inputs)
 
-            imp = elements.Imp_Gate(x, y + 1, z, True)
-            or_gate = elements.Or_Gate(x, y, z, True)
+            imp = elements.Imp_Gate(x, y + 1, z, elementXYZ=True)
+            or_gate = elements.Or_Gate(x, y, z, elementXYZ=True)
             crt_wires(or_gate.i_low, or_gate.o)
             crt_wires(or_gate.o, imp.i_up)
             crt_wires(or_gate.i_up, self._output.i_up)
@@ -361,10 +364,10 @@ class Two_four_Decoder:
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
 
-        self.nor_gate = elements.Nor_Gate(x, y, z, True)
-        self.nimp_gate1 = elements.Nimp_Gate(x + 1, y, z, True)
-        self.nimp_gate2 = elements.Nimp_Gate(x + 1, y + 1, z, True)
-        self.and_gate = elements.And_Gate(x, y + 1, z, True)
+        self.nor_gate = elements.Nor_Gate(x, y, z, elementXYZ=True)
+        self.nimp_gate1 = elements.Nimp_Gate(x + 1, y, z, elementXYZ=True)
+        self.nimp_gate2 = elements.Nimp_Gate(x + 1, y + 1, z, elementXYZ=True)
+        self.and_gate = elements.And_Gate(x, y + 1, z, elementXYZ=True)
         crt_wires(self.nor_gate.i_up, self.nimp_gate1.i_low)
         crt_wires(self.nimp_gate1.i_low, self.nimp_gate2.i_up)
         crt_wires(self.nimp_gate2.i_up, self.and_gate.i_up)
@@ -413,10 +416,10 @@ class Switched_Register:
         self.bitnum = bitnum
 
         self.register = Register(x + 1, y, z, bitnum, elementXYZ=True, heading=False)
-        self.switch_nogate = elements.No_Gate(x, y, z, True)
+        self.switch_nogate = elements.No_Gate(x, y, z, elementXYZ=True)
         self.switches = []
         for delta_y in range(bitnum):
-            m = elements.Multiplier(x, y + delta_y * 2, z, True)
+            m = elements.Multiplier(x, y + delta_y * 2, z, elementXYZ=True)
             crt_wires(m.o_lowmid, self.register.inputs[delta_y])
             crt_wires(m.i_up, self.switch_nogate.o)
             crt_wires(m.i_lowmid, self.switch_nogate.i)
@@ -471,7 +474,7 @@ class Equal_to:
         self.xnorgates = []
         self.andgate = Super_AndGate(x, y, z, bitnum=bitnum, elementXYZ=True)
         for delta_y in range(bitnum):
-            xnorgate = elements.Xnor_Gate(x, y + delta_y, z, True)
+            xnorgate = elements.Xnor_Gate(x, y + delta_y, z, elementXYZ=True)
             crt_wires(self.andgate.inputs[delta_y], xnorgate.o)
             self.xnorgates.append(xnorgate)
 
@@ -510,9 +513,9 @@ class Signed_Sum:
         self._inputs = AU_SumSub(x, y, z, bitnum=bitnum, elementXYZ=True)
         self._outputs = AU_SumSub(x + 2, y, z, bitnum=bitnum, elementXYZ=True)
         crt_wires(self._inputs.outputs[:-1], self._outputs.inputs2)
-        self.xorgate = elements.Xor_Gate(x, y + bitnum * 2, z, True)
-        nimpgate = elements.Nimp_Gate(x + 1, y + bitnum * 2, z, True)
-        self.xorgate2 = elements.Xor_Gate(x + 2, y + bitnum * 2, z, True)
+        self.xorgate = elements.Xor_Gate(x, y + bitnum * 2, z, elementXYZ=True)
+        nimpgate = elements.Nimp_Gate(x + 1, y + bitnum * 2, z, elementXYZ=True)
+        self.xorgate2 = elements.Xor_Gate(x + 2, y + bitnum * 2, z, elementXYZ=True)
         crt_wires(self.xorgate.o, self._inputs.switch)
         crt_wires(nimpgate.o, self._outputs.switch)
         crt_wires(self.xorgate.i_up, self.xorgate2.i_up)
@@ -628,24 +631,24 @@ class Sum(_Base):
             if fold:
                 zcor = z
                 for i in range(bitnum):
-                    self._elements.append(elements.Full_Adder(x + i % foldMaxNum, y, zcor, True))
+                    self._elements.append(elements.Full_Adder(x + i % foldMaxNum, y, zcor, elementXYZ=True))
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
                 for increase in range(bitnum):
-                    self._elements.append(elements.Full_Adder(x + increase, y, z, True))
+                    self._elements.append(elements.Full_Adder(x + increase, y, z, elementXYZ=True))
         else:
             if fold:
                 zcor = z
                 for i in range(bitnum):
                     self._elements.append(
-                        elements.Full_Adder(x, y + (i % foldMaxNum) * 2, zcor, True)
+                        elements.Full_Adder(x, y + (i % foldMaxNum) * 2, zcor, elementXYZ=True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
                 for increase in range(bitnum):
-                    self._elements.append(elements.Full_Adder(x, y + increase * 2, z, True))
+                    self._elements.append(elements.Full_Adder(x, y + increase * 2, z, elementXYZ=True))
 
         # 连接导线
         for i in range(self._elements.__len__() - 1):
@@ -688,7 +691,7 @@ class Sub(_Base):
                  fold: bool = False,  # False: 生成元件时不会在同一水平面的元件超过一定数量后z + 1继续生成元件
                  foldMaxNum: int = 4  # 达到foldMaxNum个元件数时即在z轴自动折叠
                  ) -> None:
-        self._elements: list = [Const_NoGate(x, y, z, True)]
+        self._elements: list = [Const_NoGate(x, y, z, elementXYZ=True)]
         self._noGates: list = []
         self._fullAdders: list = []
 
@@ -697,40 +700,40 @@ class Sub(_Base):
                 zcor = z
                 for i in range(bitnum):
                     self._fullAdders.append(
-                        elements.Full_Adder(x + i % foldMaxNum, y - 2, zcor, True)
+                        elements.Full_Adder(x + i % foldMaxNum, y - 2, zcor, elementXYZ=True)
                     )
                     self._noGates.append(
-                        elements.No_Gate(x + i % foldMaxNum, y, zcor, True)
+                        elements.No_Gate(x + i % foldMaxNum, y, zcor, elementXYZ=True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
                 for increase in range(bitnum):
                     self._fullAdders.append(
-                        elements.Full_Adder(x + increase, y - 2, z, True)
+                        elements.Full_Adder(x + increase, y - 2, z, elementXYZ=True)
                     )
                     self._noGates.append(
-                        elements.No_Gate(x + increase, y, z, True)
+                        elements.No_Gate(x + increase, y, z, elementXYZ=True)
                     )
         else:
             if fold:
                 zcor = z
                 for i in range(bitnum):
                     self._fullAdders.append(
-                        elements.Full_Adder(x + 1, y + (i % foldMaxNum) * 2, zcor, True)
+                        elements.Full_Adder(x + 1, y + (i % foldMaxNum) * 2, zcor, elementXYZ=True)
                     )
                     self._noGates.append(
-                        elements.No_Gate(x, y + (i % foldMaxNum) * 2 + 1, zcor, True)
+                        elements.No_Gate(x, y + (i % foldMaxNum) * 2 + 1, zcor, elementXYZ=True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
                 for increase in range(bitnum):
                     self._fullAdders.append(
-                        elements.Full_Adder(x + 1, y + increase * 2, z, True)
+                        elements.Full_Adder(x + 1, y + increase * 2, z, elementXYZ=True)
                     )
                     self._noGates.append(
-                        elements.No_Gate(x, y + increase * 2 + 1, z, True)
+                        elements.No_Gate(x, y + increase * 2 + 1, z, elementXYZ=True)
                     )
 
         crt_wires(self._elements[0].o, self._fullAdders[0].i_low)
@@ -788,40 +791,40 @@ class AU_SumSub(_Base):
                 zcor = z
                 for i in range(bitnum):
                     self._fullAdders.append(
-                        elements.Full_Adder(x + i % foldMaxNum, y - 2, zcor, True)
+                        elements.Full_Adder(x + i % foldMaxNum, y - 2, zcor, elementXYZ=True)
                     )
                     self._xorgates.append(
-                        elements.Xor_Gate(x + i % foldMaxNum, y, zcor, True)
+                        elements.Xor_Gate(x + i % foldMaxNum, y, zcor, elementXYZ=True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
                 for increase in range(bitnum):
                     self._fullAdders.append(
-                        elements.Full_Adder(x + increase, y - 2, z, True)
+                        elements.Full_Adder(x + increase, y - 2, z, elementXYZ=True)
                     )
                     self._xorgates.append(
-                        elements.Xor_Gate(x + increase, y, z, True)
+                        elements.Xor_Gate(x + increase, y, z, elementXYZ=True)
                     )
         else:
             if fold:
                 zcor = z
                 for i in range(bitnum):
                     self._fullAdders.append(
-                        elements.Full_Adder(x + 1, y + (i % foldMaxNum) * 2, zcor, True)
+                        elements.Full_Adder(x + 1, y + (i % foldMaxNum) * 2, zcor, elementXYZ=True)
                     )
                     self._xorgates.append(
-                        elements.Xor_Gate(x, y + (i % foldMaxNum) * 2 + 1, zcor, True)
+                        elements.Xor_Gate(x, y + (i % foldMaxNum) * 2 + 1, zcor, elementXYZ=True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
                 for increase in range(bitnum):
                     self._fullAdders.append(
-                        elements.Full_Adder(x + 1, y + increase * 2, z, True)
+                        elements.Full_Adder(x + 1, y + increase * 2, z, elementXYZ=True)
                     )
                     self._xorgates.append(
-                        elements.Xor_Gate(x, y + increase * 2 + 1, z, True)
+                        elements.Xor_Gate(x, y + increase * 2 + 1, z, elementXYZ=True)
                     )
 
         # 连接导线
@@ -886,7 +889,7 @@ class D_WaterLamp(_Base):
         self.is_bitlen_equal_to_2: bool = False
         if bitnum == 2:
             self.is_bitlen_equal_to_2 = True
-            self._elements = [elements.T_Flipflop(x, y, z, True)]
+            self._elements = [elements.T_Flipflop(x, y, z, elementXYZ=True)]
             return
 
         self._elements: list = []
@@ -896,28 +899,28 @@ class D_WaterLamp(_Base):
                 zcor = z
                 for i in range(bitnum):
                     self._elements.append(
-                        elements.D_Flipflop(x + i % foldMaxNum, y, zcor, True)
+                        elements.D_Flipflop(x + i % foldMaxNum, y, zcor, elementXYZ=True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
                 for increase in range(bitnum):
                     self._elements.append(
-                        elements.D_Flipflop(x + increase, y, z, True)
+                        elements.D_Flipflop(x + increase, y, z, elementXYZ=True)
                     )
         else:
             if fold:
                 zcor = z
                 for i in range(bitnum):
                     self._elements.append(
-                        elements.D_Flipflop(x, y + (i % foldMaxNum) * 2, zcor, True)
+                        elements.D_Flipflop(x, y + (i % foldMaxNum) * 2, zcor, elementXYZ=True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
                 for increase in range(bitnum):
                     self._elements.append(
-                        elements.D_Flipflop(x, y + increase * 2, z, True)
+                        elements.D_Flipflop(x, y + increase * 2, z, elementXYZ=True)
                     )
 
         # 连接clk
@@ -932,7 +935,7 @@ class D_WaterLamp(_Base):
             crt_wires(self._elements[-1].o_low, self._elements[0].i_up)
         else:
             firstElement = self._elements[0]
-            orGate = elements.Or_Gate(*firstElement.get_Position(), True)
+            orGate = elements.Or_Gate(*firstElement.get_Position(), elementXYZ=True)
             crt_wires(orGate.i_up, orGate.o)
             crt_wires(orGate.o, firstElement.i_up)
             crt_wires(orGate.i_low, firstElement.i_low)
@@ -987,28 +990,28 @@ class Register(_Base):
                 zcor = z
                 for i in range(bitnum):
                     self._elements.append(
-                        elements.D_Flipflop(x + i % foldMaxNum, y, zcor, True)
+                        elements.D_Flipflop(x + i % foldMaxNum, y, zcor, elementXYZ=True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
                 for increase in range(bitnum):
                     self._elements.append(
-                        elements.D_Flipflop(x + increase, y, z, True)
+                        elements.D_Flipflop(x + increase, y, z, elementXYZ=True)
                     )
         else:
             if fold:
                 zcor = z
                 for i in range(bitnum):
                     self._elements.append(
-                        elements.D_Flipflop(x, y + (i % foldMaxNum) * 2, zcor, True)
+                        elements.D_Flipflop(x, y + (i % foldMaxNum) * 2, zcor, elementXYZ=True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
             else:
                 for increase in range(bitnum):
                     self._elements.append(
-                        elements.D_Flipflop(x, y + increase * 2, z, True)
+                        elements.D_Flipflop(x, y + increase * 2, z, elementXYZ=True)
                     )
 
         last_element = None
@@ -1068,7 +1071,7 @@ class MultiElements(_Base):
                     else:
                         plus = i % foldMaxNum
                     self._elements.append(
-                        element(x + plus, y, zcor, True)
+                        element(x + plus, y, zcor, elementXYZ=True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
@@ -1079,7 +1082,7 @@ class MultiElements(_Base):
                     else:
                         plus = i
                     self._elements.append(
-                        element(x + i, y, z, True)
+                        element(x + i, y, z, elementXYZ=True)
                     )
         else:
             if fold:
@@ -1090,7 +1093,7 @@ class MultiElements(_Base):
                     else:
                         plus = i % foldMaxNum
                     self._elements.append(
-                        element(x, y + plus, zcor, True)
+                        element(x, y + plus, zcor, elementXYZ=True)
                     )
                     if i == foldMaxNum - 1:
                         zcor += 1
@@ -1101,7 +1104,7 @@ class MultiElements(_Base):
                     else:
                         plus = i
                     self._elements.append(
-                        element(x, y + plus, z, True)
+                        element(x, y + plus, z, elementXYZ=True)
                     )
 
     def pins(self, pin: Pin) -> UnitPin:

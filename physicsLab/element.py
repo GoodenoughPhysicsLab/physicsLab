@@ -424,11 +424,11 @@ class Experiment(_Experiment):
             from physicsLab import circuit
 
             if (name == '555_Timer'):
-                return circuit.NE555(x, y, z, elementXYZ)
+                return circuit.NE555(x, y, z, elementXYZ=elementXYZ)
             elif (name == '8bit_Input'):
-                return circuit.eight_bit_Input(x, y, z, elementXYZ)
+                return circuit.eight_bit_Input(x, y, z, elementXYZ=elementXYZ)
             elif (name == '8bit_Display'):
-                return circuit.eight_bit_Display(x, y, z, elementXYZ)
+                return circuit.eight_bit_Display(x, y, z, elementXYZ=elementXYZ)
             else:
                 return eval(f"circuit.{name}({x}, {y}, {z}, {elementXYZ}, *{args}, **{kwargs})")
         elif self.experiment_type == ExperimentType.Celestial:
@@ -439,73 +439,3 @@ class Experiment(_Experiment):
             return eval(f"electromagnetism.{name}({x}, {y}, {z})")
         else:
             assert False
-
-class experiment:
-    def __init__(
-            self,
-            sav_name: str,
-            read: bool = False,
-            delete: bool = False,
-            write: bool = True,
-            elementXYZ: bool = False,
-            experiment_type: ExperimentType = ExperimentType.Circuit,
-            extra_filepath: Optional[str] = None,
-            force_crt: bool = False,
-            is_exit: bool = False,
-    ) -> None:
-        errors.warning("`with experiment` is deprecated, use `with Experiment` instead")
-        if not isinstance(sav_name, str) or \
-                not isinstance(read, bool) or \
-                not isinstance(delete, bool) or \
-                not isinstance(elementXYZ, bool) or \
-                not isinstance(write, bool) or \
-                not isinstance(experiment_type, ExperimentType) or \
-                not isinstance(force_crt, bool) or \
-                not isinstance(is_exit, bool) or \
-                not isinstance(extra_filepath, (str, type(None))):
-            raise TypeError
-
-        self.sav_name: str = sav_name
-        self.read: bool = read
-        self.delete: bool = delete
-        self.write: bool = write
-        self.elementXYZ: bool = elementXYZ
-        self.experiment_type: ExperimentType = experiment_type
-        self.extra_filepath: Optional[str] = extra_filepath
-        self.force_crt: bool = force_crt
-        self.is_exit: bool = is_exit
-
-    def __enter__(self) -> _Experiment:
-        if self.force_crt:
-            self._Experiment: _Experiment = _Experiment(
-                OpenMode.crt, self.sav_name, self.experiment_type, force_crt=True
-            )
-        else:
-            try:
-                self._Experiment: _Experiment = _Experiment(OpenMode.load_by_sav_name, self.sav_name)
-            except errors.ExperimentNotExistError:
-                self._Experiment: _Experiment = _Experiment(OpenMode.crt, self.sav_name, self.experiment_type)
-
-        if not self.read:
-            self._Experiment.clear_elements()
-
-        if self.elementXYZ:
-            if self._Experiment.experiment_type != ExperimentType.Circuit:
-                _ExperimentStack.remove(self._Experiment)
-                raise errors.ExperimentTypeError
-            import physicsLab.circuit.elementXYZ as _elementXYZ
-            _elementXYZ.set_elementXYZ(True)
-
-        return self._Experiment
-
-    def __exit__(self, exc_type, exc_val, traceback) -> None:
-        if exc_type is not None:
-            self._Experiment.exit()
-            return
-
-        if self.is_exit:
-            self._Experiment.exit()
-            return
-        if self.write and not self.delete:
-            self._Experiment.save(extra_filepath=self.extra_filepath)
-        self._Experiment.exit(delete=self.delete)

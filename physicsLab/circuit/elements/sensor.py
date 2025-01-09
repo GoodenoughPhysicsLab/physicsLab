@@ -5,7 +5,7 @@ from physicsLab.typehint import Optional, num_type, CircuitElementData, Generate
 
 class _MemsBase(CircuitBase):
     ''' 三引脚集成式传感器基类 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": Generate, "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -31,7 +31,7 @@ class _MemsBase(CircuitBase):
 
 class Accelerometer(_MemsBase):
     ''' 加速度计 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Accelerometer"
         self.data["Properties"]["量程"] = 2
@@ -40,7 +40,7 @@ class Accelerometer(_MemsBase):
 
 class Analog_Joystick(CircuitBase):
     ''' 模拟摇杆 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Analog Joystick", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -77,7 +77,7 @@ class Analog_Joystick(CircuitBase):
 
 class Attitude_Sensor(_MemsBase):
     ''' 姿态传感器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Attitude Sensor"
         self.data["Properties"]["量程"] = 180
@@ -86,7 +86,7 @@ class Attitude_Sensor(_MemsBase):
 
 class Gravity_Sensor(_MemsBase):
     ''' 重力加速计 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Gravity Sensor"
         self.data["Properties"]["量程"] = 2
@@ -95,7 +95,7 @@ class Gravity_Sensor(_MemsBase):
 
 class Gyroscope(_MemsBase):
     ''' 陀螺仪传感器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Gyroscope"
         self.data["Properties"]["量程"] = 150
@@ -104,7 +104,7 @@ class Gyroscope(_MemsBase):
 
 class Linear_Accelerometer(_MemsBase):
     ''' 线性加速度计 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Linear Accelerometer"
         self.data["Properties"]["量程"] = 2
@@ -113,7 +113,7 @@ class Linear_Accelerometer(_MemsBase):
 
 class Magnetic_Field_Sensor(_MemsBase):
     ''' 磁场传感器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Magnetic Field Sensor"
         self.data["Properties"]["量程"] = 0.03999999910593033
@@ -122,7 +122,7 @@ class Magnetic_Field_Sensor(_MemsBase):
 
 class Photodiode(TwoPinMixIn):
     ''' 光电二极管 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Photodiode", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -136,7 +136,7 @@ class Photodiode(TwoPinMixIn):
 
 class Photoresistor(TwoPinMixIn):
     ''' 光敏电阻 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Photoresistor", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -150,7 +150,7 @@ class Photoresistor(TwoPinMixIn):
 
 class Proximity_Sensor(_LogicBase):
     ''' 临近传感器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None):
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Proximity Sensor", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,

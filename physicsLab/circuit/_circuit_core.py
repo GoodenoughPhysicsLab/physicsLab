@@ -159,7 +159,7 @@ class _CircuitMeta(type):
 
         x, y, z = round_data(x), round_data(y), round_data(z)
 
-        self.__init__(x, y, z, elementXYZ, *args, **kwargs)
+        self.__init__(x, y, z, *args, elementXYZ=elementXYZ, **kwargs)
         assert hasattr(self, "data") and isinstance(self.data, dict)
 
         self.data["Identifier"] = randString(32)
