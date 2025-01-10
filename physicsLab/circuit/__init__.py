@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 ''' 电学实验 '''
+from ._circuit_core import *
 # 元件类
-from physicsLab.circuit.elements import *
+from .elements import *
 # 元件坐标系
-from physicsLab.circuit.elementXYZ import *
+from .elementXYZ import *

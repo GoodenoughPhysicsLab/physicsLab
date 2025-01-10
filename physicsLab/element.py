@@ -8,7 +8,7 @@ from . import errors
 from . import savTemplate
 from .web import User
 from .savTemplate import Generate
-from .circuit.elements._circuitbase import Wire, Pin
+from .circuit._circuit_core import Wire, Pin
 from .enums import ExperimentType, Category, OpenMode, WireColor
 from ._core import _Experiment, _ExperimentStack, _check_not_closed, _ElementBase
 from .typehint import num_type, Optional, Union, List, overload, Tuple, Dict, Self
@@ -59,17 +59,19 @@ def search_experiment(sav_name: str) -> Tuple[Optional[str], Optional[dict]]:
 
         若存在则返回存档对应的文件名, 若不存在则返回None
     '''
-    for aSav in _get_all_pl_sav():
+    for a_sav in _get_all_pl_sav():
         try:
-            sav = _open_sav(os.path.join(_Experiment.SAV_PATH_DIR, aSav))
+            sav = _open_sav(os.path.join(_Experiment.SAV_PATH_DIR, a_sav))
         except errors.InvalidSavError:
             continue
         if sav["InternalName"] == sav_name:
-            return aSav, sav
+            return a_sav, sav
 
     return None, None
 
 class Experiment(_Experiment):
+    _user: Optional[User] = None
+
     @overload
     def __init__(self, open_mode: OpenMode, sav_name: str) -> None:
         ''' 根据存档名打开存档
@@ -77,7 +79,7 @@ class Experiment(_Experiment):
             @sav_name: 存档的名字
         '''
 
-    @overload
+    @overload # TODO support pathlib
     def __init__(self, open_mode: OpenMode, filepath: str) -> None:
         ''' 根据存档对应的文件路径打开存档
             @open_mode = OpenMode.open_from_abs_path
@@ -85,7 +87,14 @@ class Experiment(_Experiment):
         '''
 
     @overload
-    def __init__(self, open_mode: OpenMode, content_id: str, category: Category, /, *, user: User = User()) -> None:
+    def __init__(
+            self,
+            open_mode: OpenMode,
+            content_id: str,
+            category: Category,
+            /, *,
+            user: Optional[User] = None
+    ) -> None:
         ''' 从物实服务器中获取存档
             @open_mode = OpenMode.open_from_plar_app
             @content_id: 物实 实验/讨论 的id
@@ -170,14 +179,20 @@ class Experiment(_Experiment):
 
             if not isinstance(content_id, str) or not isinstance(category, Category) or len(rest) != 0:
                 raise TypeError
-            user = kwargs.get("user", User())
-            if not isinstance(user, User):
+            user = kwargs.get("user")
+            if not isinstance(user, (User, type(None))):
                 raise TypeError
+
+            if user is None:
+                if Experiment._user is None:
+                    Experiment._user = User()
+                user = Experiment._user
 
             self.SAV_PATH = os.path.join(_Experiment.SAV_PATH_DIR, f"{content_id}.sav")
             if _ExperimentStack.inside(self):
                     raise errors.ExperimentOpenedError
 
+            assert user is not None
             _summary = user.get_summary(content_id, category)["Data"]
             del _summary["$type"]
             _experiment = user.get_experiment(_summary["ContentID"])["Data"]
@@ -409,11 +424,11 @@ class Experiment(_Experiment):
             from physicsLab import circuit
 
             if (name == '555_Timer'):
-                return circuit.NE555(x, y, z, elementXYZ)
+                return circuit.NE555(x, y, z, elementXYZ=elementXYZ)
             elif (name == '8bit_Input'):
-                return circuit.eight_bit_Input(x, y, z, elementXYZ)
+                return circuit.eight_bit_Input(x, y, z, elementXYZ=elementXYZ)
             elif (name == '8bit_Display'):
-                return circuit.eight_bit_Display(x, y, z, elementXYZ)
+                return circuit.eight_bit_Display(x, y, z, elementXYZ=elementXYZ)
             else:
                 return eval(f"circuit.{name}({x}, {y}, {z}, {elementXYZ}, *{args}, **{kwargs})")
         elif self.experiment_type == ExperimentType.Celestial:
@@ -424,73 +439,3 @@ class Experiment(_Experiment):
             return eval(f"electromagnetism.{name}({x}, {y}, {z})")
         else:
             assert False
-
-class experiment:
-    def __init__(
-            self,
-            sav_name: str,
-            read: bool = False,
-            delete: bool = False,
-            write: bool = True,
-            elementXYZ: bool = False,
-            experiment_type: ExperimentType = ExperimentType.Circuit,
-            extra_filepath: Optional[str] = None,
-            force_crt: bool = False,
-            is_exit: bool = False,
-    ) -> None:
-        errors.warning("`with experiment` is deprecated, use `with Experiment` instead")
-        if not isinstance(sav_name, str) or \
-                not isinstance(read, bool) or \
-                not isinstance(delete, bool) or \
-                not isinstance(elementXYZ, bool) or \
-                not isinstance(write, bool) or \
-                not isinstance(experiment_type, ExperimentType) or \
-                not isinstance(force_crt, bool) or \
-                not isinstance(is_exit, bool) or \
-                not isinstance(extra_filepath, (str, type(None))):
-            raise TypeError
-
-        self.sav_name: str = sav_name
-        self.read: bool = read
-        self.delete: bool = delete
-        self.write: bool = write
-        self.elementXYZ: bool = elementXYZ
-        self.experiment_type: ExperimentType = experiment_type
-        self.extra_filepath: Optional[str] = extra_filepath
-        self.force_crt: bool = force_crt
-        self.is_exit: bool = is_exit
-
-    def __enter__(self) -> _Experiment:
-        if self.force_crt:
-            self._Experiment: _Experiment = _Experiment(
-                OpenMode.crt, self.sav_name, self.experiment_type, force_crt=True
-            )
-        else:
-            try:
-                self._Experiment: _Experiment = _Experiment(OpenMode.load_by_sav_name, self.sav_name)
-            except errors.ExperimentNotExistError:
-                self._Experiment: _Experiment = _Experiment(OpenMode.crt, self.sav_name, self.experiment_type)
-
-        if not self.read:
-            self._Experiment.clear_elements()
-
-        if self.elementXYZ:
-            if self._Experiment.experiment_type != ExperimentType.Circuit:
-                _ExperimentStack.remove(self._Experiment)
-                raise errors.ExperimentTypeError
-            import physicsLab.circuit.elementXYZ as _elementXYZ
-            _elementXYZ.set_elementXYZ(True)
-
-        return self._Experiment
-
-    def __exit__(self, exc_type, exc_val, traceback) -> None:
-        if exc_type is not None:
-            self._Experiment.exit()
-            return
-
-        if self.is_exit:
-            self._Experiment.exit()
-            return
-        if self.write and not self.delete:
-            self._Experiment.save(extra_filepath=self.extra_filepath)
-        self._Experiment.exit(delete=self.delete)

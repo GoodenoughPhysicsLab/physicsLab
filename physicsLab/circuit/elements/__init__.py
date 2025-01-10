@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from ._circuitbase import *
 # 基础电路
 from .basicCircuit import *
 # 逻辑电路

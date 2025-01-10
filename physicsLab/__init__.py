@@ -4,7 +4,7 @@
 # 颜色打印
 from ._colorUtils import close_color_print
 # 操作实验
-from .element import search_experiment, Experiment, experiment
+from .element import search_experiment, Experiment
 from ._core import get_current_experiment
 # 实验, 标签类型
 from .enums import ExperimentType, Category, Tag, OpenMode, WireColor

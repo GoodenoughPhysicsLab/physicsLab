@@ -3,7 +3,7 @@ from typing import Union, Callable, Tuple
 
 from physicsLab import errors
 from physicsLab.enums import WireColor
-from physicsLab.circuit.elements._circuitbase import crt_wire, del_wire, Pin
+from physicsLab.circuit._circuit_core import crt_wire, del_wire, Pin
 
 class UnitPin:
     ''' 模块化电路的"引脚", 输入输出都是数据 '''

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
 from .base import *
 from physicsLab.lib import *
 from physicsLab._core import _ExperimentStack
@@ -56,6 +57,7 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_load_from_app(self):
+        # TODO 异步地跑这些测试
         expe = Experiment(OpenMode.load_by_plar_app, "6774ffb4c45f930f41ccedf8", Category.Discussion, user=user)
         self.assertTrue(expe.get_elements_count() == 91)
         expe.exit()
@@ -462,3 +464,15 @@ class BasicTest(TestCase, ViztracerTool):
                 raise TestFail
             finally:
                 expe.exit(delete=True)
+
+    @my_test_dec
+    def test_export(self):
+        with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "float32_t.sav")) as expe:
+            expe.export("temp.pl.py", "__test__")
+            expe.exit()
+
+        os.system(f"{sys.executable} temp.pl.py")
+        with Experiment(OpenMode.load_by_sav_name, "__test__") as expe:
+            self.assertEqual(expe.get_elements_count(), 652)
+            self.assertEqual(expe.get_wires_count(), 1385)
+            expe.exit(delete=True)
