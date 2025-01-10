@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from .._circuit_core import CircuitBase, TwoPinMixIn, Pin
-from physicsLab.typehint import Optional, num_type, CircuitElementData, Generate
+from physicsLab.typehint import Optional, num_type, CircuitElementData, Generate, Self
 
 class NE555(CircuitBase):
     ''' 555定时器 '''
@@ -292,19 +292,47 @@ class Operational_Amplifier(CircuitBase):
         self.data: CircuitElementData = {
             "ModelID": "Operational Amplifier", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
-            "Properties": {"增益系数": 100_0000.0, "最大电压": 15.0, "最小电压": -15.0, "锁定": 1.0},
+            "Properties": {"增益系数": 1_000_000.0, "最大电压": 15.0, "最小电压": -15.0, "锁定": 1.0},
             "Statistics": {"电压-": 0, "电压+": 0, "输出电压": 0,
                             "输出电流": 0, "输出功率": 0},
             "Position": Generate,"Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
+    def set_properties(
+            self,
+            gain: Optional[num_type] = None,
+            max_voltage: Optional[num_type] = None,
+            min_voltage: Optional[num_type] = None,
+    ) -> Self:
+        ''' 修改运放属性 '''
+        if not isinstance(gain, (int, float, type(None))) or \
+                not isinstance(max_voltage, (int, float, type(None))) or \
+                not isinstance(min_voltage, (int, float, type(None))):
+            raise TypeError
+
+        if gain is None:
+            gain = self.data["Properties"]["增益系数"]
+        if max_voltage is None:
+            max_voltage = self.data["Properties"]["最大电压"]
+        if min_voltage is None:
+            min_voltage = self.data["Properties"]["最小电压"]
+
+        assert gain is not None and max_voltage is not None and min_voltage is not None
+        if max_voltage <= min_voltage:
+            raise ValueError("Maximun voltage must be greater than minimum voltage")
+
+        self.data["Properties"]["增益系数"] = gain
+        self.data["Properties"]["最大电压"] = max_voltage
+        self.data["Properties"]["最小电压"] = min_voltage
+        return self
+
     @property
-    def i_up(self) -> Pin:
+    def i_neg(self) -> Pin:
         return Pin(self, 0)
 
     @property
-    def i_low(self) -> Pin:
+    def i_pos(self) -> Pin:
         return Pin(self, 1)
 
     @property
