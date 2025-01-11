@@ -278,7 +278,7 @@ class Simple_Instrument(TwoPinMixIn):
                f"pitch={self.data['Properties']['音高']}, bpm={self.data['Properties']['节拍']}, " \
                f"velocity={self.data['Properties']['音量']}, " \
                f"rated_oltage={self.data['Properties']['额定电压']}, " \
-               f"is_ideal_model={self.data['Properties']['理想模式']}, " \
+               f"is_ideal_model={bool(self.data['Properties']['理想模式'])}, " \
                f"is_single={bool(self.data['Properties']['脉冲'])}" \
                f").add_note({str(self.notes)[1:-2]})"
 
