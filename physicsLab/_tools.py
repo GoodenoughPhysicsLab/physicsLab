@@ -10,7 +10,7 @@ position = namedtuple("position", ["x", "y", "z"])
 def round_data(num: num_type) -> num_type:
     if not isinstance(num, (int, float)):
         raise TypeError
-    return round(num, 4)
+    return round(num, 6)
 
 # 生成随机字符串
 def randString(strLength: int, lower: bool = False) -> str:

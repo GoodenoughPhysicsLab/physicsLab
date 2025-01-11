@@ -420,7 +420,7 @@
         <td>Resistor</td>
         <td>Resistor</td>
         <td>red, black</td>
-        <td>set_resistor # 设置电阻值</td>
+        <td>set_resistance # 设置电阻值</td>
     </tr>
     <tr>
         <td>保险丝</td>
@@ -462,7 +462,7 @@
         <td>Resistance_Box</td>
         <td>Resistance Box</td>
         <td>l, r</td>
-        <td>set_resistor # 设置电阻值</td>
+        <td>set_resistance # 设置电阻值</td>
     </tr>
     <tr>
         <td>直流安培表</td>
