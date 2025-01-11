@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+from ..._tools import round_data
 from .._circuit_core import CircuitBase, TwoPinMixIn, Pin
-from physicsLab.typehint import Optional, num_type, CircuitElementData, Self, Generate
+from physicsLab.typehint import Optional, num_type, CircuitElementData, Self, Generate, override
 
 class _switch_Base(CircuitBase):
     ''' 开关基类 '''
@@ -228,7 +229,7 @@ class Student_Source(CircuitBase):
 
 class Resistor(TwoPinMixIn):
     ''' 电阻 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, resistance: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Resistor", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -238,13 +239,32 @@ class Resistor(TwoPinMixIn):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+        if not resistance is None:
+            self.set_resistance(resistance=resistance)
 
-    def set_resistor(self, resistor: num_type) -> Self:
+    @property
+    def resistance(self):
+        return self.properties["电阻"]
+
+    def set_resistance(self, resistance: num_type) -> Self:
         ''' 设置电阻值 '''
-        if not isinstance(resistor, (int, float)):
+        if not isinstance(resistance, (int, float)):
             raise TypeError
 
-        self.data["Properties"]["电阻"] = resistor
+        self.properties["电阻"] = resistance
+        return self
+    
+    def __repr__(self) -> str:
+        res = f"Resistor({self._position.x}, {self._position.y}, {self._position.z}, " \
+              f"elementXYZ={self.is_elementXYZ}"
+
+        if self.properties["电阻"] != 10:
+            res += f", resistance={self.properties['电阻']}"
+        return res + ")"
+    
+    def round(self) -> Self:
+        ''' 去除由物实特性导致的电阻值的误差 '''
+        self.properties["电阻"] = round_data(self.properties["电阻"])
         return self
 
 class Fuse_Component(TwoPinMixIn):
@@ -408,7 +428,7 @@ class Resistance_Box(CircuitBase):
     def r(self) -> Pin:
         return Pin(self, 1)
 
-    def set_resistor(self, num: num_type) -> Self:
+    def set_resistance(self, num: num_type) -> Self:
         ''' 设置电阻值
         '''
         if not isinstance(num, (int, float)):

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from ..._tools import round_data
 from .._circuit_core import CircuitBase, TwoPinMixIn, Pin
 from physicsLab.typehint import Optional, num_type, CircuitElementData, Generate, Self
 
@@ -51,28 +52,125 @@ class NE555(CircuitBase):
 
 class Basic_Capacitor(TwoPinMixIn):
     ''' 电容 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            elementXYZ: Optional[bool] = None,
+            capacitance: Optional[num_type] = None,
+            ideal: Optional[bool] = None,
+            peak_voltage: Optional[num_type] = None,
+            internal_resistance: Optional[num_type] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Basic Capacitor", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
-            "Properties": {"耐压": 16.0, "电容": 1e-06, "内阻": 5.0, "锁定": 1.0},
+            "Properties": {"耐压": 16.0, "电容": 1e-06, "内阻": 5.0, "锁定": 1.0, "理想模式": 0.0},
             "Statistics": {}, "Position": Generate,
             "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+        if not(capacitance is None and ideal is None and peak_voltage is None and internal_resistance is None):
+            self.set_properties(capacitance=capacitance, ideal=ideal, peak_voltage=peak_voltage, internal_resistance=internal_resistance)
+    
+    def set_properties(self, *, capacitance: Optional[num_type] = None, ideal: Optional[bool] = None, peak_voltage: Optional[num_type] = None,
+                       internal_resistance: Optional[num_type] = None):
+        ''' 修改电容属性 '''
+        if not isinstance(capacitance, (int, float, type(None))) or \
+                not isinstance(ideal, (bool, type(None))) or \
+                not isinstance(peak_voltage, (int, float, type(None))) or \
+                not isinstance(internal_resistance, (int, float, type(None))):
+            raise TypeError
+        
+        assert not(capacitance is None and ideal is None and peak_voltage is None and internal_resistance is None)
+        
+        if not capacitance is None:
+            self.properties["电容"] = capacitance
+        if not ideal is None:
+            self.properties["理想模式"] = float(ideal)
+        if not peak_voltage is None:
+            self.properties["耐压"] = peak_voltage
+        if not internal_resistance is None:
+            self.properties["内阻"] = internal_resistance
+
+    def __repr__(self) -> str:
+        res = f"Basic_Capacitor({self._position.x}, {self._position.y}, {self._position.z}, " \
+              f"elementXYZ={self.is_elementXYZ}"
+
+        if self.properties["电容"] != 1e-06:
+            res += f", capacitance={self.properties['电容']}"
+        if "理想模式" in self.properties and self.properties["理想模式"] != 0.0:
+            res += f", ideal={bool(self.properties['理想模式'])}"
+        if self.properties["耐压"] != 16.0:
+            res += f", peak_voltage={self.properties['耐压']}"
+        if self.properties["内阻"] != 5.0:
+            res += f", internal_resistance={self.properties['内阻']}"
+        return res + ")"
 
 class Basic_Inductor(TwoPinMixIn):
     ''' 电感 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            elementXYZ: Optional[bool] = None,
+            inductance: Optional[num_type] = None,
+            ideal: Optional[bool] = None,
+            internal_resistance: Optional[num_type] = None,
+            rated_current: Optional[num_type] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Basic Inductor", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
-            "Properties": {"额定电流": 1.0, "电感": 0.05, "内阻": 1.0, "锁定": 1.0},
+            "Properties": {"额定电流": 1.0, "电感": 0.05, "内阻": 1.0, "锁定": 1.0, "理想模式": 0.0}, # 物实里电感默认值是0.05000000074505806
             "Statistics": {"电流": 0.0, "功率": 0.0, "电压": 0.0},
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
+        if not(inductance is None and ideal is None and internal_resistance is None and rated_current is None):
+            self.set_properties(inductance=inductance, ideal=ideal, internal_resistance=internal_resistance, rated_current=rated_current)
+    
+    def set_properties(self, *, inductance: Optional[num_type] = None, ideal: Optional[bool] = None,
+                       internal_resistance: Optional[num_type] = None, rated_current: Optional[num_type] = None):
+        ''' 修改电感属性 '''
+        if not isinstance(inductance, (int, float, type(None))) or \
+                not isinstance(ideal, (bool, type(None))) or \
+                not isinstance(internal_resistance, (int, float, type(None))) or \
+                not isinstance(rated_current, (int, float, type(None))):
+            raise TypeError
+
+        assert not(inductance is None and ideal is None and internal_resistance is None and rated_current is None)
+
+        if not inductance is None:
+            self.properties["电感"] = inductance
+        if not ideal is None:
+            self.properties["理想模式"] = float(ideal)
+        if not internal_resistance is None:
+            self.properties["内阻"] = internal_resistance
+        if not rated_current is None:
+            self.properties["额定电流"] = rated_current
+
+    def __repr__(self) -> str:
+        res = f"Basic_Inductor({self._position.x}, {self._position.y}, {self._position.z}, " \
+              f"elementXYZ={self.is_elementXYZ}"
+
+        if self.properties["电感"] != 0.05:
+            res += f", inductance={self.properties['电感']}"
+        if "理想模式" in self.properties and self.properties["理想模式"] != 0.0:
+            res += f", ideal={bool(self.properties['理想模式'])}"
+        if self.properties["内阻"] != 1.0:
+            res += f", internal_resistance={self.properties['内阻']}"
+        if self.properties["额定电流"] != 1.0:
+            res += f", rated_current={self.properties['额定电流']}"
+        return res + ")"
+
+    def round(self) -> Self:
+        ''' 去除由物实特性导致的电感值的误差 '''
+        self.properties["电感"] = round_data(self.properties["电感"])
+        return self
 
 class Basic_Diode(TwoPinMixIn):
     ''' 二极管 '''
@@ -288,16 +386,26 @@ class Comparator(CircuitBase):
 
 class Operational_Amplifier(CircuitBase):
     ''' 运算放大器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            elementXYZ: Optional[bool] = None,
+            gain: Optional[num_type] = None,
+            max_voltage: Optional[num_type] = None,
+            min_voltage: Optional[num_type] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Operational Amplifier", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
-            "Properties": {"增益系数": 1_000_000.0, "最大电压": 15.0, "最小电压": -15.0, "锁定": 1.0},
+            "Properties": {"增益系数": 10_000_000.0, "最大电压": 1000.0, "最小电压": -1000.0, "锁定": 1.0},
             "Statistics": {"电压-": 0, "电压+": 0, "输出电压": 0,
                             "输出电流": 0, "输出功率": 0},
             "Position": Generate,"Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+        self.set_properties(gain=gain, max_voltage=max_voltage, min_voltage=min_voltage)
 
     def set_properties(
             self,
@@ -312,20 +420,32 @@ class Operational_Amplifier(CircuitBase):
             raise TypeError
 
         if gain is None:
-            gain = self.data["Properties"]["增益系数"]
+            gain = self.properties["增益系数"]
         if max_voltage is None:
-            max_voltage = self.data["Properties"]["最大电压"]
+            max_voltage = self.properties["最大电压"]
         if min_voltage is None:
-            min_voltage = self.data["Properties"]["最小电压"]
+            min_voltage = self.properties["最小电压"]
 
         assert gain is not None and max_voltage is not None and min_voltage is not None
         if max_voltage <= min_voltage:
-            raise ValueError("Maximun voltage must be greater than minimum voltage")
+            raise ValueError("Maximun voltage must be greater than minimum voltage.")
 
-        self.data["Properties"]["增益系数"] = gain
-        self.data["Properties"]["最大电压"] = max_voltage
-        self.data["Properties"]["最小电压"] = min_voltage
+        self.properties["增益系数"] = gain
+        self.properties["最大电压"] = max_voltage
+        self.properties["最小电压"] = min_voltage
         return self
+    
+    def __repr__(self) -> str:
+        res = f"Operational_Amplifier({self._position.x}, {self._position.y}, {self._position.z}, " \
+              f"elementXYZ={self.is_elementXYZ}"
+
+        if self.properties["增益系数"] != 10_000_000.0:
+            res += f", gain={self.properties['增益系数']}"
+        if self.properties["最大电压"] != 1000.0:
+            res += f", max_voltage={self.properties['最大电压']}"
+        if self.properties["最小电压"] != -1000.0:
+            res += f", min_voltage={self.properties['最小电压']}"
+        return res + ")"
 
     @property
     def i_neg(self) -> Pin:
