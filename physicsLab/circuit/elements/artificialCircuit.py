@@ -71,8 +71,7 @@ class Basic_Capacitor(TwoPinMixIn):
             "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
-        if not(capacitance is None and ideal is None and peak_voltage is None and internal_resistance is None):
-            self.set_properties(capacitance=capacitance, ideal=ideal, peak_voltage=peak_voltage, internal_resistance=internal_resistance)
+        self.set_properties(capacitance=capacitance, ideal=ideal, peak_voltage=peak_voltage, internal_resistance=internal_resistance)
     
     def set_properties(self, *, capacitance: Optional[num_type] = None, ideal: Optional[bool] = None, peak_voltage: Optional[num_type] = None,
                        internal_resistance: Optional[num_type] = None):
@@ -82,8 +81,6 @@ class Basic_Capacitor(TwoPinMixIn):
                 not isinstance(peak_voltage, (int, float, type(None))) or \
                 not isinstance(internal_resistance, (int, float, type(None))):
             raise TypeError
-        
-        assert not(capacitance is None and ideal is None and peak_voltage is None and internal_resistance is None)
         
         if not capacitance is None:
             self.properties["电容"] = capacitance
@@ -130,8 +127,7 @@ class Basic_Inductor(TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
-        if not(inductance is None and ideal is None and internal_resistance is None and rated_current is None):
-            self.set_properties(inductance=inductance, ideal=ideal, internal_resistance=internal_resistance, rated_current=rated_current)
+        self.set_properties(inductance=inductance, ideal=ideal, internal_resistance=internal_resistance, rated_current=rated_current)
     
     def set_properties(self, *, inductance: Optional[num_type] = None, ideal: Optional[bool] = None,
                        internal_resistance: Optional[num_type] = None, rated_current: Optional[num_type] = None):
@@ -141,8 +137,6 @@ class Basic_Inductor(TwoPinMixIn):
                 not isinstance(internal_resistance, (int, float, type(None))) or \
                 not isinstance(rated_current, (int, float, type(None))):
             raise TypeError
-
-        assert not(inductance is None and ideal is None and internal_resistance is None and rated_current is None)
 
         if not inductance is None:
             self.properties["电感"] = inductance
