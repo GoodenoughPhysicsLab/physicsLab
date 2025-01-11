@@ -235,3 +235,4 @@
 14. `clear_elements`, `del_element`, `count_elements`, `get_element_from_position`, `get_element_from_index`, `get_element_from_identifier`, `crt_element`改为`Experiment.clear_elements`, `Experiment.del_element`, `Experiment.get_elements_count`, `Experiment.get_element_from_position`, `Experiment.get_element_from_index`, `Experiment.get_element_from_identifier`, `Experiment.crt_element`
 15. `pin1 - pin2`被废弃，`crt_wire`现在支持多个参数了
 16. `class experiment`被废弃
+17. 一些元件增加了`set_properties`方法，并且支持在构造函数中传入这些属性

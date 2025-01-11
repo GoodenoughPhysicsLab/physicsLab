@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from ..._tools import round_data
+from physicsLab._tools import round_data
 from .._circuit_core import CircuitBase, TwoPinMixIn, Pin
 from physicsLab.typehint import Optional, num_type, CircuitElementData, Self, Generate, override
 
