@@ -128,7 +128,7 @@ with Experiment(OpenMode.load_by_sav_name, "example") as expe:
 from physicsLab import *
 
 with Experiment(OpenMode.load_by_sav_name, "example") as expe:
-  set_elementXYZ(True) # 将expe设置为原件坐标系
+  set_elementXYZ(True) # 将expe设置为元件坐标系
   # do something
 ```
 
@@ -200,6 +200,7 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
     a.set_HighLeaveValue() # 设置高电平的值，仅逻辑电路元件有效
     # attributes
     a.data # 获取元件在物实对应的dict
+    a.properties # 获取元件的属性（相当于a.data["Properties"]）
     a.experiment # 获取元件对应的实验
 ```
 在[所有元件 elements](elements.md)中介绍得更全面

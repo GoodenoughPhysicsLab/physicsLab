@@ -183,10 +183,16 @@ class CircuitBase(_ElementBase, metaclass=_CircuitMeta):
         return  f"{self.__class__.__name__}" \
                 f"({self._position.x}, {self._position.y}, {self._position.z}, " \
                 f"elementXYZ={self.is_elementXYZ})"
+    
+    @property
+    @final
+    def properties(self) -> dict:
+        ''' 返回元件的属性 '''
+        return self.data["Properties"]
 
     @final
     def set_rotation(self, x_r: num_type = 0, y_r: num_type = 0, z_r: num_type = 180) -> Self:
-        ''' 设置原件的角度 '''
+        ''' 设置元件的角度 '''
         if not isinstance(x_r, (int, float)) or \
                 not isinstance(y_r, (int, float)) or \
                 not isinstance(z_r, (int, float)):
@@ -198,7 +204,7 @@ class CircuitBase(_ElementBase, metaclass=_CircuitMeta):
 
     @override
     def set_position(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> Self:
-        ''' 设置原件的位置
+        ''' 设置元件的位置
         '''
         if not isinstance(x, (int, float)) or \
                 not isinstance(y, (int, float)) or \
@@ -247,7 +253,7 @@ class CircuitBase(_ElementBase, metaclass=_CircuitMeta):
         return self
 
 class TwoPinMixIn(CircuitBase):
-    ''' 双引脚模拟电路原件的基类 '''
+    ''' 双引脚模拟电路元件的基类 '''
     @property
     def red(self) -> Pin:
         return Pin(self, 0)

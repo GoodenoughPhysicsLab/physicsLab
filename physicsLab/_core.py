@@ -179,7 +179,7 @@ class _Experiment:
 
     @_check_not_closed
     def get_element_from_identifier(self, identifier: str) -> "_ElementBase":
-        ''' 通过原件的id获取元件的引用 '''
+        ''' 通过元件的id获取元件的引用 '''
         for element in self.Elements:
             assert hasattr(element, "data")
             if element.data["Identifier"] == identifier:
@@ -658,7 +658,7 @@ class _ElementBase:
         raise NotImplementedError
 
     def set_position(self, x: num_type, y: num_type, z: num_type) -> Self:
-        ''' 设置原件的位置 '''
+        ''' 设置元件的位置 '''
         if not isinstance(x, (int, float)) or \
                 not isinstance(y, (int, float)) or \
                 not isinstance(z, (int, float)):
@@ -685,7 +685,7 @@ class _ElementBase:
 
     @final
     def get_position(self) -> tuple:
-        ''' 获取原件的坐标 '''
+        ''' 获取元件的坐标 '''
         assert hasattr(self, '_position')
         return copy.deepcopy(self._position)
 
