@@ -191,6 +191,10 @@ class Basic_Inductor(TwoPinMixIn):
         if not is_ideal is None:
             self.properties["理想模式"] = int(is_ideal)
 
+        return self
+
+    def fix_inductance(self) -> Self:
+        ''' 修正电感值的浮点误差 '''
         self.properties["电感"] = round_data(self.properties["电感"])
         return self
 

@@ -255,7 +255,12 @@ class Resistor(TwoPinMixIn):
         if not isinstance(resistance, (int, float)):
             raise TypeError
 
-        self.properties["电阻"] = round_data(resistance)
+        self.properties["电阻"] = resistance
+        return self
+
+    def fix_resistance(self) -> Self:
+        ''' 修正电阻值的浮点误差 '''
+        self.properties["电阻"] = round_data(self.properties["电阻"])
         return self
 
     def __repr__(self) -> str:
