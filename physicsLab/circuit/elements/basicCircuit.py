@@ -3,7 +3,7 @@ from physicsLab._tools import round_data
 from .._circuit_core import CircuitBase, TwoPinMixIn, Pin
 from physicsLab.typehint import Optional, num_type, CircuitElementData, Self, Generate, override
 
-class _switch_Base(CircuitBase):
+class _SwitchBase(CircuitBase):
     ''' 开关基类 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -19,7 +19,7 @@ class _switch_Base(CircuitBase):
         self.data["Properties"]["开关"] = 0
         return self
 
-class Simple_Switch(_switch_Base, TwoPinMixIn):
+class Simple_Switch(_SwitchBase, TwoPinMixIn):
     ''' 简单开关 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
@@ -38,7 +38,7 @@ class Simple_Switch(_switch_Base, TwoPinMixIn):
         self.data["Properties"]["开关"] = 1
         return self
 
-class SPDT_Switch(_switch_Base):
+class SPDT_Switch(_SwitchBase):
     ''' 单刀双掷开关 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
@@ -76,7 +76,7 @@ class SPDT_Switch(_switch_Base):
     def r(self) -> Pin:
         return Pin(self, 2)
 
-class DPDT_Switch(_switch_Base):
+class DPDT_Switch(_SwitchBase):
     ''' 双刀双掷开关 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
@@ -150,6 +150,7 @@ class Air_Switch(TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
+    @override
     def __repr__(self) -> str:
         res = f"Air_Switch({self._position.x}, {self._position.y}, {self._position.z}, " \
               f"elementXYZ={self.is_elementXYZ})"
@@ -229,43 +230,38 @@ class Student_Source(CircuitBase):
 
 class Resistor(TwoPinMixIn):
     ''' 电阻 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, resistance: Optional[bool] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            elementXYZ: Optional[bool] = None,
+            resistance: num_type = 10,
+    ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Resistor", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
-            "Properties": {"最大电阻": 1000_0000.0, "最小电阻": 0.1, "电阻": 10, "锁定": 1.0},
+            "Properties": {"最大电阻": 10_000_000.0, "最小电阻": 0.1, "电阻": Generate, "锁定": 1.0},
             "Statistics": {"瞬间功率": 0, "瞬间电流": 0, "瞬间电压": 0, "功率": 0,
                             "电压": 0, "电流": 0},
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
-        if not resistance is None:
-            self.set_resistance(resistance=resistance)
+        self.set_resistance(resistance=resistance)
 
-    @property
-    def resistance(self):
-        return self.properties["电阻"]
-
-    def set_resistance(self, resistance: num_type) -> Self:
+    def set_resistance(self, *, resistance: num_type) -> Self:
         ''' 设置电阻值 '''
         if not isinstance(resistance, (int, float)):
             raise TypeError
 
-        self.properties["电阻"] = resistance
+        self.properties["电阻"] = round_data(resistance)
         return self
-    
-    def __repr__(self) -> str:
-        res = f"Resistor({self._position.x}, {self._position.y}, {self._position.z}, " \
-              f"elementXYZ={self.is_elementXYZ}"
 
-        if self.properties["电阻"] != 10:
-            res += f", resistance={self.properties['电阻']}"
-        return res + ")"
-    
-    def round(self) -> Self:
-        ''' 去除由物实特性导致的电阻值的误差 '''
-        self.properties["电阻"] = round_data(self.properties["电阻"])
-        return self
+    def __repr__(self) -> str:
+        return f"Resistor({self._position.x}, {self._position.y}, {self._position.z}, " \
+              f"elementXYZ={self.is_elementXYZ}, " \
+              f"resistance={self.properties['电阻']})"
 
 class Fuse_Component(TwoPinMixIn):
     ''' 保险丝 '''
