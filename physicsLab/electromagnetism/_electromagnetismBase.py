@@ -61,7 +61,7 @@ class ElectromagnetismBase(_ElementBase, metaclass=_ElectromagnetismMeta):
             y_r: num_type,
             z_r: num_type,
     ) -> Self:
-        ''' 设置原件的角度 '''
+        ''' 设置元件的角度 '''
         if not isinstance(x_r, (int, float)) or \
                 not isinstance(y_r, (int, float)) or \
                 not isinstance(z_r, (int, float)):

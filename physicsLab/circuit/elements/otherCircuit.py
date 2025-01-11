@@ -211,7 +211,7 @@ class Electric_Fan(TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-# TODO 将构造函数统一为像其他原件的那样，其他的性质都塞到set_properties里面
+# TODO 将构造函数统一为像其他元件的那样，其他的性质都塞到set_properties里面
 class Simple_Instrument(TwoPinMixIn):
     ''' 简单乐器 '''
     def __init__(

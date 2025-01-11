@@ -63,7 +63,7 @@ def translateXYZ(x: num_type, y: num_type, z: num_type, is_bigElement: bool = Fa
     x -= _xOrigin
     y -= _yOrigin
     z -= _zOrigin
-    # 修改大体积逻辑电路原件的坐标
+    # 修改大体积逻辑电路元件的坐标
     if is_bigElement:
         y -= _Y_AMEND
     return x, y, z
