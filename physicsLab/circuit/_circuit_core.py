@@ -183,7 +183,7 @@ class CircuitBase(_ElementBase, metaclass=_CircuitMeta):
         return  f"{self.__class__.__name__}" \
                 f"({self._position.x}, {self._position.y}, {self._position.z}, " \
                 f"elementXYZ={self.is_elementXYZ})"
-    
+
     @property
     @final
     def properties(self) -> dict:

@@ -423,11 +423,11 @@ class Experiment(_Experiment):
         if self.experiment_type == ExperimentType.Circuit:
             from physicsLab import circuit
 
-            if (name == '555_Timer'):
+            if name == "555_Timer":
                 return circuit.NE555(x, y, z, elementXYZ=elementXYZ)
-            elif (name == '8bit_Input'):
+            elif name == "8bit_Input":
                 return circuit.eight_bit_Input(x, y, z, elementXYZ=elementXYZ)
-            elif (name == '8bit_Display'):
+            elif name == "8bit_Display":
                 return circuit.eight_bit_Display(x, y, z, elementXYZ=elementXYZ)
             else:
                 return eval(f"circuit.{name}({x}, {y}, {z}, {elementXYZ}, *{args}, **{kwargs})")

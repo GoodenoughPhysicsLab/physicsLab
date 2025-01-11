@@ -332,7 +332,19 @@ class Continential(PlanetBase):
 class Arctic(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type) -> None:
         self.data = {
-            "Identifier": Generate, "Model": "Arctic", "Override": None, "Name": "封冻行星", "Parent": None, "Type": 1, "Changed": False, "Extras": {}, "Radius": 6065.922, "RadiusVisible": 0.0405482, "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0, "Mass": 4.940184, "OrbitType": 0, "OrbitEstimation": 3, "Density": 5.28401556130987, "Gravity": 8.9606789613143, "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.4125203241191535, "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate, "Velocity": Generate, "Acceleration": Generate, "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False}
+            "Identifier": Generate, "Model": "Arctic", "Override": None,
+            "Name": "封冻行星", "Parent": None, "Type": 1, "Changed": False,
+            "Extras": {}, "Radius": 6065.922, "RadiusVisible": 0.0405482,
+            "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0,
+            "Mass": 4.940184, "OrbitType": 0, "OrbitEstimation": 3,
+            "Density": 5.28401556130987, "Gravity": 8.9606789613143,
+            "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.4125203241191535,
+            "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate,
+            "Velocity": Generate, "Acceleration": Generate, "Period": 0.0,
+            "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN",
+            "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN",
+            "Aphelion": "NaN", "LeavingKepler": False
+        }
 
 class Arid(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type) -> None:
