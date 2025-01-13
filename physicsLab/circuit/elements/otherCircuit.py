@@ -283,6 +283,10 @@ class Simple_Instrument(_TwoPinMixIn):
 
         return self._data
 
+    @data.setter
+    def data(self, data: CircuitElementData) -> None:
+        self._data = data
+
     def set_properties(
             self,
             *,
