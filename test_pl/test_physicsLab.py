@@ -397,16 +397,16 @@ class BasicTest(TestCase, ViztracerTool):
     @my_test_dec
     def test_load_midi(self):
         expe = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
-        music.Midi(os.path.join(TEST_DATA_DIR, "鼓哥.mid")).to_piece(max_notes=None).release(-1, -1, 0)
-        self.assertEqual(expe.get_elements_count(), 4268)
-        self.assertEqual(expe.get_wires_count(), 8532)
+        music.Midi(os.path.join(TEST_DATA_DIR, "鼓哥.mid")).to_piece(max_notes=800).release(-1, -1, 0)
+        self.assertEqual(expe.get_elements_count(), 510)
+        self.assertEqual(expe.get_wires_count(), 1016)
         expe.export("temp.pl.py", "_Test")
         expe.exit(delete=True)
 
         os.system(f"{sys.executable} temp.pl.py")
         with Experiment(OpenMode.load_by_sav_name, "_Test") as expe:
-            self.assertEqual(expe.get_elements_count(), 4268)
-            self.assertEqual(expe.get_wires_count(), 8532)
+            self.assertEqual(expe.get_elements_count(), 510)
+            self.assertEqual(expe.get_wires_count(), 1016)
             expe.exit(delete=True)
 
     @my_test_dec

@@ -377,7 +377,6 @@ class Experiment(_Experiment):
                 else:
                     obj = self.crt_element(element["ModelID"], x, y, z, elementXYZ=False)
                     obj.data["Properties"] = element["Properties"]
-                    obj.data["Properties"]["锁定"] = 1.0
                 # 设置角度信息
                 rotation = eval(f'({element["Rotation"]})')
                 r_x, r_y, r_z = rotation[0], rotation[2], rotation[1]
