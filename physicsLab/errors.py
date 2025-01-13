@@ -93,7 +93,7 @@ class ExperimentTypeError(Exception):
 
 # 用于get_Element 获取元件引用失败
 class ElementNotFound(Exception):
-    def __init__(self, err_msg: str = "Index out of range") -> None:
+    def __init__(self, err_msg: str = "") -> None:
         self.err_msg: str = err_msg
     def __str__(self):
         return self.err_msg
@@ -104,9 +104,6 @@ class ExperimentError(Exception):
 
     def __str__(self) -> str:
         return self.err_msg
-
-class ElementNotExistError(Exception):
-    pass
 
 class ResponseFail(Exception):
     ''' 返回消息体失败 '''

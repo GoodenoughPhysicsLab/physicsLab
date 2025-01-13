@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
 from physicsLab import _tools
 from physicsLab import errors
-from physicsLab.typehint import num_type, Self, override, final, NoReturn
 from physicsLab.enums import ExperimentType
 from physicsLab._core import get_current_experiment, _Experiment, _ElementBase
+from physicsLab.typehint import num_type, Self, override, final, NoReturn, Optional
 
 class _PlanetMeta(type):
-    def __call__(cls, x: num_type, y: num_type, z:num_type, *args, **kwargs):
+    def __call__(
+            cls,
+            x: num_type,
+            y: num_type,
+            z:num_type,
+            *args,
+            identifier: Optional[str] = None,
+            **kwargs,
+    ):
         if not isinstance(x, (int, float)) or \
                 not isinstance(y, (int, float)) or \
                 not isinstance(z, (int, float)):
@@ -24,12 +32,16 @@ class _PlanetMeta(type):
         self.__init__(x, y, z, *args, **kwargs)
         assert isinstance(self.data, dict)
 
-        self.data["Identifier"] = _tools.randString(32)
+        if identifier is None:
+            self.data["Identifier"] = _tools.randString(33)
+        else:
+            self.data["Identifier"] = identifier
         self.set_position(x, y, z)
         self.set_velocity(0, 0, 0)
         self.set_acceleration(0, 0, 0)
 
         _Expe.Elements.append(self)
+        _Expe._id2element[self.data["Identifier"]] = self
 
         return self
 

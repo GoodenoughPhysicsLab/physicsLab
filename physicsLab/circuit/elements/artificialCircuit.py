@@ -7,7 +7,7 @@ class NE555(CircuitBase):
     ''' 555定时器 '''
     is_bigElement = True
 
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "555 Timer", "Identifier": Generate, "IsBroken": False,
             "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0},
@@ -58,7 +58,7 @@ class Basic_Capacitor(_TwoPinMixIn):
             y: num_type,
             z: num_type,
             /, *,
-            elementXYZ: Optional[bool] = None,
+            elementXYZ: Optional[bool] = None, identifier: Optional[str] = None,
             peak_voltage: num_type = 16,
             capacitance: num_type = 1e-06,
             internal_resistance: num_type = 5,
@@ -135,6 +135,7 @@ class Basic_Inductor(_TwoPinMixIn):
             z: num_type,
             /, *,
             elementXYZ: Optional[bool] = None,
+            identifier: Optional[str] = None,
             rated_current: num_type = 1,
             inductance: num_type = 0.05,
             internal_resistance: num_type = 1,
@@ -209,7 +210,7 @@ class Basic_Inductor(_TwoPinMixIn):
 
 class Basic_Diode(_TwoPinMixIn):
     ''' 二极管 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Basic Diode", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -223,7 +224,7 @@ class Basic_Diode(_TwoPinMixIn):
 
 class Light_Emitting_Diode(_TwoPinMixIn):
     ''' 发光二极管 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Light-Emitting Diode", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -237,7 +238,7 @@ class Light_Emitting_Diode(_TwoPinMixIn):
 
 class Ground_Component(CircuitBase):
     ''' 接地元件 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Ground Component", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False, "Properties": {"锁定": 1.0},
@@ -252,7 +253,7 @@ class Ground_Component(CircuitBase):
 
 class Transformer(CircuitBase):
     ''' 理想变压器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Transformer", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -283,7 +284,7 @@ class Transformer(CircuitBase):
 
 class Tapped_Transformer(CircuitBase):
     ''' 中心抽头变压器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Tapped Transformer", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -316,7 +317,7 @@ class Tapped_Transformer(CircuitBase):
 
 class Mutual_Inductor(CircuitBase):
     ''' 理想互感 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Mutual Inductor", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -345,7 +346,7 @@ class Mutual_Inductor(CircuitBase):
 
 class Rectifier(CircuitBase):
     ''' 全波整流器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Rectifier", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -373,7 +374,7 @@ class Rectifier(CircuitBase):
 
 class Transistor(CircuitBase):
     ''' 三极管 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Transistor", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -397,7 +398,7 @@ class Transistor(CircuitBase):
 
 class Comparator(CircuitBase):
     ''' 比较器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Comparator", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -427,7 +428,7 @@ class Operational_Amplifier(CircuitBase):
             y: num_type,
             z: num_type,
             /, *,
-            elementXYZ: Optional[bool] = None,
+            elementXYZ: Optional[bool] = None, identifier: Optional[str] = None,
             gain: num_type = 10_000_000,
             max_voltage: num_type = 1000,
             min_voltage: num_type = -1000,
@@ -501,7 +502,7 @@ class Operational_Amplifier(CircuitBase):
 
 class Relay_Component(CircuitBase):
     ''' 继电器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Relay Component", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -535,7 +536,7 @@ class Relay_Component(CircuitBase):
 
 class N_MOSFET(CircuitBase):
     ''' N-MOSFET '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "N-MOSFET", "Identifier": Generate, "IsBroken": False,
             "IsLocked": False, "Properties": {"PNP": 1.0, "放大系数": 0.027,
@@ -583,7 +584,7 @@ class P_MOSFET(CircuitBase):
 
 class Current_Source(CircuitBase):
     ''' 电流源 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Current Source", "Identifier": Generate, "IsBroken": False, "IsLocked": False,
             "Properties": {"电流": 0.0099999997764825821, "内阻": 1000000000.0, "锁定": 1.0},
@@ -594,7 +595,7 @@ class Current_Source(CircuitBase):
 
 class _source_electricity(_TwoPinMixIn):
     ''' 波形发生器基类 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": Generate, "Identifier": Generate, "IsBroken": False, "IsLocked": False,
             "Properties": {"电压": 3.0, "内阻": 0.5, "频率": 20000.0, "偏移": 0.0,
@@ -605,30 +606,30 @@ class _source_electricity(_TwoPinMixIn):
 
 class Sinewave_Source(_source_electricity):
     ''' 正弦波发生器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Sinewave Source"
 
 class Square_Source(_source_electricity):
     ''' 方波发生器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Square Source"
 
 class Triangle_Source(_source_electricity):
     ''' 三角波发生器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Triangle Source"
 
 class Sawtooth_Source(_source_electricity):
     ''' 锯齿波发生器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Sawtooth Source"
 
 class Pulse_Source(_source_electricity):
     ''' 尖峰波发生器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
         self.data["ModelID"] = "Pulse Source"

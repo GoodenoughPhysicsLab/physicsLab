@@ -9,7 +9,7 @@ from physicsLab.typehint import (
 
 class Buzzer(_TwoPinMixIn):
     ''' 蜂鸣器 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Buzzer", "Identifier": Generate, "IsBroken": False,
             "IsLocked": False, "Properties": {"额定电压": 3.0, "额定功率": 0.3},
@@ -22,7 +22,7 @@ class Buzzer(_TwoPinMixIn):
 
 class Spark_Gap(_TwoPinMixIn):
     ''' 火花隙 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Spark Gap", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -34,7 +34,7 @@ class Spark_Gap(_TwoPinMixIn):
 
 class Tesla_Coil(_TwoPinMixIn):
     ''' 特斯拉线圈 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Tesla Coil", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -47,7 +47,7 @@ class Tesla_Coil(_TwoPinMixIn):
 
 class Color_Light_Emitting_Diode(CircuitBase):
     ''' 彩色发光二极管 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Color Light-Emitting Diode", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -78,7 +78,7 @@ class Color_Light_Emitting_Diode(CircuitBase):
 
 class Dual_Light_Emitting_Diode(_TwoPinMixIn):
     ''' 演示发光二极管 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Dual Light-Emitting Diode", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -92,7 +92,7 @@ class Dual_Light_Emitting_Diode(_TwoPinMixIn):
 
 class Electric_Bell(_TwoPinMixIn):
     ''' 电铃 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Electric Bell", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -105,7 +105,7 @@ class Electric_Bell(_TwoPinMixIn):
 
 class Musical_Box(_TwoPinMixIn):
     ''' 八音盒 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Musical Box", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -118,7 +118,7 @@ class Musical_Box(_TwoPinMixIn):
 
 class Resistance_Law(CircuitBase):
     ''' 电阻定律实验 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Resistance Law", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -169,7 +169,7 @@ class Resistance_Law(CircuitBase):
 
 class Solenoid(CircuitBase):
     ''' 通电螺线管 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Solenoid", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -199,7 +199,7 @@ class Solenoid(CircuitBase):
 
 class Electric_Fan(_TwoPinMixIn):
     ''' 小电扇 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Electric Fan", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -223,6 +223,7 @@ class Simple_Instrument(_TwoPinMixIn):
             /, *,
             pitches: Union[List[int], Tuple[int]],
             elementXYZ: Optional[bool] = None,
+            identifier: Optional[str] = None,
             rated_oltage: num_type = 3.0,
             volume: num_type = 1,
             bpm: int = 100,

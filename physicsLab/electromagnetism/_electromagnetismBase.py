@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from physicsLab.typehint import num_type, Self, override, NoReturn
 from physicsLab import _tools
 from physicsLab import errors
-from physicsLab._core import get_current_experiment, _Experiment, _ElementBase
 from physicsLab.enums import ExperimentType
+from physicsLab._core import get_current_experiment, _Experiment, _ElementBase
+from physicsLab.typehint import num_type, Self, override, NoReturn, Optional
 
 class _ElectromagnetismMeta(type):
     def __call__(
@@ -12,7 +12,8 @@ class _ElectromagnetismMeta(type):
             y: num_type,
             z: num_type,
             *args,
-            **kwargs
+            identifier: Optional[str] = None,
+            **kwargs,
     ):
         if not isinstance(x, (int, float)) or \
                 not isinstance(y, (int, float)) or \
@@ -29,11 +30,15 @@ class _ElectromagnetismMeta(type):
         self.__init__(x, y, z, *args, **kwargs)
         assert hasattr(self, "data") and isinstance(self.data, dict)
 
-        self.data["Identifier"] = _tools.randString(32)
+        if identifier is None:
+            self.data["Identifier"] = _tools.randString(33)
+        else:
+            self.data["Identifier"] = identifier
         self.set_position(x, y, z)
         self.set_rotation(0, 0, 0)
 
         _Expe.Elements.append(self)
+        _Expe._id2element[self.data["Identifier"]] = self
 
         return self
 

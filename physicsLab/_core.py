@@ -85,7 +85,8 @@ class _Experiment:
             SAV_PATH_DIR = "physicsLabSav"
 
     open_mode: OpenMode
-    _position2elements: Dict[tuple, list]
+    _position2elements: Dict[Tuple[num_type, num_type, num_type], List["_ElementBase"]]
+    _id2element: Dict[str, "_ElementBase"]
     Elements: List["_ElementBase"]
     SAV_PATH: str
     PlSav: dict
@@ -109,6 +110,7 @@ class _Experiment:
             self.Wires.clear()
         self.Elements.clear()
         self._position2elements.clear()
+        self._id2element.clear()
         return self
 
     @_check_not_closed
@@ -118,6 +120,10 @@ class _Experiment:
         '''
         if not isinstance(element, _ElementBase):
             raise TypeError
+        if element.experiment is not self:
+            raise errors.ExperimentError("element is not in this experiment") # TODO 换一个更好的异常类型?
+        if element not in self.Elements:
+            raise errors.ElementNotFound
 
         identifier = element.data["Identifier"]
 
@@ -132,16 +138,23 @@ class _Experiment:
             self.Wires = res_Wires
 
         for position, elements in self._position2elements.items():
+            can_break: bool = False
             if element in elements:
                 elements.remove(element)
-                break
+                can_break = True
             if len(elements) == 0:
                 del self._position2elements[position]
 
-        for element in self.Elements:
-            if element is element:
-                self.Elements.remove(element)
+            if can_break:
                 break
+        else:
+            assert False
+
+        assert identifier in self._id2element.keys()
+        del self._id2element[identifier]
+
+        assert element in self.Elements
+        self.Elements.remove(element)
 
         return self
 
@@ -171,20 +184,19 @@ class _Experiment:
         ''' 通过index (元件生成顺序) 索引元件, index从1开始 '''
         if not isinstance(index, int):
             raise TypeError
+        if not 0 < index <= self.get_elements_count():
+            raise errors.ElementNotFound("index out of range")
 
-        if 0 < index <= self.get_elements_count():
-            return self.Elements[index - 1]
-        else:
-            raise errors.ElementNotFound
+        return self.Elements[index - 1]
 
     @_check_not_closed
     def get_element_from_identifier(self, identifier: str) -> "_ElementBase":
         ''' 通过元件的id获取元件的引用 '''
-        for element in self.Elements:
-            assert hasattr(element, "data")
-            if element.data["Identifier"] == identifier:
-                return element
-        raise errors.ElementNotFound
+        res = self._id2element.get(identifier)
+        if res is None:
+            raise errors.ElementNotFound
+
+        return res
 
     @_check_not_closed
     def clear_wires(self) -> Self:
@@ -613,6 +625,8 @@ class _Experiment:
             raise TypeError
         if self.experiment_type != other.experiment_type:
             raise errors.ExperimentTypeError
+        if self is other:
+            raise errors.ExperimentError("can not merge to itself") # TODO 换一个更好的异常类型?
 
         assert self.SAV_PATH is not None and other.SAV_PATH is not None
 

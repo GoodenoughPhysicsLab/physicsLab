@@ -11,7 +11,7 @@ from physicsLab import celestial
 from physicsLab import electromagnetism
 from .web import User
 from .savTemplate import Generate
-from .circuit._circuit_core import Wire, Pin
+from .circuit._circuit_core import crt_wire, Pin
 from .enums import ExperimentType, Category, OpenMode, WireColor
 from ._core import _Experiment, _ExperimentStack, _check_not_closed, _ElementBase
 from .typehint import num_type, Optional, Union, List, overload, Tuple, Dict, Self
@@ -126,10 +126,12 @@ class Experiment(_Experiment):
             raise TypeError
 
         self.open_mode: OpenMode = open_mode
-        # 通过坐标索引元件; key: self._position, value: List[self...]
-        self._position2elements: Dict[tuple, list] = {}
+        # 通过坐标索引元件
+        self._position2elements = {}
+        # 通过元件的Identifier索引元件
+        self._id2element = {}
         # 通过index（元件生成顺序）索引元件
-        self.Elements: List["_ElementBase"] = []
+        self.Elements = []
 
         # 尽管读取存档时会将元件的字符串一并读入, 但只有在调用 load_elements 将元件的信息
         # 导入self.Elements与self._element_position之后, 元件信息才被完全导入
@@ -270,6 +272,7 @@ class Experiment(_Experiment):
 
         assert isinstance(self.open_mode, OpenMode)
         assert isinstance(self._position2elements, dict)
+        assert isinstance(self._id2element, dict)
         assert isinstance(self.Elements, list)
         assert isinstance(self.SAV_PATH, str)
         assert isinstance(self.PlSav, dict)
@@ -338,12 +341,10 @@ class Experiment(_Experiment):
             else:
                 assert False
 
-            self.Wires.add(
-                Wire(
-                    Pin(self.get_element_from_identifier(wire_dict["Source"]), wire_dict["SourcePin"]),
-                    Pin(self.get_element_from_identifier(wire_dict["Target"]), wire_dict["TargetPin"]),
-                    color=color,
-                )
+            crt_wire(
+                Pin(self.get_element_from_identifier(wire_dict["Source"]), wire_dict["SourcePin"]),
+                Pin(self.get_element_from_identifier(wire_dict["Target"]), wire_dict["TargetPin"]),
+                color=color,
             )
 
     def __load_elements(self, _elements: list) -> None:
@@ -365,6 +366,7 @@ class Experiment(_Experiment):
                     obj = Simple_Instrument(
                         x, y, z,
                         pitches=pitches,
+                        identifier=element["Identifier"],
                         elementXYZ=False,
                         instrument=int(element["Properties"].get("乐器", 0)),
                         volume=element["Properties"]["音量"],
@@ -373,19 +375,18 @@ class Experiment(_Experiment):
                         is_pulse=bool(element["Properties"]["脉冲"])
                     )
                 else:
-                    obj = self.crt_element(element["ModelID"], x, y, z, elementXYZ=False)
+                    obj = self.crt_element(element["ModelID"], x, y, z, elementXYZ=False, identifier=element["Identifier"])
                     obj.data["Properties"] = element["Properties"]
                 # 设置角度信息
                 rotation = eval(f'({element["Rotation"]})')
                 r_x, r_y, r_z = rotation[0], rotation[2], rotation[1]
                 obj.set_rotation(r_x, r_y, r_z)
-                obj.data['Identifier'] = element['Identifier']
 
             elif self.experiment_type == ExperimentType.Celestial:
-                obj = self.crt_element(element["Model"], x, y, z)
+                obj = self.crt_element(element["Model"], x, y, z, identifier=element['Identifier'])
                 obj.data = element
             elif self.experiment_type == ExperimentType.Electromagnetism:
-                obj = self.crt_element(element["ModelID"], x, y, z)
+                obj = self.crt_element(element["ModelID"], x, y, z, identifier=element['Identifier'])
                 obj.data = element
             else:
                 assert False
@@ -407,8 +408,7 @@ class Experiment(_Experiment):
             y: num_type,
             z: num_type,
             *args,
-            elementXYZ: Optional[bool] = None,
-            **kwargs
+            **kwargs,
     ) -> _ElementBase:
         ''' 通过元件的ModelID或其类名创建元件 '''
         if not isinstance(name, str) \
@@ -422,16 +422,16 @@ class Experiment(_Experiment):
 
         if self.experiment_type == ExperimentType.Circuit:
             if name == "555_Timer":
-                return circuit.NE555(x, y, z, elementXYZ=elementXYZ)
+                return circuit.NE555(x, y, z, *args, **kwargs)
             elif name == "8bit_Input":
-                return circuit.eight_bit_Input(x, y, z, elementXYZ=elementXYZ)
+                return circuit.eight_bit_Input(x, y, z, *args, **kwargs)
             elif name == "8bit_Display":
-                return circuit.eight_bit_Display(x, y, z, elementXYZ=elementXYZ)
+                return circuit.eight_bit_Display(x, y, z, *args, **kwargs)
             else:
-                return eval(f"circuit.{name}({x}, {y}, {z}, *{args}, elementXYZ={elementXYZ}, **{kwargs})")
+                return eval(f"circuit.{name}({x}, {y}, {z}, *{args}, **{kwargs})")
         elif self.experiment_type == ExperimentType.Celestial:
-            return eval(f"celestial.{name}({x}, {y}, {z})")
+            return eval(f"celestial.{name}({x}, {y}, {z}, **{kwargs})")
         elif self.experiment_type == ExperimentType.Electromagnetism:
-            return eval(f"electromagnetism.{name}({x}, {y}, {z})")
+            return eval(f"electromagnetism.{name}({x}, {y}, {z}, **{kwargs})")
         else:
             assert False

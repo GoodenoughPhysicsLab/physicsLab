@@ -142,12 +142,14 @@ class _CircuitMeta(type):
             z: num_type,
             *args,
             elementXYZ: Optional[bool] = None,
+            identifier: Optional[str] = None,
             **kwargs,
     ):
         if not isinstance(x, (float, int)) \
                 or not isinstance(y, (float, int)) \
                 or not isinstance(z, (float, int)) \
-                or not isinstance(elementXYZ, (bool, type(None))):
+                or not isinstance(elementXYZ, (bool, type(None))) \
+                or not isinstance(identifier, (str, type(None))):
             raise TypeError
 
         _Expe: _Experiment = get_current_experiment()
@@ -161,14 +163,18 @@ class _CircuitMeta(type):
 
         x, y, z = round_data(x), round_data(y), round_data(z)
 
-        self.__init__(x, y, z, *args, elementXYZ=elementXYZ, **kwargs)
+        self.__init__(x, y, z, *args, **kwargs)
         assert hasattr(self, "data") and isinstance(self.data, dict)
 
-        self.data["Identifier"] = randString(33)
+        if identifier is None:
+            self.data["Identifier"] = randString(33)
+        else:
+            self.data["Identifier"] = identifier
         self.set_position(x, y, z, elementXYZ)
         self.set_rotation()
 
         _Expe.Elements.append(self)
+        _Expe._id2element[self.data["Identifier"]] = self
 
         return self
 
