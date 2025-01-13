@@ -478,3 +478,15 @@ class BasicTest(TestCase, ViztracerTool):
             self.assertEqual(expe.get_elements_count(), 652)
             self.assertEqual(expe.get_wires_count(), 1385)
             expe.exit(delete=True)
+
+    @my_test_dec
+    def test_typeerror(self):
+        try:
+            expe = Experiment(OpenMode.crt, "test", ExperimentType.Circuit, force_crt=True)
+            Logic_Input(0,0,0,True)
+        except TypeError:
+            pass
+        else:
+            raise TestFail
+        finally:
+            expe.exit(delete=True)

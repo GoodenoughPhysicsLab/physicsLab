@@ -411,10 +411,10 @@ class Experiment(_Experiment):
             **kwargs
     ) -> _ElementBase:
         ''' 通过元件的ModelID或其类名创建元件 '''
-        if not isinstance(name, str) or \
-                not isinstance(x, (int, float)) or \
-                not isinstance(y, (int, float)) or \
-                not isinstance(z, (int, float)):
+        if not isinstance(name, str) \
+                or not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)):
             raise TypeError
 
         name = name.strip().replace(' ', '_').replace('-', '_')
@@ -428,7 +428,7 @@ class Experiment(_Experiment):
             elif name == "8bit_Display":
                 return circuit.eight_bit_Display(x, y, z, elementXYZ=elementXYZ)
             else:
-                return eval(f"circuit.{name}({x}, {y}, {z}, {elementXYZ}, *{args}, **{kwargs})")
+                return eval(f"circuit.{name}({x}, {y}, {z}, *{args}, elementXYZ={elementXYZ}, **{kwargs})")
         elif self.experiment_type == ExperimentType.Celestial:
             return eval(f"celestial.{name}({x}, {y}, {z})")
         elif self.experiment_type == ExperimentType.Electromagnetism:
