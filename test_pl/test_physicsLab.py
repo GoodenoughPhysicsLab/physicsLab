@@ -333,16 +333,11 @@ class BasicTest(TestCase, ViztracerTool):
             lib.Sub(-5, 0, 0, bitnum=4)
             expe.exit(delete=True)
 
-    # 测试简单乐器设置音高的三种方法
     @my_test_dec
     def test_Simple_Instrument(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
-            a = Simple_Instrument(0, 0, 0, pitch=48)
-            a = Simple_Instrument(0, 0, 0).set_tonality(48)
-            a = Simple_Instrument(0, 0, 0, pitch="C3")
-            a = Simple_Instrument(0, 0, 0).set_tonality("C3")
-            crt_wire(Logic_Input(-1, 0, 0).o, a.i)
-            crt_wire(a.o, Ground_Component(1, 0, 0).i)
+            a = Simple_Instrument(0, 0, 0, pitches=(48,))
+            a = Simple_Instrument(0, 0, 0, pitches=(Simple_Instrument.str2num_pitch("C3"),))
             expe.exit(delete=True)
 
     @my_test_dec
@@ -396,15 +391,23 @@ class BasicTest(TestCase, ViztracerTool):
     @my_test_dec
     def test_mutiple_notes_in_Simple_Instrument(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
-            Simple_Instrument(0, 0, 0).add_note(67) # type: ignore
+            Simple_Instrument(0, 0, 0, pitches=(67,))
             expe.exit(delete=True)
 
     @my_test_dec
     def test_load_midi(self):
         expe = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
-        music.Midi(os.path.join(TEST_DATA_DIR, "鼓哥.mid")).to_piece(max_notes=None).release(-1, -1, 0)
-        self.assertTrue(expe.get_elements_count() == 4268)
+        music.Midi(os.path.join(TEST_DATA_DIR, "鼓哥.mid")).to_piece(max_notes=800).release(-1, -1, 0)
+        self.assertEqual(expe.get_elements_count(), 510)
+        self.assertEqual(expe.get_wires_count(), 1016)
+        expe.export("temp.pl.py", "_Test")
         expe.exit(delete=True)
+
+        os.system(f"{sys.executable} temp.pl.py")
+        with Experiment(OpenMode.load_by_sav_name, "_Test") as expe:
+            self.assertEqual(expe.get_elements_count(), 510)
+            self.assertEqual(expe.get_wires_count(), 1016)
+            expe.exit(delete=True)
 
     @my_test_dec
     def test_mergeExperiment(self):

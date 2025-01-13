@@ -3,7 +3,9 @@ import physicsLab.plAR as plar
 import physicsLab.errors as errors
 
 from .._circuit_core import _TwoPinMixIn, CircuitBase, Pin
-from physicsLab.typehint import Optional, num_type, CircuitElementData, Self, Generate, Union, List, override
+from physicsLab.typehint import (
+    Optional, num_type, CircuitElementData, Self, Generate, Union, List, override, Union, Tuple
+)
 
 class Buzzer(_TwoPinMixIn):
     ''' 蜂鸣器 '''
@@ -211,7 +213,6 @@ class Electric_Fan(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-# TODO 将构造函数统一为像其他元件的那样，其他的性质都塞到set_properties里面
 class Simple_Instrument(_TwoPinMixIn):
     ''' 简单乐器 '''
     def __init__(
@@ -220,48 +221,105 @@ class Simple_Instrument(_TwoPinMixIn):
             y: num_type,
             z: num_type,
             /, *,
+            pitches: Union[List[int], Tuple[int]],
             elementXYZ: Optional[bool] = None,
-            instrument: Union[int, str] = 0, # 演奏的乐器，暂时只支持传入数字
-            pitch: Union[int, str] = 60, # 音高/音调: 20 ~ 128
-            bpm: int = 100, # 节奏
-            velocity: num_type = 1.0, # 音量/响度
-            rated_oltage: num_type = 3.0, # 额定电压
-            is_ideal_model: bool = False, # 是否为理想模式
-            is_single: bool = True, # 简单乐器是否只响一次
+            rated_oltage: num_type = 3.0,
+            volume: num_type = 1,
+            bpm: int = 100,
+            instrument: int = 0,
+            is_ideal: bool = False,
+            is_pulse: bool = True,
     ) -> None:
-        if not isinstance(instrument, int) \
-                or not isinstance(pitch, (int, str)) \
-                or not isinstance(bpm, int) \
-                or not isinstance(velocity, (int, float)) \
-                or not isinstance(rated_oltage, (int, float)) \
-                or not isinstance(is_ideal_model, bool) \
-                or not isinstance(is_single, bool):
-            raise TypeError
-
-        if isinstance(pitch, str):
-            pitch = majorSet_Tonality(pitch)
-        if not 0 <= instrument <= 128 \
-                or not 20 <= pitch <= 128 \
-                or not 20 <= bpm <= 240 \
-                or not 0 <= velocity <= 1:
-            raise ValueError
-
-        self.data: CircuitElementData = {
+        ''' @param rated_oltage: 额定电压
+            @param volume: 音量 (响度)
+            @param pitch: 音高
+            @param instrument: 演奏的乐器，暂时只支持传入数字
+            @param bpm: 节奏
+            @param is_ideal: 是否为理想模式
+            @param is_pulse: 简单乐器是否只响一次
+        '''
+        self._data: CircuitElementData = {
             "ModelID": "Simple Instrument", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
-            "Properties": {"额定电压": rated_oltage, "额定功率": 0.3,
-                            "音量": velocity, "音高": None, "节拍": bpm,
-                            "锁定": 1.0, "和弦": 1.0, "乐器": instrument,
-                            "理想模式": int(is_ideal_model),
-                            "脉冲": int(is_single), "电平": 0.0},
+            "Properties": {"额定电压": Generate, "额定功率": 0.3,
+                            "音量": Generate, "音高": Generate, "节拍": Generate,
+                            "锁定": 1.0, "和弦": Generate, "乐器": Generate,
+                            "理想模式": Generate, "脉冲": Generate, "电平": 0.0},
             "Statistics": {"瞬间功率": 0, "瞬间电流": 0, "瞬间电压": 0,
                             "功率": 0, "电压": 0, "电流": 0},
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-        self.set_tonality(pitch)
-        self.notes: List[int] = [self.data["Properties"]["音高"]] # 仅用于记录self已有的音符
+        self.pitches: List[int] = list(pitches)
+        self.set_properties(
+            rated_oltage=rated_oltage,
+            volume=volume,
+            bpm=bpm,
+            instrument=instrument,
+            is_ideal=is_ideal,
+            is_pulse=is_pulse,
+        )
+
+    @property
+    def data(self) -> CircuitElementData:
+        if not all(isinstance(a_pitch, int) for a_pitch in self.pitches):
+            raise TypeError
+        if not all(0 <= a_pitch < 128 for a_pitch in self.pitches):
+            raise ValueError
+
+        plar_version = plar.get_plAR_version()
+        if plar_version is not None and plar_version < (2, 4, 7):
+            errors.warning("Physics-Lab-AR's version less than 2.4.7")
+
+        # TODO 是否需要先清空所有 "音高"
+        for i, a_pitch in enumerate(self.pitches):
+            if i == 0:
+                self._data["Properties"]["音高"] = a_pitch
+            else:
+                self._data["Properties"][f"音高{i}"] = a_pitch
+        self._data["Properties"]["和弦"] = len(self.pitches)
+
+        return self._data
+
+    def set_properties(
+            self,
+            *,
+            rated_oltage: Optional[num_type] = None,
+            volume: Optional[num_type] = None,
+            bpm: Optional[int] = None,
+            instrument: Optional[int] = None,
+            is_ideal: Optional[bool] = None,
+            is_pulse: Optional[bool] = None,
+    ) -> Self:
+        if not isinstance(rated_oltage, (int, float, type(None))) \
+                or not isinstance(volume, (int, float, type(None))) \
+                or not isinstance(bpm, (int, type(None))) \
+                or not isinstance(instrument, (int, type(None))) \
+                or not isinstance(is_ideal, (bool, type(None))) \
+                or not isinstance(is_pulse, (bool, type(None))):
+            raise TypeError
+
+        if rated_oltage is not None:
+            self.properties["额定电压"] = rated_oltage
+        if volume is not None:
+            self.properties["音量"] = volume
+        if bpm is not None:
+            self.properties["节拍"] = bpm
+        if instrument is not None:
+            self.properties["乐器"] = instrument
+        if is_ideal is not None:
+            self.properties["理想模式"] = int(is_ideal)
+        if is_pulse is not None:
+            self.properties["脉冲"] = int(is_pulse)
+
+        assert instrument is not None and bpm is not None and volume is not None
+        if not 0 <= instrument <= 128 \
+                or not 20 <= bpm <= 240 \
+                or not 0 <= volume <= 1:
+            raise ValueError
+
+        return self
 
     @property
     def i(self) -> Pin:
@@ -273,87 +331,48 @@ class Simple_Instrument(_TwoPinMixIn):
 
     @override
     def __repr__(self) -> str:
-        return f"{self.__class__.__name__}({self._position.x}, {self._position.y}, {self._position.z}, " \
-               f"elementXYZ={self.is_elementXYZ}, instrument={self.data['Properties']['乐器']}, " \
-               f"pitch={self.data['Properties']['音高']}, bpm={self.data['Properties']['节拍']}, " \
-               f"velocity={self.data['Properties']['音量']}, " \
-               f"rated_oltage={self.data['Properties']['额定电压']}, " \
-               f"is_ideal_model={bool(self.data['Properties']['理想模式'])}, " \
-               f"is_single={bool(self.data['Properties']['脉冲'])}" \
-               f").add_note({str(self.notes)[1:-2]})"
+        return f"Simple_Instrument({self._position.x}, {self._position.y}, {self._position.z}, " \
+            f"elementXYZ={self.is_elementXYZ}, " \
+            f"pitches={self.pitches}, " \
+            f"instrument={self.properties['乐器']}, " \
+            f"bpm={self._data['Properties']['节拍']}, " \
+            f"volume={self._data['Properties']['音量']}, " \
+            f"rated_oltage={self._data['Properties']['额定电压']}, " \
+            f"is_ideal={bool(self._data['Properties']['理想模式'])}, " \
+            f"is_pulse={bool(self._data['Properties']['脉冲'])}" \
+            f")"
 
-    def add_note(self, *pitchs: int) -> Self:
-        ''' 物实v2.4.7功能: 简单乐器同时播放多个音符 '''
-        if not all(isinstance(a_pitch, int) and 0 <= a_pitch < 128 for a_pitch in pitchs):
+    @staticmethod
+    def str2num_pitch(
+            pitch: str,
+            rising_falling: Optional[bool] = None
+    ) -> int:
+        """ 输入格式：
+                pitch: C4, A5 ...
+                rising_falling = True 时，为升调，为 False 时降调
+
+            输入范围：
+                C0 ~ C8
+                注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120
+        """
+        if not isinstance(pitch, str) \
+                or not isinstance(rising_falling, (bool, type(None))):
             raise TypeError
+        if len(pitch) != 2 \
+                or pitch.upper()[0] not in "ABCDEFG" \
+                or pitch[1] not in "012345678":
+            raise ValueError
 
-        plar_version = plar.get_plAR_version()
-        if plar_version is not None and plar_version < (2, 4, 7):
-            errors.warning("Physics-Lab-AR's version less than 2.4.7")
+        var = 1 if rising_falling is True else 0 if rising_falling is None else -1
 
-        for a_pitch in pitchs:
-            if a_pitch not in self.notes:
-                amount: int = int(self.data["Properties"]["和弦"])
-                self.data["Properties"][f"音高{amount}"] = a_pitch
-                self.data["Properties"]["和弦"] += 1
-                self.notes.append(a_pitch)
+        res = {
+            'A': 22,
+            'B': 23,
+            'C': 24,
+            'D': 25,
+            'E': 26,
+            'F': 27,
+            'G': 28,
+        }[pitch.upper()[0]] + 12 * int(pitch[1]) + var
 
-        return self
-
-    def get_chord(self) -> tuple:
-        ''' 获取简单乐器已有的和弦 '''
-        return tuple(self.notes)
-
-    def get_instrument(self) -> int:
-        return self.data["Properties"]["乐器"]
-
-    def set_tonality(self, pitch: Union[int, str], rising_falling: Optional[bool] = None) -> "Simple_Instrument":
-        ''' 输入格式：
-            tonality: C4, A5 ...
-            rising_falling = True 时, 为升调, 为 False 时降调
-        '''
-
-        if isinstance(pitch, int):
-            if 0 <= pitch < 128:
-                self.data["Properties"]["音高"] = pitch
-            else:
-                raise TypeError("Input number out of range")
-        elif isinstance(pitch, str):
-            self.data["Properties"]["音高"] = majorSet_Tonality(pitch, rising_falling)
-        else:
-            raise TypeError
-
-        return self
-
-def majorSet_Tonality(pitch: str,
-                      rising_falling: Optional[bool] = None
-                      ) -> int:
-    """ 输入格式：
-            tonality: C4, A5 ...
-            rising_falling = True 时，为升调，为 False 时降调
-
-        输入范围：
-            C0 ~ C8
-            注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120
-    """
-    if (not isinstance(pitch, str) or
-        len(pitch) != 2 or
-        pitch.upper()[0] not in "ABCDEFG" or
-        pitch[1] not in "012345678" or
-        not (isinstance(rising_falling, bool) or rising_falling is None)
-    ):
-        raise TypeError
-
-    var = 1 if rising_falling is True else 0 if rising_falling is None else -1
-
-    res = {
-        'A': 22,
-        'B': 23,
-        'C': 24,
-        'D': 25,
-        'E': 26,
-        'F': 27,
-        'G': 28
-    }[pitch.upper()[0]] + 12 * int(pitch[1]) + var
-
-    return res
+        return res

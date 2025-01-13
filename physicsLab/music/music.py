@@ -14,7 +14,6 @@ from physicsLab import errors
 from physicsLab.circuit import elements, crt_wire
 from physicsLab._tools import round_data
 from physicsLab.lib import crt_wires, D_WaterLamp
-from physicsLab.circuit.elements.otherCircuit import majorSet_Tonality
 from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, num_type, Callable, Type
 
 def _format_velocity(velocity: float) -> float:
@@ -403,7 +402,7 @@ class Note:
 
             self.pitch = pitch
         elif isinstance(pitch, str):
-            self.pitch = majorSet_Tonality(pitch, rising_falling)
+            self.pitch = elements.Simple_Instrument.str2num_pitch(pitch, rising_falling)
         else:
             raise TypeError
 
@@ -493,8 +492,12 @@ class Chord:
             for delta_z, ins in enumerate(self.ins_notes):
                 notes: List[Note] = self.ins_notes[ins]
                 temp: elements.Simple_Instrument = elements.Simple_Instrument(
-                    x, y, z + delta_z, elementXYZ=True,instrument=ins,
-                    pitch=notes[0].pitch, is_ideal_model=True, velocity=self._get_velocity(notes, is_average=True)
+                    x, y, z + delta_z,
+                    elementXYZ=True,
+                    instrument=ins,
+                    pitches=(notes[0].pitch,),
+                    is_ideal=True,
+                    volume=self._get_velocity(notes, is_average=True)
                 ).set_rotation(0, 0, 0)
 
                 if first_ins is None:
@@ -504,14 +507,18 @@ class Chord:
                     crt_wire(temp.o, first_ins.o)
 
                 for a_note in notes:
-                    temp.add_note(a_note.pitch)
+                    temp.pitches.append(a_note.pitch)
         else:
             delta_z = 0
             for ins, notes in self.ins_notes.items():
                 for a_note in notes:
                     temp = elements.Simple_Instrument(
-                        x, y, z + delta_z, elementXYZ=True,instrument=ins,
-                        pitch=a_note.pitch, is_ideal_model=True, velocity=a_note.velocity
+                        x, y, z + delta_z,
+                        elementXYZ=True,
+                        instrument=ins,
+                        pitches=(a_note.pitch,),
+                        is_ideal=True,
+                        volume=a_note.velocity,
                     ).set_rotation(0, 0, 0)
 
                     if first_ins is None:
@@ -728,27 +735,27 @@ class Piece:
             )
             raise e
 
-        tick = elements.Nimp_Gate(x + 1, y, z, True)
-        counter = elements.Counter(x, y + 1, z, True)
-        l_input = elements.Logic_Input(x, y, z, True)
+        tick = elements.Nimp_Gate(x + 1, y, z, elementXYZ=True)
+        counter = elements.Counter(x, y + 1, z, elementXYZ=True)
+        l_input = elements.Logic_Input(x, y, z, elementXYZ=True)
         crt_wire(l_input.o, tick.i_up)
         crt_wire(tick.o, tick.i_low)
         crt_wire(tick.o, counter.i_up)
 
-        yesGate = elements.Yes_Gate(x + 2, y, z, True)
+        yesGate = elements.Yes_Gate(x + 2, y, z, elementXYZ=True)
         crt_wire(xPlayer[0].o_low, yesGate.i)
 
         crt_wires(xPlayer.outputs[0], yPlayer.inputs)
 
         # 上升沿触发器
-        no_gate = elements.No_Gate(x + 1, y, z + 1, True)
-        and_gate = elements.And_Gate(x + 2, y, z + 1, True)
+        no_gate = elements.No_Gate(x + 1, y, z + 1, elementXYZ=True)
+        and_gate = elements.And_Gate(x + 2, y, z + 1, elementXYZ=True)
         crt_wire(no_gate.o, and_gate.i_low)
         crt_wire(no_gate.i, and_gate.i_up)
 
         crt_wire(l_input.o, no_gate.i)
 
-        or_gate = elements.Or_Gate(x + 3, y, z, True)
+        or_gate = elements.Or_Gate(x + 3, y, z, elementXYZ=True)
         crt_wire(or_gate.i_low, and_gate.o)
         crt_wire(or_gate.i_up, counter.o_upmid)
         crt_wires(or_gate.o, xPlayer.inputs)
@@ -773,11 +780,12 @@ class Piece:
                 ins = a_note.release(1 + x + xcor,  4 + y + ycor, z, elementXYZ=True, is_optimize=self.is_optimize)
             elif isinstance(a_note, Note):
                 ins = elements.Simple_Instrument(
-                    1 + x + xcor, 4 + y + ycor, z, pitch=a_note.pitch,
+                    1 + x + xcor, 4 + y + ycor, z,
+                    pitches=(a_note.pitch,),
                     instrument=a_note.instrument,
                     elementXYZ=True,
-                    is_ideal_model=True,
-                    velocity=a_note.velocity
+                    is_ideal=True,
+                    volume=a_note.velocity
                 ).set_rotation(0, 0, 0) # type: ignore
             # 连接x轴的d触的导线
             if xcor == 0:
@@ -787,7 +795,7 @@ class Piece:
             # 连接y轴的d触的导线
             crt_wire(ins.o, yPlayer.neg_outputs[ycor // 2])
 
-        stop = elements.And_Gate(x + 1, y + ycor + 3, z, True)
+        stop = elements.And_Gate(x + 1, y + ycor + 3, z, elementXYZ=True)
         crt_wire(stop.o, counter.i_low)
 
         crt_wire(stop.i_up, yPlayer[ycor // 2].o_up)
