@@ -236,3 +236,5 @@
 15. `pin1 - pin2`被废弃，`crt_wire`现在支持多个参数了
 16. `class experiment`被废弃
 17. 一些元件增加了`set_properties`方法，并且支持在构造函数中传入这些属性
+18. 现在可以通过修改Simple_Instruments.pitches来修改和弦
+19. 电学元件新增lock方法

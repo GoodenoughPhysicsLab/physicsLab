@@ -14,6 +14,7 @@
 电学元件都有的`method`:
 * set_rotation # 设置元件的角度
 * rename # 重命名元件
+* lock(status: bool): 更改元件锁定的状态
 
 电学元件都有的`attribute`:
 * .is_bigElement # 是否是大体积元件

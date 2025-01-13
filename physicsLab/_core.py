@@ -85,7 +85,7 @@ class _Experiment:
             SAV_PATH_DIR = "physicsLabSav"
 
     open_mode: OpenMode
-    _elements_position: Dict[tuple, list]
+    _position2elements: Dict[tuple, list]
     Elements: List["_ElementBase"]
     SAV_PATH: str
     PlSav: dict
@@ -108,7 +108,7 @@ class _Experiment:
         if self.experiment_type == ExperimentType.Circuit:
             self.Wires.clear()
         self.Elements.clear()
-        self._elements_position.clear()
+        self._position2elements.clear()
         return self
 
     @_check_not_closed
@@ -131,12 +131,12 @@ class _Experiment:
                 res_Wires.add(a_wire)
             self.Wires = res_Wires
 
-        for position, elements in self._elements_position.items():
+        for position, elements in self._position2elements.items():
             if element in elements:
                 elements.remove(element)
                 break
             if len(elements) == 0:
-                del self._elements_position[position]
+                del self._position2elements[position]
 
         for element in self.Elements:
             if element is element:
@@ -160,10 +160,10 @@ class _Experiment:
             raise TypeError
 
         position = (_tools.round_data(x), _tools.round_data(y), _tools.round_data(z))
-        if position not in self._elements_position.keys():
+        if position not in self._position2elements.keys():
             raise errors.ElementNotFound(f"{position} do not exist")
 
-        result: list = self._elements_position[position]
+        result: list = self._position2elements[position]
         return result[0] if len(result) == 1 else result
 
     @_check_not_closed
@@ -667,9 +667,9 @@ class _ElementBase:
 
         x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
         assert hasattr(self, 'experiment')
-        _Expe = self.experiment
+        _Expe: _Experiment = self.experiment
 
-        for self_list in _Expe._elements_position.values():
+        for self_list in _Expe._position2elements.values():
             if self in self_list:
                 self_list.remove(self)
 
@@ -677,10 +677,10 @@ class _ElementBase:
         self.data['Position'] = f"{x},{z},{y}"
 
         assert hasattr(self, '_position')
-        if self._position in _Expe._elements_position.keys():
-            _Expe._elements_position[self._position].append(self)
+        if self._position in _Expe._position2elements.keys():
+            _Expe._position2elements[self._position].append(self)
         else:
-            _Expe._elements_position[self._position] = [self]
+            _Expe._position2elements[self._position] = [self]
 
         return self
 

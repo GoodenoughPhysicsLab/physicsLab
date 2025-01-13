@@ -124,7 +124,7 @@ class Experiment(_Experiment):
 
         self.open_mode: OpenMode = open_mode
         # 通过坐标索引元件; key: self._position, value: List[self...]
-        self._elements_position: Dict[tuple, list] = {}
+        self._position2elements: Dict[tuple, list] = {}
         # 通过index（元件生成顺序）索引元件
         self.Elements: List["_ElementBase"] = []
 
@@ -268,7 +268,7 @@ class Experiment(_Experiment):
             assert False
 
         assert isinstance(self.open_mode, OpenMode)
-        assert isinstance(self._elements_position, dict)
+        assert isinstance(self._position2elements, dict)
         assert isinstance(self.Elements, list)
         assert isinstance(self.SAV_PATH, str)
         assert isinstance(self.PlSav, dict)

@@ -98,3 +98,8 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
 
     p.release() # 转化为物实的音乐电路
 ```
+
+## class Simple_Instrument
+对应着物实中的简单乐器元件，上面的类都是对基于此类的封装
+
+可以修改`Simple_Instrument.pitches`来修改简单乐器对应的和弦

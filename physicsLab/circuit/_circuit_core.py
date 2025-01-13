@@ -144,10 +144,10 @@ class _CircuitMeta(type):
             *args,
             **kwargs,
     ):
-        if not isinstance(x, (float, int)) or \
-                not isinstance(y, (float, int)) or \
-                not isinstance(z, (float, int)) or \
-                not isinstance(elementXYZ, (bool, type(None))):
+        if not isinstance(x, (float, int)) \
+                or not isinstance(y, (float, int)) \
+                or not isinstance(z, (float, int)) \
+                or not isinstance(elementXYZ, (bool, type(None))):
             raise TypeError
 
         _Expe: _Experiment = get_current_experiment()
@@ -157,14 +157,14 @@ class _CircuitMeta(type):
         self = cls.__new__(cls) # type: ignore -> create subclass
         self.experiment = _Expe
 
-        self.is_elementXYZ = False # 元件坐标系
+        self.is_elementXYZ = False # 该元件是否为元件坐标系
 
         x, y, z = round_data(x), round_data(y), round_data(z)
 
         self.__init__(x, y, z, *args, elementXYZ=elementXYZ, **kwargs)
         assert hasattr(self, "data") and isinstance(self.data, dict)
 
-        self.data["Identifier"] = randString(32)
+        self.data["Identifier"] = randString(33)
         self.set_position(x, y, z, elementXYZ)
         self.set_rotation()
 
@@ -225,6 +225,17 @@ class CircuitBase(_ElementBase, metaclass=_CircuitMeta):
             self.is_elementXYZ = False
 
         return super().set_position(x, y, z)
+
+    @final
+    def lock(self, status: bool) -> Self:
+        ''' 是否锁定元件 (位置不会受元件间碰撞的影响)
+            @param status: 是否锁定元件
+        '''
+        if not isinstance(status, bool):
+            raise TypeError
+
+        self.properties["锁定"] = int(status)
+        return self
 
     @property
     @final
