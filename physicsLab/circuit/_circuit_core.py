@@ -142,7 +142,7 @@ class _CircuitMeta(type):
             z: num_type,
             elementXYZ: Optional[bool] = None,
             *args,
-            **kwargs
+            **kwargs,
     ):
         if not isinstance(x, (float, int)) or \
                 not isinstance(y, (float, int)) or \

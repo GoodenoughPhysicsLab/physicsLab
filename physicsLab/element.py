@@ -359,18 +359,21 @@ class Experiment(_Experiment):
             if self.experiment_type == ExperimentType.Circuit:
                 if element["ModelID"] == "Simple Instrument":
                     from .circuit.elements.otherCircuit import Simple_Instrument
-                    obj = Simple_Instrument(
-                        x, y, z, elementXYZ=False,
-                        instrument=int(element["Properties"].get("乐器", 0)),
-                        pitch=int(element["Properties"]["音高"]),
-                        velocity=element["Properties"]["音量"],
-                        rated_oltage=element["Properties"]["额定电压"],
-                        is_ideal_model=bool(element["Properties"]["理想模式"]),
-                        is_single=bool(element["Properties"]["脉冲"])
-                    )
+                    pitches = []
                     for attr, val in element["Properties"].items():
                         if attr.startswith("音高"):
-                            obj.add_note(int(val))
+                            pitches.append(int(val))
+
+                    obj = Simple_Instrument(
+                        x, y, z,
+                        pitches=pitches,
+                        elementXYZ=False,
+                        instrument=int(element["Properties"].get("乐器", 0)),
+                        volume=element["Properties"]["音量"],
+                        rated_oltage=element["Properties"]["额定电压"],
+                        is_ideal=bool(element["Properties"]["理想模式"]),
+                        is_pulse=bool(element["Properties"]["脉冲"])
+                    )
                 else:
                     obj = self.crt_element(element["ModelID"], x, y, z, elementXYZ=False)
                     obj.data["Properties"] = element["Properties"]
