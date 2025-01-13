@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .._circuit_core import TwoPinMixIn, CircuitBase, Pin
+from .._circuit_core import _TwoPinMixIn, CircuitBase, Pin
 from .logicCircuit import _LogicBase
 from physicsLab.typehint import Optional, num_type, CircuitElementData, Generate
 
@@ -120,7 +120,7 @@ class Magnetic_Field_Sensor(_MemsBase):
         self.data["Properties"]["偏移"] = 3.200000047683716
         self.data["Properties"]["响应系数"] = 80
 
-class Photodiode(TwoPinMixIn):
+class Photodiode(_TwoPinMixIn):
     ''' 光电二极管 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -134,7 +134,7 @@ class Photodiode(TwoPinMixIn):
             "DiagramRotation": 0
         }
 
-class Photoresistor(TwoPinMixIn):
+class Photoresistor(_TwoPinMixIn):
     ''' 光敏电阻 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {

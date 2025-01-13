@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from physicsLab._tools import round_data
-from .._circuit_core import CircuitBase, TwoPinMixIn, Pin
+from .._circuit_core import CircuitBase, _TwoPinMixIn, Pin
 from physicsLab.typehint import Optional, num_type, CircuitElementData, Generate, Self, override
 
 class NE555(CircuitBase):
@@ -50,7 +50,7 @@ class NE555(CircuitBase):
     def Ground(self) -> Pin:
         return Pin(self, 7)
 
-class Basic_Capacitor(TwoPinMixIn):
+class Basic_Capacitor(_TwoPinMixIn):
     ''' 电容 '''
     def __init__(
             self,
@@ -126,7 +126,7 @@ class Basic_Capacitor(TwoPinMixIn):
                 f"internal_resistance={self.properties['内阻']}, " \
                 f"is_ideal={bool(self.properties['理想模式'])})"
 
-class Basic_Inductor(TwoPinMixIn):
+class Basic_Inductor(_TwoPinMixIn):
     ''' 电感 '''
     def __init__(
             self,
@@ -207,7 +207,7 @@ class Basic_Inductor(TwoPinMixIn):
               f"internal_resistance={self.properties['内阻']}" \
               f"is_ideal={bool(self.properties['理想模式'])}"
 
-class Basic_Diode(TwoPinMixIn):
+class Basic_Diode(_TwoPinMixIn):
     ''' 二极管 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -221,7 +221,7 @@ class Basic_Diode(TwoPinMixIn):
             "DiagramRotation": 0
         }
 
-class Light_Emitting_Diode(TwoPinMixIn):
+class Light_Emitting_Diode(_TwoPinMixIn):
     ''' 发光二极管 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -592,7 +592,7 @@ class Current_Source(CircuitBase):
             "DiagramPosition": {"X": 0,"Y": 0,"Magnitude": 0.0}, "DiagramRotation":0
         }
 
-class _source_electricity(TwoPinMixIn):
+class _source_electricity(_TwoPinMixIn):
     ''' 波形发生器基类 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {

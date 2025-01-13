@@ -362,7 +362,8 @@ class _Experiment:
 
         return self
 
-    def __upload(self,
+    def __upload(
+            self,
             user: User,
             category: Optional[Category],
             image_path: Optional[str],

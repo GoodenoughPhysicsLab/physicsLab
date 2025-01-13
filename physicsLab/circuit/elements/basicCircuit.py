@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from physicsLab._tools import round_data
-from .._circuit_core import CircuitBase, TwoPinMixIn, Pin
+from .._circuit_core import CircuitBase, _TwoPinMixIn, Pin
 from physicsLab.typehint import Optional, num_type, CircuitElementData, Self, Generate, override
 
 class _SwitchBase(CircuitBase):
@@ -19,7 +19,7 @@ class _SwitchBase(CircuitBase):
         self.data["Properties"]["开关"] = 0
         return self
 
-class Simple_Switch(_SwitchBase, TwoPinMixIn):
+class Simple_Switch(_SwitchBase, _TwoPinMixIn):
     ''' 简单开关 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         super().__init__(x, y, z, elementXYZ)
@@ -126,7 +126,7 @@ class DPDT_Switch(_SwitchBase):
     def r_low(self) -> Pin:
         return Pin(self, 2)
 
-class Push_Switch(TwoPinMixIn):
+class Push_Switch(_TwoPinMixIn):
     ''' 按钮开关 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -138,7 +138,7 @@ class Push_Switch(TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-class Air_Switch(TwoPinMixIn):
+class Air_Switch(_TwoPinMixIn):
     ''' 空气开关 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -169,7 +169,7 @@ class Air_Switch(TwoPinMixIn):
         self.data["Properties"]["开关"] = 1
         return self
 
-class Incandescent_Lamp(TwoPinMixIn):
+class Incandescent_Lamp(_TwoPinMixIn):
     ''' 白炽灯泡 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -184,7 +184,7 @@ class Incandescent_Lamp(TwoPinMixIn):
             "DiagramRotation": 0
         }
 
-class Battery_Source(TwoPinMixIn):
+class Battery_Source(_TwoPinMixIn):
     ''' 一节电池 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -228,7 +228,7 @@ class Student_Source(CircuitBase):
     def r(self) -> Pin:
         return Pin(self, 3)
 
-class Resistor(TwoPinMixIn):
+class Resistor(_TwoPinMixIn):
     ''' 电阻 '''
     def __init__(
             self,
@@ -268,7 +268,7 @@ class Resistor(TwoPinMixIn):
               f"elementXYZ={self.is_elementXYZ}, " \
               f"resistance={self.properties['电阻']})"
 
-class Fuse_Component(TwoPinMixIn):
+class Fuse_Component(_TwoPinMixIn):
     ''' 保险丝 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -313,7 +313,7 @@ class Slide_Rheostat(CircuitBase):
     def r_up(self) -> Pin:
         return Pin(self, 3)
 
-class Multimeter(TwoPinMixIn):
+class Multimeter(_TwoPinMixIn):
     ''' 多用电表 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {

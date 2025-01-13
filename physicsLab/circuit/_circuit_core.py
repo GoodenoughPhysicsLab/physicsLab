@@ -135,13 +135,15 @@ def del_wire(source_pin: Pin, target_pin: Pin) -> None:
 
 # electricity class's metaClass
 class _CircuitMeta(type):
-    def __call__(cls,
-                 x: num_type,
-                 y: num_type,
-                 z: num_type,
-                 elementXYZ: Optional[bool] = None,
-                 *args, **kwargs
-                ):
+    def __call__(
+            cls,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            elementXYZ: Optional[bool] = None,
+            *args,
+            **kwargs
+    ):
         if not isinstance(x, (float, int)) or \
                 not isinstance(y, (float, int)) or \
                 not isinstance(z, (float, int)) or \
@@ -252,7 +254,7 @@ class CircuitBase(_ElementBase, metaclass=_CircuitMeta):
         self.data["Label"] = name
         return self
 
-class TwoPinMixIn(CircuitBase):
+class _TwoPinMixIn(CircuitBase):
     ''' 双引脚模拟电路元件的基类 '''
     @property
     def red(self) -> Pin:

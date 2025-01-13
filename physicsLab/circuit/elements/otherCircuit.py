@@ -2,10 +2,10 @@
 import physicsLab.plAR as plar
 import physicsLab.errors as errors
 
-from .._circuit_core import TwoPinMixIn, CircuitBase, Pin
+from .._circuit_core import _TwoPinMixIn, CircuitBase, Pin
 from physicsLab.typehint import Optional, num_type, CircuitElementData, Self, Generate, Union, List, override
 
-class Buzzer(TwoPinMixIn):
+class Buzzer(_TwoPinMixIn):
     ''' 蜂鸣器 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -18,7 +18,7 @@ class Buzzer(TwoPinMixIn):
             "DiagramRotation": 0
         }
 
-class Spark_Gap(TwoPinMixIn):
+class Spark_Gap(_TwoPinMixIn):
     ''' 火花隙 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -30,7 +30,7 @@ class Spark_Gap(TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-class Tesla_Coil(TwoPinMixIn):
+class Tesla_Coil(_TwoPinMixIn):
     ''' 特斯拉线圈 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -74,7 +74,7 @@ class Color_Light_Emitting_Diode(CircuitBase):
     def r(self) -> Pin:
         return Pin(self, 3)
 
-class Dual_Light_Emitting_Diode(TwoPinMixIn):
+class Dual_Light_Emitting_Diode(_TwoPinMixIn):
     ''' 演示发光二极管 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -88,7 +88,7 @@ class Dual_Light_Emitting_Diode(TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-class Electric_Bell(TwoPinMixIn):
+class Electric_Bell(_TwoPinMixIn):
     ''' 电铃 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -101,7 +101,7 @@ class Electric_Bell(TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-class Musical_Box(TwoPinMixIn):
+class Musical_Box(_TwoPinMixIn):
     ''' 八音盒 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -195,7 +195,7 @@ class Solenoid(CircuitBase):
     def black(self) -> Pin:
         return Pin(self, 3)
 
-class Electric_Fan(TwoPinMixIn):
+class Electric_Fan(_TwoPinMixIn):
     ''' 小电扇 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
         self.data: CircuitElementData = {
@@ -212,7 +212,7 @@ class Electric_Fan(TwoPinMixIn):
         }
 
 # TODO 将构造函数统一为像其他元件的那样，其他的性质都塞到set_properties里面
-class Simple_Instrument(TwoPinMixIn):
+class Simple_Instrument(_TwoPinMixIn):
     ''' 简单乐器 '''
     def __init__(
             self,
