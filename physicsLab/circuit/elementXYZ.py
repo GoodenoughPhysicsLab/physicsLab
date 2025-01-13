@@ -36,15 +36,9 @@ def xyzTranslate(x: num_type, y: num_type, z: num_type, is_bigElement: bool = Fa
     if get_current_experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
 
-    _xOrigin, _yOrigin, _zOrigin = get_OriginPosition()
-
     x *= _X_UNIT
     y *= _Y_UNIT
     z *= _Z_UNIT
-    # 修改元件坐标系原点
-    x += _xOrigin
-    y += _yOrigin
-    z += _zOrigin
     if is_bigElement:
         x, y, z = amend_big_Element(x, y, z)
     return x, y, z
@@ -54,39 +48,17 @@ def translateXYZ(x: num_type, y: num_type, z: num_type, is_bigElement: bool = Fa
     if get_current_experiment().experiment_type != ExperimentType.Circuit:
         raise errors.ExperimentTypeError
 
-    _xOrigin, _yOrigin, _zOrigin = get_OriginPosition()
-
     x /= _X_UNIT
     y /= _Y_UNIT
     z /= _Z_UNIT
-    # 修改元件坐标系原点
-    x -= _xOrigin
-    y -= _yOrigin
-    z -= _zOrigin
     # 修改大体积逻辑电路元件的坐标
     if is_bigElement:
         y -= _Y_AMEND
     return x, y, z
 
-# 设置元件坐标系原点O，输入值为物实坐标系
-def set_O(x: num_type, y: num_type, z: num_type) -> None:
-    # TODO 如果多次, 重复地set_O的话情况会很糟糕吧，会有很多反直觉的事情发生
-    # 或许这个可以移除了?
-    if (isinstance(x, (int, float)) and
-        isinstance(y, (int, float)) and
-        isinstance(z, (int, float))
-    ):
-        get_current_experiment().elementXYZ_origin_position = position(x, y, z)
-    else:
-        raise TypeError
-
 # 修正bigElement的坐标
 def amend_big_Element(x: num_type, y: num_type, z: num_type):
     return x, y + _Y_AMEND, z
-
-# 获取坐标原点
-def get_OriginPosition() -> position:
-    return get_current_experiment().elementXYZ_origin_position
 
 def get_xyzUnit() -> tuple:
     ''' 获取元件坐标系下的单位长度对应着物实坐标系下的值

@@ -158,20 +158,6 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
   print(a.is_elementXYZ)
 ```
 
-### 设置元件坐标系的坐标原点
-元件坐标系原点默认为物实坐标系的元件：`(0, 0, 0)`，但这是可以动态设置的
-```Python
-from physicsLab import *
-
-with Experiment(OpenMode.load_by_sav_name, "example"):
-    set_O(0.2, 0.2, 0.1)
-    print(get_OriginPosition()) # 获取坐标原点
-```
-> Note: set_O只认为传进来的x, y, z为物实默认坐标系下的坐标而非元件坐标系
-
-### 获取坐标原点
-如上面的例子所示，可以使用`get_OriginPosition()`来获取坐标原点
-
 ### 获取物实坐标系单位长度
 `get_xyzUnit()`用于获取元件坐标系下的单位长度对应着物实坐标系下的值
 ```Python

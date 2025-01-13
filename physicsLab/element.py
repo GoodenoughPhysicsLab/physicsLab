@@ -6,6 +6,9 @@ import json
 from . import _tools
 from . import errors
 from . import savTemplate
+from physicsLab import circuit
+from physicsLab import celestial
+from physicsLab import electromagnetism
 from .web import User
 from .savTemplate import Generate
 from .circuit._circuit_core import Wire, Pin
@@ -236,8 +239,6 @@ class Experiment(_Experiment):
 
             if self.experiment_type == ExperimentType.Circuit:
                 self.is_elementXYZ: bool = False
-                # 元件坐标系的坐标原点
-                self.elementXYZ_origin_position: _tools.position = _tools.position(0, 0, 0)
                 self.PlSav: dict = copy.deepcopy(savTemplate.Circuit)
                 self.Wires: set = set() # Set[Wire] # 存档对应的导线
                 # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
@@ -279,7 +280,6 @@ class Experiment(_Experiment):
         if self.experiment_type == ExperimentType.Circuit:
             assert isinstance(self.Wires, set)
             assert isinstance(self.is_elementXYZ, bool)
-            assert isinstance(self.elementXYZ_origin_position, _tools.position)
 
         _ExperimentStack.push(self)
 
@@ -311,10 +311,8 @@ class Experiment(_Experiment):
 
         if self.PlSav["Experiment"]["Type"] == ExperimentType.Circuit.value:
             self.experiment_type = ExperimentType.Circuit
-            # 该实验是否是元件坐标系
+            # 是否将该实验在全局范围中设置为元件坐标系
             self.is_elementXYZ: bool = False
-            # 元件坐标系的坐标原点
-            self.elementXYZ_origin_position: _tools.position = _tools.position(0, 0, 0)
             self.Wires: set = set() # Set[Wire] # 存档对应的导线
         elif self.PlSav["Experiment"]["Type"] == ExperimentType.Celestial.value:
             self.experiment_type = ExperimentType.Celestial
@@ -408,8 +406,8 @@ class Experiment(_Experiment):
             x: num_type,
             y: num_type,
             z: num_type,
-            elementXYZ: Optional[bool] = None,
             *args,
+            elementXYZ: Optional[bool] = None,
             **kwargs
     ) -> _ElementBase:
         ''' 通过元件的ModelID或其类名创建元件 '''
@@ -423,8 +421,6 @@ class Experiment(_Experiment):
         x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
 
         if self.experiment_type == ExperimentType.Circuit:
-            from physicsLab import circuit
-
             if name == "555_Timer":
                 return circuit.NE555(x, y, z, elementXYZ=elementXYZ)
             elif name == "8bit_Input":
@@ -434,10 +430,8 @@ class Experiment(_Experiment):
             else:
                 return eval(f"circuit.{name}({x}, {y}, {z}, {elementXYZ}, *{args}, **{kwargs})")
         elif self.experiment_type == ExperimentType.Celestial:
-            from physicsLab import celestial
             return eval(f"celestial.{name}({x}, {y}, {z})")
         elif self.experiment_type == ExperimentType.Electromagnetism:
-            from physicsLab import electromagnetism
             return eval(f"electromagnetism.{name}({x}, {y}, {z})")
         else:
             assert False

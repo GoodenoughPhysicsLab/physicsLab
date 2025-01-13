@@ -238,3 +238,4 @@
 17. 一些元件增加了`set_properties`方法，并且支持在构造函数中传入这些属性
 18. 现在可以通过修改Simple_Instruments.pitches来修改和弦
 19. 电学元件新增lock方法
+20. 移除元件坐标系`set_O`

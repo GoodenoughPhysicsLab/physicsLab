@@ -203,7 +203,6 @@ class BasicTest(TestCase, ViztracerTool):
     def test_elementXYZ_2(self):
         expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         set_elementXYZ(True)
-        set_O(-1, -1, 0)
         for x in range(10):
             for y in range(10):
                 Yes_Gate(x, y, 0)
