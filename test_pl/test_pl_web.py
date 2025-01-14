@@ -88,7 +88,6 @@ class _WebTest:
             raise TestFail
 
 async def test_web_main():
-    ''' 收集并运行所有测试任务 '''
     test_tasks = []
     for _, a_test_task in inspect.getmembers(_WebTest, inspect.iscoroutinefunction):
         test_tasks.append(a_test_task)

@@ -35,14 +35,8 @@ class ViztracerTool:
             tracer.stop()
             tracer.save() # also takes output_file as an optional argument
 
-# NOTE: 暴露token与auth_code是危险的行为，可能导致被盗号
-# 但 @AMDYES 主动暴露了自己的token与auth_code
-# 详见 <discussion=674ab7f4ce449cb493ced3a7>转让此号</discussion>
+# this is a temp user without any binding
 user = web.User(
-    token="yYReEg0oCtGlVmJqQwFr1zZXhL9NAvBH",
-    auth_code="nENz1xlrueQUmkqjYZKtCG9SI53vF8Xc"
+    token="tGTf8gbQBR9P0ZnWhSILjJ5oF6UOkVdm",
+    auth_code="xJwcHC7oOnlSdzUTh9NDZ0t1Q32MjPyB",
 )
-
-# 验证用户ID是否为测试用户
-if user.user_id != "5ce629e157035932b52f9315":
-    raise TestFail("User ID does not match")
