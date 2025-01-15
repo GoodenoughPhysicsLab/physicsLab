@@ -6,32 +6,35 @@ from .wires import UnitPin, crt_wires
 from physicsLab._tools import round_data
 from physicsLab.circuit import elements
 from physicsLab.circuit._circuit_core import Pin
-from physicsLab._core import get_current_experiment
+from physicsLab._core import get_current_experiment, _Experiment
 from physicsLab.enums import ExperimentType
-from physicsLab.typehint import num_type, Optional, Self, Union, Type, List
+from physicsLab.typehint import num_type, Optional, Self, Union, Type, List, Dict
 
 class Const_NoGate:
-    ''' 只读非门，若没有则创建一个只读非门，若已存在则不会创建新的元件 '''
-    __singleton: Optional["Const_NoGate"]  = None
-    __singleton_NoGate = None
+    ''' 只用来提供高电平的非门，若没有则创建一个只读非门，若已存在则不会创建新的元件 '''
+    __singleton: Dict[_Experiment, "Const_NoGate"] = {}
+    __singleton_NoGate: elements.No_Gate
 
-    def __new__(cls,
-                x: num_type,
-                y: num_type,
-                z: num_type,
-                elementXYZ: Optional[bool] = None,
-                ):
-        if Const_NoGate.__singleton_NoGate is None:
-            Const_NoGate.__singleton = object.__new__(cls)
-            Const_NoGate.__singleton_NoGate = elements.No_Gate(x, y, z, elementXYZ=elementXYZ)
+    def __new__(
+            cls,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            elementXYZ: Optional[bool] = None,
+    ):
+        _Expe: _Experiment = get_current_experiment()
+        if _Expe in cls.__singleton:
+            return cls.__singleton[_Expe]
 
-        assert Const_NoGate.__singleton is not None
-        return Const_NoGate.__singleton
+        self = super().__new__(cls)
+        self.__singleton_NoGate = elements.No_Gate(x, y, z, elementXYZ=elementXYZ)
+        self.__singleton[_Expe] = self
+        return self
 
     @property
     def o(self):
-        assert Const_NoGate.__singleton_NoGate is not None
-        return Const_NoGate.__singleton_NoGate.o
+        return self.__singleton_NoGate.o
 
 class Super_AndGate:
     ''' 多引脚与门, 引脚数为num '''

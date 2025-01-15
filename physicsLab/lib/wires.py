@@ -28,33 +28,33 @@ class UnitPin:
         for i in self.pins:
             yield i
 
-def check_TypeUnionPin(func: Callable):
+def _check_union_pin_type(func: Callable):
     def result(
-        sourcePin: Union[UnitPin, Pin],
-        targetPin: Union[UnitPin, Pin],
+        source_pin: Union[UnitPin, Pin],
+        target_pin: Union[UnitPin, Pin],
         *args, **kwargs
     ) -> None:
-        if isinstance(sourcePin, Pin):
-            sourcePin = UnitPin(sourcePin.element_self, sourcePin)
-        if isinstance(targetPin, Pin):
-            targetPin = UnitPin(targetPin.element_self, targetPin)
+        if isinstance(source_pin, Pin):
+            source_pin = UnitPin(source_pin.element_self, source_pin)
+        if isinstance(target_pin, Pin):
+            target_pin = UnitPin(target_pin.element_self, target_pin)
 
-        if not isinstance(sourcePin, UnitPin) or not isinstance(targetPin, UnitPin):
+        if not isinstance(source_pin, UnitPin) or not isinstance(target_pin, UnitPin):
             raise TypeError
 
-        if len(sourcePin.pins) != len(targetPin.pins):
+        if len(source_pin.pins) != len(target_pin.pins):
             errors.warning(
-                f"The number of {sourcePin.lib_self.__class__.__name__}'s output pin "
-                f"is {len(sourcePin.pins)}, "
-                f"but the number of {targetPin.lib_self.__class__.__name__}'s input pin "
-                f"is {len(targetPin.pins)}."
+                f"The number of {source_pin.lib_self.__class__.__name__}'s output pin "
+                f"is {len(source_pin.pins)}, "
+                f"but the number of {target_pin.lib_self.__class__.__name__}'s input pin "
+                f"is {len(target_pin.pins)}."
             )
 
-        func(sourcePin, targetPin, *args, **kwargs)
+        func(source_pin, target_pin, *args, **kwargs)
     return result
 
 # TODO 支持传入多个 Pin / UnitPin
-@check_TypeUnionPin
+@_check_union_pin_type
 def crt_wires(sourcePin: Union[UnitPin, Pin],
               targetPin: Union[UnitPin, Pin],
               color: WireColor = WireColor.blue,
@@ -63,10 +63,12 @@ def crt_wires(sourcePin: Union[UnitPin, Pin],
     for i, o in zip(sourcePin.pins, targetPin.pins):
         crt_wire(i, o, color=color)
 
-@check_TypeUnionPin
-def del_wires(sourcePin: Union[UnitPin, Pin],
-              targetPin: Union[UnitPin, Pin],
-              ) -> None:
+@_check_union_pin_type
+def del_wires(
+        source_pin: Union[UnitPin, Pin],
+        target_pin: Union[UnitPin, Pin],
+) -> None:
     ''' 删除unionPin的导线 '''
-    for i, o in zip(sourcePin.pins, targetPin.pins):
+    assert isinstance(source_pin, UnitPin) and isinstance(target_pin, UnitPin)
+    for i, o in zip(source_pin.pins, target_pin.pins):
         del_wire(i, o)

@@ -168,7 +168,22 @@ class BasicTest(TestCase, ViztracerTool):
             lib.Falling_edge_trigger(0, 0, 0)
             lib.Edge_trigger(0, 0, 0)
             self.assertEqual(expe.get_elements_count(), 6)
-            expe.exit(delete=False)
+            expe.exit(delete=True)
+
+    @my_test_dec
+    def test_const_nogate(self):
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
+            lib.Const_NoGate(0, 0, 0)
+            lib.Const_NoGate(0, 0, 0)
+            self.assertEqual(expe.get_elements_count(), 1)
+
+            with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as exp2:
+                lib.Const_NoGate(0, 0, 0)
+                lib.Const_NoGate(0, 0, 0)
+                self.assertEqual(exp2.get_elements_count(), 1)
+                exp2.exit(delete=True)
+
+            expe.exit(delete=True)
 
     @my_test_dec
     def test_union_Sum(self):
