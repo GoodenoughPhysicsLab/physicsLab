@@ -171,7 +171,7 @@ class BasicTest(TestCase, ViztracerTool):
             expe.exit(delete=True)
 
     @my_test_dec
-    def test_const_nogate(self):
+    def test_Const_NoGate(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             lib.Const_NoGate(0, 0, 0)
             lib.Const_NoGate(0, 0, 0)
@@ -186,7 +186,7 @@ class BasicTest(TestCase, ViztracerTool):
             expe.exit(delete=True)
 
     @my_test_dec
-    def test_union_Sum(self):
+    def test_Sum(self):
         expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         lib.Sum(0, -1, 0, bitnum=64)
         self.assertEqual(expe.get_elements_count(), 64)
@@ -341,6 +341,48 @@ class BasicTest(TestCase, ViztracerTool):
                 raise TestFail
             finally:
                 expe.exit(delete=True)
+
+    @my_test_dec
+    def test_super_and_gate(self):
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
+            with warnings.catch_warnings():
+                warnings.simplefilter("error")
+                for bitnum in range(2, 100):
+                    crt_wires(
+                        lib.Inputs(-1, 0, 0, bitnum=bitnum).outputs,
+                        lib.Super_AndGate(0, 0, 0, bitnum=bitnum).inputs
+                    )
+            self.assertEqual(expe.get_elements_count(), 6666)
+            self.assertEqual(expe.get_wires_count(), 6636)
+            expe.exit(delete=True)
+
+    @my_test_dec
+    def test_super_or_gate(self):
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
+            with warnings.catch_warnings():
+                warnings.simplefilter("error")
+                for bitnum in range(2, 100):
+                    crt_wires(
+                        lib.Inputs(-1, 0, 0, bitnum=bitnum).outputs,
+                        lib.Super_OrGate(0, 0, 0, bitnum=bitnum).inputs
+                    )
+            self.assertEqual(expe.get_elements_count(), 9800)
+            self.assertEqual(expe.get_wires_count(), 9702)
+            expe.exit(delete=True)
+
+    @my_test_dec
+    def test_super_nor_gate(self):
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
+            with warnings.catch_warnings():
+                warnings.simplefilter("error")
+                for bitnum in range(2, 100):
+                    crt_wires(
+                        lib.Inputs(-1, 0, 0, bitnum=bitnum).outputs,
+                        lib.Super_NorGate(0, 0, 0, bitnum=bitnum).inputs
+                    )
+            self.assertEqual(expe.get_elements_count(), 9800)
+            self.assertEqual(expe.get_wires_count(), 9702)
+            expe.exit(delete=True)
 
     @my_test_dec
     def test_union_Sub(self):

@@ -1,5 +1,41 @@
 # 模块化电路 unit
 
+## Super_AndGate
+支持任意大于1的正整数的输入引脚的与门
+```Python
+from physicsLab import *
+
+with Experiment(OpenMode.load_by_sav_name, "example"):
+    crt_wires(
+        lib.Inputs(-1, 0, 0, bitnum=7).outputs,
+        lib.Super_AndGate(0, 0, 0, bitnum=7).inputs
+    )
+```
+
+## Super_OrGate
+支持任意大于1的正整数的输入引脚的或门
+```Python
+from physicsLab import *
+
+with Experiment(OpenMode.load_by_sav_name, "example"):
+    crt_wires(
+        lib.Inputs(-1, 0, 0, bitnum=7).outputs,
+        lib.Super_OrGate(0, 0, 0, bitnum=7).inputs
+    )
+```
+
+## Super_NorGate
+支持任意大于1的正整数的输入引脚的或非门
+```Python
+from physicsLab import *
+
+with Experiment(OpenMode.load_by_sav_name, "example"):
+    crt_wires(
+        lib.Inputs(-1, 0, 0, bitnum=7).outputs,
+        lib.Super_NorGate(0, 0, 0, bitnum=7).inputs
+    )
+```
+
 ## Sum
 ```Sum()```用于创建模块化加法电路  
 含有3个数据引脚：`data_Input1`, `data_Input2`, `data_Output`
@@ -33,7 +69,7 @@
 from physicsLab import *
 from physicsLab.union import *
 
-with experiment("测逝"):
+with Experiment(OpenMode.load_by_sav_name, "example"):
     a = D_WaterLamp(bitLength=8)
     b = Outputs(bigLength=8)
     crt_wires(a.data_Outputs, b.data_Inputs)

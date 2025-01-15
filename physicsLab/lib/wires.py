@@ -4,6 +4,7 @@ from typing import Union, Callable, Tuple
 from physicsLab import errors
 from physicsLab.enums import WireColor
 from physicsLab.circuit._circuit_core import crt_wire, del_wire, Pin
+from physicsLab.typehint import overload
 
 class UnitPin:
     ''' 模块化电路的"引脚", 输入输出都是数据 '''
@@ -12,8 +13,15 @@ class UnitPin:
         self.lib_self = lib_self
         self.pins: Tuple[Pin] = tuple(pins)
 
-    # 通过unionPin[num]来索引单个bit
-    def __getitem__(self, item: Union[int, slice]) -> Union[Pin, "UnitPin"]:
+    @overload
+    def __getitem__(self, item: int) -> Pin:
+        ...
+
+    @overload
+    def __getitem__(self, item: slice) -> "UnitPin":
+        ...
+
+    def __getitem__(self, item):
         if isinstance(item, int):
             return self.pins[item]
         elif isinstance(item, slice):
@@ -55,12 +63,14 @@ def _check_union_pin_type(func: Callable):
 
 # TODO 支持传入多个 Pin / UnitPin
 @_check_union_pin_type
-def crt_wires(sourcePin: Union[UnitPin, Pin],
-              targetPin: Union[UnitPin, Pin],
-              color: WireColor = WireColor.blue,
-              ) -> None:
+def crt_wires(
+        source_pin: Union[UnitPin, Pin],
+        target_pin: Union[UnitPin, Pin],
+        color: WireColor = WireColor.blue,
+) -> None:
     ''' 为unionPin连接导线, 相当于自动对数据进行连接导线 '''
-    for i, o in zip(sourcePin.pins, targetPin.pins):
+    assert isinstance(source_pin, UnitPin) and isinstance(target_pin, UnitPin)
+    for i, o in zip(source_pin.pins, target_pin.pins):
         crt_wire(i, o, color=color)
 
 @_check_union_pin_type
