@@ -240,3 +240,4 @@
 19. 电学元件新增lock方法
 20. 移除元件坐标系`set_O`
 21. 元件新增`identifier`参数用于指定元件的id
+22. 废弃`elementXYZ.is_elementXYZ()`

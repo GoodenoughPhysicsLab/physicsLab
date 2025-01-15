@@ -42,14 +42,16 @@ class Super_AndGate:
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,
                  ) -> None:
-        if not isinstance(x, (int, float)) or \
-           not isinstance(y, (int, float)) or \
-           not isinstance(z, (int, float)) or \
-           elementXYZ is not None and not isinstance(elementXYZ, bool) or \
-           not isinstance(bitnum, int) or bitnum <= 1:
+        if not isinstance(x, (int, float))\
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(elementXYZ, (bool, type(None))) \
+                or not isinstance(bitnum, int):
             raise TypeError
+        if bitnum <= 1:
+            raise ValueError
 
-        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
@@ -145,7 +147,7 @@ class Super_OrGate:
         if bitnum <= 1:
             raise ValueError
 
-        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
@@ -217,7 +219,7 @@ class Super_NorGate:
            not isinstance(bitnum, int) or bitnum <= 1:
             raise TypeError
 
-        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
@@ -293,7 +295,7 @@ class Tick_Counter:
             not isinstance(bitnum, int) or bitnum <= 1:
             raise TypeError
 
-        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
@@ -360,7 +362,7 @@ class Two_four_Decoder:
             not isinstance(elementXYZ, (bool, type(None))):
             raise TypeError
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
-        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
 
@@ -410,7 +412,7 @@ class Switched_Register:
             not isinstance(bitnum, int) or bitnum <= 1:
             raise TypeError
 
-        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
@@ -466,7 +468,7 @@ class Equal_to:
             not isinstance(bitnum, int) or bitnum <= 1:
             raise TypeError
 
-        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
@@ -505,7 +507,7 @@ class Signed_Sum:
             not isinstance(bitnum, int) or bitnum <= 1:
             raise TypeError
 
-        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
@@ -560,7 +562,8 @@ class _Simple_Logic_Meta(type):
                  *args, **kwags
     ):
         self = cls.__new__(cls)
-        if get_current_experiment().experiment_type != ExperimentType.Circuit:
+        _Expe = get_current_experiment()
+        if _Expe.experiment_type != ExperimentType.Circuit:
             raise errors.ExperimentTypeError
 
         if foldMaxNum <= 0 or \
@@ -577,7 +580,7 @@ class _Simple_Logic_Meta(type):
         self.bitnum = bitnum
 
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
-        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
 

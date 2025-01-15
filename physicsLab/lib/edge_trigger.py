@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
+from physicsLab._core import get_current_experiment
 from physicsLab.circuit import elements
-from physicsLab.circuit._circuit_core import InputPin, OutputPin
+from physicsLab.circuit._circuit_core import InputPin, OutputPin, crt_wire
 from physicsLab.typehint import num_type, Optional, Self
 
 class _TriggerMeta(type):
     def __call__(cls, x: num_type = 0, y: num_type = 0, z: num_type = 0, elementXYZ: Optional[bool] = None) -> Self:
         self = cls.__new__(cls)
-        if not (
-                isinstance(x, (float, int)) and
-                isinstance(y, (float, int)) and
-                isinstance(z, (float, int)) and
-                (elementXYZ is None or isinstance(elementXYZ, bool))
-        ):
+        if not isinstance(x, (float, int)) \
+                or not isinstance(y, (float, int)) \
+                or not isinstance(z, (float, int)) \
+                or not isinstance(elementXYZ, (bool, type(None))):
             raise TypeError
 
-        if not (elementXYZ is True or _elementXYZ.is_elementXYZ() is True and elementXYZ is None):
+        if not (elementXYZ is True or get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
 
         self.__init__(x, y, z, elementXYZ)
@@ -26,10 +25,10 @@ class _TriggerMeta(type):
 class Rising_edge_trigger(metaclass=_TriggerMeta):
     ''' 上升沿触发器 '''
     def __init__(self, x: num_type = 0, y: num_type = 0, z: num_type = 0, elementXYZ: Optional[bool] = None) -> None:
-        self.no_gate = elements.No_Gate(x, y, z, True)
-        self.and_gate = elements.And_Gate(x, y + 1, z, True)
-        self.no_gate.o - self.and_gate.i_low
-        self.no_gate.i - self.and_gate.i_up
+        self.no_gate = elements.No_Gate(x, y, z, elementXYZ=True)
+        self.and_gate = elements.And_Gate(x, y + 1, z, elementXYZ=True)
+        crt_wire(self.no_gate.o, self.and_gate.i_low)
+        crt_wire(self.no_gate.i, self.and_gate.i_up)
 
     @property
     def i(self) -> InputPin:
@@ -42,10 +41,10 @@ class Rising_edge_trigger(metaclass=_TriggerMeta):
 class Falling_edge_trigger(metaclass=_TriggerMeta):
     ''' 下降沿触发器 '''
     def __init__(self, x: num_type = 0, y: num_type = 0, z: num_type = 0, elementXYZ: Optional[bool] = None) -> None:
-        self.yes_gate = elements.Yes_Gate(x, y, z, True)
-        self.nimp_gate = elements.Nimp_Gate(x, y + 1, z, True)
-        self.yes_gate.o - self.nimp_gate.i_up
-        self.yes_gate.i - self.nimp_gate.i_low
+        self.yes_gate = elements.Yes_Gate(x, y, z, elementXYZ=True)
+        self.nimp_gate = elements.Nimp_Gate(x, y + 1, z, elementXYZ=True)
+        crt_wire(self.yes_gate.o, self.nimp_gate.i_up)
+        crt_wire(self.yes_gate.i, self.nimp_gate.i_low)
 
     @property
     def i(self) -> InputPin:
@@ -58,10 +57,10 @@ class Falling_edge_trigger(metaclass=_TriggerMeta):
 class Edge_trigger(metaclass=_TriggerMeta):
     ''' 边沿触发器 (同时可以在上升沿与下降沿触发) '''
     def __init__(self, x: num_type = 0, y: num_type = 0, z: num_type = 0, elementXYZ: Optional[bool] = None) -> None:
-        self.yes_gate = elements.Yes_Gate(x, y, z, True)
-        self.xor_gate = elements.Xor_Gate(x, y + 1, z, True)
-        self.yes_gate.o - self.xor_gate.i_up
-        self.yes_gate.i - self.xor_gate.i_low
+        self.yes_gate = elements.Yes_Gate(x, y, z, elementXYZ=True)
+        self.xor_gate = elements.Xor_Gate(x, y + 1, z, elementXYZ=True)
+        crt_wire(self.yes_gate.o, self.xor_gate.i_up)
+        crt_wire(self.yes_gate.i, self.xor_gate.i_low)
 
     @property
     def i(self) -> InputPin:

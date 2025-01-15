@@ -224,7 +224,7 @@ class CircuitBase(_ElementBase, metaclass=_CircuitMeta):
         self._position = _tools.position(x, y, z)
 
         # 元件坐标系
-        if elementXYZ is True or _elementXYZ.is_elementXYZ() is True and elementXYZ is None:
+        if elementXYZ is True or self.experiment.is_elementXYZ is True and elementXYZ is None:
             x, y, z = _elementXYZ.xyzTranslate(x, y, z, self.is_bigElement)
             self.is_elementXYZ = True
         else:

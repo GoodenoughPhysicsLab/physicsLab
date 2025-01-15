@@ -146,8 +146,8 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
 ```python
 from physicsLab import *
 
-with Experiment(OpenMode.load_by_sav_name, "example"):
-    print(is_elementXYZ())
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
+    print(expe.is_elementXYZ)
 ```
 如果你想查看某个元件是否为元件坐标系，可以通过元件属性`is_elementXYZ`查看：
 ```Python

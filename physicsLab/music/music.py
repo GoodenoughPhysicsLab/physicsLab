@@ -11,6 +11,7 @@ from enum import Enum, unique
 
 from . import mido
 from physicsLab import errors
+from physicsLab._core import get_current_experiment
 from physicsLab.circuit import elements, crt_wire
 from physicsLab._tools import round_data
 from physicsLab.lib import crt_wires, D_WaterLamp
@@ -483,7 +484,7 @@ class Chord:
             raise TypeError
 
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
-        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
 
@@ -705,7 +706,7 @@ class Piece:
                 or not isinstance(elementXYZ, (bool, type(None))):
             raise TypeError
 
-        if not (elementXYZ is True or (_elementXYZ.is_elementXYZ() is True and elementXYZ is None)):
+        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = _elementXYZ.translateXYZ(x, y, z)
 
         # 给乐器增加休止符
