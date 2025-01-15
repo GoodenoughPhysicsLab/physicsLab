@@ -24,7 +24,7 @@ _X_UNIT: float = 0.16
 _Y_UNIT: float = 0.08
 _Z_UNIT: float = 0.1
 # big_element坐标修正
-_Y_AMEND = 0.045
+_Y_AMEND: float = 0.045
 
 def xyzTranslate(x: num_type, y: num_type, z: num_type, is_bigElement: bool = False):
     ''' 将元件坐标系转换为物实的坐标系 '''

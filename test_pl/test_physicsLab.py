@@ -162,6 +162,15 @@ class BasicTest(TestCase, ViztracerTool):
             expe.exit(delete=True)
 
     @my_test_dec
+    def test_edge_trigger(self):
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
+            lib.Rising_edge_trigger(0, 0, 0)
+            lib.Falling_edge_trigger(0, 0, 0)
+            lib.Edge_trigger(0, 0, 0)
+            self.assertEqual(expe.get_elements_count(), 6)
+            expe.exit(delete=False)
+
+    @my_test_dec
     def test_union_Sum(self):
         expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         lib.Sum(0, -1, 0, bitnum=64)
@@ -483,7 +492,7 @@ class BasicTest(TestCase, ViztracerTool):
     def test_typeerror(self):
         try:
             expe = Experiment(OpenMode.crt, "test", ExperimentType.Circuit, force_crt=True)
-            Logic_Input(0,0,0,True)
+            Logic_Input(0, 0, 0, True)
         except TypeError:
             pass
         else:
