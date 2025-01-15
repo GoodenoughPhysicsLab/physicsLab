@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import threading
 from .base import *
 from physicsLab.lib import *
 from physicsLab._core import _ExperimentStack
@@ -57,18 +58,30 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_load_from_app(self):
-        # TODO 异步地跑这些测试
-        expe = Experiment(OpenMode.load_by_plar_app, "6774ffb4c45f930f41ccedf8", Category.Discussion, user=user)
-        self.assertTrue(expe.get_elements_count() == 91)
-        expe.exit()
+        def task1():
+            expe = Experiment(OpenMode.load_by_plar_app, "6774ffb4c45f930f41ccedf8", Category.Discussion, user=user)
+            self.assertTrue(expe.get_elements_count() == 91)
+            expe.exit()
 
-        expe = Experiment(OpenMode.load_by_plar_app, "677500138c54132a83289f9c", Category.Discussion, user=user)
-        self.assertTrue(expe.get_elements_count() == 27)
-        expe.exit()
+        def task2():
+            expe = Experiment(OpenMode.load_by_plar_app, "677500138c54132a83289f9c", Category.Discussion, user=user)
+            self.assertTrue(expe.get_elements_count() == 27)
+            expe.exit()
 
-        expe = Experiment(OpenMode.load_by_plar_app, "67750037c45f930f41ccee02", Category.Discussion, user=user)
-        self.assertTrue(expe.get_elements_count() == 7)
-        expe.exit()
+        def task3():
+            expe = Experiment(OpenMode.load_by_plar_app, "67750037c45f930f41ccee02", Category.Discussion, user=user)
+            self.assertTrue(expe.get_elements_count() == 7)
+            expe.exit()
+
+        thread1 = threading.Thread(target=task1)
+        thraed2 = threading.Thread(target=task2)
+        thread3 = threading.Thread(target=task3)
+        thread1.start()
+        thraed2.start()
+        thread3.start()
+        thread1.join()
+        thraed2.join()
+        thread3.join()
 
     @my_test_dec
     def test_double_load_error(self):
