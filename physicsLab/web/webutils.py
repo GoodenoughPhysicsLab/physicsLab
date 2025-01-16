@@ -357,19 +357,19 @@ class AvatarsIter(_async_tool.AsyncTool):
     ''' 获取头像的迭代器 '''
     def __init__(
             self,
-            search_id: str,
+            user_id: str,
             category: str,
             user: Optional[api.User] = None,
             size_category: str = "full",
             max_retry: Optional[int] = 0,
     ) -> None:
-        ''' @param search_id: 用户id
+        ''' @param user_id: 用户id
             @param category: 只能为 "Experiment" 或 "Discussion" 或 "User"
             @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
             @param user: 查询者, None为匿名用户
             @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
         '''
-        if not isinstance(search_id, str) or \
+        if not isinstance(user_id, str) or \
                 not isinstance(category, str) or \
                 not isinstance(size_category, str) or \
                 not isinstance(user, (api.User, type(None))) or \
@@ -383,18 +383,18 @@ class AvatarsIter(_async_tool.AsyncTool):
             user = api.User()
 
         if category == "User":
-            self.max_img_counter = user.get_user(search_id)["Data"]["User"]["Avatar"]
+            self.max_img_counter = user.get_user(user_id)["Data"]["User"]["Avatar"]
             category = "users"
         elif category == "Experiment":
-            self.max_img_counter = user.get_summary(search_id, Category.Experiment)["Data"]["Image"]
+            self.max_img_counter = user.get_summary(user_id, Category.Experiment)["Data"]["Image"]
             category = "experiments"
         elif category == "Discussion":
-            self.max_img_counter = user.get_summary(search_id, Category.Discussion)["Data"]["Image"]
+            self.max_img_counter = user.get_summary(user_id, Category.Discussion)["Data"]["Image"]
             category = "experiments"
         else:
             assert False
 
-        self.search_id = search_id
+        self.search_id = user_id
         self.category = category
         self.size_category = size_category
         self.user = user
