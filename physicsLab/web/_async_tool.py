@@ -10,7 +10,7 @@ import asyncio
 import queue
 import threading
 from abc import abstractmethod
-from physicsLab.typehint import Iterator
+from physicsLab.typehint import Iterator, final
 
 class _EndOfQueue:
     def __new__(cls):
@@ -21,6 +21,7 @@ class AsyncTool:
     async def __aiter__(self):
         raise NotImplementedError
 
+    @final
     async def _async_main(self):
         async for res in self:
             self._results.put_nowait(res)

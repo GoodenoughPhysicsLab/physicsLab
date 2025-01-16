@@ -127,8 +127,7 @@ class NotificationsMsgIter(_async_tool.AsyncTool):
 
         res = []
         for message in messages:
-            # a month ~ 2629743 seconds
-            if message["TimestampInitial"] < (self.start_time - 2629743) * 1000:
+            if message["TimestampInitial"] < self.start_time * 1000:
                 self.is_fetching_end = True
                 break
             if self.start_time * 1000 <= message["TimestampInitial"] <= self.end_time * 1000:
@@ -269,11 +268,12 @@ class WarnedMsgIter:
 class CommentsIter:
     ''' 获取评论的迭代器 '''
     def __init__(self, user: api.User, id: str, category: str = "User") -> None:
-        if not isinstance(user, api.User) or \
-                not isinstance(id, str) or \
-                not isinstance(category, str) and \
-                category not in ("User", "Experiment", "Discussion"):
+        if not isinstance(user, api.User) \
+                or not isinstance(id, str) \
+                or not isinstance(category, str):
             raise TypeError
+        if category not in ("User", "Experiment", "Discussion"):
+            raise ValueError
         if category == "User" and user.is_anonymous:
             raise PermissionError("user must be anonymous")
 
