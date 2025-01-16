@@ -29,7 +29,7 @@
 自版本`2.0.0`及之后, `physicsLab`会逐步增加兼容的考虑与支持
 
 但这并不意味着无意义的兼容。通常来说，会采用标注弃用, 并推荐转移到新api的模式。
-* v2.0.0: `clsss Experiment`实验性地加入`stable`支持
+* v2.0.0: `clsss Experiment, ExperimentOpenedError, ExperimentClosedError, ExperimentExistError, ExperimentNotExistError`实验性地加入`stable`支持
 
 ## 版本发布
 `physicsLab`的版本发布采取快照的方式, `physicsLab`仅会维护`trunk`

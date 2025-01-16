@@ -12,3 +12,9 @@
 
 ### ExperimentClosedError
 尝试在调用了`Experiment.close`之后使用该实例的方法时，会抛出此异常
+
+### ExperimentExistError
+尝试创建一个已经存在的实验时，会抛出此异常, 除非`force_crt=True`
+
+### ExperimentNotExistError
+尝试导入一个不存在的实验时，会抛出此异常

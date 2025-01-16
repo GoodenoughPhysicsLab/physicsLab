@@ -56,6 +56,7 @@ class ExperimentClosedError(Exception):
     def __str__(self):
         return "The experiment has been closed"
 
+# TODO 强化报错信息：将实验的具体信息也打印出来
 class ExperimentExistError(Exception):
     ''' 实验已存在 '''
     def __str__(self):

@@ -197,6 +197,7 @@ class Experiment(_Experiment):
             if _ExperimentStack.inside(self):
                     raise errors.ExperimentOpenedError
 
+            # TODO 如果从物实读取的实验不存在的话，将异常转换为 ExperimentNotExistError
             assert user is not None
             _summary = user.get_summary(content_id, category)["Data"]
             del _summary["$type"]
