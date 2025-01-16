@@ -37,3 +37,5 @@ user = web.User(
 
 `User`类也提供了一些方法, 这些方法是对物实网络api的封装:
 > 注: 以`async_`开头的方法为协程风格的api
+
+详见[user-method.md](./docsgen/user-method.md)

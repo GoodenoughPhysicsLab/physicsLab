@@ -572,7 +572,7 @@ class User:
         return await _async_wrapper(self.get_summary, content_id, category)
 
     def get_derivatives(self, content_id: str, category: Category) -> dict:
-        ''' 获取作品的详细信息, 物实第一次读取作品是会使用此接口
+        ''' 获取作品的详细信息, 物实第一次读取作品会使用此接口
             @param content_id: 实验ID
             @param category: 实验区还是黑洞区
         '''
@@ -634,6 +634,8 @@ class User:
         return await _async_wrapper(self.get_user, user_id, name)
 
     def get_profile(self) -> dict:
+        ''' 获取用户主页信息
+        '''
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Contents/GetProfile",
             json={
@@ -652,7 +654,7 @@ class User:
         return await _async_wrapper(self.get_profile)
 
     def star(self, content_id: str, category: Category, status: bool = True) -> dict:
-        ''' 添加收藏
+        ''' 收藏某个实验
             @param content_id: 实验ID
             @param category: 实验区, 黑洞区
             @param status: True: 收藏, False: 取消收藏
@@ -682,6 +684,12 @@ class User:
         return await _async_wrapper(self.star, content_id, category, status)
 
     def star_content(self, content_id: str, category: Category, status: bool = True) -> dict:
+        ''' 使用金币支持某实验
+            @content_id: 实验id
+            @category: 实验区还是黑洞区
+            @status: 是否支持
+            @return: 返回的json数据
+        '''
         if not isinstance(content_id, str) or \
                 not isinstance(category, Category) or \
                 not isinstance(status, bool):
@@ -710,7 +718,7 @@ class User:
 
     def upload_image(self, policy: str, authorization: str, image_path: str) -> dict:
         ''' 上传实验图片
-            @param authorization： 可通过/Contents/SubmitExperiment获取
+            @param authorization: 可通过/Contents/SubmitExperiment获取
             @param image_path: 待上传的图片在本地的路径
         '''
         if policy is None or authorization is None:
@@ -744,6 +752,9 @@ class User:
         return await _async_wrapper(self.upload_image, policy, authorization, image_path)
 
     def get_message(self, message_id: str) -> dict:
+        ''' 读取系统邮件消息
+            @param message_id: 消息的id
+        '''
         if not isinstance(message_id, str):
             raise TypeError
 
