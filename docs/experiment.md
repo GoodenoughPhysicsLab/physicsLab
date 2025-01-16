@@ -40,7 +40,7 @@ from physicsLab import *
 
 expe = Experiment(OpenMode.load_by_sav_name, "example")
 expe.save()
-expe.exit()
+expe.close()
 ```
 也就是说, with语句作用是自动帮你保存存档（但如果在with内部有异常发生，是不会保存存档的）
 
@@ -87,7 +87,7 @@ from physicsLab import *
 expe = Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=False)
 # do something
 expe.save()
-expe.exit()
+expe.close()
 ```
 
 * `experiment_type`参数用于指定创建实验的类型
@@ -133,7 +133,7 @@ user = web.User(YOUR_UESRNAME, YOUR_PASSWORD)
 
 with Experiment(OpenMode.load_by_plar_app, "642cf37a494746375aae306a", Category.Discussion) as expe:
   expe.update(user, YOUR_IMAGE_PATH)
-  expe.exit() # 这里手动调用了expe.exit()之后, `with Experiment`在退出的时候就不会执行默认的保存存档并退出的操作了
+  expe.close() # 这里手动调用了expe.close()之后, `with Experiment`在退出的时候就不会执行默认的保存存档并退出的操作了
               # 也就是说，这样写，Experiment.save() 不会被调用
 ```
 
@@ -152,10 +152,10 @@ with Experiment(OpenMode.load_by_sav_name, "example") as expe:
 ```Python
 from physicsLab import *
 
-exp = Experiment(OpenMode.load_by_sav_name, "example")
+expe = Experiment(OpenMode.load_by_sav_name, "example")
 # do something
-exp.save()
-exp.exit()
+expe.save()
+expe.close()
 ```
 `Experiment.save`也有一些参数：
 *  `target_path`: 将存档写入自己指定的路径
@@ -168,7 +168,7 @@ from physicsLab import *
 
 with Experiment(OpenMode.load_by_sav_name, "example") as expe:
     # do something
-    expe.exit() # expe已经退出对存档的操作了, 就不会再在退出with的时候调用expe.save()了
+    expe.close() # expe已经退出对存档的操作了, 就不会再在退出with的时候调用expe.save()了
 ```
 
 ## 删除存档
@@ -178,8 +178,8 @@ from physicsLab import *
 
 with Experiment(OpenMode.load_by_sav_name, "example") as expe:
     # maybe do something
-    expe.exit(delete=True) # 在退出操作存档的时候执行删除存档的操作
-    # 并且由于已经手动调用了expe.exit(), 在退出with的时候不会调用expe.save()了
+    expe.close(delete=True) # 在退出操作存档的时候执行删除存档的操作
+    # 并且由于已经手动调用了expe.close(), 在退出with的时候不会调用expe.save()了
 ```
 
 更原始的方式是：
@@ -188,20 +188,19 @@ from physicsLab import *
 
 expe = Experiment(OpenMode.load_by_sav_name, "example")
 # maybe do something
-expe.exit(delete=True)
+expe.close(delete=True)
 ```
 
-> Note: `expe.exit(True)`这种写法会报错，因为这是一个`Keyword-Only argument`
+> Note: `expe.close(True)`这种写法会报错，因为这是一个`Keyword-Only argument`
 
 ## 停止操作存档
-***低级api***
-`Experiment.exit`会立刻停止对存档的操作:
+`Experiment.close`会立刻停止对存档的操作:
 ```Python
 from physicsLab import *
 
 exp = Experiment(OpenMode.load_by_sav_name, "example")
 # do something, 但未调用Experiment.save
-exp.exit()
+exp.close()
 # 对exp的所有修改都丢失了
 ```
 
@@ -211,7 +210,7 @@ from physicsLab import *
 
 exp = Experiment(OpenMode.load_by_sav_name, "example")
 # do something
-exp.exit()
+exp.close()
 
 Logic_Input() # error: 不可以在没有实验打开的情况下创建元件
 ```
@@ -221,9 +220,9 @@ from physicsLab import *
 
 expe = Experiment(OpenMode.load_by_sav_name, "example")
 # do something
-expe.exit()
+expe.close()
 # expe.save() # 无法对已经退出操作的存档调用任何Experiment的方法进行操作
-# expe.exit() # 无法重复调用.exit
+# expe.close() # 无法重复调用.close
 ```
 
 ## 编辑存档的发布信息

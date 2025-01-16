@@ -301,9 +301,9 @@ class _Experiment:
         return self
 
     @_check_not_closed
-    def exit(self, *, delete: bool = False) -> None:
-        ''' 立刻退出对该存档的操作
-            Note: 如果没有在调用Experiment.exit前调用Experiment.save, 会丢失对存档的修改
+    def close(self, *, delete: bool = False) -> None:
+        ''' 退出对该存档的操作
+            Note: 如果没有在调用Experiment.close前调用Experiment.save, 会丢失对存档的修改
         '''
         if delete:
             if os.path.exists(self.SAV_PATH): # 之所以判断路径是否存在是因为一个实验可能被创建但还未被写入就调用了delete
@@ -597,7 +597,7 @@ class _Experiment:
             res += f"e{a_element.get_index()} = {str(a_element)}\n"
         for a_wire in self.Wires:
             res += str(a_wire) + '\n'
-        res += "expe.save()\nexpe.exit()\n"
+        res += "expe.save()\nexpe.close()\n"
 
         with open(output_path, "w", encoding="utf-8") as f:
             f.write(res)

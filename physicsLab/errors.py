@@ -36,11 +36,6 @@ class InvalidWireError(Exception):
     def __str__(self):
         return self.msg
 
-# 未找到导线异常
-class WireNotFoundError(Exception):
-    def __str__(self):
-        return "Unable to delete a nonexistent wire"
-
 # 用于模块化元件的bitLength参数
 class BitnumError(Exception):
     def __str__(self):

@@ -24,9 +24,9 @@ class BasicTest(TestCase, ViztracerTool):
         self.assertTrue(_ExperimentStack.inside(expe1))
         expe2 = Experiment(OpenMode.crt, "_Test", ExperimentType.Circuit, force_crt=True)
         self.assertTrue(_ExperimentStack.inside(expe2))
-        expe1.exit()
+        expe1.close()
         self.assertFalse(_ExperimentStack.inside(expe1))
-        expe2.exit()
+        expe2.close()
         self.assertFalse(_ExperimentStack.inside(expe2))
 
     @my_test_dec
@@ -34,44 +34,44 @@ class BasicTest(TestCase, ViztracerTool):
         # 物实导出存档与保存到本地的格式不一样, 因此每种类型的实验都有两种格式的测试数据
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav")) as expe:
             self.assertTrue(expe.get_elements_count() == 91)
-            expe.exit()
+            expe.close()
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Circuit-Elements.sav")) as expe:
             self.assertTrue(expe.get_elements_count() == 91)
-            expe.exit()
+            expe.close()
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Celestial-Elements.sav")) as expe:
             self.assertTrue(expe.get_elements_count() == 27)
-            expe.exit()
+            expe.close()
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Celestial-Elements.sav")) as expe:
             self.assertTrue(expe.get_elements_count() == 27)
-            expe.exit()
+            expe.close()
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Electromagnetism-Elements.sav")) as expe:
             self.assertTrue(expe.get_elements_count() == 7)
-            expe.exit()
+            expe.close()
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Electromagnetism-Elements.sav")) as expe:
             self.assertTrue(expe.get_elements_count() == 7)
-            expe.exit()
+            expe.close()
 
     @my_test_dec
     def test_load_from_app(self):
         def task1():
             expe = Experiment(OpenMode.load_by_plar_app, "6774ffb4c45f930f41ccedf8", Category.Discussion, user=user)
             self.assertTrue(expe.get_elements_count() == 91)
-            expe.exit()
+            expe.close()
 
         def task2():
             expe = Experiment(OpenMode.load_by_plar_app, "677500138c54132a83289f9c", Category.Discussion, user=user)
             self.assertTrue(expe.get_elements_count() == 27)
-            expe.exit()
+            expe.close()
 
         def task3():
             expe = Experiment(OpenMode.load_by_plar_app, "67750037c45f930f41ccee02", Category.Discussion, user=user)
             self.assertTrue(expe.get_elements_count() == 7)
-            expe.exit()
+            expe.close()
 
         thread1 = threading.Thread(target=task1)
         thraed2 = threading.Thread(target=task2)
@@ -93,7 +93,7 @@ class BasicTest(TestCase, ViztracerTool):
         else:
             raise TestFail
         finally:
-            expe.exit()
+            expe.close()
 
     @my_test_dec
     def test_load_invalid_sav(self):
@@ -109,7 +109,7 @@ class BasicTest(TestCase, ViztracerTool):
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "float32_t.sav")) as expe:
             self.assertEqual(expe.get_elements_count(), 652)
             self.assertEqual(expe.get_wires_count(), 1385)
-            expe.exit()
+            expe.close()
 
     @my_test_dec
     def test_normal_circuit_usage(self):
@@ -126,7 +126,7 @@ class BasicTest(TestCase, ViztracerTool):
         expe.crt_element("Logic Input", 0, 0, 0)
         self.assertEqual(expe.get_elements_count(), 2)
         expe.get_element_from_position(0, 0, 0)
-        expe.exit(delete=True)
+        expe.close(delete=True)
 
     @my_test_dec
     def test_read_experiment(self):
@@ -136,11 +136,11 @@ class BasicTest(TestCase, ViztracerTool):
         self.assertEqual(expe.get_wires_count(), 0)
         Logic_Input(0, 0, 0)
         expe.save()
-        expe.exit()
+        expe.close()
 
         exp2: Experiment = Experiment(OpenMode.load_by_sav_name, "__test__")
         self.assertEqual(exp2.get_elements_count(), 1)
-        exp2.exit(delete=True)
+        exp2.close(delete=True)
 
     @my_test_dec
     def test_crt_experiment(self):
@@ -153,7 +153,7 @@ class BasicTest(TestCase, ViztracerTool):
         else:
             raise TestFail
         finally:
-            exp.exit(delete=True)
+            exp.close(delete=True)
 
     @my_test_dec
     def test_crt_wire(self):
@@ -164,7 +164,7 @@ class BasicTest(TestCase, ViztracerTool):
 
             del_wire(a.o, a.i_up)
             self.assertEqual(expe.get_wires_count(), 1)
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     def test_same_crt_wire(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
@@ -172,7 +172,7 @@ class BasicTest(TestCase, ViztracerTool):
             crt_wire(a.o, a.i_up, color=WireColor.red)
             crt_wire(a.i_up, a.o)
             self.assertEqual(expe.get_wires_count(), 1)
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_edge_trigger(self):
@@ -181,7 +181,7 @@ class BasicTest(TestCase, ViztracerTool):
             lib.Falling_edge_trigger(0, 0, 0)
             lib.Edge_trigger(0, 0, 0)
             self.assertEqual(expe.get_elements_count(), 6)
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_Const_NoGate(self):
@@ -194,9 +194,9 @@ class BasicTest(TestCase, ViztracerTool):
                 lib.Const_NoGate(0, 0, 0)
                 lib.Const_NoGate(0, 0, 0)
                 self.assertEqual(exp2.get_elements_count(), 1)
-                exp2.exit(delete=True)
+                exp2.close(delete=True)
 
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_Sum(self):
@@ -207,7 +207,7 @@ class BasicTest(TestCase, ViztracerTool):
         expe.clear_elements()
         self.assertEqual(expe.get_wires_count(), 0)
         self.assertEqual(expe.get_elements_count(), 0)
-        expe.exit(delete=True)
+        expe.close(delete=True)
 
     @my_test_dec
     def test_get_Element(self):
@@ -222,13 +222,13 @@ class BasicTest(TestCase, ViztracerTool):
             expe.get_element_from_index(1).o
         )
         self.assertEqual(expe.get_wires_count(), 2)
-        expe.exit(delete=True)
+        expe.close(delete=True)
 
     @my_test_dec
     def test_errors(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             ''' 确保__test__实验不存在 '''
-            expe.exit(delete=True)
+            expe.close(delete=True)
         try:
             Experiment(OpenMode.load_by_sav_name, '__test__') # do not exist
         except ExperimentNotExistError:
@@ -255,7 +255,7 @@ class BasicTest(TestCase, ViztracerTool):
         )
         self.assertEqual(expe.get_wires_count(), 3)
         self.assertEqual(expe.get_elements_count(), 150)
-        expe.exit(delete=True)
+        expe.close(delete=True)
 
     @my_test_dec
     def test_open_manyExperiment(self):
@@ -263,8 +263,8 @@ class BasicTest(TestCase, ViztracerTool):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as exp2:
             Logic_Input(0, 0, 0)
             self.assertEqual(1, exp2.get_elements_count())
-            exp2.exit(delete=True)
-        expe.exit(delete=True)
+            exp2.close(delete=True)
+        expe.close(delete=True)
 
     @my_test_dec
     def test_with_and_coverPosition(self):
@@ -272,7 +272,7 @@ class BasicTest(TestCase, ViztracerTool):
             Logic_Input(0, 0, 0)
             Or_Gate(0, 0, 0)
             self.assertEqual(len(expe.get_element_from_position(0, 0, 0)), 2)
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_del_element(self):
@@ -281,22 +281,22 @@ class BasicTest(TestCase, ViztracerTool):
             expe.del_element(expe.get_element_from_index(2))
             self.assertEqual(expe.get_elements_count(), 1)
             self.assertEqual(expe.get_wires_count(), 0)
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav")) as expe:
             expe.del_element(expe.get_element_from_index(1))
             self.assertEqual(expe.get_elements_count(), 90)
-            expe.exit()
+            expe.close()
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Celestial-Elements.sav")) as expe:
             expe.del_element(expe.get_element_from_index(1))
             self.assertEqual(expe.get_elements_count(), 26)
-            expe.exit()
+            expe.close()
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Electromagnetism-Elements.sav")) as expe:
             expe.del_element(expe.get_element_from_index(1))
             self.assertEqual(expe.get_elements_count(), 6)
-            expe.exit()
+            expe.close()
 
     # 测试模块化电路连接导线
     @my_test_dec
@@ -311,7 +311,7 @@ class BasicTest(TestCase, ViztracerTool):
             self.assertEqual(23, expe.get_wires_count())
             del_wires(c.outputs, b.inputs)
             self.assertEqual(15, expe.get_wires_count())
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     # 测试模块化加法电路
     @my_test_dec
@@ -324,7 +324,7 @@ class BasicTest(TestCase, ViztracerTool):
             crt_wires(a.outputs, c.inputs1)
             crt_wires(b.outputs, c.inputs2)
             crt_wires(c.outputs, d.inputs)
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     # 测试打开实验类型与文件不吻合
     @my_test_dec
@@ -338,7 +338,7 @@ class BasicTest(TestCase, ViztracerTool):
             else:
                 raise TestFail
             finally:
-                expe.exit(delete=True)
+                expe.close(delete=True)
 
     @my_test_dec
     def test_electromagnetism(self):
@@ -353,7 +353,7 @@ class BasicTest(TestCase, ViztracerTool):
             else:
                 raise TestFail
             finally:
-                expe.exit(delete=True)
+                expe.close(delete=True)
 
     @my_test_dec
     def test_super_and_gate(self):
@@ -367,7 +367,7 @@ class BasicTest(TestCase, ViztracerTool):
                     )
             self.assertEqual(expe.get_elements_count(), 6666)
             self.assertEqual(expe.get_wires_count(), 6636)
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_super_or_gate(self):
@@ -381,7 +381,7 @@ class BasicTest(TestCase, ViztracerTool):
                     )
             self.assertEqual(expe.get_elements_count(), 9800)
             self.assertEqual(expe.get_wires_count(), 9702)
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_super_nor_gate(self):
@@ -395,7 +395,7 @@ class BasicTest(TestCase, ViztracerTool):
                     )
             self.assertEqual(expe.get_elements_count(), 9800)
             self.assertEqual(expe.get_wires_count(), 9702)
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_union_Sub(self):
@@ -409,14 +409,14 @@ class BasicTest(TestCase, ViztracerTool):
             self.assertEqual(expe.get_wires_count(), 41)
 
             lib.Sub(-5, 0, 0, bitnum=4)
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_Simple_Instrument(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             a = Simple_Instrument(0, 0, 0, pitches=(48,))
             a = Simple_Instrument(0, 0, 0, pitches=(Simple_Instrument.str2num_pitch("C3"),))
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_getElementError(self):
@@ -429,7 +429,7 @@ class BasicTest(TestCase, ViztracerTool):
             else:
                 raise TestFail
             finally:
-                expe.exit(delete=True)
+                expe.close(delete=True)
 
     @my_test_dec
     def test_unionMusic(self):
@@ -450,7 +450,7 @@ class BasicTest(TestCase, ViztracerTool):
             self.assertEqual(Logic_Input(0, 0, 0).is_bigElement, False)
             self.assertEqual(Full_Adder(0, 0, 0).is_bigElement, True)
             self.assertEqual(Xor_Gate(0, 0, 0).is_bigElement, False)
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_musicPlayer(self):
@@ -464,13 +464,13 @@ class BasicTest(TestCase, ViztracerTool):
                     t.append(n)
                     n.append(music.Note(1, pitch=12 * i + j + 23))
             t.release(-1, -1, 0)
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_mutiple_notes_in_Simple_Instrument(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             Simple_Instrument(0, 0, 0, pitches=(67,))
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_load_midi(self):
@@ -479,13 +479,13 @@ class BasicTest(TestCase, ViztracerTool):
         self.assertEqual(expe.get_elements_count(), 510)
         self.assertEqual(expe.get_wires_count(), 1016)
         expe.export("temp.pl.py", "_Test")
-        expe.exit(delete=True)
+        expe.close(delete=True)
 
         os.system(f"{sys.executable} temp.pl.py")
         with Experiment(OpenMode.load_by_sav_name, "_Test") as expe:
             self.assertEqual(expe.get_elements_count(), 510)
             self.assertEqual(expe.get_wires_count(), 1016)
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_mergeExperiment(self):
@@ -497,8 +497,8 @@ class BasicTest(TestCase, ViztracerTool):
                 exp2.merge(expe, 1, 0, 0, elementXYZ=True)
 
                 self.assertEqual(exp2.get_elements_count(), 3)
-                exp2.exit(delete=True)
-            expe.exit(delete=True)
+                exp2.close(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_link_wire_in_twoExperiment(self):
@@ -513,8 +513,8 @@ class BasicTest(TestCase, ViztracerTool):
                 else:
                     raise TestFail
                 finally:
-                    exp2.exit(delete=True)
-            expe.exit(delete=True)
+                    exp2.close(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_merge_Experiment2(self):
@@ -530,8 +530,8 @@ class BasicTest(TestCase, ViztracerTool):
 
                 self.assertEqual(exp2.get_elements_count(), 2)
                 self.assertEqual(expe.get_wires_count(), 1)
-                exp2.exit(delete=True)
-            expe.exit(delete=True)
+                exp2.close(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_crt_self_wire(self):
@@ -544,19 +544,19 @@ class BasicTest(TestCase, ViztracerTool):
             else:
                 raise TestFail
             finally:
-                expe.exit(delete=True)
+                expe.close(delete=True)
 
     @my_test_dec
     def test_export(self):
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "float32_t.sav")) as expe:
             expe.export("temp.pl.py", "__test__")
-            expe.exit()
+            expe.close()
 
         os.system(f"{sys.executable} temp.pl.py")
         with Experiment(OpenMode.load_by_sav_name, "__test__") as expe:
             self.assertEqual(expe.get_elements_count(), 652)
             self.assertEqual(expe.get_wires_count(), 1385)
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test_typeerror(self):
@@ -568,7 +568,7 @@ class BasicTest(TestCase, ViztracerTool):
         else:
             raise TestFail
         finally:
-            expe.exit(delete=True)
+            expe.close(delete=True)
 
     @my_test_dec
     def test___exit__(self):
