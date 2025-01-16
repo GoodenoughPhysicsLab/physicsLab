@@ -396,8 +396,9 @@ class Experiment(_Experiment):
 
     def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         # 如果无异常抛出且用户未在with语句里调用过.exit(), 则保存存档并退出实验
-        if exc_type is None and _ExperimentStack.inside(self):
-            self.save()
+        if _ExperimentStack.inside(self):
+            if exc_type is None:
+                self.save()
             self.exit(delete=False)
 
     @_check_not_closed

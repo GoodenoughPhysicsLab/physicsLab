@@ -569,3 +569,13 @@ class BasicTest(TestCase, ViztracerTool):
             raise TestFail
         finally:
             expe.exit(delete=True)
+
+    @my_test_dec
+    def test___exit__(self):
+        try:
+            with Experiment(OpenMode.crt, "test", ExperimentType.Circuit, force_crt=True) as expe:
+                Positive_Charge(0, 0, 0)
+        except ExperimentTypeError:
+            pass
+        else:
+            raise TestFail
