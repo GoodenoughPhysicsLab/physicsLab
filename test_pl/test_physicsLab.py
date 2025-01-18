@@ -240,7 +240,7 @@ class BasicTest(TestCase, ViztracerTool):
     @my_test_dec
     def test_elementXYZ_2(self):
         expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
-        set_elementXYZ(True)
+        expe.is_elementXYZ = True
         for x in range(10):
             for y in range(10):
                 Yes_Gate(x, y, 0)
@@ -401,15 +401,15 @@ class BasicTest(TestCase, ViztracerTool):
     @my_test_dec
     def test_union_Sub(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
-            set_elementXYZ(True)
-            a = lib.Sub(0, 0, 0, bitnum=8, fold=False)
-            crt_wires(lib.Inputs(-3, 0, 0, bitnum=8).outputs, a.minuend)
-            crt_wires(lib.Inputs(-2, 0, 0, bitnum=8).outputs, a.subtrahend)
-            crt_wires(lib.Outputs(2, 0, 0, bitnum=9).inputs, a.outputs)
-            self.assertEqual(expe.get_elements_count(), 42)
-            self.assertEqual(expe.get_wires_count(), 41)
+            with ElementXYZ():
+                a = lib.Sub(0, 0, 0, bitnum=8, fold=False)
+                crt_wires(lib.Inputs(-3, 0, 0, bitnum=8).outputs, a.minuend)
+                crt_wires(lib.Inputs(-2, 0, 0, bitnum=8).outputs, a.subtrahend)
+                crt_wires(lib.Outputs(2, 0, 0, bitnum=9).inputs, a.outputs)
+                self.assertEqual(expe.get_elements_count(), 42)
+                self.assertEqual(expe.get_wires_count(), 41)
 
-            lib.Sub(-5, 0, 0, bitnum=4)
+                lib.Sub(-5, 0, 0, bitnum=4)
             expe.close(delete=True)
 
     @my_test_dec

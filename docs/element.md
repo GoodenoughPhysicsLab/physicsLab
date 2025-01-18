@@ -81,7 +81,7 @@ Successfully update experiment "example"! 4 elements, 0 wires.
 
 你能理解为什么第二次打印时输出的列表长度为3吗?  
 因为在上一次写入的时候会将元件坐标系自动转化为物实坐标系, 在第二次read的时候会直接读取存档内的物实坐标系, 那么上一次创建时的`Logic_Input(1, 0, 0elementXYZ=True)`自然就不会在后面read这次的坐标索引中被找到了  
-如果要索引第一次创建的元件坐标系的元件, 需要用`xyzTranslate(1, 0, 0)`来执行元件坐标系与物实坐标系之间的转换
+如果要索引第一次创建的元件坐标系的元件, 需要用`native_to_elementXYZ(1, 0, 0)`来执行元件坐标系与物实坐标系之间的转换
 详见[元件坐标系](#元件坐标系-elementXYZ)
 
 ## 删除元件
@@ -118,18 +118,29 @@ with Experiment(OpenMode.load_by_sav_name, "example") as expe:
 ```
 
 ## 元件坐标系 elementXYZ
+
 `物实坐标系`即为物实默认的坐标系  
-物实坐标系的单位长度与元件尺寸出入较大，因此physicsLab提供了专门为元件尺寸定制的`元件坐标系`。  
+物实坐标系的单位长度与元件尺寸出入较大，因此physicsLab提供了专门为逻辑电路元件尺寸定制的`元件坐标系`。  
 元件坐标系的x, y单位长度为1个是门的长、宽，z的单位长度为物实坐标系的0.1
 
-### 设置为元件坐标系
-此函数将从调用该函数之后到打开下一个存档之前的作用域的坐标系设置为元件坐标系
+### 启用元件坐标系
+
 ```Python
 from physicsLab import *
 
 with Experiment(OpenMode.load_by_sav_name, "example") as expe:
-  set_elementXYZ(True) # 将expe设置为元件坐标系
-  # do something
+    with ElementXYZ(): # expe中创建的元件默认为元件坐标系
+        Logic_Input(0, 0, 0) # 由于全局被设置为元件坐标系，所以创建的元件坐标系就是元件坐标系
+    Logic_Output(0, 0, 0) # 离开 with ElementXYZ的作用域，为物实坐标系
+```
+
+或者更加底层一些的操作：
+```Python
+from physicsLab import *
+
+with Experiment(OpenMode.load_by_sav_name, "example") as expe:
+    expe.is_elementXYZ = True # expe中创建的元件默认为元件坐标系
+    # do something
 ```
 
 当你只希望某个元件是元件坐标系，而其他元件不受影响时，你可以在创建元件时传入对应参数
@@ -142,13 +153,14 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
 ```
 
 ### 判断是否为元件坐标系
-你也可以使用该函数获取当前作用域下是否为元件坐标系：
+你也可以使用该函数获取当前实验中创建的元件是否默认为元件坐标系：
 ```python
 from physicsLab import *
 
 with Experiment(OpenMode.load_by_sav_name, "example") as expe:
     print(expe.is_elementXYZ)
 ```
+
 如果你想查看某个元件是否为元件坐标系，可以通过元件属性`is_elementXYZ`查看：
 ```Python
 from physicsLab import *
@@ -158,18 +170,9 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
   print(a.is_elementXYZ)
 ```
 
-### 获取物实坐标系单位长度
-`get_xyzUnit()`用于获取元件坐标系下的单位长度对应着物实坐标系下的值
-```Python
-from physicsLab import *
-
-with Experiment(OpenMode.load_by_sav_name, "example"):
-    print(get_xyzUnit())
-```
-
 ### 与物实坐标系的转换
-`translateXYZ`将物实坐标系转换为元件坐标系（包括2体积元件坐标修正）  
-`xyzTranslate`将元件坐标系转换为物实坐标系（默认不支持2体积元件坐标修正）, 但你可以通过传入元件的`is_bigElement`属性来进行2体积元件修正
+`native_to_elementXYZ`将物实坐标系转换为元件坐标系  
+`elementXYZ_to_native`将元件坐标系转换为物实坐标系, 你可以通过传入元件的`is_bigElement`属性以修正2体积元件(比如全加器)的坐标
 
 ## methods & attributes
 所有的元件都有一些方法来操作

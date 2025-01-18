@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import physicsLab.circuit.elementXYZ as _elementXYZ
-
 from physicsLab._core import get_current_experiment
 from physicsLab.circuit import elements
 from physicsLab.circuit._circuit_core import InputPin, OutputPin, crt_wire
-from physicsLab.typehint import num_type, Optional, Self
+from physicsLab.typehint import num_type, Optional
+from physicsLab._core import native_to_elementXYZ
 
 class _TriggerMeta(type):
     def __call__(cls, x: num_type = 0, y: num_type = 0, z: num_type = 0, elementXYZ: Optional[bool] = None):
@@ -16,7 +15,7 @@ class _TriggerMeta(type):
             raise TypeError
 
         if not (elementXYZ is True or get_current_experiment().is_elementXYZ is True and elementXYZ is None):
-            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z)
 
         self.__init__(x, y, z, elementXYZ=elementXYZ)
 

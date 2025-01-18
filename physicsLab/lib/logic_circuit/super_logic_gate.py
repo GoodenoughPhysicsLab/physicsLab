@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from .wires import crt_wires, UnitPin
 from physicsLab._tools import round_data
-from physicsLab.circuit import elements, Pin, crt_wire, elementXYZ as _elementXYZ
-from physicsLab._core import _Experiment, get_current_experiment
+from physicsLab.circuit import elements, Pin, crt_wire
+from physicsLab._core import _Experiment, get_current_experiment, native_to_elementXYZ
 from physicsLab.typehint import num_type, Dict, Optional, List
 
 class Const_NoGate:
@@ -54,7 +54,7 @@ class Super_AndGate:
             raise ValueError
 
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
-            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
@@ -134,7 +134,7 @@ class Super_OrGate:
             raise ValueError
 
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
-            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
@@ -199,7 +199,7 @@ class Super_NorGate:
             raise TypeError
 
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
-            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 

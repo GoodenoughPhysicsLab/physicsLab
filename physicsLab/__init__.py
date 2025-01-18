@@ -5,7 +5,12 @@
 from ._colorUtils import close_color_print
 # 操作实验
 from .element import search_experiment, Experiment
-from ._core import get_current_experiment
+from ._core import (
+    get_current_experiment,
+    elementXYZ_to_native,
+    native_to_elementXYZ,
+    ElementXYZ,
+)
 # 实验, 标签类型
 from .enums import ExperimentType, Category, Tag, OpenMode, WireColor
 # 电学实验

@@ -5,6 +5,7 @@ from string import ascii_lowercase, ascii_letters, digits
 from collections import namedtuple
 from .typehint import num_type
 
+# TODO 元件坐标系也应该由这玩意负责
 position = namedtuple("position", ["x", "y", "z"])
 
 def round_data(num: num_type) -> num_type:

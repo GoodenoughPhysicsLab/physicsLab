@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import physicsLab.errors as errors
-import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from .super_logic_gate import Const_NoGate, Super_AndGate
 from .wires import UnitPin, crt_wires
 from physicsLab._tools import round_data
 from physicsLab.circuit import elements
 from physicsLab.circuit._circuit_core import Pin
-from physicsLab._core import get_current_experiment
+from physicsLab._core import get_current_experiment, native_to_elementXYZ
 from physicsLab.enums import ExperimentType
 from physicsLab.typehint import num_type, Optional, Self, Union, Type, List
 
@@ -30,7 +29,7 @@ class Tick_Counter:
             raise TypeError
 
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
-            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
@@ -97,7 +96,7 @@ class Two_four_Decoder:
             raise TypeError
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
-            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
 
         self.nor_gate = elements.Nor_Gate(x, y, z, elementXYZ=True)
@@ -147,7 +146,7 @@ class Switched_Register:
             raise TypeError
 
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
-            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
@@ -203,7 +202,7 @@ class Equal_to:
             raise TypeError
 
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
-            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
@@ -242,7 +241,7 @@ class Signed_Sum:
             raise TypeError
 
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
-            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
@@ -315,7 +314,7 @@ class _Simple_Logic_Meta(type):
 
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
-            x, y, z = _elementXYZ.translateXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z)
         x, y, z = round_data(x), round_data(y), round_data(z)
 
         self.__init__(x=x,

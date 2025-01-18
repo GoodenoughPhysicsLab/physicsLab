@@ -98,6 +98,21 @@ class _Experiment:
     def __init__(*args, **kwargs) -> NoReturn:
         raise NotImplementedError
 
+    @property
+    @_check_not_closed
+    def is_elementXYZ(self) -> bool:
+        return self._is_elementXYZ
+
+    @is_elementXYZ.setter
+    @_check_not_closed
+    def is_elementXYZ(self, status) -> None:
+        if not isinstance(status, bool):
+            raise TypeError
+        if self.experiment_type != ExperimentType.Circuit:
+            raise errors.ExperimentTypeError
+
+        self._is_elementXYZ = status
+
     @_check_not_closed
     def get_elements_count(self) -> int:
         ''' 该实验的元件的数量 '''
@@ -640,11 +655,10 @@ class _Experiment:
             a_element = copy.deepcopy(a_element, memo={id(a_element.experiment): self})
             e_x, e_y, e_z = a_element.get_position()
             if self.experiment_type == ExperimentType.Circuit:
-                from .circuit.elementXYZ import xyzTranslate, translateXYZ
                 if elementXYZ and not a_element.is_elementXYZ:
-                    e_x, e_y, e_z = translateXYZ(e_x, e_y, e_z, a_element.is_bigElement)
+                    e_x, e_y, e_z = native_to_elementXYZ(e_x, e_y, e_z, a_element.is_bigElement)
                 elif not elementXYZ and a_element.is_elementXYZ:
-                    e_x, e_y, e_z = xyzTranslate(e_x, e_y, e_z, a_element.is_bigElement)
+                    e_x, e_y, e_z = elementXYZ_to_native(e_x, e_y, e_z, a_element.is_bigElement)
             a_element.set_position(e_x + x, e_y + y, e_z + z, elementXYZ)
             # set_Position已处理与_elements_position有关的操作
             self.Elements.append(a_element)
@@ -698,6 +712,7 @@ class _ElementBase:
 
         return self
 
+    @final
     def _set_identifier(self, identifier: Optional[str] = None) -> None:
         if identifier is None:
             self.data["Identifier"] = _tools.randString(33)
@@ -714,3 +729,57 @@ class _ElementBase:
     def get_index(self) -> int:
         ''' 获取元件的index (每创建一个元件, index就加1 (index从1开始)) '''
         return self.experiment.Elements.index(self) + 1
+
+class ElementXYZ:
+    # 元件坐标系对应物实坐标系中的x, y, z的单位一
+    _X_UNIT: float = 0.16
+    _Y_UNIT: float = 0.08
+    _Z_UNIT: float = 0.1
+    # big_element坐标修正
+    _Y_AMEND: float = 0.045
+
+    def __init__(self) -> None:
+        self._expe = get_current_experiment()
+        self.origin_status: bool = self._expe.is_elementXYZ
+
+    def __enter__(self) -> None:
+        if self._expe.experiment_type != ExperimentType.Circuit:
+            raise errors.ExperimentTypeError
+
+        self._expe.is_elementXYZ = True
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        if exc_type is None:
+            self._expe.is_elementXYZ = self.origin_status
+
+def elementXYZ_to_native(
+        x: num_type,
+        y: num_type,
+        z: num_type,
+        /,
+        is_bigElement: bool = False,
+) -> Tuple[num_type, num_type, num_type]:
+    ''' 将元件坐标系转换为物实的坐标系
+        @param is_bigElement: 是否为2体积的元件 (比如全加器)
+    '''
+    x *= ElementXYZ._X_UNIT
+    y *= ElementXYZ._Y_UNIT
+    z *= ElementXYZ._Z_UNIT
+    if is_bigElement:
+        y += ElementXYZ._Y_AMEND
+    return x, y, z
+
+def native_to_elementXYZ(
+        x: num_type,
+        y: num_type,
+        z: num_type,
+        is_bigElement: bool = False,
+) -> Tuple[num_type, num_type, num_type]:
+    ''' 将物实的坐标系转换为元件坐标系 '''
+    x /= ElementXYZ._X_UNIT
+    y /= ElementXYZ._Y_UNIT
+    z /= ElementXYZ._Z_UNIT
+    # 修改大体积逻辑电路元件的坐标
+    if is_bigElement:
+        y -= ElementXYZ._Y_AMEND
+    return x, y, z

@@ -3,11 +3,10 @@ import inspect
 
 from physicsLab import errors
 from physicsLab import _tools
-import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.enums import ExperimentType, WireColor
 from physicsLab._tools import round_data
-from physicsLab._core import _Experiment, get_current_experiment, _ElementBase
+from physicsLab._core import _Experiment, get_current_experiment, _ElementBase, elementXYZ_to_native
 from physicsLab.typehint import Optional, Self, num_type, NoReturn, Generate, override, final, List
 
 # 对于逻辑电路，应该使用`InputPin` 和 `OutputPin`
@@ -159,8 +158,6 @@ class _CircuitMeta(type):
         self: "CircuitBase" = cls.__new__(cls)
         self.experiment = _Expe
 
-        self.is_elementXYZ = False # 该元件是否为元件坐标系
-
         x, y, z = round_data(x), round_data(y), round_data(z)
 
         self.__init__(x, y, z, *args, **kwargs)
@@ -222,7 +219,7 @@ class CircuitBase(_ElementBase, metaclass=_CircuitMeta):
 
         # 元件坐标系
         if elementXYZ is True or self.experiment.is_elementXYZ is True and elementXYZ is None:
-            x, y, z = _elementXYZ.xyzTranslate(x, y, z, self.is_bigElement)
+            x, y, z = elementXYZ_to_native(x, y, z, self.is_bigElement)
             self.is_elementXYZ = True
         else:
             self.is_elementXYZ = False

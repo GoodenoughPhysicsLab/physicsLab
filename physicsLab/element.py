@@ -244,7 +244,7 @@ class Experiment(_Experiment):
             self.SAV_PATH = os.path.join(_Experiment.SAV_PATH_DIR, f"{_tools.randString(34)}.sav")
 
             if self.experiment_type == ExperimentType.Circuit:
-                self.is_elementXYZ: bool = False
+                self._is_elementXYZ: bool = False
                 self.PlSav: dict = copy.deepcopy(savTemplate.Circuit)
                 self.Wires: set = set() # Set[Wire] # 存档对应的导线
                 # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
@@ -286,7 +286,7 @@ class Experiment(_Experiment):
         assert isinstance(self.experiment_type, ExperimentType)
         if self.experiment_type == ExperimentType.Circuit:
             assert isinstance(self.Wires, set)
-            assert isinstance(self.is_elementXYZ, bool)
+            assert isinstance(self._is_elementXYZ, bool)
 
         _ExperimentStack.push(self)
 
@@ -319,7 +319,7 @@ class Experiment(_Experiment):
         if self.PlSav["Experiment"]["Type"] == ExperimentType.Circuit.value:
             self.experiment_type = ExperimentType.Circuit
             # 是否将该实验在全局范围中设置为元件坐标系
-            self.is_elementXYZ: bool = False
+            self._is_elementXYZ: bool = False
             self.Wires: set = set() # Set[Wire] # 存档对应的导线
         elif self.PlSav["Experiment"]["Type"] == ExperimentType.Celestial.value:
             self.experiment_type = ExperimentType.Celestial
