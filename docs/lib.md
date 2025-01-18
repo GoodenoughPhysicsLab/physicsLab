@@ -1,4 +1,4 @@
-# 模块化电路 unit
+# 模块化电路 lib
 
 ## Super_AndGate
 支持任意大于1的正整数的输入引脚的与门
@@ -6,7 +6,7 @@
 from physicsLab import *
 
 with Experiment(OpenMode.load_by_sav_name, "example"):
-    crt_wires(
+    lib.crt_wires(
         lib.Inputs(-1, 0, 0, bitnum=7).outputs,
         lib.Super_AndGate(0, 0, 0, bitnum=7).inputs
     )
@@ -18,7 +18,7 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
 from physicsLab import *
 
 with Experiment(OpenMode.load_by_sav_name, "example"):
-    crt_wires(
+    lib.crt_wires(
         lib.Inputs(-1, 0, 0, bitnum=7).outputs,
         lib.Super_OrGate(0, 0, 0, bitnum=7).inputs
     )
@@ -30,7 +30,7 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
 from physicsLab import *
 
 with Experiment(OpenMode.load_by_sav_name, "example"):
-    crt_wires(
+    lib.crt_wires(
         lib.Inputs(-1, 0, 0, bitnum=7).outputs,
         lib.Super_NorGate(0, 0, 0, bitnum=7).inputs
     )
@@ -67,12 +67,11 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
 调用`crt_wires()`，参数支持传入元件/模块化电路的引脚
 ```Python
 from physicsLab import *
-from physicsLab.union import *
 
 with Experiment(OpenMode.load_by_sav_name, "example"):
-    a = D_WaterLamp(bitLength=8)
-    b = Outputs(bigLength=8)
-    crt_wires(a.data_Outputs, b.data_Inputs)
+    a = lib.D_WaterLamp(bitLength=8)
+    b = lib.Outputs(bigLength=8)
+    lib.crt_wires(a.data_Outputs, b.data_Inputs)
 ```
 
 ## 删除模块化电路的导线

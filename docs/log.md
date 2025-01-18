@@ -244,3 +244,5 @@
 23. 重命名`Experiment.exit`为`Experiment.close`
 
 ## 2.0.1
+1.  不再默认省略`crt_wires`的命名空间`lib`
+2.  

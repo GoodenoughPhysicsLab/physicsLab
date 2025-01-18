@@ -17,8 +17,6 @@ from .electromagnetism import *
 # `physicsLab`自定义异常类
 from .errors import *
 
-from .lib.wires import crt_wires, del_wires
-
 from physicsLab.plAR import *
 from physicsLab.utils import *
 
