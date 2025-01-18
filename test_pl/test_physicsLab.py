@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import pathlib
 import threading
 from .base import *
 from physicsLab.lib import *
@@ -283,7 +284,7 @@ class BasicTest(TestCase, ViztracerTool):
             self.assertEqual(expe.get_wires_count(), 0)
             expe.close(delete=True)
 
-        with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav")) as expe:
+        with Experiment(OpenMode.load_by_filepath, pathlib.Path(TEST_DATA_DIR) / "All-Circuit-Elements.sav") as expe:
             expe.del_element(expe.get_element_from_index(1))
             self.assertEqual(expe.get_elements_count(), 90)
             expe.close()

@@ -2,8 +2,8 @@
 ''' `physicsLab` 操作存档的核心文件
     该文件提供操作存档的核心: `class _Experiment` 与所有元件的基类: class `_ElementBase`
     为了避免在physicsLab内出现大量的cyclic import
-    该文件仅会对存档进行文件读写方面的操作, 对元件的导入由`class Experiment`负责
-    `class Experiment`提供了更加用户友好的接口
+    该文件仅会对存档进行文件读写方面的操作, 将元件的的信息进一步导入由`class Experiment`负责
+    `class Experiment`也提供了对用户更加友好的接口
 '''
 import os
 import json
@@ -56,7 +56,7 @@ class _ExperimentStack:
     @classmethod
     def top(cls) -> "_Experiment":
         if len(cls.data) == 0:
-            raise errors.ExperimentError("no experiment can be operated (experiment stack is empty)")
+            raise errors.ExperimentError("no experiment can be operated")
 
         return cls.data[-1]
 

@@ -2,6 +2,7 @@
 import os
 import copy
 import json
+import pathlib
 
 from . import _tools
 from . import errors
@@ -76,17 +77,17 @@ class Experiment(_Experiment):
     _user: Optional[User] = None
 
     @overload
-    def __init__(self, open_mode: OpenMode, sav_name: str) -> None:
-        ''' 根据存档名打开存档
-            @open_mode = OpenMode.open_from_sav_name
-            @sav_name: 存档的名字
+    def __init__(self, open_mode: OpenMode, filepath: Union[str, pathlib.Path]) -> None:
+        ''' 根据存档对应的文件路径打开存档
+            @open_mode = OpenMode.load_by_filepath
+            @filepath: 存档对应的文件的完整路径
         '''
 
-    @overload # TODO support pathlib
-    def __init__(self, open_mode: OpenMode, filepath: str) -> None:
-        ''' 根据存档对应的文件路径打开存档
-            @open_mode = OpenMode.open_from_abs_path
-            @filepath: 存档对应的文件的完整路径
+    @overload
+    def __init__(self, open_mode: OpenMode, sav_name: str) -> None:
+        ''' 根据存档名打开存档
+            @open_mode = OpenMode.load_by_sav_name
+            @sav_name: 存档的名字
         '''
 
     @overload
@@ -99,7 +100,7 @@ class Experiment(_Experiment):
             user: Optional[User] = None
     ) -> None:
         ''' 从物实服务器中获取存档
-            @open_mode = OpenMode.open_from_plar_app
+            @open_mode = OpenMode.load_by_plar_app
             @content_id: 物实 实验/讨论 的id
             @category: 实验区还是黑洞区
             @user: 执行获取实验操作的用户, 若未指定则会创建一个临时匿名用户执行该操作 (会导致程序变慢)
@@ -137,8 +138,10 @@ class Experiment(_Experiment):
         # 导入self.Elements与self._element_position之后, 元件信息才被完全导入
         if open_mode == OpenMode.load_by_filepath:
             sav_name, *rest = args
-            if not isinstance(sav_name, str) or len(rest) != 0:
+            if not isinstance(sav_name, (str, pathlib.Path)) or len(rest) != 0:
                 raise TypeError
+            if isinstance(sav_name, pathlib.Path):
+                sav_name = str(sav_name)
 
             self.SAV_PATH = os.path.abspath(sav_name)
 

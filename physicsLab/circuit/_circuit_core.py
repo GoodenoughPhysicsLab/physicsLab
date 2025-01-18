@@ -6,7 +6,7 @@ from physicsLab import _tools
 import physicsLab.circuit.elementXYZ as _elementXYZ
 
 from physicsLab.enums import ExperimentType, WireColor
-from physicsLab._tools import round_data, randString
+from physicsLab._tools import round_data
 from physicsLab._core import _Experiment, get_current_experiment, _ElementBase
 from physicsLab.typehint import Optional, Self, num_type, NoReturn, Generate, override, final, List
 

@@ -57,8 +57,9 @@ expe2 = Experiment(OpenMode.load_by_sav_name, "example") # error
 `Experiment`类一共提供了3种导入存档的方式：
 ```Python
 from physicsLab import *
-Experiment(OpenMode.load_by_filepath, "/your/path/of/sav") # 根据存档的文件名（也就是xxxx.sav）进行导入
+Experiment(OpenMode.load_by_filepath, "/your/path/of/sav") # 根据存档的路径（也就是xxxx.sav）进行导入
                                                         #（e.g. e229d7fe-7fa3-4efa-9190-dcb4558a385a.sav）
+                                                        # pathlib.Path 也是支持的
 Experiment(OpenMode.load_by_sav_name, "example") # 根据存档的实验名（也就是你在物实导入本地实验时看到的实验的名字）进行导入实验
 Experiment(OpenMode.load_by_plar_app, "642cf37a494746375aae306a", Category.Discussion)
 ```
@@ -108,7 +109,7 @@ except ExperimentNotExistError:
 ## 搜索存档&判断存档是否存在
 ***低级api***
 
-调用`search_Experiment()`判断存档是否存在  
+调用`search_Experiment()`判断存档是否存在
 
 ## 向物实发布新的实验
 
