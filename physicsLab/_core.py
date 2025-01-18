@@ -720,7 +720,7 @@ class _ElementBase:
             self.data["Identifier"] = identifier
 
     @final
-    def get_position(self) -> tuple:
+    def get_position(self) -> _tools.position:
         ''' 获取元件的坐标 '''
         assert hasattr(self, '_position')
         return copy.deepcopy(self._position)

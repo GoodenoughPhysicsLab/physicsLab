@@ -562,14 +562,24 @@ class BasicTest(TestCase, ViztracerTool):
     @my_test_dec
     def test_typeerror(self):
         try:
-            expe = Experiment(OpenMode.crt, "test", ExperimentType.Circuit, force_crt=True)
-            Logic_Input(0, 0, 0, True)
+            expe = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
+            Logic_Input(0, 0, 0, True) # type: ignore
         except TypeError:
             pass
         else:
             raise TestFail
         finally:
             expe.close(delete=True)
+
+    @my_test_dec
+    def test_wire_is_too_less(self):
+        try:
+            with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
+                crt_wire(Logic_Input(0, 0, 0).o)
+        except ValueError:
+            pass
+        else:
+            raise TestFail
 
     @my_test_dec
     def test___exit__(self):

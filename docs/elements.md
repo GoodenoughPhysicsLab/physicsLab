@@ -44,7 +44,7 @@
         <td>Logic_Input</td>
         <td>Logic Input</td>
         <td>o</td>
-        <td>set_high_level # 将逻辑输入的状态设置为1</td>
+        <td>set_output_status # 将逻辑输入的状态设置为1</td>
     </tr>
     <tr>
         <td>逻辑输出</td>

@@ -107,6 +107,8 @@ def crt_wire(*pins: Pin, color: WireColor = WireColor.blue) -> List[Wire]:
     ''' 连接导线 '''
     if not all(isinstance(a_pin, Pin) for a_pin in pins) or not isinstance(color, WireColor):
         raise TypeError
+    if len(pins) <= 1:
+        raise ValueError("pins must be more than 1")
 
     _expe = get_current_experiment()
     if _expe.experiment_type != ExperimentType.Circuit:

@@ -183,10 +183,9 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
     a = Logic_Input()
 
     # methods
-    a.set_highLevel() # 将逻辑输入设置为输出为1（仅对逻辑输入有效）
     a.set_position() # 设置元件坐标
     a.get_index() # 获取元件的Index（index为元件生成顺序的计数器）
-    a.set_HighLeaveValue() # 设置高电平的值，仅逻辑电路元件有效
+    a.set_high_leave_value() # 设置高电平的值，仅逻辑电路元件有效
     # attributes
     a.data # 获取元件在物实对应的dict
     a.properties # 获取元件的属性（相当于a.data["Properties"]）

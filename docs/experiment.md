@@ -274,7 +274,7 @@ from physicslab import *
 
 with Experiment(OpenMode.load_by_sav_name, "example") as expe:
     # do something
-    eexp.export()
+    expe.export()
 ```
 
 export有2个参数：
