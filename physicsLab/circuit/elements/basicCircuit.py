@@ -5,7 +5,7 @@ from physicsLab.typehint import Optional, num_type, CircuitElementData, Self, Ge
 
 class _SwitchBase(CircuitBase):
     ''' 开关基类 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /) -> None:
         self.data: CircuitElementData = {
             "ModelID": Generate, "Identifier": Generate, "IsBroken": False,
             "IsLocked": False, "Properties": {"开关": 0, "锁定": 1.0},
@@ -30,7 +30,7 @@ class Simple_Switch(_SwitchBase, _TwoPinMixIn):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
     ) -> None:
-        super().__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z)
         self.data["ModelID"] = "Simple Switch"
 
     def __repr__(self) -> str:
@@ -57,7 +57,7 @@ class SPDT_Switch(_SwitchBase):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
     ) -> None:
-        super().__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z)
         self.data["ModelID"] = "SPDT Switch"
 
     def __repr__(self) -> str:
@@ -103,7 +103,7 @@ class DPDT_Switch(_SwitchBase):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
     ) -> None:
-        super().__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z)
         self.data["ModelID"] = "DPDT Switch"
 
     def __repr__(self) -> str:

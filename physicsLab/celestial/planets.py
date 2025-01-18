@@ -348,7 +348,20 @@ class Arctic(PlanetBase):
 class Arid(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
-            "Identifier": Generate, "Model": "Arid", "Override": None, "Name": "干旱行星", "Parent": None, "Type": 1, "Changed": False, "Extras": {}, "Radius": 7835.934, "RadiusVisible": 0.0523800068, "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0, "Mass": 10.7674026, "OrbitType": 0, "OrbitEstimation": 3, "Density": 5.34256755968941, "Gravity": 11.703636214389228, "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.12364274350842841, "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate, "Velocity": Generate, "Acceleration": Generate, "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False}
+            "Identifier": Generate, "Model": "Arid", "Override": None,
+            "Name": "干旱行星", "Parent": None, "Type": 1, "Changed": False,
+            "Extras": {}, "Radius": 7835.934, "RadiusVisible": 0.0523800068,
+            "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0,
+            "Mass": 10.7674026, "OrbitType": 0, "OrbitEstimation": 3,
+            "Density": 5.34256755968941, "Gravity": 11.703636214389228,
+            "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.12364274350842841,
+            "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0,
+            "Position": Generate, "Velocity": Generate, "Acceleration": Generate,
+            "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0,
+            "OmegaLC": "NaN", "Inclination": "NaN", "Phase": 0.0,
+            "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN",
+            "Aphelion": "NaN", "LeavingKepler": False
+        }
 
 class Barren(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:

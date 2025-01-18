@@ -379,7 +379,9 @@ class Experiment(_Experiment):
                         is_pulse=bool(element["Properties"]["脉冲"])
                     )
                 else:
-                    obj = self.crt_element(element["ModelID"], x, y, z, elementXYZ=False, identifier=element["Identifier"])
+                    obj = self.crt_element(
+                        element["ModelID"], x, y, z, elementXYZ=False, identifier=element["Identifier"]
+                    )
                     obj.data["Properties"] = element["Properties"]
                 # 设置角度信息
                 rotation = eval(f'({element["Rotation"]})')

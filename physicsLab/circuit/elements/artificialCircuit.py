@@ -697,9 +697,9 @@ class Current_Source(CircuitBase):
             "DiagramPosition": {"X": 0,"Y": 0,"Magnitude": 0.0}, "DiagramRotation":0
         }
 
-class _source_electricity(_TwoPinMixIn):
+class _SourceElectricity(_TwoPinMixIn):
     ''' 波形发生器基类 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None:
+    def __init__(self, x: num_type, y: num_type, z: num_type, /) -> None:
         self.data: CircuitElementData = {
             "ModelID": Generate, "Identifier": Generate, "IsBroken": False, "IsLocked": False,
             "Properties": {"电压": 3.0, "内阻": 0.5, "频率": 20000.0, "偏移": 0.0,
@@ -708,7 +708,7 @@ class _source_electricity(_TwoPinMixIn):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0}
 
-class Sinewave_Source(_source_electricity):
+class Sinewave_Source(_SourceElectricity):
     ''' 正弦波发生器 '''
     def __init__(
             self,
@@ -719,10 +719,10 @@ class Sinewave_Source(_source_electricity):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
     ) -> None:
-        super().__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z)
         self.data["ModelID"] = "Sinewave Source"
 
-class Square_Source(_source_electricity):
+class Square_Source(_SourceElectricity):
     ''' 方波发生器 '''
     def __init__(
             self,
@@ -733,10 +733,10 @@ class Square_Source(_source_electricity):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
     ) -> None:
-        super().__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z)
         self.data["ModelID"] = "Square Source"
 
-class Triangle_Source(_source_electricity):
+class Triangle_Source(_SourceElectricity):
     ''' 三角波发生器 '''
     def __init__(
             self,
@@ -747,10 +747,10 @@ class Triangle_Source(_source_electricity):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
     ) -> None:
-        super().__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z)
         self.data["ModelID"] = "Triangle Source"
 
-class Sawtooth_Source(_source_electricity):
+class Sawtooth_Source(_SourceElectricity):
     ''' 锯齿波发生器 '''
     def __init__(
             self,
@@ -761,10 +761,10 @@ class Sawtooth_Source(_source_electricity):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
     ) -> None:
-        super().__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z)
         self.data["ModelID"] = "Sawtooth Source"
 
-class Pulse_Source(_source_electricity):
+class Pulse_Source(_SourceElectricity):
     ''' 尖峰波发生器 '''
     def __init__(
             self,
@@ -775,5 +775,5 @@ class Pulse_Source(_source_electricity):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
     ) -> None:
-        super().__init__(x, y, z, elementXYZ)
+        super().__init__(x, y, z)
         self.data["ModelID"] = "Pulse Source"
