@@ -167,9 +167,9 @@ class _Experiment:
             z: num_type,
     ) -> Union["_ElementBase", List["_ElementBase"]]:
         ''' 通过坐标索引元件 '''
-        if not isinstance(x, (int, float)) or \
-                not isinstance(y, (int, float)) or \
-                not isinstance(z, (int, float)):
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)):
             raise TypeError
 
         position = (_tools.round_data(x), _tools.round_data(y), _tools.round_data(z))
@@ -380,9 +380,9 @@ class _Experiment:
             category: Optional[Category],
             image_path: Optional[str],
     ):
-        if image_path is not None and not isinstance(image_path, str) or \
-            category is not None and not isinstance(category, Category) or \
-            not isinstance(user, User):
+        if not isinstance(image_path, (str, type(None))) \
+            or not isinstance(category, (Category, type(None))) \
+            or not isinstance(user, User):
             raise TypeError
         if image_path is not None and (not os.path.exists(image_path) or not os.path.isfile(image_path)):
             raise FileNotFoundError
@@ -464,8 +464,8 @@ class _Experiment:
             @param category: 实验区还是黑洞区
             @param image_path: 图片路径
         '''
-        if not isinstance(category, Category) or \
-            image_path is not None and not isinstance(image_path, str):
+        if not isinstance(category, Category) \
+            or not isinstance(image_path, (str, type(None))):
             raise TypeError
         if self.PlSav["Summary"]["ID"] is not None:
             raise Exception(
@@ -617,11 +617,11 @@ class _Experiment:
             x, y, z, elementXYZ为重新设置要合并的实验的坐标系原点在self的坐标系的位置
             不是电学实验时, elementXYZ参数无效
         '''
-        if not isinstance(other, _Experiment) or \
-                not isinstance(x, (int, float)) or \
-                not isinstance(y, (int, float)) or \
-                not isinstance(z, (int, float)) or \
-                not isinstance(elementXYZ, (bool, type(bool))):
+        if not isinstance(other, _Experiment) \
+                or not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(elementXYZ, (bool, type(bool))):
             raise TypeError
         if self.experiment_type != other.experiment_type:
             raise errors.ExperimentTypeError
@@ -674,9 +674,9 @@ class _ElementBase:
 
     def set_position(self, x: num_type, y: num_type, z: num_type) -> Self:
         ''' 设置元件的位置 '''
-        if not isinstance(x, (int, float)) or \
-                not isinstance(y, (int, float)) or \
-                not isinstance(z, (int, float)):
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)):
             raise TypeError
 
         x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
@@ -697,6 +697,12 @@ class _ElementBase:
             _Expe._position2elements[self._position] = [self]
 
         return self
+
+    def _set_identifier(self, identifier: Optional[str] = None) -> None:
+        if identifier is None:
+            self.data["Identifier"] = _tools.randString(33)
+        else:
+            self.data["Identifier"] = identifier
 
     @final
     def get_position(self) -> tuple:

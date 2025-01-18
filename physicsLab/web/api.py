@@ -82,10 +82,10 @@ def get_avatar(target_id: str, index: int, category: str, size_category: str) ->
         @param category: 只能为 "experiments" 或 "users"
         @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
     '''
-    if not isinstance(target_id, str) or \
-            not isinstance(index, int) or \
-            not isinstance(category, str) or \
-            not isinstance(size_category, str):
+    if not isinstance(target_id, str) \
+            or not isinstance(index, int) \
+            or not isinstance(category, str) \
+            or not isinstance(size_category, str):
         raise TypeError
     if category not in ("experiments", "users"):
         raise ValueError
@@ -118,10 +118,10 @@ class User:
             token: Optional[str] = None,
             auth_code: Optional[str] = None,
     ) -> None:
-        if not isinstance(username, (str, type(None))) or \
-                not isinstance(password, (str, type(None))) or \
-                not isinstance(token, (str, type(None))) or \
-                not isinstance(auth_code, (str, type(None))):
+        if not isinstance(username, (str, type(None))) \
+                or not isinstance(password, (str, type(None))) \
+                or not isinstance(token, (str, type(None))) \
+                or not isinstance(auth_code, (str, type(None))):
             raise TypeError
 
         if token is not None and auth_code is not None:
@@ -246,15 +246,15 @@ class User:
             @param languages: 根据列表内的语言进行对应的搜索
             @param take: 搜索数量
         '''
-        if not isinstance(category, Category) or \
-                not isinstance(tags, (list, type(None))) or \
-                tags is not None and not all(isinstance(tag, Tag) for tag in tags) or \
-                not isinstance(exclude_tags, (list, type(None))) or \
-                exclude_tags is not None and not all(isinstance(tag, Tag) for tag in exclude_tags) or \
-                not isinstance(languages, (list, type(None))) or \
-                languages is not None and not all(isinstance(language, str) for language in languages) or \
-                not isinstance(take, int) or \
-                not isinstance(skip, int):
+        if not isinstance(category, Category) \
+                or not isinstance(tags, (list, type(None))) \
+                or tags is not None and not all(isinstance(tag, Tag) for tag in tags) \
+                or not isinstance(exclude_tags, (list, type(None))) \
+                or exclude_tags is not None and not all(isinstance(tag, Tag) for tag in exclude_tags) \
+                or not isinstance(languages, (list, type(None))) \
+                or languages is not None and not all(isinstance(language, str) for language in languages) \
+                or not isinstance(take, int) \
+                or not isinstance(skip, int):
             raise TypeError
 
         if languages is None:
@@ -319,8 +319,8 @@ class User:
                                否则会被识别为get_summary()["Data"]["ContentID"]的结果
             @param category: 实验区还是黑洞区
         '''
-        if not isinstance(content_id, str) or \
-                not isinstance(category, (Category, type(None))):
+        if not isinstance(content_id, str) \
+                or not isinstance(category, (Category, type(None))):
             raise TypeError
 
         if category is not None:
@@ -352,9 +352,9 @@ class User:
     def confirm_experiment(self, summary_id: str, category: Category, image_counter: int) -> dict:
         ''' 确认发布实验
         '''
-        if not isinstance(summary_id, str) or \
-                not isinstance(category, Category) or \
-                not isinstance(image_counter, int):
+        if not isinstance(summary_id, str) \
+                or not isinstance(category, Category) \
+                or not isinstance(image_counter, int):
             raise TypeError
 
         response = requests.post(
@@ -390,10 +390,10 @@ class User:
             @param content: 评论内容
             @param reply_id: 被回复的user的ID (可被自动推导)
         '''
-        if not isinstance(target_id, str) or \
-                not isinstance(content, str) or \
-                not isinstance(target_type, str) or \
-                not isinstance(reply_id, (str, type(None))):
+        if not isinstance(target_id, str) \
+                or not isinstance(content, str) \
+                or not isinstance(target_type, str) \
+                or not isinstance(reply_id, (str, type(None))):
             raise TypeError
         if target_type not in ("User", "Discussion", "Experiment"):
             raise ValueError
@@ -462,8 +462,8 @@ class User:
             @param CommentID: 评论ID, 可以通过`get_comments`获取
             @param target_type: User, Discussion, Experiment
         '''
-        if not isinstance(CommentID, str) or \
-                not isinstance(target_type, str):
+        if not isinstance(CommentID, str) \
+                or not isinstance(target_type, str):
             raise TypeError
         if target_type not in ("User", "Discussion", "Experiment"):
             raise ValueError
@@ -501,15 +501,14 @@ class User:
             @param skip: 跳过的留言数量, 为(unix时间戳 * 1000)
             @param comment_id: 从comment_id开始获取take条消息 (另一种skip的规则)
         '''
-        if not isinstance(self.token, str) or \
-                not isinstance(self.auth_code, str) or \
-                not isinstance(target_type, str) or \
-                not isinstance(take, int) or \
-                not isinstance(skip, int) or \
-                not isinstance(comment_id, (str, type(None))):
+        if not isinstance(self.token, str) \
+                or not isinstance(self.auth_code, str) \
+                or not isinstance(target_type, str) \
+                or not isinstance(take, int) \
+                or not isinstance(skip, int) \
+                or not isinstance(comment_id, (str, type(None))):
             raise TypeError
-        if target_type not in ("User", "Discussion", "Experiment") or \
-            take <= 0 or skip < 0:
+        if target_type not in ("User", "Discussion", "Experiment") or take <= 0 or skip < 0:
             raise ValueError
 
         response = requests.post(
@@ -606,10 +605,11 @@ class User:
             @param user_id: 用户ID
             @param name: 用户名
         '''
-        if not isinstance(user_id, (str, type(None))) or \
-                    not isinstance(name, (str, type(None))) or \
-                    user_id is None and name is None:
+        if not isinstance(user_id, (str, type(None))) \
+                    or not isinstance(name, (str, type(None))):
             raise TypeError
+        if user_id is None and name is None:
+            raise ValueError("user_id and name can't be None at the same time")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Users/GetUser",
@@ -659,9 +659,9 @@ class User:
             @param category: 实验区, 黑洞区
             @param status: True: 收藏, False: 取消收藏
         '''
-        if not isinstance(content_id, str) or \
-                not isinstance(category, Category) or \
-                not isinstance(status, bool):
+        if not isinstance(content_id, str) \
+                or not isinstance(category, Category) \
+                or not isinstance(status, bool):
             raise TypeError
 
         response = requests.post(
@@ -690,9 +690,9 @@ class User:
             @status: 是否支持
             @return: 返回的json数据
         '''
-        if not isinstance(content_id, str) or \
-                not isinstance(category, Category) or \
-                not isinstance(status, bool):
+        if not isinstance(content_id, str) \
+                or not isinstance(category, Category) \
+                or not isinstance(status, bool):
             raise TypeError
 
         response = requests.post(
@@ -723,9 +723,9 @@ class User:
         '''
         if policy is None or authorization is None:
             raise RuntimeError("Sorry, Physics-Lab-AR can't upload this iamge")
-        if not isinstance(policy, str) or \
-                not isinstance(authorization, str) or \
-                not isinstance(image_path, str):
+        if not isinstance(policy, str) \
+                or not isinstance(authorization, str) \
+                or not isinstance(image_path, str):
             raise TypeError
         if not os.path.exists(image_path) or not os.path.isfile(image_path):
             raise FileNotFoundError
@@ -788,10 +788,10 @@ class User:
             @param skip: 跳过skip条消息
             @param take: 取take条消息
         '''
-        if category_id not in (0, 1, 2, 3, 4, 5) or \
-                not isinstance(skip, int) or \
-                not isinstance(take, int) or \
-                not isinstance(no_templates, bool):
+        if category_id not in (0, 1, 2, 3, 4, 5) \
+                or not isinstance(skip, int) \
+                or not isinstance(take, int) \
+                or not isinstance(no_templates, bool):
             raise TypeError
         if take <= 0 or skip < 0:
             raise ValueError
@@ -834,10 +834,10 @@ class User:
             @param skip: 传入一个时间戳, 跳过skip条消息
             @param take: 取take条消息
         '''
-        if not isinstance(content_id, str) or \
-                not isinstance(category, Category) or \
-                not isinstance(skip, int) or \
-                not isinstance(take, int):
+        if not isinstance(content_id, str) \
+                or not isinstance(category, Category) \
+                or not isinstance(skip, int) \
+                or not isinstance(take, int):
             raise TypeError
         if take <= 0 or skip < 0:
             raise ValueError
@@ -882,10 +882,10 @@ class User:
             @param take: 取take个用户
             @param query: 为用户id或昵称
         '''
-        if display_type not in ("Follower, Following") or \
-                not isinstance(user_id, str) or \
-                not isinstance(skip, int) or \
-                not isinstance(take, int):
+        if display_type not in ("Follower, Following") \
+                or not isinstance(user_id, str) \
+                or not isinstance(skip, int) \
+                or not isinstance(take, int):
             raise TypeError
 
         if display_type == "Follower":
@@ -928,8 +928,8 @@ class User:
             @param target_id: 被关注的用户的id
             @param action: true为关注, false为取消关注
         '''
-        if not isinstance(target_id, str) or \
-                not isinstance(action, bool):
+        if not isinstance(target_id, str) \
+                or not isinstance(action, bool):
             raise TypeError
 
         response = requests.post(

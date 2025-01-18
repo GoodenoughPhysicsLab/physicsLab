@@ -219,9 +219,9 @@ class Experiment(_Experiment):
         elif open_mode == OpenMode.crt:
             sav_name, experiment_type, *rest = args
 
-            if not isinstance(sav_name, str) or \
-                    not isinstance(experiment_type, ExperimentType) or \
-                    len(rest) != 0:
+            if not isinstance(sav_name, str) \
+                    or not isinstance(experiment_type, ExperimentType) \
+                    or len(rest) != 0:
                 raise TypeError
             force_crt = kwargs.get("force_crt", False)
             if not isinstance(force_crt, bool):

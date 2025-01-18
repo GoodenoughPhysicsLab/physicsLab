@@ -156,7 +156,7 @@ class _CircuitMeta(type):
         if _Expe.experiment_type != ExperimentType.Circuit:
             raise errors.ExperimentTypeError # TODO 更详尽的报错信息: 什么类型的实验不能创建什么元件
 
-        self = cls.__new__(cls) # type: ignore -> create subclass
+        self: "CircuitBase" = cls.__new__(cls)
         self.experiment = _Expe
 
         self.is_elementXYZ = False # 该元件是否为元件坐标系
@@ -166,10 +166,7 @@ class _CircuitMeta(type):
         self.__init__(x, y, z, *args, **kwargs)
         assert hasattr(self, "data") and isinstance(self.data, dict)
 
-        if identifier is None:
-            self.data["Identifier"] = randString(33)
-        else:
-            self.data["Identifier"] = identifier
+        self._set_identifier(identifier)
         self.set_position(x, y, z, elementXYZ)
         self.set_rotation()
 
@@ -201,9 +198,9 @@ class CircuitBase(_ElementBase, metaclass=_CircuitMeta):
     @final
     def set_rotation(self, x_r: num_type = 0, y_r: num_type = 0, z_r: num_type = 180) -> Self:
         ''' 设置元件的角度 '''
-        if not isinstance(x_r, (int, float)) or \
-                not isinstance(y_r, (int, float)) or \
-                not isinstance(z_r, (int, float)):
+        if not isinstance(x_r, (int, float)) \
+                or not isinstance(y_r, (int, float)) \
+                or not isinstance(z_r, (int, float)):
             raise TypeError
 
         x_r, y_r, z_r = round_data(x_r), round_data(y_r), round_data(z_r)
@@ -214,10 +211,10 @@ class CircuitBase(_ElementBase, metaclass=_CircuitMeta):
     def set_position(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> Self:
         ''' 设置元件的位置
         '''
-        if not isinstance(x, (int, float)) or \
-                not isinstance(y, (int, float)) or \
-                not isinstance(z, (int, float)) or \
-                not isinstance(elementXYZ, (bool, type(None))):
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(elementXYZ, (bool, type(None))):
             raise TypeError
 
         x, y, z = round_data(x), round_data(y), round_data(z)

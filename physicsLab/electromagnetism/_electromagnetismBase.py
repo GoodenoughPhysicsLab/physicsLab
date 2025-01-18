@@ -15,25 +15,22 @@ class _ElectromagnetismMeta(type):
             identifier: Optional[str] = None,
             **kwargs,
     ):
-        if not isinstance(x, (int, float)) or \
-                not isinstance(y, (int, float)) or \
-                not isinstance(z, (int, float)):
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)):
             raise TypeError
 
         _Expe = get_current_experiment()
         if _Expe.experiment_type != ExperimentType.Electromagnetism:
             raise errors.ExperimentTypeError
 
-        self = cls.__new__(cls) # type: ignore -> create subclass
+        self: "ElectromagnetismBase" = cls.__new__(cls)
         self.experiment = _Expe
 
         self.__init__(x, y, z, *args, **kwargs)
         assert hasattr(self, "data") and isinstance(self.data, dict)
 
-        if identifier is None:
-            self.data["Identifier"] = _tools.randString(33)
-        else:
-            self.data["Identifier"] = identifier
+        self._set_identifier(identifier)
         self.set_position(x, y, z)
         self.set_rotation(0, 0, 0)
 
@@ -51,9 +48,9 @@ class ElectromagnetismBase(_ElementBase, metaclass=_ElectromagnetismMeta):
 
     @override
     def set_position(self, x: num_type, y: num_type, z: num_type) -> Self:
-        if not isinstance(x, (int, float)) or \
-                not isinstance(y, (int, float)) or \
-                not isinstance(z, (int, float)):
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)):
             raise TypeError
 
         x, y, z= _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
@@ -67,9 +64,9 @@ class ElectromagnetismBase(_ElementBase, metaclass=_ElectromagnetismMeta):
             z_r: num_type,
     ) -> Self:
         ''' 设置元件的角度 '''
-        if not isinstance(x_r, (int, float)) or \
-                not isinstance(y_r, (int, float)) or \
-                not isinstance(z_r, (int, float)):
+        if not isinstance(x_r, (int, float)) \
+                or not isinstance(y_r, (int, float)) \
+                or not isinstance(z_r, (int, float)):
             raise TypeError
 
         assert hasattr(self, "data")
