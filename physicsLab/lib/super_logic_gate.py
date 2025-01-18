@@ -113,7 +113,6 @@ class Super_AndGate:
     def output(self) -> Pin:
         return self._outputs
 
-# TODO 优化代码
 class Super_OrGate:
     ''' 多引脚或门, 引脚数为num '''
     def __init__(
@@ -145,14 +144,6 @@ class Super_OrGate:
             self._outputs = [tmp.o]
             self._output = tmp.o
             return
-        elif bitnum == 3:
-            tmp = elements.Or_Gate(x, y, z, elementXYZ=True)
-            tmp2 = elements.Or_Gate(x, y + 1, z, elementXYZ=True)
-            crt_wires(tmp2.o, tmp.i_up)
-            self._inputs = [tmp.i_low, tmp2.i_low, tmp2.i_up]
-            self._outputs = [tmp.o]
-            self._output = tmp.o
-            return
 
         self._inputs = []
         self._outputs = []
@@ -167,7 +158,7 @@ class Super_OrGate:
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
                 crt_wires(input_, output_)
-        else: # num % 2 == 1
+        elif bitnum % 2 == 1:
             num_copy = bitnum
             while num_copy != 1:
                 tmp = elements.Or_Gate(x, y + (bitnum - num_copy) / 2, z, elementXYZ=True)
@@ -179,6 +170,8 @@ class Super_OrGate:
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
                 crt_wires(input_, output_)
+        else:
+            assert False
 
     @property
     def inputs(self) -> UnitPin:
@@ -216,14 +209,6 @@ class Super_NorGate:
             self._outputs = [tmp.o]
             self._output = tmp.o
             return
-        elif bitnum == 3:
-            tmp = elements.Nor_Gate(x, y, z, elementXYZ=True)
-            tmp2 = elements.Or_Gate(x, y + 1, z, elementXYZ=True)
-            crt_wires(tmp2.o, tmp.i_up)
-            self._inputs = [tmp.i_low, tmp2.i_low, tmp2.i_up]
-            self._outputs = [tmp.o]
-            self._output = tmp.o
-            return
 
         self._inputs = []
         self._outputs = []
@@ -238,7 +223,7 @@ class Super_NorGate:
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
                 crt_wires(input_, output_)
-        else: # num % 2 == 1
+        elif bitnum % 2 == 1:
             num_copy = bitnum
             while num_copy != 1:
                 tmp = elements.Or_Gate(x, y + (bitnum - num_copy) / 2, z, elementXYZ=True)
@@ -250,6 +235,8 @@ class Super_NorGate:
             self._output = next_orgates._output
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
                 crt_wires(input_, output_)
+        else:
+            assert False
 
     @property
     def inputs(self) -> UnitPin:

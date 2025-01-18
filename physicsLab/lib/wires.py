@@ -38,9 +38,9 @@ class UnitPin:
 
 def _check_union_pin_type(func: Callable):
     def result(
-        source_pin: Union[UnitPin, Pin],
-        target_pin: Union[UnitPin, Pin],
-        *args, **kwargs
+            source_pin: Union[UnitPin, Pin],
+            target_pin: Union[UnitPin, Pin],
+            *args, **kwargs
     ) -> None:
         if isinstance(source_pin, Pin):
             source_pin = UnitPin(source_pin.element_self, source_pin)
@@ -51,6 +51,7 @@ def _check_union_pin_type(func: Callable):
             raise TypeError
 
         if len(source_pin.pins) != len(target_pin.pins):
+            # TODO 警告信息里把具体的是哪个变量给显示出来
             errors.warning(
                 f"The number of {source_pin.lib_self.__class__.__name__}'s output pin "
                 f"is {len(source_pin.pins)}, "
