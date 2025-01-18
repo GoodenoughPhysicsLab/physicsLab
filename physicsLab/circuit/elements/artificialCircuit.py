@@ -609,7 +609,6 @@ class Operational_Amplifier(CircuitBase):
         self.properties["最小电压"] = min_voltage
         return self
 
-    @override
     def __repr__(self) -> str:
         return f"Operational_Amplifier({self._position.x}, {self._position.y}, {self._position.z}, " \
             f"elementXYZ={self.is_elementXYZ}, " \
