@@ -314,16 +314,19 @@ def connect(*verteses: Vertex) -> List[Wire]:
     if not all(isinstance(i, Vertex) for i in verteses):
         raise TypeError
     pins = [i for i in verteses if not isinstance(i, VoidVertex)]
-    res = crt_wire(*pins)
+    if len(pins) > 1:
+        crt_wire(*pins)
     expe = get_current_experiment()
     if _gicw.get(expe) is None:
         _gicw[expe] = set()
+    res = _gicw[expe].copy()
     for i in range(len(verteses) - 1):
         source_vertex, target_vertex = verteses[i], verteses[i + 1]
         if source_vertex == target_vertex: # 这里假定了VoidVertex间不能相连，可能出bug
             raise errors.InvalidWireError("can't link wire to itself")
         _gicw[expe].add(frozenset({source_vertex, target_vertex}))
-    return res
+    res = _gicw[expe] - res
+    return list(res)
 
 def node_wrapper(name: str) -> Node:
     '''用于将函数的作用效果整体包装为一个节点\n
@@ -423,11 +426,11 @@ class SubNode(Node):
         super().__init__(x, y, z, "sub", gnd)
         x, y, z = self._pos
 
-        r11 = Resistor(x - 1, y + .5, z, elementXYZ=True).set_resistance(99)
-        r12 = Resistor(x, y + .5, z, elementXYZ=True).set_resistance(1)
-        r21 = Resistor(x - 1, y - .5, z, elementXYZ=True).set_resistance(99)
-        r22 = Resistor(x, y - .5, z, elementXYZ=True).set_resistance(1)
-        opamp = Operational_Amplifier(x + 1, y, z, elementXYZ=True).set_properties(100)
+        r11 = Resistor(x - 1, y + .5, z, elementXYZ=True, resistance=99)
+        r12 = Resistor(x, y + .5, z, elementXYZ=True, resistance=1)
+        r21 = Resistor(x - 1, y - .5, z, elementXYZ=True, resistance=99)
+        r22 = Resistor(x, y - .5, z, elementXYZ=True, resistance=1)
+        opamp = Operational_Amplifier(x + 1, y, z, elementXYZ=True, gain=100)
         crt_wire(r12.red, r11.black)
         crt_wire(r11.black, opamp.i_pos)
         crt_wire(r22.red, r21.black)
