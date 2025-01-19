@@ -610,10 +610,10 @@ class Operational_Amplifier(CircuitBase):
     @override
     def __repr__(self) -> str:
         return f"Operational_Amplifier({self._position.x}, {self._position.y}, {self._position.z}, " \
-              f"elementXYZ={self.is_elementXYZ}, " \
-              f"gain={self.properties['增益系数']}, " \
-              f"max_voltage={self.properties['最大电压']}, " \
-              f"min_voltage={self.properties['最小电压']})"
+            f"elementXYZ={self.is_elementXYZ}, " \
+            f"gain={self.properties['增益系数']}, " \
+            f"max_voltage={self.properties['最大电压']}, " \
+            f"min_voltage={self.properties['最小电压']})"
 
     @property
     def i_neg(self) -> Pin:

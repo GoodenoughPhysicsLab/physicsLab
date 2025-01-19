@@ -270,8 +270,8 @@ class Battery_Source(_TwoPinMixIn):
             @param voltage: 电压
             @param internal_resistance: 内阻
         '''
-        if not isinstance(voltage, (int, float, type(None))) or \
-                not isinstance(internal_resistance, (int, float, type(None))):
+        if not isinstance(voltage, (int, float, type(None))) \
+                or not isinstance(internal_resistance, (int, float, type(None))):
             raise TypeError
 
         if voltage is not None:

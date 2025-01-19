@@ -66,12 +66,12 @@ class NotificationsMsgIter(_async_tool.AsyncTool):
                 0: 全部, 1: 系统邮件, 2: 关注和粉丝, 3: 评论和回复, 4: 作品通知, 5: 管理记录
         '''
 
-        if not isinstance(user, (api.User, type(None))) or \
-                not isinstance(start_time, (int, float)) or \
-                not isinstance(end_time, (int, float, type(None))) or \
-                not isinstance(user_id, (str, type(None))) or \
-                not isinstance(max_retry, (int, type(None))) or \
-                not isinstance(category_id, int):
+        if not isinstance(user, (api.User, type(None))) \
+                or not isinstance(start_time, (int, float)) \
+                or not isinstance(end_time, (int, float, type(None))) \
+                or not isinstance(user_id, (str, type(None))) \
+                or not isinstance(max_retry, (int, type(None))) \
+                or not isinstance(category_id, int):
             raise TypeError
         if category_id not in range(0, 6):
             raise ValueError
@@ -158,12 +158,12 @@ class BannedMsgIter:
                     模板可能会被紫兰斋修改, 但消息模板基本都是稳定的
         '''
 
-        if not isinstance(user, (api.User, type(None))) or \
-                not isinstance(start_time, (int, float)) or \
-                not isinstance(end_time, (int, float, type(None))) or \
-                not isinstance(user_id, (str, type(None))) or \
-                not isinstance(max_retry, (int, type(None))) or \
-                not isinstance(get_banned_template, bool):
+        if not isinstance(user, (api.User, type(None))) \
+                or not isinstance(start_time, (int, float)) \
+                or not isinstance(end_time, (int, float, type(None))) \
+                or not isinstance(user_id, (str, type(None))) \
+                or not isinstance(max_retry, (int, type(None))) \
+                or not isinstance(get_banned_template, bool):
             raise TypeError
 
         if end_time is None:
@@ -230,11 +230,11 @@ class WarnedMsgIter:
             @param banned_message_callback: 封禁记录回调函数
             @return: 封禁记录列表
         '''
-        if not isinstance(user, api.User) or \
-                not isinstance(user_id, str) or \
-                not isinstance(start_time, (int, float)) or \
-                not isinstance(end_time, (int, float, type(None))) or \
-                maybe_warned_message_callback is not None \
+        if not isinstance(user, api.User) \
+                or not isinstance(user_id, str) \
+                or not isinstance(start_time, (int, float)) \
+                or not isinstance(end_time, (int, float, type(None))) \
+                or maybe_warned_message_callback is not None \
                 and not callable(maybe_warned_message_callback):
             raise TypeError
         if user.is_anonymous:
@@ -313,12 +313,12 @@ class RelationsIter(_async_tool.AsyncTool):
             @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
             @param amount: Follower/Following的数量, 为None时api将自动查询
         '''
-        if not isinstance(user, api.User) or \
-                not isinstance(user_id, str) or \
-                not isinstance(display_type, str) or \
-                not isinstance(max_retry, (int, type(None))) or \
-                not isinstance(amount, (int, type(None))) or \
-                display_type not in ("Follower", "Following"):
+        if not isinstance(user, api.User) \
+                or not isinstance(user_id, str) \
+                or not isinstance(display_type, str) \
+                or not isinstance(max_retry, (int, type(None))) \
+                or not isinstance(amount, (int, type(None))) \
+                or display_type not in ("Follower", "Following"):
             raise TypeError
         if max_retry is not None and max_retry < 0:
             raise ValueError
@@ -369,14 +369,14 @@ class AvatarsIter(_async_tool.AsyncTool):
             @param user: 查询者, None为匿名用户
             @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
         '''
-        if not isinstance(user_id, str) or \
-                not isinstance(category, str) or \
-                not isinstance(size_category, str) or \
-                not isinstance(user, (api.User, type(None))) or \
-                not isinstance(max_retry, (int, type(None))):
+        if not isinstance(user_id, str) \
+                or not isinstance(category, str) \
+                or not isinstance(size_category, str) \
+                or not isinstance(user, (api.User, type(None))) \
+                or not isinstance(max_retry, (int, type(None))):
             raise TypeError
-        if category not in ("User", "Experiment", "Discussion") or \
-                size_category not in ("small.round", "thumbnail", "full"):
+        if category not in ("User", "Experiment", "Discussion") \
+                or size_category not in ("small.round", "thumbnail", "full"):
             raise ValueError
 
         if user is None:
