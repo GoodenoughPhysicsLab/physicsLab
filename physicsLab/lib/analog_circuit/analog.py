@@ -7,13 +7,13 @@ from physicsLab._core import (
 from physicsLab import _tools
 from physicsLab.circuit.elements import *
 from physicsLab.circuit._circuit_core import Pin, crt_wire, Wire
-from physicsLab.typehint import Optional, num_type
+from physicsLab.typehint import Optional, num_type, List, Set, Dict, FrozenSet
 
 # 全部节点列表
-_gn: dict[_Experiment, list["Node"]] = {}
+_gn: Dict[_Experiment, List["Node"]] = {}
 
 # 全部节点间导线
-_gicw: dict[_Experiment, set[frozenset["Vertex"]]] = {}
+_gicw: Dict[_Experiment, Set[FrozenSet["Vertex"]]] = {}
 
 multiply_mode = "mos"
 
@@ -47,14 +47,14 @@ class Node:
                  gnd: Ground_Component,
                  /, *,
                  elementXYZ: Optional[bool] = None) -> None:
-        self.elements: list[CircuitBase] = []
-        self._input: list[Vertex] = []
+        self.elements: List[CircuitBase] = []
+        self._input: List[Vertex] = []
         self._output: Vertex = VoidVertex(self)
         self.name = name
         if not isinstance(gnd, Ground_Component):
             raise GroundNotFoundError
         self.gnd = gnd
-        self.wires: set[Wire] = set()
+        self.wires: Set[Wire] = set()
         expe = get_current_experiment()
         if _gn.get(expe) is None:
             _gn[expe] = [self]
@@ -67,14 +67,14 @@ class Node:
         x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
         self._pos = _tools.position(x, y, z)
 
-    def extend(self, elements: list[CircuitBase], wires: set[Wire]) -> Self:
+    def extend(self, elements: List[CircuitBase], wires: Set[Wire]) -> Self:
         ''' 扩大元件列表和导线集 '''
         self.elements.extend(elements)
         self.wires |= wires
         return self
 
     @property
-    def antecedent(self) -> set["Node"]:
+    def antecedent(self) -> Set["Node"]:
         ''' 返回与该节点输入端相连的所有节点 '''
         res = set()
         for i in _gicw[get_current_experiment()]:
@@ -84,7 +84,7 @@ class Node:
         return res
 
     @property
-    def consequent(self) -> set["Node"]:
+    def consequent(self) -> Set["Node"]:
         ''' 返回与该节点输出端相连的所有节点 '''
         return {list(i - {self.output})[0].node for i in _gicw[get_current_experiment()] if self.output in i}
 
@@ -228,7 +228,7 @@ class Node:
         return self
 
     @property
-    def input(self) -> list[Vertex]:
+    def input(self) -> List[Vertex]:
         return self._input
 
     @property
@@ -236,7 +236,7 @@ class Node:
         return self._output
 
     @input.setter
-    def input(self, value: list[Pin]) -> None:
+    def input(self, value: List[Pin]) -> None:
         if not isinstance(value, list):
             raise TypeError
         self._input = [Vertex(i, self) for i in value]
@@ -349,14 +349,14 @@ def node_wrapper(name: str) -> Node:
             res: Node = func(*args, **kwargs)
             if not isinstance(res, Node):
                 raise TypeError("The return value of the function must be a Node object")
-            elements: list[CircuitBase] = expe.Elements[ele_count:]
+            elements: List[CircuitBase] = expe.Elements[ele_count:]
             # all_wires = expe.Wires - prev_wires
             all_vertex_wires = _gicw[expe] - prev_vertex_wires
             nodes = set(_gn[expe]) - set(prev_nodes)
             # wires = all_wires.copy()
 
             gnd = None
-            inputs: set[Vertex] = set()
+            inputs: Set[Vertex] = set()
             input_nodes = []
             for i in list(args) + list(kwargs.values()):
                 if isinstance(i, Node):
@@ -406,7 +406,7 @@ class VoidNode(Node):
         super().__init__(x, y, z, "void", gnd, elementXYZ=elementXYZ)
 
 class ComplexNode(Node):
-    def __init__(self, subnodes: set[Node], x, y, z, name, gnd, /, *, elementXYZ = None):
+    def __init__(self, subnodes: Set[Node], x, y, z, name, gnd, /, *, elementXYZ = None):
         super().__init__(x, y, z, name, gnd, elementXYZ=elementXYZ)
         self.subnodes = subnodes
         expe = get_current_experiment()
