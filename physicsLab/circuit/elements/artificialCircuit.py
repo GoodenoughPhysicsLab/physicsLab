@@ -446,15 +446,61 @@ class Transistor(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            is_PNP: bool = True,
+            gain: num_type = 100.0,
+            max_power: num_type = 5.0,
     ) -> None:
+        if not isinstance(is_PNP, bool) \
+                or not isinstance(gain, (int, float)) \
+                or not isinstance(max_power, (int, float)):
+            raise TypeError
+
         self.data: CircuitElementData = {
             "ModelID": "Transistor", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
-            "Properties": {"PNP": 1.0, "放大系数": 100.0, "最大功率": 5.0, "锁定": 1.0},
+            "Properties": {"PNP": Generate, "放大系数": Generate, "最大功率": Generate, "锁定": 1.0},
             "Statistics": {"电压BC": 0.0, "电压BE": 0.0, "电压CE": 0.0, "功率": 0.0},
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+        self.set_properties(is_PNP=is_PNP, gain=gain, max_power=max_power)
+
+    def set_properties(
+            self,
+            *,
+            is_PNP: Optional[bool] = None,
+            gain: Optional[num_type] = None,
+            max_power: Optional[num_type] = None,
+    ) -> Self:
+        ''' 修改三极管属性
+            @param is_PNP: 是PNP还是NPN, True时为PNP
+            @param gain: 放大系数
+            @param max_power: 最大功率
+        '''
+        if not isinstance(is_PNP, (bool, type(None))) \
+                or not isinstance(gain, (int, float, type(None))) \
+                or not isinstance(max_power, (int, float, type(None))):
+            raise TypeError
+
+        if is_PNP is not None:
+            self.properties["PNP"] = float(is_PNP)
+        if gain is not None:
+            self.properties["放大系数"] = gain
+        if max_power is not None:
+            self.properties["最大功率"] = max_power
+
+        return self
+
+    def __repr__(self) -> str:
+        res = f"Transistor({self._position.x}, {self._position.y}, {self._position.z}, " \
+              f"elementXYZ={self.is_elementXYZ}, is_PNP={bool(self.properties['PNP'])}"
+
+        # TODO 不论是否是默认参数都显示写到res里
+        if self.properties["放大系数"] != 100.0:
+            res += f", gain={self.properties['放大系数']}"
+        if self.properties["最大功率"] != 5.0:
+            res += f", max_power={self.properties['最大功率']}"
+        return res + ")"
 
     @property
     def B(self) -> Pin:
@@ -530,6 +576,7 @@ class Operational_Amplifier(CircuitBase):
 
     def set_properties(
             self,
+            *,
             gain: Optional[num_type] = None,
             max_voltage: Optional[num_type] = None,
             min_voltage: Optional[num_type] = None,
@@ -632,15 +679,50 @@ class N_MOSFET(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            beta: num_type = 0.027,
+            threshold: num_type = 1.5,
+            max_power: num_type = 1000,
     ) -> None:
+        if not isinstance(beta, (int, float)) \
+                or not isinstance(threshold, (int, float)) \
+                or not isinstance(max_power, (int, float)):
+            raise TypeError
+
         self.data: CircuitElementData = {
-            "ModelID": "N-MOSFET", "Identifier": Generate, "IsBroken": False,
-            "IsLocked": False, "Properties": {"PNP": 1.0, "放大系数": 0.027,
-                                                "阈值电压": 1.5, "最大功率": 100.0, "锁定": 1.0},
+            "ModelID": "N-MOSFET", "Identifier": Generate,
+            "IsBroken": False, "IsLocked": False,
+            "Properties": {"PNP": 1.0, "放大系数": Generate,
+                        "阈值电压": Generate, "最大功率": Generate, "锁定": 1.0},
             "Statistics": {"电压GS": 0.0, "电压": 0.0, "电流": 0.0, "功率": 0.0, "状态": 0.0},
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+        self.set_properties(beta=beta, threshold=threshold, max_power=max_power)
+
+    def set_properties(
+            self,
+            *,
+            beta: Optional[num_type] = None,
+            threshold: Optional[num_type] = None,
+            max_power: Optional[num_type] = None,
+    ) -> Self:
+        ''' 设置 N-MOSFET 属性
+            @param beta: 放大系数
+            @param threshold: 阈值电压
+            @param max_power: 最大功率
+        '''
+        if not isinstance(threshold, (int, float, type(None))) \
+                or not isinstance(max_power, (int, float, type(None))) \
+                or not isinstance(beta, (int, float, type(None))):
+            raise TypeError
+
+        if beta is not None:
+            self.properties["放大系数"] = beta
+        if threshold is not None:
+            self.properties["阈值电压"] = threshold
+        if max_power is not None:
+            self.properties["最大功率"] = max_power
+        return self
 
     @property
     def D(self) -> Pin:
@@ -656,7 +738,15 @@ class N_MOSFET(CircuitBase):
 
 class P_MOSFET(CircuitBase):
     ''' P-MOSFET '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, elementXYZ=None):
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            elementXYZ: Optional[bool] = None,
+            identifier: Optional[str] = None,
+    ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "P-MOSFET", "Identifier": Generate, "IsBroken": False,
             "IsLocked": False, "Properties": {"PNP": 1.0, "放大系数": 0.027,

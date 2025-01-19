@@ -431,9 +431,9 @@ class Experiment(_Experiment):
             if name == "555_Timer":
                 return circuit.NE555(x, y, z, *args, **kwargs)
             elif name == "8bit_Input":
-                return circuit.eight_bit_Input(x, y, z, *args, **kwargs)
+                return circuit.Eight_Bit_Input(x, y, z, *args, **kwargs)
             elif name == "8bit_Display":
-                return circuit.eight_bit_Display(x, y, z, *args, **kwargs)
+                return circuit.Eight_Bit_Display(x, y, z, *args, **kwargs)
             else:
                 return eval(f"circuit.{name}({x}, {y}, {z}, *{args}, **{kwargs})")
         elif self.experiment_type == ExperimentType.Celestial:

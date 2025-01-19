@@ -242,15 +242,44 @@ class Battery_Source(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            voltage: num_type = 1.5,
+            internal_resistance: num_type = 0,
     ) -> None:
+        if not isinstance(voltage, (int, float)) \
+                or not isinstance(internal_resistance, (int, float)):
+            raise TypeError
+
         self.data: CircuitElementData = {
             "ModelID": "Battery Source", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
-            "Properties": {"最大功率": 16.2, "电压": 3.0, "内阻": 0.5, "锁定": 1.0},
+            "Properties": {"最大功率": 16.2, "电压": Generate, "内阻": Generate, "锁定": 1.0},
             "Statistics": {"电流": 0, "功率": 0, "电压": 0},
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+        self.set_properties(voltage=voltage, internal_resistance=internal_resistance)
+
+    def set_properties(
+            self,
+            *,
+            voltage: Optional[num_type] = None,
+            internal_resistance: Optional[num_type] = None,
+    ) -> Self:
+        ''' 设置 一节电池 的属性
+            @param voltage: 电压
+            @param internal_resistance: 内阻
+        '''
+        if not isinstance(voltage, (int, float, type(None))) or \
+                not isinstance(internal_resistance, (int, float, type(None))):
+            raise TypeError
+
+        if voltage is not None:
+            self.properties["电压"] = voltage
+        if internal_resistance is not None:
+            self.properties["内阻"] = internal_resistance
+
+        return self
 
 class Student_Source(CircuitBase):
     ''' 学生电源 '''

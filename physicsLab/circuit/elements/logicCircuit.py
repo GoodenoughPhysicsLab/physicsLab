@@ -679,7 +679,7 @@ class Random_Generator(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 3)
 
-class eight_bit_Input(_LogicBase):
+class Eight_Bit_Input(_LogicBase):
     ''' 八位输入器 '''
     is_bigElement = True
 
@@ -747,7 +747,7 @@ class eight_bit_Input(_LogicBase):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 7)
 
-class eight_bit_Display(_LogicBase):
+class Eight_Bit_Display(_LogicBase):
     ''' 八位显示器 '''
     is_bigElement = True
 
@@ -812,16 +812,65 @@ class Schmitt_Trigger(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            high_level: num_type = 5.0,
+            low_level: Optional[num_type] = None,
+            inverted: bool = False,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Schmitt Trigger", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
-            "Properties": {"工作模式": 0.0, "切变速率": 0.5, "高电准位": 5.0, "锁定": 1.0,
-                            "正向阈值": 3.33333334, "低电准位": 0.0, "负向阈值": 1.66666666},
+            "Properties": {"工作模式": Generate, "切变速率": 0.5, "高电准位": Generate,
+                           "锁定": 1.0, "正向阈值": 3.3333332538604736,
+                           "低电准位": Generate, "负向阈值": 1.6666666269302368},
             "Statistics": {"输入电压": 0.0, "输出电压": 0.0, "1": 0.0},
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+        if low_level is None:
+            low_level = max(high_level, 0)
+        self.set_properties(high_level=high_level, low_level=low_level, inverted=inverted)
+
+    def set_properties(
+            self,
+            *,
+            high_level: Optional[num_type] = None,
+            low_level: Optional[num_type] = None,
+            inverted: Optional[bool] = None,
+    ) -> Self:
+        ''' 设置施密特触发器的属性
+            @param high_level: 高电平电平
+            @param low_level: 低电平电平
+            @param inverted: 是否翻转
+        '''
+        if not isinstance(high_level, (int, float, type(None))) \
+                or not isinstance(low_level, (int, float, type(None))) \
+                or not isinstance(inverted, (bool, type(None))):
+            raise TypeError
+
+        if high_level is not None:
+            self.properties["高电准位"] = high_level
+        if low_level is not None:
+            self.properties["低电准位"] = low_level
+        if inverted is not None:
+            self.properties["工作模式"] = float(inverted)
+
+        if self.properties["高电准位"] < self.properties["低电准位"]:
+            raise ValueError("The high level must be greater than the low level")
+
+        return self
+
+    def __repr__(self) -> str:
+        res = f"Schmitt_Trigger({self._position.x}, {self._position.y}, {self._position.z}, " \
+            f"elementXYZ={self.is_elementXYZ}"
+
+        # TODO 显示指明而非使用默认值
+        if self.properties["高电准位"] != 5.0:
+            res += f", high_level={self.properties['高电准位']}"
+        if self.properties["低电准位"] != 0.0:
+            res += f", low_level={self.properties['低电准位']}"
+        if self.properties["工作模式"] != 0.0:
+            res += f", inverted=True"
+        return res + ")"
 
     @property
     def i(self) -> InputPin:
