@@ -17,7 +17,6 @@ _gicw: Dict[_Experiment, Set[FrozenSet["Vertex"]]] = {}
 
 multiply_mode = "mos"
 
-
 class Vertex(Pin):
     ''' 节点的接线柱 '''
     def __init__(self, pin: Pin, node: "Node"):
@@ -46,7 +45,8 @@ class Node:
                  name: str,
                  gnd: Ground_Component,
                  /, *,
-                 elementXYZ: Optional[bool] = None) -> None:
+                 elementXYZ: Optional[bool] = None,
+    ) -> None:
         self.elements: List[CircuitBase] = []
         self._input: List[Vertex] = []
         self._output: Vertex = VoidVertex(self)
@@ -142,15 +142,16 @@ class Node:
 
     def locate(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: bool = True) -> Self:
         self.shift(x - self._pos.x, y - self._pos.y, z - self._pos.z, elementXYZ=elementXYZ)
+        return self
 
     @pos.setter
     def pos(self, value: tuple) -> None:
         if len(value) != 3:
             raise ValueError
         x, y, z = value
-        if not isinstance(x, num_type) or \
-            not isinstance(y, num_type) or \
-            not isinstance(z, num_type):
+        if not isinstance(x, num_type) \
+                or not isinstance(y, num_type) \
+                or not isinstance(z, num_type):
             raise TypeError
         if not get_current_experiment().is_elementXYZ:
             x, y, z = native_to_elementXYZ(x, y, z)
@@ -162,6 +163,7 @@ class Node:
         expe = get_current_experiment()
         if z is None:
             z = max(_gn[expe])
+        assert z is not None
         same_level_y = [i.pos.y - i.height/2 for i in _gn[expe] if i.pos.z == z]
         if len(nodes) == 0:
             self.locate(self.width/2 - 6,
@@ -329,14 +331,14 @@ def connect(*verteses: Vertex) -> List[Wire]:
     return list(res)
 
 def node_wrapper(name: str) -> Node:
-    '''用于将函数的作用效果整体包装为一个节点\n
-    将所有在函数作用过程中与函数参数中Node对象的输出端相连的Pin作为新Node的输入端，
-    并将函数的返回的Node的输出端作为新Node的输出端\n
-    新Node的元件集为作用过程中所有以正常方法新增的元件，
-    导线集为作用过程中所有以正常方法新增的导线除去，
-    位置为作用过程中产生的所有元件的正中央，
-    接地为函数参数中的Node对象的或者作用过程中新增的接地元件\n
-    该装饰器只能用于返回Node对象的函数
+    ''' 用于将函数的作用效果整体包装为一个节点
+        将所有在函数作用过程中与函数参数中Node对象的输出端相连的Pin作为新Node的输入端,
+        并将函数的返回的Node的输出端作为新Node的输出端
+        新Node的元件集为作用过程中所有以正常方法新增的元件,
+        导线集为作用过程中所有以正常方法新增的导线除去,
+        位置为作用过程中产生的所有元件的正中央,
+        接地为函数参数中的Node对象的或者作用过程中新增的接地元件
+        该装饰器只能用于返回Node对象的函数
     '''
     def decorator_node_wrapper(func: FunctionType) -> Node:
         def wrapper(*args, **kwargs):
