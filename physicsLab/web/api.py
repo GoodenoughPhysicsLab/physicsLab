@@ -165,6 +165,7 @@ class User:
                 self.decoration = tmp["Data"]["User"]["Decoration"]
                 self.verification = tmp["Data"]["User"]["Verification"]
 
+        self.statistic = tmp["Data"]["Statistic"]
         assert isinstance(self.token, str) and isinstance(self.auth_code, str)
 
     def __login(
@@ -1000,76 +1001,23 @@ class User:
     async def async_modify_info(self, target: str):
         return await _async_wrapper(self.modify_info, target)
 
-    # TODO 该api有问题, 应该让用户指定ActivityID
-    def receive_bonus(self) -> dict:
+    def receive_bonus(self, activity_id: str, index: int) -> dict:
         ''' 领取每日签到奖励
+            @param activity_id: 活动id
+            @param index: 该活动的第几次奖励
         '''
+        if not isinstance(activity_id, str) \
+                or not isinstance(index, int):
+            raise TypeError
+        if index < 0:
+            raise ValueError
+
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Users/ReceiveBonus",
             json={
-                "ActivityID": "66d2103b8c1a9a5dbc238435",
-                "Index": 0,
-                "Statistic": {
-                    "ID": self.user_id,
-                    "PushToken": None,
-                    "PushRecord": 0,
-                    "UnreadMessages": 0,
-                    "UnreadLetters": 0,
-                    "LoginContinuity": 0,
-                    "LoginCounter": 4,
-                    "ResearchSurvey": None,
-                    "PushTags": [],
-                    "PushFrequency": 0,
-                    "Cover": None,
-                    "CommentCount": 1,
-                    "Activities": [
-                        {
-                            "ActivityID": "5efd54a9a533c76504c81ba9",
-                            "Counters": [0, 0, 0, 0, 0, 0, 0],
-                            "Gains": [0],
-                            "Avails": [],
-                            "Expiration": "2024-12-31T14:00:00+08:00",
-                            "LastModified": "2024-10-27T08:00:00+08:00",
-                            "Finished": False,
-                        },{
-                            "ActivityID": "66d2103b8c1a9a5dbc238435",
-                            "Counters": [0, 0, 0],
-                            "Gains": [],
-                            "Avails": [0],
-                            "Expiration": "2025-01-01T14:00:00+08:00",
-                            "LastModified": "2024-10-27T08:00:00+08:00",
-                            "Finished": False,
-                        },{
-                            "ActivityID": "5b63edc3795d574798950a82",
-                            "Counters": [0],
-                            "Gains": [],
-                            "Avails": [],
-                            "Expiration": "2030-12-31T14:00:00+08:00",
-                            "LastModified": "0001-01-01T08:00:00+08:00",
-                            "Finished": False,
-                        },{
-                            "ActivityID": "65c289c78a2841c2ff426eeb",
-                            "Counters": [0],
-                            "Gains": [],
-                            "Avails": [],
-                            "Expiration": "2024-12-31T14:00:00+08:00",
-                            "LastModified": "0001-01-01T08:00:00+08:00",
-                            "Finished": False,
-                        },{
-                            "ActivityID": "65ca49f3b061f3711a7237a8",
-                            "Counters": [0],
-                            "Gains": [],
-                            "Avails": [],
-                            "Expiration": "2024-12-31T14:00:00+08:00",
-                            "LastModified": "0001-01-01T08:00:00+08:00",
-                            "Finished": False,
-                        },
-                    ],
-                    "Counters": {},
-                    "Surveys": {},
-                    "LastVersion": 2500,
-                    "LastLanguage": "Chinese",
-                },
+                "ActivityID": activity_id,
+                "Index": index,
+                "Statistic": self.statistic,
             },
             headers={
                 "Content-Type": "application/json",
