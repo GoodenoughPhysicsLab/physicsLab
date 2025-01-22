@@ -165,13 +165,14 @@ class User:
                 self.decoration = tmp["Data"]["User"]["Decoration"]
                 self.verification = tmp["Data"]["User"]["Verification"]
 
+        # 存储了所有与每日活动有关的奖励信息 (比如ActivityID)
         self.statistic = tmp["Data"]["Statistic"]
         assert isinstance(self.token, str) and isinstance(self.auth_code, str)
 
     def __login(
             self,
             username: Optional[str] = None,
-            password: Optional[str] = None
+            password: Optional[str] = None,
     ) -> _login_res:
         ''' 登录, 默认为匿名登录
 
@@ -186,10 +187,7 @@ class User:
             plar_version = 2411
 
         headers = {
-            "x-API-Version": str(plar_version),
-            "Accept": "application/json",
             "Content-Type": "application/json",
-            "Accept-Language": "zh-CN",
         }
         if hasattr(self, "token") and hasattr(self, "auth_code"):
             headers["x-API-Token"] = self.token
