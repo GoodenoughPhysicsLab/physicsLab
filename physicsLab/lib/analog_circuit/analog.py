@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+import math
 from types import FunctionType
 
 from physicsLab._core import (
-    get_current_experiment, _Experiment, native_to_elementXYZ, elementXYZ_to_native
+    get_current_experiment, _Experiment, native_to_elementXYZ, elementXYZ_to_native, ElementXYZ
 )
 from physicsLab import _tools
 from physicsLab.circuit.elements import *
@@ -297,9 +298,12 @@ class Node:
         if isinstance(other, (int, float)):
             return self * (1/other)
         elif isinstance(other, Node):
-            return divide(self, other)
+            return true_divide(self, other)
         else:
             raise TypeError
+    
+    def __rtruediv__(self, other: num_type) -> "ComplexNode":
+        return true_divide(other, self)
 
 class GroundNotFoundError(Exception):
     ''' 未找到接地元件 '''
@@ -407,10 +411,12 @@ class PinNode(Node):
         self.output = pin
 
 class VoidNode(Node):
+    ''' 空节点 '''
     def __init__(self, x, y, z, gnd, /, *, elementXYZ = None):
         super().__init__(x, y, z, "void", gnd, elementXYZ=elementXYZ)
 
 class ComplexNode(Node):
+    ''' 复合节点 '''
     def __init__(self, subnodes: Set[Node], x, y, z, name, gnd, /, *, elementXYZ = None):
         super().__init__(x, y, z, name, gnd, elementXYZ=elementXYZ)
         self.subnodes = subnodes
@@ -459,7 +465,7 @@ class LinearNode(Node):
             self.elements = [st1]
             self.output = st1.o
         elif k == 1 and scale:
-            oa1 = Operational_Amplifier(x, y, z, elementXYZ=True, gain=10_000_000)
+            oa1 = Operational_Amplifier(x, y, z, elementXYZ=True)
             crt_wire(oa1.i_neg, oa1.o)
 
             self.elements = [oa1]
@@ -478,14 +484,15 @@ class LinearNode(Node):
             self.output = oa1.o
             positive = False
         elif k >= 100:
-            oa1 = Operational_Amplifier(x + .5, y, z, elementXYZ=True, gain=k)
+            oa1 = Operational_Amplifier(x + .5 if scale else x + 1, y, z, elementXYZ=True, gain=k)
 
             self.elements = [oa1]
             self.input = [oa1.i_pos]
             self.output = oa1.o
             positive = False
         elif -100 < k < 0:
-            oa1 = Operational_Amplifier(x + .5, y, z, elementXYZ=True, gain=100)
+            oa1 = Operational_Amplifier(
+                x + .5 if scale else x + 1, y, z, elementXYZ=True, gain=100)
             r1 = Resistor(x - .5 if scale else x, y - .5 if scale else y + .5, z, elementXYZ=True, resistance=1)
             r2 = Resistor(x - .5 if scale else x - 1, y + .5, z, elementXYZ=True, resistance=-100/k - 1)
             crt_wire(r2.black, oa1.i_neg)
@@ -497,7 +504,7 @@ class LinearNode(Node):
             self.output = oa1.o
             positive = True
         elif k <= -100:
-            oa1 = Operational_Amplifier(x + .5, y, z, elementXYZ=True, gain=-k)
+            oa1 = Operational_Amplifier(x + .5 if scale else x + 1, y, z, elementXYZ=True, gain=-k)
 
             self.elements = [oa1]
             self.input = [oa1.i_neg]
@@ -539,6 +546,9 @@ def pri_log(n: Node) -> PrimitiveLogTransistorNode:
     connect(n.output, log.input[0])
     return log
 
+def _t_pri_log(x: num_type) -> num_type:
+    return -0.025*math.log(x) - 0.69077552617129989
+
 @node_wrapper("ln")
 def ln(n: Node) -> LinearNode:
     ''' 对数 (y=ln(x)) '''
@@ -552,12 +562,13 @@ def inverse(func: FunctionType, vertex_id: int = 0) -> FunctionType:
         res = func(v)
         if not isinstance(res, Node):
             raise TypeError
-        opamp = Operational_Amplifier(res.pos.x + res.width/2 + .5, res.pos.y, res.pos.z)
+        with ElementXYZ():
+            opamp = Operational_Amplifier(res.pos.x + res.width/2 + .5, res.pos.y, res.pos.z)
+            node = Node(res.pos.x + .5, res.pos.y, res.pos.z, "inv", res.gnd)
         wires = {
             *crt_wire(opamp.i_pos, res.output),
             *crt_wire(opamp.o, res.input[vertex_id])
-            }
-        node = Node(res.pos.x + .5, res.pos.y, res.pos.z, "inv", res.gnd)
+        }
         node.input = [opamp.i_neg] + res.input[:vertex_id] + res.input[vertex_id + 1:]
         node.output = opamp.o
         node.extend(res.elements + [opamp], res.wires | wires)
@@ -626,7 +637,51 @@ def differentiate(n: Node) -> DifNode:
     connect(n.output, diff.input[0])
     return diff
 
-def quadrant(func: FunctionType) -> FunctionType:
+
+def signed(func: FunctionType, vertex_id: int = 0) -> FunctionType:
+    ''' 保留符号，用于内层节点只接受正值，但输入可能为负时，作用是先取绝对值再包上符号，参数函数必须已经打包好，且输出为节点 '''
+    def res_func(n: Node):
+        expe = get_current_experiment()
+        v = VoidNode(*n.pos, n.gnd)
+        res = func(v)
+        if not isinstance(res, Node):
+            raise TypeError
+        with ElementXYZ():
+            op1_opamp = Operational_Amplifier(res.pos.x - res.width/2 - .5, res.pos.y + .5, res.pos.z, gain=100)
+            op1_r1 = Resistor(res.pos.x - res.width/2 - .5, res.pos.y - 1, res.pos.z, resistance=1)
+            op1_r2 = Resistor(res.pos.x - res.width/2 - .5, res.pos.y - 2, res.pos.z, resistance=99)
+            op1_relay = Relay_Component(res.pos.x - res.width/2 - .5, res.pos.y + 1.5, res.pos.z, pull_in_current=1e-6, coil_inductance=1e-6)
+            op2_opamp = Operational_Amplifier(res.pos.x + res.width/2 + .5, res.pos.y + .5, res.pos.z, gain=100)
+            op2_r1 = Resistor(res.pos.x + res.width/2 + .5, res.pos.y - 1, res.pos.z, resistance=1)
+            op2_r2 = Resistor(res.pos.x + res.width/2 + .5, res.pos.y - 2, res.pos.z, resistance=99)
+            op2_relay = Relay_Component(res.pos.x + res.width/2 + .5, res.pos.y + 1.5, res.pos.z, pull_in_current=1e-6, coil_inductance=1e-6)
+            node = Node(*res.pos, "signed", res.gnd)
+        wires = {
+            *crt_wire(op1_r1.black, op1_r2.red),
+            *crt_wire(op2_r1.black, op2_r2.red),
+            *crt_wire(op1_relay.mid, op1_r1.black),
+            *crt_wire(op1_relay.r_low, n.gnd.i, op2_relay.r_low),
+            *crt_wire(op1_relay.l_up, op1_opamp.i_neg),
+            *crt_wire(op1_relay.l_low, op1_opamp.i_pos),
+            *crt_wire(op1_r2.black, op1_relay.r_up, op2_relay.r_up),
+            *crt_wire(op2_relay.mid, op2_r1.black),
+            *crt_wire(op2_relay.l_low, op2_opamp.i_pos),
+            *crt_wire(op2_relay.l_up, op2_opamp.i_neg),
+            *crt_wire(op1_opamp.o, res.input[vertex_id]),
+            *crt_wire(op2_r2.black, res.output),
+        }
+        node.input = [op1_r2.black]
+        node.output = op2_opamp.o
+        node.extend(res.elements + [op1_opamp, op1_r1, op1_r2, op2_opamp, op2_r1, op2_r2, op1_relay, op2_relay], res.wires | wires)
+        connect(n.output, node.input[0])
+        _gn[expe].remove(v)
+        for i in _gicw[expe].copy():
+            if list(i)[0] is v.output or list(i)[1] is v.output:
+                _gicw[expe].remove(i)
+        return node
+    return res_func       
+
+def quadrant(func: FunctionType, vertex_id1: int = 0, vertex_id2: int = 1) -> FunctionType:
     ''' 四象限化，参数函数必须已经打包好，且输出为节点 '''
     def res_func(n1: Node, n2: Node):
         expe = get_current_experiment()
@@ -635,20 +690,22 @@ def quadrant(func: FunctionType) -> FunctionType:
         res = func(v1, v2)
         if not isinstance(res, Node):
             raise TypeError
-        op1_opamp = Operational_Amplifier(res.pos.x - res.width/2 - .5, res.pos.y + 1.5, res.pos.z, gain=100)
-        op1_r1 = Resistor(res.pos.x - res.width/2 - .5, res.pos.y, res.pos.z, resistance=1)
-        op1_r2 = Resistor(res.pos.x - res.width/2 - .5, res.pos.y - 1, res.pos.z, resistance=99)
-        op2_opamp = Operational_Amplifier(res.pos.x - res.width/2 - 1.5, res.pos.y + 1.5, res.pos.z, gain=100)
-        op2_r1 = Resistor(res.pos.x - res.width/2 - 1.5, res.pos.y, res.pos.z, resistance=1)
-        op2_r2 = Resistor(res.pos.x - res.width/2 - 1.5, res.pos.y - 1, res.pos.z, resistance=99)
-        op3_opamp = Operational_Amplifier(res.pos.x + res.width/2 + 1.5, res.pos.y + 1.5, res.pos.z, gain=100)
-        op3_r1 = Resistor(res.pos.x + res.width/2 + 1.5, res.pos.y, res.pos.z, resistance=1)
-        op3_r2 = Resistor(res.pos.x + res.width/2 + 1.5, res.pos.y - 1, res.pos.z, resistance=99)
-        relay_i1 = Relay_Component(res.pos.x - res.width/2 - 2.5, res.pos.y + 1, res.pos.z)
-        relay_i2 = Relay_Component(res.pos.x - res.width/2 - 2.5, res.pos.y - .5, res.pos.z)
-        relay_o = Relay_Component(res.pos.x + res.width/2 + .5, res.pos.y + 1, res.pos.z)
-        xor = Xor_Gate(res.pos.x + res.width/2 + .5, res.pos.y, res.pos.z).set_high_level_value(1e-7)
-        amp = Operational_Amplifier(res.pos.x + res.width/2  + .5, res.pos.y - 1.5, res.pos.z)
+        with ElementXYZ():
+            op1_opamp = Operational_Amplifier(res.pos.x - res.width/2 - .5, res.pos.y + 1.5, res.pos.z, gain=100)
+            op1_r1 = Resistor(res.pos.x - res.width/2 - .5, res.pos.y, res.pos.z, resistance=1)
+            op1_r2 = Resistor(res.pos.x - res.width/2 - .5, res.pos.y - 1, res.pos.z, resistance=99)
+            op2_opamp = Operational_Amplifier(res.pos.x - res.width/2 - 1.5, res.pos.y + 1.5, res.pos.z, gain=100)
+            op2_r1 = Resistor(res.pos.x - res.width/2 - 1.5, res.pos.y, res.pos.z, resistance=1)
+            op2_r2 = Resistor(res.pos.x - res.width/2 - 1.5, res.pos.y - 1, res.pos.z, resistance=99)
+            op3_opamp = Operational_Amplifier(res.pos.x + res.width/2 + 1.5, res.pos.y + 1.5, res.pos.z, gain=100)
+            op3_r1 = Resistor(res.pos.x + res.width/2 + 1.5, res.pos.y, res.pos.z, resistance=1)
+            op3_r2 = Resistor(res.pos.x + res.width/2 + 1.5, res.pos.y - 1, res.pos.z, resistance=99)
+            relay_i1 = Relay_Component(res.pos.x - res.width/2 - 2.5, res.pos.y + 1, res.pos.z, pull_in_current=1e-6, coil_inductance=1e-6)
+            relay_i2 = Relay_Component(res.pos.x - res.width/2 - 2.5, res.pos.y - .5, res.pos.z, pull_in_current=1e-6, coil_inductance=1e-6)
+            relay_o = Relay_Component(res.pos.x + res.width/2 + .5, res.pos.y + 1, res.pos.z, pull_in_current=1e-6, coil_inductance=1e-6)
+            xor = Xor_Gate(res.pos.x + res.width/2 + .5, res.pos.y, res.pos.z).set_high_level_value(1e-7)
+            amp = Operational_Amplifier(res.pos.x + res.width/2  + .5, res.pos.y - 1.5, res.pos.z)
+            node = Node(res.pos.x - .5, res.pos.y, res.pos.z, "quad", res.gnd)
         wires = {
             *crt_wire(relay_i1.mid, op1_r1.black),
             *crt_wire(relay_i2.mid, op2_r1.black),
@@ -675,10 +732,9 @@ def quadrant(func: FunctionType) -> FunctionType:
             *crt_wire(amp.i_pos, xor.o),
             *crt_wire(relay_o.r_up, amp.o),
             *crt_wire(op3_r2.black, res.output),
-            *crt_wire(op1_opamp.o, res.input[0]),
-            *crt_wire(op2_opamp.o, res.input[1])
+            *crt_wire(op1_opamp.o, res.input[vertex_id1]),
+            *crt_wire(op2_opamp.o, res.input[vertex_id2])
         }
-        node = Node(res.pos.x - .5, res.pos.y, res.pos.z, "quad", res.gnd)
         node.input = [op1_r2.black, op2_r2.black]
         node.output = op3_opamp.o
         node.extend(res.elements + [op1_opamp, op1_r1, op1_r2, op2_opamp, op2_r1, op2_r2, op3_opamp, op3_r1, op3_r2, relay_i1, relay_i2, relay_o, xor, amp], res.wires | wires)
@@ -694,6 +750,8 @@ def quadrant(func: FunctionType) -> FunctionType:
     return res_func
 
 class MOSMultiplierNode(Node):
+    ''' MOS管乘法节点 (y=x1*x2)  '''
+    ''' 来源：@小黑猫 '''
     def __init__(self, x, y, z, gnd: Ground_Component):
         super().__init__(x, y, z, "mos_multiplier", gnd)
         x, y, z = self._pos
@@ -721,10 +779,12 @@ class MOSMultiplierNode(Node):
 
 @node_wrapper("transistor_multiplier")
 def transistor_multiply(n1: Node, n2: Node) -> ComplexNode:
+    ''' 单象限乘法（三极管） '''
     return pri_exp(pri_log(n1) + pri_log(n2) + 0.69077552617129989)
 
 @node_wrapper("mos_multiplier")
 def mos_multiply(n1: Node, n2: Node) -> MOSMultiplierNode:
+    ''' 单象限乘法（MOS管） '''
     mul = MOSMultiplierNode(*n1.pos, n1.gnd).adjust(n1, n2)
     connect(n1.output, mul.input[0])
     connect(n2.output, mul.input[1])
@@ -732,6 +792,7 @@ def mos_multiply(n1: Node, n2: Node) -> MOSMultiplierNode:
 
 @node_wrapper("mul")
 def multiply(n1: Node, n2: Node):
+    ''' 四象限乘法 '''
     if multiply_mode == "transistor":
         return quadrant(transistor_multiply)(n1, n2)
     elif multiply_mode == "mos":
@@ -741,12 +802,32 @@ def multiply(n1: Node, n2: Node):
 
 @node_wrapper("transistor_div")
 def transistor_divide(n1: Node, n2: Node):
+    ''' 单象限除法（三极管） '''
     return pri_exp(pri_log(n1) - pri_log(n2) - 0.69077552617129989)
 
+@node_wrapper("reciprocal")
+def reciprocal(n: Node):
+    ''' 单象限倒数（y=1/x） '''
+    return pri_exp(-2*0.69077552617129989 - pri_log(n))
+
 @node_wrapper("div")
-def divide(n1: Node, n2: Node):
-    return quadrant(transistor_divide)(n1, n2)
+def true_divide(n1: Union[Node, num_type], n2: Node):
+    ''' 四象限除法 '''
+    if isinstance(n1, num_type):
+        return signed(reciprocal)(n2) if n1 == 1 else n1*signed(reciprocal)(n2)
+    else:
+        return quadrant(transistor_divide)(n1, n2)
 
 @node_wrapper("log")
-def log(n1: Node, n2: Node) -> ComplexNode:
-    return (pri_log(n2) + 0.69077552617129989) / (pri_log(n1) + 0.69077552617129989)
+def log(n: Union[Node, num_type], n_base: Union[Node, num_type]) -> ComplexNode:
+    ''' 对数 '''
+    x_is_num = isinstance(n, num_type)
+    base_is_num = isinstance(n_base, num_type)
+    if x_is_num and base_is_num:
+        raise TypeError("Since both parameters are numbers, use `math.log` instead`")
+    if x_is_num and not base_is_num:
+        return (-0.025*math.log(n))/(pri_log(n_base) + 0.69077552617129989)
+    if not x_is_num and base_is_num:
+        return (pri_log(n) + 0.69077552617129989)/(-0.025*math.log(n_base))
+    if not x_is_num and not base_is_num:
+        return (pri_log(n) + 0.69077552617129989) / (pri_log(n_base) + 0.69077552617129989)

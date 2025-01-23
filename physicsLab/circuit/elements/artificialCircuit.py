@@ -448,8 +448,8 @@ class Transistor(CircuitBase):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             is_PNP: bool = True,
-            gain: num_type = 100.0,
-            max_power: num_type = 5.0,
+            gain: num_type = 100,
+            max_power: num_type = 1000,
     ) -> None:
         if not isinstance(is_PNP, bool) \
                 or not isinstance(gain, (int, float)) \
