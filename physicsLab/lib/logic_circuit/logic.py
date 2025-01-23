@@ -21,12 +21,14 @@ class Tick_Counter:
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,
                  ) -> None:
-        if not isinstance(x, (int, float)) or \
-            not isinstance(y, (int, float)) or \
-            not isinstance(z, (int, float)) or \
-            not isinstance(elementXYZ, (bool, type(None))) or \
-            not isinstance(bitnum, int) or bitnum <= 1:
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(elementXYZ, (bool, type(None))) \
+                or not isinstance(bitnum, int):
             raise TypeError
+        if bitnum <= 1:
+            raise ValueError
 
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = native_to_elementXYZ(x, y, z)
@@ -78,8 +80,10 @@ class Tick_Counter:
     def output(self) -> UnitPin:
         if isinstance(self._output, elements.T_Flipflop):
             return UnitPin(self, self._output.o_low)
-        else: # isinstance(self._output, elements.Counter)
+        elif isinstance(self._output, elements.Counter):
             return self._o
+        else:
+            assert False
 
 class Two_four_Decoder:
     ''' 2-4译码器 '''
@@ -89,10 +93,10 @@ class Two_four_Decoder:
                  z: num_type,
                  elementXYZ: Optional[bool] = None,
                  ) -> None:
-        if not isinstance(x, (int, float)) or \
-            not isinstance(y, (int, float)) or \
-            not isinstance(z, (int, float)) or \
-            not isinstance(elementXYZ, (bool, type(None))):
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(elementXYZ, (bool, type(None))):
             raise TypeError
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
@@ -138,12 +142,14 @@ class Switched_Register:
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  ) -> None:
-        if not isinstance(x, (int, float)) or \
-            not isinstance(y, (int, float)) or \
-            not isinstance(z, (int, float)) or \
-            not isinstance(elementXYZ, (bool, type(None))) or \
-            not isinstance(bitnum, int) or bitnum <= 1:
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(elementXYZ, (bool, type(None))) \
+                or not isinstance(bitnum, int):
             raise TypeError
+        if bitnum <= 1:
+            raise ValueError
 
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = native_to_elementXYZ(x, y, z)
@@ -233,12 +239,14 @@ class Signed_Sum:
                  bitnum: int,
                  elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
                  ) -> None:
-        if not isinstance(x, (int, float)) or \
-            not isinstance(y, (int, float)) or \
-            not isinstance(z, (int, float)) or \
-            not isinstance(elementXYZ, (bool, type(None))) or \
-            not isinstance(bitnum, int) or bitnum <= 1:
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(elementXYZ, (bool, type(None))) \
+                or not isinstance(bitnum, int):
             raise TypeError
+        if bitnum <= 1:
+            raise ValueError
 
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = native_to_elementXYZ(x, y, z)
