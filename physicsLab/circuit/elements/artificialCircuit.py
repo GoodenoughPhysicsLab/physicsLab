@@ -66,7 +66,8 @@ class Basic_Capacitor(_TwoPinMixIn):
             y: num_type,
             z: num_type,
             /, *,
-            elementXYZ: Optional[bool] = None, identifier: Optional[str] = None,
+            elementXYZ: Optional[bool] = None,
+            identifier: Optional[str] = None,
             peak_voltage: num_type = 16,
             capacitance: num_type = 1e-06,
             internal_resistance: num_type = 5,
@@ -554,7 +555,8 @@ class Operational_Amplifier(CircuitBase):
             y: num_type,
             z: num_type,
             /, *,
-            elementXYZ: Optional[bool] = None, identifier: Optional[str] = None,
+            elementXYZ: Optional[bool] = None,
+            identifier: Optional[str] = None,
             gain: num_type = 10_000_000,
             max_voltage: num_type = 1000,
             min_voltage: num_type = -1000,
@@ -637,17 +639,63 @@ class Relay_Component(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            pull_in_current: num_type = 0.02,
+            rated_current: num_type = 10,
+            coil_inductance: num_type = 0.2,
+            coil_resistance: num_type = 20,
     ) -> None:
+        if not isinstance(pull_in_current, (int, float)) \
+                or not isinstance(rated_current, (int, float)) \
+                or not isinstance(coil_inductance, (int, float)) \
+                or not isinstance(coil_resistance, (int, float)):
+            raise TypeError
+
         self.data: CircuitElementData = {
             "ModelID": "Relay Component", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
-            "Properties": {"开关": 0.0, "线圈电感": 0.2, "线圈电阻": 20.0,
-                            "接通电流": 0.02, "额定电流": 1.0, "锁定": 1.0},
+            "Properties": {"开关": 0.0, "线圈电感": Generate, "线圈电阻": Generate,
+                            "接通电流": Generate, "额定电流": Generate, "锁定": 1.0},
             "Statistics": {},
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
+        self.set_properties(
+            pull_in_current=pull_in_current,
+            rated_current=rated_current,
+            coil_inductance=coil_inductance,
+            coil_resistance=coil_resistance,
+        )
+
+    def set_properties(
+             self,
+             *,
+             pull_in_current: Optional[num_type] = None,
+             rated_current: Optional[num_type] = None,
+             coil_inductance: Optional[num_type] = None,
+             coil_resistance: Optional[num_type] = None,
+     ) -> Self:
+         ''' 修改运放属性
+             @param pull_in_current: 接通电流
+             @param rated_current: 额定电流
+             @param coil_inductance: 线圈电感
+             @param coil_resistance: 线圈电阻
+         '''
+         if not isinstance(pull_in_current, (int, float, type(None))) \
+                 or not isinstance(rated_current, (int, float, type(None))) \
+                 or not isinstance(coil_inductance, (int, float, type(None))) \
+                 or not isinstance(coil_resistance, (int, float, type(None))):
+             raise TypeError
+
+         if pull_in_current is not None:
+             self.properties["接通电流"] = pull_in_current
+         if rated_current is not None:
+             self.properties["额定电流"] = rated_current
+         if coil_inductance is not None:
+             self.properties["线圈电感"] = coil_inductance
+         if coil_resistance is not None:
+             self.properties["线圈电阻"] = coil_resistance
+         return self
 
     @property
     def l_up(self) -> Pin:

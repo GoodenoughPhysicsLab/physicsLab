@@ -827,7 +827,7 @@ class Schmitt_Trigger(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
         if low_level is None:
-            low_level = max(high_level, 0)
+            low_level = min(high_level, 0)
         self.set_properties(high_level=high_level, low_level=low_level, inverted=inverted)
 
     def set_properties(
