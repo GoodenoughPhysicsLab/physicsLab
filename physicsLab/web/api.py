@@ -96,6 +96,8 @@ def get_avatar(target_id: str, index: int, category: str, size_category: str) ->
         category += "/avatars"
     elif category == "experiments":
         category += "/images"
+    else:
+        assert False
 
     response = requests.get(
         f"http://physics-static-cn.turtlesim.com:80/{category}"

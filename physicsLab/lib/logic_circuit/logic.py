@@ -192,7 +192,7 @@ class Switched_Register:
     def outputs(self):
         return self.register.outputs
 
-class Equal_to:
+class EqualTo:
     def __init__(self,
                  x: num_type,
                  y: num_type,
@@ -307,17 +307,17 @@ class _Simple_Logic_Meta(type):
         if _Expe.experiment_type != ExperimentType.Circuit:
             raise errors.ExperimentTypeError
 
-        if foldMaxNum <= 0 or \
-            not isinstance(x, (int, float)) or \
-            not isinstance(y, (int, float)) or \
-            not isinstance(z, (int, float)) or \
-            not isinstance(elementXYZ, (bool, type(None))) or \
-            not isinstance(heading, bool) or \
-            not isinstance(fold, bool) or \
-            not isinstance(foldMaxNum, int):
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(elementXYZ, (bool, type(None))) \
+                or not isinstance(heading, bool) \
+                or not isinstance(fold, bool) \
+                or not isinstance(foldMaxNum, int) \
+                or not isinstance(bitnum, int):
             raise TypeError
-        if not isinstance(bitnum, int) or bitnum < 1:
-            raise errors.BitnumError("bitnum must get a integer")
+        if foldMaxNum <= 0 or bitnum < 1:
+            raise ValueError
         self.bitnum = bitnum
 
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
@@ -625,7 +625,7 @@ class D_WaterLamp(_Base):
                  is_loop: bool = True # 是否使流水灯循环
                  ) -> None:
         if bitnum < 2:
-            raise errors.BitnumError
+            raise ValueError
 
         if not isinstance(is_loop, bool):
             raise TypeError
