@@ -13,6 +13,7 @@ class ExperimentType(Enum):
     # 电与磁实验
     Electromagnetism = 4
 
+@unique
 class Category(Enum):
     ''' 实验区与黑洞区 '''
     Experiment = "Experiment"

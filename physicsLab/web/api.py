@@ -237,6 +237,7 @@ class User:
             exclude_tags: Optional[List[Tag]] = None,
             category: Category = Category.Experiment,
             languages: Optional[List[str]] = None,
+            user_id: Optional[str] = None,
             take: int = 18,
             skip: int = 0,
     ) -> dict:
@@ -245,7 +246,9 @@ class User:
             @param exclude_tags: 除了列表内的标签的实验都会被搜索到
             @param category: 实验区还是黑洞区
             @param languages: 根据列表内的语言进行对应的搜索
+            @param user_id: 指定搜索的作品的发布者
             @param take: 搜索数量
+            @param skip: 跳过搜索数量
         '''
         if not isinstance(category, Category) \
                 or not isinstance(tags, (list, type(None))) \
@@ -254,6 +257,7 @@ class User:
                 or exclude_tags is not None and not all(isinstance(tag, Tag) for tag in exclude_tags) \
                 or not isinstance(languages, (list, type(None))) \
                 or languages is not None and not all(isinstance(language, str) for language in languages) \
+                or not isinstance(user_id, (str, type(None))) \
                 or not isinstance(take, int) \
                 or not isinstance(skip, int):
             raise TypeError
@@ -280,7 +284,7 @@ class User:
                     "ExcludeTags": exclude_tags,
                     "ModelID": None,
                     "ParentID": None,
-                    "UserID": None,
+                    "UserID": user_id,
                     "Special": None,
                     "From": None,
                     "Skip": skip,
@@ -305,10 +309,20 @@ class User:
             exclude_tags: Optional[List[Tag]] = None,
             category: Category = Category.Experiment,
             languages: Optional[List[str]] = None,
+            user_id: Optional[str] = None,
             take: int = 18,
             skip: int = 0,
     ):
-        return await _async_wrapper(self.query_experiments, tags, exclude_tags, category, languages, take, skip)
+        return await _async_wrapper(
+            self.query_experiments,
+            tags,
+            exclude_tags,
+            category,
+            languages,
+            user_id,
+            take,
+            skip,
+        )
 
     def get_experiment(
             self,

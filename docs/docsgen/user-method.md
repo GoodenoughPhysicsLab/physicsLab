@@ -183,17 +183,19 @@ async def async_post_comment(self, target_id: str, target_type: str, content: st
 
 ## 查询实验
 ```Python
-def query_experiments(self, tags: Optional[List[physicsLab.enums.Tag]] = None, exclude_tags: Optional[List[physicsLab.enums.Tag]] = None, category: physicsLab.enums.Category = <Category.Experiment: 'Experiment'>, languages: Optional[List[str]] = None, take: int = 18, skip: int = 0) -> dict
+def query_experiments(self, tags: Optional[List[physicsLab.enums.Tag]] = None, exclude_tags: Optional[List[physicsLab.enums.Tag]] = None, category: physicsLab.enums.Category = <Category.Experiment: 'Experiment'>, languages: Optional[List[str]] = None, user_id: Optional[str] = None, take: int = 18, skip: int = 0) -> dict
 ```
 @param tags: 根据列表内的物实实验的标签进行对应的搜索  
 @param exclude_tags: 除了列表内的标签的实验都会被搜索到  
 @param category: 实验区还是黑洞区  
 @param languages: 根据列表内的语言进行对应的搜索  
+@param user_id: 指定搜索的作品的发布者  
 @param take: 搜索数量  
+@param skip: 跳过搜索数量  
 
 对应的协程风格的api:
 ```Python
-async def async_query_experiments(self, tags: Optional[List[physicsLab.enums.Tag]] = None, exclude_tags: Optional[List[physicsLab.enums.Tag]] = None, category: physicsLab.enums.Category = <Category.Experiment: 'Experiment'>, languages: Optional[List[str]] = None, take: int = 18, skip: int = 0)
+async def async_query_experiments(self, tags: Optional[List[physicsLab.enums.Tag]] = None, exclude_tags: Optional[List[physicsLab.enums.Tag]] = None, category: physicsLab.enums.Category = <Category.Experiment: 'Experiment'>, languages: Optional[List[str]] = None, user_id: Optional[str] = None, take: int = 18, skip: int = 0)
 ```
 
 ## 领取每日签到奖励
