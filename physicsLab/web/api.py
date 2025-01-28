@@ -599,6 +599,7 @@ class User:
 
     def get_user(
             self,
+            *,
             user_id: Optional[str] = None,
             name: Optional[str] = None,
     ) -> dict:
@@ -629,10 +630,11 @@ class User:
 
     async def async_get_user(
             self,
+            *,
             user_id: Optional[str] = None,
             name: Optional[str] = None,
     ):
-        return await _async_wrapper(self.get_user, user_id, name)
+        return await _async_wrapper(self.get_user, user_id=user_id, name=name)
 
     def get_profile(self) -> dict:
         ''' 获取用户主页信息

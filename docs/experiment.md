@@ -16,7 +16,6 @@ ExperimentType是枚举类，用于指定实验类型。目前支持三种类型
 ## enum class Category
 * Experiment 实验区
 * Discussion 讨论区(黑洞区)
-* BlackHole 讨论区(黑洞区)
 
 ## enum class OpenMode
 用Experiment打开存档的模式
