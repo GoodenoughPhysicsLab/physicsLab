@@ -29,7 +29,7 @@
 自版本`2.0.0`及之后, `physicsLab`会逐步增加兼容的考虑与支持
 
 但这并不意味着无意义的兼容。通常来说，会采用标注弃用, 并推荐转移到新api的模式。
-* v2.0.0: `clsss Experiment, ExperimentOpenedError, ExperimentClosedError, ExperimentExistError, ExperimentNotExistError`实验性地加入`stable`支持
+* v2.0.0: `class Experiment, ExperimentOpenedError, ExperimentClosedError, ExperimentExistError, ExperimentNotExistError`实验性地加入`stable`支持
 
 ## 版本发布
 `physicsLab`的版本发布采取快照的方式, `physicsLab`仅会维护`trunk`
@@ -45,7 +45,7 @@ pip install physicsLab
 ```shell
 python -m pip install physicsLab
 ```
-> Note: 在`Windows`下你可以输入`py`来使用`python`，`Linux, MacOS`下可能需要输入`python3`来使用`python`
+> Note: 在`Windows`下你可以输入`py`来使用`Python`，`Linux, MacOS`下可能需要输入`python3`或者`python3.x`（`python`加上你的`Python`版本）来使用`python`
 
 3.  有一个并非必需的功能：播放midi（仅在Windows下可用）。你可以输入下面命令的任意一条：
 ```shell
@@ -64,10 +64,10 @@ pip install chardet
 > Note: 每次通过`physicsLab`生成了一个新的存档之后，都需要重新加载物实的本地存档，即点击`从本地读取`，再次点击进入对应存档
 
 ### 新手解惑: 为什么我明明安装了physicsLab, python却告诉我无法找到？
-pip安装的包会被放在`site-package`文件夹下  
-这大概率是因为pip安装的包所对应的`site-package`与你使用的`python`对应的`site-package`不一样导致的  
-解决方案：找到ide调用的`python`对应的`site-package`，然后把`physicsLab`与`physicsLab.egg-info`复制过去  
-同时我推荐去学一下`python`的虚拟环境`venv`，有效解决此问题  
+`pip`安装的包会被放在`site-packages`文件夹下  
+这大概率是因为pip安装的包所对应的`site-packages`与你使用的`Python`对应的`site-packages`不一样导致的  
+解决方案：找到ide调用的`python`对应的`site-packages`，然后把`physicsLab`与`physicsLab.egg-info`复制过去  
+同时我推荐去学一下`Python`的虚拟环境`venv`，有效解决此问题  
 
 如果此方法失效了，虽然这一定不是这个方法的问题，但你还可以在python的开头写上这两行代码来解决这个问题：  
 ```python
@@ -75,8 +75,8 @@ import sys
 sys.path.append("/your/path/of/physicsLab") # 将字符串替换为你想添加的路径
 ```
 这个方法很丑陋但很简单好用，可以帮你快速解决问题，毕竟能跑起来就很不错了  
-其原理是python会在sys.path这个列表里面的路径去寻找python package，若未找到则会报错。因此该方法的原理就是把python找不到的路径加进去，python就找到了  
-注：每次运行的时候加入的path都是临时的，因此该方法必须让python在每次运行的时候都执行一遍  
+其原理是`Python`会在`sys.path`这个列表里面的路径去寻找`Python Package`，若未找到则会报错。因此该方法的原理就是把`Python`找不到的路径加进去，`Python`就找到了  
+注：每次运行的时候的`sys.path`都是临时的，因此该方法必须让`Python`在每次运行的时候都执行一遍  
 
 ## 特殊说明事项
 * 如果`physicsLab`抛出`AssertionError`，请**报告 bug** (请在issue中附上最小复现)
@@ -96,8 +96,8 @@ sys.path.append("/your/path/of/physicsLab") # 将字符串替换为你想添加�
 
 ## 优点
 *  `physicsLab`拥有优秀的与物实存档交互的能力，你甚至可以使用程序完成部分工作之后你再继续完成或者让程序在你已完成的实验的基础上继续完成。
-  如此灵活的功能使得physicsLab即使是在python shell上也能出色的完成工作！
-*  `physicsLab`为纯python库，其c拓展部分(播放midi的部分)被放到了`plmidi`中，但`plmidi`不是必须需要的。纯Python库通常意味着更容易使用，更少的问题。
+  如此灵活的功能使得`physicsLab`即使是在`Python`的`shell`上也能出色的完成工作！
+*  `physicsLab`为纯`Python`库，其c拓展部分(播放midi的部分)被放到了`plmidi`中，但`plmidi`不是必须需要的。纯`Python`库通常意味着更容易使用，更少的问题。
 *  封装了物实里的大量元件，即使是***未解锁的元件***也可以轻易用脚本生成，甚至一些常用的电路也被封装好了！
 *  物理实验室存档的位置有点隐蔽，但用该脚本生成实验时，你无须亲自寻找这个文件在哪里。
 *  外部依赖少
