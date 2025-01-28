@@ -17,7 +17,6 @@ class Category(Enum):
     ''' 实验区与黑洞区 '''
     Experiment = "Experiment"
     Discussion = "Discussion"
-    BlackHole = Discussion # Discussion的别名
 
 @unique
 class Tag(Enum):

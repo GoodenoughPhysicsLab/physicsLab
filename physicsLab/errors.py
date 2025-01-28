@@ -36,11 +36,6 @@ class InvalidWireError(Exception):
     def __str__(self):
         return self.msg
 
-# 用于模块化元件的bitLength参数
-class BitnumError(Exception):
-    def __str__(self):
-        return "illegal bitLength number"
-
 class InvalidSavError(Exception):
     ''' 存档文件错误 '''
     def __str__(self):

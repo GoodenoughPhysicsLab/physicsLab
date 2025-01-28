@@ -246,3 +246,5 @@
 ## 2.0.1
 1.  不再默认省略`crt_wires`的命名空间`lib`
 2.  重命名`Translatexyz`， `XYZTranslate`为`native_to_elementXYZ`, `elementXYZ_to_native`, 新增`ElementXYZ`
+3.  重命名`lib.Equal_to`为`lib.EqualTo`
+4.  移除`Category.BlackHole`, `User.get_user`的`positional-argument`
