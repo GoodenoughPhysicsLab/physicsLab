@@ -96,8 +96,6 @@ def get_avatar(target_id: str, index: int, category: str, size_category: str) ->
         category += "/avatars"
     elif category == "experiments":
         category += "/images"
-    else:
-        assert False
 
     response = requests.get(
         f"http://physics-static-cn.turtlesim.com:80/{category}"
@@ -237,7 +235,7 @@ class User:
             exclude_tags: Optional[List[Tag]] = None,
             category: Category = Category.Experiment,
             languages: Optional[List[str]] = None,
-            user_id = None,
+            user_id: Optional[str] = None,
             take: int = 18,
             skip: int = 0,
     ) -> dict:
@@ -247,7 +245,7 @@ class User:
             @param category: 实验区还是黑洞区
             @param languages: 根据列表内的语言进行对应的搜索
             @param take: 搜索数量
-            @param user_id: 指定搜索的作指定搜索的作品的发布者
+            @param user_id: 指定搜索的作品的发布者
         '''
         if not isinstance(category, Category) \
                 or not isinstance(tags, (list, type(None))) \
@@ -256,11 +254,10 @@ class User:
                 or exclude_tags is not None and not all(isinstance(tag, Tag) for tag in exclude_tags) \
                 or not isinstance(languages, (list, type(None))) \
                 or languages is not None and not all(isinstance(language, str) for language in languages) \
-                or user_id is not None and not isinstance(user_id, str) \
+                or not isinstance(user_id, (str, type(None))) \
                 or not isinstance(take, int) \
                 or not isinstance(skip, int):
             raise TypeError
-
         if languages is None:
             languages = []
         if tags is not None:
@@ -308,7 +305,7 @@ class User:
             exclude_tags: Optional[List[Tag]] = None,
             category: Category = Category.Experiment,
             languages: Optional[List[str]] = None,
-            user_id = None,
+            user_id: Optional[str] = None,
             take: int = 18,
             skip: int = 0,
     ):
@@ -603,7 +600,6 @@ class User:
 
     def get_user(
             self,
-            *,
             user_id: Optional[str] = None,
             name: Optional[str] = None,
     ) -> dict:
@@ -634,11 +630,10 @@ class User:
 
     async def async_get_user(
             self,
-            *,
             user_id: Optional[str] = None,
             name: Optional[str] = None,
     ):
-        return await _async_wrapper(self.get_user, user_id=user_id, name=name)
+        return await _async_wrapper(self.get_user, user_id, name)
 
     def get_profile(self) -> dict:
         ''' 获取用户主页信息
