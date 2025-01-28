@@ -329,9 +329,9 @@ class RelationsIter(_async_tool.AsyncTool):
         self.max_retry = max_retry
         if amount is None:
             if self.display_type == "Follower":
-                self.amount = self.user.get_user(self.user_id)['Data']['Statistic']['FollowerCount']
+                self.amount = self.user.get_user(user_id=self.user_id)['Data']['Statistic']['FollowerCount']
             elif self.display_type == "Following":
-                self.amount = self.user.get_user(self.user_id)['Data']['Statistic']['FollowingCount']
+                self.amount = self.user.get_user(user_id=self.user_id)['Data']['Statistic']['FollowingCount']
             else:
                 assert False
         else:
@@ -383,7 +383,7 @@ class AvatarsIter(_async_tool.AsyncTool):
             user = api.User()
 
         if category == "User":
-            self.max_img_counter = user.get_user(user_id)["Data"]["User"]["Avatar"]
+            self.max_img_counter = user.get_user(user_id=user_id)["Data"]["User"]["Avatar"]
             category = "users"
         elif category == "Experiment":
             self.max_img_counter = user.get_summary(user_id, Category.Experiment)["Data"]["Image"]
