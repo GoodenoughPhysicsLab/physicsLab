@@ -16,7 +16,7 @@ _gn: Dict[_Experiment, List["Node"]] = {}
 # 全部节点间导线
 _gicw: Dict[_Experiment, Set[FrozenSet["Vertex"]]] = {}
 
-multiply_mode = "mos"
+multiply_mode = "transistor"
 
 class Vertex(Pin):
     ''' 节点的接线柱 '''
@@ -554,7 +554,7 @@ def ln(n: Node) -> LinearNode:
     ''' 对数 (y=ln(x)) '''
     return (pri_log(n) + 0.69077552617129989)*-40
 
-def inverse(func: FunctionType, vertex_id: int = 0) -> FunctionType:
+def inverse(func: FunctionType, increasing: bool, vertex_id: int = 0) -> FunctionType:
     ''' 反函数，参数函数必须已经打包好，且输出为节点 '''
     def res_func(n: Node):
         v = VoidNode(*n.pos, n.gnd)
@@ -566,10 +566,10 @@ def inverse(func: FunctionType, vertex_id: int = 0) -> FunctionType:
             opamp = Operational_Amplifier(res.pos.x + res.width/2 + .5, res.pos.y, res.pos.z)
             node = Node(res.pos.x + .5, res.pos.y, res.pos.z, "inv", res.gnd)
         wires = {
-            *crt_wire(opamp.i_pos, res.output),
+            *crt_wire(opamp.i_neg if increasing else opamp.i_pos, res.output),
             *crt_wire(opamp.o, res.input[vertex_id])
         }
-        node.input = [opamp.i_neg] + res.input[:vertex_id] + res.input[vertex_id + 1:]
+        node.input = [opamp.i_pos if increasing else opamp.i_neg] + res.input[:vertex_id] + res.input[vertex_id + 1:]
         node.output = opamp.o
         node.extend(res.elements + [opamp], res.wires | wires)
         connect(n.output, node.input[0])
@@ -583,11 +583,11 @@ def inverse(func: FunctionType, vertex_id: int = 0) -> FunctionType:
 @node_wrapper("primitive_exp_transistor")
 def pri_exp(n: Node) -> Node:
     ''' 原始指数 (y=exp(-(x+0.69077552617129989)/0.025)) '''
-    return inverse(pri_log)(n)
+    return inverse(pri_log, False)(n)
 
 @node_wrapper("exp")
 def exp(n: Node) -> Node:
-    return inverse(ln)(n)
+    return inverse(ln, True)(n)
 
 class IntNode(Node):
     def __init__(self, x, y, z, gnd: Ground_Component) -> None:
@@ -831,3 +831,11 @@ def log(n: Union[Node, num_type], n_base: Union[Node, num_type]) -> ComplexNode:
         return (pri_log(n) + 0.69077552617129989)/(-0.025*math.log(n_base))
     if not x_is_num and not base_is_num:
         return (pri_log(n) + 0.69077552617129989) / (pri_log(n_base) + 0.69077552617129989)
+
+@node_wrapper("lW")
+def lambertW(n: Node) -> ComplexNode:
+    @node_wrapper("xex")
+    def xex(n: Node) -> ComplexNode:
+        return transistor_multiply(n, exp(n))
+    
+    return inverse(xex, True)(n)
