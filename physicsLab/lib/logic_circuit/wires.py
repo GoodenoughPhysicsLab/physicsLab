@@ -7,7 +7,8 @@ from physicsLab.circuit._circuit_core import crt_wire, del_wire, Pin
 from physicsLab._typing import overload
 
 class UnitPin:
-    ''' 模块化电路的"引脚", 输入输出都是数据 '''
+    ''' 模块化电路的"引脚", 是对多个Pin进行组合的封装
+    '''
     __slots__ = ("lib_self", "pins")
     def __init__(self, lib_self, *pins):
         self.lib_self = lib_self

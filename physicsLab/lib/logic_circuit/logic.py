@@ -5,95 +5,21 @@ from .super_logic_gate import Const_NoGate, Super_AndGate
 from .wires import UnitPin, crt_wires
 from physicsLab._tools import round_data
 from physicsLab.circuit import elements
-from physicsLab.circuit._circuit_core import Pin
+from physicsLab.circuit._circuit_core import Pin, OutputPin
 from physicsLab._core import get_current_experiment, native_to_elementXYZ
 from physicsLab.enums import ExperimentType
 from physicsLab._typing import num_type, Optional, Self, Union, Type, List
 
-class Tick_Counter:
-    ''' 当 逻辑输入 输入了num次, 就输出为1, 否则为0
-        如果输出为1, 则进入下一个周期, 在下一次输入了num次时输出为1, 否则为0
-    '''
-    def __init__(self,
-                 x: num_type,
-                 y: num_type,
-                 z: num_type,
-                 bitnum: int,
-                 elementXYZ: Optional[bool] = None,
-                 ) -> None:
-        if not isinstance(x, (int, float)) \
-                or not isinstance(y, (int, float)) \
-                or not isinstance(z, (int, float)) \
-                or not isinstance(elementXYZ, (bool, type(None))) \
-                or not isinstance(bitnum, int):
-            raise TypeError
-        if bitnum <= 1:
-            raise ValueError
-
-        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
-            x, y, z = native_to_elementXYZ(x, y, z)
-        x, y, z = round_data(x), round_data(y), round_data(z)
-        self.bitnum = bitnum
-
-        if bitnum == 2:
-            self._output = elements.T_Flipflop(x, y, z, elementXYZ=True)
-        else:
-            if bitnum >= 16:
-                raise Exception("Do not support num >= 16 in this version")
-
-            self._output = elements.Counter(x + 1, y, z, elementXYZ=True)
-
-            bitlist = []
-            bitnum -= 1
-            for _ in range(4):
-                bitlist.append(bitnum & 1)
-                bitnum >>= 1
-
-            output_pins = []
-            for i, a_bit in enumerate(bitlist):
-                if a_bit:
-                    _p = [self._output.o_low, self._output.o_lowmid, self._output.o_upmid, self._output.o_up][i]
-                    output_pins.append(_p)
-                    self._o = UnitPin(self, _p)
-
-            if len(output_pins) >= 2:
-                sa = Super_AndGate(x + 1, y, z, bitnum=len(output_pins), elementXYZ=True)
-                self._o = sa.output
-                crt_wires(UnitPin(None, *output_pins), sa.inputs)
-
-            imp = elements.Imp_Gate(x, y + 1, z, elementXYZ=True)
-            or_gate = elements.Or_Gate(x, y, z, elementXYZ=True)
-            crt_wires(or_gate.i_low, or_gate.o)
-            crt_wires(or_gate.o, imp.i_up)
-            crt_wires(or_gate.i_up, self._output.i_up)
-            crt_wires(imp.o, self._output.i_low)
-            crt_wires(self._o, imp.i_low)
-
-    # TODO 也许可以返回Pin而不是UnitPin
-    @property
-    def input(self) -> UnitPin:
-        if isinstance(self._output, elements.T_Flipflop):
-            return UnitPin(self, self._output.i_low)
-        else: # isinstance(self._output, elements.Counter)
-            return UnitPin(self, self._output.i_up)
-
-    @property
-    def output(self) -> UnitPin:
-        if isinstance(self._output, elements.T_Flipflop):
-            return UnitPin(self, self._output.o_low)
-        elif isinstance(self._output, elements.Counter):
-            return self._o
-        else:
-            assert False
-
-class Two_four_Decoder:
+class TwoFour_Decoder:
     ''' 2-4译码器 '''
-    def __init__(self,
-                 x: num_type,
-                 y: num_type,
-                 z: num_type,
-                 elementXYZ: Optional[bool] = None,
-                 ) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            elementXYZ: Optional[bool] = None,
+    ) -> None:
         if not isinstance(x, (int, float)) \
                 or not isinstance(y, (int, float)) \
                 or not isinstance(z, (int, float)) \
@@ -134,15 +60,17 @@ class Two_four_Decoder:
         )
 
 class Switched_Register:
-    ''' 可以切换输入的寄存器
+    ''' 可以在两列输入中切换的寄存器
     '''
-    def __init__(self,
-                 x: num_type,
-                 y: num_type,
-                 z: num_type,
-                 bitnum: int,
-                 elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
-                 ) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            bitnum: int,
+            elementXYZ: Optional[bool] = None,
+    ) -> None:
         if not isinstance(x, (int, float)) \
                 or not isinstance(y, (int, float)) \
                 or not isinstance(z, (int, float)) \
@@ -194,6 +122,8 @@ class Switched_Register:
         return self.register.outputs
 
 class EqualTo:
+    ''' 判断两个输入是否相等 (无需clk)
+    '''
     def __init__(
             self,
             x: num_type,
@@ -201,7 +131,7 @@ class EqualTo:
             z: num_type,
             /, *,
             bitnum: int,
-            elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+            elementXYZ: Optional[bool] = None,
     ) -> None:
         if not isinstance(x, (int, float)) \
                 or not isinstance(y, (int, float)) \
@@ -234,10 +164,12 @@ class EqualTo:
         return UnitPin(self, *[e.i_up for e in self.xnorgates])
 
     @property
-    def output(self) -> Pin:
+    def output(self) -> OutputPin:
         return self.andgate.output
 
 class Signed_Sum:
+    ''' 有符号数加法 (如果加法结果溢出则舍弃溢出值)
+    '''
     def __init__(
             self,
             x: num_type,
@@ -245,7 +177,7 @@ class Signed_Sum:
             z: num_type,
             /, *,
             bitnum: int,
-            elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+            elementXYZ: Optional[bool] = None,
     ) -> None:
         if not isinstance(x, (int, float)) \
                 or not isinstance(y, (int, float)) \
@@ -433,6 +365,7 @@ class Sum(_Base):
 
 class Sub(_Base):
     ''' 模块化减法电路 '''
+    # TODO 使用物实2.5.0新增全减器与半减器
     def __init__(self,
                  x: num_type,
                  y: num_type,
@@ -504,7 +437,6 @@ class Sub(_Base):
             *(e.i_up for e in self._fullAdders)
         )
 
-    # 减数
     @property
     def subtrahend(self):
         ''' 减数 '''

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from .wires import crt_wires, UnitPin
 from physicsLab._tools import round_data
-from physicsLab.circuit import elements, Pin, crt_wire
+from physicsLab.circuit import elements, Pin, crt_wire, OutputPin, InputPin
 from physicsLab._core import _Experiment, get_current_experiment, native_to_elementXYZ
 from physicsLab._typing import num_type, Dict, Optional, List
 
@@ -110,7 +110,7 @@ class Super_AndGate:
         return UnitPin(self, *self._inputs)
 
     @property
-    def output(self) -> Pin:
+    def output(self) -> OutputPin:
         return self._outputs
 
 class Super_OrGate:
@@ -248,3 +248,81 @@ class Super_NorGate:
     @property
     def output(self) -> Pin:
         return self._output
+
+class Tick_Counter:
+    ''' 当 逻辑输入 输入了num次, 就输出为1, 否则为0
+        如果输出为1, 则进入下一个周期, 在下一次输入了num次时输出为1, 否则为0
+    '''
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            num: int,
+            elementXYZ: Optional[bool] = None,
+    ) -> None:
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(elementXYZ, (bool, type(None))) \
+                or not isinstance(num, int):
+            raise TypeError
+        if num <= 1:
+            raise ValueError
+
+        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
+            x, y, z = native_to_elementXYZ(x, y, z)
+        x, y, z = round_data(x), round_data(y), round_data(z)
+        self.bitnum = num
+
+        if num == 2:
+            self._output = elements.T_Flipflop(x, y, z, elementXYZ=True)
+        else:
+            if num >= 16:
+                raise Exception("Do not support num >= 16 in this version")
+
+            self._output = elements.Counter(x + 1, y, z, elementXYZ=True)
+
+            bitlist = []
+            num -= 1
+            for _ in range(4):
+                bitlist.append(num & 1)
+                num >>= 1
+
+            output_pins = []
+            for i, a_bit in enumerate(bitlist):
+                if a_bit:
+                    self._o = [self._output.o_low, self._output.o_lowmid, self._output.o_upmid, self._output.o_up][i]
+                    output_pins.append(self._o)
+
+            if len(output_pins) >= 2:
+                sa = Super_AndGate(x + 1, y, z, bitnum=len(output_pins), elementXYZ=True)
+                self._o = sa.output
+                crt_wires(UnitPin(None, *output_pins), sa.inputs)
+
+            imp = elements.Imp_Gate(x, y + 1, z, elementXYZ=True)
+            or_gate = elements.Or_Gate(x, y, z, elementXYZ=True)
+            crt_wires(or_gate.i_low, or_gate.o)
+            crt_wires(or_gate.o, imp.i_up)
+            crt_wires(or_gate.i_up, self._output.i_up)
+            crt_wires(imp.o, self._output.i_low)
+            crt_wires(self._o, imp.i_low)
+
+    @property
+    def i(self) -> InputPin:
+        if isinstance(self._output, elements.T_Flipflop):
+            return self._output.i_low
+        elif isinstance(self._output, elements.Counter):
+            return self._output.i_up
+        else:
+            assert False
+
+    @property
+    def o(self) -> OutputPin:
+        if isinstance(self._output, elements.T_Flipflop):
+            return self._output.o_low
+        elif isinstance(self._output, elements.Counter):
+            return self._o
+        else:
+            assert False

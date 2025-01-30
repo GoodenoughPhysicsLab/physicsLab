@@ -280,7 +280,6 @@ class CircuitBase(ElementBase, metaclass=_CircuitMeta):
         if not isinstance(name, str):
             raise TypeError
 
-        assert hasattr(self, "data")
         self.data["Label"] = name
         return self
 

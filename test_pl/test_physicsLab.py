@@ -561,8 +561,8 @@ class BasicTest(TestCase, ViztracerTool):
 
     @my_test_dec
     def test_typeerror(self):
+        expe = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         try:
-            expe = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
             Logic_Input(0, 0, 0, True) # type: ignore
         except TypeError:
             pass
@@ -605,3 +605,59 @@ class BasicTest(TestCase, ViztracerTool):
         self.assertTrue(isinstance(InputPin, type(Pin)))
         self.assertTrue(isinstance(OutputPin, type(Pin)))
         self.assertFalse(isinstance(ElementBase, type(Pin)))
+
+    @my_test_dec
+    def test_tick_counter(self):
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
+            logic_input = Logic_Input(0, 0, 0)
+            for i in range(2, 16):
+                tick_counter = Tick_Counter(0, 0, 0, num=i)
+                crt_wire(logic_input.o, tick_counter.i)
+                crt_wire(tick_counter.o, Logic_Output(0, 0, 0).i)
+            self.assertEqual(expe.get_elements_count(), 65)
+            self.assertEqual(expe.get_wires_count(), 121)
+            expe.close(delete=True)
+
+    @my_test_dec
+    def test_two_four_decoder(self):
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
+            i = lib.Inputs(-1, 0, 0, bitnum=2)
+            decoder = lib.TwoFour_Decoder(0, 0, 0)
+            o = lib.Outputs(1, 0, 0, bitnum=4)
+            lib.crt_wires(i.outputs, decoder.inputs)
+            lib.crt_wires(decoder.outputs, o.inputs)
+            self.assertEqual(expe.get_elements_count(), 10)
+            self.assertEqual(expe.get_wires_count(), 12)
+            expe.close(delete=True)
+
+    @my_test_dec
+    def test_switched_register(self):
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
+            i1 = lib.Inputs(-1, 0, 0, bitnum=6)
+            i2 = lib.Inputs(-0.5, 0, 0, bitnum=6)
+            clk = Logic_Input(-1, -1, 0)
+            switch = Logic_Input(-0.5, -1, 0)
+            decoder = lib.Switched_Register(0, 0, 0, bitnum=6)
+            o = lib.Outputs(1, 0, 0, bitnum=6)
+            lib.crt_wires(i1.outputs, decoder.inputs1)
+            lib.crt_wires(i2.outputs, decoder.inputs2)
+            crt_wire(clk.o, decoder.clk)
+            crt_wire(switch.o, decoder.switch)
+            lib.crt_wires(decoder.outputs, o.inputs)
+            self.assertEqual(expe.get_elements_count(), 33)
+            self.assertEqual(expe.get_wires_count(), 43)
+            expe.close(delete=True)
+
+    @my_test_dec
+    def test_super_logic_gate(self):
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
+            i1 = lib.Inputs(-1, 0, 0, bitnum=6)
+            i2 = lib.Inputs(-0.5, 0, 0, bitnum=6)
+            compute = lib.EqualTo(0, 0, 0, bitnum=6)
+            o = Logic_Output(0.5, 0, 0)
+            lib.crt_wires(i1.outputs, compute.inputs1)
+            lib.crt_wires(i2.outputs, compute.inputs2)
+            crt_wire(compute.output, o.i)
+            self.assertEqual(expe.get_elements_count(), 22)
+            self.assertEqual(expe.get_wires_count(), 21)
+            expe.close(delete=True)
