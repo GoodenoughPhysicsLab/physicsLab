@@ -6,7 +6,14 @@ from physicsLab._typing import num_type, Optional
 from physicsLab._core import native_to_elementXYZ
 
 class _TriggerMeta(type):
-    def __call__(cls, x: num_type = 0, y: num_type = 0, z: num_type = 0, elementXYZ: Optional[bool] = None):
+    def __call__(
+            cls,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            elementXYZ: Optional[bool] = None,
+    ):
         self = cls.__new__(cls)
         if not isinstance(x, (float, int)) \
                 or not isinstance(y, (float, int)) \
@@ -21,7 +28,7 @@ class _TriggerMeta(type):
 
         return self
 
-class Rising_edge_trigger(metaclass=_TriggerMeta):
+class RisingEdgeTrigger(metaclass=_TriggerMeta):
     ''' 上升沿触发器 '''
     def __init__(
             self,
@@ -44,7 +51,7 @@ class Rising_edge_trigger(metaclass=_TriggerMeta):
     def o(self) -> OutputPin:
         return self.and_gate.o
 
-class Falling_edge_trigger(metaclass=_TriggerMeta):
+class FallingEdgeTrigger(metaclass=_TriggerMeta):
     ''' 下降沿触发器 '''
     def __init__(
             self,
@@ -67,7 +74,7 @@ class Falling_edge_trigger(metaclass=_TriggerMeta):
     def o(self) -> OutputPin:
         return self.nimp_gate.o
 
-class Edge_trigger(metaclass=_TriggerMeta):
+class EdgeTrigger(metaclass=_TriggerMeta):
     ''' 边沿触发器 (同时可以在上升沿与下降沿触发) '''
     def __init__(
             self,

@@ -178,9 +178,9 @@ class BasicTest(TestCase, ViztracerTool):
     @my_test_dec
     def test_edge_trigger(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
-            lib.Rising_edge_trigger(0, 0, 0)
-            lib.Falling_edge_trigger(0, 0, 0)
-            lib.Edge_trigger(0, 0, 0)
+            lib.RisingEdgeTrigger(0, 0, 0)
+            lib.FallingEdgeTrigger(0, 0, 0)
+            lib.EdgeTrigger(0, 0, 0)
             self.assertEqual(expe.get_elements_count(), 6)
             expe.close(delete=True)
 

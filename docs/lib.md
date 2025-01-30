@@ -1,5 +1,26 @@
 # 模块化电路 lib
 
+## RisingEdgeTrigger
+上升沿触发器
+
+引脚：
+* i: 输入引脚
+* o: 输出引脚
+
+## FallingEdgeTrigger
+下降沿触发器
+
+引脚：
+* i: 输入引脚
+* o: 输出引脚
+
+## EdgeTrigger
+上升沿和下降沿触发器
+
+引脚：
+* i: 输入引脚
+* o: 输出引脚
+
 ## Super_AndGate
 支持任意大于1的正整数的输入引脚的与门
 ```Python

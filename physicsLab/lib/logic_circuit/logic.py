@@ -69,6 +69,7 @@ class Tick_Counter:
             crt_wires(imp.o, self._output.i_low)
             crt_wires(self._o, imp.i_low)
 
+    # TODO 也许可以返回Pin而不是UnitPin
     @property
     def input(self) -> UnitPin:
         if isinstance(self._output, elements.T_Flipflop):
@@ -193,19 +194,24 @@ class Switched_Register:
         return self.register.outputs
 
 class EqualTo:
-    def __init__(self,
-                 x: num_type,
-                 y: num_type,
-                 z: num_type,
-                 bitnum: int,
-                 elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
-                 ) -> None:
-        if not isinstance(x, (int, float)) or \
-            not isinstance(y, (int, float)) or \
-            not isinstance(z, (int, float)) or \
-            not isinstance(elementXYZ, (bool, type(None))) or \
-            not isinstance(bitnum, int) or bitnum <= 1:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            bitnum: int,
+            elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+    ) -> None:
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(elementXYZ, (bool, type(None))) \
+                or not isinstance(bitnum, int):
             raise TypeError
+
+        if bitnum <= 1:
+            raise ValueError
 
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = native_to_elementXYZ(x, y, z)
@@ -232,13 +238,15 @@ class EqualTo:
         return self.andgate.output
 
 class Signed_Sum:
-    def __init__(self,
-                 x: num_type,
-                 y: num_type,
-                 z: num_type,
-                 bitnum: int,
-                 elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
-                 ) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            bitnum: int,
+            elementXYZ: Optional[bool] = None,  # x, y, z是否为元件坐标系
+    ) -> None:
         if not isinstance(x, (int, float)) \
                 or not isinstance(y, (int, float)) \
                 or not isinstance(z, (int, float)) \
