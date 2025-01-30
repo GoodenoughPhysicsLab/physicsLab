@@ -15,6 +15,11 @@ Wire的实例有以下属性：
 Pin的实例有以下属性：
 *  element_self: 该引脚所属的元件
 
+Pin的实例有以下方法：
+*  export_str: 将引脚转换为 a_element.a_pin 的形式
+*  get_pin_name: 获取该引脚在该元件中的名字
+*  get_wires: 获取该引脚上连接的所有导线
+
 ## enum class WireColor
 导线颜色:
 * red

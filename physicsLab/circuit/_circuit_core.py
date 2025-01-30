@@ -27,20 +27,24 @@ class Pin:
     def __hash__(self) -> int:
         return hash(self.element_self) + hash(self._pin_label)
 
-    # 将self转换为 CircuitBase.a_pin的形式
     def export_str(self) -> str:
-        pin_name = self._get_pin_name_of_class()
-        if pin_name is None:
-            raise errors.ExperimentError("Pin is not belong to any element")
+        ''' 将引脚转换为 a_element.a_pin 的形式
+        '''
+        pin_name = self.get_pin_name()
         return f"e{self.element_self.get_index()}.{pin_name}"
 
-    def _get_pin_name_of_class(self) -> Optional[str]:
-        for method in self.element_self._get_property():
-            if eval(f"self.element_self.{method}") == self:
-                return method
-        return None
+    def get_pin_name(self) -> str:
+        ''' 获取该引脚在该元件中的名字
+            @return: (e.g. i_up)
+        '''
+        for name, a_pin in self.element_self.get_all_pins_property():
+            if a_pin.fget(self.element_self) == self:
+                return name
+        assert False
 
     def get_wires(self) -> List["Wire"]:
+        ''' 获取该引脚上连接的所有导线
+        '''
         res = []
         for a_wire in self.element_self.experiment.Wires:
             if a_wire.Source == self or a_wire.Target == self:
@@ -207,7 +211,13 @@ class CircuitBase(ElementBase, metaclass=_CircuitMeta):
         return self
 
     @override
-    def set_position(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> Self:
+    def set_position(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            elementXYZ: Optional[bool] = None,
+    ) -> Self:
         ''' 设置元件的位置
         '''
         if not isinstance(x, (int, float)) \
@@ -246,14 +256,16 @@ class CircuitBase(ElementBase, metaclass=_CircuitMeta):
         assert not isinstance(self.data['ModelID'], type(Generate))
         return self.data['ModelID']
 
-    @classmethod
     @final
-    def _get_property(cls) -> list:
-        res: list = []
-        for name, _ in inspect.getmembers(cls, lambda i: isinstance(i, property)):
-            res.append(name)
-
-        return res
+    @classmethod
+    def get_all_pins_property(cls):
+        ''' 获取该元件的所有引脚对应的property
+        '''
+        for name, obj in inspect.getmembers(cls):
+            if isinstance(obj, property):
+                property_type = obj.fget.__annotations__.get('return')
+                if property_type == Pin or property_type == InputPin or property_type == OutputPin:
+                    yield name, obj
 
     @final
     def rename(self, name: str) -> Self:

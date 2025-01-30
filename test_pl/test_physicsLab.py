@@ -590,3 +590,7 @@ class BasicTest(TestCase, ViztracerTool):
             pass
         else:
             raise TestFail
+
+    @my_test_dec
+    def test_get_all_pins(self):
+        self.assertEqual(len(list(Multiplier.get_all_pins_property())), 8)

@@ -17,6 +17,7 @@
 * set_rotation # 设置元件的角度
 * rename # 重命名元件
 * lock(status: bool): 更改元件锁定的状态
+* get_all_pins_property: 获取该元件的所有引脚对应的property
 
 电学元件都有的`attribute`:
 * .is_bigElement # 是否是大体积元件
