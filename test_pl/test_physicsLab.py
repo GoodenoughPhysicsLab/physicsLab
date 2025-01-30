@@ -594,3 +594,14 @@ class BasicTest(TestCase, ViztracerTool):
     @my_test_dec
     def test_get_all_pins(self):
         self.assertEqual(len(list(Multiplier.get_all_pins_property())), 8)
+
+    @my_test_dec
+    def test_get_pin_name(self):
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
+            self.assertEqual(Multiplier(0, 0, 0).i_low.get_pin_name(), "i_low")
+
+    @my_test_dec
+    def test_type_pin(self):
+        self.assertTrue(isinstance(InputPin, type(Pin)))
+        self.assertTrue(isinstance(OutputPin, type(Pin)))
+        self.assertFalse(isinstance(ElementBase, type(Pin)))

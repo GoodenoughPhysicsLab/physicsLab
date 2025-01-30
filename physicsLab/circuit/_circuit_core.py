@@ -9,8 +9,13 @@ from physicsLab._tools import round_data
 from physicsLab._core import _Experiment, get_current_experiment, ElementBase, elementXYZ_to_native
 from physicsLab._typing import Optional, Self, num_type, NoReturn, Generate, override, final, List
 
+class _PinMeta(type):
+    ''' 该类仅仅用来实现以下效果:
+        通过 isinstance(cls, type(Pin)) 判断cls是否是引脚的class
+    '''
+
 # 对于逻辑电路，应该使用`InputPin` 和 `OutputPin`
-class Pin:
+class Pin(metaclass=_PinMeta):
     ''' 电学元件引脚 '''
     __slots__ = ("element_self", "_pin_label")
 
@@ -264,7 +269,7 @@ class CircuitBase(ElementBase, metaclass=_CircuitMeta):
         for name, obj in inspect.getmembers(cls):
             if isinstance(obj, property):
                 property_type = obj.fget.__annotations__.get('return')
-                if property_type == Pin or property_type == InputPin or property_type == OutputPin:
+                if isinstance(property_type, type(Pin)):
                     yield name, obj
 
     @final

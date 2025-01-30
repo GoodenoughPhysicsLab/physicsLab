@@ -41,9 +41,9 @@ class {cls.__name__}(CircuitBase):
         for name, obj in inspect.getmembers(cls):
             if isinstance(obj, property):
                 property_type = obj.fget.__annotations__.get('return')
-                if property_type == Pin or property_type == InputPin or property_type == OutputPin:
+                if isinstance(property_type, type(Pin)):
                     pins.append(name)
-            elif inspect.isfunction(obj) and not name.startswith('_'):
+            elif (inspect.isfunction(obj) or inspect.ismethod(obj)) and not name.startswith('_'):
                 circuit_detailed_info += f'''
 ### {name}
 ```Python

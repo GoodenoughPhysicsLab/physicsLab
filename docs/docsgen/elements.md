@@ -578,6 +578,13 @@ class Simple_Switch(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -635,6 +642,13 @@ class Push_Switch(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -679,6 +693,13 @@ class Push_Switch(CircuitBase):
 class Air_Switch(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -737,6 +758,13 @@ class Incandescent_Lamp(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -781,6 +809,13 @@ class Incandescent_Lamp(CircuitBase):
 class Battery_Source(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, voltage: Union[int, float] = 1.5, internal_resistance: Union[int, float] = 0) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -841,6 +876,13 @@ class Resistor(CircuitBase):
 ```
 修正电阻值的浮点误差  
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -892,6 +934,13 @@ class Fuse_Component(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -936,6 +985,13 @@ class Fuse_Component(CircuitBase):
 class Multimeter(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -985,6 +1041,13 @@ class Basic_Capacitor(CircuitBase):
 @param is_ideal: 是否为理想模式  
 @param peak_voltage: 峰值电压, 单位为V  
 @param internal_resistance: 内阻, 单位为Ω  
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -1051,6 +1114,13 @@ class Basic_Inductor(CircuitBase):
 ```
 修正电感值的浮点误差  
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -1106,6 +1176,13 @@ class Basic_Diode(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -1150,6 +1227,13 @@ class Basic_Diode(CircuitBase):
 class Light_Emitting_Diode(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -1196,6 +1280,13 @@ class Sinewave_Source(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -1240,6 +1331,13 @@ class Sinewave_Source(CircuitBase):
 class Square_Source(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -1286,6 +1384,13 @@ class Triangle_Source(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -1330,6 +1435,13 @@ class Triangle_Source(CircuitBase):
 class Sawtooth_Source(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -1376,6 +1488,13 @@ class Pulse_Source(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -1420,6 +1539,13 @@ class Pulse_Source(CircuitBase):
 class Photodiode(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -1466,6 +1592,13 @@ class Photoresistor(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -1510,6 +1643,13 @@ class Photoresistor(CircuitBase):
 class Buzzer(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -1556,6 +1696,13 @@ class Spark_Gap(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -1600,6 +1747,13 @@ class Spark_Gap(CircuitBase):
 class Tesla_Coil(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -1646,6 +1800,13 @@ class Dual_Light_Emitting_Diode(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -1690,6 +1851,13 @@ class Dual_Light_Emitting_Diode(CircuitBase):
 class Electric_Bell(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -1736,6 +1904,13 @@ class Musical_Box(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -1780,6 +1955,13 @@ class Musical_Box(CircuitBase):
 class Electric_Fan(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -1832,6 +2014,13 @@ class Simple_Instrument(CircuitBase):
 @param bpm: 节奏  
 @param is_ideal: 是否为理想模式  
 @param is_pulse: 简单乐器是否只响一次  
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -1895,6 +2084,13 @@ class Simple_Switch(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -1951,6 +2147,13 @@ class Simple_Switch(CircuitBase):
 class SPDT_Switch(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -2015,6 +2218,13 @@ class DPDT_Switch(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -2078,6 +2288,13 @@ class Student_Source(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -2122,6 +2339,13 @@ class Student_Source(CircuitBase):
 class Slide_Rheostat(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -2168,6 +2392,13 @@ class Galvanometer(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -2212,6 +2443,13 @@ class Galvanometer(CircuitBase):
 class Microammeter(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -2258,6 +2496,13 @@ class Electricity_Meter(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -2302,6 +2547,13 @@ class Electricity_Meter(CircuitBase):
 class Resistance_Box(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -2355,6 +2607,13 @@ class Simple_Ammeter(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -2400,6 +2659,13 @@ class Simple_Voltmeter(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -2444,6 +2710,13 @@ class Simple_Voltmeter(CircuitBase):
 class Logic_Input(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, output_status: bool = False) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_high_level_value
 ```Python
@@ -2520,6 +2793,13 @@ class Logic_Output(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_high_level_value
 ```Python
     def get_high_level_value(self) -> Union[int, float]
@@ -2588,6 +2868,13 @@ class Logic_Output(CircuitBase):
 class Yes_Gate(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_high_level_value
 ```Python
@@ -2658,6 +2945,13 @@ class No_Gate(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_high_level_value
 ```Python
     def get_high_level_value(self) -> Union[int, float]
@@ -2726,6 +3020,13 @@ class No_Gate(CircuitBase):
 class Or_Gate(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_high_level_value
 ```Python
@@ -2796,6 +3097,13 @@ class And_Gate(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_high_level_value
 ```Python
     def get_high_level_value(self) -> Union[int, float]
@@ -2864,6 +3172,13 @@ class And_Gate(CircuitBase):
 class Nor_Gate(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_high_level_value
 ```Python
@@ -2934,6 +3249,13 @@ class Nand_Gate(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_high_level_value
 ```Python
     def get_high_level_value(self) -> Union[int, float]
@@ -3002,6 +3324,13 @@ class Nand_Gate(CircuitBase):
 class Xor_Gate(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_high_level_value
 ```Python
@@ -3072,6 +3401,13 @@ class Xnor_Gate(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_high_level_value
 ```Python
     def get_high_level_value(self) -> Union[int, float]
@@ -3140,6 +3476,13 @@ class Xnor_Gate(CircuitBase):
 class Imp_Gate(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_high_level_value
 ```Python
@@ -3210,6 +3553,13 @@ class Nimp_Gate(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_high_level_value
 ```Python
     def get_high_level_value(self) -> Union[int, float]
@@ -3278,6 +3628,13 @@ class Nimp_Gate(CircuitBase):
 class Half_Adder(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_high_level_value
 ```Python
@@ -3348,6 +3705,13 @@ class Full_Adder(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_high_level_value
 ```Python
     def get_high_level_value(self) -> Union[int, float]
@@ -3416,6 +3780,13 @@ class Full_Adder(CircuitBase):
 class Half_Subtractor(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_high_level_value
 ```Python
@@ -3486,6 +3857,13 @@ class Full_Subtractor(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_high_level_value
 ```Python
     def get_high_level_value(self) -> Union[int, float]
@@ -3554,6 +3932,13 @@ class Full_Subtractor(CircuitBase):
 class Multiplier(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_high_level_value
 ```Python
@@ -3624,6 +4009,13 @@ class D_Flipflop(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_high_level_value
 ```Python
     def get_high_level_value(self) -> Union[int, float]
@@ -3692,6 +4084,13 @@ class D_Flipflop(CircuitBase):
 class T_Flipflop(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_high_level_value
 ```Python
@@ -3762,6 +4161,13 @@ class Real_T_Flipflop(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_high_level_value
 ```Python
     def get_high_level_value(self) -> Union[int, float]
@@ -3830,6 +4236,13 @@ class Real_T_Flipflop(CircuitBase):
 class JK_Flipflop(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_high_level_value
 ```Python
@@ -3900,6 +4313,13 @@ class Counter(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_high_level_value
 ```Python
     def get_high_level_value(self) -> Union[int, float]
@@ -3969,6 +4389,13 @@ class Random_Generator(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_high_level_value
 ```Python
     def get_high_level_value(self) -> Union[int, float]
@@ -4037,6 +4464,13 @@ class Random_Generator(CircuitBase):
 class Eight_Bit_Input(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_high_level_value
 ```Python
@@ -4112,6 +4546,13 @@ class Eight_Bit_Display(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_high_level_value
 ```Python
     def get_high_level_value(self) -> Union[int, float]
@@ -4180,6 +4621,13 @@ class Eight_Bit_Display(CircuitBase):
 class Proximity_Sensor(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_high_level_value
 ```Python
@@ -4250,6 +4698,13 @@ class Schmitt_Trigger(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, high_level: Union[int, float] = 5.0, low_level: Union[int, float, NoneType] = None, inverted: bool = False) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -4304,6 +4759,13 @@ class NE555(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -4348,6 +4810,13 @@ class NE555(CircuitBase):
 class Ground_Component(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -4394,6 +4863,13 @@ class Transformer(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -4438,6 +4914,13 @@ class Transformer(CircuitBase):
 class Tapped_Transformer(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -4484,6 +4967,13 @@ class Mutual_Inductor(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -4529,6 +5019,13 @@ class Rectifier(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -4573,6 +5070,13 @@ class Rectifier(CircuitBase):
 class Transistor(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, is_PNP: bool = True, gain: Union[int, float] = 100.0, max_power: Union[int, float] = 5.0) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -4628,6 +5132,13 @@ class Comparator(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -4675,6 +5186,13 @@ class Operational_Amplifier(CircuitBase):
 @param gain: 增益系数  
 @param max_voltage: 最大电压  
 @param min_voltage: 最小电压  
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -4729,6 +5247,13 @@ class Operational_Amplifier(CircuitBase):
 class Relay_Component(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, pull_in_current: Union[int, float] = 0.02, rated_current: Union[int, float] = 10, coil_inductance: Union[int, float] = 0.2, coil_resistance: Union[int, float] = 20) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -4785,6 +5310,13 @@ class N_MOSFET(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, beta: Union[int, float] = 0.027, threshold: Union[int, float] = 1.5, max_power: Union[int, float] = 1000) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -4839,6 +5371,13 @@ class P_MOSFET(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -4883,6 +5422,13 @@ class P_MOSFET(CircuitBase):
 class Current_Source(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -4929,6 +5475,13 @@ class Accelerometer(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -4973,6 +5526,13 @@ class Accelerometer(CircuitBase):
 class Attitude_Sensor(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -5019,6 +5579,13 @@ class Gravity_Sensor(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -5063,6 +5630,13 @@ class Gravity_Sensor(CircuitBase):
 class Gyroscope(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -5109,6 +5683,13 @@ class Linear_Accelerometer(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -5153,6 +5734,13 @@ class Linear_Accelerometer(CircuitBase):
 class Magnetic_Field_Sensor(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -5199,6 +5787,13 @@ class Analog_Joystick(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -5243,6 +5838,13 @@ class Analog_Joystick(CircuitBase):
 class Color_Light_Emitting_Diode(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
@@ -5289,6 +5891,13 @@ class Resistance_Law(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
 ### get_index
 ```Python
     def get_index(self) -> int
@@ -5333,6 +5942,13 @@ class Resistance_Law(CircuitBase):
 class Solenoid(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
 
 ### get_index
 ```Python
