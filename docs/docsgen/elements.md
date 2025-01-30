@@ -70,6 +70,11 @@
         <td>['black', 'red']</td>
     </tr>
     <tr>
+        <td> <a href="#Current_Source">电流源 </a> </td>
+        <td>Current_Source</td>
+        <td>['black', 'red']</td>
+    </tr>
+    <tr>
         <td> <a href="#Sinewave_Source">正弦波发生器 </a> </td>
         <td>Sinewave_Source</td>
         <td>['black', 'red']</td>
@@ -393,11 +398,6 @@
         <td> <a href="#P_MOSFET">P-MOSFET </a> </td>
         <td>P_MOSFET</td>
         <td>['D', 'G', 'S']</td>
-    </tr>
-    <tr>
-        <td> <a href="#Current_Source">电流源 </a> </td>
-        <td>Current_Source</td>
-        <td>[]</td>
     </tr>
     <tr>
         <td> <a href="#Accelerometer">加速度计 </a> </td>
@@ -1225,6 +1225,58 @@ class Basic_Diode(CircuitBase):
 ## <h2 id="Light_Emitting_Diode"> Light_Emitting_Diode </h2>
 ```Python
 class Light_Emitting_Diode(CircuitBase):
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+```
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
+### get_index
+```Python
+    def get_index(self) -> int
+```
+获取元件的index (每创建一个元件, index就加1 (index从1开始))  
+
+### get_position
+```Python
+    def get_position(self) -> physicsLab._tools.position
+```
+获取元件的坐标  
+
+### lock
+```Python
+    def lock(self, status: bool) -> Self
+```
+是否锁定元件 (位置不会受元件间碰撞的影响)  
+@param status: 是否锁定元件  
+
+### rename
+```Python
+    def rename(self, name: str) -> Self
+```
+重命名元件  
+@param name: 将元件重命名为name  
+
+### set_position
+```Python
+    def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
+```
+设置元件的位置  
+  
+
+### set_rotation
+```Python
+    def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
+```
+设置元件的角度  
+
+## <h2 id="Current_Source"> Current_Source </h2>
+```Python
+class Current_Source(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 
@@ -5368,58 +5420,6 @@ class N_MOSFET(CircuitBase):
 ## <h2 id="P_MOSFET"> P_MOSFET </h2>
 ```Python
 class P_MOSFET(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
-```
-
-### get_all_pins_property
-```Python
-    def get_all_pins_property()
-```
-获取该元件的所有引脚对应的property  
-  
-
-### get_index
-```Python
-    def get_index(self) -> int
-```
-获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_position
-```Python
-    def get_position(self) -> physicsLab._tools.position
-```
-获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
-### rename
-```Python
-    def rename(self, name: str) -> Self
-```
-重命名元件  
-@param name: 将元件重命名为name  
-
-### set_position
-```Python
-    def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
-```
-设置元件的位置  
-  
-
-### set_rotation
-```Python
-    def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
-```
-设置元件的角度  
-
-## <h2 id="Current_Source"> Current_Source </h2>
-```Python
-class Current_Source(CircuitBase):
     def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
 ```
 

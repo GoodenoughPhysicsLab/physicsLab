@@ -816,7 +816,7 @@ class P_MOSFET(CircuitBase):
     def D(self) -> Pin:
         return Pin(self, 1)
 
-class Current_Source(CircuitBase):
+class Current_Source(_TwoPinMixIn):
     ''' 电流源 '''
     def __init__(
             self,
