@@ -215,11 +215,11 @@ class BasicTest(TestCase, ViztracerTool):
         expe: Experiment = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         Or_Gate(0, 0, 0)
         crt_wire(
-            expe.get_element_from_position(0, 0, 0).o,
+            expe.get_element_from_position(0, 0, 0)[0].o,
             expe.get_element_from_index(1).i_up
         )
         crt_wire(
-            expe.get_element_from_position(0, 0, 0).i_low,
+            expe.get_element_from_position(0, 0, 0)[0].i_low,
             expe.get_element_from_index(1).o
         )
         self.assertEqual(expe.get_wires_count(), 2)
@@ -248,7 +248,7 @@ class BasicTest(TestCase, ViztracerTool):
             for y in [y * 2 + 10 for y in range(5)]:
                 Multiplier(x, y, 0)
 
-        crt_wire(expe.get_element_from_index(1).o, expe.get_element_from_position(0, 1, 0).i)
+        crt_wire(expe.get_element_from_index(1).o, expe.get_element_from_position(0, 1, 0)[0].i)
         crt_wire(
             expe.get_element_from_index(2).i,
             expe.get_element_from_index(3).o,
@@ -526,7 +526,7 @@ class BasicTest(TestCase, ViztracerTool):
             with Experiment(OpenMode.crt, "_Test", ExperimentType.Circuit, force_crt=True) as exp2:
                 Logic_Output(0, 0, 0.1)
                 exp2.merge(expe, 1, 0, 0, elementXYZ=True)
-                a = exp2.get_element_from_position(1, 0, 0)
+                a = exp2.get_element_from_position(1, 0, 0)[0]
                 crt_wire(a.i, a.o)
 
                 self.assertEqual(exp2.get_elements_count(), 2)

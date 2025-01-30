@@ -21,7 +21,7 @@
 更多好用的功能等你来发现
 
 ## 功能支持
-* 跨平台支持，只要Python能在该平台上运行并且能够读写文件，比如`Windows`, `Linux`, `MacOS`, `Android`
+* 跨平台支持，只要`Python3.8+`能在该平台上运行并且能够读写文件，比如`Windows7+`, `Linux`, `MacOS`, `Android`
 * 支持物实**所有**实验类型：电学，天体物理，电与磁
 * 支持物实**全部**元件
 * 大多数物实网络api封装的支持 (直接与物实服务器进行交互)
@@ -37,7 +37,7 @@
 `physicsLab`的版本发布采取快照的方式, `physicsLab`仅会维护`trunk`
 
 ## 安装教程
-1.  请确保你的电脑有[Python](https://www.python.org)（>=3.8）与[物理实验室AR](https://www.turtlesim.com/)（简称`物实`）（也可以联系物理实验室的开发者[Jone-Chen](https://gitee.com/civitasjohn)）
+1.  请确保你的电脑有[Python](https://www.python.org)（>=3.8）与[物理实验室AR](https://www.turtlesim.com/)（简称`物实`）（也可以联系物理实验室的开发者[John-Chen](https://gitee.com/civitasjohn)）
 
 2.  在cmd或shell输入以下载physicsLab：
 ```shell

@@ -248,3 +248,4 @@
 2.  重命名`Translatexyz`， `XYZTranslate`为`native_to_elementXYZ`, `elementXYZ_to_native`, 新增`ElementXYZ`
 3.  重命名`lib.Equal_to`为`lib.EqualTo`
 4.  移除`Category.BlackHole`, `User.get_user`的`positional-argument`
+5.  `Experiment.get_element_from_position`现在只会返回list (不兼容更新)

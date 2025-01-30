@@ -143,14 +143,14 @@ class _Experiment:
         identifier = element.data["Identifier"]
 
         if self.experiment_type == ExperimentType.Circuit:
-            res_Wires = set()
+            rest_wires = set()
             for a_wire in self.Wires:
                 if a_wire.Source.element_self.data["Identifier"] == identifier \
                         or a_wire.Target.element_self.data["Identifier"] == identifier:
                     continue
 
-                res_Wires.add(a_wire)
-            self.Wires = res_Wires
+                rest_wires.add(a_wire)
+            self.Wires = rest_wires
 
         for position, elements in self._position2elements.items():
             can_break: bool = False
@@ -173,14 +173,13 @@ class _Experiment:
 
         return self
 
-    # TODO 统一返回的行为，即始终返回列表之类的
     @_check_not_closed
     def get_element_from_position(
             self,
             x: num_type,
             y: num_type,
             z: num_type,
-    ) -> Union["ElementBase", List["ElementBase"]]:
+    ) -> List["ElementBase"]:
         ''' 通过坐标索引元件 '''
         if not isinstance(x, (int, float)) \
                 or not isinstance(y, (int, float)) \
@@ -191,8 +190,7 @@ class _Experiment:
         if position not in self._position2elements.keys():
             raise errors.ElementNotFound(f"{position} do not exist")
 
-        result: list = self._position2elements[position]
-        return result[0] if len(result) == 1 else result
+        return self._position2elements[position]
 
     @_check_not_closed
     def get_element_from_index(self, index: int) -> "ElementBase":
