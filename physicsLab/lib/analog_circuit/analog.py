@@ -8,7 +8,7 @@ from physicsLab._core import (
 from physicsLab import _tools
 from physicsLab.circuit.elements import *
 from physicsLab.circuit._circuit_core import Pin, crt_wire, Wire
-from physicsLab._typing import Optional, num_type, List, Set, Dict, FrozenSet
+from physicsLab._typing import Optional, num_type, List, Set, Dict, FrozenSet, Callable
 
 # 全部节点列表
 _gn: Dict[_Experiment, List["Node"]] = {}
@@ -48,16 +48,22 @@ class Node:
                  /, *,
                  elementXYZ: Optional[bool] = None,
     ) -> None:
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(name, str) \
+                or not isinstance(gnd, Ground_Component) \
+                or not isinstance(elementXYZ, (bool, type(None))):
+            raise TypeError
+
         self.elements: List[CircuitBase] = []
         self._input: List[Vertex] = []
         self._output: Vertex = VoidVertex(self)
         self.name = name
-        if not isinstance(gnd, Ground_Component):
-            raise GroundNotFoundError
         self.gnd = gnd
         self.wires: Set[Wire] = set()
         expe = get_current_experiment()
-        if _gn.get(expe) is None:
+        if expe not in _gn.keys():
             _gn[expe] = [self]
         else:
             _gn[expe].append(self)
@@ -334,7 +340,7 @@ def connect(*verteses: Vertex) -> List[Wire]:
     res = _gicw[expe] - res
     return list(res)
 
-def node_wrapper(name: str) -> Node:
+def node_wrapper(name: str) -> Callable:
     ''' 用于将函数的作用效果整体包装为一个节点
         将所有在函数作用过程中与函数参数中Node对象的输出端相连的Pin作为新Node的输入端,
         并将函数的返回的Node的输出端作为新Node的输出端
@@ -344,7 +350,7 @@ def node_wrapper(name: str) -> Node:
         接地为函数参数中的Node对象的或者作用过程中新增的接地元件
         该装饰器只能用于返回Node对象的函数
     '''
-    def decorator_node_wrapper(func: FunctionType) -> Node:
+    def decorator_node_wrapper(func: FunctionType) -> Callable:
         def wrapper(*args, **kwargs):
             expe = get_current_experiment()
             ele_count = len(expe.Elements)
@@ -404,7 +410,7 @@ def node_wrapper(name: str) -> Node:
 
 class PinNode(Node):
     ''' 接线柱节点 '''
-    def __init__(self, pin: Pin, gnd) -> None:
+    def __init__(self, pin: Pin, gnd: Ground_Component) -> None:
         pos = pin.element_self.get_position()
         super().__init__(pos.x, pos.y, pos.z, "pin", gnd, elementXYZ=pin.element_self.is_elementXYZ)
         self.input = [pin]
@@ -821,6 +827,10 @@ def true_divide(n1: Union[Node, num_type], n2: Node):
 @node_wrapper("log")
 def log(n: Union[Node, num_type], n_base: Union[Node, num_type]) -> ComplexNode:
     ''' 对数 '''
+    if not isinstance(n, (Node, int, float)) \
+            or not isinstance(n_base, (Node, int, float)):
+        raise TypeError("The parameters must be Node or number")
+
     x_is_num = isinstance(n, num_type)
     base_is_num = isinstance(n_base, num_type)
     if x_is_num and base_is_num:
@@ -828,7 +838,7 @@ def log(n: Union[Node, num_type], n_base: Union[Node, num_type]) -> ComplexNode:
     if x_is_num and not base_is_num:
         return (-0.025*math.log(n))/(pri_log(n_base) + 0.69077552617129989)
     if not x_is_num and base_is_num:
-        return (pri_log(n) + 0.69077552617129989)/(-0.025*math.log(n_base))
+        return (pri_log(n) + 0.69077552617129989) / (-0.025 * math.log(n_base))
     if not x_is_num and not base_is_num:
         return (pri_log(n) + 0.69077552617129989) / (pri_log(n_base) + 0.69077552617129989)
 
