@@ -8,7 +8,7 @@ from physicsLab._core import (
 from physicsLab import _tools
 from physicsLab.circuit.elements import *
 from physicsLab.circuit._circuit_core import Pin, crt_wire, Wire
-from physicsLab.typehint import Optional, num_type, List, Set, Dict, FrozenSet
+from physicsLab._typing import Optional, num_type, List, Set, Dict, FrozenSet
 
 # 全部节点列表
 _gn: Dict[_Experiment, List["Node"]] = {}
@@ -837,5 +837,5 @@ def lambertW(n: Node) -> ComplexNode:
     @node_wrapper("xex")
     def xex(n: Node) -> ComplexNode:
         return transistor_multiply(n, exp(n))
-    
+
     return inverse(xex, True)(n)
