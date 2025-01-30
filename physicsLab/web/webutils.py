@@ -7,7 +7,7 @@ from . import api
 from . import _async_tool
 from physicsLab import errors
 from physicsLab.enums import Category
-from physicsLab.typehint import Optional, Callable, num_type, override
+from physicsLab._typing import Optional, Callable, num_type, override
 
 async def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
     ''' 运行func, 直到成功或达到max_retry的条件

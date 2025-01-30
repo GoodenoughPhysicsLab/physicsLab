@@ -3,7 +3,7 @@ from .wires import crt_wires, UnitPin
 from physicsLab._tools import round_data
 from physicsLab.circuit import elements, Pin, crt_wire
 from physicsLab._core import _Experiment, get_current_experiment, native_to_elementXYZ
-from physicsLab.typehint import num_type, Dict, Optional, List
+from physicsLab._typing import num_type, Dict, Optional, List
 
 class Const_NoGate:
     ''' 只用来提供高电平的非门，若没有则创建一个只读非门，若已存在则不会创建新的元件 '''

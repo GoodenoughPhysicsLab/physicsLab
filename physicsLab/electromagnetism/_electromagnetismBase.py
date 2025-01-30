@@ -2,8 +2,8 @@
 from physicsLab import _tools
 from physicsLab import errors
 from physicsLab.enums import ExperimentType
-from physicsLab._core import get_current_experiment, _Experiment, _ElementBase
-from physicsLab.typehint import num_type, Self, override, NoReturn, Optional
+from physicsLab._core import get_current_experiment, _Experiment, ElementBase
+from physicsLab._typing import num_type, Self, override, NoReturn, Optional
 
 class _ElectromagnetismMeta(type):
     def __call__(
@@ -39,7 +39,7 @@ class _ElectromagnetismMeta(type):
 
         return self
 
-class ElectromagnetismBase(_ElementBase, metaclass=_ElectromagnetismMeta):
+class ElectromagnetismBase(ElementBase, metaclass=_ElectromagnetismMeta):
     ''' 所有电与磁元件的父类 '''
     experiment: _Experiment
 

@@ -8,7 +8,7 @@ from physicsLab.circuit import elements
 from physicsLab.circuit._circuit_core import Pin
 from physicsLab._core import get_current_experiment, native_to_elementXYZ
 from physicsLab.enums import ExperimentType
-from physicsLab.typehint import num_type, Optional, Self, Union, Type, List
+from physicsLab._typing import num_type, Optional, Self, Union, Type, List
 
 class Tick_Counter:
     ''' 当 逻辑输入 输入了num次, 就输出为1, 否则为0

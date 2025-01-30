@@ -2,7 +2,7 @@
 from physicsLab._core import get_current_experiment
 from physicsLab.circuit import elements
 from physicsLab.circuit._circuit_core import InputPin, OutputPin, crt_wire
-from physicsLab.typehint import num_type, Optional
+from physicsLab._typing import num_type, Optional
 from physicsLab._core import native_to_elementXYZ
 
 class _TriggerMeta(type):

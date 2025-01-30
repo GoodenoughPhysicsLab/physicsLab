@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+''' 在命令行打印出有颜色的字 '''
 from enum import Enum, unique
 
 import colorama

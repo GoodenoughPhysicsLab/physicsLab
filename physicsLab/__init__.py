@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 ''' Python API for Physics-Lab-AR '''
 
-# 颜色打印
 from ._colorUtils import close_color_print
 # 操作实验
 from .element import search_experiment, Experiment
 from ._core import (
+    ElementBase,
     get_current_experiment,
     elementXYZ_to_native,
     native_to_elementXYZ,

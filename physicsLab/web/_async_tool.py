@@ -10,7 +10,7 @@ import asyncio
 import queue
 import threading
 from abc import abstractmethod
-from physicsLab.typehint import Iterator, final
+from physicsLab._typing import Iterator, final
 
 class _EndOfQueue:
     def __new__(cls):

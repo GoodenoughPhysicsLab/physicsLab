@@ -19,7 +19,7 @@ from physicsLab import errors
 from physicsLab import _colorUtils
 from .web import User, _check_response
 from .enums import Category, Tag, ExperimentType, OpenMode
-from .typehint import Union, Optional, List, Dict, num_type, Self, Callable, Tuple, final, NoReturn
+from ._typing import Union, Optional, List, Dict, num_type, Self, Callable, Tuple, final, NoReturn
 
 class _ExperimentStack:
     data: List["_Experiment"] = []
@@ -85,9 +85,9 @@ class _Experiment:
             SAV_PATH_DIR = "physicsLabSav"
 
     open_mode: OpenMode
-    _position2elements: Dict[Tuple[num_type, num_type, num_type], List["_ElementBase"]]
-    _id2element: Dict[str, "_ElementBase"]
-    Elements: List["_ElementBase"]
+    _position2elements: Dict[Tuple[num_type, num_type, num_type], List["ElementBase"]]
+    _id2element: Dict[str, "ElementBase"]
+    Elements: List["ElementBase"]
     SAV_PATH: str
     PlSav: dict
     CameraSave: dict
@@ -129,11 +129,11 @@ class _Experiment:
         return self
 
     @_check_not_closed
-    def del_element(self, element: "_ElementBase") -> Self:
+    def del_element(self, element: "ElementBase") -> Self:
         ''' 删除元件
             @param element: 三大实验的元件
         '''
-        if not isinstance(element, _ElementBase):
+        if not isinstance(element, ElementBase):
             raise TypeError
         if element.experiment is not self:
             raise errors.ExperimentError("element is not in this experiment") # TODO 换一个更好的异常类型?
@@ -180,7 +180,7 @@ class _Experiment:
             x: num_type,
             y: num_type,
             z: num_type,
-    ) -> Union["_ElementBase", List["_ElementBase"]]:
+    ) -> Union["ElementBase", List["ElementBase"]]:
         ''' 通过坐标索引元件 '''
         if not isinstance(x, (int, float)) \
                 or not isinstance(y, (int, float)) \
@@ -195,7 +195,7 @@ class _Experiment:
         return result[0] if len(result) == 1 else result
 
     @_check_not_closed
-    def get_element_from_index(self, index: int) -> "_ElementBase":
+    def get_element_from_index(self, index: int) -> "ElementBase":
         ''' 通过index (元件生成顺序) 索引元件, index从1开始 '''
         if not isinstance(index, int):
             raise TypeError
@@ -205,7 +205,7 @@ class _Experiment:
         return self.Elements[index - 1]
 
     @_check_not_closed
-    def get_element_from_identifier(self, identifier: str) -> "_ElementBase":
+    def get_element_from_identifier(self, identifier: str) -> "ElementBase":
         ''' 通过元件的id获取元件的引用 '''
         res = self._id2element.get(identifier)
         if res is None:
@@ -678,7 +678,8 @@ class _Experiment:
 
         return self
 
-class _ElementBase:
+class ElementBase:
+    ''' 三大类型实验的元件的基类 '''
     data: dict
     experiment: _Experiment
     _position: _tools.position

@@ -3,7 +3,7 @@ import physicsLab.plAR as plar
 import physicsLab.errors as errors
 
 from .._circuit_core import _TwoPinMixIn, CircuitBase, Pin
-from physicsLab.typehint import (
+from physicsLab._typing import (
     Optional, num_type, CircuitElementData, Self, Generate, Union, List, override, Union, Tuple
 )
 

@@ -14,8 +14,8 @@ from .web import User
 from .savTemplate import Generate
 from .circuit._circuit_core import crt_wire, Pin
 from .enums import ExperimentType, Category, OpenMode, WireColor
-from ._core import _Experiment, _ExperimentStack, _check_not_closed, _ElementBase
-from .typehint import num_type, Optional, Union, List, overload, Tuple, Dict, Self
+from ._core import _Experiment, _ExperimentStack, _check_not_closed, ElementBase
+from ._typing import num_type, Optional, Union, List, overload, Tuple, Self
 
 def _get_all_pl_sav() -> List[str]:
     ''' 获取所有物实存档的文件名 '''
@@ -416,7 +416,7 @@ class Experiment(_Experiment):
             z: num_type,
             *args,
             **kwargs,
-    ) -> _ElementBase:
+    ) -> ElementBase:
         ''' 通过元件的ModelID或其类名创建元件 '''
         if not isinstance(name, str) \
                 or not isinstance(x, (int, float)) \

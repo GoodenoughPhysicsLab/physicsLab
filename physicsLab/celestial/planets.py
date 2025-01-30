@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from physicsLab.savTemplate import Generate
 from ._planetbase import PlanetBase
-from physicsLab.typehint import num_type, Optional
+from physicsLab._typing import num_type, Optional
 
 class Mercury(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from physicsLab.savTemplate import Generate
 from ._electromagnetismBase import ElectromagnetismBase
-from physicsLab.typehint import num_type, Optional
+from physicsLab._typing import num_type, Optional
 
 class Negative_Charge(ElectromagnetismBase):
     ''' 负电荷 '''

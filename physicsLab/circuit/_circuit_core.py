@@ -6,8 +6,8 @@ from physicsLab import _tools
 
 from physicsLab.enums import ExperimentType, WireColor
 from physicsLab._tools import round_data
-from physicsLab._core import _Experiment, get_current_experiment, _ElementBase, elementXYZ_to_native
-from physicsLab.typehint import Optional, Self, num_type, NoReturn, Generate, override, final, List
+from physicsLab._core import _Experiment, get_current_experiment, ElementBase, elementXYZ_to_native
+from physicsLab._typing import Optional, Self, num_type, NoReturn, Generate, override, final, List
 
 # 对于逻辑电路，应该使用`InputPin` 和 `OutputPin`
 class Pin:
@@ -174,7 +174,7 @@ class _CircuitMeta(type):
 
         return self
 
-class CircuitBase(_ElementBase, metaclass=_CircuitMeta):
+class CircuitBase(ElementBase, metaclass=_CircuitMeta):
     ''' 所有电学元件的父类 '''
     experiment: _Experiment # 元件所属的实验
     is_elementXYZ: bool

@@ -14,7 +14,7 @@ from physicsLab._core import get_current_experiment, native_to_elementXYZ
 from physicsLab.circuit import elements, crt_wire
 from physicsLab._tools import round_data
 from physicsLab.lib import crt_wires, D_WaterLamp
-from physicsLab.typehint import Optional, Union, List, Iterator, Dict, Self, num_type, Callable, Type
+from physicsLab._typing import Optional, Union, List, Iterator, Dict, Self, num_type, Callable, Type
 
 def _format_velocity(velocity: float) -> float:
     velocity = min(1, velocity)

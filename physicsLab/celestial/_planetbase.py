@@ -2,8 +2,8 @@
 from physicsLab import _tools
 from physicsLab import errors
 from physicsLab.enums import ExperimentType
-from physicsLab._core import get_current_experiment, _Experiment, _ElementBase
-from physicsLab.typehint import num_type, Self, override, final, NoReturn, Optional
+from physicsLab._core import get_current_experiment, _Experiment, ElementBase
+from physicsLab._typing import num_type, Self, override, final, NoReturn, Optional
 
 class _PlanetMeta(type):
     def __call__(
@@ -42,7 +42,7 @@ class _PlanetMeta(type):
 
         return self
 
-class PlanetBase(_ElementBase, metaclass=_PlanetMeta):
+class PlanetBase(ElementBase, metaclass=_PlanetMeta):
     ''' 星球基类 '''
     experiment: _Experiment
 

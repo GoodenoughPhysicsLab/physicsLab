@@ -17,6 +17,7 @@
 *  将midi转换为物实对应的电路
 *  修改物实的实验封面
 *  获取用户的所有头像或实验用过的所有封面
+
 更多好用的功能等你来发现
 
 ## 功能支持
@@ -30,6 +31,7 @@
 
 但这并不意味着无意义的兼容。通常来说，会采用标注弃用, 并推荐转移到新api的模式。
 * v2.0.0: `class Experiment, ExperimentOpenedError, ExperimentClosedError, ExperimentExistError, ExperimentNotExistError`实验性地加入`stable`支持
+* v2.0.1: 三大实验所有元件实验性地加入`stable`支持
 
 ## 版本发布
 `physicsLab`的版本发布采取快照的方式, `physicsLab`仅会维护`trunk`

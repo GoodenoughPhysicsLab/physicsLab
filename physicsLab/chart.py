@@ -5,7 +5,7 @@ import base64
 from physicsLab import errors
 from physicsLab._core import _Experiment
 from physicsLab.circuit.elements import CircuitBase
-from physicsLab.typehint import TypedDict, Self, List, Optional
+from physicsLab._typing import TypedDict, Self, List, Optional
 
 class _PlotDataDict(TypedDict):
     Name: str

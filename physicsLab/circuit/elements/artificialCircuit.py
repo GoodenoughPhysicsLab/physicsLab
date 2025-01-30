@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from physicsLab._tools import round_data
 from .._circuit_core import CircuitBase, _TwoPinMixIn, Pin
-from physicsLab.typehint import Optional, num_type, CircuitElementData, Generate, Self, override
+from physicsLab._typing import Optional, num_type, CircuitElementData, Generate, Self, override
 
 class NE555(CircuitBase):
     ''' 555定时器 '''

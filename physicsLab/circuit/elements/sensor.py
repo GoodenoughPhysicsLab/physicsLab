@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from .._circuit_core import _TwoPinMixIn, CircuitBase, Pin
 from .logicCircuit import _LogicBase
-from physicsLab.typehint import Optional, num_type, CircuitElementData, Generate
+from physicsLab._typing import Optional, num_type, CircuitElementData, Generate
 
 class _MemsBase(CircuitBase):
     ''' 三引脚集成式传感器基类 '''

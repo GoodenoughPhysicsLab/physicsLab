@@ -2,7 +2,7 @@
 from physicsLab import plAR
 from physicsLab import errors
 from .._circuit_core import CircuitBase, InputPin, OutputPin
-from physicsLab.typehint import Optional, num_type, CircuitElementData, Self, Generate, final
+from physicsLab._typing import Optional, num_type, CircuitElementData, Self, Generate, final
 
 class _LogicBase(CircuitBase):
     @final

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from physicsLab._tools import round_data
 from .._circuit_core import CircuitBase, _TwoPinMixIn, Pin
-from physicsLab.typehint import Optional, num_type, CircuitElementData, Self, Generate, override
+from physicsLab._typing import Optional, num_type, CircuitElementData, Self, Generate, override
 
 class _SwitchBase(CircuitBase):
     ''' 开关基类 '''
