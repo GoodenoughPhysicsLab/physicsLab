@@ -233,18 +233,18 @@ class User:
 
     def query_experiments(
             self,
+            category: Category,
             tags: Optional[List[Tag]] = None,
             exclude_tags: Optional[List[Tag]] = None,
-            category: Category = Category.Experiment,
             languages: Optional[List[str]] = None,
             user_id: Optional[str] = None,
             take: int = 18,
             skip: int = 0,
     ) -> dict:
         ''' 查询实验
+            @param category: 实验区还是黑洞区
             @param tags: 根据列表内的物实实验的标签进行对应的搜索
             @param exclude_tags: 除了列表内的标签的实验都会被搜索到
-            @param category: 实验区还是黑洞区
             @param languages: 根据列表内的语言进行对应的搜索
             @param user_id: 指定搜索的作品的发布者
             @param take: 搜索数量
@@ -264,13 +264,16 @@ class User:
 
         if languages is None:
             languages = []
-        if tags is not None:
-            _tags = [tag.value for tag in tags]
-        else:
-            _tags = None
 
-        if exclude_tags is not None:
-            exclude_tags = [tag.value for tag in exclude_tags] # type: ignore
+        if tags is None:
+            _tags = None
+        else:
+            _tags = [tag.value for tag in tags]
+
+        if exclude_tags is None:
+            exclude_tags_ = None
+        else:
+            exclude_tags_ = [tag.value for tag in exclude_tags]
 
         response = requests.post(
             "http://physics-api-cn.turtlesim.com/Contents/QueryExperiments",
@@ -281,7 +284,7 @@ class User:
                     "ExcludeLanguages": None,
                     "Tags": _tags,
                     "ModelTags": None,
-                    "ExcludeTags": exclude_tags,
+                    "ExcludeTags": exclude_tags_,
                     "ModelID": None,
                     "ParentID": None,
                     "UserID": user_id,
@@ -305,9 +308,9 @@ class User:
 
     async def async_query_experiments(
             self,
+            category: Category,
             tags: Optional[List[Tag]] = None,
             exclude_tags: Optional[List[Tag]] = None,
-            category: Category = Category.Experiment,
             languages: Optional[List[str]] = None,
             user_id: Optional[str] = None,
             take: int = 18,
@@ -315,9 +318,9 @@ class User:
     ):
         return await _async_wrapper(
             self.query_experiments,
+            category,
             tags,
             exclude_tags,
-            category,
             languages,
             user_id,
             take,
@@ -802,6 +805,7 @@ class User:
                 0: 全部, 1: 系统邮件, 2: 关注和粉丝, 3: 评论和回复, 4: 作品通知, 5: 管理记录
             @param skip: 跳过skip条消息
             @param take: 取take条消息
+            @param no_templates: 是否不返回消息种类的模板消息
         '''
         if category_id not in (0, 1, 2, 3, 4, 5) \
                 or not isinstance(skip, int) \

@@ -89,6 +89,7 @@ def get_messages(self, category_id: int = 0, skip: int = 0, take: int = 16, no_t
 0: 全部, 1: 系统邮件, 2: 关注和粉丝, 3: 评论和回复, 4: 作品通知, 5: 管理记录  
 @param skip: 跳过skip条消息  
 @param take: 取take条消息  
+@param no_templates: 是否不返回消息种类的模板消息  
 
 对应的协程风格的api:
 ```Python
@@ -183,11 +184,11 @@ async def async_post_comment(self, target_id: str, target_type: str, content: st
 
 ## 查询实验
 ```Python
-def query_experiments(self, tags: Optional[List[physicsLab.enums.Tag]] = None, exclude_tags: Optional[List[physicsLab.enums.Tag]] = None, category: physicsLab.enums.Category = <Category.Experiment: 'Experiment'>, languages: Optional[List[str]] = None, user_id: Optional[str] = None, take: int = 18, skip: int = 0) -> dict
+def query_experiments(self, category: physicsLab.enums.Category, tags: Optional[List[physicsLab.enums.Tag]] = None, exclude_tags: Optional[List[physicsLab.enums.Tag]] = None, languages: Optional[List[str]] = None, user_id: Optional[str] = None, take: int = 18, skip: int = 0) -> dict
 ```
+@param category: 实验区还是黑洞区  
 @param tags: 根据列表内的物实实验的标签进行对应的搜索  
 @param exclude_tags: 除了列表内的标签的实验都会被搜索到  
-@param category: 实验区还是黑洞区  
 @param languages: 根据列表内的语言进行对应的搜索  
 @param user_id: 指定搜索的作品的发布者  
 @param take: 搜索数量  
@@ -195,7 +196,7 @@ def query_experiments(self, tags: Optional[List[physicsLab.enums.Tag]] = None, e
 
 对应的协程风格的api:
 ```Python
-async def async_query_experiments(self, tags: Optional[List[physicsLab.enums.Tag]] = None, exclude_tags: Optional[List[physicsLab.enums.Tag]] = None, category: physicsLab.enums.Category = <Category.Experiment: 'Experiment'>, languages: Optional[List[str]] = None, user_id: Optional[str] = None, take: int = 18, skip: int = 0)
+async def async_query_experiments(self, category: physicsLab.enums.Category, tags: Optional[List[physicsLab.enums.Tag]] = None, exclude_tags: Optional[List[physicsLab.enums.Tag]] = None, languages: Optional[List[str]] = None, user_id: Optional[str] = None, take: int = 18, skip: int = 0)
 ```
 
 ## 领取每日签到奖励

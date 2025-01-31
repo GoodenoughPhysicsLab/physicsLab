@@ -3,7 +3,7 @@
 ## 第一个程序
 元件浮空几乎成为了修改存档的代名词，因此，就让我们从创建一个悬空的逻辑输入开始吧：
 ```Python
-from physicsLab import Experiment, Logic_Input
+from physicsLab import *
 
 with Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=True):
     Logic_Input(0, 0, 0.1)
@@ -32,7 +32,7 @@ with Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=True)
 ## 元件坐标系
 物实已有的坐标表示方法往往稍大于一个元件的尺寸，而元件坐标系可以解决这个问题：
 ```Python
-from physicsLab import experiment, Logic_Input
+from physicsLab import *
 
 with Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=True):
     Logic_Input(0, 0, 1, elementXYZ=True)
@@ -52,3 +52,15 @@ with Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=True)
 更多用法请查看[wire.md](./wire.md)
 
 ## 通过网络api与物实交互
+仿照客户端的行为，向物实服务器发送请求，获取物实服务器的响应
+```Python
+from physicsLab import *
+
+# 登录物实账号
+user = web.User(USERNAME, PASSWORD)
+# 或者，使用token & authcode登录
+# user = web.User(token=TOKEN, auth_code=AUTH_CODE)
+
+print(user.get_messages()) # 获取收件箱的消息
+```
+更多用法请查看[web.md](./web.md)
