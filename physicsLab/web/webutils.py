@@ -350,7 +350,7 @@ class RelationsIter(_async_tool.AsyncTool):
     async def __aiter__(self):
         tasks = [self._make_task(i) for i in range(0, self.amount, 24)]
         for task in tasks:
-            for res in (await task)["Data"]["$values"]:
+            for res in (await task)["Data"][""]:
                 yield res
 
 class AvatarsIter(_async_tool.AsyncTool):
@@ -419,3 +419,79 @@ class AvatarsIter(_async_tool.AsyncTool):
                 pass
             else:
                 yield res
+ 
+class ExperimentsIter(_async_tool.AsyncTool):
+     '''获取指定条件实验的迭代器
+     @param tags: 包含的标签列表
+     @param exclude_tags: 排除的标签列表
+     @param category: 实验类别
+     @param languages: 语言列表
+     @param user_id: 用户ID
+     @param take: 每次获取的数量
+     @param skip: 起始位置
+     @param max_retry: 最大重试次数
+     '''
+     def __init__(
+         self,
+         tags: Optional[List[Tag]] = None,
+         exclude_tags: Optional[List[Tag]] = None,
+         category: Category = Category.Experiment,
+         languages: Optional[List[str]] = None,
+         user_id: Optional[str] = None,
+         take: int = 18,
+         skip: int = 0,
+         max_retry: Optional[int] = 0,
+     ) -> None:
+         if not isinstance(category, Category) \
+                 or not isinstance(tags, (list, type(None))) \
+                 or tags is not None and not all(isinstance(tag, Tag) for tag in tags) \
+                 or not isinstance(exclude_tags, (list, type(None))) \
+                 or exclude_tags is not None and not all(isinstance(tag, Tag) for tag in exclude_tags) \
+                 or not isinstance(languages, (list, type(None))) \
+                 or languages is not None and not all(isinstance(language, str) for language in languages) \
+                 or not isinstance(user_id, (str, type(None))) \
+                 or not isinstance(take, int) \
+                 or not isinstance(skip, int) \
+                 or not isinstance(max_retry, (int, type(None))):
+             raise TypeError
+         if skip < 0 or take <= 0:
+             raise ValueError
+ 
+         self.tags = tags
+         self.exclude_tags = exclude_tags
+         self.category = category
+         self.languages = languages
+         self.user_id = user_id
+         self.take = take
+         self.max_retry = max_retry
+         self.current_skip = skip
+         
+         self.has_more = True
+ 
+     @override
+     async def __aiter__(self):
+         while self.has_more:
+             response = await _run_task(
+                 self.max_retry,
+                 api.async_query_experiments,
+                 tags=self.tags,
+                 exclude_tags=self.exclude_tags,
+                 category=self.category,
+                 languages=self.languages,
+                 user_id=self.user_id,
+                 take=self.take,
+                 skip=self.current_skip
+             )
+ 
+             experiments = response.get("Data", [])
+             
+             if not experiments:
+                 self.has_more = False
+                 return
+ 
+             for exp in experiments:
+                 yield exp
+ 
+             self.current_skip += len(experiments)
+             if len(experiments) < self.take:
+                 self.has_more = False
