@@ -114,13 +114,24 @@ async def async_get_avatar(target_id: str, index: int, category: str, size_categ
 class User:
     def __init__(
             self,
-            username: Optional[str] = None,
+            email: Optional[str] = None,
             password: Optional[str] = None,
-            *,
+            /, *,
             token: Optional[str] = None,
             auth_code: Optional[str] = None,
     ) -> None:
-        if not isinstance(username, (str, type(None))) \
+        ''' 邮箱密码登录:
+            @param email: 邮箱
+            @param password: 密码
+            @usage: User(YOUR_EMAIL, YOUR_PASSWORD)
+
+            token / auth_code登录:
+            @usage: User(token=YOUR_TOKEN, auth_code=YOUR_AUTH_CODE)
+
+            临时的匿名账号 (权限受限):
+            @usage: User()
+        '''
+        if not isinstance(email, (str, type(None))) \
                 or not isinstance(password, (str, type(None))) \
                 or not isinstance(token, (str, type(None))) \
                 or not isinstance(auth_code, (str, type(None))):
@@ -143,7 +154,7 @@ class User:
             self.verification = tmp["Data"]["User"]["Verification"]
 
         else:
-            tmp = self.__login(username, password)
+            tmp = self.__login(email, password)
 
             self.token = tmp["Token"]
             self.auth_code = tmp["AuthCode"]
@@ -173,14 +184,14 @@ class User:
 
     def __login(
             self,
-            username: Optional[str] = None,
+            email: Optional[str] = None,
             password: Optional[str] = None,
     ) -> _login_res:
         ''' 登录, 默认为匿名登录
 
             通过返回字典的Token与AuthCode实现登陆
         '''
-        assert isinstance(username, (str, type(None))) and isinstance(password, (str, type(None)))
+        assert isinstance(email, (str, type(None))) and isinstance(password, (str, type(None)))
 
         plar_version = plAR.get_plAR_version()
         if plar_version is not None:
@@ -198,7 +209,7 @@ class User:
         response = requests.post(
             "http://physics-api-cn.turtlesim.com/Users/Authenticate",
             json={
-                "Login": username,
+                "Login": email,
                 "Password": password,
                 "Version": plar_version,
                 "Device": {

@@ -116,7 +116,7 @@ except ExperimentNotExistError:
 ```Python
 from physicsLab import *
 
-user = web.User(YOUR_UESRNAME, YOUR_PASSWORD)
+user = web.User(YOUR_EMAIL, YOUR_PASSWORD)
 # 也可使用 web.User(token=YOUR_TOKEN, auth_code=YOUR_AUTH_CODE)
 
 with Experiment(OpenMode.load_by_sav_name, "example") as expe:
@@ -129,7 +129,7 @@ with Experiment(OpenMode.load_by_sav_name, "example") as expe:
 ```Python
 from physicsLab import *
 
-user = web.User(YOUR_UESRNAME, YOUR_PASSWORD)
+user = web.User(YOUR_EMAIL, YOUR_PASSWORD)
 
 with Experiment(OpenMode.load_by_plar_app, "642cf37a494746375aae306a", Category.Discussion) as expe:
   expe.update(user, YOUR_IMAGE_PATH)

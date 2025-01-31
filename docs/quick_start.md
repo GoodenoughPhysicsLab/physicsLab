@@ -57,9 +57,9 @@ with Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=True)
 from physicsLab import *
 
 # 登录物实账号
-user = web.User(USERNAME, PASSWORD)
+user = web.User(YOUR_EMAIL, YOUR_PASSWORD)
 # 或者，使用token & authcode登录
-# user = web.User(token=TOKEN, auth_code=AUTH_CODE)
+# user = web.User(token=YOUR_TOKEN, auth_code=YOUR_AUTHCODE)
 
 print(user.get_messages()) # 获取收件箱的消息
 ```
