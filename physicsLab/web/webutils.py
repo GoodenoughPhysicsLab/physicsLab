@@ -350,7 +350,7 @@ class RelationsIter(_async_tool.AsyncTool):
     async def __aiter__(self):
         tasks = [self._make_task(i) for i in range(0, self.amount, 24)]
         for task in tasks:
-            for res in (await task)["Data"][""]:
+            for res in (await task)["Data"]["$values"]:
                 yield res
 
 class AvatarsIter(_async_tool.AsyncTool):
