@@ -238,7 +238,7 @@ class WarnedMsgIter:
                 or maybe_warned_message_callback is not None \
                 and not callable(maybe_warned_message_callback):
             raise TypeError
-        if user.is_anonymous:
+        if not user.is_binded:
             raise PermissionError("user must be anonymous")
 
         if end_time is None:
@@ -275,7 +275,7 @@ class CommentsIter:
             raise TypeError
         if category not in ("User", "Experiment", "Discussion"):
             raise ValueError
-        if category == "User" and user.is_anonymous:
+        if category == "User" and not user.is_binded:
             raise PermissionError("user must be anonymous")
 
         self.user = user

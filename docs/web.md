@@ -25,10 +25,15 @@ user = web.User(
 ```
 
 一个`User`的对象有以下属性:
+* is_binded: 该账号是否绑定了邮箱或第三方关联账号
+* user_id: 用户id
+* gold: 金币
+* level: 等级
+* device_id: 硬件指纹
 * avatar_region
 * decoration
 * nickname: 用户昵称
-* signature
+* signature: 用户签名
 * avatar: 当前头像的索引
 * avatar_region
 * decoration

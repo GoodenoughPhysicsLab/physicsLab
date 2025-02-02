@@ -399,7 +399,7 @@ class _Experiment:
             raise TypeError
         if image_path is not None and (not os.path.exists(image_path) or not os.path.isfile(image_path)):
             raise FileNotFoundError
-        if user.is_anonymous:
+        if not user.is_binded:
             raise PermissionError("you must register first")
 
         self.__write()

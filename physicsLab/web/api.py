@@ -141,46 +141,33 @@ class User:
             # 只有登录一定会返回auth_code, 其他api返回的AuthCode可能是无效的None
             self.token = token
             self.auth_code = auth_code
-
             tmp = self.__login()
-            self.is_anonymous = False
-
-            self.user_id: str = tmp["Data"]["User"]["ID"]
-            self.nickname: Optional[str] = tmp["Data"]["User"]["Nickname"]
-            self.signature = tmp["Data"]["User"]["Signature"]
-            self.avatar: Optional[int] = tmp["Data"]["User"]["Avatar"]
-            self.avatar_region = tmp["Data"]["User"]["AvatarRegion"]
-            self.decoration = tmp["Data"]["User"]["Decoration"]
-            self.verification = tmp["Data"]["User"]["Verification"]
-
         else:
             tmp = self.__login(email, password)
-
             self.token = tmp["Token"]
             self.auth_code = tmp["AuthCode"]
-            self.user_id = tmp["Data"]["User"]["ID"]
 
-            # True: 是匿名登录; False: 不是匿名登录
-            self.is_anonymous: bool = tmp["Data"]["User"]["Nickname"] is None
-
-            if self.is_anonymous:
-                self.nickname = None
-                self.signature = None
-                self.avatar = None
-                self.avatar_region = None
-                self.decoration = None
-                self.verification = None
-            else:
-                self.nickname = tmp["Data"]["User"]["Nickname"]
-                self.signature = tmp["Data"]["User"]["Signature"]
-                self.avatar = tmp["Data"]["User"]["Avatar"]
-                self.avatar_region = tmp["Data"]["User"]["AvatarRegion"]
-                self.decoration = tmp["Data"]["User"]["Decoration"]
-                self.verification = tmp["Data"]["User"]["Verification"]
-
+        # True: 绑定了账号; False: 未绑定账号，是匿名登录
+        self.is_binded: bool = tmp["Data"]["User"]["IsBinded"]
+        # 硬件指纹
+        self.device_token: str = tmp["Data"]["DeviceToken"]
+        # 账号id
+        self.user_id: str = tmp["Data"]["User"]["ID"]
+        # 昵称
+        self.nickname: Optional[str] = tmp["Data"]["User"]["Nickname"]
+        # 签名
+        self.signature: Optional[str] = tmp["Data"]["User"]["Signature"]
+        # 金币数量
+        self.gold: int = tmp["Data"]["User"]["Gold"]
+        # 用户等级
+        self.level: int = tmp["Data"]["User"]["Level"]
+        # 头像的索引
+        self.avatar: int = tmp["Data"]["User"]["Avatar"]
+        self.avatar_region: int = tmp["Data"]["User"]["AvatarRegion"]
+        self.decoration: int = tmp["Data"]["User"]["Decoration"]
+        self.verification = tmp["Data"]["User"]["Verification"]
         # 存储了所有与每日活动有关的奖励信息 (比如ActivityID)
-        self.statistic = tmp["Data"]["Statistic"]
-        assert isinstance(self.token, str) and isinstance(self.auth_code, str)
+        self.statistic: dict = tmp["Data"]["Statistic"]
 
     def __login(
             self,
