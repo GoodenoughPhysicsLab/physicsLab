@@ -8,6 +8,7 @@
 import os
 import asyncio
 import requests
+import contextvars
 
 from typing import Optional, List, TypedDict, Callable
 
@@ -57,7 +58,11 @@ def _check_response(response: requests.Response, err_callback: Optional[Callable
 
 async def _async_wrapper(func: Callable, *args, **kwargs):
     if sys.version_info < (3, 9):
-        return await asyncio.get_running_loop().run_in_executor(None, func, *args, **kwargs)
+        # copied from asyncio.to_thread
+        loop = asyncio.get_running_loop()
+        ctx = contextvars.copy_context()
+        func_call = functools.partial(ctx.run, func, *args, **kwargs)
+        return await loop.run_in_executor(None, func_call)
     else:
         return await asyncio.to_thread(func, *args, **kwargs)
 
@@ -207,7 +212,7 @@ class User:
             headers=headers,
         )
 
-        return _check_response(response) # type: ignore -> response must match _login_res
+        return _check_response(response)
 
     def get_library(self) -> dict:
         ''' 获取社区作品列表 '''
