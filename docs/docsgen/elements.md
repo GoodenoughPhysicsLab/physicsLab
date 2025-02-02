@@ -145,11 +145,6 @@
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Simple_Instrument">简单乐器 </a> </td>
-        <td>Simple_Instrument</td>
-        <td>['black', 'i', 'o', 'red']</td>
-    </tr>
-    <tr>
         <td> <a href="#Simple_Switch">简单开关 </a> </td>
         <td>Simple_Switch</td>
         <td>['black', 'red']</td>
@@ -448,6 +443,11 @@
         <td> <a href="#Solenoid">通电螺线管 </a> </td>
         <td>Solenoid</td>
         <td>['black', 'red', 'subblack', 'subred']</td>
+    </tr>
+    <tr>
+        <td> <a href="#Simple_Instrument">简单乐器 </a> </td>
+        <td>Simple_Instrument</td>
+        <td>['i', 'o']</td>
     </tr>
 </tbody>
 </table>
@@ -2053,82 +2053,6 @@ class Electric_Fan(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
-
-## <h2 id="Simple_Instrument"> Simple_Instrument </h2>
-```Python
-class Simple_Instrument(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, pitches: Union[List[int], Tuple[int]], elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, rated_oltage: Union[int, float] = 3.0, volume: Union[int, float] = 1, bpm: int = 100, instrument: int = 0, is_ideal: bool = False, is_pulse: bool = True) -> None
-```
-@param rated_oltage: 额定电压  
-@param volume: 音量 (响度)  
-@param pitch: 音高  
-@param instrument: 演奏的乐器，暂时只支持传入数字  
-@param bpm: 节奏  
-@param is_ideal: 是否为理想模式  
-@param is_pulse: 简单乐器是否只响一次  
-
-### get_all_pins_property
-```Python
-    def get_all_pins_property()
-```
-获取该元件的所有引脚对应的property  
-  
-
-### get_index
-```Python
-    def get_index(self) -> int
-```
-获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_position
-```Python
-    def get_position(self) -> physicsLab._tools.position
-```
-获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
-### rename
-```Python
-    def rename(self, name: str) -> Self
-```
-重命名元件  
-@param name: 将元件重命名为name  
-
-### set_position
-```Python
-    def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
-```
-设置元件的位置  
-  
-
-### set_properties
-```Python
-    def set_properties(self, *, rated_oltage: Union[int, float, NoneType] = None, volume: Union[int, float, NoneType] = None, bpm: Optional[int] = None, instrument: Optional[int] = None, is_ideal: Optional[bool] = None, is_pulse: Optional[bool] = None) -> Self
-```
-
-### set_rotation
-```Python
-    def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
-```
-设置元件的角度  
-
-### str2num_pitch
-```Python
-    def str2num_pitch(pitch: str, rising_falling: Optional[bool] = None) -> int
-```
-输入格式：  
-pitch: C4, A5 ...  
-rising_falling = True 时，为升调，为 False 时降调  
-  
-输入范围：  
-C0 ~ C8  
-注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120  
 
 ## <h2 id="Simple_Switch"> Simple_Switch </h2>
 ```Python
@@ -5988,3 +5912,79 @@ class Solenoid(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+## <h2 id="Simple_Instrument"> Simple_Instrument </h2>
+```Python
+class Simple_Instrument(CircuitBase):
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, pitches: Union[List[int], Tuple[int]], elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, rated_oltage: Union[int, float] = 3.0, volume: Union[int, float] = 1, bpm: int = 100, instrument: int = 0, is_ideal: bool = False, is_pulse: bool = True) -> None
+```
+@param rated_oltage: 额定电压  
+@param volume: 音量 (响度)  
+@param pitch: 音高  
+@param instrument: 演奏的乐器，暂时只支持传入数字  
+@param bpm: 节奏  
+@param is_ideal: 是否为理想模式  
+@param is_pulse: 简单乐器是否只响一次  
+
+### get_all_pins_property
+```Python
+    def get_all_pins_property()
+```
+获取该元件的所有引脚对应的property  
+  
+
+### get_index
+```Python
+    def get_index(self) -> int
+```
+获取元件的index (每创建一个元件, index就加1 (index从1开始))  
+
+### get_position
+```Python
+    def get_position(self) -> physicsLab._tools.position
+```
+获取元件的坐标  
+
+### lock
+```Python
+    def lock(self, status: bool) -> Self
+```
+是否锁定元件 (位置不会受元件间碰撞的影响)  
+@param status: 是否锁定元件  
+
+### rename
+```Python
+    def rename(self, name: str) -> Self
+```
+重命名元件  
+@param name: 将元件重命名为name  
+
+### set_position
+```Python
+    def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
+```
+设置元件的位置  
+  
+
+### set_properties
+```Python
+    def set_properties(self, *, rated_oltage: Union[int, float, NoneType] = None, volume: Union[int, float, NoneType] = None, bpm: Optional[int] = None, instrument: Optional[int] = None, is_ideal: Optional[bool] = None, is_pulse: Optional[bool] = None) -> Self
+```
+
+### set_rotation
+```Python
+    def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
+```
+设置元件的角度  
+
+### str2num_pitch
+```Python
+    def str2num_pitch(pitch: str, rising_falling: Optional[bool] = None) -> int
+```
+输入格式：  
+pitch: C4, A5 ...  
+rising_falling = True 时，为升调，为 False 时降调  
+  
+输入范围：  
+C0 ~ C8  
+注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120  

@@ -293,7 +293,7 @@ class Electric_Fan(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-class Simple_Instrument(_TwoPinMixIn):
+class Simple_Instrument(CircuitBase):
     ''' 简单乐器 '''
     def __init__(
             self,
