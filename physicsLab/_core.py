@@ -297,14 +297,16 @@ class _Experiment:
         if not no_print_info:
             if self.experiment_type == ExperimentType.Circuit:
                 _colorUtils.color_print(
-                    f"Successfully {status} experiment \"{self.PlSav['InternalName']}\"! "
+                    f"Successfully {status} experiment \"{self.PlSav['InternalName']}\""
+                    f"(\"{self.SAV_PATH}\")! "
                     f"{self.get_elements_count()} elements, {self.get_wires_count()} wires.",
                     color=_colorUtils.COLOR.GREEN
                 )
             elif self.experiment_type == ExperimentType.Celestial \
                     or self.experiment_type == ExperimentType.Electromagnetism:
                 _colorUtils.color_print(
-                    f"Successfully {status} experiment \"{self.PlSav['InternalName']}\"! "
+                    f"Successfully {status} experiment \"{self.PlSav['InternalName']}\""
+                    f"(\"{self.SAV_PATH}\")! "
                     f"{self.get_elements_count()} elements.",
                     color=_colorUtils.COLOR.GREEN
                 )
