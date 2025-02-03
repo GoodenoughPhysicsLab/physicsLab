@@ -10,7 +10,7 @@ from . import savTemplate
 from physicsLab import circuit
 from physicsLab import celestial
 from physicsLab import electromagnetism
-from .web import User
+from .web._api import _User
 from .savTemplate import Generate
 from .circuit._circuit_core import crt_wire, Pin
 from .enums import ExperimentType, Category, OpenMode, WireColor
@@ -74,7 +74,7 @@ def search_experiment(sav_name: str) -> Tuple[Optional[str], Optional[dict]]:
     return None, None
 
 class Experiment(_Experiment):
-    _user: Optional[User] = None
+    _user: Optional[_User] = None
 
     @overload
     def __init__(self, open_mode: OpenMode, filepath: Union[str, pathlib.Path]) -> None:
@@ -97,7 +97,7 @@ class Experiment(_Experiment):
             content_id: str,
             category: Category,
             /, *,
-            user: Optional[User] = None
+            user: Optional[_User] = None
     ) -> None:
         ''' 从物实服务器中获取存档
             @open_mode = OpenMode.load_by_plar_app
@@ -188,12 +188,12 @@ class Experiment(_Experiment):
             if not isinstance(content_id, str) or not isinstance(category, Category) or len(rest) != 0:
                 raise TypeError
             user = kwargs.get("user")
-            if not isinstance(user, (User, type(None))):
+            if not isinstance(user, (_User, type(None))):
                 raise TypeError
 
             if user is None:
                 if Experiment._user is None:
-                    Experiment._user = User()
+                    Experiment._user = _User()
                 user = Experiment._user
 
             self.SAV_PATH = os.path.join(_Experiment.SAV_PATH_DIR, f"{content_id}.sav")

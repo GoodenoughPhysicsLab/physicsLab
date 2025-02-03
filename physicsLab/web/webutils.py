@@ -52,7 +52,7 @@ class NotificationsMsgIter(_async_tool.AsyncTool):
             self,
             start_time: num_type,
             end_time: Optional[num_type] = None,
-            user: Optional[api.User] = None,
+            user: Optional[api._User] = None,
             user_id: Optional[str] = None,
             max_retry: Optional[int] = 0,
             category_id: int = 0,
@@ -67,7 +67,7 @@ class NotificationsMsgIter(_async_tool.AsyncTool):
                 0: 全部, 1: 系统邮件, 2: 关注和粉丝, 3: 评论和回复, 4: 作品通知, 5: 管理记录
         '''
 
-        if not isinstance(user, (api.User, type(None))) \
+        if not isinstance(user, (api._User, type(None))) \
                 or not isinstance(start_time, (int, float)) \
                 or not isinstance(end_time, (int, float, type(None))) \
                 or not isinstance(user_id, (str, type(None))) \
@@ -80,7 +80,7 @@ class NotificationsMsgIter(_async_tool.AsyncTool):
         if end_time is None:
             end_time = time.time()
         if user is None:
-            user = api.User()
+            user = api._User()
         if start_time >= end_time:
             raise ValueError
 
@@ -144,7 +144,7 @@ class BannedMsgIter:
             self,
             start_time: num_type,
             end_time: Optional[num_type] = None,
-            user: Optional[api.User] = None,
+            user: Optional[api._User] = None,
             user_id: Optional[str] = None,
             max_retry: Optional[int] = 0,
             get_banned_template: bool = False,
@@ -159,7 +159,7 @@ class BannedMsgIter:
                     模板可能会被紫兰斋修改, 但消息模板基本都是稳定的
         '''
 
-        if not isinstance(user, (api.User, type(None))) \
+        if not isinstance(user, (api._User, type(None))) \
                 or not isinstance(start_time, (int, float)) \
                 or not isinstance(end_time, (int, float, type(None))) \
                 or not isinstance(user_id, (str, type(None))) \
@@ -170,7 +170,7 @@ class BannedMsgIter:
         if end_time is None:
             end_time = time.time()
         if user is None:
-            user = api.User()
+            user = api._User()
 
         self.start_time = start_time
         self.end_time = end_time
@@ -217,7 +217,7 @@ class WarnedMsgIter:
     ''' 获取一段时间的指定用户的警告信息的迭代器 '''
     def __init__(
             self,
-            user: api.User,
+            user: api._User,
             user_id: str,
             start_time: num_type,
             end_time: Optional[num_type] = None,
@@ -231,7 +231,7 @@ class WarnedMsgIter:
             @param banned_message_callback: 封禁记录回调函数
             @return: 封禁记录列表
         '''
-        if not isinstance(user, api.User) \
+        if not isinstance(user, api._User) \
                 or not isinstance(user_id, str) \
                 or not isinstance(start_time, (int, float)) \
                 or not isinstance(end_time, (int, float, type(None))) \
@@ -268,8 +268,8 @@ class WarnedMsgIter:
 
 class CommentsIter:
     ''' 获取评论的迭代器 '''
-    def __init__(self, user: api.User, id: str, category: str = "User") -> None:
-        if not isinstance(user, api.User) \
+    def __init__(self, user: api._User, id: str, category: str = "User") -> None:
+        if not isinstance(user, api._User) \
                 or not isinstance(id, str) \
                 or not isinstance(category, str):
             raise TypeError
@@ -301,7 +301,7 @@ class RelationsIter(_async_tool.AsyncTool):
     ''' 获取用户的关注/粉丝的迭代器 '''
     def __init__(
             self,
-            user: api.User,
+            user: api._User,
             user_id: str,
             display_type: str = "Follower",
             max_retry: Optional[int] = 0,
@@ -314,7 +314,7 @@ class RelationsIter(_async_tool.AsyncTool):
             @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
             @param amount: Follower/Following的数量, 为None时api将自动查询
         '''
-        if not isinstance(user, api.User) \
+        if not isinstance(user, api._User) \
                 or not isinstance(user_id, str) \
                 or not isinstance(display_type, str) \
                 or not isinstance(max_retry, (int, type(None))) \
@@ -360,7 +360,7 @@ class AvatarsIter(_async_tool.AsyncTool):
             self,
             user_id: str,
             category: str,
-            user: Optional[api.User] = None,
+            user: Optional[api._User] = None,
             size_category: str = "full",
             max_retry: Optional[int] = 0,
     ) -> None:
@@ -373,7 +373,7 @@ class AvatarsIter(_async_tool.AsyncTool):
         if not isinstance(user_id, str) \
                 or not isinstance(category, str) \
                 or not isinstance(size_category, str) \
-                or not isinstance(user, (api.User, type(None))) \
+                or not isinstance(user, (api._User, type(None))) \
                 or not isinstance(max_retry, (int, type(None))):
             raise TypeError
         if category not in ("User", "Experiment", "Discussion") \
@@ -381,7 +381,7 @@ class AvatarsIter(_async_tool.AsyncTool):
             raise ValueError
 
         if user is None:
-            user = api.User()
+            user = api._User()
 
         if category == "User":
             self.max_img_counter = user.get_user(user_id=user_id)["Data"]["User"]["Avatar"]

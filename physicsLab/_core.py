@@ -17,7 +17,7 @@ from physicsLab import plAR
 from physicsLab import  _tools
 from physicsLab import errors
 from physicsLab import _colorUtils
-from .web import User, _check_response
+from .web._api import _User, _check_response
 from .enums import Category, Tag, ExperimentType, OpenMode
 from ._typing import Union, Optional, List, Dict, num_type, Self, Callable, Tuple, final, NoReturn
 
@@ -389,13 +389,13 @@ class _Experiment:
 
     def __upload(
             self,
-            user: User,
+            user: _User,
             category: Optional[Category],
             image_path: Optional[str],
     ):
         if not isinstance(image_path, (str, type(None))) \
             or not isinstance(category, (Category, type(None))) \
-            or not isinstance(user, User):
+            or not isinstance(user, _User):
             raise TypeError
         if image_path is not None and (not os.path.exists(image_path) or not os.path.isfile(image_path)):
             raise FileNotFoundError
@@ -468,7 +468,7 @@ class _Experiment:
     @_check_not_closed
     def upload(
             self,
-            user: User,
+            user: _User,
             category: Category,
             image_path: Optional[str] = None,
     ) -> Self:
@@ -507,7 +507,7 @@ class _Experiment:
     @_check_not_closed
     def update(
             self,
-            user: User,
+            user: _User,
             image_path: Optional[str] = None,
     ) -> Self:
         ''' 更新实验到物实
