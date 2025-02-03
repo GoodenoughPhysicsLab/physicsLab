@@ -32,7 +32,7 @@ def _check_response(response: requests.Response, err_callback: Optional[Callable
     if err_callback is not None:
         err_callback(status_code)
     raise errors.ResponseFail(
-        f"Physics-Lab-AR returned error code {status_code} : {response_json['Message']}"
+        f"Physics-Lab-AR returned error code {status_code}: {response_json['Message']}"
     )
 
 def get_start_page() -> dict:
@@ -229,10 +229,6 @@ class _User:
                 or not isinstance(take, int) \
                 or not isinstance(skip, int):
             raise TypeError
-        if skip < 0:
-            raise ValueError
-        if take <= 0:
-            _take_warning()
 
         if languages is None:
             languages = []
@@ -457,10 +453,8 @@ class _User:
                 or not isinstance(skip, int) \
                 or not isinstance(comment_id, (str, type(None))):
             raise TypeError
-        if target_type not in ("User", "Discussion", "Experiment") or take <= 0 or skip < 0:
+        if target_type not in ("User", "Discussion", "Experiment"):
             raise ValueError
-        if take <= 0:
-            _take_warning()
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Messages/GetComments",
@@ -691,7 +685,7 @@ class _User:
 
     def get_messages(
             self,
-            category_id: int = 0,
+            category_id: int,
             skip: int = 0,
             take: int = 16,
             no_templates: bool = True,
@@ -708,10 +702,6 @@ class _User:
                 or not isinstance(take, int) \
                 or not isinstance(no_templates, bool):
             raise TypeError
-        if skip < 0:
-            raise ValueError
-        if take <= 0:
-            _take_warning()
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Messages/GetMessages",
@@ -747,10 +737,6 @@ class _User:
                 or not isinstance(skip, int) \
                 or not isinstance(take, int):
             raise TypeError
-        if skip < 0:
-            raise ValueError
-        if take <= 0:
-            _take_warning()
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/GetSupporters",
@@ -775,7 +761,7 @@ class _User:
             display_type: str = "Follower",
             skip: int = 0,
             take: int = 20,
-            query: str = "",
+            query: str = "", # TODO 获取编辑，志愿者列表啊之类的貌似也是这个api
     ) -> dict:
         ''' 获取用户的关注/粉丝列表
             @param display_type: 只能为 Follower: 粉丝, Following: 关注
@@ -788,8 +774,6 @@ class _User:
                 or not isinstance(skip, int) \
                 or not isinstance(take, int):
             raise TypeError
-        if take <= 0:
-            _take_warning()
 
         if display_type == "Follower":
             display_type_ = 0

@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
-''' .webutils.py has used ThreadPoolExecutor everywhere.
-    But, I have met some problems and found a solution:
+''' 在 Python3.14之前, Thread.join 在 Windows 上会阻塞异常的传播, 详见:
         https://www.bilibili.com/video/BV1au411q7LN/?spm_id_from=333.999.0.0
 
-    However, I can't apply this simple solution to built-in ThreadPoolExecutor.
-    That's why I write this module.
+    因此, 我无法直接使用ThreadPoolExecutor, 我就自己写了一个线程池
 '''
 import queue
 from threading import Thread
 from enum import Enum, unique
-from physicsLab._typing import List, Callable, Self, Union, Type
+from physicsLab._typing import List, Callable, Self, Any
+
+class CanceledError(Exception):
+    ''' Task have been canceled '''
+    pass
 
 class _EndOfQueue:
     def __new__(cls):
@@ -28,11 +30,17 @@ class _Task:
         self.func = func
         self.args = args
         self.kwargs = kwargs
-        self.res = None
+        self.res: Any = None
         self.exception = None
         self.status: _Status = _Status.wait
+
+    def has_result(self) -> bool:
+        return self.status == _Status.done
+
     def result(self):
-        while self.status != _Status.done and self.status != _Status.cancelled:
+        if self.status == _Status.cancelled:
+            raise CanceledError
+        while not self.has_result():
             pass
 
         if self.exception is not None:
@@ -41,8 +49,8 @@ class _Task:
             return self.res
 
 class ThreadPool:
-    def __init__(self, max_workers: int) -> None:
-        ''' @param max_workers: max workers' number
+    def __init__(self, *, max_workers: int) -> None:
+        ''' @param max_workers: 最大线程数
         '''
         if not isinstance(max_workers, int):
             raise TypeError
@@ -62,14 +70,13 @@ class ThreadPool:
                 continue
             if _task is _EndOfQueue:
                 self.task_queue.put_nowait(_EndOfQueue)
-                break
+                return
             _task.status = _Status.running
             try:
                 _task.res = _task.func(*_task.args, **_task.kwargs)
             except Exception as e:
                 _task.exception = e
-                _task.status = _Status.cancelled
-            else:
+            finally:
                 _task.status = _Status.done
 
     def submit(self, func, *args, **kwargs) -> _Task:
@@ -82,9 +89,9 @@ class ThreadPool:
         task = _Task(func, args, kwargs)
         self.task_queue.put_nowait(task)
         if len(self.threads) < self.max_workers:
-            thread = Thread(target=self._office, daemon=True)
-            self.threads.append(thread)
-            thread.start()
+            worker = Thread(target=self._office, daemon=True)
+            self.threads.append(worker)
+            worker.start()
 
         return task
 
@@ -94,7 +101,7 @@ class ThreadPool:
         self.task_queue.put_nowait(_EndOfQueue)
 
     def wait(self) -> None:
-        ''' block until all tasks are done
+        ''' blocking until all tasks are done
         '''
         for thread in self.threads:
             while thread.is_alive():
