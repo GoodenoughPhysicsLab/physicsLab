@@ -1,11 +1,4 @@
 # -*- coding: utf-8 -*-
-''' .webutils.py has used ThreadPoolExecutor everywhere.
-    But, I have met some problems and found a solution:
-        https://www.bilibili.com/video/BV1au411q7LN/?spm_id_from=333.999.0.0
-
-    However, I can't apply this simple solution to built-in ThreadPoolExecutor.
-    That's why I write this module.
-'''
 import asyncio
 import queue
 import threading
