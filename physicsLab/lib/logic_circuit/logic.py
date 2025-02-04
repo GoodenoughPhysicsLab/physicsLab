@@ -58,6 +58,70 @@ class TwoFour_Decoder:
             self.nimp_gate2.o,
             self.and_gate.o,
         )
+    
+class Decoder:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            bitnum: int,
+            elementXYZ: Optional[bool] = None,
+    ) -> None:
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(elementXYZ, (bool, type(None))) \
+                or not isinstance(bitnum, int):
+            raise TypeError
+        if bitnum <= 1:
+            raise ValueError
+
+        # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
+        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
+            x, y, z = native_to_elementXYZ(x, y, z)
+        x, y, z = round_data(x), round_data(y), round_data(z)
+
+        self.bitnum = bitnum
+        if bitnum==1:
+            m=elements.No_Gate(x,y,z,elementXYZ=True)
+            self._inputs=[m.i]
+            self._outputs=[m.i,m.o]
+            return
+        self._inputs = []
+        self._outputs = []
+        div_num,mod_num=divmod(bitnum,2)
+        if mod_num==0:
+            And_Gates=[[elements.And_Gate(x,y,z,elementXYZ=True) for a in range(2**div_num)] for b in range(2**div_num)]
+            l1=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
+            l2=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
+            self._inputs=l1._inputs+l2._inputs
+            for a in range(2**div_num):
+                for b in range(2**div_num):
+                    crt_wires(l1._outputs[a],And_Gates[a][b].i_low)
+                    crt_wires(l2._outputs[b],And_Gates[a][b].i_up)
+            self._outputs=[and_gate.o for and_gates in And_Gates for and_gate in and_gates] # Expand 2D list
+        elif mod_num==1:
+            And_Gates=[[elements.And_Gate(x,y,z,elementXYZ=True) for b in range(2**(div_num+1))] for a in range(2**div_num)]
+            l1=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
+            l2=Decoder(x,y,z,bitnum=div_num+1,elementXYZ=True)
+            self._inputs=l1._inputs+l2._inputs
+            for a in range(2**div_num):
+                for b in range(2**(div_num+1)):
+                    crt_wires(l1._outputs[a],And_Gates[a][b].i_low)
+                    crt_wires(l2._outputs[b],And_Gates[a][b].i_up)
+            self._outputs=[and_gate.o for and_gates in And_Gates for and_gate in and_gates] # Expand 2D list
+        else:
+            assert False
+    @property
+    def inputs(self) -> UnitPin:
+        return UnitPin(self, *self._inputs)
+
+    @property
+    def outputs(self) -> Pin:
+        return self._outputs
+
 
 class Switched_Register:
     ''' 可以在两列输入中切换的寄存器
