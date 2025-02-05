@@ -12,6 +12,9 @@ from physicsLab import errors
 from physicsLab.enums import Tag, Category
 from physicsLab._typing import Optional, List, TypedDict, Callable
 
+def _take_warning() -> None:
+    errors.warning("take is less than 1")
+
 def _check_response(response: requests.Response, err_callback: Optional[Callable] = None) -> dict:
     ''' 检查返回的response
         @callback: 自定义物实返回的status对应的报错信息,
@@ -198,6 +201,7 @@ class _User:
             tags: Optional[List[Tag]] = None,
             exclude_tags: Optional[List[Tag]] = None,
             languages: Optional[List[str]] = None,
+            exclude_languages: Optional[List[str]] = None,
             user_id: Optional[str] = None,
             take: int = 18,
             skip: int = 0,
@@ -218,13 +222,22 @@ class _User:
                 or exclude_tags is not None and not all(isinstance(tag, Tag) for tag in exclude_tags) \
                 or not isinstance(languages, (list, type(None))) \
                 or languages is not None and not all(isinstance(language, str) for language in languages) \
+                or not isinstance(exclude_languages, (list, type(None))) \
+                or exclude_languages is not None \
+                and not all(isinstance(language, str) for language in exclude_languages) \
                 or not isinstance(user_id, (str, type(None))) \
                 or not isinstance(take, int) \
                 or not isinstance(skip, int):
             raise TypeError
+        if skip < 0:
+            raise ValueError
+        if take <= 0:
+            _take_warning()
 
         if languages is None:
             languages = []
+        if exclude_languages is None:
+            exclude_languages = []
 
         if tags is None:
             _tags = None
@@ -242,10 +255,10 @@ class _User:
                 "Query": {
                     "Category": category.value,
                     "Languages": languages,
-                    "ExcludeLanguages": None,
+                    "ExcludeLanguages": exclude_languages,
                     "Tags": _tags,
-                    "ModelTags": None,
                     "ExcludeTags": exclude_tags_,
+                    "ModelTags": None,
                     "ModelID": None,
                     "ParentID": None,
                     "UserID": user_id,
@@ -254,7 +267,7 @@ class _User:
                     "Skip": skip,
                     "Take": take,
                     "Days": 0,
-                    "Sort": 0,
+                    "Sort": 0, # TODO 这个也许是那个史上热门之类的?
                     "ShowAnnouncement": False,
                 }
             },
@@ -446,6 +459,8 @@ class _User:
             raise TypeError
         if target_type not in ("User", "Discussion", "Experiment") or take <= 0 or skip < 0:
             raise ValueError
+        if take <= 0:
+            _take_warning()
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Messages/GetComments",
@@ -693,8 +708,10 @@ class _User:
                 or not isinstance(take, int) \
                 or not isinstance(no_templates, bool):
             raise TypeError
-        if take <= 0 or skip < 0:
+        if skip < 0:
             raise ValueError
+        if take <= 0:
+            _take_warning()
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Messages/GetMessages",
@@ -730,8 +747,10 @@ class _User:
                 or not isinstance(skip, int) \
                 or not isinstance(take, int):
             raise TypeError
-        if take <= 0 or skip < 0:
+        if skip < 0:
             raise ValueError
+        if take <= 0:
+            _take_warning()
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/GetSupporters",
@@ -769,6 +788,8 @@ class _User:
                 or not isinstance(skip, int) \
                 or not isinstance(take, int):
             raise TypeError
+        if take <= 0:
+            _take_warning()
 
         if display_type == "Follower":
             display_type_ = 0

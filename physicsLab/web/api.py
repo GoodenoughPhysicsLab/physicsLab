@@ -2,30 +2,31 @@
     所有以`async_`开头的函数/方法均为协程风格的api
 '''
 import sys
-import types
 import asyncio
 import functools
-import threading
 import contextvars
 from ._api import get_avatar, get_start_page, _User
 from physicsLab.enums import Tag, Category
 from physicsLab._typing import Callable, Optional, List
 
 # 从 threading._threading_atexits 中注销掉 furure._python_exit
-from concurrent.futures import thread
+# import types
+# import threading
+# from concurrent.futures import thread
 
 # python3.14之前, threading.Thread.join 在 Windows 上会阻塞异常的传播
 # 也就是说, 在join结束之前, Python无法及时抛出 KeyboardInterrupt
 # 而 python 并未提供公开的方法操作 threading._threading_atexit
+# 如果你确实被阻塞的问题困扰的话, 可以参考下面的代码讲 _python_exit 注销掉
 # NOTE: 依赖于 asyncio 与 concurrent.futures.thread 的实现细节
-if sys.version_info < (3, 14) and hasattr(threading, "_threading_atexits"):
-    _threading_atexits = [] # TODO unregister是否会导致一些问题 ?
-    for fn in threading._threading_atexits:
-        if isinstance(fn, types.FunctionType) and fn is not thread._python_exit:
-            _threading_atexits.append(fn)
-        elif isinstance(fn, functools.partial) and fn.func is not thread._python_exit:
-            _threading_atexits.append(fn)
-    threading._threading_atexits = _threading_atexits
+# if sys.version_info < (3, 14) and hasattr(threading, "_threading_atexits"):
+#     _threading_atexits = []
+#     for fn in threading._threading_atexits:
+#         if isinstance(fn, types.FunctionType) and fn is not thread._python_exit:
+#             _threading_atexits.append(fn)
+#         elif isinstance(fn, functools.partial) and fn.func is not thread._python_exit:
+#             _threading_atexits.append(fn)
+#     threading._threading_atexits = _threading_atexits
 
 async def _async_wrapper(func: Callable, *args, **kwargs):
     if sys.version_info < (3, 9):
@@ -54,6 +55,7 @@ class User(_User):
             tags: Optional[List[Tag]] = None,
             exclude_tags: Optional[List[Tag]] = None,
             languages: Optional[List[str]] = None,
+            exclude_languages: Optional[List[str]] = None,
             user_id: Optional[str] = None,
             take: int = 18,
             skip: int = 0,
@@ -64,6 +66,7 @@ class User(_User):
             tags,
             exclude_tags,
             languages,
+            exclude_languages,
             user_id,
             take,
             skip,

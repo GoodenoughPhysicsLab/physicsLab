@@ -15,7 +15,12 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
             module = inspect.getmodule(frame_info.frame)
             if module is None or module.__name__.startswith("physicsLab") or module.__name__.startswith("warnings"):
                 continue
-            print(f"  File \"{frame_info.filename}\", line {frame_info.lineno}, in {frame_info.function}")
+            print("  File ", end='')
+            _colorUtils.color_print(f"\"{frame_info.filename}\"", _colorUtils.COLOR.MAGENTA, end='')
+            print(", line ", end='')
+            _colorUtils.color_print(str(frame_info.lineno), _colorUtils.COLOR.MAGENTA, end='')
+            print(", in ", end='')
+            _colorUtils.color_print(frame_info.function, _colorUtils.COLOR.MAGENTA)
             if frame_info.code_context is not None:
                 print(f"    {frame_info.code_context[0].strip()}")
         _colorUtils.color_print(str(message), _colorUtils.COLOR.YELLOW)
