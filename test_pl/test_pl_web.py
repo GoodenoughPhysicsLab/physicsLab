@@ -56,24 +56,29 @@ class WebTest(IsolatedAsyncioTestCase, ViztracerTool):
 
     async def test_notifications_msg_iter(self):
         counter = 0
-        for _ in web.NotificationsMsgIter(
-                datetime(2025, 1, 1).timestamp(), datetime(2025, 1, 2).timestamp(),
-                user=user, max_retry=4, category_id=5
+        start_timestamp = datetime(2025, 1, 1).timestamp() * 1000
+        end_timestamp = datetime(2025, 1, 2).timestamp() * 1000
+        for msg in web.NotificationsIter(
+                user, max_retry=2, category_id=5
         ):
-            counter += 1
+            if start_timestamp <= msg["Timestamp"] < end_timestamp:
+                counter += 1
+            elif start_timestamp > msg["Timestamp"]:
+                break
         self.assertEqual(counter, 96)
 
     async def test_banned_msg_iter(self):
         counter = 0
         for _ in web.BannedMsgIter(
-            datetime(2025, 1, 1).timestamp(), datetime(2025, 1, 16).timestamp(),
-            user=user, max_retry=4
+            user,
+            start_time=datetime(2025, 1, 1).timestamp(), end_time=datetime(2025, 1, 16).timestamp(),
+            max_retry=4
         ):
             counter += 1
         self.assertEqual(counter, 1)
 
     async def test_comments_iter(self):
-        for _ in web.CommentsIter(user=user, id="677d5c6c826568de4e9896c5", category="Discussion"):
+        for _ in web.CommentsIter(user, content_id="677d5c6c826568de4e9896c5", category="Discussion"):
             pass
 
     # temp user can't get comments on user's profile
@@ -84,11 +89,11 @@ class WebTest(IsolatedAsyncioTestCase, ViztracerTool):
     #     self.assertEqual(counter, 1)
 
     async def test_relations_iter(self):
-        for _ in web.RelationsIter(user=user, user_id="62d3fd092f3a2a60cc8ccc9e", display_type="Following", max_retry=4):
+        for _ in web.RelationsIter(user, user_id="62d3fd092f3a2a60cc8ccc9e", display_type="Following", max_retry=4):
             pass
 
     async def test_avatars_iter(self):
         for _ in web.AvatarsIter(
-            user_id="5ce629e157035932b52f9315", category="User", user=user, size_category="small.round", max_retry=4
+            user, target_id="5ce629e157035932b52f9315", category="User", size_category="small.round", max_retry=4
         ):
             pass

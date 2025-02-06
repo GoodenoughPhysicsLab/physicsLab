@@ -1,26 +1,27 @@
-# -*- coding: utf-8 -*-
+''' 该文件提供更方便的遍历物实社区一些数据的迭代器
+'''
 import time
-import asyncio
+import urllib3
 import requests
-from typing import List, Optional
 
-from . import api
-from . import _async_tool
+from ._api import _User, get_avatar
+from ._threadpool import ThreadPool, _Task
 from physicsLab import errors
 from physicsLab.enums import Category, Tag
-from physicsLab._typing import Optional, Callable, num_type, override
+from physicsLab._typing import Optional, num_type, Callable, List
 
-async def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
+_DEFAULT_MAX_WORKERS: int = 4
+
+def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
     ''' 运行func, 直到成功或达到max_retry的条件
         @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
     '''
     assert (max_retry is None or max_retry >= 0) and callable(func), "internal error, please bug report"
 
-    import urllib3
     if max_retry is None:
         while True:
             try:
-                return await func(*args, **kwargs)
+                return func(*args, **kwargs)
             except (
                 TimeoutError,
                 urllib3.exceptions.NewConnectionError,
@@ -31,10 +32,10 @@ async def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
                 continue
     else:
         if max_retry == 0:
-            return await func(*args, **kwargs)
+            return func(*args, **kwargs)
         for _ in range(max_retry + 1):
             try:
-                return await func(*args, **kwargs)
+                return func(*args, **kwargs)
             except (
                 TimeoutError,
                 urllib3.exceptions.NewConnectionError,
@@ -45,179 +46,286 @@ async def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
                 continue
         raise errors.MaxRetryError("max retry reached")
 
-#TODO 所有现有的迭代器添加反向迭代器
-class NotificationsMsgIter(_async_tool.AsyncTool):
-    ''' 获取一段时间的管理记录 (可指定用户) '''
+class NotificationsIter:
+    ''' 遍历通知页面的消息的迭代器 '''
+    TAKE_AMOUNT: int = -101
+
     def __init__(
             self,
-            start_time: num_type,
-            end_time: Optional[num_type] = None,
-            user: Optional[api._User] = None,
-            user_id: Optional[str] = None,
+            user: _User,
+            /, *,
+            category_id: int,
+            start_skip: int = 0,
             max_retry: Optional[int] = 0,
-            category_id: int = 0,
+            max_workers: int = _DEFAULT_MAX_WORKERS,
     ) -> None:
-        ''' 获取封禁记录
-            @param user: 查询者
-            @param user_id: 被查询者的id, None表示查询所有封禁记录
-            @param start_time: 开始时间
-            @param end_time: 结束时间, None为当前时间
-            @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
+        ''' @param user: 执行查询操作的用户
             @param category_id: 消息类型:
                 0: 全部, 1: 系统邮件, 2: 关注和粉丝, 3: 评论和回复, 4: 作品通知, 5: 管理记录
+            @param start_skip: 开始查询的消息的偏移量, 默认为0
+            @param max_retry: 单个请求失败后最多重试次数, 默认为0, 即不重试, None为无限次数重试(不推荐)
+            @param max_workers: 最大线程数
         '''
+        if not isinstance(user, _User) \
+                or not isinstance(category_id, int) \
+                or not isinstance(start_skip, int) \
+                or not isinstance(max_retry, (int, type(None))) \
+                or not isinstance(max_workers, int):
+            raise TypeError
+        if category_id not in range(6) \
+                or not isinstance(max_retry, type(None)) and max_retry < 0 \
+                or start_skip < 0 \
+                or max_workers <= 0:
+            raise ValueError
 
-        if not isinstance(user, (api._User, type(None))) \
-                or not isinstance(start_time, (int, float)) \
-                or not isinstance(end_time, (int, float, type(None))) \
+        self.user = user
+        self.category_id = category_id
+        self.start_skip = start_skip
+        self.max_retry = max_retry
+        self.max_workers = max_workers
+
+    def __iter__(self):
+        tasks: List[_Task] = []
+        with ThreadPool(max_workers=self.max_workers) as executor:
+            while True:
+                # 避免tasks里面的任务过多导致break停止循环的时候迟迟无法退出
+                if len(tasks) < 2500:
+                    tasks.append(executor.submit(
+                        _run_task,
+                        self.max_retry,
+                        self.user.get_messages,
+                        category_id=self.category_id,
+                        skip=self.start_skip,
+                        take=self.TAKE_AMOUNT,
+                        no_templates=True,
+                    ))
+                    self.start_skip += abs(self.TAKE_AMOUNT)
+
+                if tasks[0].has_result():
+                    msgs = tasks.pop(0).result()["Data"]["Messages"]
+                    yield from msgs
+                    if len(msgs) < abs(self.TAKE_AMOUNT):
+                        executor.submit_end()
+                        break
+
+class ExperimentsIter:
+    '''遍历实验的迭代器 '''
+    # 利用物实bug一次性获取更多的实验
+    TAKE_AMOUNT: int = -101
+
+    def __init__(
+        self,
+        user: _User,
+        /, *,
+        category: Category,
+        start_skip: int = 0,
+        tags: Optional[List[Tag]] = None,
+        exclude_tags: Optional[List[Tag]] = None,
+        languages: Optional[List[str]] = None,
+        user_id: Optional[str] = None,
+        max_retry: Optional[int] = 0,
+        max_workers: int = _DEFAULT_MAX_WORKERS,
+    ) -> None:
+        ''' @param tags: 包含的标签列表
+            @param exclude_tags: 排除的标签列表
+            @param category: 实验类别
+            @param languages: 语言列表
+            @param user_id: 用户ID
+            @param take: 每次获取的数量
+            @param skip: 起始位置
+            @param max_retry: 最大重试次数
+            @param max_workers: 最大线程数
+        '''
+        if not isinstance(category, Category) \
+                or not isinstance(user, _User) \
+                or not isinstance(tags, (list, type(None))) \
+                or tags is not None and not all(isinstance(tag, Tag) for tag in tags) \
+                or not isinstance(exclude_tags, (list, type(None))) \
+                or exclude_tags is not None and not all(isinstance(tag, Tag) for tag in exclude_tags) \
+                or not isinstance(languages, (list, type(None))) \
+                or languages is not None and not all(isinstance(language, str) for language in languages) \
                 or not isinstance(user_id, (str, type(None))) \
                 or not isinstance(max_retry, (int, type(None))) \
-                or not isinstance(category_id, int):
+                or not isinstance(start_skip, int) \
+                or not isinstance(max_workers, int):
             raise TypeError
-        if category_id not in range(0, 6):
+        if start_skip < 0 \
+                or max_workers <= 0:
             raise ValueError
 
-        if end_time is None:
-            end_time = time.time()
-        if user is None:
-            user = api._User()
-        if start_time >= end_time:
-            raise ValueError
-
-        self.start_time = start_time
-        self.end_time = end_time
         self.user = user
+        self.tags = tags
+        self.exclude_tags = exclude_tags
+        self.category = category
+        self.languages = languages
         self.user_id = user_id
         self.max_retry = max_retry
-        self.category_id = category_id
+        self.start_skip = start_skip
+        self.max_workers = max_workers
 
-    @override
-    async def __aiter__(self):
-        def _make_task(i):
-            return asyncio.create_task(
-                _run_task(
-                    self.max_retry,
-                    self._fetch_manage_msgs,
-                    i + counter * FETCH_AMOUNT
-                )
-            )
+    def __iter__(self):
+        tasks: List[_Task] = []
+        with ThreadPool(max_workers=self.max_workers) as executor:
+            while True:
+                # 避免tasks里面的任务过多导致break停止循环的时候迟迟无法退出
+                if len(tasks) < 2500:
+                    tasks.append(executor.submit(
+                        _run_task,
+                        self.max_retry,
+                        self.user.query_experiments,
+                        self.category,
+                        self.tags,
+                        self.exclude_tags,
+                        self.languages,
+                        self.user_id,
+                        take=self.TAKE_AMOUNT,
+                        skip=self.start_skip,
+                    ))
+                    self.start_skip += abs(self.TAKE_AMOUNT)
 
-        assert self.start_time < self.end_time
-
-        self.is_fetching_end: bool = False
-        FETCH_AMOUNT = 100
-        counter: int = 0
-
-        while not self.is_fetching_end:
-            tasks = [_make_task(i) for i in range(FETCH_AMOUNT)]
-
-            for task in tasks:
-                for message in await task:
-                    yield message
-            counter += 1
-
-    async def _fetch_manage_msgs(self, skip: int):
-        assert skip >= 0, "InternalError: please bug-report"
-        assert self.end_time is not None, "InternalError: please bug-report"
-
-        TAKE_MESSAGES_AMOUNT = 20
-        messages = await self.user.async_get_messages(
-            self.category_id, skip=skip * TAKE_MESSAGES_AMOUNT, take=TAKE_MESSAGES_AMOUNT,
-        )
-        messages = messages["Data"]["Messages"]
-
-        res = []
-        for message in messages:
-            if message["TimestampInitial"] < self.start_time * 1000:
-                self.is_fetching_end = True
-                break
-            if self.start_time * 1000 <= message["TimestampInitial"] <= self.end_time * 1000:
-                if self.user_id is None or self.user_id == message["Users"][0]:
-                    res.append(message)
-        return res
+                if tasks[0].has_result():
+                    msgs = tasks.pop(0).result()["Data"]["$values"]
+                    yield from msgs
+                    if len(msgs) < abs(self.TAKE_AMOUNT):
+                        executor.submit_end()
+                        break
 
 class BannedMsgIter:
-    ''' 获取一段时间的封禁信息 (可指定用户) '''
-    banned_template = None
+    ''' 遍历指定一段时间的封禁信息 (可指定用户) '''
+    banned_template = {
+        "ID": "5d57f3c139523f0f640c2211",
+        "Identifier": "User-Banned-Record",
+    }
 
     def __init__(
             self,
-            start_time: num_type,
+            user: _User,
+            /, *,
+            start_skip: int = 0,
+            start_time: Optional[num_type] = None,
             end_time: Optional[num_type] = None,
-            user: Optional[api._User] = None,
             user_id: Optional[str] = None,
             max_retry: Optional[int] = 0,
             get_banned_template: bool = False,
+            max_workers: int = _DEFAULT_MAX_WORKERS,
     ) -> None:
         ''' 获取封禁记录
             @param user: 查询者
-            @param user_id: 被查询者的id, None表示查询所有封禁记录
-            @param start_time: 开始时间
+            @param user_id: 被查询者的id, None表示查询所有用户封禁记录
+            @param start_time: 开始时间, None表示遍历完所有封禁记录
             @param end_time: 结束时间, None为当前时间
             @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
             @param get_banned_template: 是否获取封禁信息的模板, False则使用physicsLab提供的模板
                     模板可能会被紫兰斋修改, 但消息模板基本都是稳定的
+            @param max_workers: 最大线程数
         '''
-
-        if not isinstance(user, (api._User, type(None))) \
-                or not isinstance(start_time, (int, float)) \
+        if not isinstance(user, _User) \
+                or not isinstance(start_skip, int) \
+                or not isinstance(start_time, (int, float, type(None))) \
                 or not isinstance(end_time, (int, float, type(None))) \
                 or not isinstance(user_id, (str, type(None))) \
                 or not isinstance(max_retry, (int, type(None))) \
-                or not isinstance(get_banned_template, bool):
+                or not isinstance(get_banned_template, bool) \
+                or not isinstance(max_workers, int):
             raise TypeError
+        if max_workers <= 0:
+            raise ValueError
+
+        if get_banned_template:
+            response = self.user.get_messages(5, take=1, no_templates=False)["Data"]
+            for template in response["Templates"]:
+                if template["Identifier"] == self.banned_template["Identifier"]:
+                    self.banned_template = template
+                    break
 
         if end_time is None:
-            end_time = time.time()
-        if user is None:
-            user = api._User()
+            self.end_time = time.time()
+        else:
+            self.end_time = end_time
 
-        self.start_time = start_time
-        self.end_time = end_time
+        if start_time is not None \
+                and start_time < self.end_time \
+                and start_time < 0 \
+                or start_skip < 0:
+            raise ValueError
+
         self.user = user
+        self.start_skip = start_skip
+        self.start_time = start_time
         self.user_id = user_id
         self.max_retry = max_retry
-        self.get_banned_template = get_banned_template
+        self.max_workers = max_workers
 
     def __iter__(self):
-        self.is_fetching_end: bool = False
+        for msg in NotificationsIter(
+            self.user,
+            category_id=5,
+            start_skip=self.start_skip,
+            max_retry=self.max_retry,
+            max_workers=self.max_workers,
+        ):
+            if msg["TemplateID"] == self.banned_template["ID"] \
+                    and (self.start_time is None or self.start_time * 1000 <= msg["Timestamp"]) \
+                    and msg["Timestamp"] < self.end_time * 1000 \
+                    and (self.user_id is None or self.user_id in msg["Users"]):
+                yield msg
+            if self.start_time is not None and msg["Timestamp"] < self.start_time * 1000:
+                return
 
-        if self.start_time >= self.end_time:
-            raise ValueError("start_time >= end_time")
+class CommentsIter:
+    ''' 获取评论的迭代器 '''
+    def __init__(
+            self,
+            user: _User,
+            /, *,
+            content_id: str,
+            category: str = "User",
+            start_time: int = 0,
+            max_retry: Optional[int] = 0,
+    ) -> None:
+        ''' @param content_id: 用户id或实验id
+            @param category: 只能为 "User" 或 "Experiment" 或 "Discussion"
+        '''
+        if not isinstance(user, _User) \
+                or not isinstance(content_id, str) \
+                or not isinstance(category, str) \
+                or not isinstance(max_retry, (int, type(None))):
+            raise TypeError
+        if category not in ("User", "Experiment", "Discussion"):
+            raise ValueError
+        if category == "User" and not user.is_binded:
+            raise PermissionError("user must be anonymous")
 
-        # fetch banned_template
-        if self.banned_template is None:
-            if self.get_banned_template:
-                response = self.user.get_messages(5, take=1, no_templates=False)["Data"]
+        self.user = user
+        self.content_id = content_id
+        self.category = category
+        self.start_time = start_time * 1000
+        self.max_retry = max_retry
 
-                for template in response["Templates"]:
-                    if template["Identifier"] == "User-Banned-Record":
-                        self.banned_template = template
-                        break
-            else:
-                self.banned_template = {
-                    'ID': '5d57f3c139523f0f640c2211',
-                    'Identifier': 'User-Banned-Record',
-                }
-
-        # main
-        for manage_msg in NotificationsMsgIter(
-                self.start_time,
-                self.end_time,
-                self.user,
-                self.user_id,
+    def __iter__(self):
+        TAKE_AMOUNT: int = 20
+        while True:
+            comments = _run_task(
                 self.max_retry,
-                category_id=5,
-                ):
-            assert self.banned_template is not None
-            if manage_msg["TemplateID"] == self.banned_template["ID"]:
-                yield manage_msg
+                self.user.get_comments,
+                self.content_id,
+                self.category,
+                skip=self.start_time,
+                take=TAKE_AMOUNT,
+            )["Data"]["Comments"]
+
+            if len(comments) == 0:
+                return
+            self.start_time = comments[-1]["Timestamp"]
+
+            yield from comments
 
 class WarnedMsgIter:
     ''' 获取一段时间的指定用户的警告信息的迭代器 '''
     def __init__(
             self,
-            user: api._User,
+            user: _User,
+            /, *,
             user_id: str,
             start_time: num_type,
             end_time: Optional[num_type] = None,
@@ -229,9 +337,8 @@ class WarnedMsgIter:
             @param start_time: 开始时间
             @param end_time: 结束时间, None为当前时间
             @param banned_message_callback: 封禁记录回调函数
-            @return: 封禁记录列表
         '''
-        if not isinstance(user, api._User) \
+        if not isinstance(user, _User) \
                 or not isinstance(user_id, str) \
                 or not isinstance(start_time, (int, float)) \
                 or not isinstance(end_time, (int, float, type(None))) \
@@ -239,7 +346,7 @@ class WarnedMsgIter:
                 and not callable(maybe_warned_message_callback):
             raise TypeError
         if not user.is_binded:
-            raise PermissionError("user must be anonymous")
+            raise PermissionError("Unbinded user cannot use this iter")
 
         if end_time is None:
             end_time = time.time()
@@ -251,7 +358,7 @@ class WarnedMsgIter:
         self.maybe_warned_message_callback = maybe_warned_message_callback
 
     def __iter__(self):
-        for comment in CommentsIter(self.user, self.user_id, "User"):
+        for comment in CommentsIter(self.user, content_id=self.user_id, category="User"):
             if comment["Timestamp"] < self.start_time * 1000:
                 return
 
@@ -266,46 +373,21 @@ class WarnedMsgIter:
                         and self.maybe_warned_message_callback is not None:
                     self.maybe_warned_message_callback(comment)
 
-class CommentsIter:
-    ''' 获取评论的迭代器 '''
-    def __init__(self, user: api._User, id: str, category: str = "User") -> None:
-        if not isinstance(user, api._User) \
-                or not isinstance(id, str) \
-                or not isinstance(category, str):
-            raise TypeError
-        if category not in ("User", "Experiment", "Discussion"):
-            raise ValueError
-        if category == "User" and not user.is_binded:
-            raise PermissionError("user must be anonymous")
-
-        self.user = user
-        self.id = id
-        self.category = category
-
-    def __iter__(self):
-        TAKE: int = 20
-        skip_time: int = 0
-        while True:
-            comments = self.user.get_comments(
-                self.id, self.category, skip=skip_time, take=TAKE
-            )["Data"]["Comments"]
-
-            if len(comments) == 0:
-                return
-            skip_time = comments[-1]["Timestamp"]
-
-            for comment in comments:
-                yield comment
-
-class RelationsIter(_async_tool.AsyncTool):
+class RelationsIter:
     ''' 获取用户的关注/粉丝的迭代器 '''
+    # 利用物实bug在每次请求中获取更多的数据
+    TAKE_AMOUNT = -101
+
     def __init__(
             self,
-            user: api._User,
+            user: _User,
+            /, *,
             user_id: str,
             display_type: str = "Follower",
             max_retry: Optional[int] = 0,
             amount: Optional[int] = None,
+            query: str = "",
+            max_workers: int = _DEFAULT_MAX_WORKERS,
     ) -> None:
         ''' 查询用户关系
             @param user: 查询者
@@ -313,21 +395,25 @@ class RelationsIter(_async_tool.AsyncTool):
             @param display_type: 关系类型, "Follower"为粉丝, "Following"为关注
             @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
             @param amount: Follower/Following的数量, 为None时api将自动查询
+            @param max_workers: 最大线程数
         '''
-        if not isinstance(user, api._User) \
+        if not isinstance(user, _User) \
                 or not isinstance(user_id, str) \
                 or not isinstance(display_type, str) \
                 or not isinstance(max_retry, (int, type(None))) \
                 or not isinstance(amount, (int, type(None))) \
-                or display_type not in ("Follower", "Following"):
+                or display_type not in ("Follower", "Following") \
+                or not isinstance(max_workers, int):
             raise TypeError
-        if max_retry is not None and max_retry < 0:
+        if max_retry is not None and max_retry < 0 \
+                or max_workers <= 0:
             raise ValueError
 
         self.user = user
         self.user_id = user_id
         self.display_type = display_type
         self.max_retry = max_retry
+        self.query = query
         if amount is None:
             if self.display_type == "Follower":
                 self.amount = self.user.get_user(user_id=self.user_id)['Data']['Statistic']['FollowerCount']
@@ -337,162 +423,103 @@ class RelationsIter(_async_tool.AsyncTool):
                 assert False
         else:
             self.amount = amount
+        self.max_workers = max_workers
 
-    def _make_task(self, i: int):
-        return asyncio.create_task(
-            _run_task(
-                self.max_retry,
-                self.user.async_get_relations,
-                self.user_id, self.display_type, skip=i, take=24,
-            )
-        )
+    def __iter__(self):
+        with ThreadPool(max_workers=self.max_workers) as executor:
+            tasks: List[_Task] = [
+                executor.submit(
+                    _run_task,
+                    self.max_retry,
+                    self.user.get_relations,
+                    user_id=self.user_id,
+                    display_type=self.display_type,
+                    skip=_skip,
+                    take=self.TAKE_AMOUNT,
+                    query=self.query,
+                )
+                for _skip in range(0, self.amount + 1, abs(self.TAKE_AMOUNT))
+            ]
+            executor.submit_end()
 
-    @override
-    async def __aiter__(self):
-        tasks = [self._make_task(i) for i in range(0, self.amount, 24)]
-        for task in tasks:
-            for res in (await task)["Data"]["$values"]:
-                yield res
+            for task in tasks:
+                yield from task.result()["Data"]["$values"]
 
-class AvatarsIter(_async_tool.AsyncTool):
-    ''' 获取头像的迭代器 '''
+class AvatarsIter:
+    ''' 遍历头像的迭代器 '''
     def __init__(
             self,
-            user_id: str,
+            user: _User,
+            /, *,
+            target_id: str,
             category: str,
-            user: Optional[api._User] = None,
             size_category: str = "full",
             max_retry: Optional[int] = 0,
+            max_img_index: Optional[int] = None,
+            max_workers: int = _DEFAULT_MAX_WORKERS,
     ) -> None:
         ''' @param user_id: 用户id
             @param category: 只能为 "Experiment" 或 "Discussion" 或 "User"
             @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
             @param user: 查询者, None为匿名用户
             @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
+            @param max_workers: 最大线程数
         '''
-        if not isinstance(user_id, str) \
+        if not isinstance(target_id, str) \
                 or not isinstance(category, str) \
                 or not isinstance(size_category, str) \
-                or not isinstance(user, (api._User, type(None))) \
-                or not isinstance(max_retry, (int, type(None))):
+                or not isinstance(user, _User) \
+                or not isinstance(max_retry, (int, type(None))) \
+                or not isinstance(max_img_index, (int, type(None))) \
+                or not isinstance(max_workers, int):
             raise TypeError
         if category not in ("User", "Experiment", "Discussion") \
-                or size_category not in ("small.round", "thumbnail", "full"):
+                or size_category not in ("small.round", "thumbnail", "full") \
+                or max_img_index is not None and max_img_index < 0 \
+                or max_workers <= 0:
             raise ValueError
 
-        if user is None:
-            user = api._User()
-
-        if category == "User":
-            self.max_img_counter = user.get_user(user_id=user_id)["Data"]["User"]["Avatar"]
-            category = "users"
-        elif category == "Experiment":
-            self.max_img_counter = user.get_summary(user_id, Category.Experiment)["Data"]["Image"]
-            category = "experiments"
-        elif category == "Discussion":
-            self.max_img_counter = user.get_summary(user_id, Category.Discussion)["Data"]["Image"]
-            category = "experiments"
+        if max_img_index is None:
+            if category == "User":
+                self.max_img_index = user.get_user(user_id=target_id)["Data"]["User"]["Avatar"]
+                category = "users"
+            elif category == "Experiment":
+                self.max_img_index = user.get_summary(target_id, Category.Experiment)["Data"]["Image"]
+                category = "experiments"
+            elif category == "Discussion":
+                self.max_img_index = user.get_summary(target_id, Category.Discussion)["Data"]["Image"]
+                category = "experiments"
+            else:
+                assert False
         else:
-            assert False
+            self.max_img_index = max_img_index
 
-        self.search_id = user_id
+        self.target_id = target_id
         self.category = category
         self.size_category = size_category
         self.user = user
         self.max_retry = max_retry
+        self.max_workers = max_workers
 
-    def _make_task(self, i):
-        return asyncio.create_task(
-            _run_task(
-                self.max_retry,
-                api.async_get_avatar,
-                self.search_id, i, self.category, self.size_category,
-            )
-        )
-
-    @override
-    async def __aiter__(self):
-        tasks = [self._make_task(i) for i in range(self.max_img_counter + 1)]
-        for task in tasks:
-            try:
-                res = await task
-            except IndexError:
-                pass
-            else:
-                yield res
- 
-class ExperimentsIter(_async_tool.AsyncTool):
-     '''获取指定条件实验的迭代器
-     @param tags: 包含的标签列表
-     @param exclude_tags: 排除的标签列表
-     @param category: 实验类别
-     @param languages: 语言列表
-     @param user_id: 用户ID
-     @param take: 每次获取的数量
-     @param skip: 起始位置
-     @param max_retry: 最大重试次数
-     '''
-     def __init__(
-         self,
-         tags: Optional[List[Tag]] = None,
-         exclude_tags: Optional[List[Tag]] = None,
-         category: Category = Category.Experiment,
-         languages: Optional[List[str]] = None,
-         user_id: Optional[str] = None,
-         take: int = 18,
-         skip: int = 0,
-         max_retry: Optional[int] = 0,
-     ) -> None:
-         if not isinstance(category, Category) \
-                 or not isinstance(tags, (list, type(None))) \
-                 or tags is not None and not all(isinstance(tag, Tag) for tag in tags) \
-                 or not isinstance(exclude_tags, (list, type(None))) \
-                 or exclude_tags is not None and not all(isinstance(tag, Tag) for tag in exclude_tags) \
-                 or not isinstance(languages, (list, type(None))) \
-                 or languages is not None and not all(isinstance(language, str) for language in languages) \
-                 or not isinstance(user_id, (str, type(None))) \
-                 or not isinstance(take, int) \
-                 or not isinstance(skip, int) \
-                 or not isinstance(max_retry, (int, type(None))):
-             raise TypeError
-         if skip < 0 or take <= 0:
-             raise ValueError
- 
-         self.tags = tags
-         self.exclude_tags = exclude_tags
-         self.category = category
-         self.languages = languages
-         self.user_id = user_id
-         self.take = take
-         self.max_retry = max_retry
-         self.current_skip = skip
-         
-         self.has_more = True
- 
-     @override
-     async def __aiter__(self):
-         while self.has_more:
-             response = await _run_task(
-                 self.max_retry,
-                 api.async_query_experiments,
-                 tags=self.tags,
-                 exclude_tags=self.exclude_tags,
-                 category=self.category,
-                 languages=self.languages,
-                 user_id=self.user_id,
-                 take=self.take,
-                 skip=self.current_skip
-             )
- 
-             experiments = response.get("Data", [])
-             
-             if not experiments:
-                 self.has_more = False
-                 return
- 
-             for exp in experiments:
-                 yield exp
- 
-             self.current_skip += len(experiments)
-             if len(experiments) < self.take:
-                 self.has_more = False
+    def __iter__(self):
+        with ThreadPool(max_workers=self.max_workers) as executor:
+            tasks: List[_Task] = [
+                executor.submit(
+                    _run_task,
+                    self.max_retry,
+                    get_avatar,
+                    self.target_id,
+                    index,
+                    self.category,
+                    self.size_category,
+                )
+                for index in range(self.max_img_index + 1)
+            ]
+            executor.submit_end()
+            for task in tasks:
+                try:
+                    img = task.result()
+                except IndexError:
+                    continue
+                else:
+                    yield img
