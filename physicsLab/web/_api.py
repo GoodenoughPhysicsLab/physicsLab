@@ -12,9 +12,6 @@ from physicsLab import errors
 from physicsLab.enums import Tag, Category
 from physicsLab._typing import Optional, List, TypedDict, Callable
 
-def _take_warning() -> None:
-    errors.warning("take is less than 1")
-
 def _check_response(response: requests.Response, err_callback: Optional[Callable] = None) -> dict:
     ''' 检查返回的response
         @callback: 自定义物实返回的status对应的报错信息,
@@ -211,6 +208,7 @@ class _User:
             @param tags: 根据列表内的物实实验的标签进行对应的搜索
             @param exclude_tags: 除了列表内的标签的实验都会被搜索到
             @param languages: 根据列表内的语言进行对应的搜索
+            @param exclude_languages: 除了列表内的语言的实验都会被搜索到
             @param user_id: 指定搜索的作品的发布者
             @param take: 搜索数量
             @param skip: 跳过搜索数量
@@ -292,8 +290,7 @@ class _User:
 
         if category is not None:
             # 如果传入的是实验ID, 先获取summary来得到ContentID
-            summary = self.get_summary(content_id, category)
-            content_id = summary["Data"]["ContentID"]
+            content_id = self.get_summary(content_id, category)["Data"]["ContentID"]
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Contents/GetExperiment",
@@ -405,12 +402,12 @@ class _User:
 
         return _check_response(response)
 
-    def remove_comment(self, CommentID: str, target_type: str) -> dict:
+    def remove_comment(self, comment_id: str, target_type: str) -> dict:
         ''' 删除评论
-            @param CommentID: 评论ID, 可以通过`get_comments`获取
+            @param comment_id: 评论ID, 可以通过`get_comments`获取
             @param target_type: User, Discussion, Experiment
         '''
-        if not isinstance(CommentID, str) \
+        if not isinstance(comment_id, str) \
                 or not isinstance(target_type, str):
             raise TypeError
         if target_type not in ("User", "Discussion", "Experiment"):
@@ -420,7 +417,7 @@ class _User:
             "https://physics-api-cn.turtlesim.com:443/Messages/RemoveComment",
             json={
                 "TargetType": target_type,
-                "CommentID": CommentID,
+                "CommentID": comment_id,
             },
             headers={
                 "Content-Type": "application/json",
@@ -573,16 +570,20 @@ class _User:
 
         return _check_response(response)
 
-    def star(self, content_id: str, category: Category, status: bool = True) -> dict:
-        ''' 收藏某个实验
+    def star_content(self, content_id: str, category: Category, star_type: int, status: bool = True) -> dict:
+        ''' 收藏/支持 某个实验
             @param content_id: 实验ID
             @param category: 实验区, 黑洞区
-            @param status: True: 收藏, False: 取消收藏
+            @param star_type: 0: 收藏, 1: 使用金币支持实验
+            @param status: True: 收藏, False: 取消收藏 (对支持无作用)
         '''
         if not isinstance(content_id, str) \
                 or not isinstance(category, Category) \
-                or not isinstance(status, bool):
+                or not isinstance(status, bool) \
+                or not isinstance(star_type, int):
             raise TypeError
+        if star_type not in (0, 1):
+            raise ValueError
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/StarContent",
@@ -590,36 +591,7 @@ class _User:
                 "ContentID": content_id,
                 "Status": status,
                 "Category": category.value,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            }
-        )
-
-        return _check_response(response)
-
-    def star_content(self, content_id: str, category: Category, status: bool = True) -> dict:
-        ''' 使用金币支持某实验
-            @content_id: 实验id
-            @category: 实验区还是黑洞区
-            @status: 是否支持
-            @return: 返回的json数据
-        '''
-        if not isinstance(content_id, str) \
-                or not isinstance(category, Category) \
-                or not isinstance(status, bool):
-            raise TypeError
-
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com:443/Contents/StarContent",
-            json={
-                "ContentID": content_id,
-                "Status": status,
-                "Category": category.value,
-                "Status": status,
-                "Type": 1,
+                "Type": star_type,
             },
             headers={
                 "Content-Type": "application/json",
@@ -846,7 +818,7 @@ class _User:
 
         return _check_response(response)
 
-    def modify_info(self, target: str) -> dict:
+    def modify_information(self, target: str) -> dict:
         ''' 修改用户签名
             @param target: 新签名
         '''

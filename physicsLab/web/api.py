@@ -91,8 +91,8 @@ class User(_User):
     ) -> dict:
         return await _async_wrapper(self.post_comment, target_id, target_type, content, reply_id)
 
-    async def async_remove_comment(self, CommentID: str, target_type:str):
-        return await _async_wrapper(self.remove_comment, CommentID, target_type)
+    async def async_remove_comment(self, comment_id: str, target_type:str):
+        return await _async_wrapper(self.remove_comment, comment_id, target_type)
 
     async def async_get_comments(
             self,
@@ -100,8 +100,9 @@ class User(_User):
             target_type: str,
             take: int = 16,
             skip: int = 0,
+            comment_id: Optional[str] = None,
     ):
-        return await _async_wrapper(self.get_comments, target_id, target_type, take, skip)
+        return await _async_wrapper(self.get_comments, target_id, target_type, take, skip, comment_id)
 
     async def async_get_summary(self, content_id: str, category: Category):
         return await _async_wrapper(self.get_summary, content_id, category)
@@ -119,11 +120,8 @@ class User(_User):
     async def async_get_profile(self):
         return await _async_wrapper(self.get_profile)
 
-    async def async_star(self, content_id: str, category: Category, status: bool = True):
-        return await _async_wrapper(self.star, content_id, category, status)
-
-    async def async_star_content(self, content_id: str, category: Category, status: bool = True):
-        return await _async_wrapper(self.star_content, content_id, category, status)
+    async def async_star_content(self, content_id: str, category: Category, star_type: int, status: bool = True):
+        return await _async_wrapper(self.star_content, content_id, category, star_type, status)
 
     async def async_upload_image(self, policy: str, authorization: str, image_path: str):
         return await _async_wrapper(self.upload_image, policy, authorization, image_path)
@@ -133,7 +131,7 @@ class User(_User):
 
     async def async_get_messages(
             self,
-            category_id: int = 0,
+            category_id: int,
             skip: int = 0,
             take: int = 16,
             no_templates: bool = True,
@@ -165,8 +163,8 @@ class User(_User):
     async def async_rename(self, nickname: str):
         return await _async_wrapper(self.rename, nickname)
 
-    async def async_modify_info(self, target: str):
-        return await _async_wrapper(self.modify_info, target)
+    async def async_modify_information(self, target: str):
+        return await _async_wrapper(self.modify_information, target)
 
-    async def async_receive_bonus(self):
-        return await _async_wrapper(self.receive_bonus)
+    async def async_receive_bonus(self, activity_id: str, index: int):
+        return await _async_wrapper(self.receive_bonus, activity_id, index)

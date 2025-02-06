@@ -27,15 +27,19 @@ def main():
                 and not obj.__name__.startswith('_') \
                 and not obj.__name__.startswith("async")
     ):
+        method_signature: inspect.Signature = inspect.signature(fn_obj)
+        async_method_signature: inspect.Signature = inspect.signature(async_methods['async_' + fn_name])
+        assert method_signature.parameters == async_method_signature.parameters, fn_name
+
         doc: str = fn_obj.__doc__
         context += f"\n## {doc.splitlines()[0]}\n"
-        context += f"```Python\ndef {fn_name}{inspect.signature(fn_obj)}\n```\n"
+        context += f"```Python\ndef {fn_name}{method_signature}\n```\n"
         for line in doc.split('\n')[1:]:
             context += f"{(line + '  ').lstrip()}\n"
 
         context += f"对应的协程风格的api:\n" \
             f"```Python\n" \
-            f"async def {'async_' + fn_name}{inspect.signature(async_methods['async_' + fn_name])}\n" \
+            f"async def {'async_' + fn_name}{async_method_signature}\n" \
             f"```\n"
 
     with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:

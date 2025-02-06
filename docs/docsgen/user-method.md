@@ -33,7 +33,7 @@ def get_comments(self, target_id: str, target_type: str, take: int = 16, skip: i
 
 对应的协程风格的api:
 ```Python
-async def async_get_comments(self, target_id: str, target_type: str, take: int = 16, skip: int = 0)
+async def async_get_comments(self, target_id: str, target_type: str, take: int = 16, skip: int = 0, comment_id: Optional[str] = None)
 ```
 
 ## 获取作品的详细信息, 物实第一次读取作品会使用此接口
@@ -83,7 +83,7 @@ async def async_get_message(self, message_id: str)
 
 ## 获取用户收到的消息
 ```Python
-def get_messages(self, category_id: int = 0, skip: int = 0, take: int = 16, no_templates: bool = True) -> dict
+def get_messages(self, category_id: int, skip: int = 0, take: int = 16, no_templates: bool = True) -> dict
 ```
 @param category_id: 消息类型:  
 0: 全部, 1: 系统邮件, 2: 关注和粉丝, 3: 评论和回复, 4: 作品通知, 5: 管理记录  
@@ -93,7 +93,7 @@ def get_messages(self, category_id: int = 0, skip: int = 0, take: int = 16, no_t
 
 对应的协程风格的api:
 ```Python
-async def async_get_messages(self, category_id: int = 0, skip: int = 0, take: int = 16, no_templates: bool = True)
+async def async_get_messages(self, category_id: int, skip: int = 0, take: int = 16, no_templates: bool = True)
 ```
 
 ## 获取用户主页信息
@@ -159,13 +159,13 @@ async def async_get_user(self, user_id: Optional[str] = None, name: Optional[str
 
 ## 修改用户签名
 ```Python
-def modify_info(self, target: str) -> dict
+def modify_information(self, target: str) -> dict
 ```
 @param target: 新签名  
 
 对应的协程风格的api:
 ```Python
-async def async_modify_info(self, target: str)
+async def async_modify_information(self, target: str)
 ```
 
 ## 发表评论
@@ -184,19 +184,20 @@ async def async_post_comment(self, target_id: str, target_type: str, content: st
 
 ## 查询实验
 ```Python
-def query_experiments(self, category: physicsLab.enums.Category, tags: Optional[List[physicsLab.enums.Tag]] = None, exclude_tags: Optional[List[physicsLab.enums.Tag]] = None, languages: Optional[List[str]] = None, user_id: Optional[str] = None, take: int = 18, skip: int = 0) -> dict
+def query_experiments(self, category: physicsLab.enums.Category, tags: Optional[List[physicsLab.enums.Tag]] = None, exclude_tags: Optional[List[physicsLab.enums.Tag]] = None, languages: Optional[List[str]] = None, exclude_languages: Optional[List[str]] = None, user_id: Optional[str] = None, take: int = 18, skip: int = 0) -> dict
 ```
 @param category: 实验区还是黑洞区  
 @param tags: 根据列表内的物实实验的标签进行对应的搜索  
 @param exclude_tags: 除了列表内的标签的实验都会被搜索到  
 @param languages: 根据列表内的语言进行对应的搜索  
+@param exclude_languages: 除了列表内的语言的实验都会被搜索到  
 @param user_id: 指定搜索的作品的发布者  
 @param take: 搜索数量  
 @param skip: 跳过搜索数量  
 
 对应的协程风格的api:
 ```Python
-async def async_query_experiments(self, category: physicsLab.enums.Category, tags: Optional[List[physicsLab.enums.Tag]] = None, exclude_tags: Optional[List[physicsLab.enums.Tag]] = None, languages: Optional[List[str]] = None, user_id: Optional[str] = None, take: int = 18, skip: int = 0)
+async def async_query_experiments(self, category: physicsLab.enums.Category, tags: Optional[List[physicsLab.enums.Tag]] = None, exclude_tags: Optional[List[physicsLab.enums.Tag]] = None, languages: Optional[List[str]] = None, exclude_languages: Optional[List[str]] = None, user_id: Optional[str] = None, take: int = 18, skip: int = 0)
 ```
 
 ## 领取每日签到奖励
@@ -208,19 +209,19 @@ def receive_bonus(self, activity_id: str, index: int) -> dict
 
 对应的协程风格的api:
 ```Python
-async def async_receive_bonus(self)
+async def async_receive_bonus(self, activity_id: str, index: int)
 ```
 
 ## 删除评论
 ```Python
-def remove_comment(self, CommentID: str, target_type: str) -> dict
+def remove_comment(self, comment_id: str, target_type: str) -> dict
 ```
-@param CommentID: 评论ID, 可以通过`get_comments`获取  
+@param comment_id: 评论ID, 可以通过`get_comments`获取  
 @param target_type: User, Discussion, Experiment  
 
 对应的协程风格的api:
 ```Python
-async def async_remove_comment(self, CommentID: str, target_type: str)
+async def async_remove_comment(self, comment_id: str, target_type: str)
 ```
 
 ## 修改用户昵称
@@ -234,31 +235,18 @@ def rename(self, nickname: str) -> dict
 async def async_rename(self, nickname: str)
 ```
 
-## 收藏某个实验
+## 收藏/支持 某个实验
 ```Python
-def star(self, content_id: str, category: physicsLab.enums.Category, status: bool = True) -> dict
+def star_content(self, content_id: str, category: physicsLab.enums.Category, star_type: int, status: bool = True) -> dict
 ```
 @param content_id: 实验ID  
 @param category: 实验区, 黑洞区  
-@param status: True: 收藏, False: 取消收藏  
+@param star_type: 0: 收藏, 1: 使用金币支持实验  
+@param status: True: 收藏, False: 取消收藏 (对支持无作用)  
 
 对应的协程风格的api:
 ```Python
-async def async_star(self, content_id: str, category: physicsLab.enums.Category, status: bool = True)
-```
-
-## 使用金币支持某实验
-```Python
-def star_content(self, content_id: str, category: physicsLab.enums.Category, status: bool = True) -> dict
-```
-@content_id: 实验id  
-@category: 实验区还是黑洞区  
-@status: 是否支持  
-@return: 返回的json数据  
-
-对应的协程风格的api:
-```Python
-async def async_star_content(self, content_id: str, category: physicsLab.enums.Category, status: bool = True)
+async def async_star_content(self, content_id: str, category: physicsLab.enums.Category, star_type: int, status: bool = True)
 ```
 
 ## 上传实验图片
