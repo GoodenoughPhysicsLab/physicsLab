@@ -122,6 +122,7 @@ user = web.User(YOUR_EMAIL, YOUR_PASSWORD)
 with Experiment(OpenMode.load_by_sav_name, "example") as expe:
     # do something
     # 参数含义：上传该实验到物实的哪个用户, 是实验区还是讨论区, 封面图片的路径
+    expe.edit_tags(Tag.Discussion, Tag.SmallProject)
     expe.upload(user, Category.Discussion, YOUR_IMAGE_PATH)
 ```
 

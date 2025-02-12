@@ -82,7 +82,7 @@ class _Experiment:
         if platform.system() == "Windows":
             SAV_PATH_DIR = os.path.join(plAR.WIN_PLAR_HOME_DIR, "Circuit")
         else:
-            SAV_PATH_DIR = "physicsLabSav"
+            SAV_PATH_DIR = os.path.abspath("physicsLabSav")
 
     open_mode: OpenMode
     _position2elements: Dict[Tuple[num_type, num_type, num_type], List["ElementBase"]]
