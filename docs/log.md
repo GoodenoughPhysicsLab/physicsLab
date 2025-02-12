@@ -249,3 +249,6 @@
 3.  重命名`lib.Equal_to`为`lib.EqualTo`
 4.  移除`Category.BlackHole`, `User.get_user`的`positional-argument`
 5.  `Experiment.get_element_from_position`现在只会返回list (不兼容更新)
+
+## 2.0.2
+1.
