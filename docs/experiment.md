@@ -159,8 +159,7 @@ expe.save()
 expe.close()
 ```
 `Experiment.save`也有一些参数：
-*  `target_path`: 将存档写入自己指定的路径
-*  `ln`: 输出存档的元件字符串是否换行
+*  `target_path`: 将存档写入**自己指定的路径**
 *  `no_print_info`: 是否打印写入存档的元件数, 导线数(如果是电学实验的话)
 
 不过请注意，`with Experiment`支持自定义退出的方式:
@@ -299,9 +298,8 @@ with Experiment(OpenMode.load_by_sav_name, "example1") as expe:
 ## 手动设置输出路径
 你可以使用`os.environ["PHYSICSLAB_HOME_PATH"] = "xxx"`来设置`physicsLab`读写存档的默认文件夹
 
-该功能主要为非`Windows`系统设计, 虽然`Windows`上也可以用
-
-该方法也是另一种导入任意路径的存档的一种方法(另一种是直接调用`load_by_filepath`)
+你也可以通过`load_by_filepath`临时指定读入存档的路径
+你也可以通过`Experiment.save`的`target_path`临时输出存档的路径
 
 ## 暂停实验
 你可以使用`Experiment.paused(status: bool)`来暂停实验

@@ -76,7 +76,7 @@ def _check_not_closed(method: Callable) -> Callable:
 class _Experiment:
     ''' 物实实验 (支持物实的三种实验类型) '''
 
-    if "PHYSICSLAB_HOME_PATH" in os.environ.keys():
+    if "PHYSICSLAB_HOME_PATH" in os.environ:
         SAV_PATH_DIR = os.environ["PHYSICSLAB_HOME_PATH"]
     else:
         if platform.system() == "Windows":
@@ -271,14 +271,17 @@ class _Experiment:
             no_print_info: bool = False,
     ) -> Self:
         ''' 以物实存档的格式导出实验
-            @param target_path: 将存档保存在此路径 (要求必须是file), 默认为 SAV_PATH
+            @param target_path: 将存档保存在此路径 (要求必须是文件的路径), 默认为 SAV_PATH
             @param no_print_info: 是否打印写入存档的元件数, 导线数(如果是电学实验的话)
         '''
-        if not isinstance(target_path, (str, type(None))) or not isinstance(no_print_info, bool):
+        if not isinstance(target_path, (str, type(None))) \
+                or not isinstance(no_print_info, bool):
             raise TypeError
 
         if target_path is None:
             target_path = self.SAV_PATH
+        else:
+            target_path = os.path.abspath(target_path)
 
         if self.open_mode in (OpenMode.load_by_sav_name, OpenMode.load_by_filepath, OpenMode.load_by_plar_app):
             status: str = "update"
@@ -298,7 +301,7 @@ class _Experiment:
             if self.experiment_type == ExperimentType.Circuit:
                 _colorUtils.color_print(
                     f"Successfully {status} experiment \"{self.PlSav['InternalName']}\""
-                    f"(\"{self.SAV_PATH}\")! "
+                    f"(\"{target_path}\")! "
                     f"{self.get_elements_count()} elements, {self.get_wires_count()} wires.",
                     color=_colorUtils.COLOR.GREEN
                 )
@@ -306,7 +309,7 @@ class _Experiment:
                     or self.experiment_type == ExperimentType.Electromagnetism:
                 _colorUtils.color_print(
                     f"Successfully {status} experiment \"{self.PlSav['InternalName']}\""
-                    f"(\"{self.SAV_PATH}\")! "
+                    f"(\"{target_path}\")! "
                     f"{self.get_elements_count()} elements.",
                     color=_colorUtils.COLOR.GREEN
                 )
