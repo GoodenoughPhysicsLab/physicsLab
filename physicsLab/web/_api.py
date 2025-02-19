@@ -200,8 +200,9 @@ class _User:
             languages: Optional[List[str]] = None,
             exclude_languages: Optional[List[str]] = None,
             user_id: Optional[str] = None,
-            take: int = 18,
+            take: int = 20,
             skip: int = 0,
+            from_skip: Optional[str] = None,
     ) -> dict:
         ''' 查询实验
             @param category: 实验区还是黑洞区
@@ -225,7 +226,8 @@ class _User:
                 and not all(isinstance(language, str) for language in exclude_languages) \
                 or not isinstance(user_id, (str, type(None))) \
                 or not isinstance(take, int) \
-                or not isinstance(skip, int):
+                or not isinstance(skip, int) \
+                or not isinstance(from_skip, (str, type(None))):
             raise TypeError
 
         if languages is None:
@@ -238,10 +240,8 @@ class _User:
         else:
             _tags = [tag.value for tag in tags]
 
-        if exclude_tags is None:
-            exclude_tags_ = None
-        else:
-            exclude_tags_ = [tag.value for tag in exclude_tags]
+        if exclude_tags is not None:
+            exclude_tags = [tag.value for tag in exclude_tags]
 
         response = requests.post(
             "http://physics-api-cn.turtlesim.com/Contents/QueryExperiments",
@@ -251,13 +251,13 @@ class _User:
                     "Languages": languages,
                     "ExcludeLanguages": exclude_languages,
                     "Tags": _tags,
-                    "ExcludeTags": exclude_tags_,
+                    "ExcludeTags": exclude_tags,
                     "ModelTags": None,
                     "ModelID": None,
                     "ParentID": None,
                     "UserID": user_id,
                     "Special": None,
-                    "From": None,
+                    "From": from_skip,
                     "Skip": skip,
                     "Take": take,
                     "Days": 0,

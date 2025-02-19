@@ -97,3 +97,16 @@ class WebTest(IsolatedAsyncioTestCase, ViztracerTool):
             user, target_id="5ce629e157035932b52f9315", category="User", size_category="small.round", max_retry=4
         ):
             pass
+
+    async def test_experiments_iter(self):
+        counter = 0
+        start_timestamp = datetime(2025, 1, 1).timestamp() * 1000
+        end_timestamp = datetime(2025, 1, 2).timestamp() * 1000
+        for msg in web.ExperimentsIter(
+            user, category=Category.Experiment, max_retry=3
+        ):
+            if start_timestamp <= msg["CreationDate"] < end_timestamp:
+                counter += 1
+            elif start_timestamp > msg["CreationDate"]:
+                break
+        self.assertEqual(counter, 2)

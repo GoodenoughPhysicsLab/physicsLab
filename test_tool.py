@@ -1,3 +1,4 @@
+import gzip
 import time
 import subprocess
 from typing import Callable
@@ -52,3 +53,6 @@ class Viz:
         self.tracer.stop()
         self.tracer.save()
         subprocess.call(["vizviewer", "result.json"])
+
+def unzip(hex: str):
+    return gzip.decompress(bytes.fromhex(hex.replace(' ', ''))).decode("utf-8")
