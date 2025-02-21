@@ -84,6 +84,14 @@ class User(_User):
     async def async_confirm_experiment(self, summary_id: str, category: Category, image_counter: int) -> Awaitable[dict]:
         return await _async_wrapper(self.confirm_experiment, summary_id, category, image_counter)
 
+    async def async_remove_experiment(
+            self,
+            summary_id: str,
+            category: Category,
+            reason: Optional[str] = None,
+    ) -> Awaitable[dict]:
+        return await _async_wrapper(self.remove_experiment, summary_id, category, reason)
+
     async def async_post_comment(
             self,
             target_id: str,

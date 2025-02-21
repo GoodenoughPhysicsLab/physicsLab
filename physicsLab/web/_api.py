@@ -76,6 +76,7 @@ class _login_res(TypedDict):
     AuthCode: str
     Data: dict
 
+# TODO 进一步封装发送请求的函数
 class _User:
     ''' 该class仅提供阻塞的api '''
     def __init__(
@@ -240,8 +241,10 @@ class _User:
         else:
             _tags = [tag.value for tag in tags]
 
-        if exclude_tags is not None:
-            exclude_tags = [tag.value for tag in exclude_tags]
+        if exclude_tags is None:
+            _exclude_tags = exclude_tags
+        else:
+            _exclude_tags = [tag.value for tag in exclude_tags]
 
         response = requests.post(
             "http://physics-api-cn.turtlesim.com/Contents/QueryExperiments",
@@ -251,7 +254,7 @@ class _User:
                     "Languages": languages,
                     "ExcludeLanguages": exclude_languages,
                     "Tags": _tags,
-                    "ExcludeTags": exclude_tags,
+                    "ExcludeTags": _exclude_tags,
                     "ModelTags": None,
                     "ModelID": None,
                     "ParentID": None,
@@ -326,6 +329,37 @@ class _User:
                 "Content-Type": "application/json",
                 "x-API-Token": self.token,
                 "x-API-AuthCode":self.auth_code,
+            }
+        )
+
+        return _check_response(response)
+
+    def remove_experiment(self, summary_id: str, category: Category, reason: Optional[str] = None) -> dict:
+        ''' 隐藏实验
+            @param summary_id: 实验ID
+            @param category: 实验区还是黑洞区
+        '''
+        if not isinstance(summary_id, str) \
+                or not isinstance(category, Category) \
+                or not isinstance(reason, (str, type(None))):
+            raise TypeError
+
+        _plar_ver = plAR.get_plAR_version()
+        plar_ver = f"{_plar_ver[0]}{_plar_ver[1]}{_plar_ver[2]}" if _plar_ver is not None else "2411"
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com:443/Contents/RemoveExperiment",
+            json={
+                "Category": category.value,
+                "SummaryID": summary_id,
+                "Hiding": True,
+                "Reason": reason,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+                "x-API-Version": plar_ver,
             }
         )
 

@@ -224,6 +224,18 @@ def remove_comment(self, comment_id: str, target_type: str) -> dict
 async def async_remove_comment(self, comment_id: str, target_type: str) -> Awaitable[dict]
 ```
 
+## 隐藏实验
+```Python
+def remove_experiment(self, summary_id: str, category: physicsLab.enums.Category, reason: Optional[str] = None) -> dict
+```
+*  summary_id: 实验ID
+*  category: 实验区还是黑洞区
+
+对应的协程风格的api:
+```Python
+async def async_remove_experiment(self, summary_id: str, category: physicsLab.enums.Category, reason: Optional[str] = None) -> Awaitable[dict]
+```
+
 ## 修改用户昵称
 ```Python
 def rename(self, nickname: str) -> dict
