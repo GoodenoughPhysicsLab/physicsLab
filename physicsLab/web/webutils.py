@@ -119,6 +119,7 @@ class ExperimentsIter:
         /, *,
         category: Category,
         start_skip: int = 0,
+        from_skip: Optional[str] = None,
         tags: Optional[List[Tag]] = None,
         exclude_tags: Optional[List[Tag]] = None,
         languages: Optional[List[str]] = None,
@@ -147,6 +148,7 @@ class ExperimentsIter:
                 or not isinstance(user_id, (str, type(None))) \
                 or not isinstance(max_retry, (int, type(None))) \
                 or not isinstance(start_skip, int) \
+                or not isinstance(from_skip, (str, type(None))) \
                 or not isinstance(max_workers, int):
             raise TypeError
         if start_skip < 0 \
@@ -161,34 +163,28 @@ class ExperimentsIter:
         self.user_id = user_id
         self.max_retry = max_retry
         self.start_skip = start_skip
+        self.from_skip = from_skip
         self.max_workers = max_workers
 
     def __iter__(self):
-        tasks: List[_Task] = []
-        with ThreadPool(max_workers=self.max_workers) as executor:
-            while True:
-                # 避免tasks里面的任务过多导致break停止循环的时候迟迟无法退出
-                if len(tasks) < 2500:
-                    tasks.append(executor.submit(
-                        _run_task,
-                        self.max_retry,
-                        self.user.query_experiments,
-                        self.category,
-                        self.tags,
-                        self.exclude_tags,
-                        self.languages,
-                        self.user_id,
-                        take=self.TAKE_AMOUNT,
-                        skip=self.start_skip,
-                    ))
-                    self.start_skip += abs(self.TAKE_AMOUNT)
-
-                if tasks[0].has_result():
-                    msgs = tasks.pop(0).result()["Data"]["$values"]
-                    yield from msgs
-                    if len(msgs) < abs(self.TAKE_AMOUNT):
-                        executor.submit_end()
-                        break
+        while True:
+            msgs = _run_task(
+                self.max_retry,
+                self.user.query_experiments,
+                self.category,
+                self.tags,
+                self.exclude_tags,
+                self.languages,
+                self.user_id,
+                take=self.TAKE_AMOUNT,
+                skip=self.start_skip,
+                from_skip=self.from_skip,
+            )["Data"]["$values"]
+            self.start_skip += abs(self.TAKE_AMOUNT)
+            self.from_skip = msgs[-1]["ID"]
+            yield from msgs
+            if len(msgs) < abs(self.TAKE_AMOUNT):
+                break
 
 class BannedMsgIter:
     ''' 遍历指定一段时间的封禁信息 (可指定用户) '''
