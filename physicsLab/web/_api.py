@@ -344,7 +344,7 @@ class _User:
             "https://physics-api-cn.turtlesim.com:443/Contents/RemoveExperiment",
             json={
                 "Category": category.value,
-                "ContentID": content_id,
+                "SummaryID": content_id,
                 "Hiding":True,
                 "Reason":None,
             },
