@@ -331,7 +331,7 @@ class _User:
 
         return _check_response(response)
         
-    def hide_experiment(self, content_id: str, category: Category) -> dict:
+    def remove_experiment(self, content_id: str, category: Category) -> dict:
         ''' 隐藏实验
             @param content_id: 实验ID,
             @param category: 实验区还是黑洞区
@@ -339,8 +339,6 @@ class _User:
         if not isinstance(content_id, str) \
                 or not isinstance(category, Category):
             raise TypeError
-
-        content_id = self.get_summary(content_id, category)["Data"]["ContentID"] # 获取summary来得到ContentID
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Contents/RemoveExperiment",
@@ -353,7 +351,8 @@ class _User:
             headers={
                 "Content-Type": "application/json",
                 "x-API-Token": self.token,
-                "x-API-AuthCode":self.auth_code,
+                "x-API-AuthCode": self.auth_code,
+                "x-API-Version": "2411"
             }
         )
 
