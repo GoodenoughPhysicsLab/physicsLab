@@ -156,9 +156,9 @@ class Node:
         if len(value) != 3:
             raise ValueError
         x, y, z = value
-        if not isinstance(x, num_type) \
-                or not isinstance(y, num_type) \
-                or not isinstance(z, num_type):
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)):
             raise TypeError
         if not get_current_experiment().is_elementXYZ:
             x, y, z = native_to_elementXYZ(x, y, z)
