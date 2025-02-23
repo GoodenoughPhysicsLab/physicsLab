@@ -743,7 +743,25 @@ def quadrant(func: FunctionType, vertex_id1: int = 0, vertex_id2: int = 1) -> Fu
         }
         node.input = [op1_r2.black, op2_r2.black]
         node.output = op3_opamp.o
-        node.extend(res.elements + [op1_opamp, op1_r1, op1_r2, op2_opamp, op2_r1, op2_r2, op3_opamp, op3_r1, op3_r2, relay_i1, relay_i2, relay_o, xor, amp], res.wires | wires)
+        node.extend(
+            res.elements + [
+                op1_opamp,
+                op1_r1,
+                op1_r2,
+                op2_opamp,
+                op2_r1,
+                op2_r2,
+                op3_opamp,
+                op3_r1,
+                op3_r2,
+                relay_i1,
+                relay_i2,
+                relay_o,
+                xor,
+                amp
+            ],
+            res.wires | wires
+        )
         connect(n1.output, node.input[0])
         connect(n2.output, node.input[1])
         _gn[expe].remove(v1)
@@ -819,7 +837,7 @@ def reciprocal(n: Node):
 @node_wrapper("div")
 def true_divide(n1: Union[Node, num_type], n2: Node):
     ''' 四象限除法 '''
-    if isinstance(n1, num_type):
+    if isinstance(n1, (int, float)):
         return signed(reciprocal)(n2) if n1 == 1 else n1*signed(reciprocal)(n2)
     else:
         return quadrant(transistor_divide)(n1, n2)
@@ -831,8 +849,8 @@ def log(n: Union[Node, num_type], n_base: Union[Node, num_type]) -> ComplexNode:
             or not isinstance(n_base, (Node, int, float)):
         raise TypeError("The parameters must be Node or number")
 
-    x_is_num = isinstance(n, num_type)
-    base_is_num = isinstance(n_base, num_type)
+    x_is_num = isinstance(n, (int, float))
+    base_is_num = isinstance(n_base, (int, float))
     if x_is_num and base_is_num:
         raise TypeError("Since both parameters are numbers, use `math.log` instead`")
     if x_is_num and not base_is_num:
