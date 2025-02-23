@@ -307,7 +307,7 @@ class Node:
             return true_divide(self, other)
         else:
             raise TypeError
-    
+
     def __rtruediv__(self, other: num_type) -> "ComplexNode":
         return true_divide(other, self)
 
@@ -685,7 +685,7 @@ def signed(func: FunctionType, vertex_id: int = 0) -> FunctionType:
             if list(i)[0] is v.output or list(i)[1] is v.output:
                 _gicw[expe].remove(i)
         return node
-    return res_func       
+    return res_func
 
 def quadrant(func: FunctionType, vertex_id1: int = 0, vertex_id2: int = 1) -> FunctionType:
     ''' 四象限化，参数函数必须已经打包好，且输出为节点 '''
