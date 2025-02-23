@@ -661,3 +661,19 @@ class BasicTest(TestCase, ViztracerTool):
             self.assertEqual(expe.get_elements_count(), 22)
             self.assertEqual(expe.get_wires_count(), 21)
             expe.close(delete=True)
+
+    @my_test_dec
+    def test_analog_lib(self):
+        with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
+            gnd = Ground_Component(5, -6, 0)
+            mtr = Multimeter(4, 0, 0)
+            crt_wire(mtr.black, gnd.i)
+            nl = lib.log(lib.exp(lib.PinNode(Logic_Input(-9, 9, 0).set_output_status(True).o, gnd)),
+                         lib.ln(lib.PinNode(Logic_Input(-9, -1, 0).set_output_status(True).o, gnd)))
+            nl.pos = (0, -11, 0)
+            lib.lambertW(lib.PinNode(Logic_Input(-9, 11, 0).o, gnd))
+            self.assertEqual(expe.get_elements_count(), 107)
+            self.assertEqual(expe.get_wires_count(), 159)
+            self.assertEqual(len(lib.analog._gn[expe]), 7)
+            self.assertEqual(len(lib.analog._gicw[expe]), 25)
+            expe.close(delete=True)
