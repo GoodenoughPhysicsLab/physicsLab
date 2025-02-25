@@ -251,4 +251,8 @@
 5.  `Experiment.get_element_from_position`现在只会返回list (不兼容更新)
 
 ## 2.0.2
+1. 新增`web.User.remove_experiment`
+2. 新增`lib.analog_circuit`
+
+## 2.0.3
 1.
