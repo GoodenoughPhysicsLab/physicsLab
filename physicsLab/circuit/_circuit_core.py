@@ -198,6 +198,11 @@ class CircuitBase(ElementBase, metaclass=_CircuitMeta):
                 f"elementXYZ={self.is_elementXYZ})"
 
     @property
+    # abs.
+    def zh_name(self):
+        raise NotImplementedError
+
+    @property
     @final
     def properties(self) -> dict:
         ''' 返回元件的属性 '''
