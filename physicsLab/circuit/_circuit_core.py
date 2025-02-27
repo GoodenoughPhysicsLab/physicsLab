@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import abc
 import inspect
 
 from physicsLab import errors
@@ -196,6 +197,11 @@ class CircuitBase(ElementBase, metaclass=_CircuitMeta):
         return  f"{self.__class__.__name__}" \
                 f"({self._position.x}, {self._position.y}, {self._position.z}, " \
                 f"elementXYZ={self.is_elementXYZ})"
+
+    @property
+    @abc.abstractmethod
+    def zh_name(self):
+        raise NotImplementedError
 
     @property
     @final

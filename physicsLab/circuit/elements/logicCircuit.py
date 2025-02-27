@@ -75,6 +75,11 @@ class Logic_Input(_LogicBase):
         return self
 
     @property
+    @final
+    def zh_name(self) -> str:
+        return "逻辑输入"
+
+    @property
     def o(self) -> OutputPin:
         return OutputPin(self, 0)
 
@@ -97,6 +102,11 @@ class Logic_Output(_LogicBase):
             "Rotation": "0,180,0", "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "逻辑输出"
 
     @property
     def i(self) -> InputPin:
@@ -135,6 +145,11 @@ class Yes_Gate(_2_Pin_Gate):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Yes Gate"
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "是门"
+
 class No_Gate(_2_Pin_Gate):
     ''' 非门 '''
     def __init__(
@@ -148,6 +163,11 @@ class No_Gate(_2_Pin_Gate):
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "No Gate"
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "非门"
 
 class _3_Pin_Gate(_LogicBase):
     ''' 3引脚门电路基类 '''
@@ -186,6 +206,11 @@ class Or_Gate(_3_Pin_Gate):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Or Gate"
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "或门"
+
 class And_Gate(_3_Pin_Gate):
     ''' 与门 '''
     def __init__(
@@ -199,6 +224,11 @@ class And_Gate(_3_Pin_Gate):
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "And Gate"
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "与门"
 
 class Nor_Gate(_3_Pin_Gate):
     ''' 或非门 '''
@@ -214,6 +244,11 @@ class Nor_Gate(_3_Pin_Gate):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Nor Gate"
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "或非门"
+
 class Nand_Gate(_3_Pin_Gate):
     ''' 与非门 '''
     def __init__(
@@ -227,6 +262,11 @@ class Nand_Gate(_3_Pin_Gate):
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Nand Gate"
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "与非门"
 
 class Xor_Gate(_3_Pin_Gate):
     ''' 异或门 '''
@@ -242,6 +282,11 @@ class Xor_Gate(_3_Pin_Gate):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Xor Gate"
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "异或门"
+
 class Xnor_Gate(_3_Pin_Gate):
     ''' 同或门 '''
     def __init__(
@@ -255,6 +300,11 @@ class Xnor_Gate(_3_Pin_Gate):
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Xnor Gate"
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "同或门"
 
 class Imp_Gate(_3_Pin_Gate):
     ''' 蕴含门 '''
@@ -270,6 +320,11 @@ class Imp_Gate(_3_Pin_Gate):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Imp Gate"
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "蕴含门"
+
 class Nimp_Gate(_3_Pin_Gate):
     ''' 蕴含非门 '''
     def __init__(
@@ -283,6 +338,11 @@ class Nimp_Gate(_3_Pin_Gate):
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Nimp Gate"
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "蕴含非门"
 
 class _BigElement(_LogicBase):
     ''' 2体积元件父类 '''
@@ -327,6 +387,11 @@ class Half_Adder(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "半加器"
+
 class Full_Adder(_BigElement):
     ''' 全加器 '''
     def __init__(
@@ -361,6 +426,11 @@ class Full_Adder(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "全加器"
+
 class Half_Subtractor(_BigElement):
     ''' 半减器 '''
     def __init__(
@@ -394,6 +464,11 @@ class Half_Subtractor(_BigElement):
     @property
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "半减器"
 
 class Full_Subtractor(_BigElement):
     ''' 全减器 '''
@@ -432,6 +507,11 @@ class Full_Subtractor(_BigElement):
     @property
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "全减器"
 
 class Multiplier(_BigElement):
     ''' 二位乘法器 '''
@@ -479,6 +559,11 @@ class Multiplier(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 3)
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "二位乘法器"
+
 class D_Flipflop(_BigElement):
     ''' D触发器 '''
     def __init__(
@@ -508,6 +593,11 @@ class D_Flipflop(_BigElement):
     @property
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "D触发器"
 
 class T_Flipflop(_BigElement):
     ''' T'触发器 '''
@@ -539,6 +629,11 @@ class T_Flipflop(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "T'触发器"
+
 class Real_T_Flipflop(_BigElement):
     ''' T触发器 '''
     def __init__(
@@ -568,6 +663,11 @@ class Real_T_Flipflop(_BigElement):
     @property
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "T触发器"
 
 class JK_Flipflop(_BigElement):
     ''' JK触发器 '''
@@ -602,6 +702,11 @@ class JK_Flipflop(_BigElement):
     @property
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "JK触发器"
 
 class Counter(_BigElement):
     ''' 计数器 '''
@@ -641,6 +746,11 @@ class Counter(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 3)
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "计数器"
+
 class Random_Generator(_BigElement):
     ''' 随机数发生器 '''
     def __init__(
@@ -678,6 +788,11 @@ class Random_Generator(_BigElement):
     @property
     def o_low(self) -> OutputPin:
         return OutputPin(self, 3)
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "随机数发生器"
 
 class Eight_Bit_Input(_LogicBase):
     ''' 八位输入器 '''
@@ -747,6 +862,11 @@ class Eight_Bit_Input(_LogicBase):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 7)
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "八位输入器"
+
 class Eight_Bit_Display(_LogicBase):
     ''' 八位显示器 '''
     is_bigElement = True
@@ -802,6 +922,11 @@ class Eight_Bit_Display(_LogicBase):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 7)
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "八位显示器"
+
 class Schmitt_Trigger(CircuitBase):
     ''' 施密特触发器 '''
     def __init__(
@@ -829,6 +954,11 @@ class Schmitt_Trigger(CircuitBase):
         if low_level is None:
             low_level = min(high_level, 0)
         self.set_properties(high_level=high_level, low_level=low_level, inverted=inverted)
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "施密特触发器"
 
     def set_properties(
             self,

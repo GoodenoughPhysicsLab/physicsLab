@@ -27,6 +27,11 @@ class NE555(CircuitBase):
         }
 
     @property
+    @final
+    def zh_name(self) -> str:
+        return "555定时器"
+
+    @property
     def VCC(self) -> Pin:
         return Pin(self, 0)
 
@@ -94,6 +99,11 @@ class Basic_Capacitor(_TwoPinMixIn):
             internal_resistance=internal_resistance,
             is_ideal=is_ideal,
         )
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "电容"
 
     def set_properties(
             self,
@@ -172,6 +182,11 @@ class Basic_Inductor(_TwoPinMixIn):
             is_ideal=is_ideal,
         )
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "电感"
+
     def set_properties(
             self,
             *,
@@ -239,6 +254,11 @@ class Basic_Diode(_TwoPinMixIn):
             "DiagramRotation": 0
         }
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "二极管"
+
 class Light_Emitting_Diode(_TwoPinMixIn):
     ''' 发光二极管 '''
     def __init__(
@@ -261,6 +281,11 @@ class Light_Emitting_Diode(_TwoPinMixIn):
             "DiagramRotation": 0
         }
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "发光二极管"
+
 class Ground_Component(CircuitBase):
     ''' 接地元件 '''
     def __init__(
@@ -279,6 +304,11 @@ class Ground_Component(CircuitBase):
             "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "接地"
 
     @property
     def i(self) -> Pin:
@@ -306,6 +336,11 @@ class Transformer(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "理想变压器"
 
     @property
     def l_up(self) -> Pin:
@@ -343,6 +378,11 @@ class Tapped_Transformer(CircuitBase):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "中心抽头变压器"
 
     @property
     def l_up(self) -> Pin:
@@ -386,6 +426,12 @@ class Mutual_Inductor(CircuitBase):
         }
 
     @property
+    @final
+    def zh_name(self) -> str:
+        return "理想互感"
+
+
+    @property
     def l_up(self) -> Pin:
         return Pin(self, 0)
 
@@ -420,6 +466,11 @@ class Rectifier(CircuitBase):
             "DiagramCached": False, "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "全波整流器"
 
     @property
     def l_up(self) -> Pin:
@@ -465,6 +516,11 @@ class Transistor(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
         self.set_properties(is_PNP=is_PNP, gain=gain, max_power=max_power)
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "三极管"
 
     def set_properties(
             self,
@@ -534,6 +590,11 @@ class Comparator(CircuitBase):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "比较器"
 
     @property
     def o(self) -> Pin:
