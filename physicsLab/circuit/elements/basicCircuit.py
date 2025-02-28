@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
 from physicsLab._tools import round_data
 from .._circuit_core import CircuitBase, _TwoPinMixIn, Pin
-from physicsLab._typing import Optional, num_type, CircuitElementData, Self, Generate, override
+from physicsLab._typing import (
+    Optional,
+    num_type,
+    CircuitElementData,
+    Self,
+    Generate,
+    override,
+    LiteralString,
+    final,
+)
 
 class _SwitchBase(CircuitBase):
     ''' 开关基类 '''
@@ -35,7 +44,7 @@ class Simple_Switch(_SwitchBase, _TwoPinMixIn):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "简单开关"
 
     def __repr__(self) -> str:
@@ -67,7 +76,7 @@ class SPDT_Switch(_SwitchBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "单刀双掷开关"
 
     def __repr__(self) -> str:
@@ -118,7 +127,7 @@ class DPDT_Switch(_SwitchBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "双刀双掷开关"
 
     def __repr__(self) -> str:
@@ -187,7 +196,7 @@ class Push_Switch(_TwoPinMixIn):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "按钮开关"
 
 class Air_Switch(_TwoPinMixIn):
@@ -212,7 +221,7 @@ class Air_Switch(_TwoPinMixIn):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "空气开关"
 
     @override
@@ -259,7 +268,7 @@ class Incandescent_Lamp(_TwoPinMixIn):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "白炽灯泡"
 
 class Battery_Source(_TwoPinMixIn):
@@ -292,7 +301,7 @@ class Battery_Source(_TwoPinMixIn):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "一节电池"
 
     def set_properties(
@@ -342,7 +351,7 @@ class Student_Source(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "学生电源"
 
     @property
@@ -385,7 +394,7 @@ class Resistor(_TwoPinMixIn):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "电阻"
 
     def set_resistance(self, resistance: num_type) -> Self:
@@ -429,7 +438,7 @@ class Fuse_Component(_TwoPinMixIn):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "保险丝"
 
 class Slide_Rheostat(CircuitBase):
@@ -458,7 +467,7 @@ class Slide_Rheostat(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "滑动变阻器"
 
     @property
@@ -501,7 +510,7 @@ class Multimeter(_TwoPinMixIn):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "多用电表"
 
 class Galvanometer(CircuitBase):
@@ -527,7 +536,7 @@ class Galvanometer(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "灵敏电流计"
 
     @property
@@ -565,7 +574,7 @@ class Microammeter(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "微安表"
 
     @property
@@ -603,7 +612,7 @@ class Electricity_Meter(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "电能表"
 
     @property
@@ -647,7 +656,7 @@ class Resistance_Box(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "电阻箱"
 
     @property
@@ -691,7 +700,7 @@ class Simple_Ammeter(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "直流安培表"
 
     @property
@@ -729,7 +738,7 @@ class Simple_Voltmeter(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "直流电压表"
 
     @property

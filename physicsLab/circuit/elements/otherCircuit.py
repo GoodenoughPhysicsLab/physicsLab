@@ -4,7 +4,18 @@ import physicsLab.errors as errors
 
 from .._circuit_core import _TwoPinMixIn, CircuitBase, Pin
 from physicsLab._typing import (
-    Optional, num_type, CircuitElementData, Self, Generate, Union, List, override, Union, Tuple
+    Optional,
+    num_type,
+    CircuitElementData,
+    Self,
+    Generate,
+    Union,
+    List,
+    override,
+    Union,
+    Tuple,
+    LiteralString,
+    final,
 )
 
 class Buzzer(_TwoPinMixIn):

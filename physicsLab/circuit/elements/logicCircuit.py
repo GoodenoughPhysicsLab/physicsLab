@@ -2,7 +2,15 @@
 from physicsLab import plAR
 from physicsLab import errors
 from .._circuit_core import CircuitBase, InputPin, OutputPin
-from physicsLab._typing import Optional, num_type, CircuitElementData, Self, Generate, final
+from physicsLab._typing import (
+    Optional,
+    num_type,
+    CircuitElementData,
+    Self,
+    Generate,
+    final,
+    LiteralString,
+)
 
 class _LogicBase(CircuitBase):
     @final
@@ -76,7 +84,7 @@ class Logic_Input(_LogicBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "逻辑输入"
 
     @property
@@ -105,7 +113,7 @@ class Logic_Output(_LogicBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "逻辑输出"
 
     @property
@@ -147,7 +155,7 @@ class Yes_Gate(_2_Pin_Gate):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "是门"
 
 class No_Gate(_2_Pin_Gate):
@@ -166,7 +174,7 @@ class No_Gate(_2_Pin_Gate):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "非门"
 
 class _3_Pin_Gate(_LogicBase):
@@ -208,7 +216,7 @@ class Or_Gate(_3_Pin_Gate):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "或门"
 
 class And_Gate(_3_Pin_Gate):
@@ -227,7 +235,7 @@ class And_Gate(_3_Pin_Gate):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "与门"
 
 class Nor_Gate(_3_Pin_Gate):
@@ -246,7 +254,7 @@ class Nor_Gate(_3_Pin_Gate):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "或非门"
 
 class Nand_Gate(_3_Pin_Gate):
@@ -265,7 +273,7 @@ class Nand_Gate(_3_Pin_Gate):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "与非门"
 
 class Xor_Gate(_3_Pin_Gate):
@@ -284,7 +292,7 @@ class Xor_Gate(_3_Pin_Gate):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "异或门"
 
 class Xnor_Gate(_3_Pin_Gate):
@@ -303,7 +311,7 @@ class Xnor_Gate(_3_Pin_Gate):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "同或门"
 
 class Imp_Gate(_3_Pin_Gate):
@@ -322,7 +330,7 @@ class Imp_Gate(_3_Pin_Gate):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "蕴含门"
 
 class Nimp_Gate(_3_Pin_Gate):
@@ -341,7 +349,7 @@ class Nimp_Gate(_3_Pin_Gate):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "蕴含非门"
 
 class _BigElement(_LogicBase):
@@ -389,7 +397,7 @@ class Half_Adder(_BigElement):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "半加器"
 
 class Full_Adder(_BigElement):
@@ -428,7 +436,7 @@ class Full_Adder(_BigElement):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "全加器"
 
 class Half_Subtractor(_BigElement):
@@ -467,7 +475,7 @@ class Half_Subtractor(_BigElement):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "半减器"
 
 class Full_Subtractor(_BigElement):
@@ -510,7 +518,7 @@ class Full_Subtractor(_BigElement):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "全减器"
 
 class Multiplier(_BigElement):
@@ -561,7 +569,7 @@ class Multiplier(_BigElement):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "二位乘法器"
 
 class D_Flipflop(_BigElement):
@@ -596,7 +604,7 @@ class D_Flipflop(_BigElement):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "D触发器"
 
 class T_Flipflop(_BigElement):
@@ -631,7 +639,7 @@ class T_Flipflop(_BigElement):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "T'触发器"
 
 class Real_T_Flipflop(_BigElement):
@@ -666,7 +674,7 @@ class Real_T_Flipflop(_BigElement):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "T触发器"
 
 class JK_Flipflop(_BigElement):
@@ -705,7 +713,7 @@ class JK_Flipflop(_BigElement):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "JK触发器"
 
 class Counter(_BigElement):
@@ -748,7 +756,7 @@ class Counter(_BigElement):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "计数器"
 
 class Random_Generator(_BigElement):
@@ -791,7 +799,7 @@ class Random_Generator(_BigElement):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "随机数发生器"
 
 class Eight_Bit_Input(_LogicBase):
@@ -864,7 +872,7 @@ class Eight_Bit_Input(_LogicBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "八位输入器"
 
 class Eight_Bit_Display(_LogicBase):
@@ -924,7 +932,7 @@ class Eight_Bit_Display(_LogicBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "八位显示器"
 
 class Schmitt_Trigger(CircuitBase):
@@ -957,7 +965,7 @@ class Schmitt_Trigger(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "施密特触发器"
 
     def set_properties(

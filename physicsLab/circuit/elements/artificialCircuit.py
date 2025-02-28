@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
 from physicsLab._tools import round_data
 from .._circuit_core import CircuitBase, _TwoPinMixIn, Pin
-from physicsLab._typing import Optional, num_type, CircuitElementData, Generate, Self, override
+from physicsLab._typing import (
+    Optional,
+    num_type,
+    CircuitElementData,
+    Generate,
+    Self,
+    override,
+    LiteralString,
+    final,
+)
 
 class NE555(CircuitBase):
     ''' 555定时器 '''
@@ -28,7 +37,7 @@ class NE555(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "555定时器"
 
     @property
@@ -102,7 +111,7 @@ class Basic_Capacitor(_TwoPinMixIn):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "电容"
 
     def set_properties(
@@ -184,7 +193,7 @@ class Basic_Inductor(_TwoPinMixIn):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "电感"
 
     def set_properties(
@@ -256,7 +265,7 @@ class Basic_Diode(_TwoPinMixIn):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "二极管"
 
 class Light_Emitting_Diode(_TwoPinMixIn):
@@ -283,7 +292,7 @@ class Light_Emitting_Diode(_TwoPinMixIn):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "发光二极管"
 
 class Ground_Component(CircuitBase):
@@ -307,7 +316,7 @@ class Ground_Component(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "接地"
 
     @property
@@ -339,7 +348,7 @@ class Transformer(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "理想变压器"
 
     @property
@@ -381,7 +390,7 @@ class Tapped_Transformer(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "中心抽头变压器"
 
     @property
@@ -427,7 +436,7 @@ class Mutual_Inductor(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "理想互感"
 
 
@@ -469,7 +478,7 @@ class Rectifier(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "全波整流器"
 
     @property
@@ -519,7 +528,7 @@ class Transistor(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "三极管"
 
     def set_properties(
@@ -593,7 +602,7 @@ class Comparator(CircuitBase):
 
     @property
     @final
-    def zh_name(self) -> str:
+    def zh_name(self) -> LiteralString:
         return "比较器"
 
     @property
