@@ -39,6 +39,11 @@ class Buzzer(_TwoPinMixIn):
             "DiagramRotation": 0
         }
 
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "嗡鸣器"
+
 class Spark_Gap(_TwoPinMixIn):
     ''' 火花隙 '''
     def __init__(
@@ -58,6 +63,11 @@ class Spark_Gap(_TwoPinMixIn):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "火花隙"
 
 class Tesla_Coil(_TwoPinMixIn):
     ''' 特斯拉线圈 '''
@@ -79,6 +89,11 @@ class Tesla_Coil(_TwoPinMixIn):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @property
+    @final
+    def zh_name(self) -> str:
+        return "特斯拉线圈"
 
 class Color_Light_Emitting_Diode(CircuitBase):
     ''' 彩色发光二极管 '''
