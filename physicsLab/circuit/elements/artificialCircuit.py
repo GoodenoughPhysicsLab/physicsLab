@@ -688,6 +688,11 @@ class Operational_Amplifier(CircuitBase):
             f"min_voltage={self.properties['最小电压']})"
 
     @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "运算放大器"
+
+    @property
     def i_neg(self) -> Pin:
         return Pin(self, 0)
 
@@ -736,6 +741,11 @@ class Relay_Component(CircuitBase):
             coil_inductance=coil_inductance,
             coil_resistance=coil_resistance,
         )
+
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "继电器"
 
     def set_properties(
              self,
@@ -817,6 +827,11 @@ class N_MOSFET(CircuitBase):
         }
         self.set_properties(beta=beta, threshold=threshold, max_power=max_power)
 
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "N-MOSFET"
+
     def set_properties(
             self,
             *,
@@ -875,6 +890,11 @@ class P_MOSFET(CircuitBase):
         }
 
     @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "P-MOSFET"
+
+    @property
     def G(self) -> Pin:
         return Pin(self, 0)
 
@@ -905,6 +925,11 @@ class Current_Source(_TwoPinMixIn):
             "DiagramPosition": {"X": 0,"Y": 0,"Magnitude": 0.0}, "DiagramRotation":0
         }
 
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "电流源"
+
 class _SourceElectricity(_TwoPinMixIn):
     ''' 波形发生器基类 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /) -> None:
@@ -930,6 +955,11 @@ class Sinewave_Source(_SourceElectricity):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Sinewave Source"
 
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "正弦波发生器"
+
 class Square_Source(_SourceElectricity):
     ''' 方波发生器 '''
     def __init__(
@@ -943,6 +973,11 @@ class Square_Source(_SourceElectricity):
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Square Source"
+
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "方波发生器"
 
 class Triangle_Source(_SourceElectricity):
     ''' 三角波发生器 '''
@@ -958,6 +993,11 @@ class Triangle_Source(_SourceElectricity):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Triangle Source"
 
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "三角波发生器"
+
 class Sawtooth_Source(_SourceElectricity):
     ''' 锯齿波发生器 '''
     def __init__(
@@ -972,6 +1012,11 @@ class Sawtooth_Source(_SourceElectricity):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Sawtooth Source"
 
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "锯齿波发生器"
+
 class Pulse_Source(_SourceElectricity):
     ''' 尖峰波发生器 '''
     def __init__(
@@ -985,3 +1030,9 @@ class Pulse_Source(_SourceElectricity):
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Pulse Source"
+
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "尖峰波发生器"
+
