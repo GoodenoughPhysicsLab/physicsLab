@@ -39,9 +39,9 @@ class Buzzer(_TwoPinMixIn):
             "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> str:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "嗡鸣器"
 
 class Spark_Gap(_TwoPinMixIn):
@@ -64,9 +64,9 @@ class Spark_Gap(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> str:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "火花隙"
 
 class Tesla_Coil(_TwoPinMixIn):
@@ -90,9 +90,9 @@ class Tesla_Coil(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> str:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "特斯拉线圈"
 
 class Color_Light_Emitting_Diode(CircuitBase):
@@ -118,9 +118,9 @@ class Color_Light_Emitting_Diode(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> str:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "彩色发光二极管"
 
     @property
@@ -161,9 +161,9 @@ class Dual_Light_Emitting_Diode(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> str:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "演示发光二极管"
 
 class Electric_Bell(_TwoPinMixIn):
@@ -187,9 +187,9 @@ class Electric_Bell(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> str:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "电铃"
 
 class Musical_Box(_TwoPinMixIn):
@@ -213,9 +213,9 @@ class Musical_Box(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> str:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "八音盒"
 
 class Resistance_Law(CircuitBase):
@@ -245,9 +245,9 @@ class Resistance_Law(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> str:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "电阻定律实验"
 
     @property
@@ -304,9 +304,9 @@ class Solenoid(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> str:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "通电螺线管"
 
     @property
@@ -349,9 +349,9 @@ class Electric_Fan(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> str:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "小电扇"
 
 class Simple_Instrument(CircuitBase):
@@ -403,9 +403,9 @@ class Simple_Instrument(CircuitBase):
             is_pulse=is_pulse,
         )
 
-    @property
     @final
-    def zh_name(self) -> str:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "简单乐器"
 
     @property

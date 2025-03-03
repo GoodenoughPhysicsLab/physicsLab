@@ -10,442 +10,442 @@
     </tr>
 </thead> <tbody>
     <tr>
-        <td> <a href="#Simple_Switch"><property object at 0x7117ff1530></a> </td>
+        <td> <a href="#Simple_Switch">简单开关</a> </td>
         <td>Simple_Switch</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Push_Switch"><property object at 0x7117ff3a10></a> </td>
+        <td> <a href="#Push_Switch">按钮开关</a> </td>
         <td>Push_Switch</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Air_Switch"><property object at 0x7117ff3b00></a> </td>
+        <td> <a href="#Air_Switch">空气开关</a> </td>
         <td>Air_Switch</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Incandescent_Lamp"><property object at 0x7117ff3bf0></a> </td>
+        <td> <a href="#Incandescent_Lamp">白炽灯泡</a> </td>
         <td>Incandescent_Lamp</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Battery_Source"><property object at 0x7117ff3ce0></a> </td>
+        <td> <a href="#Battery_Source">一节电池</a> </td>
         <td>Battery_Source</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Resistor"><property object at 0x7118008040></a> </td>
+        <td> <a href="#Resistor">电阻</a> </td>
         <td>Resistor</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Fuse_Component"><property object at 0x7118008180></a> </td>
+        <td> <a href="#Fuse_Component">保险丝</a> </td>
         <td>Fuse_Component</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Multimeter"><property object at 0x71180084a0></a> </td>
+        <td> <a href="#Multimeter">多用电表</a> </td>
         <td>Multimeter</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Basic_Capacitor"><property object at 0x7118041b70></a> </td>
+        <td> <a href="#Basic_Capacitor">电容</a> </td>
         <td>Basic_Capacitor</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Basic_Inductor"><property object at 0x7118041c60></a> </td>
+        <td> <a href="#Basic_Inductor">电感</a> </td>
         <td>Basic_Inductor</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Basic_Diode"><property object at 0x7118041d50></a> </td>
+        <td> <a href="#Basic_Diode">二极管</a> </td>
         <td>Basic_Diode</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Light_Emitting_Diode"><property object at 0x7118041e40></a> </td>
+        <td> <a href="#Light_Emitting_Diode">发光二极管</a> </td>
         <td>Light_Emitting_Diode</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Current_Source"><property object at 0x7118043510></a> </td>
+        <td> <a href="#Current_Source">电流源</a> </td>
         <td>Current_Source</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Sinewave_Source"><property object at 0x71180436a0></a> </td>
+        <td> <a href="#Sinewave_Source">正弦波发生器</a> </td>
         <td>Sinewave_Source</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Square_Source"><property object at 0x7118043740></a> </td>
+        <td> <a href="#Square_Source">方波发生器</a> </td>
         <td>Square_Source</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Triangle_Source"><property object at 0x71180437e0></a> </td>
+        <td> <a href="#Triangle_Source">三角波发生器</a> </td>
         <td>Triangle_Source</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Sawtooth_Source"><property object at 0x7118043880></a> </td>
+        <td> <a href="#Sawtooth_Source">锯齿波发生器</a> </td>
         <td>Sawtooth_Source</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Pulse_Source"><property object at 0x7118043920></a> </td>
+        <td> <a href="#Pulse_Source">尖峰波发生器</a> </td>
         <td>Pulse_Source</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Photodiode"><property object at 0x7118068d60></a> </td>
+        <td> <a href="#Photodiode">光电二极管</a> </td>
         <td>Photodiode</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Photoresistor"><property object at 0x7118069300></a> </td>
+        <td> <a href="#Photoresistor">光敏电阻</a> </td>
         <td>Photoresistor</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Buzzer"><property object at 0x711806be70></a> </td>
+        <td> <a href="#Buzzer">嗡鸣器</a> </td>
         <td>Buzzer</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Spark_Gap"><property object at 0x711806bf10></a> </td>
+        <td> <a href="#Spark_Gap">火花隙</a> </td>
         <td>Spark_Gap</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Tesla_Coil"><property object at 0x7118088040></a> </td>
+        <td> <a href="#Tesla_Coil">特斯拉线圈</a> </td>
         <td>Tesla_Coil</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Dual_Light_Emitting_Diode"><property object at 0x7118088360></a> </td>
+        <td> <a href="#Dual_Light_Emitting_Diode">演示发光二极管</a> </td>
         <td>Dual_Light_Emitting_Diode</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Electric_Bell"><property object at 0x7118088450></a> </td>
+        <td> <a href="#Electric_Bell">电铃</a> </td>
         <td>Electric_Bell</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Musical_Box"><property object at 0x7118088540></a> </td>
+        <td> <a href="#Musical_Box">八音盒</a> </td>
         <td>Musical_Box</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Electric_Fan"><property object at 0x7118088bd0></a> </td>
+        <td> <a href="#Electric_Fan">小电扇</a> </td>
         <td>Electric_Fan</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Simple_Switch"><property object at 0x7117ff1530></a> </td>
+        <td> <a href="#Simple_Switch">简单开关</a> </td>
         <td>Simple_Switch</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#SPDT_Switch"><property object at 0x7117ff1850></a> </td>
+        <td> <a href="#SPDT_Switch">单刀双掷开关</a> </td>
         <td>SPDT_Switch</td>
         <td>['l', 'mid', 'r']</td>
     </tr>
     <tr>
-        <td> <a href="#DPDT_Switch"><property object at 0x7117ff3740></a> </td>
+        <td> <a href="#DPDT_Switch">双刀双掷开关</a> </td>
         <td>DPDT_Switch</td>
         <td>['l_low', 'l_up', 'mid_low', 'mid_up', 'r_low', 'r_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Student_Source"><property object at 0x7117ff3dd0></a> </td>
+        <td> <a href="#Student_Source">学生电源</a> </td>
         <td>Student_Source</td>
         <td>['l', 'l_mid', 'r', 'r_mid']</td>
     </tr>
     <tr>
-        <td> <a href="#Slide_Rheostat"><property object at 0x7118008270></a> </td>
+        <td> <a href="#Slide_Rheostat">滑动变阻器</a> </td>
         <td>Slide_Rheostat</td>
         <td>['l_low', 'l_up', 'r_low', 'r_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Galvanometer"><property object at 0x7118008590></a> </td>
+        <td> <a href="#Galvanometer">灵敏电流计</a> </td>
         <td>Galvanometer</td>
         <td>['l', 'mid', 'r']</td>
     </tr>
     <tr>
-        <td> <a href="#Microammeter"><property object at 0x7118008770></a> </td>
+        <td> <a href="#Microammeter">微安表</a> </td>
         <td>Microammeter</td>
         <td>['l', 'mid', 'r']</td>
     </tr>
     <tr>
-        <td> <a href="#Electricity_Meter"><property object at 0x7118008950></a> </td>
+        <td> <a href="#Electricity_Meter">电能表</a> </td>
         <td>Electricity_Meter</td>
         <td>['l', 'l_mid', 'r', 'r_mid']</td>
     </tr>
     <tr>
-        <td> <a href="#Resistance_Box"><property object at 0x7118008b80></a> </td>
+        <td> <a href="#Resistance_Box">电阻箱</a> </td>
         <td>Resistance_Box</td>
         <td>['l', 'r']</td>
     </tr>
     <tr>
-        <td> <a href="#Simple_Ammeter"><property object at 0x7118008d60></a> </td>
+        <td> <a href="#Simple_Ammeter">直流安培表</a> </td>
         <td>Simple_Ammeter</td>
         <td>['l', 'mid', 'r']</td>
     </tr>
     <tr>
-        <td> <a href="#Simple_Voltmeter"><property object at 0x7118008f40></a> </td>
+        <td> <a href="#Simple_Voltmeter">直流电压表</a> </td>
         <td>Simple_Voltmeter</td>
         <td>['l', 'mid', 'r']</td>
     </tr>
     <tr>
-        <td> <a href="#Logic_Input"><property object at 0x711800b9c0></a> </td>
+        <td> <a href="#Logic_Input">逻辑输入</a> </td>
         <td>Logic_Input</td>
         <td>['o']</td>
     </tr>
     <tr>
-        <td> <a href="#Logic_Output"><property object at 0x711800bb00></a> </td>
+        <td> <a href="#Logic_Output">逻辑输出</a> </td>
         <td>Logic_Output</td>
         <td>['i']</td>
     </tr>
     <tr>
-        <td> <a href="#Yes_Gate"><property object at 0x711800bd80></a> </td>
+        <td> <a href="#Yes_Gate">是门</a> </td>
         <td>Yes_Gate</td>
         <td>['i', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#No_Gate"><property object at 0x711800be20></a> </td>
+        <td> <a href="#No_Gate">非门</a> </td>
         <td>No_Gate</td>
         <td>['i', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Or_Gate"><property object at 0x7118028090></a> </td>
+        <td> <a href="#Or_Gate">或门</a> </td>
         <td>Or_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#And_Gate"><property object at 0x7118028130></a> </td>
+        <td> <a href="#And_Gate">与门</a> </td>
         <td>And_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Nor_Gate"><property object at 0x71180281d0></a> </td>
+        <td> <a href="#Nor_Gate">或非门</a> </td>
         <td>Nor_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Nand_Gate"><property object at 0x7118028270></a> </td>
+        <td> <a href="#Nand_Gate">与非门</a> </td>
         <td>Nand_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Xor_Gate"><property object at 0x7118028310></a> </td>
+        <td> <a href="#Xor_Gate">异或门</a> </td>
         <td>Xor_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Xnor_Gate"><property object at 0x71180283b0></a> </td>
+        <td> <a href="#Xnor_Gate">同或门</a> </td>
         <td>Xnor_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Imp_Gate"><property object at 0x7118028450></a> </td>
+        <td> <a href="#Imp_Gate">蕴含门</a> </td>
         <td>Imp_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Nimp_Gate"><property object at 0x71180284f0></a> </td>
+        <td> <a href="#Nimp_Gate">蕴含非门</a> </td>
         <td>Nimp_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Half_Adder"><property object at 0x7118028770></a> </td>
+        <td> <a href="#Half_Adder">半加器</a> </td>
         <td>Half_Adder</td>
         <td>['i_low', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Full_Adder"><property object at 0x71180289a0></a> </td>
+        <td> <a href="#Full_Adder">全加器</a> </td>
         <td>Full_Adder</td>
         <td>['i_low', 'i_mid', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Half_Subtractor"><property object at 0x7118028b80></a> </td>
+        <td> <a href="#Half_Subtractor">半减器</a> </td>
         <td>Half_Subtractor</td>
         <td>['i_low', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Full_Subtractor"><property object at 0x7118028db0></a> </td>
+        <td> <a href="#Full_Subtractor">全减器</a> </td>
         <td>Full_Subtractor</td>
         <td>['i_low', 'i_mid', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Multiplier"><property object at 0x71180290d0></a> </td>
+        <td> <a href="#Multiplier">二位乘法器</a> </td>
         <td>Multiplier</td>
         <td>['i_low', 'i_lowmid', 'i_up', 'i_upmid', 'o_low', 'o_lowmid', 'o_up', 'o_upmid']</td>
     </tr>
     <tr>
-        <td> <a href="#D_Flipflop"><property object at 0x71180292b0></a> </td>
+        <td> <a href="#D_Flipflop">D触发器</a> </td>
         <td>D_Flipflop</td>
         <td>['i_low', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#T_Flipflop"><property object at 0x7118029490></a> </td>
+        <td> <a href="#T_Flipflop">T'触发器</a> </td>
         <td>T_Flipflop</td>
         <td>['i_low', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Real_T_Flipflop"><property object at 0x7118029670></a> </td>
+        <td> <a href="#Real_T_Flipflop">T触发器</a> </td>
         <td>Real_T_Flipflop</td>
         <td>['i_low', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#JK_Flipflop"><property object at 0x71180298a0></a> </td>
+        <td> <a href="#JK_Flipflop">JK触发器</a> </td>
         <td>JK_Flipflop</td>
         <td>['i_low', 'i_mid', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Counter"><property object at 0x7118029b20></a> </td>
+        <td> <a href="#Counter">计数器</a> </td>
         <td>Counter</td>
         <td>['i_low', 'i_up', 'o_low', 'o_lowmid', 'o_up', 'o_upmid']</td>
     </tr>
     <tr>
-        <td> <a href="#Random_Generator"><property object at 0x7118029da0></a> </td>
+        <td> <a href="#Random_Generator">随机数发生器</a> </td>
         <td>Random_Generator</td>
         <td>['i_low', 'i_up', 'o_low', 'o_lowmid', 'o_up', 'o_upmid']</td>
     </tr>
     <tr>
-        <td> <a href="#Eight_Bit_Input"><property object at 0x711802a0c0></a> </td>
+        <td> <a href="#Eight_Bit_Input">八位输入器</a> </td>
         <td>Eight_Bit_Input</td>
         <td>['i_low', 'i_lowmid', 'i_up', 'i_upmid', 'o_low', 'o_lowmid', 'o_up', 'o_upmid']</td>
     </tr>
     <tr>
-        <td> <a href="#Eight_Bit_Display"><property object at 0x711802a430></a> </td>
+        <td> <a href="#Eight_Bit_Display">八位显示器</a> </td>
         <td>Eight_Bit_Display</td>
         <td>['i_low', 'i_lowmid', 'i_up', 'i_upmid', 'o_low', 'o_lowmid', 'o_up', 'o_upmid']</td>
     </tr>
     <tr>
-        <td> <a href="#Proximity_Sensor"><property object at 0x71180693f0></a> </td>
+        <td> <a href="#Proximity_Sensor">临近传感器</a> </td>
         <td>Proximity_Sensor</td>
         <td>['o']</td>
     </tr>
     <tr>
-        <td> <a href="#Schmitt_Trigger"><property object at 0x711802a520></a> </td>
+        <td> <a href="#Schmitt_Trigger">施密特触发器</a> </td>
         <td>Schmitt_Trigger</td>
         <td>['i', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#NE555"><property object at 0x71180410d0></a> </td>
+        <td> <a href="#NE555">555定时器</a> </td>
         <td>NE555</td>
         <td>['Ctrl', 'Dis', 'Ground', 'Out', 'Reset', 'Thr', 'Trig', 'VCC']</td>
     </tr>
     <tr>
-        <td> <a href="#Ground_Component"><property object at 0x7118041f30></a> </td>
+        <td> <a href="#Ground_Component">接地</a> </td>
         <td>Ground_Component</td>
         <td>['i']</td>
     </tr>
     <tr>
-        <td> <a href="#Transformer"><property object at 0x7118042070></a> </td>
+        <td> <a href="#Transformer">理想变压器</a> </td>
         <td>Transformer</td>
         <td>['l_low', 'l_up', 'r_low', 'r_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Tapped_Transformer"><property object at 0x71180422a0></a> </td>
+        <td> <a href="#Tapped_Transformer">中心抽头变压器</a> </td>
         <td>Tapped_Transformer</td>
         <td>['l_low', 'l_up', 'mid', 'r_low', 'r_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Mutual_Inductor"><property object at 0x7118042520></a> </td>
+        <td> <a href="#Mutual_Inductor">理想互感</a> </td>
         <td>Mutual_Inductor</td>
         <td>['l_low', 'l_up', 'r_low', 'r_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Rectifier"><property object at 0x7118042750></a> </td>
+        <td> <a href="#Rectifier">全波整流器</a> </td>
         <td>Rectifier</td>
         <td>['l_low', 'l_up', 'r_low', 'r_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Transistor"><property object at 0x7118042980></a> </td>
+        <td> <a href="#Transistor">三极管</a> </td>
         <td>Transistor</td>
         <td>['B', 'C', 'E']</td>
     </tr>
     <tr>
-        <td> <a href="#Comparator"><property object at 0x7118042b60></a> </td>
+        <td> <a href="#Comparator">比较器</a> </td>
         <td>Comparator</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Operational_Amplifier"><property object at 0x7118042d40></a> </td>
+        <td> <a href="#Operational_Amplifier">运算放大器</a> </td>
         <td>Operational_Amplifier</td>
         <td>['i_neg', 'i_pos', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Relay_Component"><property object at 0x7118042f20></a> </td>
+        <td> <a href="#Relay_Component">继电器</a> </td>
         <td>Relay_Component</td>
         <td>['l_low', 'l_up', 'mid', 'r_low', 'r_up']</td>
     </tr>
     <tr>
-        <td> <a href="#N_MOSFET"><property object at 0x71180431a0></a> </td>
+        <td> <a href="#N_MOSFET">N-MOSFET</a> </td>
         <td>N_MOSFET</td>
         <td>['D', 'G', 'S']</td>
     </tr>
     <tr>
-        <td> <a href="#P_MOSFET"><property object at 0x7118043330></a> </td>
+        <td> <a href="#P_MOSFET">P-MOSFET</a> </td>
         <td>P_MOSFET</td>
         <td>['D', 'G', 'S']</td>
     </tr>
     <tr>
-        <td> <a href="#Accelerometer"><property object at 0x7118043ec0></a> </td>
+        <td> <a href="#Accelerometer">加速度计</a> </td>
         <td>Accelerometer</td>
         <td>['x', 'y', 'z']</td>
     </tr>
     <tr>
-        <td> <a href="#Attitude_Sensor"><property object at 0x71180684a0></a> </td>
+        <td> <a href="#Attitude_Sensor">姿态传感器</a> </td>
         <td>Attitude_Sensor</td>
         <td>['x', 'y', 'z']</td>
     </tr>
     <tr>
-        <td> <a href="#Gravity_Sensor"><property object at 0x7118068540></a> </td>
+        <td> <a href="#Gravity_Sensor">重力加速计</a> </td>
         <td>Gravity_Sensor</td>
         <td>['x', 'y', 'z']</td>
     </tr>
     <tr>
-        <td> <a href="#Gyroscope"><property object at 0x7118068680></a> </td>
+        <td> <a href="#Gyroscope">陀螺仪传感器</a> </td>
         <td>Gyroscope</td>
         <td>['x', 'y', 'z']</td>
     </tr>
     <tr>
-        <td> <a href="#Linear_Accelerometer"><property object at 0x71180688b0></a> </td>
+        <td> <a href="#Linear_Accelerometer">线性加速度计</a> </td>
         <td>Linear_Accelerometer</td>
         <td>['x', 'y', 'z']</td>
     </tr>
     <tr>
-        <td> <a href="#Magnetic_Field_Sensor"><property object at 0x7118068ae0></a> </td>
+        <td> <a href="#Magnetic_Field_Sensor">磁场传感器</a> </td>
         <td>Magnetic_Field_Sensor</td>
         <td>['x', 'y', 'z']</td>
     </tr>
     <tr>
-        <td> <a href="#Analog_Joystick"><property object at 0x7118068040></a> </td>
+        <td> <a href="#Analog_Joystick">模拟摇杆</a> </td>
         <td>Analog_Joystick</td>
         <td>['x1', 'x2', 'x3', 'y1', 'y2', 'y3']</td>
     </tr>
     <tr>
-        <td> <a href="#Color_Light_Emitting_Diode"><property object at 0x7118088130></a> </td>
+        <td> <a href="#Color_Light_Emitting_Diode">彩色发光二极管</a> </td>
         <td>Color_Light_Emitting_Diode</td>
         <td>['l_low', 'l_mid', 'l_up', 'r']</td>
     </tr>
     <tr>
-        <td> <a href="#Resistance_Law"><property object at 0x7118088630></a> </td>
+        <td> <a href="#Resistance_Law">电阻定律实验</a> </td>
         <td>Resistance_Law</td>
         <td>['l_low', 'l_lowmid', 'l_up', 'l_upmid', 'r_low', 'r_lowmid', 'r_up', 'r_upmid']</td>
     </tr>
     <tr>
-        <td> <a href="#Solenoid"><property object at 0x71180889a0></a> </td>
+        <td> <a href="#Solenoid">通电螺线管</a> </td>
         <td>Solenoid</td>
         <td>['black', 'red', 'subblack', 'subred']</td>
     </tr>
     <tr>
-        <td> <a href="#Simple_Instrument"><property object at 0x7118088db0></a> </td>
+        <td> <a href="#Simple_Instrument">简单乐器</a> </td>
         <td>Simple_Instrument</td>
         <td>['i', 'o']</td>
     </tr>
@@ -638,6 +638,11 @@ class Simple_Switch(CircuitBase):
 ```
 闭合开关  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Push_Switch"> Push_Switch </h2>
 ```Python
 class Push_Switch(CircuitBase):
@@ -691,6 +696,11 @@ class Push_Switch(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Air_Switch"> Air_Switch </h2>
 ```Python
@@ -758,6 +768,11 @@ class Air_Switch(CircuitBase):
 ```
 闭合开关  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Incandescent_Lamp"> Incandescent_Lamp </h2>
 ```Python
 class Incandescent_Lamp(CircuitBase):
@@ -811,6 +826,11 @@ class Incandescent_Lamp(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Battery_Source"> Battery_Source </h2>
 ```Python
@@ -874,6 +894,11 @@ class Battery_Source(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Resistor"> Resistor </h2>
 ```Python
@@ -941,6 +966,11 @@ class Resistor(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Fuse_Component"> Fuse_Component </h2>
 ```Python
 class Fuse_Component(CircuitBase):
@@ -995,6 +1025,11 @@ class Fuse_Component(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Multimeter"> Multimeter </h2>
 ```Python
 class Multimeter(CircuitBase):
@@ -1048,6 +1083,11 @@ class Multimeter(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Basic_Capacitor"> Basic_Capacitor </h2>
 ```Python
@@ -1118,6 +1158,11 @@ class Basic_Capacitor(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Basic_Inductor"> Basic_Inductor </h2>
 ```Python
@@ -1195,6 +1240,11 @@ class Basic_Inductor(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Basic_Diode"> Basic_Diode </h2>
 ```Python
 class Basic_Diode(CircuitBase):
@@ -1248,6 +1298,11 @@ class Basic_Diode(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Light_Emitting_Diode"> Light_Emitting_Diode </h2>
 ```Python
@@ -1303,6 +1358,11 @@ class Light_Emitting_Diode(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Current_Source"> Current_Source </h2>
 ```Python
 class Current_Source(CircuitBase):
@@ -1356,6 +1416,11 @@ class Current_Source(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Sinewave_Source"> Sinewave_Source </h2>
 ```Python
@@ -1411,6 +1476,11 @@ class Sinewave_Source(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Square_Source"> Square_Source </h2>
 ```Python
 class Square_Source(CircuitBase):
@@ -1464,6 +1534,11 @@ class Square_Source(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Triangle_Source"> Triangle_Source </h2>
 ```Python
@@ -1519,6 +1594,11 @@ class Triangle_Source(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Sawtooth_Source"> Sawtooth_Source </h2>
 ```Python
 class Sawtooth_Source(CircuitBase):
@@ -1572,6 +1652,11 @@ class Sawtooth_Source(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Pulse_Source"> Pulse_Source </h2>
 ```Python
@@ -1627,6 +1712,11 @@ class Pulse_Source(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Photodiode"> Photodiode </h2>
 ```Python
 class Photodiode(CircuitBase):
@@ -1680,6 +1770,11 @@ class Photodiode(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Photoresistor"> Photoresistor </h2>
 ```Python
@@ -1735,6 +1830,11 @@ class Photoresistor(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Buzzer"> Buzzer </h2>
 ```Python
 class Buzzer(CircuitBase):
@@ -1788,6 +1888,11 @@ class Buzzer(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Spark_Gap"> Spark_Gap </h2>
 ```Python
@@ -1843,6 +1948,11 @@ class Spark_Gap(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Tesla_Coil"> Tesla_Coil </h2>
 ```Python
 class Tesla_Coil(CircuitBase):
@@ -1896,6 +2006,11 @@ class Tesla_Coil(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Dual_Light_Emitting_Diode"> Dual_Light_Emitting_Diode </h2>
 ```Python
@@ -1951,6 +2066,11 @@ class Dual_Light_Emitting_Diode(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Electric_Bell"> Electric_Bell </h2>
 ```Python
 class Electric_Bell(CircuitBase):
@@ -2004,6 +2124,11 @@ class Electric_Bell(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Musical_Box"> Musical_Box </h2>
 ```Python
@@ -2059,6 +2184,11 @@ class Musical_Box(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Electric_Fan"> Electric_Fan </h2>
 ```Python
 class Electric_Fan(CircuitBase):
@@ -2112,6 +2242,11 @@ class Electric_Fan(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Simple_Switch"> Simple_Switch </h2>
 ```Python
@@ -2178,6 +2313,11 @@ class Simple_Switch(CircuitBase):
     def turn_on_switch(self) -> Self
 ```
 闭合开关  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="SPDT_Switch"> SPDT_Switch </h2>
 ```Python
@@ -2251,6 +2391,11 @@ class SPDT_Switch(CircuitBase):
 ```
 断开开关  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="DPDT_Switch"> DPDT_Switch </h2>
 ```Python
 class DPDT_Switch(CircuitBase):
@@ -2323,6 +2468,11 @@ class DPDT_Switch(CircuitBase):
 ```
 断开开关  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Student_Source"> Student_Source </h2>
 ```Python
 class Student_Source(CircuitBase):
@@ -2376,6 +2526,11 @@ class Student_Source(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Slide_Rheostat"> Slide_Rheostat </h2>
 ```Python
@@ -2431,6 +2586,11 @@ class Slide_Rheostat(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Galvanometer"> Galvanometer </h2>
 ```Python
 class Galvanometer(CircuitBase):
@@ -2484,6 +2644,11 @@ class Galvanometer(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Microammeter"> Microammeter </h2>
 ```Python
@@ -2539,6 +2704,11 @@ class Microammeter(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Electricity_Meter"> Electricity_Meter </h2>
 ```Python
 class Electricity_Meter(CircuitBase):
@@ -2592,6 +2762,11 @@ class Electricity_Meter(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Resistance_Box"> Resistance_Box </h2>
 ```Python
@@ -2654,6 +2829,11 @@ class Resistance_Box(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Simple_Ammeter"> Simple_Ammeter </h2>
 ```Python
 class Simple_Ammeter(CircuitBase):
@@ -2708,6 +2888,11 @@ class Simple_Ammeter(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Simple_Voltmeter"> Simple_Voltmeter </h2>
 ```Python
 class Simple_Voltmeter(CircuitBase):
@@ -2761,6 +2946,11 @@ class Simple_Voltmeter(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Logic_Input"> Logic_Input </h2>
 ```Python
@@ -2846,6 +3036,11 @@ class Logic_Input(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Logic_Output"> Logic_Output </h2>
 ```Python
 class Logic_Output(CircuitBase):
@@ -2923,6 +3118,11 @@ class Logic_Output(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Yes_Gate"> Yes_Gate </h2>
 ```Python
@@ -3002,6 +3202,11 @@ class Yes_Gate(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="No_Gate"> No_Gate </h2>
 ```Python
 class No_Gate(CircuitBase):
@@ -3079,6 +3284,11 @@ class No_Gate(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Or_Gate"> Or_Gate </h2>
 ```Python
@@ -3158,6 +3368,11 @@ class Or_Gate(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="And_Gate"> And_Gate </h2>
 ```Python
 class And_Gate(CircuitBase):
@@ -3235,6 +3450,11 @@ class And_Gate(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Nor_Gate"> Nor_Gate </h2>
 ```Python
@@ -3314,6 +3534,11 @@ class Nor_Gate(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Nand_Gate"> Nand_Gate </h2>
 ```Python
 class Nand_Gate(CircuitBase):
@@ -3391,6 +3616,11 @@ class Nand_Gate(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Xor_Gate"> Xor_Gate </h2>
 ```Python
@@ -3470,6 +3700,11 @@ class Xor_Gate(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Xnor_Gate"> Xnor_Gate </h2>
 ```Python
 class Xnor_Gate(CircuitBase):
@@ -3547,6 +3782,11 @@ class Xnor_Gate(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Imp_Gate"> Imp_Gate </h2>
 ```Python
@@ -3626,6 +3866,11 @@ class Imp_Gate(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Nimp_Gate"> Nimp_Gate </h2>
 ```Python
 class Nimp_Gate(CircuitBase):
@@ -3703,6 +3948,11 @@ class Nimp_Gate(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Half_Adder"> Half_Adder </h2>
 ```Python
@@ -3782,6 +4032,11 @@ class Half_Adder(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Full_Adder"> Full_Adder </h2>
 ```Python
 class Full_Adder(CircuitBase):
@@ -3859,6 +4114,11 @@ class Full_Adder(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Half_Subtractor"> Half_Subtractor </h2>
 ```Python
@@ -3938,6 +4198,11 @@ class Half_Subtractor(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Full_Subtractor"> Full_Subtractor </h2>
 ```Python
 class Full_Subtractor(CircuitBase):
@@ -4015,6 +4280,11 @@ class Full_Subtractor(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Multiplier"> Multiplier </h2>
 ```Python
@@ -4094,6 +4364,11 @@ class Multiplier(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="D_Flipflop"> D_Flipflop </h2>
 ```Python
 class D_Flipflop(CircuitBase):
@@ -4171,6 +4446,11 @@ class D_Flipflop(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="T_Flipflop"> T_Flipflop </h2>
 ```Python
@@ -4250,6 +4530,11 @@ class T_Flipflop(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Real_T_Flipflop"> Real_T_Flipflop </h2>
 ```Python
 class Real_T_Flipflop(CircuitBase):
@@ -4327,6 +4612,11 @@ class Real_T_Flipflop(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="JK_Flipflop"> JK_Flipflop </h2>
 ```Python
@@ -4406,6 +4696,11 @@ class JK_Flipflop(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Counter"> Counter </h2>
 ```Python
 class Counter(CircuitBase):
@@ -4484,6 +4779,11 @@ class Counter(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Random_Generator"> Random_Generator </h2>
 ```Python
 class Random_Generator(CircuitBase):
@@ -4561,6 +4861,11 @@ class Random_Generator(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Eight_Bit_Input"> Eight_Bit_Input </h2>
 ```Python
@@ -4645,6 +4950,11 @@ class Eight_Bit_Input(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Eight_Bit_Display"> Eight_Bit_Display </h2>
 ```Python
 class Eight_Bit_Display(CircuitBase):
@@ -4722,6 +5032,11 @@ class Eight_Bit_Display(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Proximity_Sensor"> Proximity_Sensor </h2>
 ```Python
@@ -4801,6 +5116,11 @@ class Proximity_Sensor(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Schmitt_Trigger"> Schmitt_Trigger </h2>
 ```Python
 class Schmitt_Trigger(CircuitBase):
@@ -4865,6 +5185,11 @@ class Schmitt_Trigger(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="NE555"> NE555 </h2>
 ```Python
 class NE555(CircuitBase):
@@ -4918,6 +5243,11 @@ class NE555(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Ground_Component"> Ground_Component </h2>
 ```Python
@@ -4973,6 +5303,11 @@ class Ground_Component(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Transformer"> Transformer </h2>
 ```Python
 class Transformer(CircuitBase):
@@ -5026,6 +5361,11 @@ class Transformer(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Tapped_Transformer"> Tapped_Transformer </h2>
 ```Python
@@ -5081,6 +5421,11 @@ class Tapped_Transformer(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Mutual_Inductor"> Mutual_Inductor </h2>
 ```Python
 class Mutual_Inductor(CircuitBase):
@@ -5135,6 +5480,11 @@ class Mutual_Inductor(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Rectifier"> Rectifier </h2>
 ```Python
 class Rectifier(CircuitBase):
@@ -5188,6 +5538,11 @@ class Rectifier(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Transistor"> Transistor </h2>
 ```Python
@@ -5253,6 +5608,11 @@ class Transistor(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Comparator"> Comparator </h2>
 ```Python
 class Comparator(CircuitBase):
@@ -5306,6 +5666,11 @@ class Comparator(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Operational_Amplifier"> Operational_Amplifier </h2>
 ```Python
@@ -5375,6 +5740,11 @@ class Operational_Amplifier(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Relay_Component"> Relay_Component </h2>
 ```Python
 class Relay_Component(CircuitBase):
@@ -5423,22 +5793,16 @@ class Relay_Component(CircuitBase):
 设置元件的位置  
   
 
-### set_properties
-```Python
-    def set_properties(self, *, pull_in_current: Union[int, float, NoneType] = None, rated_current: Union[int, float, NoneType] = None, coil_inductance: Union[int, float, NoneType] = None, coil_resistance: Union[int, float, NoneType] = None) -> Self
-```
-修改运放属性  
-@param pull_in_current: 接通电流  
-@param rated_current: 额定电流  
-@param coil_inductance: 线圈电感  
-@param coil_resistance: 线圈电阻  
-  
-
 ### set_rotation
 ```Python
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="N_MOSFET"> N_MOSFET </h2>
 ```Python
@@ -5504,6 +5868,11 @@ class N_MOSFET(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="P_MOSFET"> P_MOSFET </h2>
 ```Python
 class P_MOSFET(CircuitBase):
@@ -5557,6 +5926,11 @@ class P_MOSFET(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Accelerometer"> Accelerometer </h2>
 ```Python
@@ -5612,6 +5986,11 @@ class Accelerometer(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Attitude_Sensor"> Attitude_Sensor </h2>
 ```Python
 class Attitude_Sensor(CircuitBase):
@@ -5665,6 +6044,11 @@ class Attitude_Sensor(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Gravity_Sensor"> Gravity_Sensor </h2>
 ```Python
@@ -5720,6 +6104,11 @@ class Gravity_Sensor(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Gyroscope"> Gyroscope </h2>
 ```Python
 class Gyroscope(CircuitBase):
@@ -5773,6 +6162,11 @@ class Gyroscope(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Linear_Accelerometer"> Linear_Accelerometer </h2>
 ```Python
@@ -5828,6 +6222,11 @@ class Linear_Accelerometer(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Magnetic_Field_Sensor"> Magnetic_Field_Sensor </h2>
 ```Python
 class Magnetic_Field_Sensor(CircuitBase):
@@ -5881,6 +6280,11 @@ class Magnetic_Field_Sensor(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Analog_Joystick"> Analog_Joystick </h2>
 ```Python
@@ -5936,6 +6340,11 @@ class Analog_Joystick(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Color_Light_Emitting_Diode"> Color_Light_Emitting_Diode </h2>
 ```Python
 class Color_Light_Emitting_Diode(CircuitBase):
@@ -5989,6 +6398,11 @@ class Color_Light_Emitting_Diode(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Resistance_Law"> Resistance_Law </h2>
 ```Python
@@ -6044,6 +6458,11 @@ class Resistance_Law(CircuitBase):
 ```
 设置元件的角度  
 
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
+
 ## <h2 id="Solenoid"> Solenoid </h2>
 ```Python
 class Solenoid(CircuitBase):
@@ -6097,6 +6516,11 @@ class Solenoid(CircuitBase):
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
 ```
 设置元件的角度  
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```
 
 ## <h2 id="Simple_Instrument"> Simple_Instrument </h2>
 ```Python
@@ -6177,3 +6601,8 @@ rising_falling = True 时，为升调，为 False 时降调
 C0 ~ C8  
 注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120  
   
+
+### zh_name
+```Python
+    def zh_name() -> LiteralString
+```

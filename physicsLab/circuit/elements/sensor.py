@@ -45,9 +45,9 @@ class Accelerometer(_MemsBase):
         self.data["Properties"]["偏移"] = 0.75
         self.data["Properties"]["响应系数"] = 0.2290000021457672
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "加速度计"
 
 class Analog_Joystick(CircuitBase):
@@ -63,9 +63,9 @@ class Analog_Joystick(CircuitBase):
             "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "模拟摇杆"
 
     @property
@@ -101,9 +101,9 @@ class Attitude_Sensor(_MemsBase):
         self.data["Properties"]["偏移"] = 2.5
         self.data["Properties"]["响应系数"] = 0.012500000186264515
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "姿态传感器"
 
 class Gravity_Sensor(_MemsBase):
@@ -115,9 +115,9 @@ class Gravity_Sensor(_MemsBase):
         self.data["Properties"]["偏移"] = 0.75
         self.data["Properties"]["响应系数"] = 0.2290000021457672
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "重力加速计"
 
 class Gyroscope(_MemsBase):
@@ -129,9 +129,9 @@ class Gyroscope(_MemsBase):
         self.data["Properties"]["偏移"] = 2.5
         self.data["Properties"]["响应系数"] = 0.012500000186264515
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "陀螺仪传感器"
 
 class Linear_Accelerometer(_MemsBase):
@@ -143,9 +143,9 @@ class Linear_Accelerometer(_MemsBase):
         self.data["Properties"]["偏移"] = 0.75
         self.data["Properties"]["响应系数"] = 0.2290000021457672
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "线性加速度计"
 
 class Magnetic_Field_Sensor(_MemsBase):
@@ -157,9 +157,9 @@ class Magnetic_Field_Sensor(_MemsBase):
         self.data["Properties"]["偏移"] = 3.200000047683716
         self.data["Properties"]["响应系数"] = 80
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "磁场传感器"
 
 class Photodiode(_TwoPinMixIn):
@@ -176,9 +176,9 @@ class Photodiode(_TwoPinMixIn):
             "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "光电二极管"
 
 class Photoresistor(_TwoPinMixIn):
@@ -195,9 +195,9 @@ class Photoresistor(_TwoPinMixIn):
             "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "光敏电阻"
 
 class Proximity_Sensor(_LogicBase):
@@ -213,9 +213,9 @@ class Proximity_Sensor(_LogicBase):
             "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "临近传感器"
 
     @property

@@ -82,9 +82,9 @@ class Logic_Input(_LogicBase):
         self.properties["开关"] = int(status)
         return self
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "逻辑输入"
 
     @property
@@ -111,9 +111,9 @@ class Logic_Output(_LogicBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "逻辑输出"
 
     @property
@@ -153,9 +153,9 @@ class Yes_Gate(_2_Pin_Gate):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Yes Gate"
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "是门"
 
 class No_Gate(_2_Pin_Gate):
@@ -172,9 +172,9 @@ class No_Gate(_2_Pin_Gate):
         super().__init__(x, y, z)
         self.data["ModelID"] = "No Gate"
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "非门"
 
 class _3_Pin_Gate(_LogicBase):
@@ -214,9 +214,9 @@ class Or_Gate(_3_Pin_Gate):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Or Gate"
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "或门"
 
 class And_Gate(_3_Pin_Gate):
@@ -233,9 +233,9 @@ class And_Gate(_3_Pin_Gate):
         super().__init__(x, y, z)
         self.data["ModelID"] = "And Gate"
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "与门"
 
 class Nor_Gate(_3_Pin_Gate):
@@ -252,9 +252,9 @@ class Nor_Gate(_3_Pin_Gate):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Nor Gate"
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "或非门"
 
 class Nand_Gate(_3_Pin_Gate):
@@ -271,9 +271,9 @@ class Nand_Gate(_3_Pin_Gate):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Nand Gate"
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "与非门"
 
 class Xor_Gate(_3_Pin_Gate):
@@ -290,9 +290,9 @@ class Xor_Gate(_3_Pin_Gate):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Xor Gate"
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "异或门"
 
 class Xnor_Gate(_3_Pin_Gate):
@@ -309,9 +309,9 @@ class Xnor_Gate(_3_Pin_Gate):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Xnor Gate"
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "同或门"
 
 class Imp_Gate(_3_Pin_Gate):
@@ -328,9 +328,9 @@ class Imp_Gate(_3_Pin_Gate):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Imp Gate"
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "蕴含门"
 
 class Nimp_Gate(_3_Pin_Gate):
@@ -347,9 +347,9 @@ class Nimp_Gate(_3_Pin_Gate):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Nimp Gate"
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "蕴含非门"
 
 class _BigElement(_LogicBase):
@@ -395,9 +395,9 @@ class Half_Adder(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "半加器"
 
 class Full_Adder(_BigElement):
@@ -434,9 +434,9 @@ class Full_Adder(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "全加器"
 
 class Half_Subtractor(_BigElement):
@@ -473,9 +473,9 @@ class Half_Subtractor(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "半减器"
 
 class Full_Subtractor(_BigElement):
@@ -516,9 +516,9 @@ class Full_Subtractor(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "全减器"
 
 class Multiplier(_BigElement):
@@ -567,9 +567,9 @@ class Multiplier(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 3)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "二位乘法器"
 
 class D_Flipflop(_BigElement):
@@ -602,9 +602,9 @@ class D_Flipflop(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "D触发器"
 
 class T_Flipflop(_BigElement):
@@ -637,9 +637,9 @@ class T_Flipflop(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "T'触发器"
 
 class Real_T_Flipflop(_BigElement):
@@ -672,9 +672,9 @@ class Real_T_Flipflop(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "T触发器"
 
 class JK_Flipflop(_BigElement):
@@ -711,9 +711,9 @@ class JK_Flipflop(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 1)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "JK触发器"
 
 class Counter(_BigElement):
@@ -754,9 +754,9 @@ class Counter(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 3)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "计数器"
 
 class Random_Generator(_BigElement):
@@ -797,9 +797,9 @@ class Random_Generator(_BigElement):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 3)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "随机数发生器"
 
 class Eight_Bit_Input(_LogicBase):
@@ -870,9 +870,9 @@ class Eight_Bit_Input(_LogicBase):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 7)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "八位输入器"
 
 class Eight_Bit_Display(_LogicBase):
@@ -930,9 +930,9 @@ class Eight_Bit_Display(_LogicBase):
     def o_low(self) -> OutputPin:
         return OutputPin(self, 7)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "八位显示器"
 
 class Schmitt_Trigger(CircuitBase):
@@ -963,9 +963,9 @@ class Schmitt_Trigger(CircuitBase):
             low_level = min(high_level, 0)
         self.set_properties(high_level=high_level, low_level=low_level, inverted=inverted)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "施密特触发器"
 
     def set_properties(

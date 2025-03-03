@@ -42,9 +42,9 @@ class Simple_Switch(_SwitchBase, _TwoPinMixIn):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Simple Switch"
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "简单开关"
 
     def __repr__(self) -> str:
@@ -74,9 +74,9 @@ class SPDT_Switch(_SwitchBase):
         super().__init__(x, y, z)
         self.data["ModelID"] = "SPDT Switch"
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "单刀双掷开关"
 
     def __repr__(self) -> str:
@@ -125,9 +125,9 @@ class DPDT_Switch(_SwitchBase):
         super().__init__(x, y, z)
         self.data["ModelID"] = "DPDT Switch"
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "双刀双掷开关"
 
     def __repr__(self) -> str:
@@ -194,9 +194,9 @@ class Push_Switch(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "按钮开关"
 
 class Air_Switch(_TwoPinMixIn):
@@ -219,9 +219,9 @@ class Air_Switch(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "空气开关"
 
     @override
@@ -266,9 +266,9 @@ class Incandescent_Lamp(_TwoPinMixIn):
             "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "白炽灯泡"
 
 class Battery_Source(_TwoPinMixIn):
@@ -299,9 +299,9 @@ class Battery_Source(_TwoPinMixIn):
 
         self.set_properties(voltage=voltage, internal_resistance=internal_resistance)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "一节电池"
 
     def set_properties(
@@ -349,9 +349,9 @@ class Student_Source(CircuitBase):
             "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "学生电源"
 
     @property
@@ -392,9 +392,9 @@ class Resistor(_TwoPinMixIn):
         }
         self.set_resistance(resistance)
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "电阻"
 
     def set_resistance(self, resistance: num_type) -> Self:
@@ -436,9 +436,9 @@ class Fuse_Component(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "保险丝"
 
 class Slide_Rheostat(CircuitBase):
@@ -465,9 +465,9 @@ class Slide_Rheostat(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "滑动变阻器"
 
     @property
@@ -508,9 +508,9 @@ class Multimeter(_TwoPinMixIn):
             "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "多用电表"
 
 class Galvanometer(CircuitBase):
@@ -534,9 +534,9 @@ class Galvanometer(CircuitBase):
             "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "灵敏电流计"
 
     @property
@@ -572,9 +572,9 @@ class Microammeter(CircuitBase):
             "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "微安表"
 
     @property
@@ -610,9 +610,9 @@ class Electricity_Meter(CircuitBase):
             "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "电能表"
 
     @property
@@ -654,9 +654,9 @@ class Resistance_Box(CircuitBase):
             "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "电阻箱"
 
     @property
@@ -698,9 +698,9 @@ class Simple_Ammeter(CircuitBase):
             "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "直流安培表"
 
     @property
@@ -736,9 +736,9 @@ class Simple_Voltmeter(CircuitBase):
             "DiagramRotation": 0
         }
 
-    @property
     @final
-    def zh_name(self) -> LiteralString:
+    @staticmethod
+    def zh_name() -> LiteralString:
         return "直流电压表"
 
     @property
