@@ -56,7 +56,7 @@ class {cls.__name__}(CircuitBase):
 
         circuit_table += f'''
     <tr>
-        <td> <a href="#{cls.__name__}">{cls.__doc__}</a> </td>
+        <td> <a href="#{cls.__name__}">{cls.zh_name}</a> </td>
         <td>{cls.__name__}</td>
         <td>{pins}</td>
     </tr>'''

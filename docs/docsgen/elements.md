@@ -10,442 +10,442 @@
     </tr>
 </thead> <tbody>
     <tr>
-        <td> <a href="#Simple_Switch">简单开关 </a> </td>
+        <td> <a href="#Simple_Switch"><property object at 0x7117ff1530></a> </td>
         <td>Simple_Switch</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Push_Switch">按钮开关 </a> </td>
+        <td> <a href="#Push_Switch"><property object at 0x7117ff3a10></a> </td>
         <td>Push_Switch</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Air_Switch">空气开关 </a> </td>
+        <td> <a href="#Air_Switch"><property object at 0x7117ff3b00></a> </td>
         <td>Air_Switch</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Incandescent_Lamp">白炽灯泡 </a> </td>
+        <td> <a href="#Incandescent_Lamp"><property object at 0x7117ff3bf0></a> </td>
         <td>Incandescent_Lamp</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Battery_Source">一节电池 </a> </td>
+        <td> <a href="#Battery_Source"><property object at 0x7117ff3ce0></a> </td>
         <td>Battery_Source</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Resistor">电阻 </a> </td>
+        <td> <a href="#Resistor"><property object at 0x7118008040></a> </td>
         <td>Resistor</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Fuse_Component">保险丝 </a> </td>
+        <td> <a href="#Fuse_Component"><property object at 0x7118008180></a> </td>
         <td>Fuse_Component</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Multimeter">多用电表 </a> </td>
+        <td> <a href="#Multimeter"><property object at 0x71180084a0></a> </td>
         <td>Multimeter</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Basic_Capacitor">电容 </a> </td>
+        <td> <a href="#Basic_Capacitor"><property object at 0x7118041b70></a> </td>
         <td>Basic_Capacitor</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Basic_Inductor">电感 </a> </td>
+        <td> <a href="#Basic_Inductor"><property object at 0x7118041c60></a> </td>
         <td>Basic_Inductor</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Basic_Diode">二极管 </a> </td>
+        <td> <a href="#Basic_Diode"><property object at 0x7118041d50></a> </td>
         <td>Basic_Diode</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Light_Emitting_Diode">发光二极管 </a> </td>
+        <td> <a href="#Light_Emitting_Diode"><property object at 0x7118041e40></a> </td>
         <td>Light_Emitting_Diode</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Current_Source">电流源 </a> </td>
+        <td> <a href="#Current_Source"><property object at 0x7118043510></a> </td>
         <td>Current_Source</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Sinewave_Source">正弦波发生器 </a> </td>
+        <td> <a href="#Sinewave_Source"><property object at 0x71180436a0></a> </td>
         <td>Sinewave_Source</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Square_Source">方波发生器 </a> </td>
+        <td> <a href="#Square_Source"><property object at 0x7118043740></a> </td>
         <td>Square_Source</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Triangle_Source">三角波发生器 </a> </td>
+        <td> <a href="#Triangle_Source"><property object at 0x71180437e0></a> </td>
         <td>Triangle_Source</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Sawtooth_Source">锯齿波发生器 </a> </td>
+        <td> <a href="#Sawtooth_Source"><property object at 0x7118043880></a> </td>
         <td>Sawtooth_Source</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Pulse_Source">尖峰波发生器 </a> </td>
+        <td> <a href="#Pulse_Source"><property object at 0x7118043920></a> </td>
         <td>Pulse_Source</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Photodiode">光电二极管 </a> </td>
+        <td> <a href="#Photodiode"><property object at 0x7118068d60></a> </td>
         <td>Photodiode</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Photoresistor">光敏电阻 </a> </td>
+        <td> <a href="#Photoresistor"><property object at 0x7118069300></a> </td>
         <td>Photoresistor</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Buzzer">蜂鸣器 </a> </td>
+        <td> <a href="#Buzzer"><property object at 0x711806be70></a> </td>
         <td>Buzzer</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Spark_Gap">火花隙 </a> </td>
+        <td> <a href="#Spark_Gap"><property object at 0x711806bf10></a> </td>
         <td>Spark_Gap</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Tesla_Coil">特斯拉线圈 </a> </td>
+        <td> <a href="#Tesla_Coil"><property object at 0x7118088040></a> </td>
         <td>Tesla_Coil</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Dual_Light_Emitting_Diode">演示发光二极管 </a> </td>
+        <td> <a href="#Dual_Light_Emitting_Diode"><property object at 0x7118088360></a> </td>
         <td>Dual_Light_Emitting_Diode</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Electric_Bell">电铃 </a> </td>
+        <td> <a href="#Electric_Bell"><property object at 0x7118088450></a> </td>
         <td>Electric_Bell</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Musical_Box">八音盒 </a> </td>
+        <td> <a href="#Musical_Box"><property object at 0x7118088540></a> </td>
         <td>Musical_Box</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Electric_Fan">小电扇 </a> </td>
+        <td> <a href="#Electric_Fan"><property object at 0x7118088bd0></a> </td>
         <td>Electric_Fan</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#Simple_Switch">简单开关 </a> </td>
+        <td> <a href="#Simple_Switch"><property object at 0x7117ff1530></a> </td>
         <td>Simple_Switch</td>
         <td>['black', 'red']</td>
     </tr>
     <tr>
-        <td> <a href="#SPDT_Switch">单刀双掷开关 </a> </td>
+        <td> <a href="#SPDT_Switch"><property object at 0x7117ff1850></a> </td>
         <td>SPDT_Switch</td>
         <td>['l', 'mid', 'r']</td>
     </tr>
     <tr>
-        <td> <a href="#DPDT_Switch">双刀双掷开关 </a> </td>
+        <td> <a href="#DPDT_Switch"><property object at 0x7117ff3740></a> </td>
         <td>DPDT_Switch</td>
         <td>['l_low', 'l_up', 'mid_low', 'mid_up', 'r_low', 'r_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Student_Source">学生电源 </a> </td>
+        <td> <a href="#Student_Source"><property object at 0x7117ff3dd0></a> </td>
         <td>Student_Source</td>
         <td>['l', 'l_mid', 'r', 'r_mid']</td>
     </tr>
     <tr>
-        <td> <a href="#Slide_Rheostat">滑动变阻器 </a> </td>
+        <td> <a href="#Slide_Rheostat"><property object at 0x7118008270></a> </td>
         <td>Slide_Rheostat</td>
         <td>['l_low', 'l_up', 'r_low', 'r_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Galvanometer">灵敏电流计 </a> </td>
+        <td> <a href="#Galvanometer"><property object at 0x7118008590></a> </td>
         <td>Galvanometer</td>
         <td>['l', 'mid', 'r']</td>
     </tr>
     <tr>
-        <td> <a href="#Microammeter">微安表 </a> </td>
+        <td> <a href="#Microammeter"><property object at 0x7118008770></a> </td>
         <td>Microammeter</td>
         <td>['l', 'mid', 'r']</td>
     </tr>
     <tr>
-        <td> <a href="#Electricity_Meter">电能表 </a> </td>
+        <td> <a href="#Electricity_Meter"><property object at 0x7118008950></a> </td>
         <td>Electricity_Meter</td>
         <td>['l', 'l_mid', 'r', 'r_mid']</td>
     </tr>
     <tr>
-        <td> <a href="#Resistance_Box">电阻箱 </a> </td>
+        <td> <a href="#Resistance_Box"><property object at 0x7118008b80></a> </td>
         <td>Resistance_Box</td>
         <td>['l', 'r']</td>
     </tr>
     <tr>
-        <td> <a href="#Simple_Ammeter">直流安培表 </a> </td>
+        <td> <a href="#Simple_Ammeter"><property object at 0x7118008d60></a> </td>
         <td>Simple_Ammeter</td>
         <td>['l', 'mid', 'r']</td>
     </tr>
     <tr>
-        <td> <a href="#Simple_Voltmeter">直流电压表 </a> </td>
+        <td> <a href="#Simple_Voltmeter"><property object at 0x7118008f40></a> </td>
         <td>Simple_Voltmeter</td>
         <td>['l', 'mid', 'r']</td>
     </tr>
     <tr>
-        <td> <a href="#Logic_Input">逻辑输入 </a> </td>
+        <td> <a href="#Logic_Input"><property object at 0x711800b9c0></a> </td>
         <td>Logic_Input</td>
         <td>['o']</td>
     </tr>
     <tr>
-        <td> <a href="#Logic_Output">逻辑输出 </a> </td>
+        <td> <a href="#Logic_Output"><property object at 0x711800bb00></a> </td>
         <td>Logic_Output</td>
         <td>['i']</td>
     </tr>
     <tr>
-        <td> <a href="#Yes_Gate">是门 </a> </td>
+        <td> <a href="#Yes_Gate"><property object at 0x711800bd80></a> </td>
         <td>Yes_Gate</td>
         <td>['i', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#No_Gate">非门 </a> </td>
+        <td> <a href="#No_Gate"><property object at 0x711800be20></a> </td>
         <td>No_Gate</td>
         <td>['i', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Or_Gate">或门 </a> </td>
+        <td> <a href="#Or_Gate"><property object at 0x7118028090></a> </td>
         <td>Or_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#And_Gate">与门 </a> </td>
+        <td> <a href="#And_Gate"><property object at 0x7118028130></a> </td>
         <td>And_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Nor_Gate">或非门 </a> </td>
+        <td> <a href="#Nor_Gate"><property object at 0x71180281d0></a> </td>
         <td>Nor_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Nand_Gate">与非门 </a> </td>
+        <td> <a href="#Nand_Gate"><property object at 0x7118028270></a> </td>
         <td>Nand_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Xor_Gate">异或门 </a> </td>
+        <td> <a href="#Xor_Gate"><property object at 0x7118028310></a> </td>
         <td>Xor_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Xnor_Gate">同或门 </a> </td>
+        <td> <a href="#Xnor_Gate"><property object at 0x71180283b0></a> </td>
         <td>Xnor_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Imp_Gate">蕴含门 </a> </td>
+        <td> <a href="#Imp_Gate"><property object at 0x7118028450></a> </td>
         <td>Imp_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Nimp_Gate">蕴含非门 </a> </td>
+        <td> <a href="#Nimp_Gate"><property object at 0x71180284f0></a> </td>
         <td>Nimp_Gate</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Half_Adder">半加器 </a> </td>
+        <td> <a href="#Half_Adder"><property object at 0x7118028770></a> </td>
         <td>Half_Adder</td>
         <td>['i_low', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Full_Adder">全加器 </a> </td>
+        <td> <a href="#Full_Adder"><property object at 0x71180289a0></a> </td>
         <td>Full_Adder</td>
         <td>['i_low', 'i_mid', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Half_Subtractor">半减器 </a> </td>
+        <td> <a href="#Half_Subtractor"><property object at 0x7118028b80></a> </td>
         <td>Half_Subtractor</td>
         <td>['i_low', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Full_Subtractor">全减器 </a> </td>
+        <td> <a href="#Full_Subtractor"><property object at 0x7118028db0></a> </td>
         <td>Full_Subtractor</td>
         <td>['i_low', 'i_mid', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Multiplier">二位乘法器 </a> </td>
+        <td> <a href="#Multiplier"><property object at 0x71180290d0></a> </td>
         <td>Multiplier</td>
         <td>['i_low', 'i_lowmid', 'i_up', 'i_upmid', 'o_low', 'o_lowmid', 'o_up', 'o_upmid']</td>
     </tr>
     <tr>
-        <td> <a href="#D_Flipflop">D触发器 </a> </td>
+        <td> <a href="#D_Flipflop"><property object at 0x71180292b0></a> </td>
         <td>D_Flipflop</td>
         <td>['i_low', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#T_Flipflop">T'触发器 </a> </td>
+        <td> <a href="#T_Flipflop"><property object at 0x7118029490></a> </td>
         <td>T_Flipflop</td>
         <td>['i_low', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Real_T_Flipflop">T触发器 </a> </td>
+        <td> <a href="#Real_T_Flipflop"><property object at 0x7118029670></a> </td>
         <td>Real_T_Flipflop</td>
         <td>['i_low', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#JK_Flipflop">JK触发器 </a> </td>
+        <td> <a href="#JK_Flipflop"><property object at 0x71180298a0></a> </td>
         <td>JK_Flipflop</td>
         <td>['i_low', 'i_mid', 'i_up', 'o_low', 'o_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Counter">计数器 </a> </td>
+        <td> <a href="#Counter"><property object at 0x7118029b20></a> </td>
         <td>Counter</td>
         <td>['i_low', 'i_up', 'o_low', 'o_lowmid', 'o_up', 'o_upmid']</td>
     </tr>
     <tr>
-        <td> <a href="#Random_Generator">随机数发生器 </a> </td>
+        <td> <a href="#Random_Generator"><property object at 0x7118029da0></a> </td>
         <td>Random_Generator</td>
         <td>['i_low', 'i_up', 'o_low', 'o_lowmid', 'o_up', 'o_upmid']</td>
     </tr>
     <tr>
-        <td> <a href="#Eight_Bit_Input">八位输入器 </a> </td>
+        <td> <a href="#Eight_Bit_Input"><property object at 0x711802a0c0></a> </td>
         <td>Eight_Bit_Input</td>
         <td>['i_low', 'i_lowmid', 'i_up', 'i_upmid', 'o_low', 'o_lowmid', 'o_up', 'o_upmid']</td>
     </tr>
     <tr>
-        <td> <a href="#Eight_Bit_Display">八位显示器 </a> </td>
+        <td> <a href="#Eight_Bit_Display"><property object at 0x711802a430></a> </td>
         <td>Eight_Bit_Display</td>
         <td>['i_low', 'i_lowmid', 'i_up', 'i_upmid', 'o_low', 'o_lowmid', 'o_up', 'o_upmid']</td>
     </tr>
     <tr>
-        <td> <a href="#Proximity_Sensor">临近传感器 </a> </td>
+        <td> <a href="#Proximity_Sensor"><property object at 0x71180693f0></a> </td>
         <td>Proximity_Sensor</td>
         <td>['o']</td>
     </tr>
     <tr>
-        <td> <a href="#Schmitt_Trigger">施密特触发器 </a> </td>
+        <td> <a href="#Schmitt_Trigger"><property object at 0x711802a520></a> </td>
         <td>Schmitt_Trigger</td>
         <td>['i', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#NE555">555定时器 </a> </td>
+        <td> <a href="#NE555"><property object at 0x71180410d0></a> </td>
         <td>NE555</td>
         <td>['Ctrl', 'Dis', 'Ground', 'Out', 'Reset', 'Thr', 'Trig', 'VCC']</td>
     </tr>
     <tr>
-        <td> <a href="#Ground_Component">接地元件 </a> </td>
+        <td> <a href="#Ground_Component"><property object at 0x7118041f30></a> </td>
         <td>Ground_Component</td>
         <td>['i']</td>
     </tr>
     <tr>
-        <td> <a href="#Transformer">理想变压器 </a> </td>
+        <td> <a href="#Transformer"><property object at 0x7118042070></a> </td>
         <td>Transformer</td>
         <td>['l_low', 'l_up', 'r_low', 'r_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Tapped_Transformer">中心抽头变压器 </a> </td>
+        <td> <a href="#Tapped_Transformer"><property object at 0x71180422a0></a> </td>
         <td>Tapped_Transformer</td>
         <td>['l_low', 'l_up', 'mid', 'r_low', 'r_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Mutual_Inductor">理想互感 </a> </td>
+        <td> <a href="#Mutual_Inductor"><property object at 0x7118042520></a> </td>
         <td>Mutual_Inductor</td>
         <td>['l_low', 'l_up', 'r_low', 'r_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Rectifier">全波整流器 </a> </td>
+        <td> <a href="#Rectifier"><property object at 0x7118042750></a> </td>
         <td>Rectifier</td>
         <td>['l_low', 'l_up', 'r_low', 'r_up']</td>
     </tr>
     <tr>
-        <td> <a href="#Transistor">三极管 </a> </td>
+        <td> <a href="#Transistor"><property object at 0x7118042980></a> </td>
         <td>Transistor</td>
         <td>['B', 'C', 'E']</td>
     </tr>
     <tr>
-        <td> <a href="#Comparator">比较器 </a> </td>
+        <td> <a href="#Comparator"><property object at 0x7118042b60></a> </td>
         <td>Comparator</td>
         <td>['i_low', 'i_up', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Operational_Amplifier">运算放大器 </a> </td>
+        <td> <a href="#Operational_Amplifier"><property object at 0x7118042d40></a> </td>
         <td>Operational_Amplifier</td>
         <td>['i_neg', 'i_pos', 'o']</td>
     </tr>
     <tr>
-        <td> <a href="#Relay_Component">继电器 </a> </td>
+        <td> <a href="#Relay_Component"><property object at 0x7118042f20></a> </td>
         <td>Relay_Component</td>
         <td>['l_low', 'l_up', 'mid', 'r_low', 'r_up']</td>
     </tr>
     <tr>
-        <td> <a href="#N_MOSFET">N-MOSFET </a> </td>
+        <td> <a href="#N_MOSFET"><property object at 0x71180431a0></a> </td>
         <td>N_MOSFET</td>
         <td>['D', 'G', 'S']</td>
     </tr>
     <tr>
-        <td> <a href="#P_MOSFET">P-MOSFET </a> </td>
+        <td> <a href="#P_MOSFET"><property object at 0x7118043330></a> </td>
         <td>P_MOSFET</td>
         <td>['D', 'G', 'S']</td>
     </tr>
     <tr>
-        <td> <a href="#Accelerometer">加速度计 </a> </td>
+        <td> <a href="#Accelerometer"><property object at 0x7118043ec0></a> </td>
         <td>Accelerometer</td>
         <td>['x', 'y', 'z']</td>
     </tr>
     <tr>
-        <td> <a href="#Attitude_Sensor">姿态传感器 </a> </td>
+        <td> <a href="#Attitude_Sensor"><property object at 0x71180684a0></a> </td>
         <td>Attitude_Sensor</td>
         <td>['x', 'y', 'z']</td>
     </tr>
     <tr>
-        <td> <a href="#Gravity_Sensor">重力加速计 </a> </td>
+        <td> <a href="#Gravity_Sensor"><property object at 0x7118068540></a> </td>
         <td>Gravity_Sensor</td>
         <td>['x', 'y', 'z']</td>
     </tr>
     <tr>
-        <td> <a href="#Gyroscope">陀螺仪传感器 </a> </td>
+        <td> <a href="#Gyroscope"><property object at 0x7118068680></a> </td>
         <td>Gyroscope</td>
         <td>['x', 'y', 'z']</td>
     </tr>
     <tr>
-        <td> <a href="#Linear_Accelerometer">线性加速度计 </a> </td>
+        <td> <a href="#Linear_Accelerometer"><property object at 0x71180688b0></a> </td>
         <td>Linear_Accelerometer</td>
         <td>['x', 'y', 'z']</td>
     </tr>
     <tr>
-        <td> <a href="#Magnetic_Field_Sensor">磁场传感器 </a> </td>
+        <td> <a href="#Magnetic_Field_Sensor"><property object at 0x7118068ae0></a> </td>
         <td>Magnetic_Field_Sensor</td>
         <td>['x', 'y', 'z']</td>
     </tr>
     <tr>
-        <td> <a href="#Analog_Joystick">模拟摇杆 </a> </td>
+        <td> <a href="#Analog_Joystick"><property object at 0x7118068040></a> </td>
         <td>Analog_Joystick</td>
         <td>['x1', 'x2', 'x3', 'y1', 'y2', 'y3']</td>
     </tr>
     <tr>
-        <td> <a href="#Color_Light_Emitting_Diode">彩色发光二极管 </a> </td>
+        <td> <a href="#Color_Light_Emitting_Diode"><property object at 0x7118088130></a> </td>
         <td>Color_Light_Emitting_Diode</td>
         <td>['l_low', 'l_mid', 'l_up', 'r']</td>
     </tr>
     <tr>
-        <td> <a href="#Resistance_Law">电阻定律实验 </a> </td>
+        <td> <a href="#Resistance_Law"><property object at 0x7118088630></a> </td>
         <td>Resistance_Law</td>
         <td>['l_low', 'l_lowmid', 'l_up', 'l_upmid', 'r_low', 'r_lowmid', 'r_up', 'r_upmid']</td>
     </tr>
     <tr>
-        <td> <a href="#Solenoid">通电螺线管 </a> </td>
+        <td> <a href="#Solenoid"><property object at 0x71180889a0></a> </td>
         <td>Solenoid</td>
         <td>['black', 'red', 'subblack', 'subred']</td>
     </tr>
     <tr>
-        <td> <a href="#Simple_Instrument">简单乐器 </a> </td>
+        <td> <a href="#Simple_Instrument"><property object at 0x7118088db0></a> </td>
         <td>Simple_Instrument</td>
         <td>['i', 'o']</td>
     </tr>
@@ -603,6 +603,7 @@ class Simple_Switch(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -610,6 +611,7 @@ class Simple_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -667,6 +669,7 @@ class Push_Switch(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -674,6 +677,7 @@ class Push_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -719,6 +723,7 @@ class Air_Switch(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -726,6 +731,7 @@ class Air_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -783,6 +789,7 @@ class Incandescent_Lamp(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -790,6 +797,7 @@ class Incandescent_Lamp(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -835,6 +843,7 @@ class Battery_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -842,6 +851,7 @@ class Battery_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -857,6 +867,7 @@ class Battery_Source(CircuitBase):
 设置 一节电池 的属性  
 @param voltage: 电压  
 @param internal_resistance: 内阻  
+  
 
 ### set_rotation
 ```Python
@@ -901,6 +912,7 @@ class Resistor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -908,6 +920,7 @@ class Resistor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -959,6 +972,7 @@ class Fuse_Component(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -966,6 +980,7 @@ class Fuse_Component(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1011,6 +1026,7 @@ class Multimeter(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1018,6 +1034,7 @@ class Multimeter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1041,6 +1058,7 @@ class Basic_Capacitor(CircuitBase):
 @param is_ideal: 是否为理想模式  
 @param peak_voltage: 峰值电压, 单位为V  
 @param internal_resistance: 内阻, 单位为Ω  
+  
 
 ### get_all_pins_property
 ```Python
@@ -1067,6 +1085,7 @@ class Basic_Capacitor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1074,6 +1093,7 @@ class Basic_Capacitor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1091,6 +1111,7 @@ class Basic_Capacitor(CircuitBase):
 @param is_ideal: 是否为理想模式  
 @param peak_voltage: 峰值电压, 单位为V  
 @param internal_resistance: 内阻, 单位为Ω  
+  
 
 ### set_rotation
 ```Python
@@ -1107,6 +1128,7 @@ class Basic_Inductor(CircuitBase):
 @param inductance: 电感，单位为 Henry  
 @param internal_resistance: 电感内部阻抗，单位为 Ohm  
 @param is_ideal: 是否为理想模式  
+  
 
 ### fix_inductance
 ```Python
@@ -1139,6 +1161,7 @@ class Basic_Inductor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1146,6 +1169,7 @@ class Basic_Inductor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1163,6 +1187,7 @@ class Basic_Inductor(CircuitBase):
 @param inductance: 电感，单位为 Henry  
 @param internal_resistance: 电感内部阻抗，单位为 Ohm  
 @param is_ideal: 是否为理想模式  
+  
 
 ### set_rotation
 ```Python
@@ -1201,6 +1226,7 @@ class Basic_Diode(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1208,6 +1234,7 @@ class Basic_Diode(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1253,6 +1280,7 @@ class Light_Emitting_Diode(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1260,6 +1288,7 @@ class Light_Emitting_Diode(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1305,6 +1334,7 @@ class Current_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1312,6 +1342,7 @@ class Current_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1357,6 +1388,7 @@ class Sinewave_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1364,6 +1396,7 @@ class Sinewave_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1409,6 +1442,7 @@ class Square_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1416,6 +1450,7 @@ class Square_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1461,6 +1496,7 @@ class Triangle_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1468,6 +1504,7 @@ class Triangle_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1513,6 +1550,7 @@ class Sawtooth_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1520,6 +1558,7 @@ class Sawtooth_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1565,6 +1604,7 @@ class Pulse_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1572,6 +1612,7 @@ class Pulse_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1617,6 +1658,7 @@ class Photodiode(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1624,6 +1666,7 @@ class Photodiode(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1669,6 +1712,7 @@ class Photoresistor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1676,6 +1720,7 @@ class Photoresistor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1721,6 +1766,7 @@ class Buzzer(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1728,6 +1774,7 @@ class Buzzer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1773,6 +1820,7 @@ class Spark_Gap(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1780,6 +1828,7 @@ class Spark_Gap(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1825,6 +1874,7 @@ class Tesla_Coil(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1832,6 +1882,7 @@ class Tesla_Coil(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1877,6 +1928,7 @@ class Dual_Light_Emitting_Diode(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1884,6 +1936,7 @@ class Dual_Light_Emitting_Diode(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1929,6 +1982,7 @@ class Electric_Bell(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1936,6 +1990,7 @@ class Electric_Bell(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1981,6 +2036,7 @@ class Musical_Box(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -1988,6 +2044,7 @@ class Musical_Box(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2033,6 +2090,7 @@ class Electric_Fan(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2040,6 +2098,7 @@ class Electric_Fan(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2085,6 +2144,7 @@ class Simple_Switch(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2092,6 +2152,7 @@ class Simple_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2155,6 +2216,7 @@ class SPDT_Switch(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2162,6 +2224,7 @@ class SPDT_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### right_turn_on_switch
 ```Python
@@ -2225,6 +2288,7 @@ class DPDT_Switch(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2232,6 +2296,7 @@ class DPDT_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### right_turn_on_switch
 ```Python
@@ -2289,6 +2354,7 @@ class Student_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2296,6 +2362,7 @@ class Student_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2341,6 +2408,7 @@ class Slide_Rheostat(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2348,6 +2416,7 @@ class Slide_Rheostat(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2393,6 +2462,7 @@ class Galvanometer(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2400,6 +2470,7 @@ class Galvanometer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2445,6 +2516,7 @@ class Microammeter(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2452,6 +2524,7 @@ class Microammeter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2497,6 +2570,7 @@ class Electricity_Meter(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2504,6 +2578,7 @@ class Electricity_Meter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2549,6 +2624,7 @@ class Resistance_Box(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2556,6 +2632,7 @@ class Resistance_Box(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2608,6 +2685,7 @@ class Simple_Ammeter(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2615,6 +2693,7 @@ class Simple_Ammeter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2660,6 +2739,7 @@ class Simple_Voltmeter(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2667,6 +2747,7 @@ class Simple_Voltmeter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2724,6 +2805,7 @@ class Logic_Input(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2731,6 +2813,7 @@ class Logic_Input(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -2806,6 +2889,7 @@ class Logic_Output(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2813,6 +2897,7 @@ class Logic_Output(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -2882,6 +2967,7 @@ class Yes_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2889,6 +2975,7 @@ class Yes_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -2958,6 +3045,7 @@ class No_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -2965,6 +3053,7 @@ class No_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -3034,6 +3123,7 @@ class Or_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -3041,6 +3131,7 @@ class Or_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -3110,6 +3201,7 @@ class And_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -3117,6 +3209,7 @@ class And_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -3186,6 +3279,7 @@ class Nor_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -3193,6 +3287,7 @@ class Nor_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -3262,6 +3357,7 @@ class Nand_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -3269,6 +3365,7 @@ class Nand_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -3338,6 +3435,7 @@ class Xor_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -3345,6 +3443,7 @@ class Xor_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -3414,6 +3513,7 @@ class Xnor_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -3421,6 +3521,7 @@ class Xnor_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -3490,6 +3591,7 @@ class Imp_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -3497,6 +3599,7 @@ class Imp_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -3566,6 +3669,7 @@ class Nimp_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -3573,6 +3677,7 @@ class Nimp_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -3642,6 +3747,7 @@ class Half_Adder(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -3649,6 +3755,7 @@ class Half_Adder(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -3718,6 +3825,7 @@ class Full_Adder(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -3725,6 +3833,7 @@ class Full_Adder(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -3794,6 +3903,7 @@ class Half_Subtractor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -3801,6 +3911,7 @@ class Half_Subtractor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -3870,6 +3981,7 @@ class Full_Subtractor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -3877,6 +3989,7 @@ class Full_Subtractor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -3946,6 +4059,7 @@ class Multiplier(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -3953,6 +4067,7 @@ class Multiplier(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -4022,6 +4137,7 @@ class D_Flipflop(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -4029,6 +4145,7 @@ class D_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -4098,6 +4215,7 @@ class T_Flipflop(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -4105,6 +4223,7 @@ class T_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -4174,6 +4293,7 @@ class Real_T_Flipflop(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -4181,6 +4301,7 @@ class Real_T_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -4250,6 +4371,7 @@ class JK_Flipflop(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -4257,6 +4379,7 @@ class JK_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -4326,6 +4449,7 @@ class Counter(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -4333,6 +4457,7 @@ class Counter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -4402,6 +4527,7 @@ class Random_Generator(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -4409,6 +4535,7 @@ class Random_Generator(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -4478,6 +4605,7 @@ class Eight_Bit_Input(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -4485,6 +4613,7 @@ class Eight_Bit_Input(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -4559,6 +4688,7 @@ class Eight_Bit_Display(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -4566,6 +4696,7 @@ class Eight_Bit_Display(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -4635,6 +4766,7 @@ class Proximity_Sensor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -4642,6 +4774,7 @@ class Proximity_Sensor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_high_level_value
 ```Python
@@ -4699,6 +4832,7 @@ class Schmitt_Trigger(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -4706,6 +4840,7 @@ class Schmitt_Trigger(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4722,6 +4857,7 @@ class Schmitt_Trigger(CircuitBase):
 @param high_level: 高电平电平  
 @param low_level: 低电平电平  
 @param inverted: 是否翻转  
+  
 
 ### set_rotation
 ```Python
@@ -4760,6 +4896,7 @@ class NE555(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -4767,6 +4904,7 @@ class NE555(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4812,6 +4950,7 @@ class Ground_Component(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -4819,6 +4958,7 @@ class Ground_Component(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4864,6 +5004,7 @@ class Transformer(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -4871,6 +5012,7 @@ class Transformer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4916,6 +5058,7 @@ class Tapped_Transformer(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -4923,6 +5066,7 @@ class Tapped_Transformer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4968,6 +5112,7 @@ class Mutual_Inductor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -4975,6 +5120,7 @@ class Mutual_Inductor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5020,6 +5166,7 @@ class Rectifier(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5027,6 +5174,7 @@ class Rectifier(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5044,7 +5192,7 @@ class Rectifier(CircuitBase):
 ## <h2 id="Transistor"> Transistor </h2>
 ```Python
 class Transistor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, is_PNP: bool = True, gain: Union[int, float] = 100.0, max_power: Union[int, float] = 5.0) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, is_PNP: bool = True, gain: Union[int, float] = 100, max_power: Union[int, float] = 1000) -> None
 ```
 
 ### get_all_pins_property
@@ -5072,6 +5220,7 @@ class Transistor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5079,6 +5228,7 @@ class Transistor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5095,6 +5245,7 @@ class Transistor(CircuitBase):
 @param is_PNP: 是PNP还是NPN, True时为PNP  
 @param gain: 放大系数  
 @param max_power: 最大功率  
+  
 
 ### set_rotation
 ```Python
@@ -5133,6 +5284,7 @@ class Comparator(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5140,6 +5292,7 @@ class Comparator(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5162,6 +5315,7 @@ class Operational_Amplifier(CircuitBase):
 @param gain: 增益系数  
 @param max_voltage: 最大电压  
 @param min_voltage: 最小电压  
+  
 
 ### get_all_pins_property
 ```Python
@@ -5188,6 +5342,7 @@ class Operational_Amplifier(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5195,6 +5350,7 @@ class Operational_Amplifier(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5211,6 +5367,7 @@ class Operational_Amplifier(CircuitBase):
 @param gain: 增益系数  
 @param max_voltage: 最大电压  
 @param min_voltage: 最小电压  
+  
 
 ### set_rotation
 ```Python
@@ -5249,6 +5406,7 @@ class Relay_Component(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5256,6 +5414,7 @@ class Relay_Component(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5273,6 +5432,7 @@ class Relay_Component(CircuitBase):
 @param rated_current: 额定电流  
 @param coil_inductance: 线圈电感  
 @param coil_resistance: 线圈电阻  
+  
 
 ### set_rotation
 ```Python
@@ -5311,6 +5471,7 @@ class N_MOSFET(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5318,6 +5479,7 @@ class N_MOSFET(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5334,6 +5496,7 @@ class N_MOSFET(CircuitBase):
 @param beta: 放大系数  
 @param threshold: 阈值电压  
 @param max_power: 最大功率  
+  
 
 ### set_rotation
 ```Python
@@ -5372,6 +5535,7 @@ class P_MOSFET(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5379,6 +5543,7 @@ class P_MOSFET(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5424,6 +5589,7 @@ class Accelerometer(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5431,6 +5597,7 @@ class Accelerometer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5476,6 +5643,7 @@ class Attitude_Sensor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5483,6 +5651,7 @@ class Attitude_Sensor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5528,6 +5697,7 @@ class Gravity_Sensor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5535,6 +5705,7 @@ class Gravity_Sensor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5580,6 +5751,7 @@ class Gyroscope(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5587,6 +5759,7 @@ class Gyroscope(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5632,6 +5805,7 @@ class Linear_Accelerometer(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5639,6 +5813,7 @@ class Linear_Accelerometer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5684,6 +5859,7 @@ class Magnetic_Field_Sensor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5691,6 +5867,7 @@ class Magnetic_Field_Sensor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5736,6 +5913,7 @@ class Analog_Joystick(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5743,6 +5921,7 @@ class Analog_Joystick(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5788,6 +5967,7 @@ class Color_Light_Emitting_Diode(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5795,6 +5975,7 @@ class Color_Light_Emitting_Diode(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5840,6 +6021,7 @@ class Resistance_Law(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5847,6 +6029,7 @@ class Resistance_Law(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5892,6 +6075,7 @@ class Solenoid(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5899,6 +6083,7 @@ class Solenoid(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5925,6 +6110,7 @@ class Simple_Instrument(CircuitBase):
 @param bpm: 节奏  
 @param is_ideal: 是否为理想模式  
 @param is_pulse: 简单乐器是否只响一次  
+  
 
 ### get_all_pins_property
 ```Python
@@ -5951,6 +6137,7 @@ class Simple_Instrument(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
+  
 
 ### rename
 ```Python
@@ -5958,6 +6145,7 @@ class Simple_Instrument(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5988,3 +6176,4 @@ rising_falling = True 时，为升调，为 False 时降调
 输入范围：  
 C0 ~ C8  
 注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120  
+  

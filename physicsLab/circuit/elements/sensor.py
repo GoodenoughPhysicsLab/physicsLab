@@ -1,7 +1,14 @@
 # -*- coding: utf-8 -*-
 from .._circuit_core import _TwoPinMixIn, CircuitBase, Pin
 from .logicCircuit import _LogicBase
-from physicsLab._typing import Optional, num_type, CircuitElementData, Generate
+from physicsLab._typing import (
+    Optional,
+    num_type,
+    CircuitElementData,
+    Generate,
+    LiteralString,
+    final,
+)
 
 class _MemsBase(CircuitBase):
     ''' 三引脚集成式传感器基类 '''
@@ -38,6 +45,11 @@ class Accelerometer(_MemsBase):
         self.data["Properties"]["偏移"] = 0.75
         self.data["Properties"]["响应系数"] = 0.2290000021457672
 
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "加速度计"
+
 class Analog_Joystick(CircuitBase):
     ''' 模拟摇杆 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
@@ -50,6 +62,11 @@ class Analog_Joystick(CircuitBase):
             "DiagramPosition": { "X": 0, "Y": 0, "Magnitude": 0 },
             "DiagramRotation": 0
         }
+
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "模拟摇杆"
 
     @property
     def x1(self) -> Pin:
@@ -84,6 +101,11 @@ class Attitude_Sensor(_MemsBase):
         self.data["Properties"]["偏移"] = 2.5
         self.data["Properties"]["响应系数"] = 0.012500000186264515
 
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "姿态传感器"
+
 class Gravity_Sensor(_MemsBase):
     ''' 重力加速计 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
@@ -92,6 +114,11 @@ class Gravity_Sensor(_MemsBase):
         self.data["Properties"]["量程"] = 2
         self.data["Properties"]["偏移"] = 0.75
         self.data["Properties"]["响应系数"] = 0.2290000021457672
+
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "重力加速计"
 
 class Gyroscope(_MemsBase):
     ''' 陀螺仪传感器 '''
@@ -102,6 +129,11 @@ class Gyroscope(_MemsBase):
         self.data["Properties"]["偏移"] = 2.5
         self.data["Properties"]["响应系数"] = 0.012500000186264515
 
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "陀螺仪传感器"
+
 class Linear_Accelerometer(_MemsBase):
     ''' 线性加速度计 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
@@ -111,6 +143,11 @@ class Linear_Accelerometer(_MemsBase):
         self.data["Properties"]["偏移"] = 0.75
         self.data["Properties"]["响应系数"] = 0.2290000021457672
 
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "线性加速度计"
+
 class Magnetic_Field_Sensor(_MemsBase):
     ''' 磁场传感器 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
@@ -119,6 +156,11 @@ class Magnetic_Field_Sensor(_MemsBase):
         self.data["Properties"]["量程"] = 0.03999999910593033
         self.data["Properties"]["偏移"] = 3.200000047683716
         self.data["Properties"]["响应系数"] = 80
+
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "磁场传感器"
 
 class Photodiode(_TwoPinMixIn):
     ''' 光电二极管 '''
@@ -134,6 +176,11 @@ class Photodiode(_TwoPinMixIn):
             "DiagramRotation": 0
         }
 
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "光电二极管"
+
 class Photoresistor(_TwoPinMixIn):
     ''' 光敏电阻 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
@@ -148,6 +195,11 @@ class Photoresistor(_TwoPinMixIn):
             "DiagramRotation": 0
         }
 
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "光敏电阻"
+
 class Proximity_Sensor(_LogicBase):
     ''' 临近传感器 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None) -> None:
@@ -160,6 +212,11 @@ class Proximity_Sensor(_LogicBase):
             "DiagramPosition": { "X": 0, "Y": 0, "Magnitude": 0 },
             "DiagramRotation": 0
         }
+
+    @property
+    @final
+    def zh_name(self) -> LiteralString:
+        return "临近传感器"
 
     @property
     def o(self) -> Pin:
