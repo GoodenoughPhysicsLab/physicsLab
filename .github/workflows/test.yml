@@ -43,6 +43,7 @@ jobs:
     - name: Test with unittest
       run: |
         coverage run -m unittest test_pl -v
+        python -m docsgen
 
     - name: Generate coverage report
       run: |
