@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 from physicsLab.savTemplate import Generate
 from ._electromagnetismBase import ElectromagnetismBase
-from physicsLab._typing import num_type, Optional
+from physicsLab._typing import (
+    num_type,
+    Optional,
+    final,
+)
 
 class Negative_Charge(ElectromagnetismBase):
-    ''' 负电荷 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
             "ModelID": "Negative Charge", "Identifier": Generate,
@@ -13,8 +16,12 @@ class Negative_Charge(ElectromagnetismBase):
             "AngularVelocity": "0,0,0"
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "负电荷"
+
 class Positive_Charge(ElectromagnetismBase):
-    ''' 正电荷 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
             "ModelID": "Positive Charge", "Identifier": Generate,
@@ -22,6 +29,11 @@ class Positive_Charge(ElectromagnetismBase):
             "Position": Generate, "Rotation": Generate, "Velocity": "0,0,0",
             "AngularVelocity": "0,0,0"
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "正电荷"
 
 class Negative_Test_Charge(ElectromagnetismBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
@@ -32,6 +44,11 @@ class Negative_Test_Charge(ElectromagnetismBase):
             'AngularVelocity': '0,0,0'
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "正试验电荷"
+
 class Positive_Test_Charge(ElectromagnetismBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
@@ -40,6 +57,11 @@ class Positive_Test_Charge(ElectromagnetismBase):
             'Position': Generate, 'Rotation': Generate, 'Velocity': '0,0,0',
             'AngularVelocity': '0,0,0'
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "负试验电荷"
 
 class Bar_Magnet(ElectromagnetismBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
@@ -50,6 +72,11 @@ class Bar_Magnet(ElectromagnetismBase):
             'AngularVelocity': '0,0,0'
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "条形磁铁"
+
 class Compass(ElectromagnetismBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
@@ -59,6 +86,11 @@ class Compass(ElectromagnetismBase):
             'Velocity': '0,0,0', 'AngularVelocity': '0,0,0'
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "指南针"
+
 class Uniform_Magnetic_Field(ElectromagnetismBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
@@ -67,3 +99,9 @@ class Uniform_Magnetic_Field(ElectromagnetismBase):
             'Position': Generate, 'Rotation': Generate,
             'Velocity': '0,0,0', 'AngularVelocity': '0,0,0'
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "匀强磁场"
+
