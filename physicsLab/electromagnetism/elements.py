@@ -5,6 +5,7 @@ from physicsLab._typing import (
     num_type,
     Optional,
     final,
+    LiteralString,
 )
 
 class Negative_Charge(ElectromagnetismBase):
