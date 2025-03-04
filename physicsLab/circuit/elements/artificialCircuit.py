@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
 from physicsLab._tools import round_data
 from .._circuit_core import CircuitBase, _TwoPinMixIn, Pin
-from physicsLab._typing import Optional, num_type, CircuitElementData, Generate, Self, override
+from physicsLab._typing import (
+    Optional,
+    num_type,
+    CircuitElementData,
+    Generate,
+    Self,
+    override,
+    LiteralString,
+    final,
+)
 
 class NE555(CircuitBase):
     ''' 555定时器 '''
@@ -25,6 +34,11 @@ class NE555(CircuitBase):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "555定时器"
 
     @property
     def VCC(self) -> Pin:
@@ -94,6 +108,11 @@ class Basic_Capacitor(_TwoPinMixIn):
             internal_resistance=internal_resistance,
             is_ideal=is_ideal,
         )
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "电容"
 
     def set_properties(
             self,
@@ -172,6 +191,11 @@ class Basic_Inductor(_TwoPinMixIn):
             is_ideal=is_ideal,
         )
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "电感"
+
     def set_properties(
             self,
             *,
@@ -239,6 +263,11 @@ class Basic_Diode(_TwoPinMixIn):
             "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "二极管"
+
 class Light_Emitting_Diode(_TwoPinMixIn):
     ''' 发光二极管 '''
     def __init__(
@@ -261,6 +290,11 @@ class Light_Emitting_Diode(_TwoPinMixIn):
             "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "发光二极管"
+
 class Ground_Component(CircuitBase):
     ''' 接地元件 '''
     def __init__(
@@ -279,6 +313,11 @@ class Ground_Component(CircuitBase):
             "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "接地"
 
     @property
     def i(self) -> Pin:
@@ -306,6 +345,11 @@ class Transformer(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "理想变压器"
 
     @property
     def l_up(self) -> Pin:
@@ -343,6 +387,11 @@ class Tapped_Transformer(CircuitBase):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "中心抽头变压器"
 
     @property
     def l_up(self) -> Pin:
@@ -385,6 +434,12 @@ class Mutual_Inductor(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "理想互感"
+
+
     @property
     def l_up(self) -> Pin:
         return Pin(self, 0)
@@ -420,6 +475,11 @@ class Rectifier(CircuitBase):
             "DiagramCached": False, "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "全波整流器"
 
     @property
     def l_up(self) -> Pin:
@@ -465,6 +525,11 @@ class Transistor(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
         self.set_properties(is_PNP=is_PNP, gain=gain, max_power=max_power)
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "三极管"
 
     def set_properties(
             self,
@@ -534,6 +599,11 @@ class Comparator(CircuitBase):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "比较器"
 
     @property
     def o(self) -> Pin:
@@ -617,6 +687,11 @@ class Operational_Amplifier(CircuitBase):
             f"max_voltage={self.properties['最大电压']}, " \
             f"min_voltage={self.properties['最小电压']})"
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "运算放大器"
+
     @property
     def i_neg(self) -> Pin:
         return Pin(self, 0)
@@ -697,6 +772,11 @@ class Relay_Component(CircuitBase):
              self.properties["线圈电阻"] = coil_resistance
          return self
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "继电器"
+
     @property
     def l_up(self) -> Pin:
         return Pin(self, 0)
@@ -746,6 +826,11 @@ class N_MOSFET(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
         self.set_properties(beta=beta, threshold=threshold, max_power=max_power)
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "N-MOSFET"
 
     def set_properties(
             self,
@@ -804,6 +889,11 @@ class P_MOSFET(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "P-MOSFET"
+
     @property
     def G(self) -> Pin:
         return Pin(self, 0)
@@ -835,6 +925,11 @@ class Current_Source(_TwoPinMixIn):
             "DiagramPosition": {"X": 0,"Y": 0,"Magnitude": 0.0}, "DiagramRotation":0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "电流源"
+
 class _SourceElectricity(_TwoPinMixIn):
     ''' 波形发生器基类 '''
     def __init__(self, x: num_type, y: num_type, z: num_type, /) -> None:
@@ -860,6 +955,11 @@ class Sinewave_Source(_SourceElectricity):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Sinewave Source"
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "正弦波发生器"
+
 class Square_Source(_SourceElectricity):
     ''' 方波发生器 '''
     def __init__(
@@ -873,6 +973,11 @@ class Square_Source(_SourceElectricity):
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Square Source"
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "方波发生器"
 
 class Triangle_Source(_SourceElectricity):
     ''' 三角波发生器 '''
@@ -888,6 +993,11 @@ class Triangle_Source(_SourceElectricity):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Triangle Source"
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "三角波发生器"
+
 class Sawtooth_Source(_SourceElectricity):
     ''' 锯齿波发生器 '''
     def __init__(
@@ -902,6 +1012,11 @@ class Sawtooth_Source(_SourceElectricity):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Sawtooth Source"
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "锯齿波发生器"
+
 class Pulse_Source(_SourceElectricity):
     ''' 尖峰波发生器 '''
     def __init__(
@@ -915,3 +1030,9 @@ class Pulse_Source(_SourceElectricity):
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Pulse Source"
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "尖峰波发生器"
+

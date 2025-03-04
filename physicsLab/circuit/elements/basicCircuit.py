@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
 from physicsLab._tools import round_data
 from .._circuit_core import CircuitBase, _TwoPinMixIn, Pin
-from physicsLab._typing import Optional, num_type, CircuitElementData, Self, Generate, override
+from physicsLab._typing import (
+    Optional,
+    num_type,
+    CircuitElementData,
+    Self,
+    Generate,
+    override,
+    LiteralString,
+    final,
+)
 
 class _SwitchBase(CircuitBase):
     ''' 开关基类 '''
@@ -33,6 +42,11 @@ class Simple_Switch(_SwitchBase, _TwoPinMixIn):
         super().__init__(x, y, z)
         self.data["ModelID"] = "Simple Switch"
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "简单开关"
+
     def __repr__(self) -> str:
         res = f"Simple_Switch({self._position.x}, {self._position.y}, {self._position.z}, " \
               f"elementXYZ={self.is_elementXYZ})"
@@ -59,6 +73,11 @@ class SPDT_Switch(_SwitchBase):
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "SPDT Switch"
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "单刀双掷开关"
 
     def __repr__(self) -> str:
         res = f"SPDT_Switch({self._position.x}, {self._position.y}, {self._position.z}, " \
@@ -105,6 +124,11 @@ class DPDT_Switch(_SwitchBase):
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "DPDT Switch"
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "双刀双掷开关"
 
     def __repr__(self) -> str:
         res = f"DPDT_Switch({self._position.x}, {self._position.y}, {self._position.z}, " \
@@ -170,6 +194,11 @@ class Push_Switch(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "按钮开关"
+
 class Air_Switch(_TwoPinMixIn):
     ''' 空气开关 '''
     def __init__(
@@ -189,6 +218,11 @@ class Air_Switch(_TwoPinMixIn):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "空气开关"
 
     @override
     def __repr__(self) -> str:
@@ -232,6 +266,11 @@ class Incandescent_Lamp(_TwoPinMixIn):
             "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "白炽灯泡"
+
 class Battery_Source(_TwoPinMixIn):
     ''' 一节电池 '''
     def __init__(
@@ -259,6 +298,11 @@ class Battery_Source(_TwoPinMixIn):
         }
 
         self.set_properties(voltage=voltage, internal_resistance=internal_resistance)
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "一节电池"
 
     def set_properties(
             self,
@@ -305,6 +349,11 @@ class Student_Source(CircuitBase):
             "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "学生电源"
+
     @property
     def l(self) -> Pin:
         return Pin(self, 0)
@@ -342,6 +391,11 @@ class Resistor(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
         self.set_resistance(resistance)
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "电阻"
 
     def set_resistance(self, resistance: num_type) -> Self:
         ''' 设置电阻值 '''
@@ -382,6 +436,11 @@ class Fuse_Component(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "保险丝"
+
 class Slide_Rheostat(CircuitBase):
     ''' 滑动变阻器 '''
     def __init__(
@@ -405,6 +464,11 @@ class Slide_Rheostat(CircuitBase):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "滑动变阻器"
 
     @property
     def l_low(self) -> Pin:
@@ -444,6 +508,11 @@ class Multimeter(_TwoPinMixIn):
             "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "多用电表"
+
 class Galvanometer(CircuitBase):
     ''' 灵敏电流计 '''
     def __init__(
@@ -464,6 +533,11 @@ class Galvanometer(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "灵敏电流计"
 
     @property
     def l(self) -> Pin:
@@ -498,6 +572,11 @@ class Microammeter(CircuitBase):
             "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "微安表"
+
     @property
     def l(self) -> Pin:
         return Pin(self, 0)
@@ -530,6 +609,11 @@ class Electricity_Meter(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "电能表"
 
     @property
     def l(self) -> Pin:
@@ -570,6 +654,11 @@ class Resistance_Box(CircuitBase):
             "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "电阻箱"
+
     @property
     def l(self) -> Pin:
         return Pin(self, 0)
@@ -609,6 +698,11 @@ class Simple_Ammeter(CircuitBase):
             "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "直流安培表"
+
     @property
     def l(self) -> Pin:
         return Pin(self, 0)
@@ -641,6 +735,11 @@ class Simple_Voltmeter(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "直流电压表"
 
     @property
     def l(self) -> Pin:

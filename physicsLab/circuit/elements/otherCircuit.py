@@ -4,7 +4,18 @@ import physicsLab.errors as errors
 
 from .._circuit_core import _TwoPinMixIn, CircuitBase, Pin
 from physicsLab._typing import (
-    Optional, num_type, CircuitElementData, Self, Generate, Union, List, override, Union, Tuple
+    Optional,
+    num_type,
+    CircuitElementData,
+    Self,
+    Generate,
+    Union,
+    List,
+    override,
+    Union,
+    Tuple,
+    LiteralString,
+    final,
 )
 
 class Buzzer(_TwoPinMixIn):
@@ -28,6 +39,11 @@ class Buzzer(_TwoPinMixIn):
             "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "嗡鸣器"
+
 class Spark_Gap(_TwoPinMixIn):
     ''' 火花隙 '''
     def __init__(
@@ -47,6 +63,11 @@ class Spark_Gap(_TwoPinMixIn):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "火花隙"
 
 class Tesla_Coil(_TwoPinMixIn):
     ''' 特斯拉线圈 '''
@@ -68,6 +89,11 @@ class Tesla_Coil(_TwoPinMixIn):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "特斯拉线圈"
 
 class Color_Light_Emitting_Diode(CircuitBase):
     ''' 彩色发光二极管 '''
@@ -91,6 +117,11 @@ class Color_Light_Emitting_Diode(CircuitBase):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "彩色发光二极管"
 
     @property
     def l_up(self) -> Pin:
@@ -130,6 +161,11 @@ class Dual_Light_Emitting_Diode(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "演示发光二极管"
+
 class Electric_Bell(_TwoPinMixIn):
     ''' 电铃 '''
     def __init__(
@@ -151,6 +187,11 @@ class Electric_Bell(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "电铃"
+
 class Musical_Box(_TwoPinMixIn):
     ''' 八音盒 '''
     def __init__(
@@ -171,6 +212,11 @@ class Musical_Box(_TwoPinMixIn):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "八音盒"
 
 class Resistance_Law(CircuitBase):
     ''' 电阻定律实验 '''
@@ -198,6 +244,11 @@ class Resistance_Law(CircuitBase):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "电阻定律实验"
 
     @property
     def l_low(self) -> Pin:
@@ -253,6 +304,11 @@ class Solenoid(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "通电螺线管"
+
     @property
     def subred(self) -> Pin:
         return Pin(self, 0)
@@ -292,6 +348,11 @@ class Electric_Fan(_TwoPinMixIn):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "小电扇"
 
 class Simple_Instrument(CircuitBase):
     ''' 简单乐器 '''
@@ -341,6 +402,11 @@ class Simple_Instrument(CircuitBase):
             is_ideal=is_ideal,
             is_pulse=is_pulse,
         )
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "简单乐器"
 
     @property
     def data(self) -> CircuitElementData:

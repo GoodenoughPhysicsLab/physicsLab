@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 ''' `physicsLab` 操作存档的核心文件
-    该文件提供操作存档的核心: `class _Experiment` 与所有元件的基类: class `_ElementBase`
+    该文件提供操作存档的核心: `class _Experiment` 与所有元件的基类: class `ElementBase`
     为了避免在physicsLab内出现大量的cyclic import
     该文件仅会对存档进行文件读写方面的操作, 将元件的的信息进一步导入由`class Experiment`负责
     `class Experiment`也提供了对用户更加友好的接口
 '''
 import os
+import abc
 import json
 import copy
 import time
@@ -688,6 +689,10 @@ class ElementBase:
     _position: _tools.position
 
     def __init__(self) -> None:
+        raise NotImplementedError
+
+    @abc.abstractmethod
+    def zh_name(self):
         raise NotImplementedError
 
     def set_position(self, x: num_type, y: num_type, z: num_type) -> Self:
