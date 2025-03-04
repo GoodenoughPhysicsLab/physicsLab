@@ -742,6 +742,36 @@ class Relay_Component(CircuitBase):
             coil_resistance=coil_resistance,
         )
 
+    def set_properties(
+             self,
+             *,
+             pull_in_current: Optional[num_type] = None,
+             rated_current: Optional[num_type] = None,
+             coil_inductance: Optional[num_type] = None,
+             coil_resistance: Optional[num_type] = None,
+     ) -> Self:
+         ''' 修改运放属性
+             @param pull_in_current: 接通电流
+             @param rated_current: 额定电流
+             @param coil_inductance: 线圈电感
+             @param coil_resistance: 线圈电阻
+         '''
+         if not isinstance(pull_in_current, (int, float, type(None))) \
+                 or not isinstance(rated_current, (int, float, type(None))) \
+                 or not isinstance(coil_inductance, (int, float, type(None))) \
+                 or not isinstance(coil_resistance, (int, float, type(None))):
+             raise TypeError
+
+         if pull_in_current is not None:
+             self.properties["接通电流"] = pull_in_current
+         if rated_current is not None:
+             self.properties["额定电流"] = rated_current
+         if coil_inductance is not None:
+             self.properties["线圈电感"] = coil_inductance
+         if coil_resistance is not None:
+             self.properties["线圈电阻"] = coil_resistance
+         return self
+
     @final
     @staticmethod
     def zh_name() -> LiteralString:
