@@ -5793,6 +5793,17 @@ class Relay_Component(CircuitBase):
 设置元件的位置  
   
 
+### set_properties
+```Python
+    def set_properties(self, *, pull_in_current: Union[int, float, NoneType] = None, rated_current: Union[int, float, NoneType] = None, coil_inductance: Union[int, float, NoneType] = None, coil_resistance: Union[int, float, NoneType] = None) -> Self
+```
+修改运放属性  
+@param pull_in_current: 接通电流  
+@param rated_current: 额定电流  
+@param coil_inductance: 线圈电感  
+@param coil_resistance: 线圈电阻  
+  
+
 ### set_rotation
 ```Python
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self

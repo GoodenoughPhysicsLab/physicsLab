@@ -77,14 +77,12 @@ class {cls.__name__}(CircuitBase):
 '''
 
     planet_table = ""
-    with Experiment(OpenMode.crt, "__test__", ExperimentType.Celestial, force_crt=True) as expe:
-        for cls in get_all_elements(PlanetBase):
-            planet_table += f'''
+    for cls in get_all_elements(PlanetBase):
+        planet_table += f'''
     <tr>
-        <td>{cls(0, 0, 0).data['Name']}</td>
+        <td>{cls.zh_name()}</td>
         <td>{cls.__name__}</td>
     </tr>'''
-        expe.close(delete=True)
 
     context += f'''
 ## 天体
