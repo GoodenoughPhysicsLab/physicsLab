@@ -6,6 +6,7 @@
     `class Experiment`也提供了对用户更加友好的接口
 '''
 import os
+import abc
 import json
 import copy
 import time

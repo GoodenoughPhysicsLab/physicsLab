@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import abc
 import inspect
 
 from physicsLab import errors

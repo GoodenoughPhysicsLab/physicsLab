@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 from physicsLab.savTemplate import Generate
 from ._planetbase import PlanetBase
-from physicsLab._typing import num_type, Optional
+from physicsLab._typing import (
+    num_type,
+    Optional,
+    LiteralString,
+    final,
+)
 
 class Mercury(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
@@ -20,6 +25,11 @@ class Mercury(PlanetBase):
             "PhaseCurrent": 0.0, "AxisSemi": 10.0, "Perihelion": 10.0,
             "Aphelion": 10.0, "LeavingKepler": False
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "水星"
 
 class Venus(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
@@ -40,6 +50,11 @@ class Venus(PlanetBase):
             "Aphelion": 10.0, "LeavingKepler": False
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "金星"
+
 class Earth(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
@@ -58,6 +73,12 @@ class Earth(PlanetBase):
             "AxisSemi": 10.0, "Perihelion": 10.0, "Aphelion": 10.0,
             "LeavingKepler": False
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "地球"
+
 class Mars(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
@@ -74,6 +95,11 @@ class Mars(PlanetBase):
             "Inclination": 0.0, "Phase": 0.0, "PhaseCurrent": 0.0, "AxisSemi": 10.0,
             "Perihelion": 10.0, "Aphelion": 10.0, "LeavingKepler": False
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "火星"
 
 class Jupiter(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
@@ -92,6 +118,11 @@ class Jupiter(PlanetBase):
             "Perihelion": 10.0, "Aphelion": 10.0, "LeavingKepler": False
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "木星"
+
 class Saturn(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
@@ -108,6 +139,11 @@ class Saturn(PlanetBase):
             "Inclination": 0.0, "Phase": 0.0, "PhaseCurrent": 0.0, "AxisSemi": 10.0,
             "Perihelion": 10.0, "Aphelion": 10.0, "LeavingKepler": False
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "土星"
 
 class Uranus(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
@@ -126,6 +162,11 @@ class Uranus(PlanetBase):
             "Perihelion": 10.0, "Aphelion": 10.0, "LeavingKepler": False
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "天王星"
+
 class Neptune(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
@@ -141,6 +182,11 @@ class Neptune(PlanetBase):
             "Inclination": 0.0, "Phase": 0.0, "PhaseCurrent": 0.0, "AxisSemi": 10.0,
             "Perihelion": 10.0, "Aphelion": 10.0, "LeavingKepler": False
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "海王星"
 
 class Pluto(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
@@ -159,6 +205,11 @@ class Pluto(PlanetBase):
             "Perihelion": 10.0, "Aphelion": 10.0, "LeavingKepler": False
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "冥王星"
+
 class Sun(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
@@ -175,6 +226,11 @@ class Sun(PlanetBase):
             "Inclination": 0.0, "Phase": 0.0, "PhaseCurrent": 0.0, "AxisSemi": 10.0,
             "Perihelion": 10.0, "Aphelion": 10.0, "LeavingKepler": False
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "太阳"
 
 class Blue_Giant(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
@@ -193,6 +249,11 @@ class Blue_Giant(PlanetBase):
             "Perihelion": 10.0, "Aphelion": 10.0, "LeavingKepler": False
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "蓝巨星"
+
 class Red_Giant(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
@@ -209,6 +270,11 @@ class Red_Giant(PlanetBase):
             "Inclination": 0.0, "Phase": 0.0, "PhaseCurrent": 0.0, "AxisSemi": 10.0,
             "Perihelion": 10.0, "Aphelion": 10.0, "LeavingKepler": False
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "红巨星"
 
 class Red_Dwarf(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
@@ -227,6 +293,11 @@ class Red_Dwarf(PlanetBase):
             "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "红矮星"
+
 class White_Dwarf(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
@@ -243,6 +314,11 @@ class White_Dwarf(PlanetBase):
             "Inclination": 0.0, "Phase": 0.0, "PhaseCurrent": 0.0, "AxisSemi": 10.0,
             "Perihelion": 10.0, "Aphelion": 10.0, "LeavingKepler": False
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "白矮星"
 
 class Blackhole(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
@@ -261,6 +337,11 @@ class Blackhole(PlanetBase):
             "Perihelion": 10.0, "Aphelion": 10.0, "LeavingKepler": False
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "黑洞"
+
 class Fantasy_Star(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
@@ -277,6 +358,11 @@ class Fantasy_Star(PlanetBase):
             "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN",
             "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "幻想恒星"
 
 class Moon(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
@@ -295,6 +381,11 @@ class Moon(PlanetBase):
             "Aphelion": "NaN", "LeavingKepler": False
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "月球"
+
 class Chocolate_Ball(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
@@ -310,6 +401,11 @@ class Chocolate_Ball(PlanetBase):
             "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN",
             "Aphelion": "NaN", "LeavingKepler": False
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "巧克力球"
 
 class Continential(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
@@ -328,6 +424,11 @@ class Continential(PlanetBase):
             "Aphelion": 10.0, "LeavingKepler": False
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "大陆行星"
+
 class Arctic(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
@@ -344,6 +445,11 @@ class Arctic(PlanetBase):
             "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN",
             "Aphelion": "NaN", "LeavingKepler": False
         }
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "封冻行星"
 
 class Arid(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
@@ -363,32 +469,135 @@ class Arid(PlanetBase):
             "Aphelion": "NaN", "LeavingKepler": False
         }
 
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "干旱行星"
+
 class Barren(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
-            "Identifier": Generate, "Model": "Barren", "Override": None, "Name": "贫瘠行星", "Parent": None, "Type": 1, "Changed": False, "Extras": {}, "Radius": 4541.27246, "RadiusVisible": 0.030356545, "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0, "Mass": 2.03722143, "OrbitType": 0, "OrbitEstimation": 3, "Density": 5.192983592302659, "Gravity": 6.5928702184257375, "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.10571566044065506, "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate, "Velocity": Generate, "Acceleration": Generate, "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False}
+            "Identifier": Generate, "Model": "Barren", "Override": None, "Name": "贫瘠行星",
+            "Parent": None, "Type": 1, "Changed": False, "Extras": {}, "Radius": 4541.27246,
+            "RadiusVisible": 0.030356545, "RotationPeriod": 1.0, "RotationPhase": 0.0,
+            "AxialTilt": 0.0, "Mass": 2.03722143, "OrbitType": 0, "OrbitEstimation": 3,
+            "Density": 5.192983592302659, "Gravity": 6.5928702184257375,
+            "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.10571566044065506,
+            "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0,
+            "Position": Generate, "Velocity": Generate, "Acceleration": Generate,
+            "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN",
+            "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN",
+            "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False}
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "贫瘠行星"
 
 class Desert(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
-            "Identifier": Generate, "Model": "Desert", "Override": None, "Name": "沙漠行星", "Parent": None, "Type": 1, "Changed": False, "Extras": {}, "Radius": 4934.40771, "RadiusVisible": 0.03298449, "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0, "Mass": 2.710787, "OrbitType": 0, "OrbitEstimation": 3, "Density": 5.386438443611148, "Gravity": 7.430477946170987, "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.21723898875306347, "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate, "Velocity": Generate, "Acceleration": Generate, "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False}
+            "Identifier": Generate, "Model": "Desert", "Override": None,
+            "Name": "沙漠行星", "Parent": None, "Type": 1, "Changed": False,
+            "Extras": {}, "Radius": 4934.40771, "RadiusVisible": 0.03298449,
+            "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0,
+            "Mass": 2.710787, "OrbitType": 0, "OrbitEstimation": 3,
+            "Density": 5.386438443611148, "Gravity": 7.430477946170987,
+            "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.21723898875306347,
+            "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0,
+            "Position": Generate, "Velocity": Generate, "Acceleration": Generate,
+            "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN",
+            "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN",
+            "AxisSemi": "NaN", "Perihelion": "NaN",
+            "Aphelion": "NaN", "LeavingKepler": False}
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "沙漠行星"
 
 class Jungle(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
-            "Identifier": Generate, "Model": "Jungle", "Override": None, "Name": "丛林行星", "Parent": None, "Type": 1, "Changed": False, "Extras": {}, "Radius": 2861.00879, "RadiusVisible": 0.0191246718, "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0, "Mass": 0.5192027, "OrbitType": 0, "OrbitEstimation": 3, "Density": 5.2928643631051635, "Gravity": 4.233406517765326, "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.10596970288294205, "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate, "Velocity": Generate, "Acceleration": Generate, "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False}
+            "Identifier": Generate, "Model": "Jungle", "Override": None,
+            "Name": "丛林行星", "Parent": None, "Type": 1, "Changed": False,
+            "Extras": {}, "Radius": 2861.00879, "RadiusVisible": 0.0191246718,
+            "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0,
+            "Mass": 0.5192027, "OrbitType": 0, "OrbitEstimation": 3,
+            "Density": 5.2928643631051635, "Gravity": 4.233406517765326,
+            "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.10596970288294205,
+            "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0,
+            "Position": Generate, "Velocity": Generate, "Acceleration": Generate,
+            "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN",
+            "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN",
+            "AxisSemi": "NaN", "Perihelion": "NaN",
+            "Aphelion": "NaN", "LeavingKepler": False}
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "丛林行星"
 
 class Toxic(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
-            "Identifier": Generate, "Model": "Toxic", "Override": None, "Name": "剧毒行星", "Parent": None, "Type": 1, "Changed": False, "Extras": {}, "Radius": 9783.194, "RadiusVisible": 0.0653966442, "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0, "Mass": 20.55713, "OrbitType": 0, "OrbitEstimation": 3, "Density": 5.241213470473673, "Gravity": 14.334829985641749, "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.11500446600565795, "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate, "Velocity": Generate, "Acceleration": Generate, "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False}
+            "Identifier": Generate, "Model": "Toxic", "Override": None,
+            "Name": "剧毒行星", "Parent": None, "Type": 1, "Changed": False,
+            "Extras": {}, "Radius": 9783.194, "RadiusVisible": 0.0653966442,
+            "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0,
+            "Mass": 20.55713, "OrbitType": 0, "OrbitEstimation": 3,
+            "Density": 5.241213470473673, "Gravity": 14.334829985641749, "Luminosity": 0.0,
+            "Temperature": 0.0, "Albedo": 0.11500446600565795, "PowerAbsorbtion": 0.0,
+            "PlanetariumBalance": 0.0, "Position": Generate, "Velocity": Generate,
+            "Acceleration": Generate, "Period": 0.0, "Eccentricity": "NaN",
+            "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN", "Phase": 0.0,
+            "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN",
+            "Aphelion": "NaN", "LeavingKepler": False}
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "剧毒行星"
 
 class Lava(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
-            "Identifier": Generate, "Model": "Lava", "Override": None, "Name": "熔岩行星", "Parent": None, "Type": 1, "Changed": False, "Extras": {}, "Radius": 5447.97, "RadiusVisible": 0.036417447, "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0, "Mass": 3.63040853, "OrbitType": 0, "OrbitEstimation": 3, "Density": 5.3599744007793495, "Gravity": 8.163519931681726, "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.2376526732503912, "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate, "Velocity": Generate, "Acceleration": Generate, "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False}
+            "Identifier": Generate, "Model": "Lava", "Override": None,
+            "Name": "熔岩行星", "Parent": None, "Type": 1, "Changed": False,
+            "Extras": {}, "Radius": 5447.97, "RadiusVisible": 0.036417447,
+            "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0,
+            "Mass": 3.63040853, "OrbitType": 0, "OrbitEstimation": 3,
+            "Density": 5.3599744007793495, "Gravity": 8.163519931681726,
+            "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.2376526732503912,
+            "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate,
+            "Velocity": Generate, "Acceleration": Generate, "Period": 0.0,
+            "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN",
+            "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN",
+            "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False}
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "熔岩行星"
 
 class Ocean(PlanetBase):
     def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
         self.data = {
-            "Identifier": Generate, "Model": "Ocean", "Override": None, "Name": "海洋行星", "Parent": None, "Type": 1, "Changed": False, "Extras": {}, "Radius": 6777.314, "RadiusVisible": 0.0453035645, "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0, "Mass": 7.10958433, "OrbitType": 0, "OrbitEstimation": 3, "Density": 5.452338182781527, "Gravity": 10.330477777335007, "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.2213094047766173, "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate, "Velocity": Generate, "Acceleration": Generate, "Period": 0.0, "Eccentricity": "NaN", "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN", "Phase": 0.0, "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN", "Aphelion": "NaN", "LeavingKepler": False}
+            "Identifier": Generate, "Model": "Ocean", "Override": None,
+            "Name": "海洋行星", "Parent": None, "Type": 1, "Changed": False,
+            "Extras": {}, "Radius": 6777.314, "RadiusVisible": 0.0453035645,
+            "RotationPeriod": 1.0, "RotationPhase": 0.0, "AxialTilt": 0.0,
+            "Mass": 7.10958433, "OrbitType": 0, "OrbitEstimation": 3,
+            "Density": 5.452338182781527, "Gravity": 10.330477777335007,
+            "Luminosity": 0.0, "Temperature": 0.0, "Albedo": 0.2213094047766173,
+            "PowerAbsorbtion": 0.0, "PlanetariumBalance": 0.0, "Position": Generate,
+            "Velocity": Generate, "Acceleration": Generate, "Period": 0.0, "Eccentricity": "NaN",
+            "OmegaUC": 0.0, "OmegaLC": "NaN", "Inclination": "NaN", "Phase": 0.0,
+            "PhaseCurrent": "NaN", "AxisSemi": "NaN", "Perihelion": "NaN",
+            "Aphelion": "NaN", "LeavingKepler": False}
+
+    @final
+    @staticmethod
+    def zh_name() -> LiteralString:
+        return "海洋行星"
+
