@@ -6,6 +6,7 @@
     `class Experiment`也提供了对用户更加友好的接口
 '''
 import os
+import sys
 import abc
 import json
 import copy
@@ -98,6 +99,13 @@ class _Experiment:
 
     def __init__(*args, **kwargs) -> NoReturn:
         raise NotImplementedError
+
+    @property
+    def is_anonymous_sav(self) -> bool:
+        ''' 是否为匿名存档
+            若为匿名存档则返回True, 否则返回False
+        '''
+        return "InternalName" not in self.PlSav
 
     @property
     @_check_not_closed
@@ -284,33 +292,38 @@ class _Experiment:
         else:
             target_path = os.path.abspath(target_path)
 
-        if self.open_mode in (OpenMode.load_by_sav_name, OpenMode.load_by_filepath, OpenMode.load_by_plar_app):
-            status: str = "update"
-        elif self.open_mode == OpenMode.crt:
-            status: str = "create"
-        else:
-            assert False
-
         self.__write()
 
-        context: str = json.dumps(self.PlSav, indent=2, ensure_ascii=False, separators=(',', ':'))
+        try:
+            context: str = json.dumps(self.PlSav, indent=2, ensure_ascii=False, separators=(',', ':'))
+        except TypeError as e:
+            # 通常由序列化出现 <Generate>导致
+            print("TypeError: ", e, file=sys.stderr)
+            errors.unreachable()
 
         with open(target_path, "w", encoding="utf-8") as f:
             f.write(context)
 
         if not no_print_info:
+            _colorUtils.color_print("Successfully save experiment ", color=_colorUtils.COLOR.GREEN, end='')
+            if self.is_anonymous_sav:
+                # 对匿名实验的特殊处理
+                _colorUtils.color_print(f"<anonymous>", color=_colorUtils.COLOR.CYAN, end='')
+            else:
+                _colorUtils.color_print(
+                    f"\"{self.PlSav['InternalName']}\"",
+                    color=_colorUtils.COLOR.GREEN,
+                    end='',
+                )
+            _colorUtils.color_print(f" at \"{target_path}\"! ", _colorUtils.COLOR.GREEN, end='')
             if self.experiment_type == ExperimentType.Circuit:
                 _colorUtils.color_print(
-                    f"Successfully {status} experiment \"{self.PlSav['InternalName']}\""
-                    f"(\"{target_path}\")! "
                     f"{self.get_elements_count()} elements, {self.get_wires_count()} wires.",
                     color=_colorUtils.COLOR.GREEN
                 )
             elif self.experiment_type == ExperimentType.Celestial \
                     or self.experiment_type == ExperimentType.Electromagnetism:
                 _colorUtils.color_print(
-                    f"Successfully {status} experiment \"{self.PlSav['InternalName']}\""
-                    f"(\"{target_path}\")! "
                     f"{self.get_elements_count()} elements.",
                     color=_colorUtils.COLOR.GREEN
                 )
@@ -327,10 +340,12 @@ class _Experiment:
         if delete:
             if os.path.exists(self.SAV_PATH): # 之所以判断路径是否存在是因为一个实验可能被创建但还未被写入就调用了delete
                 os.remove(self.SAV_PATH)
-                _colorUtils.color_print(
-                    f"Successfully delete experiment \"{self.PlSav['InternalName']}\"(\"{self.SAV_PATH}\")",
-                    _colorUtils.COLOR.BLUE
-                )
+                _colorUtils.color_print("Successfully delete experiment ", _colorUtils.COLOR.BLUE, end='')
+                if self.is_anonymous_sav:
+                    _colorUtils.color_print("<anonymous>", color=_colorUtils.COLOR.CYAN, end='')
+                else:
+                    _colorUtils.color_print(f"\"{self.PlSav['InternalName']}\"", _colorUtils.COLOR.BLUE, end='')
+                _colorUtils.color_print(f"at \"{self.SAV_PATH}\"!", _colorUtils.COLOR.BLUE)
             if os.path.exists(self.SAV_PATH.replace(".sav", ".jpg")): # 用存档生成的实验无图片
                 os.remove(self.SAV_PATH.replace(".sav", ".jpg"))
 

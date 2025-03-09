@@ -33,6 +33,21 @@ def warning(msg: str):
     assert isinstance(msg, str)
     warnings.warn(msg, PhysicsLabWarning)
 
+BUG_REPORT: str = "please send a bug-report at " \
+                "https://github.com/GoodenoughPhysicsLab/physicsLab/issues or " \
+                "https://gitee.com/script2000/physicsLab/issues " \
+                "with your code, *.sav and traceback"
+
+def assert_true(
+        condition: bool,
+        msg: str = BUG_REPORT,
+) -> None:
+    if not condition:
+        raise AssertionError(msg)
+
+def unreachable():
+    raise AssertionError(f"Unreachable touched, {BUG_REPORT}")
+
 class InvalidWireError(Exception):
     def __init__(self, msg: str):
         assert isinstance(msg, str)

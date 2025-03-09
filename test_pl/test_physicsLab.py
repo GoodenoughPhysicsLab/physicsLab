@@ -35,26 +35,32 @@ class BasicTest(TestCase, ViztracerTool):
         # 物实导出存档与保存到本地的格式不一样, 因此每种类型的实验都有两种格式的测试数据
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Circuit-Elements.sav")) as expe:
             self.assertTrue(expe.get_elements_count() == 91)
+            expe.save(target_path=os.devnull)
             expe.close()
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Circuit-Elements.sav")) as expe:
             self.assertTrue(expe.get_elements_count() == 91)
+            expe.save(target_path=os.devnull)
             expe.close()
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Celestial-Elements.sav")) as expe:
             self.assertTrue(expe.get_elements_count() == 27)
+            expe.save(target_path=os.devnull)
             expe.close()
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Celestial-Elements.sav")) as expe:
             self.assertTrue(expe.get_elements_count() == 27)
+            expe.save(target_path=os.devnull)
             expe.close()
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "All-Electromagnetism-Elements.sav")) as expe:
             self.assertTrue(expe.get_elements_count() == 7)
+            expe.save(target_path=os.devnull)
             expe.close()
 
         with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Electromagnetism-Elements.sav")) as expe:
             self.assertTrue(expe.get_elements_count() == 7)
+            expe.save(target_path=os.devnull)
             expe.close()
 
     @my_test_dec
@@ -62,16 +68,19 @@ class BasicTest(TestCase, ViztracerTool):
         def task1():
             expe = Experiment(OpenMode.load_by_plar_app, "6774ffb4c45f930f41ccedf8", Category.Discussion, user=user)
             self.assertTrue(expe.get_elements_count() == 91)
+            expe.save(target_path=os.devnull)
             expe.close()
 
         def task2():
             expe = Experiment(OpenMode.load_by_plar_app, "677500138c54132a83289f9c", Category.Discussion, user=user)
             self.assertTrue(expe.get_elements_count() == 27)
+            expe.save(target_path=os.devnull)
             expe.close()
 
         def task3():
             expe = Experiment(OpenMode.load_by_plar_app, "67750037c45f930f41ccee02", Category.Discussion, user=user)
             self.assertTrue(expe.get_elements_count() == 7)
+            expe.save(target_path=os.devnull)
             expe.close()
 
         thread1 = threading.Thread(target=task1)

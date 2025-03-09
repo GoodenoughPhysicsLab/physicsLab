@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
 ''' 在命令行打印出有颜色的字 '''
+import platform
 from enum import Enum, unique
 
 import colorama
 colorama.init(autoreset=True)
+
+if platform.system() == "Windows":
+    import ctypes
+    # 设置终端的编码为UTF-8
+    kernel32 = ctypes.windll.kernel32
+    kernel32.SetConsoleOutputCP(65001)
 
 @unique
 class COLOR(Enum):

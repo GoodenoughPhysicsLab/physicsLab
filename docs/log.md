@@ -255,4 +255,5 @@
 2. 新增`lib.analog_circuit`
 
 ## 2.0.3
-1.
+1. 元件增加`zh_name()`方法
+2. 增加对匿名存档的支持(Experiment.is_anonymous_sav)

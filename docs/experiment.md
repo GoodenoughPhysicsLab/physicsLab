@@ -3,6 +3,7 @@
 ## class Experiment
 `Experiment`类的实例有一些attr:
 * `PlSav`: 物实存档json对应的dict
+* `is_anonymous_sav`: 是否是匿名存档
 
 1个Experiment类的实例仅用于操作1个实验存档,  无法同时创建2个对应同一个实验的Experiment实例。
 Experiment类的方法会在后面依次介绍

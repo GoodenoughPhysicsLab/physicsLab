@@ -63,12 +63,15 @@ def search_experiment(sav_name: str) -> Tuple[Optional[str], Optional[dict]]:
 
         若存在则返回存档对应的文件名, 若不存在则返回None
     '''
+    if not isinstance(sav_name, str):
+        raise TypeError
+
     for a_sav in _get_all_pl_sav():
         try:
             sav = _open_sav(os.path.join(_Experiment.SAV_PATH_DIR, a_sav))
         except errors.InvalidSavError:
             continue
-        if sav["InternalName"] == sav_name:
+        if sav.get("InternalName") == sav_name:
             return a_sav, sav
 
     return None, None
@@ -165,6 +168,7 @@ class Experiment(_Experiment):
                     assert False
 
                 self.PlSav["Experiment"] = _temp
+                # .sav的Experiment不包含存档名, 会产生一个匿名存档
             self.__load()
         elif open_mode == OpenMode.load_by_sav_name:
             sav_name, *rest = args
@@ -218,6 +222,7 @@ class Experiment(_Experiment):
 
             self.PlSav["Experiment"] = _experiment
             self.PlSav["Summary"] = _summary
+            self.PlSav["InternalName"] = _summary["Subject"]
             self.__load()
         elif open_mode == OpenMode.crt:
             sav_name, experiment_type, *rest = args

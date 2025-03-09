@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 class Generate:
-    ''' Dynamically generated at runtime ''' # 运行时动态生成
+    ''' 这个类仅仅代表一个占位符, 表示对应key的value在运行时动态生成
+        如果运行时没有生成对应的value, 那么在生成json的时候会出错
+    '''
 
 # 所有模板都是只读的
 # 电学实验的sav模板
@@ -14,11 +16,11 @@ Circuit = {
         "Subject": None,
         "StatusSave": Generate,
         "CameraSave": Generate,
-        "Version": 2404,
+        "Version": 2404, # TODO 生成正确的版本号
         "CreationDate": Generate,
         "Paused": False,
         "Summary": None,
-        "Plots": None
+        "Plots": None,
     },
     "ID": None,
     "Summary": { # 发布实验
@@ -70,7 +72,6 @@ Circuit = {
         "Multilingual": False
     },
     "CreationDate": 0,
-    "InternalName": Generate, # 存档名
     "Speed": 1.0,
     "SpeedMinimum": 0.0002,
     "SpeedMaximum": 2.0,
@@ -153,7 +154,6 @@ Celestial = {
         "Multilingual": False
     },
     "CreationDate": 0,
-    "InternalName": Generate, # 存档名
     "Speed": 1.0,
     "SpeedMinimum": 0.1,
     "SpeedMaximum": 10.0,
@@ -233,10 +233,9 @@ Electromagnetism = {
         },
         "Visibility": 0,
         "Settings": {},
-        "Multilingual": False
+        "Multilingual": False,
     },
     "CreationDate": 0,
-    "InternalName": Generate, # 存档名
     "Speed": 1.0,
     "SpeedMinimum": 0.1,
     "SpeedMaximum": 2.0,
