@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 ''' 在命令行打印出有颜色的字 '''
-import platform
 from enum import Enum, unique
 
 import colorama
-colorama.init(autoreset=True)
 
-if platform.system() == "Windows":
-    import ctypes
-    # 设置终端的编码为UTF-8
-    kernel32 = ctypes.windll.kernel32
-    kernel32.SetConsoleOutputCP(65001)
+# 设置终端的编码为UTF-8
+import io
+import sys
+sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 @unique
 class COLOR(Enum):
@@ -32,7 +31,7 @@ def color_print(msg: str, color: COLOR, end='\n') -> None:
     global _ColorSupport
 
     if _ColorSupport:
-        print(color.value + msg, end=end)
+        print(color.value + msg + colorama.Fore.RESET, end=end)
     else:
         print(msg, end=end)
 
