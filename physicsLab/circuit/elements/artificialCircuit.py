@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from physicsLab import errors
 from physicsLab._tools import round_data
 from .._circuit_core import CircuitBase, _TwoPinMixIn, Pin
 from physicsLab._typing import (
@@ -725,7 +726,7 @@ class Operational_Amplifier(CircuitBase):
         if min_voltage is None:
             min_voltage = self.properties["最小电压"]
 
-        assert gain is not None and max_voltage is not None and min_voltage is not None
+        assert gain is not None and max_voltage is not None and min_voltage is not None, errors.BUG_REPORT
         if max_voltage <= min_voltage:
             raise ValueError("Maximun voltage must be greater than minimum voltage")
 
@@ -1090,4 +1091,3 @@ class Pulse_Source(_SourceElectricity):
     @staticmethod
     def zh_name() -> LiteralString:
         return "尖峰波发生器"
-

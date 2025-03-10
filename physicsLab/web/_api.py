@@ -17,7 +17,7 @@ def _check_response(response: requests.Response, err_callback: Optional[Callable
         @callback: 自定义物实返回的status对应的报错信息,
                     要求传入status_code(捕获物实返回体中的status_code), 无返回值
     '''
-    assert err_callback is None or callable(err_callback)
+    errors.assert_true(err_callback is None or callable(err_callback))
 
     response.raise_for_status()
 
@@ -151,10 +151,7 @@ class _User:
 
             通过返回字典的Token与AuthCode实现登陆
         '''
-        if not isinstance(email, (str, type(None))):
-            raise TypeError(f"TypeError in function '__login' of class '_User': Parameter 'email' must be of type 'str' or None, but got {type(email).__name__}")
-        if not isinstance(password, (str, type(None))):
-            raise TypeError(f"TypeError in function '__login' of class '_User': Parameter 'password' must be of type 'str' or None, but got {type(password).__name__}")
+        errors.assert_true(isinstance(email, (str, type(None))) and isinstance(password, (str, type(None))))
 
         plar_version = plAR.get_plAR_version()
         if plar_version is not None:

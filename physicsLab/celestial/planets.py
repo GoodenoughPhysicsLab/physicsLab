@@ -600,4 +600,3 @@ class Ocean(PlanetBase):
     @staticmethod
     def zh_name() -> LiteralString:
         return "海洋行星"
-

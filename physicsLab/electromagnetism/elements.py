@@ -105,4 +105,3 @@ class Uniform_Magnetic_Field(ElectromagnetismBase):
     @staticmethod
     def zh_name() -> LiteralString:
         return "匀强磁场"
-

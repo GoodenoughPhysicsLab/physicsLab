@@ -71,7 +71,7 @@ def crt_wires(
         color: WireColor = WireColor.blue,
 ) -> None:
     ''' 为unionPin连接导线, 相当于自动对数据进行连接导线 '''
-    assert isinstance(source_pin, UnitPin) and isinstance(target_pin, UnitPin)
+    assert isinstance(source_pin, UnitPin) and isinstance(target_pin, UnitPin), errors.BUG_REPORT
     for i, o in zip(source_pin.pins, target_pin.pins):
         crt_wire(i, o, color=color)
 
@@ -81,6 +81,6 @@ def del_wires(
         target_pin: Union[UnitPin, Pin],
 ) -> None:
     ''' 删除unionPin的导线 '''
-    assert isinstance(source_pin, UnitPin) and isinstance(target_pin, UnitPin)
+    assert isinstance(source_pin, UnitPin) and isinstance(target_pin, UnitPin), errors.BUG_REPORT
     for i, o in zip(source_pin.pins, target_pin.pins):
         del_wire(i, o)

@@ -529,7 +529,7 @@ class Chord:
 
                     delta_z += 1
 
-        assert first_ins is not None
+        errors.assert_true(first_ins is not None)
         return first_ins
 
 # 循环类，用于创建一段循环的音乐片段

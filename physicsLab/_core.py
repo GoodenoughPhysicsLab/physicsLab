@@ -40,7 +40,7 @@ class _ExperimentStack:
 
     @classmethod
     def remove(cls, data: "_Experiment") -> None:
-        assert isinstance(data, _Experiment)
+        errors.assert_true(isinstance(data, _Experiment))
 
         cls.data.remove(data)
 
@@ -68,7 +68,7 @@ def get_current_experiment() -> "_Experiment":
 
 def _check_not_closed(method: Callable) -> Callable:
     def res(self: "_Experiment", *args, **kwargs):
-        assert isinstance(self, _Experiment)
+        errors.assert_true(isinstance(self, _Experiment))
         if not _ExperimentStack.inside(self): # 存档已被关闭
             raise errors.ExperimentClosedError
 
@@ -174,10 +174,10 @@ class _Experiment:
         else:
             errors.unreachable()
 
-        assert identifier in self._id2element.keys()
+        errors.assert_true(identifier in self._id2element.keys())
         del self._id2element[identifier]
 
-        assert element in self.Elements
+        errors.assert_true(element in self.Elements)
         self.Elements.remove(element)
 
         return self
@@ -352,7 +352,7 @@ class _Experiment:
         _ExperimentStack.remove(self)
 
     def __entitle(self, sav_name: str) -> None:
-        assert isinstance(sav_name, str)
+        errors.assert_true(isinstance(sav_name, str))
 
         self.PlSav["Summary"]["Subject"] = sav_name
         self.PlSav["InternalName"] = sav_name
@@ -378,23 +378,16 @@ class _Experiment:
             @param introduction: 简介
             @param wx: 是否续写简介
         '''
-        def introduce_Experiment(introduction: Union[str, None]) -> None:
-            '''  发布实验时输入实验介绍 '''
-            if introduction is not None:
-                if self.PlSav['Summary']['Description'] is not None and wx:
-                    self.PlSav['Summary']['Description'] += introduction.split('\n')
-                else:
-                    self.PlSav['Summary']['Description'] = introduction.split('\n')
+        # 发布实验时输入实验标题
+        if title is not None:
+            self.PlSav['Summary']['Subject'] = title
 
-        def name_Experiment(title: Union[str, None]) -> None:
-            ''' 发布实验时输入实验标题 '''
-            if title is not None:
-                self.PlSav['Summary']['Subject'] = title
-
-        assert self.SAV_PATH is not None # ???
-
-        introduce_Experiment(introduction)
-        name_Experiment(title)
+        # 发布实验时输入实验介绍
+        if introduction is not None:
+            if self.PlSav['Summary']['Description'] is not None and wx:
+                self.PlSav['Summary']['Description'] += introduction.split('\n')
+            else:
+                self.PlSav['Summary']['Description'] = introduction.split('\n')
 
         return self
 
@@ -662,8 +655,6 @@ class _Experiment:
         if self is other:
             raise errors.ExperimentError("can not merge to itself") # TODO 换一个更好的异常类型?
 
-        errors.assert_true(self.SAV_PATH is not None and other.SAV_PATH is not None)
-
         if self is other:
             return self
 
@@ -719,17 +710,17 @@ class ElementBase:
             raise TypeError
 
         x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
-        assert hasattr(self, 'experiment')
+        errors.assert_true(hasattr(self, 'experiment'))
         _Expe: _Experiment = self.experiment
 
         for self_list in _Expe._position2elements.values():
             if self in self_list:
                 self_list.remove(self)
 
-        assert hasattr(self, 'data')
+        errors.assert_true(hasattr(self, 'data'))
         self.data['Position'] = f"{x},{z},{y}"
 
-        assert hasattr(self, '_position')
+        errors.assert_true(hasattr(self, '_position'))
         if self._position in _Expe._position2elements.keys():
             _Expe._position2elements[self._position].append(self)
         else:
@@ -747,7 +738,7 @@ class ElementBase:
     @final
     def get_position(self) -> _tools.position:
         ''' 获取元件的坐标 '''
-        assert hasattr(self, '_position')
+        errors.assert_true(hasattr(self, '_position'))
         return copy.deepcopy(self._position)
 
     @final

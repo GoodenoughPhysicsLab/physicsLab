@@ -35,7 +35,7 @@ def _open_sav(sav_path) -> dict:
         else:
             return d
 
-    assert os.path.exists(sav_path)
+    errors.assert_true(os.path.exists(sav_path))
 
     res = encode_sav(sav_path, "utf-8")
     if res is not None:

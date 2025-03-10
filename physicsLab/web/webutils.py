@@ -17,7 +17,7 @@ def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
     ''' 运行func, 直到成功或达到max_retry的条件
         @param max_retry: 最大重试次数(大于等于0), 为None时不限制重试次数
     '''
-    assert (max_retry is None or max_retry >= 0) and callable(func), "internal error, please bug report"
+    errors.assert_true((max_retry is None or max_retry >= 0) and callable(func))
 
     if max_retry is None:
         while True:
