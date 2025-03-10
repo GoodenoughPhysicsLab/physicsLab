@@ -64,12 +64,27 @@ class Logic_Input(_LogicBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
-        self.set_output_status(output_status)
+        self.output_status = output_status
+
+    @property
+    @final
+    def output_status(self) -> bool:
+        ''' 设置开关的状态
+        '''
+        if "开关" not in self.properties:
+            self.properties["开关"] = 0
+
+        return bool(self.properties["开关"])
+
+    @output_status.setter
+    @final
+    def output_status(self, value: bool):
+        self.properties["开关"] = int(value)
 
     def __repr__(self) -> str:
         res = f"Logic_Input({self._position.x}, {self._position.y}, {self._position.z}, " \
               f"elementXYZ={self.is_elementXYZ}, " \
-              f"output_status={bool(self.properties['开关'])})"
+              f"output_status={self.output_status})"
 
         return res
 
@@ -825,7 +840,7 @@ class Eight_Bit_Input(_LogicBase):
         }
 
     def __repr__(self) -> str:
-        res = f"eight_bit_Input({self._position.x}, {self._position.y}, {self._position.z}, " \
+        res = f"Eight_Bit_Input({self._position.x}, {self._position.y}, {self._position.z}, " \
               f"elementXYZ={self.is_elementXYZ})"
 
         if self.data["Properties"]["十进制"] != 0:

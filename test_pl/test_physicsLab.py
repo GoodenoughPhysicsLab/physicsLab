@@ -560,6 +560,17 @@ class BasicTest(TestCase, ViztracerTool):
             expe.close(delete=True)
 
     @my_test_dec
+    def test_export2(self):
+        with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Circuit-Elements.sav")) as expe:
+            expe.export("temp.pl.py", "__test__")
+            expe.close()
+
+        os.system(f"{sys.executable} temp.pl.py")
+        with Experiment(OpenMode.load_by_sav_name, "__test__") as expe:
+            self.assertTrue(expe.get_elements_count() == 91)
+            expe.close(delete=True)
+
+    @my_test_dec
     def test_typeerror(self):
         expe = Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True)
         try:
