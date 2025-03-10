@@ -45,15 +45,18 @@ def get_avatar(target_id: str, index: int, category: str, size_category: str) ->
         @param category: 只能为 "experiments" 或 "users"
         @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
     '''
-    if not isinstance(target_id, str) \
-            or not isinstance(index, int) \
-            or not isinstance(category, str) \
-            or not isinstance(size_category, str):
-        raise TypeError
+    if not isinstance(target_id, str):
+        raise TypeError(f"TypeError in function 'get_avatar': Parameter 'target_id' must be of type 'str', but got {type(target_id).__name__}")
+    if not isinstance(index, int):
+        raise TypeError(f"TypeError in function 'get_avatar': Parameter 'index' must be of type 'int', but got {type(index).__name__}")
+    if not isinstance(category, str):
+        raise TypeError(f"TypeError in function 'get_avatar': Parameter 'category' must be of type 'str', but got {type(category).__name__}")
+    if not isinstance(size_category, str):
+        raise TypeError(f"TypeError in function 'get_avatar': Parameter 'size_category' must be of type 'str', but got {type(size_category).__name__}")
     if category not in ("experiments", "users"):
-        raise ValueError
+        raise ValueError(f"ValueError in function 'get_avatar': Parameter 'category' must be one of ['experiments', 'users'], but got '{category}'")
     if size_category not in ("small.round", "thumbnail", "full"):
-        raise ValueError
+        raise ValueError(f"ValueError in function 'get_avatar': Parameter 'size_category' must be one of ['small.round', 'thumbnail', 'full'], but got '{size_category}'")
 
     if category == "users":
         category += "/avatars"
@@ -98,11 +101,14 @@ class _User:
             临时的匿名账号 (权限受限):
             @usage: User()
         '''
-        if not isinstance(email, (str, type(None))) \
-                or not isinstance(password, (str, type(None))) \
-                or not isinstance(token, (str, type(None))) \
-                or not isinstance(auth_code, (str, type(None))):
-            raise TypeError
+        if not isinstance(email, (str, type(None))):
+            raise TypeError(f"TypeError in function '__init__' of class '_User': Parameter 'email' must be of type 'str' or None, but got {type(email).__name__}")
+        if not isinstance(password, (str, type(None))):
+            raise TypeError(f"TypeError in function '__init__' of class '_User': Parameter 'password' must be of type 'str' or None, but got {type(password).__name__}")
+        if not isinstance(token, (str, type(None))):
+            raise TypeError(f"TypeError in function '__init__' of class '_User': Parameter 'token' must be of type 'str' or None, but got {type(token).__name__}")
+        if not isinstance(auth_code, (str, type(None))):
+            raise TypeError(f"TypeError in function '__init__' of class '_User': Parameter 'auth_code' must be of type 'str' or None, but got {type(auth_code).__name__}")
 
         if token is not None and auth_code is not None:
             # 只有登录一定会返回auth_code, 其他api返回的AuthCode可能是无效的None
@@ -145,7 +151,10 @@ class _User:
 
             通过返回字典的Token与AuthCode实现登陆
         '''
-        assert isinstance(email, (str, type(None))) and isinstance(password, (str, type(None)))
+        if not isinstance(email, (str, type(None))):
+            raise TypeError(f"TypeError in function '__login' of class '_User': Parameter 'email' must be of type 'str' or None, but got {type(email).__name__}")
+        if not isinstance(password, (str, type(None))):
+            raise TypeError(f"TypeError in function '__login' of class '_User': Parameter 'password' must be of type 'str' or None, but got {type(password).__name__}")
 
         plar_version = plAR.get_plAR_version()
         if plar_version is not None:
@@ -215,21 +224,32 @@ class _User:
             @param take: 搜索数量
             @param skip: 跳过搜索数量
         '''
-        if not isinstance(category, Category) \
-                or not isinstance(tags, (list, type(None))) \
-                or tags is not None and not all(isinstance(tag, Tag) for tag in tags) \
-                or not isinstance(exclude_tags, (list, type(None))) \
-                or exclude_tags is not None and not all(isinstance(tag, Tag) for tag in exclude_tags) \
-                or not isinstance(languages, (list, type(None))) \
-                or languages is not None and not all(isinstance(language, str) for language in languages) \
-                or not isinstance(exclude_languages, (list, type(None))) \
-                or exclude_languages is not None \
-                and not all(isinstance(language, str) for language in exclude_languages) \
-                or not isinstance(user_id, (str, type(None))) \
-                or not isinstance(take, int) \
-                or not isinstance(skip, int) \
-                or not isinstance(from_skip, (str, type(None))):
-            raise TypeError
+        if not isinstance(category, Category):
+            raise TypeError(f"TypeError in function 'query_experiments' of class '_User': Parameter 'category' must be an instance of Category enum, but got {type(category).__name__}")
+        if not isinstance(tags, (list, type(None))):
+            raise TypeError(f"TypeError in function 'query_experiments' of class '_User': Parameter 'tags' must be of type 'list' or None, but got {type(tags).__name__}")
+        if tags is not None and not all(isinstance(tag, Tag) for tag in tags):
+            raise TypeError(f"TypeError in function 'query_experiments' of class '_User': Parameter 'tags' must be a list of Tag enum instances, but got list containing non-Tag elements")
+        if not isinstance(exclude_tags, (list, type(None))):
+            raise TypeError(f"TypeError in function 'query_experiments' of class '_User': Parameter 'exclude_tags' must be of type 'list' or None, but got {type(exclude_tags).__name__}")
+        if exclude_tags is not None and not all(isinstance(tag, Tag) for tag in exclude_tags):
+            raise TypeError(f"TypeError in function 'query_experiments' of class '_User': Parameter 'exclude_tags' must be a list of Tag enum instances, but got list containing non-Tag elements")
+        if not isinstance(languages, (list, type(None))):
+            raise TypeError(f"TypeError in function 'query_experiments' of class '_User': Parameter 'languages' must be of type 'list' or None, but got {type(languages).__name__}")
+        if languages is not None and not all(isinstance(language, str) for language in languages):
+            raise TypeError(f"TypeError in function 'query_experiments' of class '_User': Parameter 'languages' must be a list of str, but got list containing non-str elements")
+        if not isinstance(exclude_languages, (list, type(None))):
+            raise TypeError(f"TypeError in function 'query_experiments' of class '_User': Parameter 'exclude_languages' must be of type 'list' or None, but got {type(exclude_languages).__name__}")
+        if exclude_languages is not None and not all(isinstance(language, str) for language in exclude_languages):
+            raise TypeError(f"TypeError in function 'query_experiments' of class '_User': Parameter 'exclude_languages' must be a list of str, but got list containing non-str elements")
+        if not isinstance(user_id, (str, type(None))):
+            raise TypeError(f"TypeError in function 'query_experiments' of class '_User': Parameter 'user_id' must be of type 'str' or None, but got {type(user_id).__name__}")
+        if not isinstance(take, int):
+            raise TypeError(f"TypeError in function 'query_experiments' of class '_User': Parameter 'take' must be of type 'int', but got {type(take).__name__}")
+        if not isinstance(skip, int):
+            raise TypeError(f"TypeError in function 'query_experiments' of class '_User': Parameter 'skip' must be of type 'int', but got {type(skip).__name__}")
+        if not isinstance(from_skip, (str, type(None))):
+            raise TypeError(f"TypeError in function 'query_experiments' of class '_User': Parameter 'from_skip' must be of type 'str' or None, but got {type(from_skip).__name__}")
 
         if languages is None:
             languages = []
@@ -287,9 +307,10 @@ class _User:
                                否则会被识别为get_summary()["Data"]["ContentID"]的结果
             @param category: 实验区还是黑洞区
         '''
-        if not isinstance(content_id, str) \
-                or not isinstance(category, (Category, type(None))):
-            raise TypeError
+        if not isinstance(content_id, str):
+            raise TypeError(f"TypeError in function 'get_experiment' of class '_User': Parameter 'content_id' must be of type 'str', but got {type(content_id).__name__}")
+        if not isinstance(category, (Category, type(None))):
+            raise TypeError(f"TypeError in function 'get_experiment' of class '_User': Parameter 'category' must be an instance of Category enum or None, but got {type(category).__name__}")
 
         if category is not None:
             # 如果传入的是实验ID, 先获取summary来得到ContentID
@@ -312,10 +333,12 @@ class _User:
     def confirm_experiment(self, summary_id: str, category: Category, image_counter: int) -> dict:
         ''' 确认发布实验
         '''
-        if not isinstance(summary_id, str) \
-                or not isinstance(category, Category) \
-                or not isinstance(image_counter, int):
-            raise TypeError
+        if not isinstance(summary_id, str):
+            raise TypeError(f"TypeError in function 'confirm_experiment' of class '_User': Parameter 'summary_id' must be of type 'str', but got {type(summary_id).__name__}")
+        if not isinstance(category, Category):
+            raise TypeError(f"TypeError in function 'confirm_experiment' of class '_User': Parameter 'category' must be an instance of Category enum, but got {type(category).__name__}")
+        if not isinstance(image_counter, int):
+            raise TypeError(f"TypeError in function 'confirm_experiment' of class '_User': Parameter 'image_counter' must be of type 'int', but got {type(image_counter).__name__}")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/ConfirmExperiment",
@@ -339,10 +362,12 @@ class _User:
             @param summary_id: 实验ID
             @param category: 实验区还是黑洞区
         '''
-        if not isinstance(summary_id, str) \
-                or not isinstance(category, Category) \
-                or not isinstance(reason, (str, type(None))):
-            raise TypeError
+        if not isinstance(summary_id, str):
+            raise TypeError(f"TypeError in function 'remove_experiment' of class '_User': Parameter 'summary_id' must be of type 'str', but got {type(summary_id).__name__}")
+        if not isinstance(category, Category):
+            raise TypeError(f"TypeError in function 'remove_experiment' of class '_User': Parameter 'category' must be an instance of Category enum, but got {type(category).__name__}")
+        if not isinstance(reason, (str, type(None))):
+            raise TypeError(f"TypeError in function 'remove_experiment' of class '_User': Parameter 'reason' must be of type 'str' or None, but got {type(reason).__name__}")
 
         _plar_ver = plAR.get_plAR_version()
         plar_ver = f"{_plar_ver[0]}{_plar_ver[1]}{_plar_ver[2]}" if _plar_ver is not None else "2411"
@@ -378,13 +403,16 @@ class _User:
             @param content: 评论内容
             @param reply_id: 被回复的user的ID (可被自动推导)
         '''
-        if not isinstance(target_id, str) \
-                or not isinstance(content, str) \
-                or not isinstance(target_type, str) \
-                or not isinstance(reply_id, (str, type(None))):
-            raise TypeError
+        if not isinstance(target_id, str):
+            raise TypeError(f"TypeError in function 'post_comment' of class '_User': Parameter 'target_id' must be of type 'str', but got {type(target_id).__name__}")
+        if not isinstance(content, str):
+            raise TypeError(f"TypeError in function 'post_comment' of class '_User': Parameter 'content' must be of type 'str', but got {type(content).__name__}")
+        if not isinstance(target_type, str):
+            raise TypeError(f"TypeError in function 'post_comment' of class '_User': Parameter 'target_type' must be of type 'str', but got {type(target_type).__name__}")
+        if not isinstance(reply_id, (str, type(None))):
+            raise TypeError(f"TypeError in function 'post_comment' of class '_User': Parameter 'reply_id' must be of type 'str' or None, but got {type(reply_id).__name__}")
         if target_type not in ("User", "Discussion", "Experiment"):
-            raise ValueError
+            raise ValueError(f"ValueError in function 'post_comment' of class '_User': Parameter 'target_type' must be one of ['User', 'Discussion', 'Experiment'], but got '{target_type}'")
 
         if reply_id is None:
             reply_id = ""
@@ -441,11 +469,12 @@ class _User:
             @param comment_id: 评论ID, 可以通过`get_comments`获取
             @param target_type: User, Discussion, Experiment
         '''
-        if not isinstance(comment_id, str) \
-                or not isinstance(target_type, str):
-            raise TypeError
+        if not isinstance(comment_id, str):
+            raise TypeError(f"TypeError in function 'remove_comment' of class '_User': Parameter 'comment_id' must be of type 'str', but got {type(comment_id).__name__}")
+        if not isinstance(target_type, str):
+            raise TypeError(f"TypeError in function 'remove_comment' of class '_User': Parameter 'target_type' must be of type 'str', but got {type(target_type).__name__}")
         if target_type not in ("User", "Discussion", "Experiment"):
-            raise ValueError
+            raise ValueError(f"ValueError in function 'remove_comment' of class '_User': Parameter 'target_type' must be one of ['User', 'Discussion', 'Experiment'], but got '{target_type}'")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Messages/RemoveComment",
@@ -477,15 +506,22 @@ class _User:
             @param skip: 跳过的留言数量, 为(unix时间戳 * 1000)
             @param comment_id: 从comment_id开始获取take条消息 (另一种skip的规则)
         '''
-        if not isinstance(self.token, str) \
-                or not isinstance(self.auth_code, str) \
-                or not isinstance(target_type, str) \
-                or not isinstance(take, int) \
-                or not isinstance(skip, int) \
-                or not isinstance(comment_id, (str, type(None))):
-            raise TypeError
+        if not isinstance(self.token, str):
+            raise TypeError(f"TypeError in function 'get_comments' of class '_User': 'self.token' must be of type 'str', but got {type(self.token).__name__}")
+        if not isinstance(self.auth_code, str):
+            raise TypeError(f"TypeError in function 'get_comments' of class '_User': 'self.auth_code' must be of type 'str', but got {type(self.auth_code).__name__}")
+        if not isinstance(target_id, str):
+            raise TypeError(f"TypeError in function 'get_comments' of class '_User': Parameter 'target_id' must be of type 'str', but got {type(target_id).__name__}")
+        if not isinstance(target_type, str):
+            raise TypeError(f"TypeError in function 'get_comments' of class '_User': Parameter 'target_type' must be of type 'str', but got {type(target_type).__name__}")
+        if not isinstance(take, int):
+            raise TypeError(f"TypeError in function 'get_comments' of class '_User': Parameter 'take' must be of type 'int', but got {type(take).__name__}")
+        if not isinstance(skip, int):
+            raise TypeError(f"TypeError in function 'get_comments' of class '_User': Parameter 'skip' must be of type 'int', but got {type(skip).__name__}")
+        if not isinstance(comment_id, (str, type(None))):
+            raise TypeError(f"TypeError in function 'get_comments' of class '_User': Parameter 'comment_id' must be of type 'str' or None, but got {type(comment_id).__name__}")
         if target_type not in ("User", "Discussion", "Experiment"):
-            raise ValueError
+            raise ValueError(f"ValueError in function 'get_comments' of class '_User': Parameter 'target_type' must be one of ['User', 'Discussion', 'Experiment'], but got '{target_type}'")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Messages/GetComments",
@@ -510,8 +546,10 @@ class _User:
             @param content_id: 实验ID
             @param category: 实验区还是黑洞区
         '''
-        if not isinstance(content_id, str) or not isinstance(category, Category):
-            raise TypeError
+        if not isinstance(content_id, str):
+            raise TypeError(f"TypeError in function 'get_summary' of class '_User': Parameter 'content_id' must be of type 'str', but got {type(content_id).__name__}")
+        if not isinstance(category, Category):
+            raise TypeError(f"TypeError in function 'get_summary' of class '_User': Parameter 'category' must be an instance of Category enum, but got {type(category).__name__}")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/GetSummary",
@@ -539,8 +577,10 @@ class _User:
             @param content_id: 实验ID
             @param category: 实验区还是黑洞区
         '''
-        if not isinstance(content_id, str) or not isinstance(category, Category):
-            raise TypeError
+        if not isinstance(content_id, str):
+            raise TypeError(f"TypeError in function 'get_derivatives' of class '_User': Parameter 'content_id' must be of type 'str', but got {type(content_id).__name__}")
+        if not isinstance(category, Category):
+            raise TypeError(f"TypeError in function 'get_derivatives' of class '_User': Parameter 'category' must be an instance of Category enum, but got {type(category).__name__}")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/GetDerivatives",
@@ -566,11 +606,12 @@ class _User:
             @param user_id: 用户ID
             @param name: 用户名
         '''
-        if not isinstance(user_id, (str, type(None))) \
-                    or not isinstance(name, (str, type(None))):
-            raise TypeError
+        if not isinstance(user_id, (str, type(None))):
+            raise TypeError(f"TypeError in function 'get_user' of class '_User': Parameter 'user_id' must be of type 'str' or None, but got {type(user_id).__name__}")
+        if not isinstance(name, (str, type(None))):
+            raise TypeError(f"TypeError in function 'get_user' of class '_User': Parameter 'name' must be of type 'str' or None, but got {type(name).__name__}")
         if user_id is None and name is None:
-            raise ValueError("user_id and name can't be None at the same time")
+            raise ValueError(f"ValueError in function 'get_user' of class '_User': At least one of parameters 'user_id' or 'name' must be provided, but both are None")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Users/GetUser",
@@ -611,13 +652,16 @@ class _User:
             @param star_type: 0: 收藏, 1: 使用金币支持实验
             @param status: True: 收藏, False: 取消收藏 (对支持无作用)
         '''
-        if not isinstance(content_id, str) \
-                or not isinstance(category, Category) \
-                or not isinstance(status, bool) \
-                or not isinstance(star_type, int):
-            raise TypeError
+        if not isinstance(content_id, str):
+            raise TypeError(f"TypeError in function 'star_content' of class '_User': Parameter 'content_id' must be of type 'str', but got {type(content_id).__name__}")
+        if not isinstance(category, Category):
+            raise TypeError(f"TypeError in function 'star_content' of class '_User': Parameter 'category' must be an instance of Category enum, but got {type(category).__name__}")
+        if not isinstance(status, bool):
+            raise TypeError(f"TypeError in function 'star_content' of class '_User': Parameter 'status' must be of type 'bool', but got {type(status).__name__}")
+        if not isinstance(star_type, int):
+            raise TypeError(f"TypeError in function 'star_content' of class '_User': Parameter 'star_type' must be of type 'int', but got {type(star_type).__name__}")
         if star_type not in (0, 1):
-            raise ValueError
+            raise ValueError(f"ValueError in function 'star_content' of class '_User': Parameter 'star_type' must be one of [0, 1], but got '{star_type}'")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/StarContent",
@@ -643,12 +687,14 @@ class _User:
         '''
         if policy is None or authorization is None:
             raise RuntimeError("Sorry, Physics-Lab-AR can't upload this iamge")
-        if not isinstance(policy, str) \
-                or not isinstance(authorization, str) \
-                or not isinstance(image_path, str):
-            raise TypeError
+        if not isinstance(policy, str):
+            raise TypeError(f"TypeError in function 'upload_image' of class '_User': Parameter 'policy' must be of type 'str', but got {type(policy).__name__}")
+        if not isinstance(authorization, str):
+            raise TypeError(f"TypeError in function 'upload_image' of class '_User': Parameter 'authorization' must be of type 'str', but got {type(authorization).__name__}")
+        if not isinstance(image_path, str):
+            raise TypeError(f"TypeError in function 'upload_image' of class '_User': Parameter 'image_path' must be of type 'str', but got {type(image_path).__name__}")
         if not os.path.exists(image_path) or not os.path.isfile(image_path):
-            raise FileNotFoundError
+            raise FileNotFoundError(f"FileNotFoundError in function 'upload_image' of class '_User': Parameter 'image_path' points to an invalid file path: '{image_path}'")
 
         with open(image_path, "rb") as f:
             data = {
@@ -673,7 +719,7 @@ class _User:
             @param message_id: 消息的id
         '''
         if not isinstance(message_id, str):
-            raise TypeError
+            raise TypeError(f"TypeError in function 'get_message' of class '_User': Parameter 'message_id' must be of type 'str', but got {type(message_id).__name__}")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Messages/GetMessage",
@@ -703,11 +749,14 @@ class _User:
             @param take: 取take条消息
             @param no_templates: 是否不返回消息种类的模板消息
         '''
-        if category_id not in (0, 1, 2, 3, 4, 5) \
-                or not isinstance(skip, int) \
-                or not isinstance(take, int) \
-                or not isinstance(no_templates, bool):
-            raise TypeError
+        if category_id not in (0, 1, 2, 3, 4, 5):
+            raise TypeError(f"TypeError in function 'get_messages' of class '_User': Parameter 'category_id' must be an integer within [0, 5], but got {category_id}")
+        if not isinstance(skip, int):
+            raise TypeError(f"TypeError in function 'get_messages' of class '_User': Parameter 'skip' must be of type 'int', but got {type(skip).__name__}")
+        if not isinstance(take, int):
+            raise TypeError(f"TypeError in function 'get_messages' of class '_User': Parameter 'take' must be of type 'int', but got {type(take).__name__}")
+        if not isinstance(no_templates, bool):
+            raise TypeError(f"TypeError in function 'get_messages' of class '_User': Parameter 'no_templates' must be of type 'bool', but got {type(no_templates).__name__}")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Messages/GetMessages",
@@ -738,11 +787,14 @@ class _User:
             @param skip: 传入一个时间戳, 跳过skip条消息
             @param take: 取take条消息
         '''
-        if not isinstance(content_id, str) \
-                or not isinstance(category, Category) \
-                or not isinstance(skip, int) \
-                or not isinstance(take, int):
-            raise TypeError
+        if not isinstance(content_id, str):
+            raise TypeError(f"TypeError in function 'get_supporters' of class '_User': Parameter 'content_id' must be of type 'str', but got {type(content_id).__name__}")
+        if not isinstance(category, Category):
+            raise TypeError(f"TypeError in function 'get_supporters' of class '_User': Parameter 'category' must be an instance of Category enum, but got {type(category).__name__}")
+        if not isinstance(skip, int):
+            raise TypeError(f"TypeError in function 'get_supporters' of class '_User': Parameter 'skip' must be of type 'int', but got {type(skip).__name__}")
+        if not isinstance(take, int):
+            raise TypeError(f"TypeError in function 'get_supporters' of class '_User': Parameter 'take' must be of type 'int', but got {type(take).__name__}")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/GetSupporters",
@@ -775,11 +827,14 @@ class _User:
             @param take: 取take个用户
             @param query: 为用户id或昵称
         '''
-        if display_type not in ("Follower, Following") \
-                or not isinstance(user_id, str) \
-                or not isinstance(skip, int) \
-                or not isinstance(take, int):
-            raise TypeError
+        if display_type not in ("Follower", "Following"):
+            raise ValueError(f"ValueError in function 'get_relations' of class '_User': Parameter 'display_type' must be one of ['Follower', 'Following'], but got '{display_type}'")
+        if not isinstance(user_id, str):
+            raise TypeError(f"TypeError in function 'get_relations' of class '_User': Parameter 'user_id' must be of type 'str', but got {type(user_id).__name__}")
+        if not isinstance(skip, int):
+            raise TypeError(f"TypeError in function 'get_relations' of class '_User': Parameter 'skip' must be of type 'int', but got {type(skip).__name__}")
+        if not isinstance(take, int):
+            raise TypeError(f"TypeError in function 'get_relations' of class '_User': Parameter 'take' must be of type 'int', but got {type(take).__name__}")
 
         if display_type == "Follower":
             display_type_ = 0
@@ -811,9 +866,10 @@ class _User:
             @param target_id: 被关注的用户的id
             @param action: true为关注, false为取消关注
         '''
-        if not isinstance(target_id, str) \
-                or not isinstance(action, bool):
-            raise TypeError
+        if not isinstance(target_id, str):
+            raise TypeError(f"TypeError in function 'follow' of class '_User': Parameter 'target_id' must be of type 'str', but got {type(target_id).__name__}")
+        if not isinstance(action, bool):
+            raise TypeError(f"TypeError in function 'follow' of class '_User': Parameter 'action' must be of type 'bool', but got {type(action).__name__}")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Users/Follow",
@@ -835,7 +891,7 @@ class _User:
             @param nickname: 新昵称
         '''
         if not isinstance(nickname, str):
-            raise TypeError
+            raise TypeError(f"TypeError in function 'rename' of class '_User': Parameter 'nickname' must be of type 'str', but got {type(nickname).__name__}")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Users/Rename",
@@ -857,7 +913,7 @@ class _User:
             @param target: 新签名
         '''
         if not isinstance(target, str):
-            raise TypeError
+            raise TypeError(f"TypeError in function 'modify_information' of class '_User': Parameter 'target' must be of type 'str', but got {type(target).__name__}")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Users/ModifyInformation",
@@ -879,11 +935,12 @@ class _User:
             @param activity_id: 活动id
             @param index: 该活动的第几次奖励
         '''
-        if not isinstance(activity_id, str) \
-                or not isinstance(index, int):
-            raise TypeError
+        if not isinstance(activity_id, str):
+            raise TypeError(f"TypeError in function 'receive_bonus' of class '_User': Parameter 'activity_id' must be of type 'str', but got {type(activity_id).__name__}")
+        if not isinstance(index, int):
+            raise TypeError(f"TypeError in function 'receive_bonus' of class '_User': Parameter 'index' must be of type 'int', but got {type(index).__name__}")
         if index < 0:
-            raise ValueError
+            raise ValueError(f"ValueError in function 'receive_bonus' of class '_User': Parameter 'index' must be a non-negative integer, but got {index}")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Users/ReceiveBonus",
