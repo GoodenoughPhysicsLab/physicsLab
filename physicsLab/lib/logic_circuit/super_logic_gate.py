@@ -101,7 +101,7 @@ class Super_AndGate:
             self._inputs += [_mul.i_low, _mul.i_lowmid, _mul.i_upmid]
             crt_wires(UnitPin(None, *[a_mul.o_up for a_mul in _muls], _mul.o_up), sub_super_and_gate.inputs)
         else:
-            assert False
+            errors.unreachable()
 
         self._outputs = sub_super_and_gate.output
 
@@ -171,7 +171,7 @@ class Super_OrGate:
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
                 crt_wires(input_, output_)
         else:
-            assert False
+            errors.unreachable()
 
     @property
     def inputs(self) -> UnitPin:
@@ -236,7 +236,7 @@ class Super_NorGate:
             for input_, output_ in zip(self._outputs, next_orgates._inputs):
                 crt_wires(input_, output_)
         else:
-            assert False
+            errors.unreachable()
 
     @property
     def inputs(self) -> UnitPin:
@@ -316,7 +316,7 @@ class Tick_Counter:
         elif isinstance(self._output, elements.Counter):
             return self._output.i_up
         else:
-            assert False
+            errors.unreachable()
 
     @property
     def o(self) -> OutputPin:
@@ -325,4 +325,4 @@ class Tick_Counter:
         elif isinstance(self._output, elements.Counter):
             return self._o
         else:
-            assert False
+            errors.unreachable()

@@ -45,7 +45,7 @@ class Pin(metaclass=_PinMeta):
         for name, a_pin in self.element_self.get_all_pins_property():
             if a_pin.fget(self.element_self) == self:
                 return name
-        assert False
+        errors.unreachable()
 
     def get_wires(self) -> List["Wire"]:
         ''' 获取该引脚上连接的所有导线

@@ -31,7 +31,7 @@ class _ExperimentStack:
 
     @classmethod
     def inside(cls, item: "_Experiment") -> bool:
-        assert isinstance(item, _Experiment)
+        errors.assert_true(isinstance(item, _Experiment))
 
         for a_expe in cls.data:
             if a_expe.SAV_PATH == item.SAV_PATH:
@@ -172,7 +172,7 @@ class _Experiment:
             if can_break:
                 break
         else:
-            assert False
+            errors.unreachable()
 
         assert identifier in self._id2element.keys()
         del self._id2element[identifier]
@@ -262,7 +262,7 @@ class _Experiment:
                 "Elements": [a_element.data for a_element in self.Elements],
             }
         else:
-            assert False
+            errors.unreachable()
 
         self.PlSav["Experiment"]["CreationDate"] = int(time.time() * 1000)
         self.PlSav["Summary"]["CreationDate"] = int(time.time() * 1000)
@@ -328,7 +328,7 @@ class _Experiment:
                     color=_colorUtils.COLOR.GREEN
                 )
             else:
-                assert False
+                errors.unreachable()
 
         return self
 
@@ -662,7 +662,7 @@ class _Experiment:
         if self is other:
             raise errors.ExperimentError("can not merge to itself") # TODO 换一个更好的异常类型?
 
-        assert self.SAV_PATH is not None and other.SAV_PATH is not None
+        errors.assert_true(self.SAV_PATH is not None and other.SAV_PATH is not None)
 
         if self is other:
             return self

@@ -165,7 +165,7 @@ class Experiment(_Experiment):
                 elif _temp["Type"] == ExperimentType.Electromagnetism.value:
                     self.PlSav = copy.deepcopy(savTemplate.Electromagnetism)
                 else:
-                    assert False
+                    errors.unreachable()
 
                 self.PlSav["Experiment"] = _temp
                 # .sav的Experiment不包含存档名, 会产生一个匿名存档
@@ -218,7 +218,7 @@ class Experiment(_Experiment):
             elif _experiment["Type"] == ExperimentType.Electromagnetism.value:
                 self.PlSav = copy.deepcopy(savTemplate.Electromagnetism)
             else:
-                assert False
+                errors.unreachable()
 
             self.PlSav["Experiment"] = _experiment
             self.PlSav["Summary"] = _summary
@@ -273,11 +273,11 @@ class Experiment(_Experiment):
                 self.VisionCenter: _tools.position = _tools.position(0, 0 ,0.88)
                 self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
             else:
-                assert False
+                errors.unreachable()
 
             self.__entitle(sav_name)
         else:
-            assert False
+            errors.unreachable()
 
         assert isinstance(self.open_mode, OpenMode)
         assert isinstance(self._position2elements, dict)
@@ -308,7 +308,7 @@ class Experiment(_Experiment):
             elif self.experiment_type == ExperimentType.Electromagnetism:
                 self.__load_elements(status_sav["Elements"])
             else:
-                assert False
+                errors.unreachable()
 
     def __load(self) -> None:
         assert isinstance(self.PlSav["Experiment"]["CameraSave"], str)
@@ -331,7 +331,7 @@ class Experiment(_Experiment):
         elif self.PlSav["Experiment"]["Type"] == ExperimentType.Electromagnetism.value:
             self.experiment_type = ExperimentType.Electromagnetism
         else:
-            assert False
+            errors.unreachable()
 
     def __load_wires(self, _wires: list) -> None:
         assert self.experiment_type == ExperimentType.Circuit
@@ -348,7 +348,7 @@ class Experiment(_Experiment):
             elif wire_dict["ColorName"][0] == '黑':
                 color = WireColor.black
             else:
-                assert False
+                errors.unreachable()
 
             crt_wire(
                 Pin(self.get_element_from_identifier(wire_dict["Source"]), wire_dict["SourcePin"]),
@@ -400,7 +400,7 @@ class Experiment(_Experiment):
                 obj = self.crt_element(element["ModelID"], x, y, z, identifier=element['Identifier'])
                 obj.data = element
             else:
-                assert False
+                errors.unreachable()
 
     def __enter__(self) -> Self:
         return self
@@ -446,4 +446,4 @@ class Experiment(_Experiment):
         elif self.experiment_type == ExperimentType.Electromagnetism:
             return eval(f"electromagnetism.{name}({x}, {y}, {z}, **{kwargs})")
         else:
-            assert False
+            errors.unreachable()

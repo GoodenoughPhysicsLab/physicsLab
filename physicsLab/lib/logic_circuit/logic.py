@@ -114,7 +114,7 @@ class Decoder:
                     crt_wires(l2._outputs[b],And_Gates[a][b].i_up)
             self._outputs=[and_gate.o for and_gates in And_Gates for and_gate in and_gates] # Expand 2D list
         else:
-            assert False
+            errors.unreachable()
     @property
     def inputs(self) -> UnitPin:
         return UnitPin(self, *self._inputs)

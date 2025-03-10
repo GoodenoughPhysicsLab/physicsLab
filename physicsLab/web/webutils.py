@@ -417,7 +417,7 @@ class RelationsIter:
             elif self.display_type == "Following":
                 self.amount = self.user.get_user(user_id=self.user_id)['Data']['Statistic']['FollowingCount']
             else:
-                assert False
+                errors.unreachable()
         else:
             self.amount = amount
         self.max_workers = max_workers
@@ -487,7 +487,7 @@ class AvatarsIter:
                 self.max_img_index = user.get_summary(target_id, Category.Discussion)["Data"]["Image"]
                 category = "experiments"
             else:
-                assert False
+                errors.unreachable()
         else:
             self.max_img_index = max_img_index
 

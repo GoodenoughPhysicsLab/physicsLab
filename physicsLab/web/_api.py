@@ -60,7 +60,7 @@ def get_avatar(target_id: str, index: int, category: str, size_category: str) ->
     elif category == "experiments":
         category += "/images"
     else:
-        assert False
+        errors.unreachable()
 
     response = requests.get(
         f"http://physics-static-cn.turtlesim.com:80/{category}"
@@ -786,7 +786,7 @@ class _User:
         elif display_type == "Following":
             display_type_ = 1
         else:
-            assert False
+            errors.unreachable()
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Users/GetRelations",
