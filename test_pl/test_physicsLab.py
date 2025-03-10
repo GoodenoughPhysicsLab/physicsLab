@@ -569,6 +569,17 @@ class BasicTest(TestCase, ViztracerTool):
             expe.close(delete=True)
 
     @my_test_dec
+    def test_export2(self):
+        with Experiment(OpenMode.load_by_filepath, os.path.join(TEST_DATA_DIR, "Export-All-Circuit-Elements.sav")) as expe:
+            expe.export("temp.pl.py", "__test__")
+            expe.close()
+
+        os.system(f"{sys.executable} temp.pl.py")
+        with Experiment(OpenMode.load_by_sav_name, "__test__") as expe:
+            self.assertTrue(expe.get_elements_count() == 91)
+            expe.close(delete=True)
+
+    @my_test_dec
     def test_type_error(self):
         expe = Experiment(OpenMode.crt, "__test___type_error__", ExperimentType.Circuit, force_crt=True)
         try:
@@ -678,8 +689,11 @@ class BasicTest(TestCase, ViztracerTool):
             gnd = Ground_Component(5, -6, 0)
             mtr = Multimeter(4, 0, 0)
             crt_wire(mtr.black, gnd.i)
-            nl = lib.log(lib.exp(lib.PinNode(Logic_Input(-9, 9, 0).set_output_status(True).o, gnd)),
-                         lib.ln(lib.PinNode(Logic_Input(-9, -1, 0).set_output_status(True).o, gnd)))
+            logic_input1 = Logic_Input(-9, 9, 0)
+            logic_input1.output_status = True
+            logic_input2 = Logic_Input(-9, -1, 0)
+            logic_input2.output_status = True
+            nl = lib.log(lib.exp(lib.PinNode(logic_input1.o, gnd)), lib.ln(lib.PinNode(logic_input2.o, gnd)))
             nl.pos = (0, -11, 0)
             lib.lambertW(lib.PinNode(Logic_Input(-9, 11, 0).o, gnd))
             self.assertEqual(expe.get_elements_count(), 107)

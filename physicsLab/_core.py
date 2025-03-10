@@ -706,8 +706,9 @@ class ElementBase:
     def __init__(self) -> None:
         raise NotImplementedError
 
+    @staticmethod
     @abc.abstractmethod
-    def zh_name(self):
+    def zh_name():
         raise NotImplementedError
 
     def set_position(self, x: num_type, y: num_type, z: num_type) -> Self:

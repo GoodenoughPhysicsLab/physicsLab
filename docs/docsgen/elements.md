@@ -603,7 +603,6 @@ class Simple_Switch(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -611,7 +610,6 @@ class Simple_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -674,7 +672,6 @@ class Push_Switch(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -682,7 +679,6 @@ class Push_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -733,7 +729,6 @@ class Air_Switch(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -741,7 +736,6 @@ class Air_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -804,7 +798,6 @@ class Incandescent_Lamp(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -812,7 +805,6 @@ class Incandescent_Lamp(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -863,7 +855,6 @@ class Battery_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -871,7 +862,6 @@ class Battery_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -887,7 +877,6 @@ class Battery_Source(CircuitBase):
 设置 一节电池 的属性  
 @param voltage: 电压  
 @param internal_resistance: 内阻  
-  
 
 ### set_rotation
 ```Python
@@ -937,7 +926,6 @@ class Resistor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -945,7 +933,6 @@ class Resistor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1002,7 +989,6 @@ class Fuse_Component(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1010,7 +996,6 @@ class Fuse_Component(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1061,7 +1046,6 @@ class Multimeter(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1069,7 +1053,6 @@ class Multimeter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1098,7 +1081,6 @@ class Basic_Capacitor(CircuitBase):
 @param is_ideal: 是否为理想模式  
 @param peak_voltage: 峰值电压, 单位为V  
 @param internal_resistance: 内阻, 单位为Ω  
-  
 
 ### get_all_pins_property
 ```Python
@@ -1125,7 +1107,6 @@ class Basic_Capacitor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1133,24 +1114,12 @@ class Basic_Capacitor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
-
-### set_properties
-```Python
-    def set_properties(self, *, peak_voltage: Union[int, float, NoneType] = None, capacitance: Union[int, float, NoneType] = None, internal_resistance: Union[int, float, NoneType] = None, is_ideal: Optional[bool] = None) -> Self
-```
-修改电容属性  
-@param capacitance: 电容, 单位为F  
-@param is_ideal: 是否为理想模式  
-@param peak_voltage: 峰值电压, 单位为V  
-@param internal_resistance: 内阻, 单位为Ω  
   
 
 ### set_rotation
@@ -1173,7 +1142,6 @@ class Basic_Inductor(CircuitBase):
 @param inductance: 电感，单位为 Henry  
 @param internal_resistance: 电感内部阻抗，单位为 Ohm  
 @param is_ideal: 是否为理想模式  
-  
 
 ### fix_inductance
 ```Python
@@ -1206,7 +1174,6 @@ class Basic_Inductor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1214,24 +1181,12 @@ class Basic_Inductor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
-
-### set_properties
-```Python
-    def set_properties(self, *, rated_current: Union[int, float, NoneType] = None, inductance: Union[int, float, NoneType] = None, internal_resistance: Union[int, float, NoneType] = None, is_ideal: Optional[bool] = None) -> Self
-```
-修改电感属性  
-@param rated_current: 电感额定电流，单位为 A  
-@param inductance: 电感，单位为 Henry  
-@param internal_resistance: 电感内部阻抗，单位为 Ohm  
-@param is_ideal: 是否为理想模式  
   
 
 ### set_rotation
@@ -1276,7 +1231,6 @@ class Basic_Diode(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1284,7 +1238,6 @@ class Basic_Diode(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1335,7 +1288,6 @@ class Light_Emitting_Diode(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1343,7 +1295,6 @@ class Light_Emitting_Diode(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1394,7 +1345,6 @@ class Current_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1402,7 +1352,6 @@ class Current_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1453,7 +1402,6 @@ class Sinewave_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1461,7 +1409,6 @@ class Sinewave_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1512,7 +1459,6 @@ class Square_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1520,7 +1466,6 @@ class Square_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1571,7 +1516,6 @@ class Triangle_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1579,7 +1523,6 @@ class Triangle_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1630,7 +1573,6 @@ class Sawtooth_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1638,7 +1580,6 @@ class Sawtooth_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1689,7 +1630,6 @@ class Pulse_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1697,7 +1637,6 @@ class Pulse_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1748,7 +1687,6 @@ class Photodiode(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1756,7 +1694,6 @@ class Photodiode(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1807,7 +1744,6 @@ class Photoresistor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1815,7 +1751,6 @@ class Photoresistor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1866,7 +1801,6 @@ class Buzzer(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1874,7 +1808,6 @@ class Buzzer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1925,7 +1858,6 @@ class Spark_Gap(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1933,7 +1865,6 @@ class Spark_Gap(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1984,7 +1915,6 @@ class Tesla_Coil(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -1992,7 +1922,6 @@ class Tesla_Coil(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2043,7 +1972,6 @@ class Dual_Light_Emitting_Diode(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -2051,7 +1979,6 @@ class Dual_Light_Emitting_Diode(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2102,7 +2029,6 @@ class Electric_Bell(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -2110,7 +2036,6 @@ class Electric_Bell(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2161,7 +2086,6 @@ class Musical_Box(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -2169,7 +2093,6 @@ class Musical_Box(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2220,7 +2143,6 @@ class Electric_Fan(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -2228,7 +2150,6 @@ class Electric_Fan(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2279,7 +2200,6 @@ class Simple_Switch(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -2287,7 +2207,6 @@ class Simple_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2356,7 +2275,6 @@ class SPDT_Switch(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -2364,7 +2282,6 @@ class SPDT_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### right_turn_on_switch
 ```Python
@@ -2433,7 +2350,6 @@ class DPDT_Switch(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -2441,7 +2357,6 @@ class DPDT_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### right_turn_on_switch
 ```Python
@@ -2504,7 +2419,6 @@ class Student_Source(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -2512,7 +2426,6 @@ class Student_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2563,7 +2476,6 @@ class Slide_Rheostat(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -2571,7 +2483,6 @@ class Slide_Rheostat(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2622,7 +2533,6 @@ class Galvanometer(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -2630,7 +2540,6 @@ class Galvanometer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2681,7 +2590,6 @@ class Microammeter(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -2689,7 +2597,6 @@ class Microammeter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2740,7 +2647,6 @@ class Electricity_Meter(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -2748,7 +2654,6 @@ class Electricity_Meter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2799,7 +2704,6 @@ class Resistance_Box(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -2807,7 +2711,6 @@ class Resistance_Box(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2865,7 +2768,6 @@ class Simple_Ammeter(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -2873,7 +2775,6 @@ class Simple_Ammeter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2924,7 +2825,6 @@ class Simple_Voltmeter(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -2932,7 +2832,6 @@ class Simple_Voltmeter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2995,7 +2894,6 @@ class Logic_Input(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -3003,7 +2901,6 @@ class Logic_Input(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -3016,12 +2913,6 @@ class Logic_Input(CircuitBase):
     def set_low_level_value(self, num: Union[int, float]) -> Self
 ```
 设置低电平的值  
-
-### set_output_status
-```Python
-    def set_output_status(self, status: bool) -> Self
-```
-将逻辑输入的状态设置为1  
 
 ### set_position
 ```Python
@@ -3084,7 +2975,6 @@ class Logic_Output(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -3092,7 +2982,6 @@ class Logic_Output(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -3167,7 +3056,6 @@ class Yes_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -3175,7 +3063,6 @@ class Yes_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -3250,7 +3137,6 @@ class No_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -3258,7 +3144,6 @@ class No_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -3333,7 +3218,6 @@ class Or_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -3341,7 +3225,6 @@ class Or_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -3416,7 +3299,6 @@ class And_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -3424,7 +3306,6 @@ class And_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -3499,7 +3380,6 @@ class Nor_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -3507,7 +3387,6 @@ class Nor_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -3582,7 +3461,6 @@ class Nand_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -3590,7 +3468,6 @@ class Nand_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -3665,7 +3542,6 @@ class Xor_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -3673,7 +3549,6 @@ class Xor_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -3748,7 +3623,6 @@ class Xnor_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -3756,7 +3630,6 @@ class Xnor_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -3831,7 +3704,6 @@ class Imp_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -3839,7 +3711,6 @@ class Imp_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -3914,7 +3785,6 @@ class Nimp_Gate(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -3922,7 +3792,6 @@ class Nimp_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -3997,7 +3866,6 @@ class Half_Adder(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -4005,7 +3873,6 @@ class Half_Adder(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -4080,7 +3947,6 @@ class Full_Adder(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -4088,7 +3954,6 @@ class Full_Adder(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -4163,7 +4028,6 @@ class Half_Subtractor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -4171,7 +4035,6 @@ class Half_Subtractor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -4246,7 +4109,6 @@ class Full_Subtractor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -4254,7 +4116,6 @@ class Full_Subtractor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -4329,7 +4190,6 @@ class Multiplier(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -4337,7 +4197,6 @@ class Multiplier(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -4412,7 +4271,6 @@ class D_Flipflop(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -4420,7 +4278,6 @@ class D_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -4495,7 +4352,6 @@ class T_Flipflop(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -4503,7 +4359,6 @@ class T_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -4578,7 +4433,6 @@ class Real_T_Flipflop(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -4586,7 +4440,6 @@ class Real_T_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -4661,7 +4514,6 @@ class JK_Flipflop(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -4669,7 +4521,6 @@ class JK_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -4744,7 +4595,6 @@ class Counter(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -4752,7 +4602,6 @@ class Counter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -4827,7 +4676,6 @@ class Random_Generator(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -4835,7 +4683,6 @@ class Random_Generator(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -4910,7 +4757,6 @@ class Eight_Bit_Input(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -4918,7 +4764,6 @@ class Eight_Bit_Input(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -4998,7 +4843,6 @@ class Eight_Bit_Display(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5006,7 +4850,6 @@ class Eight_Bit_Display(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -5081,7 +4924,6 @@ class Proximity_Sensor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5089,7 +4931,6 @@ class Proximity_Sensor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_high_level_value
 ```Python
@@ -5152,7 +4993,6 @@ class Schmitt_Trigger(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5160,7 +5000,6 @@ class Schmitt_Trigger(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5177,7 +5016,6 @@ class Schmitt_Trigger(CircuitBase):
 @param high_level: 高电平电平  
 @param low_level: 低电平电平  
 @param inverted: 是否翻转  
-  
 
 ### set_rotation
 ```Python
@@ -5221,7 +5059,6 @@ class NE555(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5229,7 +5066,6 @@ class NE555(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5280,7 +5116,6 @@ class Ground_Component(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5288,7 +5123,6 @@ class Ground_Component(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5339,7 +5173,6 @@ class Transformer(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5347,7 +5180,6 @@ class Transformer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5398,7 +5230,6 @@ class Tapped_Transformer(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5406,7 +5237,6 @@ class Tapped_Transformer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5457,7 +5287,6 @@ class Mutual_Inductor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5465,7 +5294,6 @@ class Mutual_Inductor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5516,7 +5344,6 @@ class Rectifier(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5524,7 +5351,6 @@ class Rectifier(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5575,7 +5401,6 @@ class Transistor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5583,7 +5408,6 @@ class Transistor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5600,7 +5424,6 @@ class Transistor(CircuitBase):
 @param is_PNP: 是PNP还是NPN, True时为PNP  
 @param gain: 放大系数  
 @param max_power: 最大功率  
-  
 
 ### set_rotation
 ```Python
@@ -5644,7 +5467,6 @@ class Comparator(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5652,7 +5474,6 @@ class Comparator(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5680,7 +5501,6 @@ class Operational_Amplifier(CircuitBase):
 @param gain: 增益系数  
 @param max_voltage: 最大电压  
 @param min_voltage: 最小电压  
-  
 
 ### get_all_pins_property
 ```Python
@@ -5707,7 +5527,6 @@ class Operational_Amplifier(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5715,7 +5534,6 @@ class Operational_Amplifier(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5732,7 +5550,6 @@ class Operational_Amplifier(CircuitBase):
 @param gain: 增益系数  
 @param max_voltage: 最大电压  
 @param min_voltage: 最小电压  
-  
 
 ### set_rotation
 ```Python
@@ -5776,7 +5593,6 @@ class Relay_Component(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5784,7 +5600,6 @@ class Relay_Component(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5802,7 +5617,6 @@ class Relay_Component(CircuitBase):
 @param rated_current: 额定电流  
 @param coil_inductance: 线圈电感  
 @param coil_resistance: 线圈电阻  
-  
 
 ### set_rotation
 ```Python
@@ -5846,7 +5660,6 @@ class N_MOSFET(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5854,7 +5667,6 @@ class N_MOSFET(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5871,7 +5683,6 @@ class N_MOSFET(CircuitBase):
 @param beta: 放大系数  
 @param threshold: 阈值电压  
 @param max_power: 最大功率  
-  
 
 ### set_rotation
 ```Python
@@ -5915,7 +5726,6 @@ class P_MOSFET(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5923,7 +5733,6 @@ class P_MOSFET(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5974,7 +5783,6 @@ class Accelerometer(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -5982,7 +5790,6 @@ class Accelerometer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -6033,7 +5840,6 @@ class Attitude_Sensor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -6041,7 +5847,6 @@ class Attitude_Sensor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -6092,7 +5897,6 @@ class Gravity_Sensor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -6100,7 +5904,6 @@ class Gravity_Sensor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -6151,7 +5954,6 @@ class Gyroscope(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -6159,7 +5961,6 @@ class Gyroscope(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -6210,7 +6011,6 @@ class Linear_Accelerometer(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -6218,7 +6018,6 @@ class Linear_Accelerometer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -6269,7 +6068,6 @@ class Magnetic_Field_Sensor(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -6277,7 +6075,6 @@ class Magnetic_Field_Sensor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -6328,7 +6125,6 @@ class Analog_Joystick(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -6336,7 +6132,6 @@ class Analog_Joystick(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -6387,7 +6182,6 @@ class Color_Light_Emitting_Diode(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -6395,7 +6189,6 @@ class Color_Light_Emitting_Diode(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -6446,7 +6239,6 @@ class Resistance_Law(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -6454,7 +6246,6 @@ class Resistance_Law(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -6505,7 +6296,6 @@ class Solenoid(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -6513,7 +6303,6 @@ class Solenoid(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -6545,7 +6334,6 @@ class Simple_Instrument(CircuitBase):
 @param bpm: 节奏  
 @param is_ideal: 是否为理想模式  
 @param is_pulse: 简单乐器是否只响一次  
-  
 
 ### get_all_pins_property
 ```Python
@@ -6572,7 +6360,6 @@ class Simple_Instrument(CircuitBase):
 ```
 是否锁定元件 (位置不会受元件间碰撞的影响)  
 @param status: 是否锁定元件  
-  
 
 ### rename
 ```Python
@@ -6580,7 +6367,6 @@ class Simple_Instrument(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -6611,7 +6397,6 @@ rising_falling = True 时，为升调，为 False 时降调
 输入范围：  
 C0 ~ C8  
 注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120  
-  
 
 ### zh_name
 ```Python

@@ -102,57 +102,83 @@ class Basic_Capacitor(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
-        self.set_properties(
-            peak_voltage=peak_voltage,
-            capacitance=capacitance,
-            internal_resistance=internal_resistance,
-            is_ideal=is_ideal,
-        )
+        self.peak_voltage = peak_voltage
+        self.capacitance = capacitance
+        self.internal_resistance = internal_resistance
+        self.is_ideal = is_ideal
 
     @final
     @staticmethod
     def zh_name() -> LiteralString:
         return "电容"
 
-    def set_properties(
-            self,
-            *,
-            peak_voltage: Optional[num_type] = None,
-            capacitance: Optional[num_type] = None,
-            internal_resistance: Optional[num_type] = None,
-            is_ideal: Optional[bool] = None,
-    ) -> Self:
-        ''' 修改电容属性
-            @param capacitance: 电容, 单位为F
-            @param is_ideal: 是否为理想模式
-            @param peak_voltage: 峰值电压, 单位为V
-            @param internal_resistance: 内阻, 单位为Ω
+    @property
+    @final
+    def peak_voltage(self) -> num_type:
+        ''' 峰值电压属性, 单位为V
         '''
-        if not isinstance(peak_voltage, (int, float, type(None))) \
-                or not isinstance(capacitance, (int, float, type(None))) \
-                or not isinstance(internal_resistance, (int, float, type(None))) \
-                or not isinstance(is_ideal, (bool, type(None))):
+        return self.properties["耐压"]
+
+    @peak_voltage.setter
+    @final
+    def peak_voltage(self, value: num_type):
+        if not isinstance(value, (int, float)):
             raise TypeError
 
-        if peak_voltage is not None:
-            self.properties["耐压"] = peak_voltage
-        if capacitance is not None:
-            self.properties["电容"] = capacitance
-        if internal_resistance is not None:
-            self.properties["内阻"] = internal_resistance
-        if is_ideal is not None:
-            self.properties["理想模式"] = int(is_ideal)
+        self.properties["耐压"] = value
 
-        return self
+    @property
+    @final
+    def capacitance(self) -> num_type:
+        ''' 电容属性, 单位为F
+        '''
+        return self.properties["电容"]
+
+    @capacitance.setter
+    @final
+    def capacitance(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError
+
+        self.properties["电容"] = value
+
+    @property
+    @final
+    def internal_resistance(self) -> num_type:
+        ''' 内阻属性, 单位为Ω
+        '''
+        return self.properties["内阻"]
+
+    @internal_resistance.setter
+    @final
+    def internal_resistance(self, value: num_type):
+        self.properties["内阻"] = value
+
+    @property
+    @final
+    def is_ideal(self) -> bool:
+        ''' 元件是否为理想模式
+        '''
+        if "理想模式" not in self.properties:
+            self.properties["理想模式"] = 0
+        return bool(self.properties["理想模式"])
+
+    @is_ideal.setter
+    @final
+    def is_ideal(self, value: bool):
+        if not isinstance(value, bool):
+            raise TypeError
+
+        self.properties["理想模式"] = int(value)
 
     @override
     def __repr__(self) -> str:
         return f"Basic_Capacitor({self._position.x}, {self._position.y}, {self._position.z}, " \
                 f"elementXYZ={self.is_elementXYZ}, " \
-                f"peak_voltage={self.properties['耐压']}, " \
-                f"capacitance={self.properties['电容']}, " \
-                f"internal_resistance={self.properties['内阻']}, " \
-                f"is_ideal={bool(self.properties['理想模式'])})"
+                f"peak_voltage={self.peak_voltage}, " \
+                f"capacitance={self.capacitance}, " \
+                f"internal_resistance={self.internal_resistance}, " \
+                f"is_ideal={self.is_ideal})"
 
 class Basic_Inductor(_TwoPinMixIn):
     ''' 电感 '''
@@ -184,48 +210,77 @@ class Basic_Inductor(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
-        self.set_properties(
-            rated_current=rated_current,
-            inductance=inductance,
-            internal_resistance=internal_resistance,
-            is_ideal=is_ideal,
-        )
+        self.rated_current = rated_current
+        self.inductance = inductance
+        self.internal_resistance = internal_resistance
+        self.is_ideal = is_ideal
 
     @final
     @staticmethod
     def zh_name() -> LiteralString:
         return "电感"
 
-    def set_properties(
-            self,
-            *,
-            rated_current: Optional[num_type] = None,
-            inductance: Optional[num_type] = None,
-            internal_resistance: Optional[num_type] = None,
-            is_ideal: Optional[bool] = None,
-    ) -> Self:
-        ''' 修改电感属性
-            @param rated_current: 电感额定电流，单位为 A
-            @param inductance: 电感，单位为 Henry
-            @param internal_resistance: 电感内部阻抗，单位为 Ohm
-            @param is_ideal: 是否为理想模式
+    @property
+    @final
+    def rated_current(self) -> num_type:
+        ''' 电感额定电流，单位为 A
         '''
-        if not isinstance(rated_current, (int, float, type(None))) \
-                or not isinstance(inductance, (int, float, type(None))) \
-                or not isinstance(internal_resistance, (int, float, type(None))) \
-                or not isinstance(is_ideal, (bool, type(None))):
+        return self.properties["额定电流"]
+
+    @rated_current.setter
+    @final
+    def rated_current(self, value: num_type):
+        if not isinstance(value, (int, float)):
             raise TypeError
 
-        if not rated_current is None:
-            self.properties["额定电流"] = rated_current
-        if not inductance is None:
-            self.properties["电感"] = inductance
-        if not internal_resistance is None:
-            self.properties["内阻"] = internal_resistance
-        if not is_ideal is None:
-            self.properties["理想模式"] = int(is_ideal)
+        self.properties["额定电流"] = value
 
-        return self
+    @property
+    @final
+    def inductance(self) -> num_type:
+        ''' 电感，单位为 Henry
+        '''
+        return self.properties["电感"]
+
+    @inductance.setter
+    @final
+    def inductance(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError
+
+        self.properties["电感"] = value
+
+    @property
+    @final
+    def internal_resistance(self) -> num_type:
+        ''' 电感内部阻抗, 单位为Ohm
+        '''
+        return self.properties["内阻"]
+
+    @internal_resistance.setter
+    @final
+    def internal_resistance(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError
+
+        self.properties["内阻"] = value
+
+    @property
+    @final
+    def is_ideal(self) -> bool:
+        ''' 元件是否为理想模式
+        '''
+        if "理想模式" not in self.properties:
+            self.properties["理想模式"] = 0
+        return bool(self.properties["理想模式"])
+
+    @is_ideal.setter
+    @final
+    def is_ideal(self, value: bool):
+        if not isinstance(value, bool):
+            raise TypeError
+
+        self.properties["理想模式"] = int(value)
 
     def fix_inductance(self) -> Self:
         ''' 修正电感值的浮点误差 '''
@@ -236,10 +291,10 @@ class Basic_Inductor(_TwoPinMixIn):
     def __repr__(self) -> str:
         return f"Basic_Inductor({self._position.x}, {self._position.y}, {self._position.z}, " \
               f"elementXYZ={self.is_elementXYZ}, " \
-              f"rated_current={self.properties['额定电流']}" \
-              f"inductance={self.properties['电感']}, " \
-              f"internal_resistance={self.properties['内阻']}" \
-              f"is_ideal={bool(self.properties['理想模式'])}"
+              f"rated_current={self.rated_current}, " \
+              f"inductance={self.inductance}, " \
+              f"internal_resistance={self.internal_resistance}, " \
+              f"is_ideal={self.is_ideal})"
 
 class Basic_Diode(_TwoPinMixIn):
     ''' 二极管 '''
