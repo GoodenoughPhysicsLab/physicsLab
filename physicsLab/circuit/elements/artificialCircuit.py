@@ -580,38 +580,48 @@ class Transistor(CircuitBase):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
-        self.set_properties(is_PNP=is_PNP, gain=gain, max_power=max_power)
+        self.is_PNP = is_PNP
+        self.gain = gain
+        self.max_power = max_power
 
     @final
     @staticmethod
     def zh_name() -> LiteralString:
         return "三极管"
 
-    def set_properties(
-            self,
-            *,
-            is_PNP: Optional[bool] = None,
-            gain: Optional[num_type] = None,
-            max_power: Optional[num_type] = None,
-    ) -> Self:
-        ''' 修改三极管属性
-            @param is_PNP: 是PNP还是NPN, True时为PNP
-            @param gain: 放大系数
-            @param max_power: 最大功率
-        '''
-        if not isinstance(is_PNP, (bool, type(None))) \
-                or not isinstance(gain, (int, float, type(None))) \
-                or not isinstance(max_power, (int, float, type(None))):
-            raise TypeError
+    @property
+    def is_PNP(self) -> bool:
+        ''' 是PNP还是NPN, True时为PNP '''
+        return bool(self.properties["PNP"])
 
-        if is_PNP is not None:
-            self.properties["PNP"] = float(is_PNP)
-        if gain is not None:
-            self.properties["放大系数"] = gain
-        if max_power is not None:
-            self.properties["最大功率"] = max_power
+    @is_PNP.setter
+    def is_PNP(self, value: bool):
+        if not isinstance(value, bool):
+            raise TypeError(f"is_PNP must be of type `bool`, but got `{type(value).__name__}`")
 
-        return self
+        self.properties["PNP"] = int(value)
+
+    @property
+    def gain(self) -> num_type:
+        return self.properties["放大系数"]
+
+    @gain.setter
+    def gain(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"gain must be of type `int | float`, but got `{type(value).__name__}`")
+
+        self.properties["放大系数"] = value
+
+    @property
+    def max_power(self) -> num_type:
+        return self.properties["最大功率"]
+
+    @max_power.setter
+    def max_power(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"max_power must be of type `int | float`, but got `{type(value).__name__}`")
+
+        self.properties["最大功率"] = value
 
     def __repr__(self) -> str:
         res = f"Transistor({self._position.x}, {self._position.y}, {self._position.z}, " \
@@ -700,40 +710,48 @@ class Operational_Amplifier(CircuitBase):
             "Position": Generate,"Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
-        self.set_properties(gain=gain, max_voltage=max_voltage, min_voltage=min_voltage)
+        self.gain = gain
+        self.max_voltage = max_voltage
+        self.min_voltage = min_voltage
+        # TODO I wonder what will happen if max_voltage < min_voltage
+        # if max_voltage <= min_voltage:
+        #     raise ValueError("Maximun voltage must be greater than minimum voltage")
 
-    def set_properties(
-            self,
-            *,
-            gain: Optional[num_type] = None,
-            max_voltage: Optional[num_type] = None,
-            min_voltage: Optional[num_type] = None,
-    ) -> Self:
-        ''' 修改运放属性
-            @param gain: 增益系数
-            @param max_voltage: 最大电压
-            @param min_voltage: 最小电压
+    @property
+    def gain(self) -> num_type:
+        ''' 增益系数
         '''
-        if not isinstance(gain, (int, float, type(None))) \
-                or not isinstance(max_voltage, (int, float, type(None))) \
-                or not isinstance(min_voltage, (int, float, type(None))):
-            raise TypeError
+        return self.properties["增益系数"]
 
-        if gain is None:
-            gain = self.properties["增益系数"]
-        if max_voltage is None:
-            max_voltage = self.properties["最大电压"]
-        if min_voltage is None:
-            min_voltage = self.properties["最小电压"]
+    @gain.setter
+    def gain(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"gain must be of type `int | float`, but got `{type(value).__name__}`")
 
-        assert gain is not None and max_voltage is not None and min_voltage is not None, errors.BUG_REPORT
-        if max_voltage <= min_voltage:
-            raise ValueError("Maximun voltage must be greater than minimum voltage")
+        self.properties["增益系数"] = value
 
-        self.properties["增益系数"] = gain
-        self.properties["最大电压"] = max_voltage
-        self.properties["最小电压"] = min_voltage
-        return self
+    @property
+    def max_voltage(self) -> num_type:
+        return self.properties["最大电压"]
+
+    @max_voltage.setter
+    def max_voltage(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"max_voltage must be of type `int | float`, but got `{type(value).__name__}`")
+
+        self.properties["最大电压"] = value
+
+
+    @property
+    def min_voltage(self) -> num_type:
+        return self.properties["最小电压"]
+
+    @min_voltage.setter
+    def min_voltage(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"min_voltage must be of type `int | float`, but got `{type(value).__name__}`")
+
+        self.properties["最小电压"] = value
 
     @override
     def __repr__(self) -> str:
@@ -775,12 +793,6 @@ class Relay_Component(CircuitBase):
             coil_inductance: num_type = 0.2,
             coil_resistance: num_type = 20,
     ) -> None:
-        if not isinstance(pull_in_current, (int, float)) \
-                or not isinstance(rated_current, (int, float)) \
-                or not isinstance(coil_inductance, (int, float)) \
-                or not isinstance(coil_resistance, (int, float)):
-            raise TypeError
-
         self.data: CircuitElementData = {
             "ModelID": "Relay Component", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -791,42 +803,62 @@ class Relay_Component(CircuitBase):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
-        self.set_properties(
-            pull_in_current=pull_in_current,
-            rated_current=rated_current,
-            coil_inductance=coil_inductance,
-            coil_resistance=coil_resistance,
-        )
+        self.pull_in_current = pull_in_current
+        self.rated_current = rated_current
+        self.coil_inductance = coil_inductance
+        self.coil_resistance = coil_resistance
 
-    def set_properties(
-             self,
-             *,
-             pull_in_current: Optional[num_type] = None,
-             rated_current: Optional[num_type] = None,
-             coil_inductance: Optional[num_type] = None,
-             coil_resistance: Optional[num_type] = None,
-     ) -> Self:
-         ''' 修改运放属性
-             @param pull_in_current: 接通电流
-             @param rated_current: 额定电流
-             @param coil_inductance: 线圈电感
-             @param coil_resistance: 线圈电阻
-         '''
-         if not isinstance(pull_in_current, (int, float, type(None))) \
-                 or not isinstance(rated_current, (int, float, type(None))) \
-                 or not isinstance(coil_inductance, (int, float, type(None))) \
-                 or not isinstance(coil_resistance, (int, float, type(None))):
-             raise TypeError
+    @property
+    def pull_in_current(self) -> num_type:
+        ''' 接通电流
+        '''
+        return self.properties["接通电流"]
 
-         if pull_in_current is not None:
-             self.properties["接通电流"] = pull_in_current
-         if rated_current is not None:
-             self.properties["额定电流"] = rated_current
-         if coil_inductance is not None:
-             self.properties["线圈电感"] = coil_inductance
-         if coil_resistance is not None:
-             self.properties["线圈电阻"] = coil_resistance
-         return self
+    @pull_in_current.setter
+    def pull_in_current(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"pull_in_current must be of type `int | float`, but got `{type(value).__name__}`")
+
+        self.properties["接通电流"] = value
+
+    @property
+    def rated_current(self) -> num_type:
+        ''' 额定电流
+        '''
+        return self.properties["额定电流"]
+
+    @rated_current.setter
+    def rated_current(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"rated_current must be of type `int | float`, but got `{type(value).__name__}`")
+
+        self.properties["额定电流"] = value
+
+    @property
+    def coil_inductance(self) -> num_type:
+        ''' 线圈电感
+        '''
+        return self.properties["线圈电感"]
+
+    @coil_inductance.setter
+    def coil_inductance(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"coil_inductance must be of type `int | flaot`, but got `{type(value).__name__}`")
+
+        self.properties["线圈电感"] = value
+
+    @property
+    def coil_resistance(self) -> num_type:
+        ''' 线圈电阻
+        '''
+        return self.properties["线圈电阻"]
+
+    @coil_resistance.setter
+    def coil_resistance(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"coil_resistance must be of type `int | flaot`, but got `{type(value).__name__}`")
+
+        self.properties["线圈电阻"] = value
 
     @final
     @staticmethod

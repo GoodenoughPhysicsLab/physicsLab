@@ -29,7 +29,7 @@ def _check_response(response: requests.Response, err_callback: Optional[Callable
     if err_callback is not None:
         err_callback(status_code)
     raise errors.ResponseFail(
-        f"Physics-Lab-AR returned error code {status_code}: {response_json['Message']}"
+        f"Physics-Lab-AR's server returned error code {status_code}: {response_json['Message']}"
     )
 
 def get_start_page() -> dict:
