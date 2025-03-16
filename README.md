@@ -4,7 +4,7 @@
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![build](https://github.com/gaogaotiantian/viztracer/workflows/build/badge.svg)](https://github.com/GoodenoughPhysicsLab/physicsLab/actions)
-<!-- ![support-version](https://img.shields.io/pypi/pyversions/viztracer) 支持3.8及以上版本 -->
+![support-version](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-blue)
 
 ## 介绍
 当我们在[物理实验室AR](https://www.turtlesim.com/)纯手动做实验的时候，往往会遇到一些琐碎、麻烦但又不得不做的事情，比如：重复的搭建某些电路，调整元件的位置，电路内部结构的重复。这些问题都可以通过使用`physicsLab`生成这些电路结构来轻易解决！于是我写了`physicsLab`，让你能用`Python`在物实做实验。
