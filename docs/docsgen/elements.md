@@ -597,13 +597,6 @@ class Simple_Switch(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -666,13 +659,6 @@ class Push_Switch(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -722,13 +708,6 @@ class Air_Switch(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -792,13 +771,6 @@ class Incandescent_Lamp(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -849,13 +821,6 @@ class Battery_Source(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -869,14 +834,6 @@ class Battery_Source(CircuitBase):
 ```
 设置元件的位置  
   
-
-### set_properties
-```Python
-    def set_properties(self, *, voltage: Union[int, float, NoneType] = None, internal_resistance: Union[int, float, NoneType] = None) -> Self
-```
-设置 一节电池 的属性  
-@param voltage: 电压  
-@param internal_resistance: 内阻  
 
 ### set_rotation
 ```Python
@@ -919,13 +876,6 @@ class Resistor(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -983,13 +933,6 @@ class Fuse_Component(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -1039,13 +982,6 @@ class Multimeter(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -1100,13 +1036,6 @@ class Basic_Capacitor(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -1168,13 +1097,6 @@ class Basic_Inductor(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -1224,13 +1146,6 @@ class Basic_Diode(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -1282,13 +1197,6 @@ class Light_Emitting_Diode(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -1338,13 +1246,6 @@ class Current_Source(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -1396,13 +1297,6 @@ class Sinewave_Source(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -1452,13 +1346,6 @@ class Square_Source(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -1510,13 +1397,6 @@ class Triangle_Source(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -1566,13 +1446,6 @@ class Sawtooth_Source(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -1624,13 +1497,6 @@ class Pulse_Source(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -1680,13 +1546,6 @@ class Photodiode(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -1738,13 +1597,6 @@ class Photoresistor(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -1794,13 +1646,6 @@ class Buzzer(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -1852,13 +1697,6 @@ class Spark_Gap(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -1908,13 +1746,6 @@ class Tesla_Coil(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -1966,13 +1797,6 @@ class Dual_Light_Emitting_Diode(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -2022,13 +1846,6 @@ class Electric_Bell(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -2080,13 +1897,6 @@ class Musical_Box(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -2137,13 +1947,6 @@ class Electric_Fan(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -2193,13 +1996,6 @@ class Simple_Switch(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -2269,13 +2065,6 @@ class SPDT_Switch(CircuitBase):
 ```
 向左闭合开关  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -2344,13 +2133,6 @@ class DPDT_Switch(CircuitBase):
 ```
 向左闭合开关  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -2413,13 +2195,6 @@ class Student_Source(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -2469,13 +2244,6 @@ class Slide_Rheostat(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -2527,13 +2295,6 @@ class Galvanometer(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -2583,13 +2344,6 @@ class Microammeter(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -2641,13 +2395,6 @@ class Electricity_Meter(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -2697,13 +2444,6 @@ class Resistance_Box(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -2762,13 +2502,6 @@ class Simple_Ammeter(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -2818,13 +2551,6 @@ class Simple_Voltmeter(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -2887,13 +2613,6 @@ class Logic_Input(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -2969,13 +2688,6 @@ class Logic_Output(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -3049,13 +2761,6 @@ class Yes_Gate(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -3131,13 +2836,6 @@ class No_Gate(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -3211,13 +2909,6 @@ class Or_Gate(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -3293,13 +2984,6 @@ class And_Gate(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -3373,13 +3057,6 @@ class Nor_Gate(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -3455,13 +3132,6 @@ class Nand_Gate(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -3535,13 +3205,6 @@ class Xor_Gate(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -3617,13 +3280,6 @@ class Xnor_Gate(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -3697,13 +3353,6 @@ class Imp_Gate(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -3779,13 +3428,6 @@ class Nimp_Gate(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -3859,13 +3501,6 @@ class Half_Adder(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -3941,13 +3576,6 @@ class Full_Adder(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -4021,13 +3649,6 @@ class Half_Subtractor(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -4103,13 +3724,6 @@ class Full_Subtractor(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -4183,13 +3797,6 @@ class Multiplier(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -4265,13 +3872,6 @@ class D_Flipflop(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -4345,13 +3945,6 @@ class T_Flipflop(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -4427,13 +4020,6 @@ class Real_T_Flipflop(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -4507,13 +4093,6 @@ class JK_Flipflop(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -4589,13 +4168,6 @@ class Counter(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -4670,13 +4242,6 @@ class Random_Generator(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -4750,13 +4315,6 @@ class Eight_Bit_Input(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -4837,13 +4395,6 @@ class Eight_Bit_Display(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -4918,13 +4469,6 @@ class Proximity_Sensor(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -4987,13 +4531,6 @@ class Schmitt_Trigger(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -5007,15 +4544,6 @@ class Schmitt_Trigger(CircuitBase):
 ```
 设置元件的位置  
   
-
-### set_properties
-```Python
-    def set_properties(self, *, high_level: Union[int, float, NoneType] = None, low_level: Union[int, float, NoneType] = None, inverted: Optional[bool] = None) -> Self
-```
-设置施密特触发器的属性  
-@param high_level: 高电平电平  
-@param low_level: 低电平电平  
-@param inverted: 是否翻转  
 
 ### set_rotation
 ```Python
@@ -5052,13 +4580,6 @@ class NE555(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -5110,13 +4631,6 @@ class Ground_Component(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -5166,13 +4680,6 @@ class Transformer(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -5224,13 +4731,6 @@ class Tapped_Transformer(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -5280,13 +4780,6 @@ class Mutual_Inductor(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -5338,13 +4831,6 @@ class Rectifier(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -5395,13 +4881,6 @@ class Transistor(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -5415,15 +4894,6 @@ class Transistor(CircuitBase):
 ```
 设置元件的位置  
   
-
-### set_properties
-```Python
-    def set_properties(self, *, is_PNP: Optional[bool] = None, gain: Union[int, float, NoneType] = None, max_power: Union[int, float, NoneType] = None) -> Self
-```
-修改三极管属性  
-@param is_PNP: 是PNP还是NPN, True时为PNP  
-@param gain: 放大系数  
-@param max_power: 最大功率  
 
 ### set_rotation
 ```Python
@@ -5460,13 +4930,6 @@ class Comparator(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -5521,13 +4984,6 @@ class Operational_Amplifier(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -5541,15 +4997,6 @@ class Operational_Amplifier(CircuitBase):
 ```
 设置元件的位置  
   
-
-### set_properties
-```Python
-    def set_properties(self, *, gain: Union[int, float, NoneType] = None, max_voltage: Union[int, float, NoneType] = None, min_voltage: Union[int, float, NoneType] = None) -> Self
-```
-修改运放属性  
-@param gain: 增益系数  
-@param max_voltage: 最大电压  
-@param min_voltage: 最小电压  
 
 ### set_rotation
 ```Python
@@ -5587,13 +5034,6 @@ class Relay_Component(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -5607,16 +5047,6 @@ class Relay_Component(CircuitBase):
 ```
 设置元件的位置  
   
-
-### set_properties
-```Python
-    def set_properties(self, *, pull_in_current: Union[int, float, NoneType] = None, rated_current: Union[int, float, NoneType] = None, coil_inductance: Union[int, float, NoneType] = None, coil_resistance: Union[int, float, NoneType] = None) -> Self
-```
-修改运放属性  
-@param pull_in_current: 接通电流  
-@param rated_current: 额定电流  
-@param coil_inductance: 线圈电感  
-@param coil_resistance: 线圈电阻  
 
 ### set_rotation
 ```Python
@@ -5654,13 +5084,6 @@ class N_MOSFET(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -5674,15 +5097,6 @@ class N_MOSFET(CircuitBase):
 ```
 设置元件的位置  
   
-
-### set_properties
-```Python
-    def set_properties(self, *, beta: Union[int, float, NoneType] = None, threshold: Union[int, float, NoneType] = None, max_power: Union[int, float, NoneType] = None) -> Self
-```
-设置 N-MOSFET 属性  
-@param beta: 放大系数  
-@param threshold: 阈值电压  
-@param max_power: 最大功率  
 
 ### set_rotation
 ```Python
@@ -5719,13 +5133,6 @@ class P_MOSFET(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -5777,13 +5184,6 @@ class Accelerometer(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -5833,13 +5233,6 @@ class Attitude_Sensor(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -5891,13 +5284,6 @@ class Gravity_Sensor(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -5947,13 +5333,6 @@ class Gyroscope(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -6005,13 +5384,6 @@ class Linear_Accelerometer(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -6061,13 +5433,6 @@ class Magnetic_Field_Sensor(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -6119,13 +5484,6 @@ class Analog_Joystick(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -6175,13 +5533,6 @@ class Color_Light_Emitting_Diode(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -6233,13 +5584,6 @@ class Resistance_Law(CircuitBase):
 ```
 获取元件的坐标  
 
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
-
 ### rename
 ```Python
     def rename(self, name: str) -> Self
@@ -6289,13 +5633,6 @@ class Solenoid(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python
@@ -6353,13 +5690,6 @@ class Simple_Instrument(CircuitBase):
     def get_position(self) -> physicsLab._tools.position
 ```
 获取元件的坐标  
-
-### lock
-```Python
-    def lock(self, status: bool) -> Self
-```
-是否锁定元件 (位置不会受元件间碰撞的影响)  
-@param status: 是否锁定元件  
 
 ### rename
 ```Python

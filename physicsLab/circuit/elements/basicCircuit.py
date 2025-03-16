@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from physicsLab import errors
 from physicsLab._tools import round_data
 from .._circuit_core import CircuitBase, _TwoPinMixIn, Pin
 from physicsLab._typing import (
@@ -297,33 +298,37 @@ class Battery_Source(_TwoPinMixIn):
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
 
-        self.set_properties(voltage=voltage, internal_resistance=internal_resistance)
+        self.voltage = voltage
+        self.internal_resistance = internal_resistance
+
+    @property
+    def voltage(self) -> num_type:
+        errors.assert_true(self.properties["电压"] is not Generate)
+        return self.properties["电压"]
+
+    @voltage.setter
+    def voltage(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"voltage must be of type `int | float`, but got `{type(value).__name__}`")
+
+        self.properties["电压"] = value
+
+    @property
+    def internal_resistance(self) -> num_type:
+        errors.assert_true(self.properties["内阻"] is not Generate)
+        return self.properties["内阻"]
+
+    @internal_resistance.setter
+    def internal_resistance(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"internal_resistance must be of type `int | float`, but got `{type(value).__name__}`")
+
+        self.properties["内阻"] = value
 
     @final
     @staticmethod
     def zh_name() -> LiteralString:
         return "一节电池"
-
-    def set_properties(
-            self,
-            *,
-            voltage: Optional[num_type] = None,
-            internal_resistance: Optional[num_type] = None,
-    ) -> Self:
-        ''' 设置 一节电池 的属性
-            @param voltage: 电压
-            @param internal_resistance: 内阻
-        '''
-        if not isinstance(voltage, (int, float, type(None))) \
-                or not isinstance(internal_resistance, (int, float, type(None))):
-            raise TypeError
-
-        if voltage is not None:
-            self.properties["电压"] = voltage
-        if internal_resistance is not None:
-            self.properties["内阻"] = internal_resistance
-
-        return self
 
 class Student_Source(CircuitBase):
     ''' 学生电源 '''

@@ -124,7 +124,7 @@ class Basic_Capacitor(_TwoPinMixIn):
     @final
     def peak_voltage(self, value: num_type):
         if not isinstance(value, (int, float)):
-            raise TypeError
+            raise TypeError(f"peak_voltage must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["耐压"] = value
 
@@ -139,7 +139,7 @@ class Basic_Capacitor(_TwoPinMixIn):
     @final
     def capacitance(self, value: num_type):
         if not isinstance(value, (int, float)):
-            raise TypeError
+            raise TypeError(f"capacitance must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["电容"] = value
 
@@ -168,7 +168,7 @@ class Basic_Capacitor(_TwoPinMixIn):
     @final
     def is_ideal(self, value: bool):
         if not isinstance(value, bool):
-            raise TypeError
+            raise TypeError(f"is_ideal must be of type `bool`, but got {type(value).__name__}")
 
         self.properties["理想模式"] = int(value)
 
@@ -232,7 +232,7 @@ class Basic_Inductor(_TwoPinMixIn):
     @final
     def rated_current(self, value: num_type):
         if not isinstance(value, (int, float)):
-            raise TypeError
+            raise TypeError(f"rated_current must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["额定电流"] = value
 
@@ -247,7 +247,7 @@ class Basic_Inductor(_TwoPinMixIn):
     @final
     def inductance(self, value: num_type):
         if not isinstance(value, (int, float)):
-            raise TypeError
+            raise TypeError(f"inductance must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["电感"] = value
 
@@ -262,7 +262,7 @@ class Basic_Inductor(_TwoPinMixIn):
     @final
     def internal_resistance(self, value: num_type):
         if not isinstance(value, (int, float)):
-            raise TypeError
+            raise TypeError(f"internal_resisitance must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["内阻"] = value
 
@@ -567,11 +567,6 @@ class Transistor(CircuitBase):
             gain: num_type = 100,
             max_power: num_type = 1000,
     ) -> None:
-        if not isinstance(is_PNP, bool) \
-                or not isinstance(gain, (int, float)) \
-                or not isinstance(max_power, (int, float)):
-            raise TypeError
-
         self.data: CircuitElementData = {
             "ModelID": "Transistor", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -899,11 +894,6 @@ class N_MOSFET(CircuitBase):
             threshold: num_type = 1.5,
             max_power: num_type = 1000,
     ) -> None:
-        if not isinstance(beta, (int, float)) \
-                or not isinstance(threshold, (int, float)) \
-                or not isinstance(max_power, (int, float)):
-            raise TypeError
-
         self.data: CircuitElementData = {
             "ModelID": "N-MOSFET", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -913,37 +903,52 @@ class N_MOSFET(CircuitBase):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
-        self.set_properties(beta=beta, threshold=threshold, max_power=max_power)
+        self. beta = beta
+        self.threshold = threshold
+        self.max_power = max_power
+
+    @property
+    def beta(self) -> num_type:
+        ''' 放大系数
+        '''
+        return self.properties["放大系数"]
+
+    @beta.setter
+    def beta(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"beta must be of type `int | float`, but got {type(value).__name__}")
+        self.properties["放大系数"] = value
+
+    @property
+    def threshold(self) -> num_type:
+        ''' 阈值电压
+        '''
+        return self.properties["阈值电压"]
+
+    @threshold.setter
+    def threshold(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"threshold must be of type `int | float`, but got {type(value).__name__}")
+
+        self.properties["阈值电压"] = value
+
+    @property
+    def max_power(self) -> num_type:
+        ''' 最大功率
+        '''
+        return self.properties["最大功率"]
+
+    @max_power.setter
+    def max_power(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"max_power must be of type `int | float`, but got {type(value).__name__}")
+
+        self.properties["最大功率"] = value
 
     @final
     @staticmethod
     def zh_name() -> LiteralString:
         return "N-MOSFET"
-
-    def set_properties(
-            self,
-            *,
-            beta: Optional[num_type] = None,
-            threshold: Optional[num_type] = None,
-            max_power: Optional[num_type] = None,
-    ) -> Self:
-        ''' 设置 N-MOSFET 属性
-            @param beta: 放大系数
-            @param threshold: 阈值电压
-            @param max_power: 最大功率
-        '''
-        if not isinstance(threshold, (int, float, type(None))) \
-                or not isinstance(max_power, (int, float, type(None))) \
-                or not isinstance(beta, (int, float, type(None))):
-            raise TypeError
-
-        if beta is not None:
-            self.properties["放大系数"] = beta
-        if threshold is not None:
-            self.properties["阈值电压"] = threshold
-        if max_power is not None:
-            self.properties["最大功率"] = max_power
-        return self
 
     @property
     def D(self) -> Pin:

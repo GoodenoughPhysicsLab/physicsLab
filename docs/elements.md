@@ -16,14 +16,14 @@
 电学元件都有的`method`:
 * set_rotation # 设置元件的角度
 * rename # 重命名元件
-* lock(status: bool): 更改元件锁定的状态
 * get_all_pins_property: 获取该元件的所有引脚对应的property
 
 电学元件都有的`attribute`:
-* .is_bigElement # 是否是大体积元件
-* .is_elementXYZ # 是否是元件坐标系
-* .modelID # 存档信息中的`ModelID`
-* .properties # 存档信息中的`Properties`
+* .is_bigElement: bool # 是否是大体积元件
+* .is_elementXYZ: bool # 是否是元件坐标系
+* .modelID: str # 存档信息中的`ModelID`
+* .properties: dict # 存档信息中的`Properties`
+* .lock: bool # 元件是否锁定
 
 ### 逻辑电路
 

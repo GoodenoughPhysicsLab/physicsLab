@@ -965,43 +965,67 @@ class Schmitt_Trigger(CircuitBase):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
-        if low_level is None:
-            low_level = min(high_level, 0)
-        self.set_properties(high_level=high_level, low_level=low_level, inverted=inverted)
+        self.high_level = high_level
+        self.low_level = low_level
+        self.inverted = inverted
+
+    @property
+    def high_level(self) -> num_type:
+        ''' 高电准位
+        '''
+        errors.assert_true(self.properties["高电准位"] is not Generate)
+        return self.properties["高电准位"]
+
+    @high_level.setter
+    def high_level(self, value: num_type):
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"high_level must be of type `int | float`, but got {type(value).__name__}")
+
+        self.properties["高电准位"] = value
+
+        if self.properties["低电准位"] is not Generate and self.properties["高电准位"] < self.properties["低电准位"]:
+            raise ValueError("The high level must be greater than the low level")
+
+    @property
+    def low_level(self) -> num_type:
+        ''' 低电准位
+        '''
+        errors.assert_true(self.properties["低电准位"] is not Generate)
+        return self.properties["低电准位"]
+
+    @low_level.setter
+    def low_level(self, value: Optional[num_type]):
+        # None means auto derivation
+        # TODO maybe we should use physicsLab.auto instead of None
+        if not isinstance(value, (int, float, type(None))):
+            raise TypeError(f"low_level must be of type `Optional[int | float]`, but got {type(value).__name__}")
+
+        if value is None:
+            self.properties["低电准位"] = min(self.high_level, 0)
+        else:
+            self.properties["低电准位"] = value
+
+        if self.properties["高电准位"] is not Generate and self.properties["高电准位"] < self.properties["低电准位"]:
+            raise ValueError("The high level must be greater than the low level")
+
+    @property
+    def inverted(self) -> bool:
+        ''' 是否翻转
+        '''
+        errors.assert_true(self.properties["工作模式"] is not Generate)
+        return bool(self.properties["工作模式"])
+
+    @inverted.setter
+    def inverted(self, value: bool):
+        if not isinstance(value, bool):
+            raise TypeError(f"inverted must be of type `bool`, but got {type(value).__name__}")
+
+        self.properties["工作模式"] = int(value)
 
     @final
     @staticmethod
     def zh_name() -> LiteralString:
         return "施密特触发器"
-
-    def set_properties(
-            self,
-            *,
-            high_level: Optional[num_type] = None,
-            low_level: Optional[num_type] = None,
-            inverted: Optional[bool] = None,
-    ) -> Self:
-        ''' 设置施密特触发器的属性
-            @param high_level: 高电平电平
-            @param low_level: 低电平电平
-            @param inverted: 是否翻转
-        '''
-        if not isinstance(high_level, (int, float, type(None))) \
-                or not isinstance(low_level, (int, float, type(None))) \
-                or not isinstance(inverted, (bool, type(None))):
-            raise TypeError
-
-        if high_level is not None:
-            self.properties["高电准位"] = high_level
-        if low_level is not None:
-            self.properties["低电准位"] = low_level
-        if inverted is not None:
-            self.properties["工作模式"] = float(inverted)
-
-        if self.properties["高电准位"] < self.properties["低电准位"]:
-            raise ValueError("The high level must be greater than the low level")
-
-        return self
 
     def __repr__(self) -> str:
         res = f"Schmitt_Trigger({self._position.x}, {self._position.y}, {self._position.z}, " \

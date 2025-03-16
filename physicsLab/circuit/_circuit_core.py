@@ -243,16 +243,21 @@ class CircuitBase(ElementBase, metaclass=_CircuitMeta):
 
         return super().set_position(x, y, z)
 
+    @property
     @final
-    def lock(self, status: bool) -> Self:
+    def lock(self) -> bool:
+        return bool(self.properties["锁定"])
+
+    @lock.setter
+    @final
+    def lock(self, status: bool):
         ''' 是否锁定元件 (位置不会受元件间碰撞的影响)
             @param status: 是否锁定元件
         '''
         if not isinstance(status, bool):
-            raise TypeError
+            raise TypeError(f"lock must be of type `bool`, but got {type(status).__name__}")
 
         self.properties["锁定"] = int(status)
-        return self
 
     @property
     @final

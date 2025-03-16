@@ -100,7 +100,7 @@ class Experiment(_Experiment):
             content_id: str,
             category: Category,
             /, *,
-            user: Optional[_User] = None
+            user: Optional[_User] = None,
     ) -> None:
         ''' 从物实服务器中获取存档
             @open_mode = OpenMode.load_by_plar_app
@@ -116,7 +116,7 @@ class Experiment(_Experiment):
             sav_name: str,
             experiment_type: ExperimentType,
             /, *,
-            force_crt: bool = False
+            force_crt: bool = False,
     ) -> None:
         ''' 创建一个新实验
             @open_mode = OpenMode.crt
@@ -126,8 +126,8 @@ class Experiment(_Experiment):
         '''
 
     def __init__(self, open_mode: OpenMode, *args, **kwargs) -> None:
-        if not isinstance(open_mode, OpenMode) or len(args) == 0:
-            raise TypeError
+        if not isinstance(open_mode, OpenMode):
+            raise TypeError(f"open_mode must be of type `OpenMode`, but got `{type(open_mode).__name__}`")
 
         self.open_mode: OpenMode = open_mode
         # 通过坐标索引元件
@@ -140,9 +140,16 @@ class Experiment(_Experiment):
         # 尽管读取存档时会将元件的字符串一并读入, 但只有在调用 load_elements 将元件的信息
         # 导入self.Elements与self._element_position之后, 元件信息才被完全导入
         if open_mode == OpenMode.load_by_filepath:
-            sav_name, *rest = args
-            if not isinstance(sav_name, (str, pathlib.Path)) or len(rest) != 0:
-                raise TypeError
+            if len(kwargs) == 1:
+                raise TypeError(f"When open_mode is OpenMode.load_by_filepath, constructor is `def __init__(self, open_mode: OpenMode, filepath: str | pathlib.Path) -> None`, but an unexpected keyword argument is gotten: {list(kwargs.keys())[0]}={list(kwargs.values())[0]}")
+            elif len(kwargs) != 0:
+                raise TypeError(f"When open_mode is OpenMode.load_by_filepath, constructor is `def __init__(self, open_mode: OpenMode, filepath: str | pathlib.Path) -> None`, but unexpected keyword arguments are gotten: {''.join(str(key) + '=' + str(value) + ' ' for key, value in kwargs.items())}")
+
+            if len(args) != 1:
+                raise TypeError(f"When open_mode is OpenMode.load_by_filepath, constructor is `def __init__(self, open_mode: OpenMode, filepath: str | pathlib.Path) -> None`, but got {len(args)} positional arguments")
+            sav_name = args[0]
+            if not isinstance(sav_name, (str, pathlib.Path)):
+                raise TypeError(f"sav_path must be of type `str | pathlib.Path`, but got `{type(sav_name).__name__}`")
             if isinstance(sav_name, pathlib.Path):
                 sav_name = str(sav_name)
 
@@ -171,9 +178,16 @@ class Experiment(_Experiment):
                 # .sav的Experiment不包含存档名, 会产生一个匿名存档
             self.__load()
         elif open_mode == OpenMode.load_by_sav_name:
-            sav_name, *rest = args
-            if not isinstance(sav_name, str) or len(rest) != 0:
-                raise TypeError
+            if len(kwargs) == 1:
+                raise TypeError(f"When open_mode is OpenMode.load_by_sav_name, constructor is `def __init__(self, open_mode: OpenMode, sav_name: str) -> None`, but an unexpected keyword argument is gotten: {list(kwargs.keys())[0]}={list(kwargs.values())[0]}")
+            elif len(kwargs) != 0:
+                raise TypeError(f"When open_mode is OpenMode.load_by_sav_name, constructor is `def __init__(self, open_mode: OpenMode, sav_name: str) -> None`, but unexpected keyword arguments are gotten: {''.join(str(key) + '=' + str(value) + ' ' for key, value in kwargs.items())}")
+
+            if len(args) != 1:
+                raise TypeError(f"When open_mode is OpenMode.load_by_sav_name, constructor is `def __init__(self, open_mode: OpenMode, sav_name: str) -> None`, but got {len(args)} positional arguments")
+            sav_name = args[0]
+            if not isinstance(sav_name, str):
+                raise TypeError(f"sav_name must be of type `str`, but got `{type(sav_name).__name__}`")
 
             filename, _plsav = search_experiment(sav_name)
             if filename is None:
