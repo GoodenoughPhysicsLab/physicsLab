@@ -1,4 +1,17 @@
 
+## 封禁用户
+```Python
+def ban(self, target_id: str, reason: str, length: int) -> dict
+```
+*  target_id: 要封禁的用户的id
+*  reason: 封禁理由
+*  length: 封禁天数
+
+对应的协程风格的api:
+```Python
+async def async_ban(self, target_id: str, reason: str, length: int) -> Awaitable[dict]
+```
+
 ## 确认发布实验
 ```Python
 def confirm_experiment(self, summary_id: str, category: physicsLab.enums.Category, image_counter: int) -> dict
@@ -170,16 +183,17 @@ async def async_modify_information(self, target: str) -> Awaitable[dict]
 
 ## 发表评论
 ```Python
-def post_comment(self, target_id: str, target_type: str, content: str, reply_id: Optional[str] = None) -> dict
+def post_comment(self, target_id: str, target_type: str, content: str, reply_id: Optional[str] = None, special: Optional[str] = None) -> dict
 ```
 *  target_id: 目标用户/实验的ID
 *  target_type: User, Discussion, Experiment
 *  content: 评论内容
 *  reply_id: 被回复的user的ID (可被自动推导)
+*  special: 为 "Reminder" 的话则是发送警告, 为None则是普通的评论
 
 对应的协程风格的api:
 ```Python
-async def async_post_comment(self, target_id: str, target_type: str, content: str, reply_id: Optional[str] = None) -> Awaitable[dict]
+async def async_post_comment(self, target_id: str, target_type: str, content: str, reply_id: Optional[str] = None, special: Optional[str] = None) -> Awaitable[dict]
 ```
 
 ## 查询实验
@@ -259,6 +273,18 @@ def star_content(self, content_id: str, category: physicsLab.enums.Category, sta
 对应的协程风格的api:
 ```Python
 async def async_star_content(self, content_id: str, category: physicsLab.enums.Category, star_type: int, status: bool = True) -> Awaitable[dict]
+```
+
+## 解除封禁
+```Python
+def unban(self, target_id: str, reason: str) -> dict
+```
+*  target_id: 要解除封禁的用户的id
+*  reason: 解封理由
+
+对应的协程风格的api:
+```Python
+async def async_unban(self, target_id: str, reason: str) -> Awaitable[dict]
 ```
 
 ## 上传实验图片

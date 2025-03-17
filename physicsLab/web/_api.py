@@ -393,23 +393,27 @@ class _User:
             target_type: str,
             content: str,
             reply_id: Optional[str] = None,
+            special: Optional[str] = None,
     ) -> dict:
         ''' 发表评论
             @param target_id: 目标用户/实验的ID
             @param target_type: User, Discussion, Experiment
             @param content: 评论内容
             @param reply_id: 被回复的user的ID (可被自动推导)
+            @param special: 为 "Reminder" 的话则是发送警告, 为None则是普通的评论
         '''
         if not isinstance(target_id, str):
-            raise TypeError(f"TypeError in function 'post_comment' of class '_User': Parameter 'target_id' must be of type 'str', but got {type(target_id).__name__}")
+            raise TypeError(f"Parameter 'target_id' must be of type 'str', but got {type(target_id).__name__}")
         if not isinstance(content, str):
-            raise TypeError(f"TypeError in function 'post_comment' of class '_User': Parameter 'content' must be of type 'str', but got {type(content).__name__}")
+            raise TypeError(f"Parameter 'content' must be of type 'str', but got {type(content).__name__}")
         if not isinstance(target_type, str):
-            raise TypeError(f"TypeError in function 'post_comment' of class '_User': Parameter 'target_type' must be of type 'str', but got {type(target_type).__name__}")
+            raise TypeError(f"Parameter 'target_type' must be of type 'str', but got {type(target_type).__name__}")
         if not isinstance(reply_id, (str, type(None))):
-            raise TypeError(f"TypeError in function 'post_comment' of class '_User': Parameter 'reply_id' must be of type 'str' or None, but got {type(reply_id).__name__}")
+            raise TypeError(f"Parameter 'reply_id' must be of type 'str' or None, but got {type(reply_id).__name__}")
         if target_type not in ("User", "Discussion", "Experiment"):
-            raise ValueError(f"ValueError in function 'post_comment' of class '_User': Parameter 'target_type' must be one of ['User', 'Discussion', 'Experiment'], but got '{target_type}'")
+            raise ValueError(f"Parameter 'target_type' must be one of ['User', 'Discussion', 'Experiment'], but got '{target_type}'")
+        if special not in (None, "Reminder"):
+            raise ValueError(f"Parameter 'special' must be one of [None, 'Reminder'], but got '{special}'")
 
         if reply_id is None:
             reply_id = ""
@@ -450,7 +454,7 @@ class _User:
                 "Language": "Chinese",
                 "ReplyID": reply_id,
                 "Content": content,
-                "Special": None
+                "Special": special,
             },
             headers={
                 "Content-Type": "application/json",
@@ -951,6 +955,63 @@ class _User:
                 "x-API-Token": self.token,
                 "x-API-AuthCode": self.auth_code,
             },
+        )
+
+        return _check_response(response)
+
+    def ban(self, target_id: str, reason: str, length: int) -> dict:
+        ''' 封禁用户
+            @param target_id: 要封禁的用户的id
+            @param reason: 封禁理由
+            @param length: 封禁天数
+        '''
+        if not isinstance(target_id, str):
+            raise TypeError(f"Parameter target_id must be of type `str`, but got {type(target_id).__name__}")
+        if not isinstance(reason, str):
+            raise TypeError(f"Parameter reason must be of type `str`, but got {type(reason).__name__}")
+        if not isinstance(length, int):
+            raise TypeError(f"Parameter length must be of type `int`, but got {type(length).__name__}")
+
+        if length <= 0: #TODO 改天试试负数会发生什么
+            raise ValueError
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com:443/Users/Ban",
+            json={
+                "TargetID": target_id,
+                "Reason": reason,
+                "Length": length,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            },
+        )
+
+        return _check_response(response)
+
+    def unban(self, target_id: str, reason: str) -> dict:
+        ''' 解除封禁
+            @param target_id: 要解除封禁的用户的id
+            @param reason: 解封理由
+        '''
+        if not isinstance(target_id, str):
+            raise TypeError(f"Parameter target_id must be of type `str`, but got {type(target_id).__name__}")
+        if not isinstance(reason, str):
+            raise TypeError(f"Parameter reason must be of type `str`, but got {type(reason).__name__}")
+
+        response = requests.post(
+            "https://physics-api-cn.turtlesim.com:443/Users/Unban",
+            json={
+                "TargetID": target_id,
+                "Reason": reason,
+            },
+            headers={
+                "Content-Type": "application/json",
+                "x-API-Token": self.token,
+                "x-API-AuthCode": self.auth_code,
+            }
         )
 
         return _check_response(response)

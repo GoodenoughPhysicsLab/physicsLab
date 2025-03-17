@@ -99,8 +99,9 @@ class User(_User):
             target_type: str,
             content: str,
             reply_id: Optional[str] = None,
+            special: Optional[str] = None,
     ) -> Awaitable[dict]:
-        return await _async_wrapper(self.post_comment, target_id, target_type, content, reply_id)
+        return await _async_wrapper(self.post_comment, target_id, target_type, content, reply_id, special)
 
     async def async_remove_comment(self, comment_id: str, target_type:str) -> Awaitable[dict]:
         return await _async_wrapper(self.remove_comment, comment_id, target_type)
@@ -185,3 +186,9 @@ class User(_User):
 
     async def async_receive_bonus(self, activity_id: str, index: int) -> Awaitable[dict]:
         return await _async_wrapper(self.receive_bonus, activity_id, index)
+
+    async def async_ban(self, target_id: str, reason: str, length: int) -> Awaitable[dict]:
+        return await _async_wrapper(self.ban, target_id, reason, length)
+
+    async def async_unban(self, target_id: str, reason: str) -> Awaitable[dict]:
+        return await _async_wrapper(self.unban, target_id, reason)
