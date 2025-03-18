@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from physicsLab import errors
 from physicsLab._tools import round_data
+from physicsLab._core import _Experiment
 from .._circuit_core import CircuitBase, _TwoPinMixIn, Pin
 from physicsLab._typing import (
     Optional,
@@ -39,6 +40,7 @@ class Simple_Switch(_SwitchBase, _TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Simple Switch"
@@ -71,6 +73,7 @@ class SPDT_Switch(_SwitchBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "SPDT Switch"
@@ -122,6 +125,7 @@ class DPDT_Switch(_SwitchBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "DPDT Switch"
@@ -185,6 +189,7 @@ class Push_Switch(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Push Switch", "Identifier": Generate,
@@ -210,6 +215,7 @@ class Air_Switch(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Air Switch", "Identifier": Generate,
@@ -254,6 +260,7 @@ class Incandescent_Lamp(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Incandescent Lamp", "Identifier": Generate,
@@ -282,6 +289,7 @@ class Battery_Source(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
             voltage: num_type = 1.5,
             internal_resistance: num_type = 0,
     ) -> None:
@@ -340,6 +348,7 @@ class Student_Source(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Student Source", "Identifier": Generate,
@@ -383,7 +392,9 @@ class Resistor(_TwoPinMixIn):
             y: num_type,
             z: num_type,
             /, *,
-            elementXYZ: Optional[bool] = None, identifier: Optional[str] = None,
+            elementXYZ: Optional[bool] = None,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
             resistance: num_type = 10,
     ) -> None:
         self.data: CircuitElementData = {
@@ -430,6 +441,7 @@ class Fuse_Component(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Fuse Component", "Identifier": Generate,
@@ -456,6 +468,7 @@ class Slide_Rheostat(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Slide Rheostat", "Identifier": Generate,
@@ -501,6 +514,7 @@ class Multimeter(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Multimeter", "Identifier": Generate,
@@ -528,6 +542,7 @@ class Galvanometer(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Galvanometer", "Identifier": Generate,
@@ -566,6 +581,7 @@ class Microammeter(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Microammeter", "Identifier": Generate,
@@ -604,6 +620,7 @@ class Electricity_Meter(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Electricity Meter", "Identifier": Generate,
@@ -646,6 +663,7 @@ class Resistance_Box(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Resistance Box", "Identifier": Generate,
@@ -691,6 +709,7 @@ class Simple_Ammeter(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Simple Ammeter", "Identifier": Generate,
@@ -730,6 +749,7 @@ class Simple_Voltmeter(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Simple Voltmeter", "Identifier": Generate,

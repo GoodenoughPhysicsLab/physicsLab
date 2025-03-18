@@ -13,6 +13,7 @@ class _PlanetMeta(type):
             z:num_type,
             *args,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
             **kwargs,
     ):
         if not isinstance(x, (int, float)) \
@@ -20,7 +21,11 @@ class _PlanetMeta(type):
                 or not isinstance(z, (int, float)):
             raise TypeError
 
-        _Expe = get_current_experiment()
+        _Expe: _Experiment
+        if experiment is None:
+            _Expe = get_current_experiment()
+        else:
+            _Expe = experiment
         if _Expe.experiment_type != ExperimentType.Celestial:
             raise errors.ExperimentTypeError
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import physicsLab.plAR as plar
-import physicsLab.errors as errors
-
+from physicsLab import errors
+from physicsLab._core import _Experiment
 from .._circuit_core import _TwoPinMixIn, CircuitBase, Pin
 from physicsLab._typing import (
     Optional,
@@ -28,6 +28,7 @@ class Buzzer(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Buzzer", "Identifier": Generate, "IsBroken": False,
@@ -54,6 +55,7 @@ class Spark_Gap(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Spark Gap", "Identifier": Generate,
@@ -79,6 +81,7 @@ class Tesla_Coil(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Tesla Coil", "Identifier": Generate,
@@ -105,6 +108,7 @@ class Color_Light_Emitting_Diode(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Color Light-Emitting Diode", "Identifier": Generate,
@@ -149,6 +153,7 @@ class Dual_Light_Emitting_Diode(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Dual Light-Emitting Diode", "Identifier": Generate,
@@ -176,6 +181,7 @@ class Electric_Bell(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Electric Bell", "Identifier": Generate,
@@ -202,6 +208,7 @@ class Musical_Box(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Musical Box", "Identifier": Generate,
@@ -228,6 +235,7 @@ class Resistance_Law(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Resistance Law", "Identifier": Generate,
@@ -292,6 +300,7 @@ class Solenoid(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Solenoid", "Identifier": Generate,
@@ -335,6 +344,7 @@ class Electric_Fan(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Electric Fan", "Identifier": Generate,
@@ -364,6 +374,7 @@ class Simple_Instrument(CircuitBase):
             /, *,
             pitches: Union[List[int], Tuple[int]],
             elementXYZ: Optional[bool] = None,
+            experiment: Optional[_Experiment] = None,
             identifier: Optional[str] = None,
             rated_oltage: num_type = 3.0,
             volume: num_type = 1,

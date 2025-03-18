@@ -153,6 +153,7 @@ class _CircuitMeta(type):
             *args,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
             **kwargs,
     ):
         if not isinstance(x, (float, int)) \
@@ -162,7 +163,11 @@ class _CircuitMeta(type):
                 or not isinstance(identifier, (str, type(None))):
             raise TypeError
 
-        _Expe: _Experiment = get_current_experiment()
+        _Expe: _Experiment
+        if experiment is None:
+            _Expe = get_current_experiment()
+        else:
+            _Expe = experiment
         if _Expe.experiment_type != ExperimentType.Circuit:
             raise errors.ExperimentTypeError # TODO 更详尽的报错信息: 什么类型的实验不能创建什么元件
 

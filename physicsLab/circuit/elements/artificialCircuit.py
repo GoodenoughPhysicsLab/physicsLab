@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from physicsLab import errors
+from physicsLab._core import _Experiment
 from physicsLab._tools import round_data
 from .._circuit_core import CircuitBase, _TwoPinMixIn, Pin
 from physicsLab._typing import (
@@ -25,6 +26,7 @@ class NE555(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "555 Timer", "Identifier": Generate, "IsBroken": False,
@@ -83,6 +85,7 @@ class Basic_Capacitor(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
             peak_voltage: num_type = 16,
             capacitance: num_type = 1e-06,
             internal_resistance: num_type = 5,
@@ -191,6 +194,7 @@ class Basic_Inductor(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
             rated_current: num_type = 1,
             inductance: num_type = 0.05,
             internal_resistance: num_type = 1,
@@ -307,6 +311,7 @@ class Basic_Diode(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Basic Diode", "Identifier": Generate,
@@ -334,6 +339,7 @@ class Light_Emitting_Diode(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Light-Emitting Diode", "Identifier": Generate,
@@ -361,6 +367,7 @@ class Ground_Component(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Ground Component", "Identifier": Generate,
@@ -389,6 +396,7 @@ class Transformer(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Transformer", "Identifier": Generate,
@@ -433,6 +441,7 @@ class Tapped_Transformer(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Tapped Transformer", "Identifier": Generate,
@@ -479,6 +488,7 @@ class Mutual_Inductor(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Mutual Inductor", "Identifier": Generate,
@@ -522,6 +532,7 @@ class Rectifier(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Rectifier", "Identifier": Generate,
@@ -563,6 +574,7 @@ class Transistor(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
             is_PNP: bool = True,
             gain: num_type = 100,
             max_power: num_type = 1000,
@@ -651,6 +663,7 @@ class Comparator(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Comparator", "Identifier": Generate,
@@ -688,6 +701,7 @@ class Operational_Amplifier(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
             gain: num_type = 10_000_000,
             max_voltage: num_type = 1000,
             min_voltage: num_type = -1000,
@@ -783,6 +797,7 @@ class Relay_Component(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
             pull_in_current: num_type = 0.02,
             rated_current: num_type = 10,
             coil_inductance: num_type = 0.2,
@@ -890,6 +905,7 @@ class N_MOSFET(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
             beta: num_type = 0.027,
             threshold: num_type = 1.5,
             max_power: num_type = 1000,
@@ -972,6 +988,7 @@ class P_MOSFET(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "P-MOSFET", "Identifier": Generate, "IsBroken": False,
@@ -1009,6 +1026,7 @@ class Current_Source(_TwoPinMixIn):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Current Source", "Identifier": Generate, "IsBroken": False, "IsLocked": False,
@@ -1044,6 +1062,7 @@ class Sinewave_Source(_SourceElectricity):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Sinewave Source"
@@ -1063,6 +1082,7 @@ class Square_Source(_SourceElectricity):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Square Source"
@@ -1082,6 +1102,7 @@ class Triangle_Source(_SourceElectricity):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Triangle Source"
@@ -1101,6 +1122,7 @@ class Sawtooth_Source(_SourceElectricity):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Sawtooth Source"
@@ -1120,6 +1142,7 @@ class Pulse_Source(_SourceElectricity):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Pulse Source"

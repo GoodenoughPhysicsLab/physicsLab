@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from physicsLab._core import _Experiment
 from physicsLab.savTemplate import Generate
 from ._planetbase import PlanetBase
 from physicsLab._typing import (
@@ -9,7 +10,15 @@ from physicsLab._typing import (
 )
 
 class Mercury(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Mercury", "Override": None,
             "Name": "水星", "Parent": None, "Type": 1, "Changed": False,
@@ -32,7 +41,15 @@ class Mercury(PlanetBase):
         return "水星"
 
 class Venus(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Venus", "Override": None,
             "Name": "金星", "Parent": None, "Type": 1, "Changed": False,
@@ -56,7 +73,15 @@ class Venus(PlanetBase):
         return "金星"
 
 class Earth(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Earth", "Override": None,
             "Name": "地球", "Parent": None, "Type": 1, "Changed": False,
@@ -80,7 +105,15 @@ class Earth(PlanetBase):
         return "地球"
 
 class Mars(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Mars", "Override": None,
             "Name": "火星", "Parent": None, "Type": 1, "Changed": False,
@@ -102,7 +135,15 @@ class Mars(PlanetBase):
         return "火星"
 
 class Jupiter(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Jupiter", "Override": None,
             "Name": "木星", "Parent": None, "Type": 1, "Changed": False,
@@ -124,7 +165,15 @@ class Jupiter(PlanetBase):
         return "木星"
 
 class Saturn(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Saturn", "Override": None,
             "Name": "土星", "Parent": None, "Type": 1, "Changed": False,
@@ -146,7 +195,15 @@ class Saturn(PlanetBase):
         return "土星"
 
 class Uranus(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Uranus", "Override": None,
             "Name": "天王星", "Parent": None, "Type": 1, "Changed": False,
@@ -168,7 +225,15 @@ class Uranus(PlanetBase):
         return "天王星"
 
 class Neptune(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Neptune", "Override": None,
             "Name": "海王星", "Parent": None, "Type": 1, "Changed": False, "Extras": {},
@@ -189,7 +254,15 @@ class Neptune(PlanetBase):
         return "海王星"
 
 class Pluto(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Pluto", "Override": None,
             "Name": "冥王星", "Parent": None, "Type": 1, "Changed": False,
@@ -211,7 +284,15 @@ class Pluto(PlanetBase):
         return "冥王星"
 
 class Sun(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Sun", "Override": None,
             "Name": "太阳", "Parent": None, "Type": 0, "Changed": False,
@@ -233,7 +314,15 @@ class Sun(PlanetBase):
         return "太阳"
 
 class Blue_Giant(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Blue Giant", "Override": None,
             "Name": "蓝巨星", "Parent": None, "Type": 0, "Changed": False,
@@ -255,7 +344,15 @@ class Blue_Giant(PlanetBase):
         return "蓝巨星"
 
 class Red_Giant(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Red Giant", "Override": None,
             "Name": "红巨星", "Parent": None, "Type": 0, "Changed": False,
@@ -277,7 +374,15 @@ class Red_Giant(PlanetBase):
         return "红巨星"
 
 class Red_Dwarf(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Red Dwarf", "Override": None,
             "Name": "红矮星", "Parent": None, "Type": 0, "Changed": False,
@@ -299,7 +404,15 @@ class Red_Dwarf(PlanetBase):
         return "红矮星"
 
 class White_Dwarf(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "White Dwarf", "Override": None,
             "Name": "白矮星", "Parent": None, "Type": 0, "Changed": False,
@@ -321,7 +434,15 @@ class White_Dwarf(PlanetBase):
         return "白矮星"
 
 class Blackhole(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Blackhole", "Override": None,
             "Name": "黑洞", "Parent": None, "Type": -1, "Changed": False,
@@ -343,7 +464,15 @@ class Blackhole(PlanetBase):
         return "黑洞"
 
 class Fantasy_Star(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Fantasy Star", "Override": None,
             "Name": "幻想恒星", "Parent": None, "Type": 0, "Changed": False,
@@ -365,7 +494,15 @@ class Fantasy_Star(PlanetBase):
         return "幻想恒星"
 
 class Moon(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Moon", "Override": None,
             "Name": "月球", "Parent": None, "Type": 2, "Changed": False,
@@ -387,7 +524,15 @@ class Moon(PlanetBase):
         return "月球"
 
 class Chocolate_Ball(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Chocolate Ball", "Override": None,
             "Name": "巧克力球", "Parent": None, "Type": 2, "Changed": False, "Extras": {},
@@ -408,7 +553,15 @@ class Chocolate_Ball(PlanetBase):
         return "巧克力球"
 
 class Continential(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Continential", "Override": None,
             "Name": "大陆行星", "Parent": None, "Type": 1, "Changed": False,
@@ -430,7 +583,15 @@ class Continential(PlanetBase):
         return "大陆行星"
 
 class Arctic(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Arctic", "Override": None,
             "Name": "封冻行星", "Parent": None, "Type": 1, "Changed": False,
@@ -452,7 +613,15 @@ class Arctic(PlanetBase):
         return "封冻行星"
 
 class Arid(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Arid", "Override": None,
             "Name": "干旱行星", "Parent": None, "Type": 1, "Changed": False,
@@ -475,7 +644,15 @@ class Arid(PlanetBase):
         return "干旱行星"
 
 class Barren(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Barren", "Override": None, "Name": "贫瘠行星",
             "Parent": None, "Type": 1, "Changed": False, "Extras": {}, "Radius": 4541.27246,
@@ -495,7 +672,15 @@ class Barren(PlanetBase):
         return "贫瘠行星"
 
 class Desert(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Desert", "Override": None,
             "Name": "沙漠行星", "Parent": None, "Type": 1, "Changed": False,
@@ -517,7 +702,15 @@ class Desert(PlanetBase):
         return "沙漠行星"
 
 class Jungle(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Jungle", "Override": None,
             "Name": "丛林行星", "Parent": None, "Type": 1, "Changed": False,
@@ -539,7 +732,15 @@ class Jungle(PlanetBase):
         return "丛林行星"
 
 class Toxic(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Toxic", "Override": None,
             "Name": "剧毒行星", "Parent": None, "Type": 1, "Changed": False,
@@ -560,7 +761,15 @@ class Toxic(PlanetBase):
         return "剧毒行星"
 
 class Lava(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Lava", "Override": None,
             "Name": "熔岩行星", "Parent": None, "Type": 1, "Changed": False,
@@ -581,7 +790,15 @@ class Lava(PlanetBase):
         return "熔岩行星"
 
 class Ocean(PlanetBase):
-    def __init__(self, x: num_type, y: num_type, z: num_type, /, *, identifier: Optional[str] = None) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            /, *,
+            identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
+    ) -> None:
         self.data = {
             "Identifier": Generate, "Model": "Ocean", "Override": None,
             "Name": "海洋行星", "Parent": None, "Type": 1, "Changed": False,

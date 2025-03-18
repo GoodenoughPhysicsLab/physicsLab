@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from physicsLab import plAR
 from physicsLab import errors
+from physicsLab._core import _Experiment
 from .._circuit_core import CircuitBase, InputPin, OutputPin
 from physicsLab._typing import (
     Optional,
@@ -53,6 +54,7 @@ class Logic_Input(_LogicBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
             output_status: bool = False,
     ) -> None:
         self.data: CircuitElementData = {
@@ -107,6 +109,7 @@ class Logic_Output(_LogicBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Logic Output", "Identifier": Generate,
@@ -155,6 +158,7 @@ class Yes_Gate(_2_Pin_Gate):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Yes Gate"
@@ -174,6 +178,7 @@ class No_Gate(_2_Pin_Gate):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "No Gate"
@@ -216,6 +221,7 @@ class Or_Gate(_3_Pin_Gate):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Or Gate"
@@ -235,6 +241,7 @@ class And_Gate(_3_Pin_Gate):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "And Gate"
@@ -254,6 +261,7 @@ class Nor_Gate(_3_Pin_Gate):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Nor Gate"
@@ -273,6 +281,7 @@ class Nand_Gate(_3_Pin_Gate):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Nand Gate"
@@ -292,6 +301,7 @@ class Xor_Gate(_3_Pin_Gate):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Xor Gate"
@@ -311,6 +321,7 @@ class Xnor_Gate(_3_Pin_Gate):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Xnor Gate"
@@ -330,6 +341,7 @@ class Imp_Gate(_3_Pin_Gate):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Imp Gate"
@@ -349,6 +361,7 @@ class Nimp_Gate(_3_Pin_Gate):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Nimp Gate"
@@ -381,6 +394,7 @@ class Half_Adder(_BigElement):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Half Adder"
@@ -416,6 +430,7 @@ class Full_Adder(_BigElement):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Full Adder"
@@ -455,6 +470,7 @@ class Half_Subtractor(_BigElement):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         plAR_version = plAR.get_plAR_version()
         if plAR_version is not None and plAR_version < (2, 5, 0):
@@ -494,6 +510,7 @@ class Full_Subtractor(_BigElement):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         plAR_version = plAR.get_plAR_version()
         if plAR_version is not None and plAR_version < (2, 5, 0):
@@ -537,6 +554,7 @@ class Multiplier(_BigElement):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Multiplier"
@@ -588,6 +606,7 @@ class D_Flipflop(_BigElement):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "D Flipflop"
@@ -623,6 +642,7 @@ class T_Flipflop(_BigElement):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "T Flipflop"
@@ -658,6 +678,7 @@ class Real_T_Flipflop(_BigElement):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Real-T Flipflop"
@@ -693,6 +714,7 @@ class JK_Flipflop(_BigElement):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "JK Flipflop"
@@ -732,6 +754,7 @@ class Counter(_BigElement):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Counter"
@@ -775,6 +798,7 @@ class Random_Generator(_BigElement):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Random Generator"
@@ -820,6 +844,7 @@ class Eight_Bit_Input(_LogicBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "8bit Input", "Identifier": Generate,
@@ -893,6 +918,7 @@ class Eight_Bit_Display(_LogicBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "8bit Display", "Identifier": Generate,
@@ -951,6 +977,7 @@ class Schmitt_Trigger(CircuitBase):
             /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
+            experiment: Optional[_Experiment] = None,
             high_level: num_type = 5.0,
             low_level: Optional[num_type] = None,
             inverted: bool = False,
