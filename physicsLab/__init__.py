@@ -21,6 +21,7 @@ from .celestial import *
 from .electromagnetism import *
 # `physicsLab`自定义异常类
 from .errors import *
+from . import _warn
 
 from physicsLab.plAR import *
 from physicsLab.utils import *
@@ -34,8 +35,9 @@ import platform
 
 if not os.path.exists(Experiment.SAV_PATH_DIR):
     if platform.system() == "Windows":
-        warning("Have you installed Physics-Lab-AR?")
+        _warn.warning("Have you installed Physics-Lab-AR?")
     os.makedirs(Experiment.SAV_PATH_DIR)
 
 del os
 del platform
+del _warn

@@ -3,12 +3,13 @@ import os
 import io
 import tempfile
 
-import physicsLab._colorUtils as colorUtils
+from physicsLab import _colorUtils
 
 from math import ceil, sqrt
 from enum import Enum, unique
 
 from . import mido
+from physicsLab import _warn
 from physicsLab import errors
 from physicsLab._core import get_current_experiment, native_to_elementXYZ
 from physicsLab.circuit import elements, crt_wire
@@ -131,7 +132,7 @@ class Midi:
             except ImportError:
                 return False
             else:
-                colorUtils.color_print("sound by using plmidi", colorUtils.COLOR.CYAN)
+                _colorUtils.cprint(_colorUtils.Cyan("sound by using plmidi"))
 
                 try:
                     plmidi.sound(midifile)
@@ -148,7 +149,7 @@ class Midi:
             except ImportError:
                 return False
             else:
-                colorUtils.color_print("sound by using pygame", colorUtils.COLOR.CYAN)
+                _colorUtils.cprint(_colorUtils.Cyan("sound by using pygame"))
 
                 # 代码参考自musicpy的play函数
                 mixer.init()
@@ -163,7 +164,7 @@ class Midi:
 
         # 使用系统调用播放midi
         def sound_by_os() -> bool:
-            colorUtils.color_print("sound by using os", colorUtils.COLOR.CYAN)
+            _colorUtils.cprint(_colorUtils.Cyan("sound by using os"))
 
             if os.path.exists(self.midifile):
                 os.system(f"\"{self.midifile}\"")
@@ -187,7 +188,7 @@ class Midi:
             if player is not None:
                 f = (sound_by_plmidi, sound_by_pygame, sound_by_os)[player.value]
                 if not f():
-                    errors.warning(f"can not use {f.__name__} to play midi.")
+                    _warn.warning(f"can not use {f.__name__} to play midi.")
                 return self
 
             if sound_by_plmidi():
@@ -197,7 +198,7 @@ class Midi:
             elif sound_by_os():
                 pass
             else:
-                errors.warning("no sound method can be used")
+                _warn.warning("no sound method can be used")
         finally:
             if use_tempfile:
                 os.remove(midifile)
@@ -727,11 +728,9 @@ class Piece:
             xPlayer = D_WaterLamp(x + 1, y + 1, z, heading=True, bitnum=side, elementXYZ=True)
             yPlayer = D_WaterLamp(x, y + 3, z, bitnum=ceil(len_musicArray / side), elementXYZ=True)
         except ValueError as e: #TODO 应该支持超短的bitLength而不是报错
-            from physicsLab._colorUtils import color_print, COLOR
-            color_print(
-                "bigLength of D_WaterLamp is too short, "
-                "try to use argument \"div_time\" in class Midi to solve this problem",
-                COLOR.RED
+            _colorUtils.cprint(
+                _colorUtils.Red("bigLength of D_WaterLamp is too short, "
+                "try to use argument \"div_time\" in class Midi to solve this problem"),
             )
             raise e
 

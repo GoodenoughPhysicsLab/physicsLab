@@ -575,7 +575,7 @@
 ## <h2 id="Simple_Switch"> Simple_Switch </h2>
 ```Python
 class Simple_Switch(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -637,7 +637,7 @@ class Simple_Switch(CircuitBase):
 ## <h2 id="Push_Switch"> Push_Switch </h2>
 ```Python
 class Push_Switch(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -687,7 +687,7 @@ class Push_Switch(CircuitBase):
 ## <h2 id="Air_Switch"> Air_Switch </h2>
 ```Python
 class Air_Switch(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -749,7 +749,7 @@ class Air_Switch(CircuitBase):
 ## <h2 id="Incandescent_Lamp"> Incandescent_Lamp </h2>
 ```Python
 class Incandescent_Lamp(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -799,7 +799,7 @@ class Incandescent_Lamp(CircuitBase):
 ## <h2 id="Battery_Source"> Battery_Source </h2>
 ```Python
 class Battery_Source(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, voltage: Union[int, float] = 1.5, internal_resistance: Union[int, float] = 0) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, voltage: Union[int, float] = 1.5, internal_resistance: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -849,7 +849,7 @@ class Battery_Source(CircuitBase):
 ## <h2 id="Resistor"> Resistor </h2>
 ```Python
 class Resistor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, resistance: Union[int, float] = 10) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, resistance: Union[int, float] = 10) -> None
 ```
 
 ### fix_resistance
@@ -911,7 +911,7 @@ class Resistor(CircuitBase):
 ## <h2 id="Fuse_Component"> Fuse_Component </h2>
 ```Python
 class Fuse_Component(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -961,7 +961,7 @@ class Fuse_Component(CircuitBase):
 ## <h2 id="Multimeter"> Multimeter </h2>
 ```Python
 class Multimeter(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1011,7 +1011,7 @@ class Multimeter(CircuitBase):
 ## <h2 id="Basic_Capacitor"> Basic_Capacitor </h2>
 ```Python
 class Basic_Capacitor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, peak_voltage: Union[int, float] = 16, capacitance: Union[int, float] = 1e-06, internal_resistance: Union[int, float] = 5, is_ideal: bool = False) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, peak_voltage: Union[int, float] = 16, capacitance: Union[int, float] = 1e-06, internal_resistance: Union[int, float] = 5, is_ideal: bool = False) -> None
 ```
 @param capacitance: 电容, 单位为F  
 @param is_ideal: 是否为理想模式  
@@ -1065,7 +1065,7 @@ class Basic_Capacitor(CircuitBase):
 ## <h2 id="Basic_Inductor"> Basic_Inductor </h2>
 ```Python
 class Basic_Inductor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, rated_current: Union[int, float] = 1, inductance: Union[int, float] = 0.05, internal_resistance: Union[int, float] = 1, is_ideal: bool = False) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, rated_current: Union[int, float] = 1, inductance: Union[int, float] = 0.05, internal_resistance: Union[int, float] = 1, is_ideal: bool = False) -> None
 ```
 @param rated_current: 电感额定电流，单位为 A  
 @param inductance: 电感，单位为 Henry  
@@ -1125,7 +1125,7 @@ class Basic_Inductor(CircuitBase):
 ## <h2 id="Basic_Diode"> Basic_Diode </h2>
 ```Python
 class Basic_Diode(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1175,7 +1175,7 @@ class Basic_Diode(CircuitBase):
 ## <h2 id="Light_Emitting_Diode"> Light_Emitting_Diode </h2>
 ```Python
 class Light_Emitting_Diode(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1225,7 +1225,7 @@ class Light_Emitting_Diode(CircuitBase):
 ## <h2 id="Current_Source"> Current_Source </h2>
 ```Python
 class Current_Source(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1275,7 +1275,7 @@ class Current_Source(CircuitBase):
 ## <h2 id="Sinewave_Source"> Sinewave_Source </h2>
 ```Python
 class Sinewave_Source(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1325,7 +1325,7 @@ class Sinewave_Source(CircuitBase):
 ## <h2 id="Square_Source"> Square_Source </h2>
 ```Python
 class Square_Source(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1375,7 +1375,7 @@ class Square_Source(CircuitBase):
 ## <h2 id="Triangle_Source"> Triangle_Source </h2>
 ```Python
 class Triangle_Source(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1425,7 +1425,7 @@ class Triangle_Source(CircuitBase):
 ## <h2 id="Sawtooth_Source"> Sawtooth_Source </h2>
 ```Python
 class Sawtooth_Source(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1475,7 +1475,7 @@ class Sawtooth_Source(CircuitBase):
 ## <h2 id="Pulse_Source"> Pulse_Source </h2>
 ```Python
 class Pulse_Source(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1525,7 +1525,7 @@ class Pulse_Source(CircuitBase):
 ## <h2 id="Photodiode"> Photodiode </h2>
 ```Python
 class Photodiode(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1575,7 +1575,7 @@ class Photodiode(CircuitBase):
 ## <h2 id="Photoresistor"> Photoresistor </h2>
 ```Python
 class Photoresistor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1625,7 +1625,7 @@ class Photoresistor(CircuitBase):
 ## <h2 id="Buzzer"> Buzzer </h2>
 ```Python
 class Buzzer(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1675,7 +1675,7 @@ class Buzzer(CircuitBase):
 ## <h2 id="Spark_Gap"> Spark_Gap </h2>
 ```Python
 class Spark_Gap(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1725,7 +1725,7 @@ class Spark_Gap(CircuitBase):
 ## <h2 id="Tesla_Coil"> Tesla_Coil </h2>
 ```Python
 class Tesla_Coil(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1775,7 +1775,7 @@ class Tesla_Coil(CircuitBase):
 ## <h2 id="Dual_Light_Emitting_Diode"> Dual_Light_Emitting_Diode </h2>
 ```Python
 class Dual_Light_Emitting_Diode(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1825,7 +1825,7 @@ class Dual_Light_Emitting_Diode(CircuitBase):
 ## <h2 id="Electric_Bell"> Electric_Bell </h2>
 ```Python
 class Electric_Bell(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1875,7 +1875,7 @@ class Electric_Bell(CircuitBase):
 ## <h2 id="Musical_Box"> Musical_Box </h2>
 ```Python
 class Musical_Box(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1925,7 +1925,7 @@ class Musical_Box(CircuitBase):
 ## <h2 id="Electric_Fan"> Electric_Fan </h2>
 ```Python
 class Electric_Fan(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -1975,7 +1975,7 @@ class Electric_Fan(CircuitBase):
 ## <h2 id="Simple_Switch"> Simple_Switch </h2>
 ```Python
 class Simple_Switch(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -2037,7 +2037,7 @@ class Simple_Switch(CircuitBase):
 ## <h2 id="SPDT_Switch"> SPDT_Switch </h2>
 ```Python
 class SPDT_Switch(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -2105,7 +2105,7 @@ class SPDT_Switch(CircuitBase):
 ## <h2 id="DPDT_Switch"> DPDT_Switch </h2>
 ```Python
 class DPDT_Switch(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -2173,7 +2173,7 @@ class DPDT_Switch(CircuitBase):
 ## <h2 id="Student_Source"> Student_Source </h2>
 ```Python
 class Student_Source(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -2223,7 +2223,7 @@ class Student_Source(CircuitBase):
 ## <h2 id="Slide_Rheostat"> Slide_Rheostat </h2>
 ```Python
 class Slide_Rheostat(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -2273,7 +2273,7 @@ class Slide_Rheostat(CircuitBase):
 ## <h2 id="Galvanometer"> Galvanometer </h2>
 ```Python
 class Galvanometer(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -2323,7 +2323,7 @@ class Galvanometer(CircuitBase):
 ## <h2 id="Microammeter"> Microammeter </h2>
 ```Python
 class Microammeter(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -2373,7 +2373,7 @@ class Microammeter(CircuitBase):
 ## <h2 id="Electricity_Meter"> Electricity_Meter </h2>
 ```Python
 class Electricity_Meter(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -2423,7 +2423,7 @@ class Electricity_Meter(CircuitBase):
 ## <h2 id="Resistance_Box"> Resistance_Box </h2>
 ```Python
 class Resistance_Box(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -2480,7 +2480,7 @@ class Resistance_Box(CircuitBase):
 ## <h2 id="Simple_Ammeter"> Simple_Ammeter </h2>
 ```Python
 class Simple_Ammeter(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -2530,7 +2530,7 @@ class Simple_Ammeter(CircuitBase):
 ## <h2 id="Simple_Voltmeter"> Simple_Voltmeter </h2>
 ```Python
 class Simple_Voltmeter(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -2580,7 +2580,7 @@ class Simple_Voltmeter(CircuitBase):
 ## <h2 id="Logic_Input"> Logic_Input </h2>
 ```Python
 class Logic_Input(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, output_status: bool = False) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, output_status: bool = False) -> None
 ```
 
 ### get_all_pins_property
@@ -2654,7 +2654,7 @@ class Logic_Input(CircuitBase):
 ## <h2 id="Logic_Output"> Logic_Output </h2>
 ```Python
 class Logic_Output(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -2728,7 +2728,7 @@ class Logic_Output(CircuitBase):
 ## <h2 id="Yes_Gate"> Yes_Gate </h2>
 ```Python
 class Yes_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -2802,7 +2802,7 @@ class Yes_Gate(CircuitBase):
 ## <h2 id="No_Gate"> No_Gate </h2>
 ```Python
 class No_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -2876,7 +2876,7 @@ class No_Gate(CircuitBase):
 ## <h2 id="Or_Gate"> Or_Gate </h2>
 ```Python
 class Or_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -2950,7 +2950,7 @@ class Or_Gate(CircuitBase):
 ## <h2 id="And_Gate"> And_Gate </h2>
 ```Python
 class And_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -3024,7 +3024,7 @@ class And_Gate(CircuitBase):
 ## <h2 id="Nor_Gate"> Nor_Gate </h2>
 ```Python
 class Nor_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -3098,7 +3098,7 @@ class Nor_Gate(CircuitBase):
 ## <h2 id="Nand_Gate"> Nand_Gate </h2>
 ```Python
 class Nand_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -3172,7 +3172,7 @@ class Nand_Gate(CircuitBase):
 ## <h2 id="Xor_Gate"> Xor_Gate </h2>
 ```Python
 class Xor_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -3246,7 +3246,7 @@ class Xor_Gate(CircuitBase):
 ## <h2 id="Xnor_Gate"> Xnor_Gate </h2>
 ```Python
 class Xnor_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -3320,7 +3320,7 @@ class Xnor_Gate(CircuitBase):
 ## <h2 id="Imp_Gate"> Imp_Gate </h2>
 ```Python
 class Imp_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -3394,7 +3394,7 @@ class Imp_Gate(CircuitBase):
 ## <h2 id="Nimp_Gate"> Nimp_Gate </h2>
 ```Python
 class Nimp_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -3468,7 +3468,7 @@ class Nimp_Gate(CircuitBase):
 ## <h2 id="Half_Adder"> Half_Adder </h2>
 ```Python
 class Half_Adder(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -3542,7 +3542,7 @@ class Half_Adder(CircuitBase):
 ## <h2 id="Full_Adder"> Full_Adder </h2>
 ```Python
 class Full_Adder(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -3616,7 +3616,7 @@ class Full_Adder(CircuitBase):
 ## <h2 id="Half_Subtractor"> Half_Subtractor </h2>
 ```Python
 class Half_Subtractor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -3690,7 +3690,7 @@ class Half_Subtractor(CircuitBase):
 ## <h2 id="Full_Subtractor"> Full_Subtractor </h2>
 ```Python
 class Full_Subtractor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -3764,7 +3764,7 @@ class Full_Subtractor(CircuitBase):
 ## <h2 id="Multiplier"> Multiplier </h2>
 ```Python
 class Multiplier(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -3838,7 +3838,7 @@ class Multiplier(CircuitBase):
 ## <h2 id="D_Flipflop"> D_Flipflop </h2>
 ```Python
 class D_Flipflop(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -3912,7 +3912,7 @@ class D_Flipflop(CircuitBase):
 ## <h2 id="T_Flipflop"> T_Flipflop </h2>
 ```Python
 class T_Flipflop(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -3986,7 +3986,7 @@ class T_Flipflop(CircuitBase):
 ## <h2 id="Real_T_Flipflop"> Real_T_Flipflop </h2>
 ```Python
 class Real_T_Flipflop(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -4060,7 +4060,7 @@ class Real_T_Flipflop(CircuitBase):
 ## <h2 id="JK_Flipflop"> JK_Flipflop </h2>
 ```Python
 class JK_Flipflop(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -4134,7 +4134,7 @@ class JK_Flipflop(CircuitBase):
 ## <h2 id="Counter"> Counter </h2>
 ```Python
 class Counter(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -4208,7 +4208,7 @@ class Counter(CircuitBase):
 ## <h2 id="Random_Generator"> Random_Generator </h2>
 ```Python
 class Random_Generator(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -4282,7 +4282,7 @@ class Random_Generator(CircuitBase):
 ## <h2 id="Eight_Bit_Input"> Eight_Bit_Input </h2>
 ```Python
 class Eight_Bit_Input(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -4361,7 +4361,7 @@ class Eight_Bit_Input(CircuitBase):
 ## <h2 id="Eight_Bit_Display"> Eight_Bit_Display </h2>
 ```Python
 class Eight_Bit_Display(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -4435,7 +4435,7 @@ class Eight_Bit_Display(CircuitBase):
 ## <h2 id="Proximity_Sensor"> Proximity_Sensor </h2>
 ```Python
 class Proximity_Sensor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -4509,7 +4509,7 @@ class Proximity_Sensor(CircuitBase):
 ## <h2 id="Schmitt_Trigger"> Schmitt_Trigger </h2>
 ```Python
 class Schmitt_Trigger(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, high_level: Union[int, float] = 5.0, low_level: Union[int, float, NoneType] = None, inverted: bool = False) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 5.0, low_level: Union[int, float, NoneType] = None, inverted: bool = False) -> None
 ```
 
 ### get_all_pins_property
@@ -4559,7 +4559,7 @@ class Schmitt_Trigger(CircuitBase):
 ## <h2 id="NE555"> NE555 </h2>
 ```Python
 class NE555(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -4609,7 +4609,7 @@ class NE555(CircuitBase):
 ## <h2 id="Ground_Component"> Ground_Component </h2>
 ```Python
 class Ground_Component(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -4659,7 +4659,7 @@ class Ground_Component(CircuitBase):
 ## <h2 id="Transformer"> Transformer </h2>
 ```Python
 class Transformer(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -4709,7 +4709,7 @@ class Transformer(CircuitBase):
 ## <h2 id="Tapped_Transformer"> Tapped_Transformer </h2>
 ```Python
 class Tapped_Transformer(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -4759,7 +4759,7 @@ class Tapped_Transformer(CircuitBase):
 ## <h2 id="Mutual_Inductor"> Mutual_Inductor </h2>
 ```Python
 class Mutual_Inductor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -4809,7 +4809,7 @@ class Mutual_Inductor(CircuitBase):
 ## <h2 id="Rectifier"> Rectifier </h2>
 ```Python
 class Rectifier(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -4859,7 +4859,7 @@ class Rectifier(CircuitBase):
 ## <h2 id="Transistor"> Transistor </h2>
 ```Python
 class Transistor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, is_PNP: bool = True, gain: Union[int, float] = 100, max_power: Union[int, float] = 1000) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, is_PNP: bool = True, gain: Union[int, float] = 100, max_power: Union[int, float] = 1000) -> None
 ```
 
 ### get_all_pins_property
@@ -4909,7 +4909,7 @@ class Transistor(CircuitBase):
 ## <h2 id="Comparator"> Comparator </h2>
 ```Python
 class Comparator(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -4959,7 +4959,7 @@ class Comparator(CircuitBase):
 ## <h2 id="Operational_Amplifier"> Operational_Amplifier </h2>
 ```Python
 class Operational_Amplifier(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, gain: Union[int, float] = 10000000, max_voltage: Union[int, float] = 1000, min_voltage: Union[int, float] = -1000) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, gain: Union[int, float] = 10000000, max_voltage: Union[int, float] = 1000, min_voltage: Union[int, float] = -1000) -> None
 ```
 @param gain: 增益系数  
 @param max_voltage: 最大电压  
@@ -5012,7 +5012,7 @@ class Operational_Amplifier(CircuitBase):
 ## <h2 id="Relay_Component"> Relay_Component </h2>
 ```Python
 class Relay_Component(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, pull_in_current: Union[int, float] = 0.02, rated_current: Union[int, float] = 10, coil_inductance: Union[int, float] = 0.2, coil_resistance: Union[int, float] = 20) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, pull_in_current: Union[int, float] = 0.02, rated_current: Union[int, float] = 10, coil_inductance: Union[int, float] = 0.2, coil_resistance: Union[int, float] = 20) -> None
 ```
 
 ### get_all_pins_property
@@ -5062,7 +5062,7 @@ class Relay_Component(CircuitBase):
 ## <h2 id="N_MOSFET"> N_MOSFET </h2>
 ```Python
 class N_MOSFET(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, beta: Union[int, float] = 0.027, threshold: Union[int, float] = 1.5, max_power: Union[int, float] = 1000) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, beta: Union[int, float] = 0.027, threshold: Union[int, float] = 1.5, max_power: Union[int, float] = 1000) -> None
 ```
 
 ### get_all_pins_property
@@ -5112,7 +5112,7 @@ class N_MOSFET(CircuitBase):
 ## <h2 id="P_MOSFET"> P_MOSFET </h2>
 ```Python
 class P_MOSFET(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -5162,7 +5162,7 @@ class P_MOSFET(CircuitBase):
 ## <h2 id="Accelerometer"> Accelerometer </h2>
 ```Python
 class Accelerometer(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -5212,7 +5212,7 @@ class Accelerometer(CircuitBase):
 ## <h2 id="Attitude_Sensor"> Attitude_Sensor </h2>
 ```Python
 class Attitude_Sensor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -5262,7 +5262,7 @@ class Attitude_Sensor(CircuitBase):
 ## <h2 id="Gravity_Sensor"> Gravity_Sensor </h2>
 ```Python
 class Gravity_Sensor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -5312,7 +5312,7 @@ class Gravity_Sensor(CircuitBase):
 ## <h2 id="Gyroscope"> Gyroscope </h2>
 ```Python
 class Gyroscope(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -5362,7 +5362,7 @@ class Gyroscope(CircuitBase):
 ## <h2 id="Linear_Accelerometer"> Linear_Accelerometer </h2>
 ```Python
 class Linear_Accelerometer(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -5412,7 +5412,7 @@ class Linear_Accelerometer(CircuitBase):
 ## <h2 id="Magnetic_Field_Sensor"> Magnetic_Field_Sensor </h2>
 ```Python
 class Magnetic_Field_Sensor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -5462,7 +5462,7 @@ class Magnetic_Field_Sensor(CircuitBase):
 ## <h2 id="Analog_Joystick"> Analog_Joystick </h2>
 ```Python
 class Analog_Joystick(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -5512,7 +5512,7 @@ class Analog_Joystick(CircuitBase):
 ## <h2 id="Color_Light_Emitting_Diode"> Color_Light_Emitting_Diode </h2>
 ```Python
 class Color_Light_Emitting_Diode(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -5562,7 +5562,7 @@ class Color_Light_Emitting_Diode(CircuitBase):
 ## <h2 id="Resistance_Law"> Resistance_Law </h2>
 ```Python
 class Resistance_Law(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -5612,7 +5612,7 @@ class Resistance_Law(CircuitBase):
 ## <h2 id="Solenoid"> Solenoid </h2>
 ```Python
 class Solenoid(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
 ```
 
 ### get_all_pins_property
@@ -5662,7 +5662,7 @@ class Solenoid(CircuitBase):
 ## <h2 id="Simple_Instrument"> Simple_Instrument </h2>
 ```Python
 class Simple_Instrument(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, pitches: Union[List[int], Tuple[int]], elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, rated_oltage: Union[int, float] = 3.0, volume: Union[int, float] = 1, bpm: int = 100, instrument: int = 0, is_ideal: bool = False, is_pulse: bool = True) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, pitches: Union[List[int], Tuple[int]], elementXYZ: Optional[bool] = None, experiment: Optional[physicsLab._core._Experiment] = None, identifier: Optional[str] = None, rated_oltage: Union[int, float] = 3.0, volume: Union[int, float] = 1, bpm: int = 100, instrument: int = 0, is_ideal: bool = False, is_pulse: bool = True) -> None
 ```
 @param rated_oltage: 额定电压  
 @param volume: 音量 (响度)  

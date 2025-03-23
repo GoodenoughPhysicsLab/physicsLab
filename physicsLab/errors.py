@@ -1,37 +1,5 @@
 # -*- coding: utf-8 -*-
-import warnings
-import inspect
-
-from physicsLab import _colorUtils
-
-class PhysicsLabWarning(Warning):
-    ''' physicsLab抛出的警告的类型 '''
-
-def _showwarning(message, category, filename, lineno, file=None, line=None):
-    if category is PhysicsLabWarning:
-        _colorUtils.color_print("Warning in", _colorUtils.COLOR.YELLOW)
-
-        for frame_info in inspect.stack()[::-1]:
-            module = inspect.getmodule(frame_info.frame)
-            if module is None or module.__name__.startswith("physicsLab") or module.__name__.startswith("warnings"):
-                continue
-            print("  File ", end='')
-            _colorUtils.color_print(f"\"{frame_info.filename}\"", _colorUtils.COLOR.MAGENTA, end='')
-            print(", line ", end='')
-            _colorUtils.color_print(str(frame_info.lineno), _colorUtils.COLOR.MAGENTA, end='')
-            print(", in ", end='')
-            _colorUtils.color_print(frame_info.function, _colorUtils.COLOR.MAGENTA)
-            if frame_info.code_context is not None:
-                print(f"    {frame_info.code_context[0].strip()}")
-        _colorUtils.color_print(str(message), _colorUtils.COLOR.YELLOW)
-    else:
-        warnings.showwarning(message, category, filename, lineno, file, line)
-
-warnings.showwarning = _showwarning
-
-def warning(msg: str):
-    assert isinstance(msg, str)
-    warnings.warn(msg, PhysicsLabWarning)
+from ._typing import NoReturn
 
 BUG_REPORT: str = "please send a bug-report at " \
                 "https://github.com/GoodenoughPhysicsLab/physicsLab/issues or " \
@@ -45,7 +13,7 @@ def assert_true(
     if not condition:
         raise AssertionError(msg)
 
-def unreachable():
+def unreachable() -> NoReturn:
     raise AssertionError(f"Unreachable touched, {BUG_REPORT}")
 
 class InvalidWireError(Exception):

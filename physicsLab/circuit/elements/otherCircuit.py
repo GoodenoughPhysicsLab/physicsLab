@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import physicsLab.plAR as plar
-from physicsLab import errors
+import physicsLab as _warn
+
 from physicsLab._core import _Experiment
 from .._circuit_core import _TwoPinMixIn, CircuitBase, Pin
 from physicsLab._typing import (
@@ -428,7 +429,7 @@ class Simple_Instrument(CircuitBase):
 
         plar_version = plar.get_plAR_version()
         if plar_version is not None and plar_version < (2, 4, 7):
-            errors.warning("Physics-Lab-AR's version less than 2.4.7")
+            _warn.warning("Physics-Lab-AR's version less than 2.4.7")
 
         # TODO 是否需要先清空所有 "音高"
         for i, a_pitch in enumerate(self.pitches):

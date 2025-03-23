@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from physicsLab import plAR
+from physicsLab import _warn
 from physicsLab import errors
 from physicsLab._core import _Experiment
 from .._circuit_core import CircuitBase, InputPin, OutputPin
@@ -474,7 +475,7 @@ class Half_Subtractor(_BigElement):
     ) -> None:
         plAR_version = plAR.get_plAR_version()
         if plAR_version is not None and plAR_version < (2, 5, 0):
-            errors.warning("Physics-Lab-AR's version less than 2.5.0")
+            _warn.warning("Physics-Lab-AR's version less than 2.5.0")
 
         super().__init__(x, y, z)
         self.data["ModelID"] = "Half Subtractor"
@@ -514,7 +515,7 @@ class Full_Subtractor(_BigElement):
     ) -> None:
         plAR_version = plAR.get_plAR_version()
         if plAR_version is not None and plAR_version < (2, 5, 0):
-            errors.warning("Physics-Lab-AR's version less than 2.5.0")
+            _warn.warning("Physics-Lab-AR's version less than 2.5.0")
 
         super().__init__(x, y, z)
         self.data["ModelID"] = "Full Subtractor"

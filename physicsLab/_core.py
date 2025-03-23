@@ -305,28 +305,20 @@ class _Experiment:
             f.write(context)
 
         if not no_print_info:
-            _colorUtils.color_print("Successfully save experiment ", color=_colorUtils.COLOR.GREEN, end='')
+            _colorUtils.cprint(_colorUtils.Green("Successfully save experiment "), end='')
             if self.is_anonymous_sav:
                 # 对匿名实验的特殊处理
-                _colorUtils.color_print(f"<anonymous>", color=_colorUtils.COLOR.CYAN, end='')
+                _colorUtils.cprint(_colorUtils.Cyan("<anonymous>"), end='')
             else:
-                _colorUtils.color_print(
-                    f"\"{self.PlSav['InternalName']}\"",
-                    color=_colorUtils.COLOR.GREEN,
-                    end='',
-                )
-            _colorUtils.color_print(f" at \"{target_path}\"! ", _colorUtils.COLOR.GREEN, end='')
+                _colorUtils.cprint(_colorUtils.Green(f"\"{self.PlSav['InternalName']}\""), end='')
+            _colorUtils.cprint(_colorUtils.Green(f" at \"{target_path}\"! "), end='')
             if self.experiment_type == ExperimentType.Circuit:
-                _colorUtils.color_print(
-                    f"{self.get_elements_count()} elements, {self.get_wires_count()} wires.",
-                    color=_colorUtils.COLOR.GREEN
+                _colorUtils.cprint(
+                    _colorUtils.Green(f"{self.get_elements_count()} elements, {self.get_wires_count()} wires.")
                 )
             elif self.experiment_type == ExperimentType.Celestial \
                     or self.experiment_type == ExperimentType.Electromagnetism:
-                _colorUtils.color_print(
-                    f"{self.get_elements_count()} elements.",
-                    color=_colorUtils.COLOR.GREEN
-                )
+                _colorUtils.cprint(_colorUtils.Green(f"{self.get_elements_count()} elements."))
             else:
                 errors.unreachable()
 
@@ -340,12 +332,12 @@ class _Experiment:
         if delete:
             if os.path.exists(self.SAV_PATH): # 之所以判断路径是否存在是因为一个实验可能被创建但还未被写入就调用了delete
                 os.remove(self.SAV_PATH)
-                _colorUtils.color_print("Successfully delete experiment ", _colorUtils.COLOR.BLUE, end='')
+                _colorUtils.cprint(_colorUtils.Blue("Successfully delete experiment "), end='')
                 if self.is_anonymous_sav:
-                    _colorUtils.color_print("<anonymous>", color=_colorUtils.COLOR.CYAN, end='')
+                    _colorUtils.cprint(_colorUtils.Cyan("<anonymous>"), end='')
                 else:
-                    _colorUtils.color_print(f"\"{self.PlSav['InternalName']}\"", _colorUtils.COLOR.BLUE, end='')
-                _colorUtils.color_print(f"at \"{self.SAV_PATH}\"!", _colorUtils.COLOR.BLUE)
+                    _colorUtils.cprint(_colorUtils.Blue(f"\"{self.PlSav['InternalName']}\""), end='')
+                _colorUtils.cprint(_colorUtils.Blue(f"at \"{self.SAV_PATH}\"!"))
             if os.path.exists(self.SAV_PATH.replace(".sav", ".jpg")): # 用存档生成的实验无图片
                 os.remove(self.SAV_PATH.replace(".sav", ".jpg"))
 
@@ -470,7 +462,7 @@ class _Experiment:
         )
         def callback(status_code):
             if status_code == 403:
-                _colorUtils.color_print(
+                _colorUtils.cprint(
                     "you can't submit experiment because you are not the author "
                     "or experiment status(elements, tags...) is invalid",
                     _colorUtils.COLOR.RED,

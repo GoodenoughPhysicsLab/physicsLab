@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from typing import Union, Callable, Tuple
 
+from physicsLab import _warn
 from physicsLab import errors
 from physicsLab.enums import WireColor
 from physicsLab.circuit._circuit_core import crt_wire, del_wire, Pin
@@ -53,7 +54,7 @@ def _check_union_pin_type(func: Callable):
 
         if len(source_pin.pins) != len(target_pin.pins):
             # TODO 警告信息里把具体的是哪个变量给显示出来
-            errors.warning(
+            _warn.warning(
                 f"The number of {source_pin.lib_self.__class__.__name__}'s output pin "
                 f"is {len(source_pin.pins)}, "
                 f"but the number of {target_pin.lib_self.__class__.__name__}'s input pin "
