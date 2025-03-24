@@ -12,6 +12,7 @@ from physicsLab._typing import (
     override,
     LiteralString,
     final,
+    Self,
 )
 
 class NE555(CircuitBase):
@@ -125,11 +126,12 @@ class Basic_Capacitor(_TwoPinMixIn):
 
     @peak_voltage.setter
     @final
-    def peak_voltage(self, value: num_type):
+    def peak_voltage(self, value: num_type) -> Self:
         if not isinstance(value, (int, float)):
             raise TypeError(f"peak_voltage must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["耐压"] = value
+        return self
 
     @property
     @final
@@ -140,11 +142,12 @@ class Basic_Capacitor(_TwoPinMixIn):
 
     @capacitance.setter
     @final
-    def capacitance(self, value: num_type):
+    def capacitance(self, value: num_type) -> Self:
         if not isinstance(value, (int, float)):
             raise TypeError(f"capacitance must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["电容"] = value
+        return self
 
     @property
     @final
@@ -155,8 +158,12 @@ class Basic_Capacitor(_TwoPinMixIn):
 
     @internal_resistance.setter
     @final
-    def internal_resistance(self, value: num_type):
+    def internal_resistance(self, value: num_type) -> Self:
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"internal_resistance must be of type `int | float`, but got {type(value).__name__}")
+
         self.properties["内阻"] = value
+        return self
 
     @property
     @final
