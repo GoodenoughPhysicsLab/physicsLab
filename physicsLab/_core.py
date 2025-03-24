@@ -325,23 +325,35 @@ class _Experiment:
         return self
 
     @_check_not_closed
+    def delete(self) -> None:
+        ''' 删除存档文件
+            @note: 删除存档后还可以继续操作Experiment对象可能看起来有点奇怪,
+                   因此使用close的delete argument可能会更符合直觉一些
+        '''
+        if os.path.exists(self.SAV_PATH): # 之所以判断路径是否存在是因为一个实验可能被创建但还未被写入就调用了delete
+            os.remove(self.SAV_PATH)
+            _colorUtils.cprint(_colorUtils.Blue("Successfully delete experiment "), end='')
+            if self.is_anonymous_sav:
+                _colorUtils.cprint(_colorUtils.Cyan("<anonymous>"), end='')
+            else:
+                _colorUtils.cprint(_colorUtils.Blue(f"\"{self.PlSav['InternalName']}\""), end='')
+            _colorUtils.cprint(_colorUtils.Blue(f"at \"{self.SAV_PATH}\"!"))
+        if os.path.exists(self.SAV_PATH.replace(".sav", ".jpg")): # 用存档生成的实验无图片
+            os.remove(self.SAV_PATH.replace(".sav", ".jpg"))
+
+    @_check_not_closed
     def close(self, *, delete: bool = False) -> None:
         ''' 退出对该存档的操作
             Note: 如果没有在调用Experiment.close前调用Experiment.save, 会丢失对存档的修改
         '''
         if delete:
-            if os.path.exists(self.SAV_PATH): # 之所以判断路径是否存在是因为一个实验可能被创建但还未被写入就调用了delete
-                os.remove(self.SAV_PATH)
-                _colorUtils.cprint(_colorUtils.Blue("Successfully delete experiment "), end='')
-                if self.is_anonymous_sav:
-                    _colorUtils.cprint(_colorUtils.Cyan("<anonymous>"), end='')
-                else:
-                    _colorUtils.cprint(_colorUtils.Blue(f"\"{self.PlSav['InternalName']}\""), end='')
-                _colorUtils.cprint(_colorUtils.Blue(f"at \"{self.SAV_PATH}\"!"))
-            if os.path.exists(self.SAV_PATH.replace(".sav", ".jpg")): # 用存档生成的实验无图片
-                os.remove(self.SAV_PATH.replace(".sav", ".jpg"))
+            self.delete()
 
         _ExperimentStack.remove(self)
+
+    def ensure_close(self) -> None:
+        if _ExperimentStack.inside(self):
+            _ExperimentStack.remove(self)
 
     def __entitle(self, sav_name: str) -> None:
         errors.assert_true(isinstance(sav_name, str))

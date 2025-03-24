@@ -34,15 +34,7 @@ with Experiment(OpenMode.load_by_sav_name, "example") as expe:
     ...
 ```
 
-上面的代码等价于:
-```python
-from physicsLab import *
-
-expe = Experiment(OpenMode.load_by_sav_name, "example")
-expe.save()
-expe.close()
-```
-也就是说, with语句作用是自动帮你保存存档（但如果在with内部有异常发生，是不会保存存档的）
+with语句会自动帮你保存存档（但如果在with内部有异常发生，是不会保存存档的）, 并退出对该存档的操作(即调用`Experiment.close`)
 
 `expe`是一个`Experiment`类的实例，因此你可以通过`expe`来轻易地使用`Experiment`类的所有方法来操作存档
 
@@ -55,6 +47,10 @@ expe2 = Experiment(OpenMode.load_by_sav_name, "example") # error
 ```
 
 `Experiment`类一共提供了3种导入存档的方式：
+1.  存档名（在物实保存的实验的名字）
+2.  自定义存档的路径
+3.  读取物实服务器上的实验
+
 ```Python
 from physicsLab import *
 Experiment(OpenMode.load_by_filepath, "/your/path/of/sav") # 根据存档的路径（也就是xxxx.sav）进行导入
@@ -63,11 +59,6 @@ Experiment(OpenMode.load_by_filepath, "/your/path/of/sav") # 根据存档的路�
 Experiment(OpenMode.load_by_sav_name, "example") # 根据存档的实验名（也就是你在物实导入本地实验时看到的实验的名字）进行导入实验
 Experiment(OpenMode.load_by_plar_app, "642cf37a494746375aae306a", Category.Discussion)
 ```
-
-但该方法支持读取字符串的形式最完善, 共支持3种:
-1.  存档名（在物实保存的实验的名字）
-2.  自定义存档的路径
-3.  读取物实服务器上的实验
 
 > Note: 如果导入的实验不存在，则会抛出`ExperimentNotExistError`异常
 
@@ -80,15 +71,6 @@ Experiment(OpenMode.load_by_plar_app, "642cf37a494746375aae306a", Category.Discu
 with Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=False) as expe:
     # 使用with Experiment的话，执行完代码之后会自动保存存档并使expe退出对存档的操作（无法再操作存档）
     ...
-```
-
-上面代码等价于:
-```python
-from physicsLab import *
-expe = Experiment(OpenMode.crt, "example", ExperimentType.Circuit, force_crt=False)
-# do something
-expe.save()
-expe.close()
 ```
 
 * `experiment_type`参数用于指定创建实验的类型
@@ -104,6 +86,11 @@ try:
     expe = Experiment(OpenMode.load_by_sav_name, "example")
 except ExperimentNotExistError:
     expe = Experiment(OpenMode.crt, "example", ExperimentType.Circuit)
+
+try:
+    # do something
+finally:
+    expe.close()
 ```
 
 ## 搜索存档&判断存档是否存在
@@ -155,10 +142,13 @@ with Experiment(OpenMode.load_by_sav_name, "example") as expe:
 from physicsLab import *
 
 expe = Experiment(OpenMode.load_by_sav_name, "example")
-# do something
-expe.save()
-expe.close()
+try:
+    # do something
+    expe.save()
+finally:
+    expe.close()
 ```
+
 `Experiment.save`也有一些参数：
 *  `target_path`: 将存档写入**自己指定的路径**
 *  `no_print_info`: 是否打印写入存档的元件数, 导线数(如果是电学实验的话)
@@ -188,8 +178,11 @@ with Experiment(OpenMode.load_by_sav_name, "example") as expe:
 from physicsLab import *
 
 expe = Experiment(OpenMode.load_by_sav_name, "example")
-# maybe do something
-expe.close(delete=True)
+try:
+    # maybe do something
+    expe.delete()
+finally:
+    expe.close()
 ```
 
 > Note: `expe.close(True)`这种写法会报错，因为这是一个`Keyword-Only argument`
@@ -200,7 +193,7 @@ expe.close(delete=True)
 from physicsLab import *
 
 exp = Experiment(OpenMode.load_by_sav_name, "example")
-# do something, 但未调用Experiment.save
+# do something, 但未调用Experiment.save保存修改
 exp.close()
 # 对exp的所有修改都丢失了
 ```
