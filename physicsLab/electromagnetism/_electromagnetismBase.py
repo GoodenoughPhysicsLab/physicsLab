@@ -11,15 +11,21 @@ class _ElectromagnetismMeta(type):
             x: num_type,
             y: num_type,
             z: num_type,
-            *args,
+            /, *,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
             **kwargs,
     ):
-        if not isinstance(x, (int, float)) \
-                or not isinstance(y, (int, float)) \
-                or not isinstance(z, (int, float)):
-            raise TypeError
+        if not isinstance(x, (int, float)):
+            raise TypeError(f"Parameter x must be of type `int | float`, but got {type(x).__name__}")
+        if not isinstance(y, (int, float)):
+            raise TypeError(f"Parameter y must be of type `int | float`, but got {type(y).__name__}")
+        if not isinstance(z, (int, float)):
+            raise TypeError(f"Parameter z must be of type `int | float`, but got {type(z).__name__}")
+        if not isinstance(identifier, (str, type(None))):
+            raise TypeError(f"Parameter identifier must be of type `Optional[str]`, but got {type(identifier).__name__}")
+        if not isinstance(experiment, (_Experiment, type(None))):
+            raise TypeError(f"Parameter experiment must be of type `Optional[Experiment]`, but got {type(experiment).__name__}")
 
         _Expe: _Experiment
         if experiment is None:
@@ -27,20 +33,20 @@ class _ElectromagnetismMeta(type):
         else:
             _Expe = experiment
         if _Expe.experiment_type != ExperimentType.Electromagnetism:
-            raise errors.ExperimentTypeError
+            raise errors.ExperimentTypeError(f"Can't create {cls.__name__} because experiment_type is {_Expe.experiment_type}")
 
         self: "ElectromagnetismBase" = cls.__new__(cls)
         self.experiment = _Expe
 
-        self.__init__(x, y, z, *args, **kwargs)
+        self.__init__(x, y, z, **kwargs)
         assert hasattr(self, "data") and isinstance(self.data, dict)
 
         self._set_identifier(identifier)
         self.set_position(x, y, z)
         self.set_rotation(0, 0, 0)
 
-        _Expe.Elements.append(self)
-        _Expe._id2element[self.data["Identifier"]] = self
+        self.experiment.Elements.append(self)
+        self.experiment._id2element[self.data["Identifier"]] = self
 
         return self
 

@@ -327,7 +327,8 @@ class _Experiment:
     @_check_not_closed
     def close(self, *, delete: bool = False) -> None:
         ''' 退出对该存档的操作
-            Note: 如果没有在调用Experiment.close前调用Experiment.save, 会丢失对存档的修改
+            @param delete: 是否在退出对存档的操作的时候并删除存档
+            @note: 如果没有在调用Experiment.close前调用Experiment.save, 会丢失对存档的修改
         '''
         if delete:
             if os.path.exists(self.SAV_PATH): # 之所以判断路径是否存在是因为一个实验可能被创建但还未被写入就调用了delete

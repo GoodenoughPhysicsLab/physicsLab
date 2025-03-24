@@ -9,6 +9,7 @@ from physicsLab._typing import (
     Generate,
     LiteralString,
     final,
+    Self,
 )
 
 class _MemsBase(CircuitBase):
@@ -48,12 +49,57 @@ class Accelerometer(_MemsBase):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            ranges: num_type = 2,
+            shifting: num_type = 0.75,
+            response_factor: num_type = 0.2290000021457672,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Accelerometer"
-        self.data["Properties"]["量程"] = 2
-        self.data["Properties"]["偏移"] = 0.75
-        self.data["Properties"]["响应系数"] = 0.2290000021457672
+        self.ranges = ranges
+        self.shifting = shifting
+        self.response_factor = response_factor
+
+    @property
+    def ranges(self) -> num_type:
+        ''' 量程
+        '''
+        return self.properties["量程"]
+
+    @ranges.setter
+    def ranges(self, value: num_type) -> Self:
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"ranges must be of type `int | float`, but got {type(value).__name__}")
+
+        self.properties["量程"] = value
+        return self
+
+    @property
+    def shifting(self) -> num_type:
+        ''' 偏移
+        '''
+        return self.properties["偏移"]
+
+    @shifting.setter
+    def shifting(self, value: num_type) -> Self:
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"shifting must be of type `int | float`, but got {type(valure).__name__}")
+
+        self.properties["偏移"] = value
+        return self
+
+    @property
+    def response_factor(self) -> num_type:
+        return self.properties["响应系数"]
+
+    @response_factor.setter
+    def response_factor(self, value: num_type) -> Self:
+        ''' 响应系数
+        '''
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"response_factor must be of type `int | float`, but got {type(value).__name__}")
+
+        self.properties["响应系数"] = value
+        return self
 
     @final
     @staticmethod

@@ -433,7 +433,7 @@ class Experiment(_Experiment):
             x: num_type,
             y: num_type,
             z: num_type,
-            *args,
+            /,
             **kwargs,
     ) -> ElementBase:
         ''' 通过元件的ModelID或其类名创建元件 '''
@@ -448,13 +448,13 @@ class Experiment(_Experiment):
 
         if self.experiment_type == ExperimentType.Circuit:
             if name == "555_Timer":
-                return circuit.NE555(x, y, z, *args, **kwargs)
+                return circuit.NE555(x, y, z, **kwargs)
             elif name == "8bit_Input":
-                return circuit.Eight_Bit_Input(x, y, z, *args, **kwargs)
+                return circuit.Eight_Bit_Input(x, y, z, **kwargs)
             elif name == "8bit_Display":
-                return circuit.Eight_Bit_Display(x, y, z, *args, **kwargs)
+                return circuit.Eight_Bit_Display(x, y, z, **kwargs)
             else:
-                return eval(f"circuit.{name}({x}, {y}, {z}, *{args}, **{kwargs})")
+                return eval(f"circuit.{name}({x}, {y}, {z}, **{kwargs})")
         elif self.experiment_type == ExperimentType.Celestial:
             return eval(f"celestial.{name}({x}, {y}, {z}, **{kwargs})")
         elif self.experiment_type == ExperimentType.Electromagnetism:

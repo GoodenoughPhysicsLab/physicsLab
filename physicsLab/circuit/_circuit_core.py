@@ -150,18 +150,24 @@ class _CircuitMeta(type):
             x: num_type,
             y: num_type,
             z: num_type,
-            *args,
+            /, *,
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
             **kwargs,
     ):
-        if not isinstance(x, (float, int)) \
-                or not isinstance(y, (float, int)) \
-                or not isinstance(z, (float, int)) \
-                or not isinstance(elementXYZ, (bool, type(None))) \
-                or not isinstance(identifier, (str, type(None))):
-            raise TypeError
+        if not isinstance(x, (float, int)):
+            raise TypeError(f"Parameter x must be of type `int | float`, but got {type(x).__name__}")
+        if not isinstance(y, (float, int)):
+            raise TypeError(f"Parameter y must be of type `int | float`, but got {type(y).__name__}")
+        if not isinstance(z, (float, int)):
+            raise TypeError(f"Parameter z must be of type `int | float`, but got {type(z).__name__}")
+        if not isinstance(elementXYZ, (bool, type(None))):
+            raise TypeError(f"Parameter elementXYZ must be of type `Optional[bool]`, but got {type(elementXYZ).__name__}")
+        if not isinstance(identifier, (str, type(None))):
+            raise TypeError(f"Parameter identifier must be of type `Optional[str]`, but got {type(identifier).__name__}")
+        if not isinstance(experiment, (_Experiment, type(None))):
+            raise TypeError(f"Parameter experiment must be of type `Optional[Experiment]`, but got {type(experiment).__name__}")
 
         _Expe: _Experiment
         if experiment is None:
@@ -169,22 +175,22 @@ class _CircuitMeta(type):
         else:
             _Expe = experiment
         if _Expe.experiment_type != ExperimentType.Circuit:
-            raise errors.ExperimentTypeError # TODO 更详尽的报错信息: 什么类型的实验不能创建什么元件
+            raise errors.ExperimentTypeError(f"Can't create {cls.__name__} because experiment_type is {_Expe.experiment_type}")
 
         self: "CircuitBase" = cls.__new__(cls)
         self.experiment = _Expe
 
         x, y, z = round_data(x), round_data(y), round_data(z)
 
-        self.__init__(x, y, z, *args, **kwargs)
+        self.__init__(x, y, z, **kwargs)
         assert hasattr(self, "data") and isinstance(self.data, dict)
 
         self._set_identifier(identifier)
         self.set_position(x, y, z, elementXYZ)
         self.set_rotation()
 
-        _Expe.Elements.append(self)
-        _Expe._id2element[self.data["Identifier"]] = self
+        self.experiment.Elements.append(self)
+        self.experiment._id2element[self.data["Identifier"]] = self
 
         return self
 
