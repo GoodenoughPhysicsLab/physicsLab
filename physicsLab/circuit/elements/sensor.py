@@ -66,12 +66,12 @@ class Accelerometer(_MemsBase):
         return self.properties["量程"]
 
     @ranges.setter
-    def ranges(self, value: num_type) -> Self:
+    def ranges(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"ranges must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["量程"] = value
-        return self
+        return value
 
     @property
     def shifting(self) -> num_type:
@@ -80,26 +80,26 @@ class Accelerometer(_MemsBase):
         return self.properties["偏移"]
 
     @shifting.setter
-    def shifting(self, value: num_type) -> Self:
+    def shifting(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"shifting must be of type `int | float`, but got {type(valure).__name__}")
 
         self.properties["偏移"] = value
-        return self
+        return value
 
     @property
     def response_factor(self) -> num_type:
         return self.properties["响应系数"]
 
     @response_factor.setter
-    def response_factor(self, value: num_type) -> Self:
+    def response_factor(self, value: num_type) -> num_type:
         ''' 响应系数
         '''
         if not isinstance(value, (int, float)):
             raise TypeError(f"response_factor must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["响应系数"] = value
-        return self
+        return value
 
     @final
     @staticmethod

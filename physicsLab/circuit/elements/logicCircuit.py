@@ -81,8 +81,11 @@ class Logic_Input(_LogicBase):
 
     @output_status.setter
     @final
-    def output_status(self, value: bool):
+    def output_status(self, value: bool) -> bool:
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"output_status must be of type `bool`, but got {type(value).__name__}")
         self.properties["开关"] = int(value)
+        return value
 
     def __repr__(self) -> str:
         res = f"Logic_Input({self._position.x}, {self._position.y}, {self._position.z}, " \
@@ -864,6 +867,7 @@ class Eight_Bit_Input(_LogicBase):
             res += f".set_num({self.data['Properties']['十进制']})"
         return res
 
+    # TODO 改为@property
     def set_num(self, num : int):
         if 0 <= num <= 255:
             self.data["Properties"]["十进制"] = num
@@ -1005,7 +1009,7 @@ class Schmitt_Trigger(CircuitBase):
         return self.properties["高电准位"]
 
     @high_level.setter
-    def high_level(self, value: num_type):
+    def high_level(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"high_level must be of type `int | float`, but got {type(value).__name__}")
 
@@ -1013,6 +1017,7 @@ class Schmitt_Trigger(CircuitBase):
 
         if self.properties["低电准位"] is not Generate and self.properties["高电准位"] < self.properties["低电准位"]:
             raise ValueError("The high level must be greater than the low level")
+        return value
 
     @property
     def low_level(self) -> num_type:
@@ -1022,7 +1027,7 @@ class Schmitt_Trigger(CircuitBase):
         return self.properties["低电准位"]
 
     @low_level.setter
-    def low_level(self, value: Optional[num_type]):
+    def low_level(self, value: Optional[num_type]) -> num_type:
         # None means auto derivation
         # TODO maybe we should use physicsLab.auto instead of None
         if not isinstance(value, (int, float, type(None))):
@@ -1035,6 +1040,7 @@ class Schmitt_Trigger(CircuitBase):
 
         if self.properties["高电准位"] is not Generate and self.properties["高电准位"] < self.properties["低电准位"]:
             raise ValueError("The high level must be greater than the low level")
+        return value
 
     @property
     def inverted(self) -> bool:
@@ -1044,11 +1050,12 @@ class Schmitt_Trigger(CircuitBase):
         return bool(self.properties["工作模式"])
 
     @inverted.setter
-    def inverted(self, value: bool):
+    def inverted(self, value: bool) -> bool:
         if not isinstance(value, bool):
             raise TypeError(f"inverted must be of type `bool`, but got {type(value).__name__}")
 
         self.properties["工作模式"] = int(value)
+        return value
 
     @final
     @staticmethod
