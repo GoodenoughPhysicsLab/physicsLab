@@ -315,11 +315,12 @@ class Battery_Source(_TwoPinMixIn):
         return self.properties["电压"]
 
     @voltage.setter
-    def voltage(self, value: num_type):
+    def voltage(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"voltage must be of type `int | float`, but got `{type(value).__name__}`")
 
         self.properties["电压"] = value
+        return value
 
     @property
     def internal_resistance(self) -> num_type:
@@ -327,11 +328,12 @@ class Battery_Source(_TwoPinMixIn):
         return self.properties["内阻"]
 
     @internal_resistance.setter
-    def internal_resistance(self, value: num_type):
+    def internal_resistance(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"internal_resistance must be of type `int | float`, but got `{type(value).__name__}`")
 
         self.properties["内阻"] = value
+        return value
 
     @final
     @staticmethod
@@ -664,18 +666,21 @@ class Resistance_Box(CircuitBase):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            resistance: num_type = 10,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Resistance Box", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
             "Properties": {"最大电阻": 10000.0, "最小电阻": 0.1,
-                            "电阻": 10.0, "锁定": 1.0},
+                            "电阻": Generate, "锁定": 1.0},
             "Statistics": {"瞬间功率": 0.0, "瞬间电流": 0.0, "瞬间电压": 0.0,
                             "功率": 0.0, "电压": 0.0, "电流": 0.0},
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
+
+        self.resistance = resistance
 
     @final
     @staticmethod
@@ -690,14 +695,19 @@ class Resistance_Box(CircuitBase):
     def r(self) -> Pin:
         return Pin(self, 1)
 
-    def set_resistance(self, num: num_type) -> Self:
-        ''' 设置电阻值
+    @property
+    def resistance(self) -> num_type:
+        ''' 电阻
         '''
-        if not isinstance(num, (int, float)):
-            raise TypeError
+        return self.properties["电阻"]
 
-        self.data["Properties"]["电阻"] = num
-        return self
+    @resistance.setter
+    def resistance(self, value: num_type) -> num_type:
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"resistance must be of type `int | float`, but got {type(value).__name__}")
+
+        self.properties["电阻"] = value
+        return value
 
 class Simple_Ammeter(CircuitBase):
     ''' 直流安培表 '''

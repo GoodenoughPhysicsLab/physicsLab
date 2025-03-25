@@ -12,6 +12,7 @@ from physicsLab._typing import (
     override,
     LiteralString,
     final,
+    Self,
 )
 
 class NE555(CircuitBase):
@@ -125,11 +126,12 @@ class Basic_Capacitor(_TwoPinMixIn):
 
     @peak_voltage.setter
     @final
-    def peak_voltage(self, value: num_type):
+    def peak_voltage(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"peak_voltage must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["耐压"] = value
+        return value
 
     @property
     @final
@@ -140,11 +142,12 @@ class Basic_Capacitor(_TwoPinMixIn):
 
     @capacitance.setter
     @final
-    def capacitance(self, value: num_type):
+    def capacitance(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"capacitance must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["电容"] = value
+        return value
 
     @property
     @final
@@ -155,8 +158,12 @@ class Basic_Capacitor(_TwoPinMixIn):
 
     @internal_resistance.setter
     @final
-    def internal_resistance(self, value: num_type):
+    def internal_resistance(self, value: num_type) -> num_type:
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"internal_resistance must be of type `int | float`, but got {type(value).__name__}")
+
         self.properties["内阻"] = value
+        return value
 
     @property
     @final
@@ -169,11 +176,12 @@ class Basic_Capacitor(_TwoPinMixIn):
 
     @is_ideal.setter
     @final
-    def is_ideal(self, value: bool):
+    def is_ideal(self, value: bool) -> bool:
         if not isinstance(value, bool):
             raise TypeError(f"is_ideal must be of type `bool`, but got {type(value).__name__}")
 
         self.properties["理想模式"] = int(value)
+        return value
 
     @override
     def __repr__(self) -> str:
@@ -234,11 +242,12 @@ class Basic_Inductor(_TwoPinMixIn):
 
     @rated_current.setter
     @final
-    def rated_current(self, value: num_type):
+    def rated_current(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"rated_current must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["额定电流"] = value
+        return value
 
     @property
     @final
@@ -249,11 +258,12 @@ class Basic_Inductor(_TwoPinMixIn):
 
     @inductance.setter
     @final
-    def inductance(self, value: num_type):
+    def inductance(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"inductance must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["电感"] = value
+        return value
 
     @property
     @final
@@ -264,11 +274,12 @@ class Basic_Inductor(_TwoPinMixIn):
 
     @internal_resistance.setter
     @final
-    def internal_resistance(self, value: num_type):
+    def internal_resistance(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"internal_resisitance must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["内阻"] = value
+        return value
 
     @property
     @final
@@ -281,11 +292,12 @@ class Basic_Inductor(_TwoPinMixIn):
 
     @is_ideal.setter
     @final
-    def is_ideal(self, value: bool):
+    def is_ideal(self, value: bool) -> bool:
         if not isinstance(value, bool):
-            raise TypeError
+            raise TypeError(f"is_ideal must be of type `bool`, but got {type(value).__name__}")
 
         self.properties["理想模式"] = int(value)
+        return value
 
     def fix_inductance(self) -> Self:
         ''' 修正电感值的浮点误差 '''
@@ -602,33 +614,36 @@ class Transistor(CircuitBase):
         return bool(self.properties["PNP"])
 
     @is_PNP.setter
-    def is_PNP(self, value: bool):
+    def is_PNP(self, value: bool) -> bool:
         if not isinstance(value, bool):
             raise TypeError(f"is_PNP must be of type `bool`, but got `{type(value).__name__}`")
 
         self.properties["PNP"] = int(value)
+        return value
 
     @property
     def gain(self) -> num_type:
         return self.properties["放大系数"]
 
     @gain.setter
-    def gain(self, value: num_type):
+    def gain(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"gain must be of type `int | float`, but got `{type(value).__name__}`")
 
         self.properties["放大系数"] = value
+        return value
 
     @property
     def max_power(self) -> num_type:
         return self.properties["最大功率"]
 
     @max_power.setter
-    def max_power(self, value: num_type):
+    def max_power(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"max_power must be of type `int | float`, but got `{type(value).__name__}`")
 
         self.properties["最大功率"] = value
+        return value
 
     def __repr__(self) -> str:
         res = f"Transistor({self._position.x}, {self._position.y}, {self._position.z}, " \
@@ -733,34 +748,36 @@ class Operational_Amplifier(CircuitBase):
         return self.properties["增益系数"]
 
     @gain.setter
-    def gain(self, value: num_type):
+    def gain(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"gain must be of type `int | float`, but got `{type(value).__name__}`")
 
         self.properties["增益系数"] = value
+        return value
 
     @property
     def max_voltage(self) -> num_type:
         return self.properties["最大电压"]
 
     @max_voltage.setter
-    def max_voltage(self, value: num_type):
+    def max_voltage(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"max_voltage must be of type `int | float`, but got `{type(value).__name__}`")
 
         self.properties["最大电压"] = value
-
+        return value
 
     @property
     def min_voltage(self) -> num_type:
         return self.properties["最小电压"]
 
     @min_voltage.setter
-    def min_voltage(self, value: num_type):
+    def min_voltage(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"min_voltage must be of type `int | float`, but got `{type(value).__name__}`")
 
         self.properties["最小电压"] = value
+        return value
 
     @override
     def __repr__(self) -> str:
@@ -825,11 +842,12 @@ class Relay_Component(CircuitBase):
         return self.properties["接通电流"]
 
     @pull_in_current.setter
-    def pull_in_current(self, value: num_type):
+    def pull_in_current(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"pull_in_current must be of type `int | float`, but got `{type(value).__name__}`")
 
         self.properties["接通电流"] = value
+        return value
 
     @property
     def rated_current(self) -> num_type:
@@ -838,11 +856,12 @@ class Relay_Component(CircuitBase):
         return self.properties["额定电流"]
 
     @rated_current.setter
-    def rated_current(self, value: num_type):
+    def rated_current(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"rated_current must be of type `int | float`, but got `{type(value).__name__}`")
 
         self.properties["额定电流"] = value
+        return value
 
     @property
     def coil_inductance(self) -> num_type:
@@ -851,11 +870,12 @@ class Relay_Component(CircuitBase):
         return self.properties["线圈电感"]
 
     @coil_inductance.setter
-    def coil_inductance(self, value: num_type):
+    def coil_inductance(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"coil_inductance must be of type `int | flaot`, but got `{type(value).__name__}`")
 
         self.properties["线圈电感"] = value
+        return value
 
     @property
     def coil_resistance(self) -> num_type:
@@ -864,11 +884,12 @@ class Relay_Component(CircuitBase):
         return self.properties["线圈电阻"]
 
     @coil_resistance.setter
-    def coil_resistance(self, value: num_type):
+    def coil_resistance(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"coil_resistance must be of type `int | flaot`, but got `{type(value).__name__}`")
 
         self.properties["线圈电阻"] = value
+        return value
 
     @final
     @staticmethod
@@ -930,10 +951,12 @@ class N_MOSFET(CircuitBase):
         return self.properties["放大系数"]
 
     @beta.setter
-    def beta(self, value: num_type):
+    def beta(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"beta must be of type `int | float`, but got {type(value).__name__}")
+
         self.properties["放大系数"] = value
+        return value
 
     @property
     def threshold(self) -> num_type:
@@ -942,11 +965,12 @@ class N_MOSFET(CircuitBase):
         return self.properties["阈值电压"]
 
     @threshold.setter
-    def threshold(self, value: num_type):
+    def threshold(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"threshold must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["阈值电压"] = value
+        return value
 
     @property
     def max_power(self) -> num_type:
@@ -955,11 +979,12 @@ class N_MOSFET(CircuitBase):
         return self.properties["最大功率"]
 
     @max_power.setter
-    def max_power(self, value: num_type):
+    def max_power(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"max_power must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["最大功率"] = value
+        return value
 
     @final
     @staticmethod

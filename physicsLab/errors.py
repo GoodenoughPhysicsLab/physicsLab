@@ -65,10 +65,13 @@ class ExperimentHasNotCrtError(Exception):
     def __str__(self):
         return "The experiment has not been created"
 
-# 打开的实验与调用的元件不符
 class ExperimentTypeError(Exception):
+    ''' 打开的实验与调用的元件不符 '''
+    def __init__(self, err_msg: str = "The type of experiment does not match the element"):
+        self.err_msg = err_msg
+
     def __str__(self):
-        return "The type of experiment does not match the element"
+        return self.err_msg
 
 # 用于get_Element 获取元件引用失败
 class ElementNotFound(Exception):

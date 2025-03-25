@@ -10,16 +10,22 @@ class _PlanetMeta(type):
             cls,
             x: num_type,
             y: num_type,
-            z:num_type,
-            *args,
+            z: num_type,
+            /, *,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
             **kwargs,
     ):
-        if not isinstance(x, (int, float)) \
-                or not isinstance(y, (int, float)) \
-                or not isinstance(z, (int, float)):
-            raise TypeError
+        if not isinstance(x, (int, float)):
+            raise TypeError(f"Parameter x must be of type `int | float`, but got {type(x).__name__}")
+        if not isinstance(y, (int, float)):
+            raise TypeError(f"Parameter y must be of type `int | float`, but got {type(y).__name__}")
+        if not isinstance(z, (int, float)):
+            raise TypeError(f"Parameter z must be of type `int | float`, but got {type(z).__name__}")
+        if not isinstance(identifier, (str, type(None))):
+            raise TypeError(f"Parameter identifier must be of type `Optional[str]`, but got {type(identifier).__name__}")
+        if not isinstance(experiment, (_Experiment, type(None))):
+            raise TypeError(f"Parameter experiment must be of type `Optional[Experiment]`, but got {type(experiment).__name__}")
 
         _Expe: _Experiment
         if experiment is None:
@@ -27,14 +33,14 @@ class _PlanetMeta(type):
         else:
             _Expe = experiment
         if _Expe.experiment_type != ExperimentType.Celestial:
-            raise errors.ExperimentTypeError
+            raise errors.ExperimentTypeError(f"Can't create {cls.__name__} because experiment_type is {_Expe.experiment_type}")
 
         self: "PlanetBase" = cls.__new__(cls)
         self.experiment = _Expe
 
         x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
 
-        self.__init__(x, y, z, *args, **kwargs)
+        self.__init__(x, y, z, **kwargs)
         assert isinstance(self.data, dict)
 
         self._set_identifier(identifier)
@@ -42,8 +48,8 @@ class _PlanetMeta(type):
         self.set_velocity(0, 0, 0)
         self.set_acceleration(0, 0, 0)
 
-        _Expe.Elements.append(self)
-        _Expe._id2element[self.data["Identifier"]] = self
+        self.experiment.Elements.append(self)
+        self.experiment._id2element[self.data["Identifier"]] = self
 
         return self
 
