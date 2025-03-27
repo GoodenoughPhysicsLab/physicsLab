@@ -38,6 +38,54 @@ class _MemsBase(CircuitBase):
     def z(self) -> Pin:
         return Pin(self, 2)
 
+    @property
+    @final
+    def ranges(self) -> num_type:
+        ''' 量程
+        '''
+        return self.properties["量程"]
+
+    @ranges.setter
+    @final
+    def ranges(self, value: num_type) -> num_type:
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"ranges must be of type `int | float`, but got {type(value).__name__}")
+
+        self.properties["量程"] = value
+        return value
+
+    @property
+    @final
+    def shifting(self) -> num_type:
+        ''' 偏移
+        '''
+        return self.properties["偏移"]
+
+    @shifting.setter
+    @final
+    def shifting(self, value: num_type) -> num_type:
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"shifting must be of type `int | float`, but got {type(valure).__name__}")
+
+        self.properties["偏移"] = value
+        return value
+
+    @property
+    @final
+    def response_factor(self) -> num_type:
+        return self.properties["响应系数"]
+
+    @response_factor.setter
+    @final
+    def response_factor(self, value: num_type) -> num_type:
+        ''' 响应系数
+        '''
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"response_factor must be of type `int | float`, but got {type(value).__name__}")
+
+        self.properties["响应系数"] = value
+        return value
+
 class Accelerometer(_MemsBase):
     ''' 加速度计 '''
     def __init__(
@@ -58,48 +106,6 @@ class Accelerometer(_MemsBase):
         self.ranges = ranges
         self.shifting = shifting
         self.response_factor = response_factor
-
-    @property
-    def ranges(self) -> num_type:
-        ''' 量程
-        '''
-        return self.properties["量程"]
-
-    @ranges.setter
-    def ranges(self, value: num_type) -> num_type:
-        if not isinstance(value, (int, float)):
-            raise TypeError(f"ranges must be of type `int | float`, but got {type(value).__name__}")
-
-        self.properties["量程"] = value
-        return value
-
-    @property
-    def shifting(self) -> num_type:
-        ''' 偏移
-        '''
-        return self.properties["偏移"]
-
-    @shifting.setter
-    def shifting(self, value: num_type) -> num_type:
-        if not isinstance(value, (int, float)):
-            raise TypeError(f"shifting must be of type `int | float`, but got {type(valure).__name__}")
-
-        self.properties["偏移"] = value
-        return value
-
-    @property
-    def response_factor(self) -> num_type:
-        return self.properties["响应系数"]
-
-    @response_factor.setter
-    def response_factor(self, value: num_type) -> num_type:
-        ''' 响应系数
-        '''
-        if not isinstance(value, (int, float)):
-            raise TypeError(f"response_factor must be of type `int | float`, but got {type(value).__name__}")
-
-        self.properties["响应系数"] = value
-        return value
 
     @final
     @staticmethod
@@ -168,12 +174,15 @@ class Attitude_Sensor(_MemsBase):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            ranges: num_type = 180,
+            shifting: num_type = 2.5,
+            response_factor: num_type = 0.0125,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Attitude Sensor"
-        self.data["Properties"]["量程"] = 180
-        self.data["Properties"]["偏移"] = 2.5
-        self.data["Properties"]["响应系数"] = 0.012500000186264515
+        self.ranges = ranges
+        self.shifting = shifting
+        self.response_factor = response_factor
 
     @final
     @staticmethod
@@ -191,12 +200,15 @@ class Gravity_Sensor(_MemsBase):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            ranges: num_type = 2,
+            shifting: num_type = 0.75,
+            response_factor: num_type = 0.229,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Gravity Sensor"
-        self.data["Properties"]["量程"] = 2
-        self.data["Properties"]["偏移"] = 0.75
-        self.data["Properties"]["响应系数"] = 0.2290000021457672
+        self.ranges = ranges
+        self.shifting = shifting
+        self.response_factor = response_factor
 
     @final
     @staticmethod
@@ -214,12 +226,15 @@ class Gyroscope(_MemsBase):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            ranges: num_type = 150,
+            shifting: num_type = 2.5,
+            response_factor: num_type = 0.0125,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Gyroscope"
-        self.data["Properties"]["量程"] = 150
-        self.data["Properties"]["偏移"] = 2.5
-        self.data["Properties"]["响应系数"] = 0.012500000186264515
+        self.ranges = ranges
+        self.shifting = shifting
+        self.response_factor = response_factor
 
     @final
     @staticmethod
@@ -237,12 +252,15 @@ class Linear_Accelerometer(_MemsBase):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            ranges: num_type = 2,
+            shifting: num_type = 0.75,
+            response_factor: num_type = 0.229,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Linear Accelerometer"
-        self.data["Properties"]["量程"] = 2
-        self.data["Properties"]["偏移"] = 0.75
-        self.data["Properties"]["响应系数"] = 0.2290000021457672
+        self.ranges = ranges
+        self.shifting = shifting
+        self.response_factor = response_factor
 
     @final
     @staticmethod
@@ -260,12 +278,15 @@ class Magnetic_Field_Sensor(_MemsBase):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            ranges: num_type = 0.04,
+            shifting: num_type = 3.2,
+            response_factor: num_type = 80,
     ) -> None:
         super().__init__(x, y, z)
         self.data["ModelID"] = "Magnetic Field Sensor"
-        self.data["Properties"]["量程"] = 0.03999999910593033
-        self.data["Properties"]["偏移"] = 3.200000047683716
-        self.data["Properties"]["响应系数"] = 80
+        self.ranges = ranges
+        self.shifting = shifting
+        self.response_factor = response_factor
 
     @final
     @staticmethod
