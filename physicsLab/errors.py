@@ -1,20 +1,39 @@
 # -*- coding: utf-8 -*-
 from ._typing import NoReturn
+from physicsLab import unwind
+from physicsLab import _colorUtils
+from physicsLab._typing import Optional
 
 BUG_REPORT: str = "please send a bug-report at " \
                 "https://github.com/GoodenoughPhysicsLab/physicsLab/issues or " \
                 "https://gitee.com/script2000/physicsLab/issues " \
                 "with your code, *.sav and traceback"
 
+def unrecoverable_error(err_type: str, msg: Optional[str]) -> NoReturn:
+    assert isinstance(err_type, str) and isinstance(msg, str), BUG_REPORT
+    unwind.print_stack()
+    _colorUtils.cprint(_colorUtils.Red(err_type), end='')
+    if msg is None:
+        print('\n')
+    else:
+        _colorUtils.cprint(": ", _colorUtils.Red(msg))
+    exit(1)
+
+def assertion_error(msg: str) -> NoReturn:
+    unrecoverable_error("AssertionError", msg)
+
+def type_error(msg: Optional[str] = None) -> NoReturn:
+    unrecoverable_error("TypeError", msg)
+
 def assert_true(
         condition: bool,
         msg: str = BUG_REPORT,
 ) -> None:
     if not condition:
-        raise AssertionError(msg)
+        raise assertion_error(msg)
 
 def unreachable() -> NoReturn:
-    raise AssertionError(f"Unreachable touched, {BUG_REPORT}")
+    assertion_error(f"Unreachable touched, {BUG_REPORT}")
 
 class InvalidWireError(Exception):
     def __init__(self, msg: str):

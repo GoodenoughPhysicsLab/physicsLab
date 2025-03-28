@@ -49,7 +49,7 @@ class WebTest(IsolatedAsyncioTestCase, ViztracerTool):
         )
 
     async def test_get_user(self):
-        await user.async_get_user(user_id="5ce629e157035932b52f9315")
+        await user.async_get_user("5ce629e157035932b52f9315", GetUserMode.by_id)
 
     async def test_get_profile(self):
         await user.async_get_profile()

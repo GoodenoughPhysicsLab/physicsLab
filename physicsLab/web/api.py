@@ -9,6 +9,7 @@ import contextvars
 import requests
 from ._api import _User, get_avatar, get_start_page, _check_response, _api_result
 from physicsLab import plAR
+from physicsLab import enums
 from physicsLab import errors
 from physicsLab.enums import Tag, Category
 from physicsLab._typing import Callable, Optional, List, Awaitable
@@ -158,10 +159,10 @@ class User(_User):
 
     async def async_get_user(
             self,
-            user_id: Optional[str] = None,
-            name: Optional[str] = None,
+            msg: str,
+            get_user_mode: enums.GetUserMode,
     ) -> Awaitable[_api_result]:
-        return await _async_wrapper(self.get_user, user_id, name)
+        return await _async_wrapper(self.get_user, msg, get_user_mode)
 
     async def async_get_profile(self) -> Awaitable[_api_result]:
         return await _async_wrapper(self.get_profile)

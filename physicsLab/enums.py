@@ -67,3 +67,8 @@ class WireColor(Enum):
     red = "红"
     green = "绿"
     yellow = "黄"
+
+@unique
+class GetUserMode(Enum):
+    by_id = 0
+    by_name = 1

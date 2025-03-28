@@ -17,15 +17,15 @@ class _PlanetMeta(type):
             **kwargs,
     ):
         if not isinstance(x, (int, float)):
-            raise TypeError(f"Parameter x must be of type `int | float`, but got {type(x).__name__}")
+            errors.type_error(f"Parameter x must be of type `int | float`, but got {type(x).__name__}")
         if not isinstance(y, (int, float)):
-            raise TypeError(f"Parameter y must be of type `int | float`, but got {type(y).__name__}")
+            errors.type_error(f"Parameter y must be of type `int | float`, but got {type(y).__name__}")
         if not isinstance(z, (int, float)):
-            raise TypeError(f"Parameter z must be of type `int | float`, but got {type(z).__name__}")
+            errors.type_error(f"Parameter z must be of type `int | float`, but got {type(z).__name__}")
         if not isinstance(identifier, (str, type(None))):
-            raise TypeError(f"Parameter identifier must be of type `Optional[str]`, but got {type(identifier).__name__}")
+            errors.type_error(f"Parameter identifier must be of type `Optional[str]`, but got {type(identifier).__name__}")
         if not isinstance(experiment, (_Experiment, type(None))):
-            raise TypeError(f"Parameter experiment must be of type `Optional[Experiment]`, but got {type(experiment).__name__}")
+            errors.type_error(f"Parameter experiment must be of type `Optional[Experiment]`, but got {type(experiment).__name__}")
 
         _Expe: _Experiment
         if experiment is None:
@@ -64,10 +64,12 @@ class PlanetBase(ElementBase, metaclass=_PlanetMeta):
     @override
     def set_position(self, x: num_type, y: num_type, z: num_type) -> Self:
         ''' 设置位置坐标 '''
-        if not isinstance(x, (int, float)) \
-                or not isinstance(y, (int, float)) \
-                or not isinstance(z, (int, float)):
-            raise TypeError
+        if not isinstance(x, (int, float)):
+            errors.type_error(f"Parameter x must be of type `int | float`, but got {type(x).__name__}")
+        if not isinstance(y, (int, float)):
+            errors.type_error(f"Parameter y must be of type `int | float`, but got {type(x).__name__}")
+        if not isinstance(z, (int, float)):
+            errors.type_error(f"Parameter z must be of type `int | float`, but got {type(x).__name__}")
 
         x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
         self._position = _tools.position(x, y, z)

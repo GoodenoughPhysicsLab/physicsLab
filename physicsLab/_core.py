@@ -51,8 +51,7 @@ class _ExperimentStack:
 
     @classmethod
     def push(cls, data: "_Experiment") -> None:
-        if not isinstance(data, _Experiment):
-            raise TypeError
+        errors.assert_true(isinstance(data, _Experiment))
 
         cls.data.append(data)
 
@@ -117,7 +116,7 @@ class _Experiment:
     @_check_not_closed
     def is_elementXYZ(self, status) -> None:
         if not isinstance(status, bool):
-            raise TypeError
+            errors.type_error()
         if self.experiment_type != ExperimentType.Circuit:
             raise errors.ExperimentTypeError
 
@@ -144,7 +143,7 @@ class _Experiment:
             @param element: 三大实验的元件
         '''
         if not isinstance(element, ElementBase):
-            raise TypeError
+            errors.type_error()
         if element.experiment is not self:
             raise errors.ExperimentError("element is not in this experiment") # TODO 换一个更好的异常类型?
         if element not in self.Elements:
@@ -194,7 +193,7 @@ class _Experiment:
         if not isinstance(x, (int, float)) \
                 or not isinstance(y, (int, float)) \
                 or not isinstance(z, (int, float)):
-            raise TypeError
+            errors.type_error()
 
         position = (_tools.round_data(x), _tools.round_data(y), _tools.round_data(z))
         if position not in self._position2elements.keys():
@@ -206,7 +205,7 @@ class _Experiment:
     def get_element_from_index(self, index: int) -> "ElementBase":
         ''' 通过index (元件生成顺序) 索引元件, index从1开始 '''
         if not isinstance(index, int):
-            raise TypeError
+            errors.type_error()
         if not 0 < index <= self.get_elements_count():
             raise errors.ElementNotFound("index out of range")
 
@@ -286,7 +285,7 @@ class _Experiment:
         '''
         if not isinstance(target_path, (str, type(None))) \
                 or not isinstance(no_print_info, bool):
-            raise TypeError
+            errors.type_error()
 
         if target_path is None:
             target_path = self.SAV_PATH
@@ -367,7 +366,7 @@ class _Experiment:
     def entitle(self, sav_name: str) -> Self:
         ''' 对存档名进行重命名 '''
         if not isinstance(sav_name, str):
-            raise TypeError
+            errors.type_error()
 
         self.__entitle(sav_name)
         return self
@@ -400,7 +399,7 @@ class _Experiment:
     @_check_not_closed
     def edit_tags(self, *tags: Tag) -> Self:
         if not all(isinstance(tag, Tag) for tag in tags):
-            raise TypeError
+            errors.type_error()
 
         temp = self.PlSav["Summary"]["Tags"] + [tag.value for tag in tags]
         self.PlSav["Summary"]["Tags"] = list(set(temp))
@@ -416,7 +415,7 @@ class _Experiment:
         if not isinstance(image_path, (str, type(None))) \
             or not isinstance(category, (Category, type(None))) \
             or not isinstance(user, _User):
-            raise TypeError
+            errors.type_error()
         if image_path is not None and (not os.path.exists(image_path) or not os.path.isfile(image_path)):
             raise FileNotFoundError
         if not user.is_binded:
@@ -500,7 +499,7 @@ class _Experiment:
         '''
         if not isinstance(category, Category) \
             or not isinstance(image_path, (str, type(None))):
-            raise TypeError
+            errors.type_error()
         if self.PlSav["Summary"]["ID"] is not None:
             raise Exception(
                 "upload can only be used to upload a brand new experiment, try using `.update` instead"
@@ -602,7 +601,7 @@ class _Experiment:
                 or not isinstance(rotation_x, (int, float)) \
                 or not isinstance(rotation_y, (int, float)) \
                 or not isinstance(rotation_z, (int, float)):
-            raise TypeError
+            errors.type_error()
 
         self.VisionCenter = _tools.position(x, y, z)
         self.CameraSave["Distance"] = distance
@@ -614,7 +613,7 @@ class _Experiment:
     def paused(self, status: bool = True) -> Self:
         ''' 暂停或解除暂停实验 '''
         if not isinstance(status, bool):
-            raise TypeError
+            errors.type_error()
 
         self.PlSav["Paused"] = status
         self.PlSav["Experiment"]["Paused"] = status
@@ -656,7 +655,7 @@ class _Experiment:
                 or not isinstance(y, (int, float)) \
                 or not isinstance(z, (int, float)) \
                 or not isinstance(elementXYZ, (bool, type(bool))):
-            raise TypeError
+            errors.type_error()
         if self.experiment_type != other.experiment_type:
             raise errors.ExperimentTypeError
         if self is other:
@@ -711,10 +710,12 @@ class ElementBase:
 
     def set_position(self, x: num_type, y: num_type, z: num_type) -> Self:
         ''' 设置元件的位置 '''
-        if not isinstance(x, (int, float)) \
-                or not isinstance(y, (int, float)) \
-                or not isinstance(z, (int, float)):
-            raise TypeError
+        if not isinstance(x, (int, float)):
+            errors.type_error(f"Parameter x must be of type `int` or `float`, but got `{type(x).__name__}`")
+        if not isinstance(y, (int, float)):
+            errors.type_error(f"Parameter y must be of type `int` or `float`, but got `{type(y).__name__}`")
+        if not isinstance(z, (int, float)):
+            errors.type_error(f"Parameter z must be of type `int` or `float`, but got `{type(z).__name__}`")
 
         x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
         errors.assert_true(hasattr(self, 'experiment'))

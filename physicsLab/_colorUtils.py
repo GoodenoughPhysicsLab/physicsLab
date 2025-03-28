@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-''' 在命令行打印出有颜色的字 '''
+''' 在命令行打印出有颜色的字
+    为最基础, 最底层的设施
+'''
 
 # 设置终端的编码为UTF-8
 import io
@@ -9,7 +11,6 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 import colorama
-from physicsLab import errors
 
 _color_support = True
 
@@ -20,7 +21,6 @@ def close_color_print():
 
 class Color:
     def __init__(self, msg: str) -> None:
-        errors.assert_true(isinstance(msg, str))
         self.msg = msg
 
 class Black(Color):

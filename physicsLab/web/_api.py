@@ -8,6 +8,7 @@ import os
 import requests
 
 from physicsLab import plAR
+from physicsLab import enums
 from physicsLab import errors
 from physicsLab.enums import Tag, Category
 from physicsLab._typing import Optional, List, TypedDict, Callable
@@ -109,6 +110,9 @@ class _User:
     decoration: int
     # 存储了所有与每日活动有关的奖励信息 (比如ActivityID)
     statistic: dict
+
+    def __init__(*args, **kwargs) -> None:
+        raise NotImplementedError
 
     def get_library(self) -> _api_result:
         ''' 获取社区作品列表 '''
@@ -368,7 +372,7 @@ class _User:
 
                 if _nickname != "":
                     try:
-                        reply_id = self.get_user(name=_nickname)["Data"]["User"]["ID"]
+                        reply_id = self.get_user(_nickname, enums.GetUserMode.by_name)["Data"]["User"]["ID"]
                     except errors.ResponseFail:
                         pass
 
@@ -528,26 +532,29 @@ class _User:
 
     def get_user(
             self,
-            user_id: Optional[str] = None,
-            name: Optional[str] = None,
+            msg: str,
+            get_user_mode: enums.GetUserMode,
     ) -> _api_result:
         ''' 获取用户信息
-            @param user_id: 用户ID
-            @param name: 用户名
+            @param msg: 用户ID/用户名
+            @param get_user_mode: 根据ID/用户名获取用户信息
         '''
-        if not isinstance(user_id, (str, type(None))):
-            raise TypeError(f"Parameter 'user_id' must be of type 'str' or None, but got {type(user_id).__name__}")
-        if not isinstance(name, (str, type(None))):
-            raise TypeError(f"Parameter 'name' must be of type 'str' or None, but got {type(name).__name__}")
-        if user_id is None and name is None:
-            raise ValueError(f"At least one of parameters 'user_id' or 'name' must be provided, but both are None")
+        if not isinstance(msg, str):
+            raise TypeError(f"Parameter 'msg' must be of type 'str', but got {type(msg).__name__}")
+        if not isinstance(get_user_mode, enums.GetUserMode):
+            raise TypeError(f"Parameter 'get_user_mode' must be an instance of type "
+                            f"`physicsLab.enums.GetUserMode`, but got {type(get_user_mode).__name__}")
+
+        if get_user_mode == enums.GetUserMode.by_id:
+            body = {"ID": msg}
+        elif get_user_mode == enums.GetUserMode.by_name:
+            body = {"Name": msg}
+        else:
+            errors.unreachable()
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Users/GetUser",
-            json={
-                "ID": user_id,
-                "Name": name,
-            },
+            json=body,
             headers={
                 "Content-Type": "application/json",
                 "x-API-Token": self.token,

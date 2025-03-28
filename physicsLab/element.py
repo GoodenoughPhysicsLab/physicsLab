@@ -64,7 +64,7 @@ def search_experiment(sav_name: str) -> Tuple[Optional[str], Optional[dict]]:
         若存在则返回存档对应的文件名, 若不存在则返回None
     '''
     if not isinstance(sav_name, str):
-        raise TypeError
+        errors.type_error(f"Parameter sav_name must be of type `str`, but got `{type(sav_name).__name__}`")
 
     for a_sav in _get_all_pl_sav():
         try:
@@ -127,7 +127,7 @@ class Experiment(_Experiment):
 
     def __init__(self, open_mode: OpenMode, *args, **kwargs) -> None:
         if not isinstance(open_mode, OpenMode):
-            raise TypeError(f"open_mode must be of type `OpenMode`, but got `{type(open_mode).__name__}`")
+            errors.type_error(f"Parameter open_mode must be of type `OpenMode`, but got `{type(open_mode).__name__}`")
 
         self.open_mode: OpenMode = open_mode
         # 通过坐标索引元件
@@ -141,15 +141,15 @@ class Experiment(_Experiment):
         # 导入self.Elements与self._element_position之后, 元件信息才被完全导入
         if open_mode == OpenMode.load_by_filepath:
             if len(kwargs) == 1:
-                raise TypeError(f"When open_mode is OpenMode.load_by_filepath, constructor is `def __init__(self, open_mode: OpenMode, filepath: str | pathlib.Path) -> None`, but an unexpected keyword argument is gotten: {list(kwargs.keys())[0]}={list(kwargs.values())[0]}")
+                errors.type_error(f"When open_mode is OpenMode.load_by_filepath, constructor is `def __init__(self, open_mode: OpenMode, filepath: str | pathlib.Path) -> None`, but an unexpected keyword argument is gotten: {list(kwargs.keys())[0]}={list(kwargs.values())[0]}")
             elif len(kwargs) != 0:
-                raise TypeError(f"When open_mode is OpenMode.load_by_filepath, constructor is `def __init__(self, open_mode: OpenMode, filepath: str | pathlib.Path) -> None`, but unexpected keyword arguments are gotten: {''.join(str(key) + '=' + str(value) + ' ' for key, value in kwargs.items())}")
+                errors.type_error(f"When open_mode is OpenMode.load_by_filepath, constructor is `def __init__(self, open_mode: OpenMode, filepath: str | pathlib.Path) -> None`, but unexpected keyword arguments are gotten: {''.join(str(key) + '=' + str(value) + ' ' for key, value in kwargs.items())}")
 
             if len(args) != 1:
-                raise TypeError(f"When open_mode is OpenMode.load_by_filepath, constructor is `def __init__(self, open_mode: OpenMode, filepath: str | pathlib.Path) -> None`, but got {len(args)} positional arguments")
+                errors.type_error(f"When open_mode is OpenMode.load_by_filepath, constructor is `def __init__(self, open_mode: OpenMode, filepath: str | pathlib.Path) -> None`, but got {len(args)} positional arguments")
             sav_name = args[0]
             if not isinstance(sav_name, (str, pathlib.Path)):
-                raise TypeError(f"sav_path must be of type `str | pathlib.Path`, but got `{type(sav_name).__name__}`")
+                errors.type_error(f"sav_path must be of type `str | pathlib.Path`, but got `{type(sav_name).__name__}`")
             if isinstance(sav_name, pathlib.Path):
                 sav_name = str(sav_name)
 
@@ -179,15 +179,15 @@ class Experiment(_Experiment):
             self.__load()
         elif open_mode == OpenMode.load_by_sav_name:
             if len(kwargs) == 1:
-                raise TypeError(f"When open_mode is OpenMode.load_by_sav_name, constructor is `def __init__(self, open_mode: OpenMode, sav_name: str) -> None`, but an unexpected keyword argument is gotten: {list(kwargs.keys())[0]}={list(kwargs.values())[0]}")
+                errors.type_error(f"When open_mode is OpenMode.load_by_sav_name, constructor is `def __init__(self, open_mode: OpenMode, sav_name: str) -> None`, but an unexpected keyword argument is gotten: {list(kwargs.keys())[0]}={list(kwargs.values())[0]}")
             elif len(kwargs) != 0:
-                raise TypeError(f"When open_mode is OpenMode.load_by_sav_name, constructor is `def __init__(self, open_mode: OpenMode, sav_name: str) -> None`, but unexpected keyword arguments are gotten: {''.join(str(key) + '=' + str(value) + ' ' for key, value in kwargs.items())}")
+                errors.type_error(f"When open_mode is OpenMode.load_by_sav_name, constructor is `def __init__(self, open_mode: OpenMode, sav_name: str) -> None`, but unexpected keyword arguments are gotten: {''.join(str(key) + '=' + str(value) + ' ' for key, value in kwargs.items())}")
 
             if len(args) != 1:
-                raise TypeError(f"When open_mode is OpenMode.load_by_sav_name, constructor is `def __init__(self, open_mode: OpenMode, sav_name: str) -> None`, but got {len(args)} positional arguments")
+                errors.type_error(f"When open_mode is OpenMode.load_by_sav_name, constructor is `def __init__(self, open_mode: OpenMode, sav_name: str) -> None`, but got {len(args)} positional arguments")
             sav_name = args[0]
             if not isinstance(sav_name, str):
-                raise TypeError(f"sav_name must be of type `str`, but got `{type(sav_name).__name__}`")
+                errors.type_error(f"sav_name must be of type `str`, but got `{type(sav_name).__name__}`")
 
             filename, _plsav = search_experiment(sav_name)
             if filename is None:
@@ -204,10 +204,10 @@ class Experiment(_Experiment):
             content_id, category, *rest = args
 
             if not isinstance(content_id, str) or not isinstance(category, Category) or len(rest) != 0:
-                raise TypeError
+                errors.type_error()
             user = kwargs.get("user")
             if not isinstance(user, (_User, type(None))):
-                raise TypeError
+                errors.type_error(f"Parameter user must be of type `_User | None`, but got `{type(user).__name__}`")
 
             if user is None:
                 if Experiment._user is None:
@@ -239,15 +239,38 @@ class Experiment(_Experiment):
             self.PlSav["InternalName"] = _summary["Subject"]
             self.__load()
         elif open_mode == OpenMode.crt:
-            sav_name, experiment_type, *rest = args
+            if len(args) != 2:
+                errors.type_error(
+                    f"When open_mode is OpenMode.crt, constructor is `def __init__("
+                    f"self, open_mode: OpenMode, sav_name: str, "
+                    f"experiment_type: ExperimentType, /, *, "
+                    f"force_crt: bool = False) -> None`, but got {len(args)} positional arguments"
+                )
+            sav_name, experiment_type = args
 
-            if not isinstance(sav_name, str) \
-                    or not isinstance(experiment_type, ExperimentType) \
-                    or len(rest) != 0:
-                raise TypeError
+            if not isinstance(sav_name, str):
+                errors.type_error(f"Parameter sav_name must be of type `str`, but got `{type(sav_name).__name__}`")
+            if not isinstance(experiment_type, ExperimentType):
+                raise TypeError(f"Parameter experiment_type must be of type `ExperimentType`, but got `{type(experiment_type).__name__}`")
+
+            if len(kwargs) != 0 and len(kwargs) != 1:
+                kwargs.pop("force_crt", None)
+                errors.type_error(
+                    f"When open_mode is OpenMode.crt, constructor is `def __init__("
+                    f"self, open_mode: OpenMode, sav_name: str, "
+                    f"experiment_type: ExperimentType, /, *, "
+                    f"force_crt: bool = False) -> None`, but got unexpected keyword arguments: "
+                    f"{''.join(str(key) + '=' + str(value) + ' ' for key, value in kwargs.items())}")
+            if "force_crt" not in kwargs and len(kwargs) == 1:
+                errors.type_error(
+                    f"When open_mode is OpenMode.crt, constructor is `def __init__("
+                    f"self, open_mode: OpenMode, sav_name: str, "
+                    f"experiment_type: ExperimentType, /, *, "
+                    f"force_crt: bool = False) -> None) -> None`, but got unexpected an keyword argument: "
+                    f"{''.join(str(key) + '=' + str(value) for key, value in kwargs.items())}")
             force_crt = kwargs.get("force_crt", False)
             if not isinstance(force_crt, bool):
-                raise TypeError
+                errors.type_error(f"Parameter force_crt must be of type `bool`, but got `{type(force_crt).__name__}`")
 
             filepath, _ = search_experiment(sav_name)
             if not force_crt and filepath is not None:

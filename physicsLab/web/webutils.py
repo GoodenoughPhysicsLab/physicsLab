@@ -8,7 +8,7 @@ import requests
 from ._api import _User, get_avatar
 from ._threadpool import ThreadPool, _Task
 from physicsLab import errors
-from physicsLab.enums import Category, Tag
+from physicsLab.enums import Category, Tag, GetUserMode
 from physicsLab._typing import Optional, num_type, Callable, List
 
 _DEFAULT_MAX_WORKERS: int = 4
@@ -413,9 +413,9 @@ class RelationsIter:
         self.query = query
         if amount is None:
             if self.display_type == "Follower":
-                self.amount = self.user.get_user(user_id=self.user_id)['Data']['Statistic']['FollowerCount']
+                self.amount = self.user.get_user(self.user_id, GetUserMode.by_id)['Data']['Statistic']['FollowerCount']
             elif self.display_type == "Following":
-                self.amount = self.user.get_user(user_id=self.user_id)['Data']['Statistic']['FollowingCount']
+                self.amount = self.user.get_user(self.user_id, GetUserMode.by_id)['Data']['Statistic']['FollowingCount']
             else:
                 errors.unreachable()
         else:
@@ -478,7 +478,7 @@ class AvatarsIter:
 
         if max_img_index is None:
             if category == "User":
-                self.max_img_index = user.get_user(user_id=target_id)["Data"]["User"]["Avatar"]
+                self.max_img_index = user.get_user(target_id, GetUserMode.by_id)["Data"]["User"]["Avatar"]
                 category = "users"
             elif category == "Experiment":
                 self.max_img_index = user.get_summary(target_id, Category.Experiment)["Data"]["Image"]

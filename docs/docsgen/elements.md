@@ -2423,7 +2423,7 @@ class Electricity_Meter(CircuitBase):
 ## <h2 id="Resistance_Box"> Resistance_Box </h2>
 ```Python
 class Resistance_Box(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, resistance: Union[int, float] = 10) -> None
 ```
 
 ### get_all_pins_property
@@ -2457,13 +2457,6 @@ class Resistance_Box(CircuitBase):
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
-
-### set_resistance
-```Python
-    def set_resistance(self, num: Union[int, float]) -> Self
-```
-设置电阻值  
   
 
 ### set_rotation
@@ -5162,7 +5155,7 @@ class P_MOSFET(CircuitBase):
 ## <h2 id="Accelerometer"> Accelerometer </h2>
 ```Python
 class Accelerometer(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, ranges: Union[int, float] = 2, shifting: Union[int, float] = 0.75, response_factor: Union[int, float] = 0.2290000021457672) -> None
 ```
 
 ### get_all_pins_property
@@ -5212,7 +5205,7 @@ class Accelerometer(CircuitBase):
 ## <h2 id="Attitude_Sensor"> Attitude_Sensor </h2>
 ```Python
 class Attitude_Sensor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, ranges: Union[int, float] = 180, shifting: Union[int, float] = 2.5, response_factor: Union[int, float] = 0.0125) -> None
 ```
 
 ### get_all_pins_property
@@ -5262,7 +5255,7 @@ class Attitude_Sensor(CircuitBase):
 ## <h2 id="Gravity_Sensor"> Gravity_Sensor </h2>
 ```Python
 class Gravity_Sensor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, ranges: Union[int, float] = 2, shifting: Union[int, float] = 0.75, response_factor: Union[int, float] = 0.229) -> None
 ```
 
 ### get_all_pins_property
@@ -5312,7 +5305,7 @@ class Gravity_Sensor(CircuitBase):
 ## <h2 id="Gyroscope"> Gyroscope </h2>
 ```Python
 class Gyroscope(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, ranges: Union[int, float] = 150, shifting: Union[int, float] = 2.5, response_factor: Union[int, float] = 0.0125) -> None
 ```
 
 ### get_all_pins_property
@@ -5362,7 +5355,7 @@ class Gyroscope(CircuitBase):
 ## <h2 id="Linear_Accelerometer"> Linear_Accelerometer </h2>
 ```Python
 class Linear_Accelerometer(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, ranges: Union[int, float] = 2, shifting: Union[int, float] = 0.75, response_factor: Union[int, float] = 0.229) -> None
 ```
 
 ### get_all_pins_property
@@ -5412,7 +5405,7 @@ class Linear_Accelerometer(CircuitBase):
 ## <h2 id="Magnetic_Field_Sensor"> Magnetic_Field_Sensor </h2>
 ```Python
 class Magnetic_Field_Sensor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, ranges: Union[int, float] = 0.04, shifting: Union[int, float] = 3.2, response_factor: Union[int, float] = 80) -> None
 ```
 
 ### get_all_pins_property
