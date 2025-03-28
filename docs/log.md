@@ -262,4 +262,4 @@
 
 ## 2.0.4
 1. `Experiment`增加`.delete`方法
-
+2. `class User`的构造函数被破坏性更新

@@ -17,11 +17,12 @@ import platform
 
 from physicsLab import plAR
 from physicsLab import  _tools
+from physicsLab import _warn
 from physicsLab import errors
 from physicsLab import _colorUtils
 from .web._api import _User, _check_response
 from .enums import Category, Tag, ExperimentType, OpenMode
-from ._typing import Union, Optional, List, Dict, num_type, Self, Callable, Tuple, final, NoReturn
+from ._typing import Optional, List, Dict, num_type, Self, Callable, Tuple, final, NoReturn
 
 class _ExperimentStack:
     data: List["_Experiment"] = []
@@ -455,7 +456,7 @@ class _Experiment:
         if image_path is not None:
             image_size = os.path.getsize(image_path)
             if image_size >= 1048576:
-                errors.warning("image size is bigger than 1MB")
+                _warn.warning("image size is bigger than 1MB")
                 image_size = -image_size # 利用物实bug发布大图片
             submit_data["Request"] = {
                 "FileSize": image_size,
@@ -476,9 +477,10 @@ class _Experiment:
         def callback(status_code):
             if status_code == 403:
                 _colorUtils.cprint(
-                    "you can't submit experiment because you are not the author "
-                    "or experiment status(elements, tags...) is invalid",
-                    _colorUtils.COLOR.RED,
+                    _colorUtils.Red(
+                        "you can't submit experiment because you are not the author "
+                        "or experiment status(elements, tags...) is invalid"
+                    )
                 )
         _check_response(submit_response, callback)
 

@@ -6,19 +6,19 @@
 * 匿名用户登录:
 ```python
 from physicsLab import web
-user = web.User()
+user = anonymous_login()
 ```
 
 * 通过邮箱密码登录:
 ```python
 from physicsLab import web
-user = web.User(YOUR_EMAIL, YOUR_PASSWORD)
+user = web.email(YOUR_EMAIL, YOUR_PASSWORD)
 ```
 
 * 通过`Token`, `AuthCode`登录:
 ```python
 from physicsLab import *
-user = web.User(
+user = web.token_login(
     token=YOUR_TOKEN,
     auth_code=YOUR_AUTH_CODE,
 )
