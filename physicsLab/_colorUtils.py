@@ -21,8 +21,8 @@ if platform.system() == "Windows":
         _fields_ = [
             ("dwSize", wintypes._COORD),
             ("dwCursorPosition", wintypes._COORD),
-            ("srWindow", wintypes.SMALL_RECT),
             ("wAttributes", wintypes.WORD),
+            ("srWindow", wintypes.SMALL_RECT),
             ("dwMaximumWindowSize", wintypes._COORD),
         ]
 
@@ -58,7 +58,7 @@ def close_color_print():
     global _color_support
     _color_support = False
 
-class Color:
+class _Color:
     fore: int
 
     def __init__(self, msg: str) -> None:
@@ -69,13 +69,13 @@ class Color:
         if platform.system() == "Windows":
             csbi = _CONSOLE_SCREEN_BUFFER_INFO()
             _GetConsoleScreenBufferInfo(_stdout_handle, ctypes.byref(csbi))
-            _SetConsoleTextAttribute(_stdout_handle, 4)
-            print(self.msg, end='')
+            _SetConsoleTextAttribute(_stdout_handle, self.fore)
+            print(self.msg, flush=True, end='')
             _SetConsoleTextAttribute(_stdout_handle, csbi.wAttributes)
         else:
             print(f"\033[{self.fore}m{self.msg}\033[39m", end='')
 
-class Black(Color):
+class Black(_Color):
     def __init__(self, msg: str) -> None:
         super().__init__(msg)
 
@@ -84,7 +84,7 @@ class Black(Color):
         else:
             self.fore = 30
 
-class Red(Color):
+class Red(_Color):
     def __init__(self, msg: str) -> None:
         super().__init__(msg)
 
@@ -93,7 +93,7 @@ class Red(Color):
         else:
             self.fore = 31
 
-class Green(Color):
+class Green(_Color):
     def __init__(self, msg: str) -> None:
         super().__init__(msg)
 
@@ -102,43 +102,44 @@ class Green(Color):
         else:
             self.fore = 32
 
-class Yellow(Color):
+class Yellow(_Color):
     def __init__(self, msg: str) -> None:
         super().__init__(msg)
 
         if platform.system() == "Windows":
-            self.fore = 33
-        else:
             self.fore = 6
+        else:
+            self.fore = 33
 
-class Blue(Color):
+
+class Blue(_Color):
     def __init__(self, msg: str) -> None:
         super().__init__(msg)
 
         if platform.system() == "Windows":
-            self.fore = 34
-        else:
             self.fore = 1
+        else:
+            self.fore = 34
 
-class Magenta(Color):
+class Magenta(_Color):
     def __init__(self, msg: str) -> None:
         super().__init__(msg)
 
         if platform.system() == "Windows":
-            self.fore = 35
-        else:
             self.fore = 5
+        else:
+            self.fore = 35
 
-class Cyan(Color):
+class Cyan(_Color):
    def __init__(self, msg: str) -> None:
         super().__init__(msg)
 
         if platform.system() == "Windows":
-            self.fore = 36
-        else:
             self.fore = 3
+        else:
+            self.fore = 36
 
-class Grey(Color):
+class Grey(_Color):
     def __init__(self, msg: str) -> None:
         super().__init__(msg)
 
@@ -150,8 +151,8 @@ class Grey(Color):
 def cprint(*args, end='\n'):
     global _color_support
     for arg in args:
-        if _color_support and isinstance(arg, Color):
+        if _color_support and isinstance(arg, _Color):
             arg.cprint()
         else:
-            print(arg, end='')
-    print(end, end='')
+            print(arg, flush=True, end='')
+    print(end, flush=True, end='')
