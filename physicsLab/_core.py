@@ -337,7 +337,7 @@ class _Experiment:
                 _colorUtils.cprint(_colorUtils.Cyan("<anonymous>"), end='')
             else:
                 _colorUtils.cprint(_colorUtils.Blue(f"\"{self.PlSav['InternalName']}\""), end='')
-            _colorUtils.cprint(_colorUtils.Blue(f"at \"{self.SAV_PATH}\"!"))
+            _colorUtils.cprint(_colorUtils.Blue(f" at \"{self.SAV_PATH}\"!"))
         if os.path.exists(self.SAV_PATH.replace(".sav", ".jpg")): # 用存档生成的实验无图片
             os.remove(self.SAV_PATH.replace(".sav", ".jpg"))
 
