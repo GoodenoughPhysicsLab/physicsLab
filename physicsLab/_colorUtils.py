@@ -67,6 +67,10 @@ class _Color:
     @final
     def cprint(self):
         if platform.system() == "Windows":
+            # 先刷新再打印, 避免以下的bug
+            # print("test")
+            # _colorUtils.cprint("test")
+            sys.stdout.flush()
             csbi = _CONSOLE_SCREEN_BUFFER_INFO()
             _GetConsoleScreenBufferInfo(_stdout_handle, ctypes.byref(csbi))
             _SetConsoleTextAttribute(_stdout_handle, self.fore)
@@ -154,5 +158,5 @@ def cprint(*args, end='\n'):
         if _color_support and isinstance(arg, _Color):
             arg.cprint()
         else:
-            print(arg, flush=True, end='')
-    print(end, flush=True, end='')
+            print(arg, end='')
+    print(end, end='')
