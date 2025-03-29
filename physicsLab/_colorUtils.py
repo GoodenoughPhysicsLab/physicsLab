@@ -143,7 +143,7 @@ class Cyan(_Color):
         else:
             self.fore = 36
 
-class Grey(_Color):
+class White(_Color):
     def __init__(self, msg: str) -> None:
         super().__init__(msg)
 
