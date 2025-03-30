@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import inspect
 from ._typing import NoReturn
 from physicsLab import unwind
 from physicsLab import _colorUtils
@@ -9,9 +10,10 @@ BUG_REPORT: str = "please send a bug-report at " \
                 "https://gitee.com/script2000/physicsLab/issues " \
                 "with your code, *.sav and traceback"
 
-def unrecoverable_error(err_type: str, msg: Optional[str]) -> NoReturn:
-    assert isinstance(err_type, str) and isinstance(msg, str), BUG_REPORT
-    unwind.print_stack()
+def _unrecoverable_error(err_type: str, msg: Optional[str]) -> NoReturn:
+    ''' 不可恢复的错误, 表明程序抽象机已崩溃
+        会打印的错误信息并退出程序
+    '''
     _colorUtils.cprint(_colorUtils.Red(err_type), end='')
     if msg is None:
         print('\n')
@@ -20,20 +22,35 @@ def unrecoverable_error(err_type: str, msg: Optional[str]) -> NoReturn:
     exit(1)
 
 def assertion_error(msg: str) -> NoReturn:
-    unrecoverable_error("AssertionError", msg)
-
-def type_error(msg: Optional[str] = None) -> NoReturn:
-    unrecoverable_error("TypeError", msg)
+    ''' 断言错误, physicsLab认为其为不可恢复的错误
+    '''
+    unwind.print_stack()
+    _unrecoverable_error("AssertionError", msg)
 
 def assert_true(
         condition: bool,
         msg: str = BUG_REPORT,
 ) -> None:
     if not condition:
-        raise assertion_error(msg)
+        assertion_error(msg)
 
 def unreachable() -> NoReturn:
     assertion_error(f"Unreachable touched, {BUG_REPORT}")
+
+def type_error(msg: Optional[str] = None) -> NoReturn:
+    ''' 类型错误, physicsLab认为其为不可恢复的错误
+    '''
+    current_frame = inspect.currentframe()
+    if current_frame is None:
+        unreachable()
+    declared_frame = current_frame.f_back
+    if declared_frame is None:
+        unreachable()
+    func_obj = declared_frame.f_globals.get(declared_frame.f_code.co_name)
+    if func_obj is None:
+        unreachable()
+    print(func_obj)
+    _unrecoverable_error("TypeError", msg)
 
 class InvalidWireError(Exception):
     def __init__(self, msg: str):
