@@ -49,7 +49,7 @@ if platform.system() == "Windows":
     _SetConsoleTextAttribute.restype = wintypes.BOOL
 
     _stdout_handle = _GetStdHandle(-11) # STD_OUTPUT_HANDLE
-    _stderr_handle = _GetStdHandle(-12)
+    _stderr_handle = _GetStdHandle(-12) # STD_ERROR_HANDLE
 
 _color_support = True
 
@@ -152,6 +152,7 @@ class White(_Color):
         else:
             self.fore = 37
 
+# TODO Support stderr
 def cprint(*args, end='\n'):
     global _color_support
     for arg in args:

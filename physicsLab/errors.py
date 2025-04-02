@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+import os
 import inspect
 from ._typing import NoReturn
 from physicsLab import unwind
 from physicsLab import _colorUtils
-from physicsLab._typing import Optional
+from physicsLab._typing import Optional, LiteralString
 
 BUG_REPORT: str = "please send a bug-report at " \
                 "https://github.com/GoodenoughPhysicsLab/physicsLab/issues or " \
@@ -19,7 +20,7 @@ def _unrecoverable_error(err_type: str, msg: Optional[str]) -> NoReturn:
         print('\n')
     else:
         _colorUtils.cprint(": ", _colorUtils.Red(msg))
-    exit(1)
+    os.abort()
 
 def assertion_error(msg: str) -> NoReturn:
     ''' 断言错误, physicsLab认为其为不可恢复的错误
@@ -54,7 +55,6 @@ def type_error(msg: Optional[str] = None) -> NoReturn:
 
 class InvalidWireError(Exception):
     def __init__(self, msg: str):
-        assert isinstance(msg, str)
         self.msg = msg
 
     def __str__(self):
@@ -83,11 +83,9 @@ class ExperimentExistError(Exception):
 
 class ExperimentNotExistError(Exception):
     ''' 实验不存在 '''
-    err_msg = "The experiment does not exist"
+    def __init__(self, err_msg: LiteralString = "The experiment does not exist") -> None:
+        self.err_msg = err_msg
 
-    def __init__(self, err_msg = None) -> None:
-        if err_msg is not None:
-            self.err_msg = err_msg
     def __str__(self):
         return self.err_msg
 
@@ -103,17 +101,17 @@ class ExperimentHasNotCrtError(Exception):
 
 class ExperimentTypeError(Exception):
     ''' 打开的实验与调用的元件不符 '''
-    def __init__(self, err_msg: str = "The type of experiment does not match the element"):
+    def __init__(self, err_msg: LiteralString = "The type of experiment does not match the element") -> None:
         self.err_msg = err_msg
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.err_msg
 
 # 用于get_Element 获取元件引用失败
 class ElementNotFound(Exception):
-    def __init__(self, err_msg: str = "") -> None:
-        self.err_msg: str = err_msg
-    def __str__(self):
+    def __init__(self, err_msg: LiteralString = "Can't find element") -> None:
+        self.err_msg = err_msg
+    def __str__(self) -> str:
         return self.err_msg
 
 class ExperimentError(Exception):
@@ -125,15 +123,17 @@ class ExperimentError(Exception):
 
 class ResponseFail(Exception):
     ''' 返回消息体失败 '''
-    def __init__(self, err_msg: str):
+    # TODO 获取对应的错误码
+    def __init__(self, err_msg: LiteralString):
         self.err_msg: str = err_msg
+
     def __str__(self):
         return self.err_msg
 
 class MaxRetryError(Exception):
     ''' 重试次数过多 '''
-    def __init__(self, err_msg: str):
-        self.err_msg: str = err_msg
+    def __init__(self, err_msg: LiteralString):
+        self.err_msg = err_msg
 
     def __str__(self):
         return self.err_msg
