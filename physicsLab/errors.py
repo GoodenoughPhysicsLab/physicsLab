@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import os
+import ast
 import inspect
+import executing
+
 from ._typing import NoReturn
 from physicsLab import unwind
 from physicsLab import _colorUtils
@@ -44,13 +47,48 @@ def type_error(msg: Optional[str] = None) -> NoReturn:
     current_frame = inspect.currentframe()
     if current_frame is None:
         unreachable()
-    declared_frame = current_frame.f_back
-    if declared_frame is None:
+
+    declare_frame = current_frame.f_back
+    if declare_frame is None:
         unreachable()
-    func_obj = declared_frame.f_globals.get(declared_frame.f_code.co_name)
-    if func_obj is None:
+    declare_node = executing.Source.executing(declare_frame).node
+    declare_module = inspect.getmodule(declare_frame)
+    if declare_module is None:
         unreachable()
-    print(func_obj)
+
+    call_frame = declare_frame.f_back
+    if call_frame is None:
+        unreachable()
+    call_node = executing.Source.executing(call_frame).node
+    call_module = inspect.getmodule(call_frame)
+    if call_module is None:
+        unreachable()
+    lineno = call_frame.f_lineno
+    _colorUtils.cprint(
+        "  File ",
+        _colorUtils.Magenta(f"\"{call_frame.f_code.co_filename}\""),
+        ", in ",
+        _colorUtils.Magenta(call_frame.f_code.co_name),
+        end='\n',
+    )
+    print(ast.get_source_segment(inspect.getsource(call_module), call_node, padded=True))
+
+    while not isinstance(declare_node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+        declare_node = declare_node.parent
+    func_declare = ast.get_source_segment(inspect.getsource(declare_module), declare_node, padded=True)
+    if func_declare is None:
+        unreachable()
+    is_signature = False
+    for char in func_declare:
+        if char == '(':
+            is_signature = True
+        elif char == ')':
+            is_signature = False
+        elif char == ':' and not is_signature:
+            print('\n', end='')
+            break
+        print(char, end='')
+
     _unrecoverable_error("TypeError", msg)
 
 class InvalidWireError(Exception):
