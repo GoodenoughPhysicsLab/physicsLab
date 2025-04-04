@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
 import ast
 import math
 import inspect
@@ -25,6 +26,7 @@ def _unrecoverable_error(err_type: str, msg: Optional[str]) -> NoReturn:
         print('\n')
     else:
         _colorUtils.cprint(": ", _colorUtils.Red(msg))
+    sys.stdout.flush()
     os.abort()
 
 def assertion_error(msg: str) -> NoReturn:
@@ -56,7 +58,7 @@ def _print_err_msg(print_title: Callable, line_number: int, source_code: str) ->
         _colorUtils.cprint(' ', _colorUtils.Cyan(str(line_number + index)), end='')
         if int(math.log10(line_number + index)) + 1 == digits:
             print(' ', end='')
-        _colorUtils.cprint(_colorUtils.Cyan('|'), line)
+        _colorUtils.cprint(_colorUtils.Cyan('|'), ' ', line)
 
 _type_error_lock = threading.Lock()
 
