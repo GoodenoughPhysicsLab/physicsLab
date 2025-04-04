@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
 import ast
+import math
 import inspect
+import threading
 import executing
 
-from ._typing import NoReturn
+from ._typing import NoReturn, Callable
 from physicsLab import unwind
 from physicsLab import _colorUtils
 from physicsLab._typing import Optional, LiteralString
@@ -41,9 +43,27 @@ def assert_true(
 def unreachable() -> NoReturn:
     assertion_error(f"Unreachable touched, {BUG_REPORT}")
 
+def _print_err_msg(print_title: Callable, line_number: int, source_code: str) -> None:
+    ''' 打印错误信息
+    '''
+    digits = int(math.log10(line_number)) + 1
+    print(' ', end='')
+    for _ in range(digits + 1):
+        _colorUtils.cprint(_colorUtils.Cyan('-'), end='')
+    _colorUtils.cprint(_colorUtils.Cyan('+->'), end='')
+    print_title()
+    for index, line in enumerate(source_code.splitlines()):
+        _colorUtils.cprint(' ', _colorUtils.Cyan(str(line_number + index)), end='')
+        if int(math.log10(line_number + index)) + 1 == digits:
+            print(' ', end='')
+        _colorUtils.cprint(_colorUtils.Cyan('|'), line)
+
+_type_error_lock = threading.Lock()
+
 def type_error(msg: Optional[str] = None) -> NoReturn:
     ''' 类型错误, physicsLab认为其为不可恢复的错误
     '''
+    _type_error_lock.acquire()
     current_frame = inspect.currentframe()
     if current_frame is None:
         unreachable()
@@ -64,31 +84,42 @@ def type_error(msg: Optional[str] = None) -> NoReturn:
     call_module = inspect.getmodule(call_frame)
     if call_module is None:
         unreachable()
-    lineno = call_frame.f_lineno
-    _colorUtils.cprint(
-        "  File ",
-        _colorUtils.Magenta(f"\"{call_frame.f_code.co_filename}\""),
-        ", in ",
-        _colorUtils.Magenta(call_executing.code_qualname()),
-        end='\n',
+    call_src = ast.get_source_segment(inspect.getsource(call_module), call_node, padded=True)
+    if call_src is None:
+        unreachable()
+    _print_err_msg(
+        lambda: _colorUtils.cprint(
+            " File ",
+            _colorUtils.Magenta(f"\"{call_frame.f_code.co_filename}\""),
+            ", in ",
+            _colorUtils.Magenta(call_executing.code_qualname()),
+        ),
+        call_frame.f_lineno,
+        call_src,
     )
-    print(ast.get_source_segment(inspect.getsource(call_module), call_node, padded=True))
 
     while not isinstance(declare_node, (ast.FunctionDef, ast.AsyncFunctionDef)):
         declare_node = declare_node.parent
     func_declare = ast.get_source_segment(inspect.getsource(declare_module), declare_node, padded=True)
     if func_declare is None:
         unreachable()
-    is_signature = False
+    is_signature = 0
+    declare_output: str = ""
     for char in func_declare:
         if char == '(':
-            is_signature = True
+            is_signature += 1
         elif char == ')':
-            is_signature = False
-        elif char == ':' and not is_signature:
-            print('\n', end='')
+            is_signature -= 1
+        elif char == ':' and is_signature == 0:
+            declare_output += '\n'
             break
-        print(char, end='')
+        declare_output += char
+
+    _print_err_msg(
+        lambda: _colorUtils.cprint(_colorUtils.Yellow(" Note"), ": function defined here:"),
+        declare_node.lineno,
+        declare_output,
+    )
 
     _unrecoverable_error("TypeError", msg)
 
