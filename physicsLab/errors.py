@@ -59,7 +59,8 @@ def type_error(msg: Optional[str] = None) -> NoReturn:
     call_frame = declare_frame.f_back
     if call_frame is None:
         unreachable()
-    call_node = executing.Source.executing(call_frame).node
+    call_executing = executing.Source.executing(call_frame)
+    call_node = call_executing.node
     call_module = inspect.getmodule(call_frame)
     if call_module is None:
         unreachable()
@@ -68,7 +69,7 @@ def type_error(msg: Optional[str] = None) -> NoReturn:
         "  File ",
         _colorUtils.Magenta(f"\"{call_frame.f_code.co_filename}\""),
         ", in ",
-        _colorUtils.Magenta(call_frame.f_code.co_name),
+        _colorUtils.Magenta(call_executing.code_qualname()),
         end='\n',
     )
     print(ast.get_source_segment(inspect.getsource(call_module), call_node, padded=True))
