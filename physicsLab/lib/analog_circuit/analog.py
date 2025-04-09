@@ -709,7 +709,7 @@ def quadrant(func: FunctionType, vertex_id1: int = 0, vertex_id2: int = 1) -> Fu
             relay_i1 = Relay_Component(res.pos.x - res.width/2 - 2.5, res.pos.y + 1, res.pos.z, pull_in_current=1e-6, coil_inductance=1e-6)
             relay_i2 = Relay_Component(res.pos.x - res.width/2 - 2.5, res.pos.y - .5, res.pos.z, pull_in_current=1e-6, coil_inductance=1e-6)
             relay_o = Relay_Component(res.pos.x + res.width/2 + .5, res.pos.y + 1, res.pos.z, pull_in_current=1e-6, coil_inductance=1e-6)
-            xor = Xor_Gate(res.pos.x + res.width/2 + .5, res.pos.y, res.pos.z).set_high_level_value(1e-7)
+            xor = Xor_Gate(res.pos.x + res.width/2 + .5, res.pos.y, res.pos.z, high_level=1e-7)
             amp = Operational_Amplifier(res.pos.x + res.width/2  + .5, res.pos.y - 1.5, res.pos.z)
             node = Node(res.pos.x - .5, res.pos.y, res.pos.z, "quad", res.gnd)
         wires = {

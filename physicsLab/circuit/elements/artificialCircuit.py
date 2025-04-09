@@ -122,7 +122,9 @@ class Basic_Capacitor(_TwoPinMixIn):
     def peak_voltage(self) -> num_type:
         ''' 峰值电压属性, 单位为V
         '''
-        return self.properties["耐压"]
+        result = self.properties["耐压"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @peak_voltage.setter
     @final
@@ -138,7 +140,9 @@ class Basic_Capacitor(_TwoPinMixIn):
     def capacitance(self) -> num_type:
         ''' 电容属性, 单位为F
         '''
-        return self.properties["电容"]
+        result = self.properties["电容"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @capacitance.setter
     @final
@@ -154,7 +158,9 @@ class Basic_Capacitor(_TwoPinMixIn):
     def internal_resistance(self) -> num_type:
         ''' 内阻属性, 单位为Ω
         '''
-        return self.properties["内阻"]
+        result = self.properties["内阻"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @internal_resistance.setter
     @final
@@ -172,7 +178,9 @@ class Basic_Capacitor(_TwoPinMixIn):
         '''
         if "理想模式" not in self.properties:
             self.properties["理想模式"] = 0
-        return bool(self.properties["理想模式"])
+        result = bool(self.properties["理想模式"])
+        errors.assert_true(result is not Generate)
+        return result
 
     @is_ideal.setter
     @final
@@ -238,7 +246,9 @@ class Basic_Inductor(_TwoPinMixIn):
     def rated_current(self) -> num_type:
         ''' 电感额定电流，单位为 A
         '''
-        return self.properties["额定电流"]
+        result = self.properties["额定电流"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @rated_current.setter
     @final
@@ -254,7 +264,9 @@ class Basic_Inductor(_TwoPinMixIn):
     def inductance(self) -> num_type:
         ''' 电感，单位为 Henry
         '''
-        return self.properties["电感"]
+        result = self.properties["电感"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @inductance.setter
     @final
@@ -270,7 +282,9 @@ class Basic_Inductor(_TwoPinMixIn):
     def internal_resistance(self) -> num_type:
         ''' 电感内部阻抗, 单位为Ohm
         '''
-        return self.properties["内阻"]
+        result = self.properties["内阻"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @internal_resistance.setter
     @final
@@ -288,7 +302,9 @@ class Basic_Inductor(_TwoPinMixIn):
         '''
         if "理想模式" not in self.properties:
             self.properties["理想模式"] = 0
-        return bool(self.properties["理想模式"])
+        result = self.properties["理想模式"]
+        errors.assert_true(result is not Generate)
+        return bool(result)
 
     @is_ideal.setter
     @final
@@ -517,7 +533,6 @@ class Mutual_Inductor(CircuitBase):
     def zh_name() -> LiteralString:
         return "理想互感"
 
-
     @property
     def l_up(self) -> Pin:
         return Pin(self, 0)
@@ -611,7 +626,9 @@ class Transistor(CircuitBase):
     @property
     def is_PNP(self) -> bool:
         ''' 是PNP还是NPN, True时为PNP '''
-        return bool(self.properties["PNP"])
+        result = self.properties["PNP"]
+        errors.assert_true(result is not Generate)
+        return bool(result)
 
     @is_PNP.setter
     def is_PNP(self, value: bool) -> bool:
@@ -623,7 +640,9 @@ class Transistor(CircuitBase):
 
     @property
     def gain(self) -> num_type:
-        return self.properties["放大系数"]
+        result = self.properties["放大系数"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @gain.setter
     def gain(self, value: num_type) -> num_type:
@@ -635,7 +654,9 @@ class Transistor(CircuitBase):
 
     @property
     def max_power(self) -> num_type:
-        return self.properties["最大功率"]
+        result = self.properties["最大功率"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @max_power.setter
     def max_power(self, value: num_type) -> num_type:
@@ -737,15 +758,14 @@ class Operational_Amplifier(CircuitBase):
         self.gain = gain
         self.max_voltage = max_voltage
         self.min_voltage = min_voltage
-        # TODO I wonder what will happen if max_voltage < min_voltage
-        # if max_voltage <= min_voltage:
-        #     raise ValueError("Maximun voltage must be greater than minimum voltage")
 
     @property
     def gain(self) -> num_type:
         ''' 增益系数
         '''
-        return self.properties["增益系数"]
+        result = self.properties["增益系数"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @gain.setter
     def gain(self, value: num_type) -> num_type:
@@ -757,24 +777,32 @@ class Operational_Amplifier(CircuitBase):
 
     @property
     def max_voltage(self) -> num_type:
-        return self.properties["最大电压"]
+        result = self.properties["最大电压"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @max_voltage.setter
     def max_voltage(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"max_voltage must be of type `int | float`, but got `{type(value).__name__}`")
+        if self.properties["最小电压"] is not Generate and self.min_voltage >= value:
+            raise ValueError(f"min_voltage must must less than max_voltage")
 
         self.properties["最大电压"] = value
         return value
 
     @property
     def min_voltage(self) -> num_type:
-        return self.properties["最小电压"]
+        result = self.properties["最小电压"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @min_voltage.setter
     def min_voltage(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"min_voltage must be of type `int | float`, but got `{type(value).__name__}`")
+        if self.properties["最大电压"] is not Generate and self.max_voltage <= value:
+            raise ValueError("min_voltage must less than max_voltage")
 
         self.properties["最小电压"] = value
         return value
@@ -839,7 +867,9 @@ class Relay_Component(CircuitBase):
     def pull_in_current(self) -> num_type:
         ''' 接通电流
         '''
-        return self.properties["接通电流"]
+        result = self.properties["接通电流"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @pull_in_current.setter
     def pull_in_current(self, value: num_type) -> num_type:
@@ -853,7 +883,9 @@ class Relay_Component(CircuitBase):
     def rated_current(self) -> num_type:
         ''' 额定电流
         '''
-        return self.properties["额定电流"]
+        result = self.properties["额定电流"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @rated_current.setter
     def rated_current(self, value: num_type) -> num_type:
@@ -867,7 +899,9 @@ class Relay_Component(CircuitBase):
     def coil_inductance(self) -> num_type:
         ''' 线圈电感
         '''
-        return self.properties["线圈电感"]
+        result = self.properties["线圈电感"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @coil_inductance.setter
     def coil_inductance(self, value: num_type) -> num_type:
@@ -881,7 +915,9 @@ class Relay_Component(CircuitBase):
     def coil_resistance(self) -> num_type:
         ''' 线圈电阻
         '''
-        return self.properties["线圈电阻"]
+        result = self.properties["线圈电阻"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @coil_resistance.setter
     def coil_resistance(self, value: num_type) -> num_type:
@@ -948,7 +984,9 @@ class N_MOSFET(CircuitBase):
     def beta(self) -> num_type:
         ''' 放大系数
         '''
-        return self.properties["放大系数"]
+        result = self.properties["放大系数"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @beta.setter
     def beta(self, value: num_type) -> num_type:
@@ -962,7 +1000,9 @@ class N_MOSFET(CircuitBase):
     def threshold(self) -> num_type:
         ''' 阈值电压
         '''
-        return self.properties["阈值电压"]
+        result = self.properties["阈值电压"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @threshold.setter
     def threshold(self, value: num_type) -> num_type:
@@ -976,7 +1016,9 @@ class N_MOSFET(CircuitBase):
     def max_power(self) -> num_type:
         ''' 最大功率
         '''
-        return self.properties["最大功率"]
+        result = self.properties["最大功率"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @max_power.setter
     def max_power(self, value: num_type) -> num_type:

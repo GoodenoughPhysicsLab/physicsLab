@@ -14,25 +14,6 @@ from physicsLab import errors
 from physicsLab.enums import Tag, Category
 from physicsLab._typing import Callable, Optional, List, Awaitable
 
-# 从 threading._threading_atexits 中注销掉 furure._python_exit
-# import types
-# import threading
-# from concurrent.futures import thread
-
-# python3.14之前, threading.Thread.join 在 Windows 上会阻塞异常的传播
-# 也就是说, 在join结束之前, Python无法及时抛出 KeyboardInterrupt
-# 而 python 并未提供公开的方法操作 threading._threading_atexit
-# 如果你确实被阻塞的问题困扰的话, 可以参考下面的代码讲 _python_exit 注销掉
-# NOTE: 依赖于 asyncio 与 concurrent.futures.thread 的实现细节
-# if sys.version_info < (3, 14) and hasattr(threading, "_threading_atexits"):
-#     _threading_atexits = []
-#     for fn in threading._threading_atexits:
-#         if isinstance(fn, types.FunctionType) and fn is not thread._python_exit:
-#             _threading_atexits.append(fn)
-#         elif isinstance(fn, functools.partial) and fn.func is not thread._python_exit:
-#             _threading_atexits.append(fn)
-#     threading._threading_atexits = _threading_atexits
-
 async def _async_wrapper(func: Callable, *args, **kwargs):
     if sys.version_info < (3, 9):
         # copied from asyncio.to_thread

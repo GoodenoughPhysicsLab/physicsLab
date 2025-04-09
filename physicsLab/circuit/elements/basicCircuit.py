@@ -145,6 +145,7 @@ class DPDT_Switch(_SwitchBase):
             res += ".right_turn_on_switch()"
         return res
 
+    # TODO 改为enum是否会更好
     def left_turn_on_switch(self) -> Self:
         ''' 向左闭合开关 '''
         self.data["Properties"]["开关"] = 1
@@ -311,8 +312,9 @@ class Battery_Source(_TwoPinMixIn):
 
     @property
     def voltage(self) -> num_type:
-        errors.assert_true(self.properties["电压"] is not Generate)
-        return self.properties["电压"]
+        result = self.properties["电压"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @voltage.setter
     def voltage(self, value: num_type) -> num_type:
@@ -324,8 +326,9 @@ class Battery_Source(_TwoPinMixIn):
 
     @property
     def internal_resistance(self) -> num_type:
-        errors.assert_true(self.properties["内阻"] is not Generate)
-        return self.properties["内阻"]
+        result = self.properties["内阻"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @internal_resistance.setter
     def internal_resistance(self, value: num_type) -> num_type:
@@ -408,20 +411,26 @@ class Resistor(_TwoPinMixIn):
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
-        self.set_resistance(resistance)
+        self.resistance = resistance
 
     @final
     @staticmethod
     def zh_name() -> LiteralString:
         return "电阻"
 
-    def set_resistance(self, resistance: num_type) -> Self:
-        ''' 设置电阻值 '''
-        if not isinstance(resistance, (int, float)):
-            raise TypeError
+    @property
+    def resistance(self) -> num_type:
+        result = self.properties["电阻"]
+        errors.assert_true(result is not Generate)
+        return result
 
-        self.properties["电阻"] = resistance
-        return self
+    @resistance.setter
+    def resistance(self, value: num_type) -> num_type:
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"resistance must be of type `int | float`, but got `{type(value).__name__}`")
+
+        self.properties["电阻"] = value
+        return value
 
     def fix_resistance(self) -> Self:
         ''' 修正电阻值的浮点误差 '''
@@ -699,7 +708,9 @@ class Resistance_Box(CircuitBase):
     def resistance(self) -> num_type:
         ''' 电阻
         '''
-        return self.properties["电阻"]
+        result = self.properties["电阻"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @resistance.setter
     def resistance(self, value: num_type) -> num_type:

@@ -15,35 +15,43 @@ from physicsLab._typing import (
 )
 
 class _LogicBase(CircuitBase):
+    @property
     @final
-    def set_high_level_value(self, num: num_type) -> Self:
-        ''' 设置高电平的值 '''
-        if not isinstance(num, (int, float)) or num < self.get_low_level_value():
-            raise TypeError
+    def high_level(self) -> num_type:
+        ''' 高电平的值 '''
+        result = self.properties["高电平"]
+        errors.assert_true(result is not Generate)
+        return result
 
-        self.data["Properties"]["高电平"] = num
-
-        return self
-
+    @high_level.setter
     @final
-    def get_high_level_value(self) -> num_type:
-        ''' 获取高电平的值 '''
-        return self.data["Properties"]["高电平"]
+    def high_level(self, value) -> num_type:
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"high_level must be of type `int | float`, but got {type(value).__name__}")
+        if self.properties["低电平"] is not Generate and self.low_level > value:
+            raise ValueError(f"high_level is smaller than low_level")
 
+        self.properties["高电平"] = value
+        return value
+
+    @property
     @final
-    def set_low_level_value(self, num: num_type) -> Self:
-        ''' 设置低电平的值 '''
-        if not isinstance(num, (int, float)) or num < self.get_low_level_value():
-            raise TypeError
+    def low_level(self) -> num_type:
+        ''' 低电平的值  '''
+        result = self.properties["低电平"]
+        errors.assert_true(result is not Generate)
+        return result
 
-        self.data["Properties"]["低电平"] = num
-
-        return self
-
+    @low_level.setter
     @final
-    def get_low_level_value(self):
-        ''' 获取低电平的值 '''
-        return self.data["Properties"]["低电平"]
+    def low_level(self, value) -> num_type:
+        if not isinstance(value, (int, float)):
+            raise TypeError(f"low_level must be of type `int | float`, but got {type(value).__name__}")
+        if self.properties["高电平"] is not Generate and value > self.high_level:
+            raise ValueError(f"high_level is smaller than low_level")
+
+        self.properties["低电平"] = value
+        return value
 
 class Logic_Input(_LogicBase):
     ''' 逻辑输入 '''
@@ -57,17 +65,21 @@ class Logic_Input(_LogicBase):
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
             output_status: bool = False,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Logic Input", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
-            "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0, "开关": Generate},
+            "Properties": {"高电平": Generate, "低电平": Generate, "锁定": 1.0, "开关": Generate},
             "Statistics": {"电流": 0.0, "电压": 0.0, "功率": 0.0},
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0},
             "DiagramRotation": 0
         }
         self.output_status = output_status
+        self.high_level = high_level
+        self.low_level = low_level
 
     @property
     @final
@@ -77,7 +89,9 @@ class Logic_Input(_LogicBase):
         if "开关" not in self.properties:
             self.properties["开关"] = 0
 
-        return bool(self.properties["开关"])
+        result = self.properties["开关"]
+        errors.assert_true(result is not Generate)
+        return bool(result)
 
     @output_status.setter
     @final
@@ -114,15 +128,19 @@ class Logic_Output(_LogicBase):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "Logic Output", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
-            "Properties": {"状态": 0.0, "高电平": 3.0, "低电平": 0.0, "锁定": 1.0}, "Statistics": {},
+            "Properties": {"状态": 0.0, "高电平": Generate, "低电平": Generate, "锁定": 1.0}, "Statistics": {},
             "Position": Generate,
             "Rotation": "0,180,0", "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+        self.high_level = high_level
+        self.low_level = low_level
 
     @final
     @staticmethod
@@ -135,14 +153,24 @@ class Logic_Output(_LogicBase):
 
 class _2_Pin_Gate(_LogicBase):
     ''' 2引脚门电路基类 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            high_level: num_type,
+            low_level: num_type,
+            /,
+    ) -> None:
         self.data: CircuitElementData = {
             "ModelID": Generate, "Identifier": Generate,"IsBroken": False, "IsLocked": False,
-            "Properties": {"高电平": 3.0, "低电平": 0.0, "最大电流": 0.1, "锁定": 1.0},
+            "Properties": {"高电平": Generate, "低电平": Generate, "最大电流": 0.1, "锁定": 1.0},
             "Statistics": {},
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+        self.high_level = high_level
+        self.low_level = low_level
 
     @property
     def i(self) -> InputPin:
@@ -163,8 +191,10 @@ class Yes_Gate(_2_Pin_Gate):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Yes Gate"
 
     @final
@@ -183,8 +213,10 @@ class No_Gate(_2_Pin_Gate):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "No Gate"
 
     @final
@@ -194,14 +226,24 @@ class No_Gate(_2_Pin_Gate):
 
 class _3_Pin_Gate(_LogicBase):
     ''' 3引脚门电路基类 '''
-    def __init__(self, x: num_type, y: num_type, z: num_type, /) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            high_level: num_type,
+            low_level: num_type,
+            /,
+    ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "", "Identifier": Generate, "IsBroken": False, "IsLocked": False,
-            "Properties": {"高电平": 3.0, "低电平": 0.0, "最大电流": 0.1, "锁定": 1.0},
+            "Properties": {"高电平": Generate, "低电平": Generate, "最大电流": 0.1, "锁定": 1.0},
             "Statistics": {},
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+        self.high_level = high_level
+        self.low_level = low_level
 
     @property
     def i_up(self) -> InputPin:
@@ -226,8 +268,10 @@ class Or_Gate(_3_Pin_Gate):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Or Gate"
 
     @final
@@ -246,8 +290,10 @@ class And_Gate(_3_Pin_Gate):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "And Gate"
 
     @final
@@ -266,8 +312,10 @@ class Nor_Gate(_3_Pin_Gate):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Nor Gate"
 
     @final
@@ -286,8 +334,10 @@ class Nand_Gate(_3_Pin_Gate):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Nand Gate"
 
     @final
@@ -306,8 +356,10 @@ class Xor_Gate(_3_Pin_Gate):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Xor Gate"
 
     @final
@@ -326,8 +378,10 @@ class Xnor_Gate(_3_Pin_Gate):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Xnor Gate"
 
     @final
@@ -346,8 +400,10 @@ class Imp_Gate(_3_Pin_Gate):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Imp Gate"
 
     @final
@@ -366,8 +422,10 @@ class Nimp_Gate(_3_Pin_Gate):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Nimp Gate"
 
     @final
@@ -379,14 +437,24 @@ class _BigElement(_LogicBase):
     ''' 2体积元件父类 '''
     is_bigElement = True
 
-    def __init__(self, x: num_type, y: num_type, z: num_type, /) -> None:
+    def __init__(
+            self,
+            x: num_type,
+            y: num_type,
+            z: num_type,
+            high_level: num_type,
+            low_level: num_type,
+            /,
+    ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "", "Identifier": Generate, "IsBroken": False,
-            "IsLocked": False, "Properties": {"高电平": 3.0, "低电平": 0.0, "锁定": 1.0},
+            "IsLocked": False, "Properties": {"高电平": Generate, "低电平": Generate, "锁定": 1.0},
             "Statistics": {},
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+        self.high_level = high_level
+        self.low_level = low_level
 
 class Half_Adder(_BigElement):
     ''' 半加器 '''
@@ -399,8 +467,10 @@ class Half_Adder(_BigElement):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Half Adder"
 
     @property
@@ -435,8 +505,10 @@ class Full_Adder(_BigElement):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Full Adder"
 
     @property
@@ -475,12 +547,14 @@ class Half_Subtractor(_BigElement):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
         plAR_version = plAR.get_plAR_version()
         if plAR_version is not None and plAR_version < (2, 5, 0):
             _warn.warning("Physics-Lab-AR's version less than 2.5.0")
 
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Half Subtractor"
 
     @property
@@ -515,12 +589,14 @@ class Full_Subtractor(_BigElement):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
         plAR_version = plAR.get_plAR_version()
         if plAR_version is not None and plAR_version < (2, 5, 0):
             _warn.warning("Physics-Lab-AR's version less than 2.5.0")
 
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Full Subtractor"
 
     @property
@@ -559,8 +635,10 @@ class Multiplier(_BigElement):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Multiplier"
 
     @property
@@ -611,8 +689,10 @@ class D_Flipflop(_BigElement):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "D Flipflop"
 
     @property
@@ -647,8 +727,10 @@ class T_Flipflop(_BigElement):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "T Flipflop"
 
     @property
@@ -683,8 +765,10 @@ class Real_T_Flipflop(_BigElement):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Real-T Flipflop"
 
     @property
@@ -719,8 +803,10 @@ class JK_Flipflop(_BigElement):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "JK Flipflop"
 
     @property
@@ -759,8 +845,10 @@ class Counter(_BigElement):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Counter"
 
     @property
@@ -803,8 +891,10 @@ class Random_Generator(_BigElement):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
-        super().__init__(x, y, z)
+        super().__init__(x, y, z, high_level, low_level)
         self.data["ModelID"] = "Random Generator"
 
     @property
@@ -849,15 +939,19 @@ class Eight_Bit_Input(_LogicBase):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "8bit Input", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
-            "Properties": {"高电平": 3.0, "低电平": 0.0, "十进制": 0.0, "锁定": 1.0},
+            "Properties": {"高电平": Generate, "低电平": Generate, "十进制": 0.0, "锁定": 1.0},
             "Statistics": {},
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+        self.high_level = high_level
+        self.low_level = low_level
 
     def __repr__(self) -> str:
         res = f"Eight_Bit_Input({self._position.x}, {self._position.y}, {self._position.z}, " \
@@ -924,16 +1018,20 @@ class Eight_Bit_Display(_LogicBase):
             elementXYZ: Optional[bool] = None,
             identifier: Optional[str] = None,
             experiment: Optional[_Experiment] = None,
+            high_level: num_type = 3,
+            low_level: num_type = 0,
     ) -> None:
         self.data: CircuitElementData = {
             "ModelID": "8bit Display", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
-            "Properties": {"高电平": 3.0, "低电平": 0.0, "状态": 0.0, "锁定": 1.0},
+            "Properties": {"高电平": Generate, "低电平": Generate, "状态": 0.0, "锁定": 1.0},
             "Statistics": {"7": 0.0, "6": 0.0, "5": 0.0, "4": 0.0,
                             "3": 0.0, "2": 0.0, "1": 0.0, "0": 0.0, "十进制": 0.0},
             "Position": Generate, "Rotation": Generate, "DiagramCached": False,
             "DiagramPosition": {"X": 0, "Y": 0, "Magnitude": 0.0}, "DiagramRotation": 0
         }
+        self.high_level = high_level
+        self.low_level = low_level
 
     @property
     def i_up(self) -> InputPin:
@@ -1005,26 +1103,28 @@ class Schmitt_Trigger(CircuitBase):
     def high_level(self) -> num_type:
         ''' 高电准位
         '''
-        errors.assert_true(self.properties["高电准位"] is not Generate)
-        return self.properties["高电准位"]
+        result = self.properties["高电准位"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @high_level.setter
     def high_level(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
             raise TypeError(f"high_level must be of type `int | float`, but got {type(value).__name__}")
 
-        self.properties["高电准位"] = value
-
-        if self.properties["低电准位"] is not Generate and self.properties["高电准位"] < self.properties["低电准位"]:
+        if self.properties["低电准位"] is not Generate and self.low_level >= value:
             raise ValueError("The high level must be greater than the low level")
+
+        self.properties["高电准位"] = value
         return value
 
     @property
     def low_level(self) -> num_type:
         ''' 低电准位
         '''
-        errors.assert_true(self.properties["低电准位"] is not Generate)
-        return self.properties["低电准位"]
+        result = self.properties["低电准位"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @low_level.setter
     def low_level(self, value: Optional[num_type]) -> num_type:

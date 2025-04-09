@@ -43,7 +43,9 @@ class _MemsBase(CircuitBase):
     def ranges(self) -> num_type:
         ''' 量程
         '''
-        return self.properties["量程"]
+        result = self.properties["量程"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @ranges.setter
     @final
@@ -59,7 +61,9 @@ class _MemsBase(CircuitBase):
     def shifting(self) -> num_type:
         ''' 偏移
         '''
-        return self.properties["偏移"]
+        result = self.properties["偏移"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @shifting.setter
     @final
@@ -73,7 +77,9 @@ class _MemsBase(CircuitBase):
     @property
     @final
     def response_factor(self) -> num_type:
-        return self.properties["响应系数"]
+        result = self.properties["响应系数"]
+        errors.assert_true(result is not Generate)
+        return result
 
     @response_factor.setter
     @final
