@@ -1,4 +1,20 @@
 # -*- coding: utf-8 -*-
+''' physicsLab的异常系统
+    有2个主要的组成部分: 可恢复的异常, 不可恢复的错误
+
+    * 可恢复的异常: 基于Python的Exception自定义的一系列错误类
+
+    * 不可恢复的错误:
+        当某些错误发生的时候, physicsLab认为程序抽象机已经崩溃, 无法继续运行
+        因此一旦这些错误发生, physicsLab会调用os.abort来终止程序, 而不是抛出一个异常
+        因为抽象机崩溃的情况下, 程序已经无法继续运行, 最需要的是修bug, 因此坚决不给用户捕获异常的可能
+        被视为 不可恢复的错误 的有:
+        * assertion_error: 断言错误, physicsLab认为其为不可恢复的错误, 因此请不要使用 AssertionError
+        * type_error: 断言错误, physicsLab认为其为不可恢复的错误, 因此请不要使用 TypeError
+        除此之外, physicsLab自定义了不可恢复错误发生时的打印输出格式
+        这些格式比Python的traceback可读性更好
+'''
+
 import os
 import sys
 import ast
@@ -21,12 +37,13 @@ def _unrecoverable_error(err_type: str, msg: Optional[str]) -> NoReturn:
     ''' 不可恢复的错误, 表明程序抽象机已崩溃
         会打印的错误信息并退出程序
     '''
-    _colorUtils.cprint(_colorUtils.Red(err_type), end='')
+    _colorUtils.cprint(_colorUtils.Red(err_type), end='', file=sys.stderr)
     if msg is None:
-        print('\n')
+        print('\n', file=sys.stderr)
     else:
-        _colorUtils.cprint(": ", _colorUtils.Red(msg))
+        _colorUtils.cprint(": ", _colorUtils.Red(msg), file=sys.stderr)
     sys.stdout.flush()
+    sys.stderr.flush()
     os.abort()
 
 def assertion_error(msg: str) -> NoReturn:
@@ -49,16 +66,16 @@ def _print_err_msg(print_title: Callable, line_number: int, source_code: str) ->
     ''' 打印错误信息
     '''
     digits = int(math.log10(line_number)) + 1
-    print(' ', end='')
+    print(' ', end='', file=sys.stderr)
     for _ in range(digits + 1):
-        _colorUtils.cprint(_colorUtils.Cyan('-'), end='')
-    _colorUtils.cprint(_colorUtils.Cyan('+->'), end='')
+        _colorUtils.cprint(_colorUtils.Cyan('-'), end='', file=sys.stderr)
+    _colorUtils.cprint(_colorUtils.Cyan('+->'), end='', file=sys.stderr)
     print_title()
     for index, line in enumerate(source_code.splitlines()):
-        _colorUtils.cprint(' ', _colorUtils.Cyan(str(line_number + index)), end='')
+        _colorUtils.cprint(' ', _colorUtils.Cyan(str(line_number + index)), end='', file=sys.stderr)
         if int(math.log10(line_number + index)) + 1 == digits:
-            print(' ', end='')
-        _colorUtils.cprint(_colorUtils.Cyan('|'), ' ', line)
+            print(' ', end='', file=sys.stderr)
+        _colorUtils.cprint(_colorUtils.Cyan('|'), ' ', line, file=sys.stderr)
 
 _type_error_lock = threading.Lock()
 
@@ -81,47 +98,70 @@ def type_error(msg: Optional[str] = None) -> NoReturn:
     call_frame = declare_frame.f_back
     if call_frame is None:
         unreachable()
+    call_module = inspect.getmodule(call_frame)
     call_executing = executing.Source.executing(call_frame)
     call_node = call_executing.node
-    call_module = inspect.getmodule(call_frame)
-    if call_module is None:
-        unreachable()
-    call_src = ast.get_source_segment(inspect.getsource(call_module), call_node, padded=True)
-    if call_src is None:
-        unreachable()
-    _print_err_msg(
-        lambda: _colorUtils.cprint(
-            " File ",
-            _colorUtils.Magenta(f"\"{call_frame.f_code.co_filename}\""),
-            ", in ",
-            _colorUtils.Magenta(call_executing.code_qualname()),
-        ),
-        call_frame.f_lineno,
-        call_src,
-    )
+    if call_node is None:
+        # executing 的原理是通过解析字节码`__code__`来获取对应的节点
+        # 但executing支持的字节码有限, 比如await有关的字节码就不支持, 无法获取对应的node
+        # 此时只好用inspect.stack来反射获取相对原始的源代码信息
+        call_frame_info = inspect.stack()[2]
+        if call_frame_info is None or call_frame_info.code_context is None:
+            unreachable()
+        _print_err_msg(
+            lambda: _colorUtils.cprint(
+                " File ",
+                _colorUtils.Magenta(f"\"{call_frame.f_code.co_filename}\""),
+                ", in ",
+                _colorUtils.Magenta(call_executing.code_qualname()),
+                file=sys.stderr
+            ),
+            call_frame_info.lineno,
+            call_frame_info.code_context[0].strip(),
+        )
+    else:
+        if call_module is None:
+            unreachable()
+        call_src = ast.get_source_segment(inspect.getsource(call_module), call_node, padded=True)
+        if call_src is None:
+            unreachable()
+        _print_err_msg(
+            lambda: _colorUtils.cprint(
+                " File ",
+                _colorUtils.Magenta(f"\"{call_frame.f_code.co_filename}\""),
+                ", in ",
+                _colorUtils.Magenta(call_executing.code_qualname()),
+                file=sys.stderr
+            ),
+            call_frame.f_lineno,
+            call_src,
+        )
 
-    while not isinstance(declare_node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-        declare_node = declare_node.parent
-    func_declare = ast.get_source_segment(inspect.getsource(declare_module), declare_node, padded=True)
-    if func_declare is None:
-        unreachable()
-    is_signature = 0
-    declare_output: str = ""
-    for char in func_declare:
-        if char == '(':
-            is_signature += 1
-        elif char == ')':
-            is_signature -= 1
-        elif char == ':' and is_signature == 0:
-            declare_output += '\n'
-            break
-        declare_output += char
+        while not isinstance(declare_node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            declare_node = declare_node.parent
+        func_declare = ast.get_source_segment(inspect.getsource(declare_module), declare_node, padded=True)
+        if func_declare is None:
+            unreachable()
+        is_signature = 0
+        declare_output: str = ""
+        for char in func_declare:
+            if char == '(':
+                is_signature += 1
+            elif char == ')':
+                is_signature -= 1
+            elif char == ':' and is_signature == 0:
+                declare_output += '\n'
+                break
+            declare_output += char
 
-    _print_err_msg(
-        lambda: _colorUtils.cprint(_colorUtils.Yellow(" Note"), ": function defined here:"),
-        declare_node.lineno,
-        declare_output,
-    )
+        _print_err_msg(
+            lambda: _colorUtils.cprint(
+                _colorUtils.Yellow(" Note"), ": function defined here:",
+                file=sys.stderr,
+            ),
+            declare_node.lineno,
+            declare_output,
+        )
 
     _unrecoverable_error("TypeError", msg)
 
