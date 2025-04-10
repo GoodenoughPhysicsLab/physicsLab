@@ -23,15 +23,15 @@ import inspect
 import threading
 import executing
 
-from ._typing import NoReturn, Callable
-from physicsLab import unwind
+from ._typing import NoReturn
+from physicsLab import _unwind
 from physicsLab import _colorUtils
 from physicsLab._typing import Optional, LiteralString
 
 BUG_REPORT: str = "please send a bug-report at " \
                 "https://github.com/GoodenoughPhysicsLab/physicsLab/issues or " \
                 "https://gitee.com/script2000/physicsLab/issues " \
-                "with your code, *.sav and traceback"
+                "with your code, *.sav and traceback / coredump for Python"
 
 def _unrecoverable_error(err_type: str, msg: Optional[str]) -> NoReturn:
     ''' 不可恢复的错误, 表明程序抽象机已崩溃
@@ -46,10 +46,13 @@ def _unrecoverable_error(err_type: str, msg: Optional[str]) -> NoReturn:
     sys.stderr.flush()
     os.abort()
 
+_unrecoverable_error_lock = threading.Lock()
+
 def assertion_error(msg: str) -> NoReturn:
     ''' 断言错误, physicsLab认为其为不可恢复的错误
     '''
-    unwind.print_stack()
+    _unrecoverable_error_lock.acquire()
+    _unwind.print_stack(full=True)
     _unrecoverable_error("AssertionError", msg)
 
 def assert_true(
@@ -62,27 +65,10 @@ def assert_true(
 def unreachable() -> NoReturn:
     assertion_error(f"Unreachable touched, {BUG_REPORT}")
 
-def _print_err_msg(print_title: Callable, line_number: int, source_code: str) -> None:
-    ''' 打印错误信息
-    '''
-    digits = int(math.log10(line_number)) + 1
-    print(' ', end='', file=sys.stderr)
-    for _ in range(digits + 1):
-        _colorUtils.cprint(_colorUtils.Cyan('-'), end='', file=sys.stderr)
-    _colorUtils.cprint(_colorUtils.Cyan('+->'), end='', file=sys.stderr)
-    print_title()
-    for index, line in enumerate(source_code.splitlines()):
-        _colorUtils.cprint(' ', _colorUtils.Cyan(str(line_number + index)), end='', file=sys.stderr)
-        if int(math.log10(line_number + index)) + 1 == digits:
-            print(' ', end='', file=sys.stderr)
-        _colorUtils.cprint(_colorUtils.Cyan('|'), ' ', line, file=sys.stderr)
-
-_type_error_lock = threading.Lock()
-
 def type_error(msg: Optional[str] = None) -> NoReturn:
     ''' 类型错误, physicsLab认为其为不可恢复的错误
     '''
-    _type_error_lock.acquire()
+    _unrecoverable_error_lock.acquire()
     current_frame = inspect.currentframe()
     if current_frame is None:
         unreachable()
@@ -108,7 +94,7 @@ def type_error(msg: Optional[str] = None) -> NoReturn:
         call_frame_info = inspect.stack()[2]
         if call_frame_info is None or call_frame_info.code_context is None:
             unreachable()
-        _print_err_msg(
+        _unwind.print_code_block(
             lambda: _colorUtils.cprint(
                 " File ",
                 _colorUtils.Magenta(f"\"{call_frame.f_code.co_filename}\""),
@@ -125,7 +111,7 @@ def type_error(msg: Optional[str] = None) -> NoReturn:
         call_src = ast.get_source_segment(inspect.getsource(call_module), call_node, padded=True)
         if call_src is None:
             unreachable()
-        _print_err_msg(
+        _unwind.print_code_block(
             lambda: _colorUtils.cprint(
                 " File ",
                 _colorUtils.Magenta(f"\"{call_frame.f_code.co_filename}\""),
@@ -154,7 +140,7 @@ def type_error(msg: Optional[str] = None) -> NoReturn:
                 break
             declare_output += char
 
-        _print_err_msg(
+        _unwind.print_code_block(
             lambda: _colorUtils.cprint(
                 _colorUtils.Yellow(" Note"), ": function defined here:",
                 file=sys.stderr,
