@@ -6,9 +6,9 @@
     Usage:
         >>> from physicsLab._colorUtils import *
         >>> cprint(Red("test")) # 输出红色字
-        # 支持变参函数, 一次性打印多个不用颜色的字符串
+        # 支持变参函数, 一次性打印多个不同颜色的Object
         # 但不像python的print一样支持sep参数 [设计如此]
-        >>> cprint(Green("test"), "test", Yellow("test"))
+        >>> cprint(Green("test"), "test", Yellow("test"), 1111, 3.14)
         >>> cprint(Blue("test")) # 还支持以下颜色
         >>> cprint(Magenta("test"))
         >>> cprint(Cyan("test"))
@@ -16,7 +16,7 @@
         >>> cprint(Black("test"))
         >>> cprint(Red("test"), file=sys.stderr) # 输出到stderr
         >>> cprint(Red("test"), end='') # 支持print那样指定end
-        # 如果你不希望打印出颜色子 (即使使用了Red("xxx")之类的), 请使用python原生print
+        # 如果你不希望打印出颜色字 (即使使用了Red("xxx")之类的), 请使用python原生print
         >>> print(Green("test"), "test", Yellow("test")) # 此时打印无颜色
 '''
 
