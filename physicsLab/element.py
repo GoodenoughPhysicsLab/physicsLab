@@ -251,7 +251,8 @@ class Experiment(_Experiment):
             if not isinstance(sav_name, str):
                 errors.type_error(f"Parameter sav_name must be of type `str`, but got `{type(sav_name).__name__}`")
             if not isinstance(experiment_type, ExperimentType):
-                raise TypeError(f"Parameter experiment_type must be of type `ExperimentType`, but got `{type(experiment_type).__name__}`")
+                errors.type_error(f"Parameter experiment_type must be of type `ExperimentType`, "
+                                f"but got value `{experiment_type}` of type `{type(experiment_type).__name__}`")
 
             if len(kwargs) != 0 and len(kwargs) != 1:
                 kwargs.pop("force_crt", None)
@@ -460,11 +461,14 @@ class Experiment(_Experiment):
             **kwargs,
     ) -> ElementBase:
         ''' 通过元件的ModelID或其类名创建元件 '''
-        if not isinstance(name, str) \
-                or not isinstance(x, (int, float)) \
-                or not isinstance(y, (int, float)) \
-                or not isinstance(z, (int, float)):
-            raise TypeError
+        if not isinstance(name, str):
+            errors.type_error(f"Parameter 'name' must be of type `str`, but got value `{name}` of type `{type(name).__name__}`")
+        if not isinstance(x, (int, float)):
+            errors.type_error(f"Parameter 'x' must be of type `int | float`, but got value `{x}` of type `{type(x).__name__}`")
+        if not isinstance(y, (int, float)):
+            errors.type_error(f"Parameter 'y' must be of type `int | float`, but got value `{y}` of type `{type(y).__name__}`")
+        if not isinstance(z, (int, float)):
+            errors.type_error(f"Parameter 'z' must be of type `int | float`, but got value `{z}` of type `{type(z).__name__}`")
 
         name = name.strip().replace(' ', '_').replace('-', '_')
         x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)

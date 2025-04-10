@@ -157,17 +157,17 @@ class _CircuitMeta(type):
             **kwargs,
     ):
         if not isinstance(x, (float, int)):
-            raise TypeError(f"Parameter x must be of type `int | float`, but got {type(x).__name__}")
+            errors.type_error(f"Parameter x must be of type `int | float`, but got value {x} of type {type(x).__name__}")
         if not isinstance(y, (float, int)):
-            raise TypeError(f"Parameter y must be of type `int | float`, but got {type(y).__name__}")
+            errors.type_error(f"Parameter y must be of type `int | float`, but got value {y} of type {type(y).__name__}")
         if not isinstance(z, (float, int)):
-            raise TypeError(f"Parameter z must be of type `int | float`, but got {type(z).__name__}")
+            errors.type_error(f"Parameter z must be of type `int | float`, but got value {z} of type {type(z).__name__}")
         if not isinstance(elementXYZ, (bool, type(None))):
-            raise TypeError(f"Parameter elementXYZ must be of type `Optional[bool]`, but got {type(elementXYZ).__name__}")
+            errors.type_error(f"Parameter elementXYZ must be of type `Optional[bool]`, but got value {elementXYZ} of type {type(elementXYZ).__name__}")
         if not isinstance(identifier, (str, type(None))):
-            raise TypeError(f"Parameter identifier must be of type `Optional[str]`, but got {type(identifier).__name__}")
+            errors.type_error(f"Parameter identifier must be of type `Optional[str]`, but got value {identifier} of type {type(identifier).__name__}")
         if not isinstance(experiment, (_Experiment, type(None))):
-            raise TypeError(f"Parameter experiment must be of type `Optional[Experiment]`, but got {type(experiment).__name__}")
+            errors.type_error(f"Parameter experiment must be of type `Optional[Experiment]`, but got value {experiment} of type {type(experiment).__name__}")
 
         _Expe: _Experiment
         if experiment is None:
@@ -266,7 +266,7 @@ class CircuitBase(ElementBase, metaclass=_CircuitMeta):
             @param status: 是否锁定元件
         '''
         if not isinstance(status, bool):
-            raise TypeError(f"lock must be of type `bool`, but got {type(status).__name__}")
+            errors.type_error(f"lock must be of type `bool`, but got value {status} of type {type(status).__name__}")
 
         self.properties["锁定"] = int(status)
 

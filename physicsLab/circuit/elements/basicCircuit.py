@@ -294,10 +294,6 @@ class Battery_Source(_TwoPinMixIn):
             voltage: num_type = 1.5,
             internal_resistance: num_type = 0,
     ) -> None:
-        if not isinstance(voltage, (int, float)) \
-                or not isinstance(internal_resistance, (int, float)):
-            raise TypeError
-
         self.data: CircuitElementData = {
             "ModelID": "Battery Source", "Identifier": Generate,
             "IsBroken": False, "IsLocked": False,
@@ -319,7 +315,7 @@ class Battery_Source(_TwoPinMixIn):
     @voltage.setter
     def voltage(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
-            raise TypeError(f"voltage must be of type `int | float`, but got `{type(value).__name__}`")
+            errors.type_error(f"voltage must be of type `int | float`, but got value `{value}` of type `{type(value).__name__}`")
 
         self.properties["电压"] = value
         return value
@@ -333,7 +329,7 @@ class Battery_Source(_TwoPinMixIn):
     @internal_resistance.setter
     def internal_resistance(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
-            raise TypeError(f"internal_resistance must be of type `int | float`, but got `{type(value).__name__}`")
+            errors.type_error(f"internal_resistance must be of type `int | float`, but got value `{value}` of type `{type(value).__name__}`")
 
         self.properties["内阻"] = value
         return value
@@ -427,7 +423,7 @@ class Resistor(_TwoPinMixIn):
     @resistance.setter
     def resistance(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
-            raise TypeError(f"resistance must be of type `int | float`, but got `{type(value).__name__}`")
+            errors.type_error(f"resistance must be of type `int | float`, but got value `{value}` of type `{type(value).__name__}`")
 
         self.properties["电阻"] = value
         return value
@@ -715,7 +711,7 @@ class Resistance_Box(CircuitBase):
     @resistance.setter
     def resistance(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
-            raise TypeError(f"resistance must be of type `int | float`, but got {type(value).__name__}")
+            errors.type_error(f"resistance must be of type `int | float`, but got {type(value).__name__}")
 
         self.properties["电阻"] = value
         return value
