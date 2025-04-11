@@ -891,12 +891,6 @@ class Resistor(CircuitBase):
 设置元件的位置  
   
 
-### set_resistance
-```Python
-    def set_resistance(self, resistance: Union[int, float]) -> Self
-```
-设置电阻值  
-
 ### set_rotation
 ```Python
     def set_rotation(self, x_r: Union[int, float] = 0, y_r: Union[int, float] = 0, z_r: Union[int, float] = 180) -> Self
@@ -2573,7 +2567,7 @@ class Simple_Voltmeter(CircuitBase):
 ## <h2 id="Logic_Input"> Logic_Input </h2>
 ```Python
 class Logic_Input(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, output_status: bool = False) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, output_status: bool = False, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -2583,23 +2577,11 @@ class Logic_Input(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -2613,18 +2595,6 @@ class Logic_Input(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -2647,7 +2617,7 @@ class Logic_Input(CircuitBase):
 ## <h2 id="Logic_Output"> Logic_Output </h2>
 ```Python
 class Logic_Output(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -2657,23 +2627,11 @@ class Logic_Output(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -2687,18 +2645,6 @@ class Logic_Output(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -2721,7 +2667,7 @@ class Logic_Output(CircuitBase):
 ## <h2 id="Yes_Gate"> Yes_Gate </h2>
 ```Python
 class Yes_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -2731,23 +2677,11 @@ class Yes_Gate(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -2761,18 +2695,6 @@ class Yes_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -2795,7 +2717,7 @@ class Yes_Gate(CircuitBase):
 ## <h2 id="No_Gate"> No_Gate </h2>
 ```Python
 class No_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -2805,23 +2727,11 @@ class No_Gate(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -2835,18 +2745,6 @@ class No_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -2869,7 +2767,7 @@ class No_Gate(CircuitBase):
 ## <h2 id="Or_Gate"> Or_Gate </h2>
 ```Python
 class Or_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -2879,23 +2777,11 @@ class Or_Gate(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -2909,18 +2795,6 @@ class Or_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -2943,7 +2817,7 @@ class Or_Gate(CircuitBase):
 ## <h2 id="And_Gate"> And_Gate </h2>
 ```Python
 class And_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -2953,23 +2827,11 @@ class And_Gate(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -2983,18 +2845,6 @@ class And_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -3017,7 +2867,7 @@ class And_Gate(CircuitBase):
 ## <h2 id="Nor_Gate"> Nor_Gate </h2>
 ```Python
 class Nor_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -3027,23 +2877,11 @@ class Nor_Gate(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -3057,18 +2895,6 @@ class Nor_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -3091,7 +2917,7 @@ class Nor_Gate(CircuitBase):
 ## <h2 id="Nand_Gate"> Nand_Gate </h2>
 ```Python
 class Nand_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -3101,23 +2927,11 @@ class Nand_Gate(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -3131,18 +2945,6 @@ class Nand_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -3165,7 +2967,7 @@ class Nand_Gate(CircuitBase):
 ## <h2 id="Xor_Gate"> Xor_Gate </h2>
 ```Python
 class Xor_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -3175,23 +2977,11 @@ class Xor_Gate(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -3205,18 +2995,6 @@ class Xor_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -3239,7 +3017,7 @@ class Xor_Gate(CircuitBase):
 ## <h2 id="Xnor_Gate"> Xnor_Gate </h2>
 ```Python
 class Xnor_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -3249,23 +3027,11 @@ class Xnor_Gate(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -3279,18 +3045,6 @@ class Xnor_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -3313,7 +3067,7 @@ class Xnor_Gate(CircuitBase):
 ## <h2 id="Imp_Gate"> Imp_Gate </h2>
 ```Python
 class Imp_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -3323,23 +3077,11 @@ class Imp_Gate(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -3353,18 +3095,6 @@ class Imp_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -3387,7 +3117,7 @@ class Imp_Gate(CircuitBase):
 ## <h2 id="Nimp_Gate"> Nimp_Gate </h2>
 ```Python
 class Nimp_Gate(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -3397,23 +3127,11 @@ class Nimp_Gate(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -3427,18 +3145,6 @@ class Nimp_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -3461,7 +3167,7 @@ class Nimp_Gate(CircuitBase):
 ## <h2 id="Half_Adder"> Half_Adder </h2>
 ```Python
 class Half_Adder(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -3471,23 +3177,11 @@ class Half_Adder(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -3501,18 +3195,6 @@ class Half_Adder(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -3535,7 +3217,7 @@ class Half_Adder(CircuitBase):
 ## <h2 id="Full_Adder"> Full_Adder </h2>
 ```Python
 class Full_Adder(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -3545,23 +3227,11 @@ class Full_Adder(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -3575,18 +3245,6 @@ class Full_Adder(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -3609,7 +3267,7 @@ class Full_Adder(CircuitBase):
 ## <h2 id="Half_Subtractor"> Half_Subtractor </h2>
 ```Python
 class Half_Subtractor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -3619,23 +3277,11 @@ class Half_Subtractor(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -3649,18 +3295,6 @@ class Half_Subtractor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -3683,7 +3317,7 @@ class Half_Subtractor(CircuitBase):
 ## <h2 id="Full_Subtractor"> Full_Subtractor </h2>
 ```Python
 class Full_Subtractor(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -3693,23 +3327,11 @@ class Full_Subtractor(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -3723,18 +3345,6 @@ class Full_Subtractor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -3757,7 +3367,7 @@ class Full_Subtractor(CircuitBase):
 ## <h2 id="Multiplier"> Multiplier </h2>
 ```Python
 class Multiplier(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -3767,23 +3377,11 @@ class Multiplier(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -3797,18 +3395,6 @@ class Multiplier(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -3831,7 +3417,7 @@ class Multiplier(CircuitBase):
 ## <h2 id="D_Flipflop"> D_Flipflop </h2>
 ```Python
 class D_Flipflop(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -3841,23 +3427,11 @@ class D_Flipflop(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -3871,18 +3445,6 @@ class D_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -3905,7 +3467,7 @@ class D_Flipflop(CircuitBase):
 ## <h2 id="T_Flipflop"> T_Flipflop </h2>
 ```Python
 class T_Flipflop(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -3915,23 +3477,11 @@ class T_Flipflop(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -3945,18 +3495,6 @@ class T_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -3979,7 +3517,7 @@ class T_Flipflop(CircuitBase):
 ## <h2 id="Real_T_Flipflop"> Real_T_Flipflop </h2>
 ```Python
 class Real_T_Flipflop(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -3989,23 +3527,11 @@ class Real_T_Flipflop(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -4019,18 +3545,6 @@ class Real_T_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -4053,7 +3567,7 @@ class Real_T_Flipflop(CircuitBase):
 ## <h2 id="JK_Flipflop"> JK_Flipflop </h2>
 ```Python
 class JK_Flipflop(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -4063,23 +3577,11 @@ class JK_Flipflop(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -4093,18 +3595,6 @@ class JK_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -4127,7 +3617,7 @@ class JK_Flipflop(CircuitBase):
 ## <h2 id="Counter"> Counter </h2>
 ```Python
 class Counter(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -4137,23 +3627,11 @@ class Counter(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -4167,18 +3645,6 @@ class Counter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -4201,7 +3667,7 @@ class Counter(CircuitBase):
 ## <h2 id="Random_Generator"> Random_Generator </h2>
 ```Python
 class Random_Generator(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -4211,23 +3677,11 @@ class Random_Generator(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -4241,18 +3695,6 @@ class Random_Generator(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -4275,7 +3717,7 @@ class Random_Generator(CircuitBase):
 ## <h2 id="Eight_Bit_Input"> Eight_Bit_Input </h2>
 ```Python
 class Eight_Bit_Input(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -4285,23 +3727,11 @@ class Eight_Bit_Input(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -4315,18 +3745,6 @@ class Eight_Bit_Input(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_num
 ```Python
@@ -4354,7 +3772,7 @@ class Eight_Bit_Input(CircuitBase):
 ## <h2 id="Eight_Bit_Display"> Eight_Bit_Display </h2>
 ```Python
 class Eight_Bit_Display(CircuitBase):
-    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None) -> None
+    def __init__(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], /, *, elementXYZ: Optional[bool] = None, identifier: Optional[str] = None, experiment: Optional[physicsLab._core._Experiment] = None, high_level: Union[int, float] = 3, low_level: Union[int, float] = 0) -> None
 ```
 
 ### get_all_pins_property
@@ -4364,23 +3782,11 @@ class Eight_Bit_Display(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -4394,18 +3800,6 @@ class Eight_Bit_Display(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
@@ -4438,23 +3832,11 @@ class Proximity_Sensor(CircuitBase):
 获取该元件的所有引脚对应的property  
   
 
-### get_high_level_value
-```Python
-    def get_high_level_value(self) -> Union[int, float]
-```
-获取高电平的值  
-
 ### get_index
 ```Python
     def get_index(self) -> int
 ```
 获取元件的index (每创建一个元件, index就加1 (index从1开始))  
-
-### get_low_level_value
-```Python
-    def get_low_level_value(self)
-```
-获取低电平的值  
 
 ### get_position
 ```Python
@@ -4468,18 +3850,6 @@ class Proximity_Sensor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
-
-### set_high_level_value
-```Python
-    def set_high_level_value(self, num: Union[int, float]) -> Self
-```
-设置高电平的值  
-
-### set_low_level_value
-```Python
-    def set_low_level_value(self, num: Union[int, float]) -> Self
-```
-设置低电平的值  
 
 ### set_position
 ```Python
