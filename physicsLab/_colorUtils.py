@@ -72,7 +72,7 @@ class _Color:
     fore: int
 
     def __init__(self, msg: str) -> None:
-        self.msg = msg
+        raise NotImplementedError
 
     def __repr__(self) -> str:
         return self.msg
@@ -103,7 +103,7 @@ class _Color:
 
 class Black(_Color):
     def __init__(self, msg: str) -> None:
-        super().__init__(msg)
+        self.msg = msg
 
         if platform.system() == "Windows":
             self.fore = 0
@@ -111,68 +111,67 @@ class Black(_Color):
             self.fore = 30
 
 class Red(_Color):
-    def __init__(self, msg: str) -> None:
-        super().__init__(msg)
+    if platform.system() == "Windows":
+        fore = 4
+    else:
+        fore = 31
 
-        if platform.system() == "Windows":
-            self.fore = 4
-        else:
-            self.fore = 31
+    def __init__(self, msg: str) -> None:
+        self.msg = msg
 
 class Green(_Color):
-    def __init__(self, msg: str) -> None:
-        super().__init__(msg)
+    if platform.system() == "Windows":
+        fore = 2
+    else:
+        fore = 32
 
-        if platform.system() == "Windows":
-            self.fore = 2
-        else:
-            self.fore = 32
+    def __init__(self, msg: str) -> None:
+        self.msg = msg
 
 class Yellow(_Color):
+    if platform.system() == "Windows":
+        fore = 6
+    else:
+        fore = 33
+
     def __init__(self, msg: str) -> None:
-        super().__init__(msg)
-
-        if platform.system() == "Windows":
-            self.fore = 6
-        else:
-            self.fore = 33
-
+        self.msg = msg
 
 class Blue(_Color):
-    def __init__(self, msg: str) -> None:
-        super().__init__(msg)
+    if platform.system() == "Windows":
+        fore = 1
+    else:
+        fore = 34
 
-        if platform.system() == "Windows":
-            self.fore = 1
-        else:
-            self.fore = 34
+    def __init__(self, msg: str) -> None:
+        self.msg = msg
 
 class Magenta(_Color):
-    def __init__(self, msg: str) -> None:
-        super().__init__(msg)
+    if platform.system() == "Windows":
+        fore = 5
+    else:
+        fore = 35
 
-        if platform.system() == "Windows":
-            self.fore = 5
-        else:
-            self.fore = 35
+    def __init__(self, msg: str) -> None:
+        self.msg = msg
 
 class Cyan(_Color):
-   def __init__(self, msg: str) -> None:
-        super().__init__(msg)
+    if platform.system() == "Windows":
+        fore = 3
+    else:
+        fore = 36
 
-        if platform.system() == "Windows":
-            self.fore = 3
-        else:
-            self.fore = 36
+    def __init__(self, msg: str) -> None:
+        self.msg = msg
 
 class White(_Color):
-    def __init__(self, msg: str) -> None:
-        super().__init__(msg)
+    if platform.system() == "Windows":
+        fore = 7
+    else:
+        fore = 37
 
-        if platform.system() == "Windows":
-            self.fore = 7
-        else:
-            self.fore = 37
+    def __init__(self, msg: str) -> None:
+        self.msg = msg
 
 def cprint(*args, end='\n', file: Any = sys.stdout) -> None:
     # 先刷新再打印, 避免在Windows下打印缓冲区的内容还未输出就被改变了Attribute
