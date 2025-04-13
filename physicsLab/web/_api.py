@@ -57,17 +57,17 @@ def get_avatar(target_id: str, index: int, category: str, size_category: str) ->
         @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
     '''
     if not isinstance(target_id, str):
-        raise TypeError(f"Parameter 'target_id' must be of type 'str', but got value {} of type {type(target_id).__name__}")
+        raise TypeError(f"Parameter 'target_id' must be of type 'str', but got value {target_id} of type {type(target_id).__name__}")
     if not isinstance(index, int):
-        raise TypeError(f"Parameter 'index' must be of type 'int', but got value {} of type {type(index).__name__}")
+        raise TypeError(f"Parameter 'index' must be of type 'int', but got value {index} of type {type(index).__name__}")
     if not isinstance(category, str):
-        raise TypeError(f"Parameter 'category' must be of type 'str', but got value {} of type {type(category).__name__}")
+        raise TypeError(f"Parameter 'category' must be of type 'str', but got value {category} of type {type(category).__name__}")
     if not isinstance(size_category, str):
-        raise TypeError(f"Parameter 'size_category' must be of type 'str', but got value {} of type {type(size_category).__name__}")
+        raise TypeError(f"Parameter 'size_category' must be of type 'str', but got value {size_category} of type {type(size_category).__name__}")
     if category not in ("experiments", "users"):
-        raise ValueError(f"Parameter 'category' must be one of ['experiments', 'users'], but got value {} of type '{category}'")
+        raise ValueError(f"Parameter 'category' must be one of ['experiments', 'users'], but got value {category} of type '{category}'")
     if size_category not in ("small.round", "thumbnail", "full"):
-        raise ValueError(f"Parameter 'size_category' must be one of ['small.round', 'thumbnail', 'full'], but got value {} of type '{size_category}'")
+        raise ValueError(f"Parameter 'size_category' must be one of ['small.round', 'thumbnail', 'full'], but got value {size_category} of type '{size_category}'")
 
     if category == "users":
         category += "/avatars"
@@ -154,13 +154,13 @@ class _User:
             @param skip: 跳过搜索数量
         '''
         if not isinstance(category, Category):
-            raise TypeError(f"Parameter 'category' must be an instance of Category enum, but got value {} of type {type(category).__name__}")
+            raise TypeError(f"Parameter 'category' must be an instance of Category enum, but got value {category} of type {type(category).__name__}")
         if not isinstance(tags, (list, type(None))):
-            raise TypeError(f"Parameter 'tags' must be of type 'list' or None, but got value {} of type {type(tags).__name__}")
+            raise TypeError(f"Parameter 'tags' must be of type 'list' or None, but got value {tags} of type {type(tags).__name__}")
         if tags is not None and not all(isinstance(tag, Tag) for tag in tags):
-            raise TypeError(f"Parameter 'tags' must be a list of Tag enum instances, but got value {} of type list containing non-Tag elements")
+            raise TypeError(f"Parameter 'tags' must be a list of Tag enum instances, but got value {tags} of type list containing non-Tag elements")
         if not isinstance(exclude_tags, (list, type(None))):
-            raise TypeError(f"Parameter 'exclude_tags' must be of type 'list' or None, but got value {} of type {type(exclude_tags).__name__}")
+            raise TypeError(f"Parameter 'exclude_tags' must be of type 'list' or None, but got value {exclude_tags} of type {type(exclude_tags).__name__}")
         if exclude_tags is not None and not all(isinstance(tag, Tag) for tag in exclude_tags):
             raise TypeError(f"Parameter 'exclude_tags' must be a list of Tag enum instances, but got value {} of type list containing non-Tag elements")
         if not isinstance(languages, (list, type(None))):
