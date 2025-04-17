@@ -38,6 +38,7 @@ class User(_User):
     ) -> None:
         ''' 仅提供数据的初始化
         '''
+        # TODO 用assert_true检查类型
         self.token: str = info["Token"]
         assert info["AuthCode"] is not None, errors.BUG_REPORT
         self.auth_code: str = info["AuthCode"]
