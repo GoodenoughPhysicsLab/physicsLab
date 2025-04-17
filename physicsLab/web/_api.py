@@ -57,17 +57,17 @@ def get_avatar(target_id: str, index: int, category: str, size_category: str) ->
         @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
     '''
     if not isinstance(target_id, str):
-        errors.type_error(f"Parameter 'target_id' must be of type `str`, but got value `{target_id}` of type `{type(target_id).__name__}`")
+        errors.type_error(f"Parameter `target_id` must be of type `str`, but got value `{target_id}` of type `{type(target_id).__name__}`")
     if not isinstance(index, int):
-        errors.type_error(f"Parameter 'index' must be of type `int`, but got value `{index}` of type `{type(index).__name__}`")
+        errors.type_error(f"Parameter `index` must be of type `int`, but got value `{index}` of type `{type(index).__name__}`")
     if not isinstance(category, str):
-        errors.type_error(f"Parameter 'category' must be of type `str`, but got value `{category}` of type `{type(category).__name__}`")
+        errors.type_error(f"Parameter `category` must be of type `str`, but got value `{category}` of type `{type(category).__name__}`")
     if not isinstance(size_category, str):
-        errors.type_error(f"Parameter 'size_category' must be of type `str`, but got value `{size_category}` of type `{type(size_category).__name__}`")
+        errors.type_error(f"Parameter `size_category` must be of type `str`, but got value `{size_category}` of type `{type(size_category).__name__}`")
     if category not in ("experiments", "users"):
-        raise ValueError(f"Parameter 'category' must be one of ['experiments', 'users'], but got value `{category} of type '{category}'")
+        raise ValueError(f"Parameter `category` must be one of ['experiments', 'users'], but got value `{category} of type '{category}'")
     if size_category not in ("small.round", "thumbnail", "full"):
-        raise ValueError(f"Parameter 'size_category' must be one of ['small.round', 'thumbnail', 'full'], but got value `{size_category} of type '{size_category}'")
+        raise ValueError(f"Parameter `size_category` must be one of ['small.round', 'thumbnail', 'full'], but got value `{size_category} of type '{size_category}'")
 
     if category == "users":
         category += "/avatars"
@@ -154,31 +154,31 @@ class _User:
             @param skip: 跳过搜索数量
         '''
         if not isinstance(category, Category):
-            errors.type_error(f"Parameter 'category' must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`")
+            errors.type_error(f"Parameter `category` must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`")
         if not isinstance(tags, (list, type(None))):
-            errors.type_error(f"Parameter 'tags' must be of type 'list' or None, but got value `{tags}` of type `{type(tags).__name__}`")
+            errors.type_error(f"Parameter `tags` must be of type 'list' or None, but got value `{tags}` of type `{type(tags).__name__}`")
         if tags is not None and not all(isinstance(tag, Tag) for tag in tags):
-            errors.type_error(f"Parameter 'tags' must be a list of Tag enum instances, but got value `{tags} of type list containing non-Tag elements")
+            errors.type_error(f"Parameter `tags` must be a list of Tag enum instances, but got value `{tags} of type list containing non-Tag elements")
         if not isinstance(exclude_tags, (list, type(None))):
-            errors.type_error(f"Parameter 'exclude_tags' must be of type 'list' or None, but got value `{exclude_tags}` of type `{type(exclude_tags).__name__}`")
+            errors.type_error(f"Parameter `exclude_tags` must be of type 'list' or None, but got value `{exclude_tags}` of type `{type(exclude_tags).__name__}`")
         if exclude_tags is not None and not all(isinstance(tag, Tag) for tag in exclude_tags):
-            errors.type_error(f"Parameter 'exclude_tags' must be a list of Tag enum instances, but got value `{exclude_tags} of type list containing non-Tag elements")
+            errors.type_error(f"Parameter `exclude_tags` must be a list of Tag enum instances, but got value `{exclude_tags} of type list containing non-Tag elements")
         if not isinstance(languages, (list, type(None))):
-            errors.type_error(f"Parameter 'languages' must be of type 'list' or None, but got value `{languages}` of type `{type(languages).__name__}`")
+            errors.type_error(f"Parameter `languages` must be of type 'list' or None, but got value `{languages}` of type `{type(languages).__name__}`")
         if languages is not None and not all(isinstance(language, str) for language in languages):
-            errors.type_error(f"Parameter 'languages' must be a list of str, but got value `{languages} of type list containing non-str elements")
+            errors.type_error(f"Parameter `languages` must be a list of str, but got value `{languages} of type list containing non-str elements")
         if not isinstance(exclude_languages, (list, type(None))):
-            errors.type_error(f"Parameter 'exclude_languages' must be of type 'list' or None, but got value `{exclude_languages}` of type `{type(exclude_languages).__name__}`")
+            errors.type_error(f"Parameter `exclude_languages` must be of type 'list' or None, but got value `{exclude_languages}` of type `{type(exclude_languages).__name__}`")
         if exclude_languages is not None and not all(isinstance(language, str) for language in exclude_languages):
-            errors.type_error(f"Parameter 'exclude_languages' must be a list of str, but got value `{exclude_languages} of type list containing non-str elements")
+            errors.type_error(f"Parameter `exclude_languages` must be a list of str, but got value `{exclude_languages} of type list containing non-str elements")
         if not isinstance(user_id, (str, type(None))):
-            errors.type_error(f"Parameter 'user_id' must be of type `str` or None, but got value `{user_id}` of type {type(user_id).__name__}`")
+            errors.type_error(f"Parameter `user_id` must be of type `str` or None, but got value `{user_id}` of type {type(user_id).__name__}`")
         if not isinstance(take, int):
-            errors.type_error(f"Parameter 'take' must be of type `int`, but got value `{take}` of type `{type(take).__name__}`")
+            errors.type_error(f"Parameter `take` must be of type `int`, but got value `{take}` of type `{type(take).__name__}`")
         if not isinstance(skip, int):
-            errors.type_error(f"Parameter 'skip' must be of type `int`, but got value `{skip}` of type `{type(skip).__name__}`")
+            errors.type_error(f"Parameter `skip` must be of type `int`, but got value `{skip}` of type `{type(skip).__name__}`")
         if not isinstance(from_skip, (str, type(None))):
-            errors.type_error(f"Parameter 'from_skip' must be of type `str` or None, but got value `{from_skip}` of type `{type(from_skip).__name__}`")
+            errors.type_error(f"Parameter `from_skip` must be of type `str` or None, but got value `{from_skip}` of type `{type(from_skip).__name__}`")
 
         if languages is None:
             languages = []
@@ -237,9 +237,9 @@ class _User:
             @param category: 实验区还是黑洞区
         '''
         if not isinstance(content_id, str):
-            errors.type_error(f"Parameter 'content_id' must be of type `str`, but got value `{content_id}` of type `{type(content_id).__name__}`")
+            errors.type_error(f"Parameter `content_id` must be of type `str`, but got value `{content_id}` of type `{type(content_id).__name__}`")
         if not isinstance(category, (Category, type(None))):
-            errors.type_error(f"Parameter 'category' must be an instance of Category enum or None, but got value `{category}` of type `{type(category).__name__}`")
+            errors.type_error(f"Parameter `category` must be an instance of Category enum or None, but got value `{category}` of type `{type(category).__name__}`")
 
         if category is not None:
             # 如果传入的是实验ID, 先获取summary来得到ContentID
@@ -263,11 +263,11 @@ class _User:
         ''' 确认发布实验
         '''
         if not isinstance(summary_id, str):
-            errors.type_error(f"Parameter 'summary_id' must be of type `str`, but got value `{summary_id}` of type `{type(summary_id).__name__}`")
+            errors.type_error(f"Parameter `summary_id` must be of type `str`, but got value `{summary_id}` of type `{type(summary_id).__name__}`")
         if not isinstance(category, Category):
-            errors.type_error(f"Parameter 'category' must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`")
+            errors.type_error(f"Parameter `category` must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`")
         if not isinstance(image_counter, int):
-            errors.type_error(f"Parameter 'image_counter' must be of type `int`, but got value `{image_counter}` of type `{type(image_counter).__name__}`")
+            errors.type_error(f"Parameter `image_counter` must be of type `int`, but got value `{image_counter}` of type `{type(image_counter).__name__}`")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/ConfirmExperiment",
@@ -292,11 +292,11 @@ class _User:
             @param category: 实验区还是黑洞区
         '''
         if not isinstance(summary_id, str):
-            errors.type_error(f"Parameter 'summary_id' must be of type `str`, but got value `{summary_id}` of type `{type(summary_id).__name__}`")
+            errors.type_error(f"Parameter `summary_id` must be of type `str`, but got value `{summary_id}` of type `{type(summary_id).__name__}`")
         if not isinstance(category, Category):
-            errors.type_error(f"Parameter 'category' must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`")
+            errors.type_error(f"Parameter `category` must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`")
         if not isinstance(reason, (str, type(None))):
-            errors.type_error(f"Parameter 'reason' must be of type `str` or None, but got value `{reason}` of type `{type(reason).__name__}`")
+            errors.type_error(f"Parameter `reason` must be of type `str` or None, but got value `{reason}` of type `{type(reason).__name__}`")
 
         _plar_ver = plAR.get_plAR_version()
         plar_ver = f"{_plar_ver[0]}{_plar_ver[1]}{_plar_ver[2]}`" if _plar_ver is not None else "2411"
@@ -335,17 +335,17 @@ class _User:
             @param special: 为 "Reminder" 的话则是发送警告, 为None则是普通的评论
         '''
         if not isinstance(target_id, str):
-            errors.type_error(f"Parameter 'target_id' must be of type `str`, but got value `{target_id}` of type `{type(target_id).__name__}`")
+            errors.type_error(f"Parameter `target_id` must be of type `str`, but got value `{target_id}` of type `{type(target_id).__name__}`")
         if not isinstance(content, str):
-            errors.type_error(f"Parameter 'content' must be of type `str`, but got value `{content}` of type `{type(content).__name__}`")
+            errors.type_error(f"Parameter `content` must be of type `str`, but got value `{content}` of type `{type(content).__name__}`")
         if not isinstance(target_type, str):
-            errors.type_error(f"Parameter 'target_type' must be of type `str`, but got value `{target_type}` of type `{type(target_type).__name__}`")
+            errors.type_error(f"Parameter `target_type` must be of type `str`, but got value `{target_type}` of type `{type(target_type).__name__}`")
         if not isinstance(reply_id, (str, type(None))):
-            errors.type_error(f"Parameter 'reply_id' must be of type `str` or None, but got value `{reply_id}` of type `{type(reply_id).__name__}`")
+            errors.type_error(f"Parameter `reply_id` must be of type `str` or None, but got value `{reply_id}` of type `{type(reply_id).__name__}`")
         if target_type not in ("User", "Discussion", "Experiment"):
-            raise ValueError(f"Parameter 'target_type' must be one of ['User', 'Discussion', 'Experiment'], but got value `{target_type}`")
+            raise ValueError(f"Parameter `target_type` must be one of ['User', 'Discussion', 'Experiment'], but got value `{target_type}`")
         if special not in (None, "Reminder"):
-            raise ValueError(f"Parameter 'special' must be one of [None, 'Reminder'], but got value `{special}`")
+            raise ValueError(f"Parameter `special` must be one of [None, 'Reminder'], but got value `{special}`")
 
         if reply_id is None:
             reply_id = ""
@@ -403,11 +403,11 @@ class _User:
             @param target_type: User, Discussion, Experiment
         '''
         if not isinstance(comment_id, str):
-            errors.type_error(f"Parameter 'comment_id' must be of type `str`, but got value `{commend_id}` of type `{type(comment_id).__name__}`")
+            errors.type_error(f"Parameter `comment_id` must be of type `str`, but got value `{commend_id}` of type `{type(comment_id).__name__}`")
         if not isinstance(target_type, str):
-            errors.type_error(f"Parameter 'target_type' must be of type `str`, but got value `{target_type}` of type `{type(target_type).__name__}`")
+            errors.type_error(f"Parameter `target_type` must be of type `str`, but got value `{target_type}` of type `{type(target_type).__name__}`")
         if target_type not in ("User", "Discussion", "Experiment"):
-            raise ValueError(f"Parameter 'target_type' must be one of ['User', 'Discussion', 'Experiment'], but got value `{target_type}`")
+            raise ValueError(f"Parameter `target_type` must be one of ['User', 'Discussion', 'Experiment'], but got value `{target_type}`")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Messages/RemoveComment",
@@ -440,17 +440,17 @@ class _User:
             @param comment_id: 从comment_id开始获取take条消息 (另一种skip的规则)
         '''
         if not isinstance(target_id, str):
-            errors.type_error(f"Parameter 'target_id' must be of type `str`, but got value `{target_id}` of type `{type(target_id).__name__}`")
+            errors.type_error(f"Parameter `target_id` must be of type `str`, but got value `{target_id}` of type `{type(target_id).__name__}`")
         if not isinstance(target_type, str):
-            errors.type_error(f"Parameter 'target_type' must be of type `str`, but got value `{target_type}` of type `{type(target_type).__name__}`")
+            errors.type_error(f"Parameter `target_type` must be of type `str`, but got value `{target_type}` of type `{type(target_type).__name__}`")
         if not isinstance(take, int):
-            errors.type_error(f"Parameter 'take' must be of type `int`, but got value `{take}` of type `{type(take).__name__}`")
+            errors.type_error(f"Parameter `take` must be of type `int`, but got value `{take}` of type `{type(take).__name__}`")
         if not isinstance(skip, int):
-            errors.type_error(f"Parameter 'skip' must be of type `int`, but got value `{skip}` of type `{type(skip).__name__}`")
+            errors.type_error(f"Parameter `skip` must be of type `int`, but got value `{skip}` of type `{type(skip).__name__}`")
         if not isinstance(comment_id, (str, type(None))):
-            errors.type_error(f"Parameter 'comment_id' must be of type `str` or None, but got value `{comment_id}` of type `{type(comment_id).__name__}`")
+            errors.type_error(f"Parameter `comment_id` must be of type `str` or None, but got value `{comment_id}` of type `{type(comment_id).__name__}`")
         if target_type not in ("User", "Discussion", "Experiment"):
-            raise ValueError(f"Parameter 'target_type' must be one of ['User', 'Discussion', 'Experiment'], but got value `{target_type} of type '{target_type}'")
+            raise ValueError(f"Parameter `target_type` must be one of ['User', 'Discussion', 'Experiment'], but got value `{target_type} of type '{target_type}'")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Messages/GetComments",
@@ -476,9 +476,9 @@ class _User:
             @param category: 实验区还是黑洞区
         '''
         if not isinstance(content_id, str):
-            errors.type_error(f"Parameter 'content_id' must be of type `str`, but got value `{content_id}` of type `{type(content_id).__name__}`")
+            errors.type_error(f"Parameter `content_id` must be of type `str`, but got value `{content_id}` of type `{type(content_id).__name__}`")
         if not isinstance(category, Category):
-            errors.type_error(f"Parameter 'category' must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`")
+            errors.type_error(f"Parameter `category` must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/GetSummary",
@@ -507,9 +507,9 @@ class _User:
             @param category: 实验区还是黑洞区
         '''
         if not isinstance(content_id, str):
-            errors.type_error(f"Parameter 'content_id' must be of type `str`, but got value `{content_id}` of type `{type(content_id).__name__}`")
+            errors.type_error(f"Parameter `content_id` must be of type `str`, but got value `{content_id}` of type `{type(content_id).__name__}`")
         if not isinstance(category, Category):
-            errors.type_error(f"Parameter 'category' must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`")
+            errors.type_error(f"Parameter `category` must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/GetDerivatives",
@@ -536,9 +536,9 @@ class _User:
             @param get_user_mode: 根据ID/用户名获取用户信息
         '''
         if not isinstance(msg, str):
-            errors.type_error(f"Parameter 'msg' must be of type `str`, but got value `{msg}` of type {type(msg).__name__}`")
+            errors.type_error(f"Parameter `msg` must be of type `str`, but got value `{msg}` of type {type(msg).__name__}`")
         if not isinstance(get_user_mode, enums.GetUserMode):
-            errors.type_error(f"Parameter 'get_user_mode' must be an instance of type "
+            errors.type_error(f"Parameter `get_user_mode` must be an instance of type "
                             f"`physicsLab.enums.GetUserMode`, but got value `{get_user_mode}` of type {type(get_user_mode).__name__}`")
 
         if get_user_mode == enums.GetUserMode.by_id:
@@ -585,15 +585,15 @@ class _User:
             @param status: True: 收藏, False: 取消收藏 (对支持无作用)
         '''
         if not isinstance(content_id, str):
-            errors.type_error(f"Parameter 'content_id' must be of type `str`, but got value `{content_id}` of type `{type(content_id).__name__}`")
+            errors.type_error(f"Parameter `content_id` must be of type `str`, but got value `{content_id}` of type `{type(content_id).__name__}`")
         if not isinstance(category, Category):
-            errors.type_error(f"Parameter 'category' must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`")
+            errors.type_error(f"Parameter `category` must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`")
         if not isinstance(status, bool):
-            errors.type_error(f"Parameter 'status' must be of type `bool`, but got value `{status}` of type `{type(status).__name__}`")
+            errors.type_error(f"Parameter `status` must be of type `bool`, but got value `{status}` of type `{type(status).__name__}`")
         if not isinstance(star_type, int):
-            errors.type_error(f"Parameter 'star_type' must be of type `int`, but got value `{star_type}` of type `{type(star_type).__name__}`")
+            errors.type_error(f"Parameter `star_type` must be of type `int`, but got value `{star_type}` of type `{type(star_type).__name__}`")
         if star_type not in (0, 1):
-            raise ValueError(f"Parameter 'star_type' must be one of [0, 1], but got value `{star_type} of type '{star_type}'")
+            raise ValueError(f"Parameter `star_type` must be one of [0, 1], but got value `{star_type} of type '{star_type}'")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/StarContent",
@@ -620,11 +620,11 @@ class _User:
         if policy is None or authorization is None:
             raise RuntimeError("Sorry, Physics-Lab-AR can't upload this iamge")
         if not isinstance(policy, str):
-            errors.type_error(f"Parameter 'policy' must be of type `str`, but got value `{policy}` of type `{type(policy).__name__}`")
+            errors.type_error(f"Parameter `policy` must be of type `str`, but got value `{policy}` of type `{type(policy).__name__}`")
         if not isinstance(authorization, str):
-            errors.type_error(f"Parameter 'authorization' must be of type `str`, but got value `{authorization}` of type `{type(authorization).__name__}`")
+            errors.type_error(f"Parameter `authorization` must be of type `str`, but got value `{authorization}` of type `{type(authorization).__name__}`")
         if not isinstance(image_path, str):
-            errors.type_error(f"Parameter 'image_path' must be of type `str`, but got value `{image_path}` of type `{type(image_path).__name__}`")
+            errors.type_error(f"Parameter `image_path` must be of type `str`, but got value `{image_path}` of type `{type(image_path).__name__}`")
         if not os.path.exists(image_path) or not os.path.isfile(image_path):
             raise FileNotFoundError(f"`{image_path}` not found")
 
@@ -651,7 +651,7 @@ class _User:
             @param message_id: 消息的id
         '''
         if not isinstance(message_id, str):
-            errors.type_error(f"Parameter 'message_id' must be of type `str`, but got value `{message_id}` of type `{type(message_id).__name__}`")
+            errors.type_error(f"Parameter `message_id` must be of type `str`, but got value `{message_id}` of type `{type(message_id).__name__}`")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Messages/GetMessage",
@@ -682,13 +682,13 @@ class _User:
             @param no_templates: 是否不返回消息种类的模板消息
         '''
         if category_id not in (0, 1, 2, 3, 4, 5):
-            errors.type_error(f"Parameter 'category_id' must be an integer within [0, 5], but got value `{category_id}` of type `{category_id}`")
+            errors.type_error(f"Parameter `category_id` must be an integer within [0, 5], but got value `{category_id}` of type `{category_id}`")
         if not isinstance(skip, int):
-            errors.type_error(f"Parameter 'skip' must be of type `int`, but got value `{skip}` of type `{type(skip).__name__}`")
+            errors.type_error(f"Parameter `skip` must be of type `int`, but got value `{skip}` of type `{type(skip).__name__}`")
         if not isinstance(take, int):
-            errors.type_error(f"Parameter 'take' must be of type `int`, but got value `{take}` of type `{type(take).__name__}`")
+            errors.type_error(f"Parameter `take` must be of type `int`, but got value `{take}` of type `{type(take).__name__}`")
         if not isinstance(no_templates, bool):
-            errors.type_error(f"Parameter 'no_templates' must be of type `bool`, but got value `{no_templates}` of type `{type(no_templates).__name__}`")
+            errors.type_error(f"Parameter `no_templates` must be of type `bool`, but got value `{no_templates}` of type `{type(no_templates).__name__}`")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Messages/GetMessages",
@@ -720,13 +720,13 @@ class _User:
             @param take: 取take条消息
         '''
         if not isinstance(content_id, str):
-            errors.type_error(f"Parameter 'content_id' must be of type `str`, but got value `{content_id}` of type `{type(content_id).__name__}`")
+            errors.type_error(f"Parameter `content_id` must be of type `str`, but got value `{content_id}` of type `{type(content_id).__name__}`")
         if not isinstance(category, Category):
-            errors.type_error(f"Parameter 'category' must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`")
+            errors.type_error(f"Parameter `category` must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`")
         if not isinstance(skip, int):
-            errors.type_error(f"Parameter 'skip' must be of type `int`, but got value `{skip}` of type `{type(skip).__name__}`")
+            errors.type_error(f"Parameter `skip` must be of type `int`, but got value `{skip}` of type `{type(skip).__name__}`")
         if not isinstance(take, int):
-            errors.type_error(f"Parameter 'take' must be of type `int`, but got value `{take}` of type `{type(take).__name__}`")
+            errors.type_error(f"Parameter `take` must be of type `int`, but got value `{take}` of type `{type(take).__name__}`")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/GetSupporters",
@@ -760,13 +760,13 @@ class _User:
             @param query: 为用户id或昵称
         '''
         if display_type not in ("Follower", "Following"):
-            raise ValueError(f"Parameter 'display_type' must be one of ['Follower', 'Following'], but got value `{display_type} of type '{display_type}'")
+            raise ValueError(f"Parameter `display_type` must be one of ['Follower', 'Following'], but got value `{display_type}` of type `{display_type}`")
         if not isinstance(user_id, str):
-            errors.type_error(f"Parameter 'user_id' must be of type `str`, but got value `{user_id}` of type `{type(user_id).__name__}`")
+            errors.type_error(f"Parameter `user_id` must be of type `str`, but got value `{user_id}` of type `{type(user_id).__name__}`")
         if not isinstance(skip, int):
-            errors.type_error(f"Parameter 'skip' must be of type `int`, but got value `{skip}` of type `{type(skip).__name__}`")
+            errors.type_error(f"Parameter `skip` must be of type `int`, but got value `{skip}` of type `{type(skip).__name__}`")
         if not isinstance(take, int):
-            errors.type_error(f"Parameter 'take' must be of type `int`, but got value `{take}` of type `{type(take).__name__}`")
+            errors.type_error(f"Parameter `take` must be of type `int`, but got value `{take}` of type `{type(take).__name__}`")
 
         if display_type == "Follower":
             display_type_ = 0
@@ -799,9 +799,9 @@ class _User:
             @param action: true为关注, false为取消关注
         '''
         if not isinstance(target_id, str):
-            errors.type_error(f"Parameter 'target_id' must be of type `str`, but got value `{target_id}` of type `{type(target_id).__name__}`")
+            errors.type_error(f"Parameter `target_id` must be of type `str`, but got value `{target_id}` of type `{type(target_id).__name__}`")
         if not isinstance(action, bool):
-            errors.type_error(f"Parameter 'action' must be of type `bool`, but got value `{action}` of type `{type(action).__name__}`")
+            errors.type_error(f"Parameter `action` must be of type `bool`, but got value `{action}` of type `{type(action).__name__}`")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Users/Follow",
@@ -823,7 +823,7 @@ class _User:
             @param nickname: 新昵称
         '''
         if not isinstance(nickname, str):
-            errors.type_error(f"Parameter 'nickname' must be of type `str`, but got value `{nickname}` of type {type(nickname).__name__}`")
+            errors.type_error(f"Parameter `nickname` must be of type `str`, but got value `{nickname}` of type {type(nickname).__name__}`")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Users/Rename",
@@ -845,7 +845,7 @@ class _User:
             @param target: 新签名
         '''
         if not isinstance(target, str):
-            errors.type_error(f"Parameter 'target' must be of type `str`, but got value `{target}` of type `{type(target).__name__}`")
+            errors.type_error(f"Parameter `target` must be of type `str`, but got value `{target}` of type `{type(target).__name__}`")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Users/ModifyInformation",
@@ -868,11 +868,11 @@ class _User:
             @param index: 该活动的第几次奖励
         '''
         if not isinstance(activity_id, str):
-            errors.type_error(f"Parameter 'activity_id' must be of type `str`, but got value `{activity_id}` of type `{type(activity_id).__name__}`")
+            errors.type_error(f"Parameter `activity_id` must be of type `str`, but got value `{activity_id}` of type `{type(activity_id).__name__}`")
         if not isinstance(index, int):
-            errors.type_error(f"Parameter 'index' must be of type `int`, but got value `{index}` of type `{type(index).__name__}`")
+            errors.type_error(f"Parameter `index` must be of type `int`, but got value `{index}` of type `{type(index).__name__}`")
         if index < 0:
-            raise ValueError(f"Parameter 'index' must be a non-negative integer, but got value `{index}`")
+            raise ValueError(f"Parameter `index` must be a non-negative integer, but got value `{index}`")
 
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Users/ReceiveBonus",
