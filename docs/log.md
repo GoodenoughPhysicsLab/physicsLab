@@ -265,3 +265,5 @@
 2. `class User`的构造函数被破坏性更新
 3. 新增`GetUserMode`
 4. 移除`close_color_print`, _colorUtils为内部模块, 在外部请谨慎使用
+
+# 2.0.5
