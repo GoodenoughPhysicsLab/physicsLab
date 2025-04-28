@@ -17,15 +17,15 @@ class _PlanetMeta(type):
             **kwargs,
     ):
         if not isinstance(x, (int, float)):
-            errors.type_error(f"Parameter x must be of type `int | float`, but got {type(x).__name__}")
+            errors.type_error(f"Parameter x must be of type `int | float`, but got value `{x}` of type `{type(x).__name__}`")
         if not isinstance(y, (int, float)):
-            errors.type_error(f"Parameter y must be of type `int | float`, but got {type(y).__name__}")
+            errors.type_error(f"Parameter y must be of type `int | float`, but got value `{y}` of type `{type(y).__name__}`")
         if not isinstance(z, (int, float)):
-            errors.type_error(f"Parameter z must be of type `int | float`, but got {type(z).__name__}")
+            errors.type_error(f"Parameter z must be of type `int | float`, but got value `{z}` of type `{type(z).__name__}`")
         if not isinstance(identifier, (str, type(None))):
-            errors.type_error(f"Parameter identifier must be of type `Optional[str]`, but got {type(identifier).__name__}")
+            errors.type_error(f"Parameter identifier must be of type `Optional[str]`, but got value `{identifier}` of type `{type(identifier).__name__}`")
         if not isinstance(experiment, (_Experiment, type(None))):
-            errors.type_error(f"Parameter experiment must be of type `Optional[Experiment]`, but got {type(experiment).__name__}")
+            errors.type_error(f"Parameter experiment must be of type `Optional[Experiment]`, but got value `{experiment}` of type `{type(experiment).__name__}`")
 
         _Expe: _Experiment
         if experiment is None:
