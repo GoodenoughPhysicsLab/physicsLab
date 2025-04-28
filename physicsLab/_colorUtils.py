@@ -21,7 +21,7 @@
 '''
 
 import platform
-from physicsLab._typing import final, Any
+from physicsLab._typing import final
 
 # 设置终端的编码为UTF-8
 import io
@@ -72,7 +72,12 @@ class _Color:
     fore: int
 
     def __init__(self, msg: str) -> None:
-        raise NotImplementedError
+        if type(self) is _Color:
+            raise NotImplementedError("_Color class can't be instantiated directly")
+        if not isinstance(msg, str):
+            raise TypeError(f"Parameter msg must be of type `str`, but got value `{msg}` of type {type(msg).__name__}")
+
+        self.msg = msg
 
     def __repr__(self) -> str:
         return self.msg
@@ -102,13 +107,10 @@ class _Color:
             print(f"\033[{self.fore}m{self.msg}\033[39m", end='', file=file)
 
 class Black(_Color):
-    def __init__(self, msg: str) -> None:
-        self.msg = msg
-
-        if platform.system() == "Windows":
-            self.fore = 0
-        else:
-            self.fore = 30
+    if platform.system() == "Windows":
+        fore = 0
+    else:
+        fore = 30
 
 class Red(_Color):
     if platform.system() == "Windows":
@@ -116,17 +118,11 @@ class Red(_Color):
     else:
         fore = 31
 
-    def __init__(self, msg: str) -> None:
-        self.msg = msg
-
 class Green(_Color):
     if platform.system() == "Windows":
         fore = 2
     else:
         fore = 32
-
-    def __init__(self, msg: str) -> None:
-        self.msg = msg
 
 class Yellow(_Color):
     if platform.system() == "Windows":
@@ -134,17 +130,11 @@ class Yellow(_Color):
     else:
         fore = 33
 
-    def __init__(self, msg: str) -> None:
-        self.msg = msg
-
 class Blue(_Color):
     if platform.system() == "Windows":
         fore = 1
     else:
         fore = 34
-
-    def __init__(self, msg: str) -> None:
-        self.msg = msg
 
 class Magenta(_Color):
     if platform.system() == "Windows":
@@ -152,17 +142,11 @@ class Magenta(_Color):
     else:
         fore = 35
 
-    def __init__(self, msg: str) -> None:
-        self.msg = msg
-
 class Cyan(_Color):
     if platform.system() == "Windows":
         fore = 3
     else:
         fore = 36
-
-    def __init__(self, msg: str) -> None:
-        self.msg = msg
 
 class White(_Color):
     if platform.system() == "Windows":
@@ -170,10 +154,7 @@ class White(_Color):
     else:
         fore = 37
 
-    def __init__(self, msg: str) -> None:
-        self.msg = msg
-
-def cprint(*args, end='\n', file: Any = sys.stdout) -> None:
+def cprint(*args, end='\n', file = sys.stdout) -> None:
     # 先刷新再打印, 避免在Windows下打印缓冲区的内容还未输出就被改变了Attribute
     # e.g.
     # print("test")
@@ -183,7 +164,7 @@ def cprint(*args, end='\n', file: Any = sys.stdout) -> None:
     elif file == sys.stderr:
         sys.stderr.flush()
     else:
-        assert False
+        assert False, "unreachable touched"
 
     for arg in args:
         if isinstance(arg, _Color):
@@ -200,4 +181,4 @@ def cprint(*args, end='\n', file: Any = sys.stdout) -> None:
     elif file == sys.stderr:
         sys.stderr.flush()
     else:
-        assert False
+        assert False, "unreachable touched"
