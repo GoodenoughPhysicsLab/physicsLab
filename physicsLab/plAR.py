@@ -4,11 +4,10 @@ import os
 import json
 import platform
 
-from getpass import getuser
 from typing import Optional, Tuple
 
 if platform.system() == "Windows":
-    WIN_PLAR_HOME_DIR = f"C:\\Users\\{getuser()}\\AppData\\LocalLow\\CIVITAS\\Quantum Physics"
+    WIN_PLAR_HOME_DIR = f"{os.environ['USERPROFILE']}\\AppData\\LocalLow\\CIVITAS\\Quantum Physics"
 
 _plar_version_mem: Optional[Tuple[int, int, int]] = None
 
