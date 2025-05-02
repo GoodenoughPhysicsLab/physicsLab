@@ -30,8 +30,11 @@ sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding="utf-8")
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
 
-import ctypes
-if platform.system() == "Windows":
+# Windows 11 默认支持ANSI转义, 因此只有Windows 10及以下才使用Win32 API
+_USE_WIN32_COLOR_API = platform.system() == "Windows" and (sys.getwindowsversion().major, sys.getwindowsversion().minor, sys.getwindowsversion().build) < (10, 0, 22000)
+
+if _USE_WIN32_COLOR_API:
+    import ctypes
     from ctypes import wintypes
 
     class _CONSOLE_SCREEN_BUFFER_INFO(ctypes.Structure):
@@ -84,7 +87,8 @@ class _Color:
 
     @final
     def cprint(self, file):
-        if platform.system() == "Windows":
+        if _USE_WIN32_COLOR_API:
+            import ctypes
             # 临时更改终端打印字符的属性
             csbi = _CONSOLE_SCREEN_BUFFER_INFO()
             if file is sys.stdout:
@@ -104,52 +108,52 @@ class _Color:
             else:
                 assert False
         else:
-            print(f"\033[{self.fore}m{self.msg}\033[39m", end='', file=file)
+            print(f"\033[{self.fore}m{self.msg}\033[0m", end='', file=file)
 
 class Black(_Color):
-    if platform.system() == "Windows":
+    if _USE_WIN32_COLOR_API:
         fore = 0
     else:
         fore = 30
 
 class Red(_Color):
-    if platform.system() == "Windows":
+    if _USE_WIN32_COLOR_API:
         fore = 4
     else:
         fore = 31
 
 class Green(_Color):
-    if platform.system() == "Windows":
+    if _USE_WIN32_COLOR_API:
         fore = 2
     else:
         fore = 32
 
 class Yellow(_Color):
-    if platform.system() == "Windows":
+    if _USE_WIN32_COLOR_API:
         fore = 6
     else:
         fore = 33
 
 class Blue(_Color):
-    if platform.system() == "Windows":
+    if _USE_WIN32_COLOR_API:
         fore = 1
     else:
         fore = 34
 
 class Magenta(_Color):
-    if platform.system() == "Windows":
+    if _USE_WIN32_COLOR_API:
         fore = 5
     else:
         fore = 35
 
 class Cyan(_Color):
-    if platform.system() == "Windows":
+    if _USE_WIN32_COLOR_API:
         fore = 3
     else:
         fore = 36
 
 class White(_Color):
-    if platform.system() == "Windows":
+    if _USE_WIN32_COLOR_API:
         fore = 7
     else:
         fore = 37
