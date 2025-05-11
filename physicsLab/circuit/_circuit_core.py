@@ -71,10 +71,12 @@ class Wire:
     __slots__ = ("Source", "Target", "color")
 
     def __init__(self, source_pin: Pin, target_pin: Pin, color: WireColor = WireColor.blue) -> None:
-        if not isinstance(source_pin, Pin) \
-                or not isinstance(target_pin, Pin) \
-                or not isinstance(color, WireColor):
-            raise TypeError
+        if not isinstance(source_pin, Pin):
+            errors.type_error(f"Parameter source_pin must be of type `Pin`, but got value {source_pin} of type `{type(source_pin).__name__}`")
+        if not isinstance(target_pin, Pin):
+            errors.type_error(f"Parameter target_pin must be of type `Pin`, but got value {target_pin} of type `{type(target_pin).__name__}`")
+        if not isinstance(color, WireColor):
+            errors.type_error(f"Parameter color must be of type `WireColor`, but got value {color} of type `{type(color).__name__}`")
 
         if source_pin.element_self.experiment is not target_pin.element_self.experiment:
             raise errors.InvalidWireError("can't link wire in two experiment")
@@ -114,8 +116,10 @@ class Wire:
 
 def crt_wire(*pins: Pin, color: WireColor = WireColor.blue) -> List[Wire]:
     ''' 连接导线 '''
-    if not all(isinstance(a_pin, Pin) for a_pin in pins) or not isinstance(color, WireColor):
-        raise TypeError
+    if not all(isinstance(a_pin, Pin) for a_pin in pins):
+            errors.type_error(f"Parameter pins must be of type `tuple[Pin]`")
+    if not isinstance(color, WireColor):
+            errors.type_error(f"Parameter color must be of type `WireColor`, but got value {color} of type `{type(color).__name__}`")
     if len(pins) <= 1:
         raise ValueError("pins must be more than 1")
 
@@ -134,8 +138,10 @@ def crt_wire(*pins: Pin, color: WireColor = WireColor.blue) -> List[Wire]:
 
 def del_wire(source_pin: Pin, target_pin: Pin) -> None:
     ''' 删除导线'''
-    if not isinstance(source_pin, Pin) or not isinstance(target_pin, Pin):
-        raise TypeError
+    if not isinstance(source_pin, Pin):
+        errors.type_error(f"Parameter source_pin must be of type `Pin`, but got value {source_pin} of type `{type(source_pin).__name__}`")
+    if not isinstance(target_pin, Pin):
+        errors.type_error(f"Parameter target_pin must be of type `Pin`, but got value {target_pin} of type `{type(target_pin).__name__}`")
 
     _expe = get_current_experiment()
     if _expe.experiment_type != ExperimentType.Circuit:
@@ -217,10 +223,12 @@ class CircuitBase(ElementBase, metaclass=_CircuitMeta):
     @final
     def set_rotation(self, x_r: num_type = 0, y_r: num_type = 0, z_r: num_type = 180) -> Self:
         ''' 设置元件的角度 '''
-        if not isinstance(x_r, (int, float)) \
-                or not isinstance(y_r, (int, float)) \
-                or not isinstance(z_r, (int, float)):
-            raise TypeError
+        if not isinstance(x_r, (int, float)):
+            errors.type_error(f"Parameter x_r must be of type `int | float`, but got value {x_r} of type `{type(x_r).__name__}`")
+        if not isinstance(y_r, (int, float)):
+            errors.type_error(f"Parameter y_r must be of type `int | float`, but got value {y_r} of type `{type(y_r).__name__}`")
+        if not isinstance(z_r, (int, float)):
+            errors.type_error(f"Parameter z_r must be of type `int | float`, but got value {z_r} of type `{type(z_r).__name__}`")
 
         x_r, y_r, z_r = round_data(x_r), round_data(y_r), round_data(z_r)
         self.data["Rotation"] = f"{x_r},{z_r},{y_r}"
@@ -236,11 +244,14 @@ class CircuitBase(ElementBase, metaclass=_CircuitMeta):
     ) -> Self:
         ''' 设置元件的位置
         '''
-        if not isinstance(x, (int, float)) \
-                or not isinstance(y, (int, float)) \
-                or not isinstance(z, (int, float)) \
-                or not isinstance(elementXYZ, (bool, type(None))):
-            raise TypeError
+        if not isinstance(x, (int, float)):
+            errors.type_error(f"Parameter x must be of type `int | float`, but got value {x} of type `{type(x).__name__}`")
+        if not isinstance(y, (int, float)):
+            errors.type_error(f"Parameter y must be of type `int | float`, but got value {y} of type `{type(y).__name__}`")
+        if not isinstance(z, (int, float)):
+            errors.type_error(f"Parameter z must be of type `int | float`, but got value {z} of type `{type(z).__name__}`")
+        if not isinstance(elementXYZ, (bool, type(None))):
+            errors.type_error(f"Parameter elementXYZ must be of type `Optional[bool]`, but got value {elementXYZ} of type `{type(elementXYZ).__name__}`")
 
         x, y, z = round_data(x), round_data(y), round_data(z)
         self._position = _tools.position(x, y, z)
@@ -294,7 +305,7 @@ class CircuitBase(ElementBase, metaclass=_CircuitMeta):
             @param name: 将元件重命名为name
         '''
         if not isinstance(name, str):
-            raise TypeError
+            errors.type_error(f"Parameter name must be of type `str`, but got value {name} of type `{type(name).__name__}`")
 
         self.data["Label"] = name
         return self

@@ -455,13 +455,18 @@ class Simple_Instrument(CircuitBase):
             is_ideal: Optional[bool] = None,
             is_pulse: Optional[bool] = None,
     ) -> Self:
-        if not isinstance(rated_oltage, (int, float, type(None))) \
-                or not isinstance(volume, (int, float, type(None))) \
-                or not isinstance(bpm, (int, type(None))) \
-                or not isinstance(instrument, (int, type(None))) \
-                or not isinstance(is_ideal, (bool, type(None))) \
-                or not isinstance(is_pulse, (bool, type(None))):
-            raise TypeError
+        if not isinstance(rated_oltage, (int, float, type(None))):
+            errors.type_error(f"Parameter rated_oltage must be of type `Optional[int | float]`, but got value {rated_oltage} of type `{type(rated_oltage).__name__}`")
+        if not isinstance(volume, (int, float, type(None))):
+            errors.type_error(f"Parameter volume must be of type `Optional[int | float]`, but got value {volume} of type `{type(volume).__name__}`")
+        if not isinstance(bpm, (int, type(None))):
+            errors.type_error(f"Parameter bpm must be of type `Optional[int]`, but got value {bpm} of type `{type(bpm).__name__}`")
+        if not isinstance(instrument, (int, type(None))):
+            errors.type_error(f"Parameter instrument must be of type `Optional[int]`, but got value {instrument} of type `{type(instrument).__name__}`")
+        if not isinstance(is_ideal, (bool, type(None))):
+            errors.type_error(f"Parameter is_ideal must be of type `Optional[bool]`, but got value {is_ideal} of type `{type(is_ideal).__name__}`")
+        if not isinstance(is_pulse, (bool, type(None))):
+            errors.type_error(f"Parameter is_pulse must be of type `Optional[bool]`, but got value {is_pulse} of type `{type(is_pulse).__name__}`")
 
         if rated_oltage is not None:
             self.properties["额定电压"] = rated_oltage
