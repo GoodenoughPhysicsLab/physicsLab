@@ -33,6 +33,7 @@
 * v2.0.1: 承诺三大实验所有元件的类名会`stable`
 * v2.0.3: 承诺`class Experiment`会`stable`
 * v2.0.4: 承诺`class User, anonymous_login, email_login, token_login`会`stable`
+* Note: v2.0.4 将部分函数抛出TypeError的行为替换为了abort(), 因为我认为这个异常永远不应该被捕获。这是一个极小的breaking change但我认为有利于让physicsLab变得更好, 并且对使用者的影响微乎其微。
 
 ## 版本发布
 `physicsLab`的版本发布采取快照的方式, `physicsLab`仅会维护`trunk`

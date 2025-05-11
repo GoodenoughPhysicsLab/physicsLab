@@ -603,6 +603,7 @@ class Simple_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -665,6 +666,7 @@ class Push_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -715,6 +717,7 @@ class Air_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -777,6 +780,7 @@ class Incandescent_Lamp(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -827,6 +831,7 @@ class Battery_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -883,6 +888,7 @@ class Resistor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -933,6 +939,7 @@ class Fuse_Component(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -983,6 +990,7 @@ class Multimeter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1011,6 +1019,7 @@ class Basic_Capacitor(CircuitBase):
 @param is_ideal: 是否为理想模式  
 @param peak_voltage: 峰值电压, 单位为V  
 @param internal_resistance: 内阻, 单位为Ω  
+  
 
 ### get_all_pins_property
 ```Python
@@ -1037,6 +1046,7 @@ class Basic_Capacitor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1065,6 +1075,7 @@ class Basic_Inductor(CircuitBase):
 @param inductance: 电感，单位为 Henry  
 @param internal_resistance: 电感内部阻抗，单位为 Ohm  
 @param is_ideal: 是否为理想模式  
+  
 
 ### fix_inductance
 ```Python
@@ -1097,6 +1108,7 @@ class Basic_Inductor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1147,6 +1159,7 @@ class Basic_Diode(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1197,6 +1210,7 @@ class Light_Emitting_Diode(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1247,6 +1261,7 @@ class Current_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1297,6 +1312,7 @@ class Sinewave_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1347,6 +1363,7 @@ class Square_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1397,6 +1414,7 @@ class Triangle_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1447,6 +1465,7 @@ class Sawtooth_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1497,6 +1516,7 @@ class Pulse_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1547,6 +1567,7 @@ class Photodiode(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1597,6 +1618,7 @@ class Photoresistor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1647,6 +1669,7 @@ class Buzzer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1697,6 +1720,7 @@ class Spark_Gap(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1747,6 +1771,7 @@ class Tesla_Coil(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1797,6 +1822,7 @@ class Dual_Light_Emitting_Diode(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1847,6 +1873,7 @@ class Electric_Bell(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1897,6 +1924,7 @@ class Musical_Box(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1947,6 +1975,7 @@ class Electric_Fan(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -1997,6 +2026,7 @@ class Simple_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2065,6 +2095,7 @@ class SPDT_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### right_turn_on_switch
 ```Python
@@ -2133,6 +2164,7 @@ class DPDT_Switch(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### right_turn_on_switch
 ```Python
@@ -2195,6 +2227,7 @@ class Student_Source(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2245,6 +2278,7 @@ class Slide_Rheostat(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2295,6 +2329,7 @@ class Galvanometer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2345,6 +2380,7 @@ class Microammeter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2395,6 +2431,7 @@ class Electricity_Meter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2445,6 +2482,7 @@ class Resistance_Box(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2495,6 +2533,7 @@ class Simple_Ammeter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2545,6 +2584,7 @@ class Simple_Voltmeter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2595,6 +2635,7 @@ class Logic_Input(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2645,6 +2686,7 @@ class Logic_Output(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2695,6 +2737,7 @@ class Yes_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2745,6 +2788,7 @@ class No_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2795,6 +2839,7 @@ class Or_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2845,6 +2890,7 @@ class And_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2895,6 +2941,7 @@ class Nor_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2945,6 +2992,7 @@ class Nand_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -2995,6 +3043,7 @@ class Xor_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3045,6 +3094,7 @@ class Xnor_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3095,6 +3145,7 @@ class Imp_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3145,6 +3196,7 @@ class Nimp_Gate(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3195,6 +3247,7 @@ class Half_Adder(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3245,6 +3298,7 @@ class Full_Adder(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3295,6 +3349,7 @@ class Half_Subtractor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3345,6 +3400,7 @@ class Full_Subtractor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3395,6 +3451,7 @@ class Multiplier(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3445,6 +3502,7 @@ class D_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3495,6 +3553,7 @@ class T_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3545,6 +3604,7 @@ class Real_T_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3595,6 +3655,7 @@ class JK_Flipflop(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3645,6 +3706,7 @@ class Counter(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3695,6 +3757,7 @@ class Random_Generator(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3745,6 +3808,7 @@ class Eight_Bit_Input(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_num
 ```Python
@@ -3800,6 +3864,7 @@ class Eight_Bit_Display(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3850,6 +3915,7 @@ class Proximity_Sensor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3900,6 +3966,7 @@ class Schmitt_Trigger(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -3950,6 +4017,7 @@ class NE555(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4000,6 +4068,7 @@ class Ground_Component(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4050,6 +4119,7 @@ class Transformer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4100,6 +4170,7 @@ class Tapped_Transformer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4150,6 +4221,7 @@ class Mutual_Inductor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4200,6 +4272,7 @@ class Rectifier(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4250,6 +4323,7 @@ class Transistor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4300,6 +4374,7 @@ class Comparator(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4327,6 +4402,7 @@ class Operational_Amplifier(CircuitBase):
 @param gain: 增益系数  
 @param max_voltage: 最大电压  
 @param min_voltage: 最小电压  
+  
 
 ### get_all_pins_property
 ```Python
@@ -4353,6 +4429,7 @@ class Operational_Amplifier(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4403,6 +4480,7 @@ class Relay_Component(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4453,6 +4531,7 @@ class N_MOSFET(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4503,6 +4582,7 @@ class P_MOSFET(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4553,6 +4633,7 @@ class Accelerometer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4603,6 +4684,7 @@ class Attitude_Sensor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4653,6 +4735,7 @@ class Gravity_Sensor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4703,6 +4786,7 @@ class Gyroscope(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4753,6 +4837,7 @@ class Linear_Accelerometer(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4803,6 +4888,7 @@ class Magnetic_Field_Sensor(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4853,6 +4939,7 @@ class Analog_Joystick(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4903,6 +4990,7 @@ class Color_Light_Emitting_Diode(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -4953,6 +5041,7 @@ class Resistance_Law(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5003,6 +5092,7 @@ class Solenoid(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5034,6 +5124,7 @@ class Simple_Instrument(CircuitBase):
 @param bpm: 节奏  
 @param is_ideal: 是否为理想模式  
 @param is_pulse: 简单乐器是否只响一次  
+  
 
 ### get_all_pins_property
 ```Python
@@ -5060,6 +5151,7 @@ class Simple_Instrument(CircuitBase):
 ```
 重命名元件  
 @param name: 将元件重命名为name  
+  
 
 ### set_position
 ```Python
@@ -5090,6 +5182,7 @@ rising_falling = True 时，为升调，为 False 时降调
 输入范围：  
 C0 ~ C8  
 注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120  
+  
 
 ### zh_name
 ```Python
