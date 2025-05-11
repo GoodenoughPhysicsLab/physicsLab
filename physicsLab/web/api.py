@@ -211,6 +211,8 @@ class User(_User):
         return await _async_wrapper(self.unban, target_id, reason)
 
 def anonymous_login() -> User:
+    ''' 匿名登录物实
+    '''
     plar_version = plAR.get_plAR_version()
     if plar_version is not None:
         plar_version = int(f"{plar_version[0]}{plar_version[1]}{plar_version[2]}")
@@ -236,10 +238,12 @@ def anonymous_login() -> User:
     return User(_check_response(response))
 
 def email_login(email: str, password: str) -> User:
+    ''' 通过邮箱登录物实
+    '''
     if not isinstance(email, str):
-        raise TypeError(f"Parameter email must be of type `str`, but got {type(email).__name__}")
+        errors.type_error(f"Parameter email must be of type `str`, but got value {email} of type `{type(email).__name__}`")
     if not isinstance(password, str):
-        raise TypeError(f"Parameter password must be of type `str`, but got {type(password).__name__}")
+        errors.type_error(f"Parameter password must be of type `str`, but got value {password} of type `{type(password).__name__}`")
 
     plar_version = plAR.get_plAR_version()
     if plar_version is not None:
@@ -266,10 +270,12 @@ def email_login(email: str, password: str) -> User:
     return User(_check_response(response))
 
 def token_login(token: str, auth_code: str) -> User:
+    ''' 通过token登录物实
+    '''
     if not isinstance(token, str):
-        raise TypeError(f"Parameter email must be of type `str`, but got {type(token).__name__}")
+        errors.type_error(f"Parameter email must be of type `str`, but got value {token} of type `{type(token).__name__}`")
     if not isinstance(auth_code, str):
-        raise TypeError(f"Parameter password must be of type `str`, but got {type(auth_code).__name__}")
+        errors.type_error(f"Parameter password must be of type `str`, but got value {auth_code} of type `{type(auth_code).__name__}`")
 
     plar_version = plAR.get_plAR_version()
     if plar_version is not None:

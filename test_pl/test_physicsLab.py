@@ -446,7 +446,7 @@ class BasicTest(TestCase, ViztracerTool):
         music.Note(2)
         try:
             music.Note(0)
-        except TypeError: # TODO 应该改为ValueError
+        except ValueError:
             pass
         else:
             raise TestFail

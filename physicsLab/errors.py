@@ -6,13 +6,13 @@
 
     * 不可恢复的错误:
         当某些错误发生的时候, physicsLab认为程序抽象机已经崩溃, 无法继续运行
+        也就是说, 当该错误发生时, 仅表明程序出现了bug, 因此坚决不给用户捕获异常的可能
         因此一旦这些错误发生, physicsLab会调用os.abort来终止程序, 而不是抛出一个异常
-        因为抽象机崩溃的情况下, 程序已经无法继续运行, 最需要的是修bug, 因此坚决不给用户捕获异常的可能
         被视为 不可恢复的错误 的有:
         * assertion_error: 断言错误, physicsLab认为其为不可恢复的错误, 因此请不要使用 AssertionError
         * type_error: 断言错误, physicsLab认为其为不可恢复的错误, 因此请不要使用 TypeError
         除此之外, physicsLab自定义了不可恢复错误发生时的打印输出格式
-        这些格式比Python的traceback可读性更好
+        这些格式比Python自带的traceback可读性更好
 '''
 
 import os

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from physicsLab import errors
 from .._circuit_core import _TwoPinMixIn, CircuitBase, Pin
 from physicsLab._core import _Experiment
 from .logicCircuit import _LogicBase
@@ -51,7 +52,7 @@ class _MemsBase(CircuitBase):
     @final
     def ranges(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
-            raise TypeError(f"ranges must be of type `int | float`, but got {type(value).__name__}")
+            errors.type_error(f"ranges must be of type `int | float`, but got value {value} of type `{type(value).__name__}`")
 
         self.properties["量程"] = value
         return value
@@ -69,7 +70,7 @@ class _MemsBase(CircuitBase):
     @final
     def shifting(self, value: num_type) -> num_type:
         if not isinstance(value, (int, float)):
-            raise TypeError(f"shifting must be of type `int | float`, but got {type(valure).__name__}")
+            errors.type_error(f"shifting must be of type `int | float`, but got value {value} of type `{type(value).__name__}`")
 
         self.properties["偏移"] = value
         return value
@@ -87,7 +88,7 @@ class _MemsBase(CircuitBase):
         ''' 响应系数
         '''
         if not isinstance(value, (int, float)):
-            raise TypeError(f"response_factor must be of type `int | float`, but got {type(value).__name__}")
+            errors.type_error(f"response_factor must be of type `int | float`, but got value {value} of type `{type(value).__name__}`")
 
         self.properties["响应系数"] = value
         return value

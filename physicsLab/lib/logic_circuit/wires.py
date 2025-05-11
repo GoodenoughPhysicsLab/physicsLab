@@ -23,13 +23,13 @@ class UnitPin:
     def __getitem__(self, item: slice) -> "UnitPin":
         ...
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: Union[int, slice]):
         if isinstance(item, int):
             return self.pins[item]
         elif isinstance(item, slice):
             return UnitPin(self.lib_self, *self.pins[item])
         else:
-            raise TypeError
+            errors.type_error(f"Parameter item must be of type `int | slice`, but got value {item} of type `{type(item).__name__}`")
 
     def __iter__(self):
         return iter(self.pins)

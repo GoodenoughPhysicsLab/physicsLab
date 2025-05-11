@@ -394,8 +394,10 @@ class Note:
                 isinstance(instrument, int) and
                 isinstance(velocity, (int, float)) and 0 < velocity <= 1 and
                 (rising_falling is None or isinstance(rising_falling, bool))
-        ) or time <= 0:
+        ):
             raise TypeError
+        if time <= 0:
+            raise ValueError
 
         if isinstance(pitch, int):
             if not 0 < pitch <= 128:
