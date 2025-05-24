@@ -8,7 +8,7 @@ from physicsLab import web
 if not os.path.exists("images") or not os.path.isdir("images"):
     os.mkdir("images")
 
-user = web.User(
+user = web.token_login(
     token="tGTf8gbQBR9P0ZnWhSILjJ5oF6UOkVdm",
     auth_code="xJwcHC7oOnlSdzUTh9NDZ0t1Q32MjPyB",
 )
