@@ -268,3 +268,4 @@
 
 # 2.0.5
 1. 增加`__version__`
+2. 修复`NotificationsIter`无法及时退出的bug
