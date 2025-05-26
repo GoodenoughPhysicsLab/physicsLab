@@ -11,7 +11,8 @@ from physicsLab._typing import List, Callable, Self, Any
 
 class CanceledError(Exception):
     ''' Task have been canceled '''
-    pass
+    def __repr__(self) -> str:
+        return "Task have been canceled"
 
 class _EndOfQueue:
     def __new__(cls):
@@ -61,7 +62,7 @@ class ThreadPool:
         self.task_queue = queue.SimpleQueue()
         self.threads: List[Thread] = []
 
-    def _office(self):
+    def _office(self) -> None:
         ''' workers work here '''
         while True:
             try:
@@ -99,6 +100,22 @@ class ThreadPool:
         ''' users should call this method after all tasks are submitted
         '''
         self.task_queue.put_nowait(_EndOfQueue)
+
+    def cancel_all_pending_tasks(self) -> None:
+        ''' cancel all pending tasks
+        '''
+        while True:
+            try:
+                task = self.task_queue.get_nowait()
+            except queue.Empty:
+                break
+
+            if task.status == _Status.wait:
+                task.status = _Status.cancelled
+            else:
+                raise AssertionError("Please file a bug report")
+
+        self.submit_end()
 
     def wait(self) -> None:
         ''' blocking until all tasks are done

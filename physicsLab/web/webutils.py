@@ -110,7 +110,7 @@ class NotificationsIter:
                     msgs = tasks.pop(0).result()["Data"]["Messages"]
                     yield from msgs
                     if len(msgs) < abs(self.TAKE_AMOUNT):
-                        executor.submit_end()
+                        executor.cancel_all_pending_tasks()
                         break
 
 class ExperimentsIter:
