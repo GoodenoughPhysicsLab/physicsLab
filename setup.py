@@ -1,9 +1,16 @@
 # -*- coding: utf-8 -*-
+import os
+import sys
 import setuptools
+
+physicsLab_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "physicsLab")
+sys.path.append(physicsLab_dir)
+
+import physicsLab_version as v
 
 setuptools.setup(
     name="physicsLab",
-    version="2.0.4",
+    version=str(v.__version__),
     license="MIT",
     author="Arendelle",
     author_email="2381642961@qq.com",

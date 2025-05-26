@@ -267,3 +267,4 @@
 4. 移除`close_color_print`, _colorUtils为内部模块, 在外部请谨慎使用
 
 # 2.0.5
+1. 增加`__version__`

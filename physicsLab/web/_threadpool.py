@@ -7,6 +7,7 @@
 import queue
 from threading import Thread
 from enum import Enum, unique
+from physicsLab import errors
 from physicsLab._typing import List, Callable, Self, Any
 
 class CanceledError(Exception):
@@ -54,7 +55,7 @@ class ThreadPool:
         ''' @param max_workers: 最大线程数
         '''
         if not isinstance(max_workers, int):
-            raise TypeError
+            errors.type_error(f"Parameter `max_workers` must be of type `int`, but got value `{max_workers}` of type `{type(max_workers).__name__}`")
         if max_workers <= 0:
             raise ValueError
 
@@ -85,7 +86,7 @@ class ThreadPool:
             @param func: function to be submitted
         '''
         if not callable(func):
-            raise TypeError
+            errors.type_error(f"Parameter func must be of `callable`, but got value {func} of type `{type(func)}`")
 
         task = _Task(func, args, kwargs)
         self.task_queue.put_nowait(task)
@@ -113,7 +114,7 @@ class ThreadPool:
             if task.status == _Status.wait:
                 task.status = _Status.cancelled
             else:
-                raise AssertionError("Please file a bug report")
+                errors.unreachable()
 
         self.submit_end()
 

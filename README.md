@@ -27,13 +27,14 @@
 * 大多数物实网络api封装的支持 (直接与物实服务器进行交互)
 
 ## 稳定&兼容
-自版本`2.0.0`及之后, `physicsLab`会逐步增加兼容的考虑与支持。宣布`stable`的api将永远不会移除, 行为几乎不会改变, 除非物实更改了一些api的行为导致physicsLab的底层api的行为被迫发生改变或者更改几乎没有任何影响。
+自版本`2.0.0`及之后, `physicsLab`会逐步增加兼容的考虑与支持。承诺`stable`的api将永远不会移除, 行为几乎不会改变, 除非物实更改了一些api的行为导致physicsLab的底层api的行为被迫发生改变或者更改几乎没有任何影响。
 
 * v2.0.0: 承诺`ExperimentOpenedError, ExperimentClosedError, ExperimentExistError, ExperimentNotExistError`会`stable`
 * v2.0.1: 承诺三大实验所有元件的类名会`stable`
 * v2.0.3: 承诺`class Experiment`会`stable`
 * v2.0.4: 承诺`class User, anonymous_login, email_login, token_login`会`stable`
 * Note: v2.0.4 将部分函数抛出TypeError的行为替换为了abort(), 因为我认为这个异常永远不应该被捕获。这是一个极小的breaking change但我认为有利于让physicsLab变得更好, 并且对使用者的影响微乎其微。
+* v2.0.5: 承诺`__version__`会`stable`
 
 ## 版本发布
 `physicsLab`的版本发布采取快照的方式, `physicsLab`仅会维护`trunk`

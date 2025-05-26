@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 ''' Python API for Physics-Lab-AR '''
 
+from .physicsLab_version import __version__
 # 操作实验
 from .element import search_experiment, Experiment
 from ._core import (
