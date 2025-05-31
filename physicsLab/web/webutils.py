@@ -307,6 +307,8 @@ class CommentsIter:
         ''' @param user: 执行查询操作的用户
             @param content_id: 用户id或实验id
             @param category: 只能为 "User" 或 "Experiment" 或 "Discussion"
+            @param start_time: 起始查询评论的时间, 默认是最新的评论往下遍历到最后一条评论
+            @param: max_retry: 网络请求失败时重试的次数
         '''
         if not isinstance(user, _User):
             errors.type_error(f"Parameter `user` must be of type `User`, but got value `{user}` of type `{type(user).__name__}`")
@@ -314,6 +316,8 @@ class CommentsIter:
             errors.type_error(f"Parameter `content_id` must be of type `str`, but got value `{content_id}` of type `{type(content_id).__name__}`")
         if not isinstance(category, str):
             errors.type_error(f"Parameter `category` must be of type `str`, but got value `{category}` of type `{type(category).__name__}`")
+        if not isinstance(start_time, (int, float)):
+            errors.type_error(f"Parameter `start_time` must be of type `int | float`, but got value `{start_time}` of type `{type(start_time).__name__}`")
         if not isinstance(max_retry, (int, type(None))):
             errors.type_error(f"Parameter `max_retry` must be of type `Optional[int]`, but got value `{max_retry}` of type `{type(max_retry).__name__}`")
         if category not in ("User", "Experiment", "Discussion"):
@@ -324,7 +328,7 @@ class CommentsIter:
         self.user = user
         self.content_id = content_id
         self.category = category
-        self.start_time = start_time * 1000
+        self.start_time = int(start_time * 1000)
         self.max_retry = max_retry
 
     def __iter__(self):
