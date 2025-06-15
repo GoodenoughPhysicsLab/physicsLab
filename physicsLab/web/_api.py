@@ -77,7 +77,7 @@ def get_avatar(target_id: str, index: int, category: str, size_category: str) ->
         errors.unreachable()
 
     response = requests.get(
-        f"http://physics-static-cn.turtlesim.com:80/{category}"
+        f"https://physics-static-cn.turtlesim.com:80/{category}"
         f"/{target_id[0:4]}/{target_id[4:6]}/{target_id[6:8]}/{target_id[8:]}/{index}.jpg!{size_category}",
     )
 
@@ -196,7 +196,7 @@ class _User:
             _exclude_tags = [tag.value for tag in exclude_tags]
 
         response = requests.post(
-            "http://physics-api-cn.turtlesim.com/Contents/QueryExperiments",
+            "https://physics-api-cn.turtlesim.com/Contents/QueryExperiments",
             json={
                 "Query": {
                     "Category": category.value,
