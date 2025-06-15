@@ -77,7 +77,7 @@ def get_avatar(target_id: str, index: int, category: str, size_category: str) ->
         errors.unreachable()
 
     response = requests.get(
-        f"https://physics-static-cn.turtlesim.com:80/{category}"
+        f"https://physics-static-cn.turtlesim.com:443/{category}"
         f"/{target_id[0:4]}/{target_id[4:6]}/{target_id[6:8]}/{target_id[8:]}/{index}.jpg!{size_category}",
     )
 
