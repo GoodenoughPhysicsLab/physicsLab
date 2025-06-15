@@ -49,12 +49,13 @@ def get_start_page() -> _api_result:
 
     return _check_response(response)
 
-def get_avatar(target_id: str, index: int, category: str, size_category: str) -> bytes:
+def get_avatar(target_id: str, index: int, category: str, size_category: str, usehttps: bool = False) -> bytes:
     ''' 获取头像/实验封面
         @param target_id: 用户id或实验id
         @param index: 历史图片的索引
         @param category: 只能为 "experiments" 或 "users"
         @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
+        @param usehttps: 是否使用HTTPS协议，由于证书和域名不匹配，所以如果使用，则不会验证证书
     '''
     if not isinstance(target_id, str):
         errors.type_error(f"Parameter `target_id` must be of type `str`, but got value `{target_id}` of type `{type(target_id).__name__}`")
@@ -64,6 +65,8 @@ def get_avatar(target_id: str, index: int, category: str, size_category: str) ->
         errors.type_error(f"Parameter `category` must be of type `str`, but got value `{category}` of type `{type(category).__name__}`")
     if not isinstance(size_category, str):
         errors.type_error(f"Parameter `size_category` must be of type `str`, but got value `{size_category}` of type `{type(size_category).__name__}`")
+    if not isinstance(usehttps, bool):
+        errors.type_error(f"Parameter `usehttps` must be of type `bool`, but got value `{usehttps}` of type `{type(usehttps).__name__}`")
     if category not in ("experiments", "users"):
         raise ValueError(f"Parameter `category` must be one of ['experiments', 'users'], but got value `{category} of type '{category}'")
     if size_category not in ("small.round", "thumbnail", "full"):
@@ -76,10 +79,16 @@ def get_avatar(target_id: str, index: int, category: str, size_category: str) ->
     else:
         errors.unreachable()
 
-    response = requests.get(
-        f"http://physics-static-cn.turtlesim.com:80/{category}"
-        f"/{target_id[0:4]}/{target_id[4:6]}/{target_id[6:8]}/{target_id[8:]}/{index}.jpg!{size_category}",
-    )
+    protocol = "https" if usehttps else "http"
+    port = "443" if usehttps else "80"
+    
+    url = f"{protocol}://physics-static-cn.turtlesim.com:{port}/{category}" \
+          f"/{target_id[0:4]}/{target_id[4:6]}/{target_id[6:8]}/{target_id[8:]}/{index}.jpg!{size_category}"
+    
+    if usehttps:
+        response = requests.get(url, verify=False)
+    else:
+        response = requests.get(url)
 
     if b'<Error>' in response.content:
         raise IndexError("avatar not found")
