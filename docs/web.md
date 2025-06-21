@@ -12,7 +12,7 @@ user = anonymous_login()
 * 通过邮箱密码登录:
 ```python
 from physicsLab import web
-user = web.email(YOUR_EMAIL, YOUR_PASSWORD)
+user = web.email_login(YOUR_EMAIL, YOUR_PASSWORD)
 ```
 
 * 通过`Token`, `AuthCode`登录:
