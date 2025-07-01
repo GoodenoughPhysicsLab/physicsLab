@@ -76,7 +76,7 @@ class Decoder:
                 or not isinstance(elementXYZ, (bool, type(None))) \
                 or not isinstance(bitnum, int):
             raise TypeError
-        if bitnum <= 1:
+        if bitnum < 1:
             raise ValueError
 
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
@@ -120,8 +120,8 @@ class Decoder:
         return UnitPin(self, *self._inputs)
 
     @property
-    def outputs(self) -> Pin:
-        return self._outputs
+    def outputs(self) -> UnitPin:
+        return UnitPin(self,*self._outputs)
 
 class Switched_Register:
     ''' 可以在两列输入中切换的寄存器
