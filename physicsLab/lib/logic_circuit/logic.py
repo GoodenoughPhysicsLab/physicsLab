@@ -20,11 +20,16 @@ class TwoFour_Decoder:
             /, *,
             elementXYZ: Optional[bool] = None,
     ) -> None:
-        if not isinstance(x, (int, float)) \
-                or not isinstance(y, (int, float)) \
-                or not isinstance(z, (int, float)) \
-                or not isinstance(elementXYZ, (bool, type(None))):
-            raise TypeError
+        if not isinstance(x, (int, float)):
+            errors.type_error(f"Parameter `x` must be of type `int | float`, but got value `{x}` of type `{type(x).__name__}`")
+        if not isinstance(y, (int, float)):
+            errors.type_error(f"Parameter `y` must be of type `int | float`, but got value `{y}` of type `{type(y).__name__}`")
+        if not isinstance(z, (int, float)):
+            errors.type_error(f"Parameter `z` must be of type `int | float`, but got value `{z}` of type `{type(z).__name__}`")
+        if not isinstance(elementXYZ, (bool, type(None))):
+            errors.type_error(f"Parameter `elementXYZ` must be of type `Optional[bool]`, but got value `{elementXYZ}` of type `{type(elementXYZ).__name__}`")
+        if not isinstance(bitnum, int):
+            errors.type_error(f"Parameter `bitnum` must be of type `int`, but got value `{bitnum}` of type `{type(bitnum).__name__}`")
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = native_to_elementXYZ(x, y, z)
