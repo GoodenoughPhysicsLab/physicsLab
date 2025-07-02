@@ -640,10 +640,10 @@ class BasicTest(TestCase, ViztracerTool):
             expe.close(delete=True)
 
     @my_test_dec
-    def test_two_four_decoder(self):
-        with Experiment(OpenMode.crt, "__test___two_four_decoder__", ExperimentType.Circuit, force_crt=True) as expe:
+    def test_decoder(self):
+        with Experiment(OpenMode.crt, "__test___decoder__", ExperimentType.Circuit, force_crt=True) as expe:
             i = lib.Inputs(-1, 0, 0, bitnum=2)
-            decoder = lib.TwoFour_Decoder(0, 0, 0)
+            decoder = lib.Decoder(0, 0, 0, bitnum=2)
             o = lib.Outputs(1, 0, 0, bitnum=4)
             lib.crt_wires(i.outputs, decoder.inputs)
             lib.crt_wires(decoder.outputs, o.inputs)
