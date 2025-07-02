@@ -40,24 +40,16 @@ class TwoFour_Decoder:
         crt_wires(self.nor_gate.i_low, self.nimp_gate1.i_up)
         crt_wires(self.nimp_gate1.i_up, self.nimp_gate2.i_low)
         crt_wires(self.nimp_gate2.i_low, self.and_gate.i_low)
+        self._inputs = [self.nor_gate.i_low, self.and_gate.i_up]
+        self._outputs = [self.nor_gate.o, self.nimp_gate1.o, self.nimp_gate2.o, self.and_gate.o,]
 
     @property
     def inputs(self) -> UnitPin:
-        return UnitPin(
-            self,
-            self.nor_gate.i_low,
-            self.and_gate.i_up,
-        )
+        return UnitPin(self,*self._inputs)
 
     @property
     def outputs(self) -> UnitPin:
-        return UnitPin(
-            self,
-            self.nor_gate.o,
-            self.nimp_gate1.o,
-            self.nimp_gate2.o,
-            self.and_gate.o,
-        )
+        return UnitPin(self, self._outputs)
 
 class Decoder:
     ''' 任意bit译码器 '''
@@ -88,12 +80,31 @@ class Decoder:
         if bitnum==1:
             m=elements.No_Gate(x,y,z,elementXYZ=True)
             self._inputs=[m.i]
-            self._outputs=[m.i,m.o]
+            self._outputs=[m.o,m.i]
+            return
+        if bitnum==2:
+            m=TwoFour_Decoder(x,y,z,elementXYZ=True)
+            self._inputs=m._inputs
+            self._outputs=m._outputs
             return
         self._inputs = []
         self._outputs = []
         div_num,mod_num=divmod(bitnum,2)
         if mod_num==0:
+            sub_1=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
+            sub_2=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
+            And_Gates=[elements.Multiplier(x,y,z,elementXYZ=True) for _ in range(2**(2*div_num-1))]
+            self._inputs=sub_2._inputs+sub_1._inputs
+            for a in range(2**(div_num-1)):
+                for b in range(2**div_num):
+                    crt_wires(sub_1._outputs[a],And_Gates[a*2**div_num+b].i_up)
+                    crt_wires(sub_2._outputs[b],And_Gates[a*2**div_num+b].i_lowmid)
+                    crt_wires(sub_1._outputs[a+2**(div_num-1)],And_Gates[a*2**div_num+b].i_upmid)
+                    crt_wires(sub_2._outputs[b],And_Gates[a*2**div_num+b].i_low)
+            self._outputs = [and_gate.o_upmid for and_gate in And_Gates] + \
+                            [and_gate.o_low for and_gate in And_Gates]
+            # Old Method
+            '''
             And_Gates=[[elements.And_Gate(x,y,z,elementXYZ=True) for a in range(2**div_num)] for b in range(2**div_num)]
             l1=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
             l2=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
@@ -103,16 +114,35 @@ class Decoder:
                     crt_wires(l1._outputs[a],And_Gates[a][b].i_low)
                     crt_wires(l2._outputs[b],And_Gates[a][b].i_up)
             self._outputs=[and_gate.o for and_gates in And_Gates for and_gate in and_gates] # Expand 2D list
+            '''
         elif mod_num==1:
-            And_Gates=[[elements.And_Gate(x,y,z,elementXYZ=True) for b in range(2**(div_num+1))] for a in range(2**div_num)]
-            l1=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
-            l2=Decoder(x,y,z,bitnum=div_num+1,elementXYZ=True)
-            self._inputs=l1._inputs+l2._inputs
-            for a in range(2**div_num):
-                for b in range(2**(div_num+1)):
-                    crt_wires(l1._outputs[a],And_Gates[a][b].i_low)
-                    crt_wires(l2._outputs[b],And_Gates[a][b].i_up)
-            self._outputs=[and_gate.o for and_gates in And_Gates for and_gate in and_gates] # Expand 2D list
+            sub_1=Decoder(x,y,z,bitnum=div_num+1,elementXYZ=True)
+            sub_2=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
+            And_Gates=[elements.Multiplier(x,y,z,elementXYZ=True) for _ in range(2**(2*div_num))]
+            # self._inputs=sub_2._inputs+sub_1._inputs
+            self._inputs=sub_2._inputs+sub_1._inputs
+            for a in range(2**(div_num)):
+                for b in range(2**div_num):
+                    crt_wires(sub_1._outputs[a],And_Gates[a*2**div_num+b].i_up)
+                    crt_wires(sub_2._outputs[b],And_Gates[a*2**div_num+b].i_lowmid)
+                    crt_wires(sub_1._outputs[a+2**div_num],And_Gates[a*2**div_num+b].i_upmid)
+                    crt_wires(sub_2._outputs[b],And_Gates[a*2**div_num+b].i_low)
+            self._outputs = [and_gate.o_upmid for and_gate in And_Gates] + \
+                            [and_gate.o_low for and_gate in And_Gates]
+            # Old Method
+            '''
+            # self._outputs = [and_gate.o_low for and_gate in And_Gates] + \
+            #                 [and_gate.o_upmid for and_gate in And_Gates]
+            # And_Gates=[[elements.And_Gate(x,y,z,elementXYZ=True) for b in range(2**(div_num+1))] for a in range(2**div_num)]
+            # l1=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
+            # l2=Decoder(x,y,z,bitnum=div_num+1,elementXYZ=True)
+            # self._inputs=l1._inputs+l2._inputs
+            # for a in range(2**div_num):
+            #     for b in range(2**(div_num+1)):
+            #         crt_wires(l1._outputs[a],And_Gates[a][b].i_low)
+            #         crt_wires(l2._outputs[b],And_Gates[a][b].i_up)
+            # self._outputs=[and_gate.o for and_gates in And_Gates for and_gate in and_gates] # Expand 2D list
+            '''
         else:
             errors.unreachable()
     @property
