@@ -20,16 +20,11 @@ class TwoFour_Decoder:
             /, *,
             elementXYZ: Optional[bool] = None,
     ) -> None:
-        if not isinstance(x, (int, float)):
-            errors.type_error(f"Parameter `x` must be of type `int | float`, but got value `{x}` of type `{type(x).__name__}`")
-        if not isinstance(y, (int, float)):
-            errors.type_error(f"Parameter `y` must be of type `int | float`, but got value `{y}` of type `{type(y).__name__}`")
-        if not isinstance(z, (int, float)):
-            errors.type_error(f"Parameter `z` must be of type `int | float`, but got value `{z}` of type `{type(z).__name__}`")
-        if not isinstance(elementXYZ, (bool, type(None))):
-            errors.type_error(f"Parameter `elementXYZ` must be of type `Optional[bool]`, but got value `{elementXYZ}` of type `{type(elementXYZ).__name__}`")
-        if not isinstance(bitnum, int):
-            errors.type_error(f"Parameter `bitnum` must be of type `int`, but got value `{bitnum}` of type `{type(bitnum).__name__}`")
+        if not isinstance(x, (int, float)) \
+                or not isinstance(y, (int, float)) \
+                or not isinstance(z, (int, float)) \
+                or not isinstance(elementXYZ, (bool, type(None))):
+            raise TypeError
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
             x, y, z = native_to_elementXYZ(x, y, z)
@@ -57,7 +52,6 @@ class TwoFour_Decoder:
         return UnitPin(self, *self._outputs)
 
 class Decoder:
-    ''' 任意bit译码器 '''
     def __init__(
             self,
             x: num_type,
@@ -66,13 +60,30 @@ class Decoder:
             /, *,
             bitnum: int,
             elementXYZ: Optional[bool] = None,
+            align_delays: bool = False,
     ) -> None:
-        if not isinstance(x, (int, float)) \
-                or not isinstance(y, (int, float)) \
-                or not isinstance(z, (int, float)) \
-                or not isinstance(elementXYZ, (bool, type(None))) \
-                or not isinstance(bitnum, int):
-            raise TypeError
+        """ 任意bit译码器
+
+        Args:
+            x: x坐标
+            y: y坐标
+            z: z坐标
+            bitnum: Decoder的输入引脚的个数
+            elementXYZ: True为元件坐标系, False为物实默认坐标系, None时跟随Experiment的设置
+            align_delays: 是否平衡输出信号的延时避免尖峰波出现(会导致电路元件数增加)
+        """
+        if not isinstance(x, (int, float)):
+            errors.type_error(f"Parameter `x` must be of type `int | float`, but got value `{x}` of type `{type(x).__name__}`")
+        if not isinstance(y, (int, float)):
+            errors.type_error(f"Parameter `y` must be of type `int | float`, but got value `{y}` of type `{type(y).__name__}`")
+        if not isinstance(z, (int, float)):
+            errors.type_error(f"Parameter `z` must be of type `int | float`, but got value `{z}` of type `{type(z).__name__}`")
+        if not isinstance(elementXYZ, (bool, type(None))):
+            errors.type_error(f"Parameter `elementXYZ` must be of type `Optional[bool]`, but got value `{elementXYZ}` of type `{type(elementXYZ).__name__}`")
+        if not isinstance(bitnum, int):
+            errors.type_error(f"Parameter `bitnum` must be of type `int`, but got value `{bitnum}` of type `{type(bitnum).__name__}`")
+        if not isinstance(align_delays, bool):
+            errors.type_error(f"Parameter `align_delays` must be of type `bool`, but got value `{align_delays}` of type `{type(align_delays).__name__}`")
         if bitnum < 1:
             raise ValueError
 
@@ -82,23 +93,28 @@ class Decoder:
         x, y, z = round_data(x), round_data(y), round_data(z)
 
         self.bitnum = bitnum
-        if bitnum==1:
-            m=elements.No_Gate(x,y,z,elementXYZ=True)
-            self._inputs=[m.i]
-            self._outputs=[m.o,m.i]
+        if bitnum == 1:
+            m = elements.No_Gate(x, y, z, elementXYZ=True)
+            self._inputs = [m.i]
+            if align_delays:
+                gate_for_delay = elements.Yes_Gate(x, y, z, elementXYZ=True)
+                crt_wires(m.i, gate_for_delay.i)
+                self._outputs(m.o, gate_for_delay.o)
+            else:
+                self._outputs = [m.o, m.i]
             return
-        if bitnum==2:
-            m=TwoFour_Decoder(x,y,z,elementXYZ=True)
-            self._inputs=m._inputs
-            self._outputs=m._outputs
+        if bitnum == 2:
+            m = TwoFour_Decoder(x, y, z, elementXYZ=True)
+            self._inputs = m._inputs
+            self._outputs = m._outputs
             return
         self._inputs = []
         self._outputs = []
-        div_num,mod_num=divmod(bitnum,2)
-        if mod_num==0:
-            sub_1=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
-            sub_2=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
-            And_Gates=[elements.Multiplier(x,y,z,elementXYZ=True) for _ in range(2**(2*div_num-1))]
+        div_num,mod_num = divmod(bitnum, 2)
+        if mod_num == 0:
+            sub_1 = Decoder(x, y, z, bitnum=div_num, elementXYZ=True)
+            sub_2 = Decoder(x, y, z, bitnum=div_num, elementXYZ=True)
+            And_Gates = [elements.Multiplier(x, y, z, elementXYZ=True) for _ in range(2 ** (2 * div_num - 1))]
             self._inputs=sub_2._inputs+sub_1._inputs
             for a in range(2**(div_num-1)):
                 for b in range(2**div_num):
@@ -108,19 +124,7 @@ class Decoder:
                     crt_wires(sub_2._outputs[b],And_Gates[a*2**div_num+b].i_low)
             self._outputs = [and_gate.o_upmid for and_gate in And_Gates] + \
                             [and_gate.o_low for and_gate in And_Gates]
-            # Old Method
-            '''
-            And_Gates=[[elements.And_Gate(x,y,z,elementXYZ=True) for a in range(2**div_num)] for b in range(2**div_num)]
-            l1=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
-            l2=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
-            self._inputs=l1._inputs+l2._inputs
-            for a in range(2**div_num):
-                for b in range(2**div_num):
-                    crt_wires(l1._outputs[a],And_Gates[a][b].i_low)
-                    crt_wires(l2._outputs[b],And_Gates[a][b].i_up)
-            self._outputs=[and_gate.o for and_gates in And_Gates for and_gate in and_gates] # Expand 2D list
-            '''
-        elif mod_num==1:
+        elif mod_num == 1:
             sub_1=Decoder(x,y,z,bitnum=div_num+1,elementXYZ=True)
             sub_2=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
             And_Gates=[elements.Multiplier(x,y,z,elementXYZ=True) for _ in range(2**(2*div_num))]
@@ -134,22 +138,9 @@ class Decoder:
                     crt_wires(sub_2._outputs[b],And_Gates[a*2**div_num+b].i_low)
             self._outputs = [and_gate.o_upmid for and_gate in And_Gates] + \
                             [and_gate.o_low for and_gate in And_Gates]
-            # Old Method
-            '''
-            # self._outputs = [and_gate.o_low for and_gate in And_Gates] + \
-            #                 [and_gate.o_upmid for and_gate in And_Gates]
-            # And_Gates=[[elements.And_Gate(x,y,z,elementXYZ=True) for b in range(2**(div_num+1))] for a in range(2**div_num)]
-            # l1=Decoder(x,y,z,bitnum=div_num,elementXYZ=True)
-            # l2=Decoder(x,y,z,bitnum=div_num+1,elementXYZ=True)
-            # self._inputs=l1._inputs+l2._inputs
-            # for a in range(2**div_num):
-            #     for b in range(2**(div_num+1)):
-            #         crt_wires(l1._outputs[a],And_Gates[a][b].i_low)
-            #         crt_wires(l2._outputs[b],And_Gates[a][b].i_up)
-            # self._outputs=[and_gate.o for and_gates in And_Gates for and_gate in and_gates] # Expand 2D list
-            '''
         else:
             errors.unreachable()
+
     @property
     def inputs(self) -> UnitPin:
         return UnitPin(self, *self._inputs)
