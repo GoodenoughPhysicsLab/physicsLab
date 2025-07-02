@@ -45,11 +45,11 @@ class TwoFour_Decoder:
 
     @property
     def inputs(self) -> UnitPin:
-        return UnitPin(self,*self._inputs)
+        return UnitPin(self, *self._inputs)
 
     @property
     def outputs(self) -> UnitPin:
-        return UnitPin(self, self._outputs)
+        return UnitPin(self, *self._outputs)
 
 class Decoder:
     ''' 任意bit译码器 '''
