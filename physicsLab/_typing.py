@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from typing import *
-from typing_extensions import *
+from .vendor.typing_extensions import *
 
 from physicsLab.savTemplate import Generate
 

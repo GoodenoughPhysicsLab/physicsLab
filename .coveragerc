@@ -1,6 +1,8 @@
 [run]
 source = physicsLab/
-omit = */mido/*
+omit = 
+    */mido/*
+    */vendor/*
 
 [report]
 show_missing = False

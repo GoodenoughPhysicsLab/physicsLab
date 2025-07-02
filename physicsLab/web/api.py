@@ -6,7 +6,7 @@ import sys
 import asyncio
 import functools
 import contextvars
-import requests
+from physicsLab.vendor import requests
 from ._api import _User, get_avatar, get_start_page, _check_response, _api_result
 from physicsLab import plAR
 from physicsLab import enums

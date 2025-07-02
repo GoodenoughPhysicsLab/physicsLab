@@ -3,7 +3,7 @@
 '''
 import time
 import urllib3
-import requests
+from physicsLab.vendor import requests
 
 from ._api import _User, get_avatar
 from ._threadpool import ThreadPool, _Task
