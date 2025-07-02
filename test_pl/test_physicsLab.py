@@ -652,6 +652,12 @@ class BasicTest(TestCase, ViztracerTool):
             expe.close(delete=True)
 
     @my_test_dec
+    def test_decoder2(self):
+        with Experiment(OpenMode.crt, "__test___decoder_2__", ExperimentType.Circuit, force_crt=True) as expe:
+            lib.Decoder(0, 0, 0, bitnum=5, align_delays=True)
+            self.assertEqual(expe.get_elements_count(), 30)
+
+    @my_test_dec
     def test_switched_register(self):
         with Experiment(OpenMode.crt, "__test__", ExperimentType.Circuit, force_crt=True) as expe:
             i1 = lib.Inputs(-1, 0, 0, bitnum=6)
