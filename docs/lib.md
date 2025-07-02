@@ -74,8 +74,8 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
     crt_wire(tick_counter.o, Logic_Output(0, 0, 0).i)
 ```
 
-## TowFour_Decoder
-2-4译码器
+## Decoder
+译码器
 
 引脚:
 * inputs
@@ -86,7 +86,7 @@ from physicsLab import *
 
 with Experiment(OpenMode.load_by_sav_name, "example"):
     i = lib.Inputs(-1, 0, 0, bitnum=2)
-    decoder = lib.TwoFour_Decoder(0, 0, 0)
+    decoder = lib.Decoder(0, 0, 0, bitnum=2)
     o = lib.Outputs(1, 0, 0, bitnum=4)
     lib.crt_wires(i.outputs, decoder.inputs)
     lib.crt_wires(decoder.outputs, o.inputs)
