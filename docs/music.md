@@ -1,12 +1,15 @@
 # music
+
 `physicsLab.music`本来是`physicsLab`的模块化电路的其中一个组成部分，不过由于其引入了`mido`这个依赖，所以我单独将其分离出来。
 
 `physicsLab`已自带轻量版的mido, 无需用户手动安装mido。
 
 ## 快速使用
+
 通常来说，music模块使用得最多的功能是将一个`midi`文件转化为一个对应的可以在物实运行的音乐电路。
 
 下面给出代码模板：
+
 ```Python
 from physicsLab import *
 
@@ -16,7 +19,8 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
 
 上面的示例代码打开或创建了一个名为`example`的存档  
 `max_notes`用来控制音乐电路的音符的数量，当`max_notes=None`时，physicsLab会将整首midi乐曲都给处理完。  
-`to_piece`还有一些其他的参数: 
+`to_piece`还有一些其他的参数：
+
 * `div_time`: 用来调控生成的音乐电路的节奏。其原理大概是这样的：一个midi文件的时长是固定的，physicsLab以`div_time`的时长为最小的单位，如果有一堆音符的播放时长在`div_time`内，那么这些音符会被处理为一个和弦；后面的音符会以同样的原理被处理为下一个音符/和弦，或者下下个，下下下个音符/和弦...  
 因此，div_time的值越小，对midi的处理就越精细，但随之而来的影响是乐曲的播放速度变慢。  
 * `is_optimize`: 为`False`时将不会把多个音符优化为和弦。
@@ -24,7 +28,9 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
 * `release`对应的三个参数分别是x, y, z，个人感觉这`-1, -1, 0`就已经很好用了，没必要修改。
 
 ## class Midi
+
 `Midi` 类是`Piece`与 *midi文件* 之间的桥梁
+
 ```Python
 from physicsLab import *
 
@@ -48,18 +54,24 @@ m.write_plpy() # 将文件以.pl.py的格式导出
 ```
 
 ### Midi.sound() # 播放midi
+
 我最推荐使用我为physicsLab专门写的二进制拓展：`plmidi`  
 下载plmidi:
+
 ```shell
 pip install plmidi
 ```
+
 但`pygame`也有播放midi的功能，你也可以下载pygame：
+
 ```shell
 pip install pygame
 ```
+
 如果上述两个package都不存在，那么physicsLab会尝试系统调用播放midi。  
 
 通过调用Midi的sound方法来播放midi：
+
 ```python
 from physicsLab import *
 
@@ -70,6 +82,7 @@ music.Midi("/your/path/of/midi").sound()
 请注意，`Note`, `Chord`, `Piece`为数据类（只用来存储数据），要转变为物实对应的电路结构需要使用`Piece.release()`方法
 
 ## class Note
+
 理论上，你也可以使用`Note`, `Chord`来手动编写一首音乐。
 
 `Note`是音符类  
@@ -80,16 +93,20 @@ music.Midi("/your/path/of/midi").sound()
 如果你要表示和弦，请使用`Chord`类
 
 ## class Chord
+
 `Chord(self, *notes: Note, time: int)`
+
 * `notes`: 一个音符的列表，列表中的音符将共同构成这个和弦
 * `time`: 和弦的time，其对Chord的作用与Note的time一致
 
 ## class Piece
+
 ```Piece```是乐曲类
 这是一个只用来保存数据的类，想要往里面存储音符必须是`Note`，如果是休止符则用`Rest_symbol`表示  
 初始化时支持传入`list`，但也支持`append`方法  
 将Piece类转换为可以在物实播放的电路，除了使用`Player(piece, x, y, z, elementXYZ)`的方法，也可以使用`piece.release(x, y, z, elementXYZ)`的方法，两者是等价的。  
 在`midi`中最容易碰到的是播放速度过慢或过快的问题，你可以调用`Piece().set_tempo(num)`来重新设置播放速度，`num`参数的含义是将原有的播放速度乘以num倍。
+
 ```Python
 from physicsLab import *
 
@@ -100,6 +117,7 @@ with Experiment(OpenMode.load_by_sav_name, "example"):
 ```
 
 ## class Simple_Instrument
+
 对应着物实中的简单乐器元件，上面的类都是对基于此类的封装
 
 可以修改`Simple_Instrument.pitches`来修改简单乐器对应的和弦
