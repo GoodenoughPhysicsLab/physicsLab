@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-''' 对Physics-Lab-AR(Quantam Physics)进行操作的API '''
+"""对Physics-Lab-AR(Quantam Physics)进行操作的API"""
 import os
 import json
 import platform
@@ -7,12 +7,15 @@ import platform
 from typing import Optional, Tuple
 
 if platform.system() == "Windows":
-    WIN_PLAR_HOME_DIR = f"{os.environ['USERPROFILE']}\\AppData\\LocalLow\\CIVITAS\\Quantum Physics"
+    WIN_PLAR_HOME_DIR = (
+        f"{os.environ['USERPROFILE']}\\AppData\\LocalLow\\CIVITAS\\Quantum Physics"
+    )
 
 _plar_version_mem: Optional[Tuple[int, int, int]] = None
 
+
 def get_plAR_version() -> Optional[Tuple[int, int, int]]:
-    ''' 获取物实版本 '''
+    """获取物实版本"""
     global _plar_version_mem
     if _plar_version_mem is not None:
         return _plar_version_mem
@@ -25,17 +28,20 @@ def get_plAR_version() -> Optional[Tuple[int, int, int]]:
         if len(a_dir) != 1:
             return None
 
-        a_file = os.path.join(WIN_PLAR_HOME_DIR, "Unity", a_dir[0], "Analytics", "values")
+        a_file = os.path.join(
+            WIN_PLAR_HOME_DIR, "Unity", a_dir[0], "Analytics", "values"
+        )
 
         with open(a_file) as f:
-            ver_str: str = json.load(f)['app_ver']
+            ver_str: str = json.load(f)["app_ver"]
         _plar_version_mem = eval(f"({ver_str.replace('.', ',')})")
         return _plar_version_mem
     except (json.decoder.JSONDecodeError, UnicodeDecodeError, FileNotFoundError):
         return None
 
+
 def get_plAR_path() -> Optional[str]:
-    ''' 获取物实路径 '''
+    """获取物实路径"""
     if platform.system() != "Windows":
         return None
 

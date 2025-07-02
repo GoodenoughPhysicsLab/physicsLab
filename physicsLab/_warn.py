@@ -4,8 +4,10 @@ import warnings
 from physicsLab import _colorUtils
 from physicsLab import _unwind
 
+
 class PhysicsLabWarning(Warning):
-    ''' physicsLab抛出的警告的类型 '''
+    """physicsLab抛出的警告的类型"""
+
 
 def _showwarning(message, category, filename, lineno, file=None, line=None):
     if category is PhysicsLabWarning:
@@ -15,7 +17,9 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
     else:
         warnings.showwarning(message, category, filename, lineno, file, line)
 
+
 warnings.showwarning = _showwarning
+
 
 def warning(msg: str):
     warnings.warn(msg, PhysicsLabWarning)

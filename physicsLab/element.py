@@ -17,20 +17,25 @@ from .enums import ExperimentType, Category, OpenMode, WireColor
 from ._core import _Experiment, _ExperimentStack, _check_not_closed, ElementBase
 from ._typing import num_type, Optional, Union, List, overload, Tuple, Self
 
+
 def _get_all_pl_sav() -> List[str]:
-    ''' 获取所有物实存档的文件名 '''
+    """获取所有物实存档的文件名"""
     savs = [i for i in os.walk(_Experiment.SAV_PATH_DIR)][0][-1]
-    return [aSav for aSav in savs if aSav.endswith('.sav')]
+    return [aSav for aSav in savs if aSav.endswith(".sav")]
+
 
 def _open_sav(sav_path) -> dict:
-    ''' 打开一个存档, 返回存档对应的dict
-        @param sav_path: 存档的绝对路径
-    '''
+    """打开一个存档, 返回存档对应的dict
+
+    Args:
+        sav_path: 存档的绝对路径
+    """
+
     def encode_sav(path: str, encoding: str) -> Optional[dict]:
         try:
             with open(path, encoding=encoding) as f:
-                d = json.loads(f.read().replace('\n', ''))
-        except (json.decoder.JSONDecodeError, UnicodeDecodeError): # 文件不是物实存档
+                d = json.loads(f.read().replace("\n", ""))
+        except (json.decoder.JSONDecodeError, UnicodeDecodeError):  # 文件不是物实存档
             return None
         else:
             return d
@@ -42,7 +47,7 @@ def _open_sav(sav_path) -> dict:
         return res
 
     try:
-        import chardet # type: ignore
+        import chardet
     except ImportError:
         for encoding in ("utf-8-sig", "gbk"):
             res = encode_sav(sav_path, encoding)
@@ -57,14 +62,17 @@ def _open_sav(sav_path) -> dict:
 
     raise errors.InvalidSavError
 
-def search_experiment(sav_name: str) -> Tuple[Optional[str], Optional[dict]]:
-    ''' 检测实验是否存在
-        @param sav_name: 存档名
 
-        若存在则返回存档对应的文件名, 若不存在则返回None
-    '''
+def search_experiment(sav_name: str) -> Tuple[Optional[str], Optional[dict]]:
+    """检测实验是否存在, 若存在则返回存档对应的文件名, 若不存在则返回None
+
+    Args:
+        sav_name: 存档名
+    """
     if not isinstance(sav_name, str):
-        errors.type_error(f"Parameter sav_name must be of type `str`, but got `{type(sav_name).__name__}`")
+        errors.type_error(
+            f"Parameter sav_name must be of type `str`, but got `{type(sav_name).__name__}`"
+        )
 
     for a_sav in _get_all_pl_sav():
         try:
@@ -76,58 +84,71 @@ def search_experiment(sav_name: str) -> Tuple[Optional[str], Optional[dict]]:
 
     return None, None
 
+
 class Experiment(_Experiment):
     _user: Optional[_User] = None
 
     @overload
     def __init__(self, open_mode: OpenMode, filepath: Union[str, pathlib.Path]) -> None:
-        ''' 根据存档对应的文件路径打开存档
-            @open_mode = OpenMode.load_by_filepath
-            @filepath: 存档对应的文件的完整路径
-        '''
+        """根据存档对应的文件路径打开存档
+
+        Args:
+            open_mode = OpenMode.load_by_filepath
+            filepath: 存档对应的文件的完整路径
+        """
 
     @overload
     def __init__(self, open_mode: OpenMode, sav_name: str) -> None:
-        ''' 根据存档名打开存档
-            @open_mode = OpenMode.load_by_sav_name
-            @sav_name: 存档的名字
-        '''
+        """根据存档名打开存档
+
+        Args:
+            open_mode = OpenMode.load_by_sav_name
+            sav_name: 存档的名字
+        """
 
     @overload
     def __init__(
-            self,
-            open_mode: OpenMode,
-            content_id: str,
-            category: Category,
-            /, *,
-            user: Optional[_User] = None,
+        self,
+        open_mode: OpenMode,
+        content_id: str,
+        category: Category,
+        /,
+        *,
+        user: Optional[_User] = None,
     ) -> None:
-        ''' 从物实服务器中获取存档
-            @open_mode = OpenMode.load_by_plar_app
-            @content_id: 物实 实验/讨论 的id
-            @category: 实验区还是黑洞区
-            @user: 执行获取实验操作的用户, 若未指定则会创建一个临时匿名用户执行该操作 (会导致程序变慢)
-        '''
+        """从物实服务器中获取存档
+
+        Args:
+            open_mode = OpenMode.load_by_plar_app
+            content_id: 物实 实验/讨论 的id
+            category: 实验区还是黑洞区
+            user: 执行获取实验操作的用户, 若未指定则会创建一个临时匿名用户执行该操作 (会导致程序变慢)
+        """
 
     @overload
     def __init__(
-            self,
-            open_mode: OpenMode,
-            sav_name: str,
-            experiment_type: ExperimentType,
-            /, *,
-            force_crt: bool = False,
+        self,
+        open_mode: OpenMode,
+        sav_name: str,
+        experiment_type: ExperimentType,
+        /,
+        *,
+        force_crt: bool = False,
     ) -> None:
-        ''' 创建一个新实验
-            @open_mode = OpenMode.crt
-            @sav_name: 存档的名字
-            @experiment_type: 实验类型
-            @force_crt: 强制创建一个实验, 若已存在则覆盖已有实验
-        '''
+        """创建一个新实验
+
+        Args:
+            open_mode = OpenMode.crt
+            sav_name: 存档的名字
+            experiment_type: 实验类型
+            force_crt: 强制创建一个实验, 若已存在则覆盖已有实验
+        """
 
     def __init__(self, open_mode: OpenMode, *args, **kwargs) -> None:
         if not isinstance(open_mode, OpenMode):
-            errors.type_error(f"Parameter open_mode must be of type `OpenMode`, but got `{type(open_mode).__name__}`")
+            errors.type_error(
+                f"Parameter open_mode must be of type `OpenMode`, but got `{type(open_mode).__name__}`"
+            )
 
         self.open_mode: OpenMode = open_mode
         # 通过坐标索引元件
@@ -141,22 +162,30 @@ class Experiment(_Experiment):
         # 导入self.Elements与self._element_position之后, 元件信息才被完全导入
         if open_mode == OpenMode.load_by_filepath:
             if len(kwargs) == 1:
-                errors.type_error(f"When open_mode is OpenMode.load_by_filepath, constructor is `def __init__(self, open_mode: OpenMode, filepath: str | pathlib.Path) -> None`, but an unexpected keyword argument is gotten: {list(kwargs.keys())[0]}={list(kwargs.values())[0]}")
+                errors.type_error(
+                    f"When open_mode is OpenMode.load_by_filepath, constructor is `def __init__(self, open_mode: OpenMode, filepath: str | pathlib.Path) -> None`, but an unexpected keyword argument is gotten: {list(kwargs.keys())[0]}={list(kwargs.values())[0]}"
+                )
             elif len(kwargs) != 0:
-                errors.type_error(f"When open_mode is OpenMode.load_by_filepath, constructor is `def __init__(self, open_mode: OpenMode, filepath: str | pathlib.Path) -> None`, but unexpected keyword arguments are gotten: {''.join(str(key) + '=' + str(value) + ' ' for key, value in kwargs.items())}")
+                errors.type_error(
+                    f"When open_mode is OpenMode.load_by_filepath, constructor is `def __init__(self, open_mode: OpenMode, filepath: str | pathlib.Path) -> None`, but unexpected keyword arguments are gotten: {''.join(str(key) + '=' + str(value) + ' ' for key, value in kwargs.items())}"
+                )
 
             if len(args) != 1:
-                errors.type_error(f"When open_mode is OpenMode.load_by_filepath, constructor is `def __init__(self, open_mode: OpenMode, filepath: str | pathlib.Path) -> None`, but got {len(args)} positional arguments")
+                errors.type_error(
+                    f"When open_mode is OpenMode.load_by_filepath, constructor is `def __init__(self, open_mode: OpenMode, filepath: str | pathlib.Path) -> None`, but got {len(args)} positional arguments"
+                )
             sav_name = args[0]
             if not isinstance(sav_name, (str, pathlib.Path)):
-                errors.type_error(f"sav_path must be of type `str | pathlib.Path`, but got `{type(sav_name).__name__}`")
+                errors.type_error(
+                    f"sav_path must be of type `str | pathlib.Path`, but got `{type(sav_name).__name__}`"
+                )
             if isinstance(sav_name, pathlib.Path):
                 sav_name = str(sav_name)
 
             self.SAV_PATH = os.path.abspath(sav_name)
 
             if not os.path.exists(self.SAV_PATH):
-                raise FileNotFoundError(f"\"{self.SAV_PATH}\" not found")
+                raise FileNotFoundError(f'"{self.SAV_PATH}" not found')
             if _ExperimentStack.inside(self):
                 raise errors.ExperimentOpenedError
 
@@ -164,7 +193,7 @@ class Experiment(_Experiment):
 
             if "Experiment" in _temp.keys():
                 self.PlSav = _temp
-            else: # 读取物实导出的存档只含有.sav的Experiment部分
+            else:  # 读取物实导出的存档只含有.sav的Experiment部分
                 if _temp["Type"] == ExperimentType.Circuit.value:
                     self.PlSav = copy.deepcopy(savTemplate.Circuit)
                 elif _temp["Type"] == ExperimentType.Celestial.value:
@@ -179,15 +208,23 @@ class Experiment(_Experiment):
             self.__load()
         elif open_mode == OpenMode.load_by_sav_name:
             if len(kwargs) == 1:
-                errors.type_error(f"When open_mode is OpenMode.load_by_sav_name, constructor is `def __init__(self, open_mode: OpenMode, sav_name: str) -> None`, but an unexpected keyword argument is gotten: {list(kwargs.keys())[0]}={list(kwargs.values())[0]}")
+                errors.type_error(
+                    f"When open_mode is OpenMode.load_by_sav_name, constructor is `def __init__(self, open_mode: OpenMode, sav_name: str) -> None`, but an unexpected keyword argument is gotten: {list(kwargs.keys())[0]}={list(kwargs.values())[0]}"
+                )
             elif len(kwargs) != 0:
-                errors.type_error(f"When open_mode is OpenMode.load_by_sav_name, constructor is `def __init__(self, open_mode: OpenMode, sav_name: str) -> None`, but unexpected keyword arguments are gotten: {''.join(str(key) + '=' + str(value) + ' ' for key, value in kwargs.items())}")
+                errors.type_error(
+                    f"When open_mode is OpenMode.load_by_sav_name, constructor is `def __init__(self, open_mode: OpenMode, sav_name: str) -> None`, but unexpected keyword arguments are gotten: {''.join(str(key) + '=' + str(value) + ' ' for key, value in kwargs.items())}"
+                )
 
             if len(args) != 1:
-                errors.type_error(f"When open_mode is OpenMode.load_by_sav_name, constructor is `def __init__(self, open_mode: OpenMode, sav_name: str) -> None`, but got {len(args)} positional arguments")
+                errors.type_error(
+                    f"When open_mode is OpenMode.load_by_sav_name, constructor is `def __init__(self, open_mode: OpenMode, sav_name: str) -> None`, but got {len(args)} positional arguments"
+                )
             sav_name = args[0]
             if not isinstance(sav_name, str):
-                errors.type_error(f"sav_name must be of type `str`, but got `{type(sav_name).__name__}`")
+                errors.type_error(
+                    f"sav_name must be of type `str`, but got `{type(sav_name).__name__}`"
+                )
 
             filename, _plsav = search_experiment(sav_name)
             if filename is None:
@@ -203,11 +240,17 @@ class Experiment(_Experiment):
         elif open_mode == OpenMode.load_by_plar_app:
             content_id, category, *rest = args
 
-            if not isinstance(content_id, str) or not isinstance(category, Category) or len(rest) != 0:
+            if (
+                not isinstance(content_id, str)
+                or not isinstance(category, Category)
+                or len(rest) != 0
+            ):
                 errors.type_error()
             user = kwargs.get("user")
             if not isinstance(user, (_User, type(None))):
-                errors.type_error(f"Parameter user must be of type `_User | None`, but got `{type(user).__name__}`")
+                errors.type_error(
+                    f"Parameter user must be of type `_User | None`, but got `{type(user).__name__}`"
+                )
 
             if user is None:
                 if Experiment._user is None:
@@ -216,7 +259,7 @@ class Experiment(_Experiment):
 
             self.SAV_PATH = os.path.join(_Experiment.SAV_PATH_DIR, f"{content_id}.sav")
             if _ExperimentStack.inside(self):
-                    raise errors.ExperimentOpenedError
+                raise errors.ExperimentOpenedError
 
             # TODO 如果从物实读取的实验不存在的话，将异常转换为 ExperimentNotExistError
             assert user is not None
@@ -249,10 +292,14 @@ class Experiment(_Experiment):
             sav_name, experiment_type = args
 
             if not isinstance(sav_name, str):
-                errors.type_error(f"Parameter sav_name must be of type `str`, but got `{type(sav_name).__name__}`")
+                errors.type_error(
+                    f"Parameter sav_name must be of type `str`, but got `{type(sav_name).__name__}`"
+                )
             if not isinstance(experiment_type, ExperimentType):
-                errors.type_error(f"Parameter experiment_type must be of type `ExperimentType`, "
-                                f"but got value `{experiment_type}` of type `{type(experiment_type).__name__}`")
+                errors.type_error(
+                    f"Parameter experiment_type must be of type `ExperimentType`, "
+                    f"but got value `{experiment_type}` of type `{type(experiment_type).__name__}`"
+                )
 
             if len(kwargs) != 0 and len(kwargs) != 1:
                 kwargs.pop("force_crt", None)
@@ -261,17 +308,21 @@ class Experiment(_Experiment):
                     f"self, open_mode: OpenMode, sav_name: str, "
                     f"experiment_type: ExperimentType, /, *, "
                     f"force_crt: bool = False) -> None`, but got unexpected keyword arguments: "
-                    f"{''.join(str(key) + '=' + str(value) + ' ' for key, value in kwargs.items())}")
+                    f"{''.join(str(key) + '=' + str(value) + ' ' for key, value in kwargs.items())}"
+                )
             if "force_crt" not in kwargs and len(kwargs) == 1:
                 errors.type_error(
                     f"When open_mode is OpenMode.crt, constructor is `def __init__("
                     f"self, open_mode: OpenMode, sav_name: str, "
                     f"experiment_type: ExperimentType, /, *, "
                     f"force_crt: bool = False) -> None) -> None`, but got unexpected an keyword argument: "
-                    f"{''.join(str(key) + '=' + str(value) for key, value in kwargs.items())}")
+                    f"{''.join(str(key) + '=' + str(value) for key, value in kwargs.items())}"
+                )
             force_crt = kwargs.get("force_crt", False)
             if not isinstance(force_crt, bool):
-                errors.type_error(f"Parameter force_crt must be of type `bool`, but got `{type(force_crt).__name__}`")
+                errors.type_error(
+                    f"Parameter force_crt must be of type `bool`, but got `{type(force_crt).__name__}`"
+                )
 
             filepath, _ = search_experiment(sav_name)
             if not force_crt and filepath is not None:
@@ -280,35 +331,48 @@ class Experiment(_Experiment):
                 # TODO 要是在一个force_crt的实验中又force_crt这个实验呢？
                 path = os.path.join(_Experiment.SAV_PATH_DIR, filepath)
                 os.remove(path)
-                if os.path.exists(path.replace(".sav", ".jpg")): # 用存档生成的实验无图片，因此可能删除失败
+                if os.path.exists(
+                    path.replace(".sav", ".jpg")
+                ):  # 用存档生成的实验无图片，因此可能删除失败
                     os.remove(path.replace(".sav", ".jpg"))
 
             self.experiment_type = experiment_type
-            self.SAV_PATH = os.path.join(_Experiment.SAV_PATH_DIR, f"{_tools.randString(34)}.sav")
+            self.SAV_PATH = os.path.join(
+                _Experiment.SAV_PATH_DIR, f"{_tools.randString(34)}.sav"
+            )
 
             if self.experiment_type == ExperimentType.Circuit:
                 self._is_elementXYZ: bool = False
                 self.PlSav: dict = copy.deepcopy(savTemplate.Circuit)
-                self.Wires: set = set() # Set[Wire] # 存档对应的导线
+                self.Wires: set = set()  # Set[Wire] # 存档对应的导线
                 # 存档对应的StatusSave, 存放实验元件，导线（如果是电学实验的话）
                 self.CameraSave: dict = {
-                    "Mode": 0, "Distance": 2.7, "VisionCenter": Generate, "TargetRotation": Generate
+                    "Mode": 0,
+                    "Distance": 2.7,
+                    "VisionCenter": Generate,
+                    "TargetRotation": Generate,
                 }
                 self.VisionCenter: _tools.position = _tools.position(0, -0.45, 1.08)
                 self.TargetRotation: _tools.position = _tools.position(50, 0, 0)
             elif self.experiment_type == ExperimentType.Celestial:
                 self.PlSav: dict = copy.deepcopy(savTemplate.Celestial)
                 self.CameraSave: dict = {
-                    "Mode": 2, "Distance": 2.75, "VisionCenter": Generate, "TargetRotation": Generate
+                    "Mode": 2,
+                    "Distance": 2.75,
+                    "VisionCenter": Generate,
+                    "TargetRotation": Generate,
                 }
-                self.VisionCenter: _tools.position = _tools.position(0 ,0, 1.08)
+                self.VisionCenter: _tools.position = _tools.position(0, 0, 1.08)
                 self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
             elif self.experiment_type == ExperimentType.Electromagnetism:
                 self.PlSav: dict = copy.deepcopy(savTemplate.Electromagnetism)
                 self.CameraSave: dict = {
-                    "Mode": 0, "Distance": 3.25, "VisionCenter": Generate, "TargetRotation": Generate,
+                    "Mode": 0,
+                    "Distance": 3.25,
+                    "VisionCenter": Generate,
+                    "TargetRotation": Generate,
                 }
-                self.VisionCenter: _tools.position = _tools.position(0, 0 ,0.88)
+                self.VisionCenter: _tools.position = _tools.position(0, 0, 0.88)
                 self.TargetRotation: _tools.position = _tools.position(90, 0, 0)
             else:
                 errors.unreachable()
@@ -333,9 +397,11 @@ class Experiment(_Experiment):
 
         _ExperimentStack.push(self)
 
-        if self.open_mode == OpenMode.load_by_sav_name \
-                or self.open_mode == OpenMode.load_by_filepath \
-                or self.open_mode == OpenMode.load_by_plar_app:
+        if (
+            self.open_mode == OpenMode.load_by_sav_name
+            or self.open_mode == OpenMode.load_by_filepath
+            or self.open_mode == OpenMode.load_by_plar_app
+        ):
             status_sav = json.loads(self.PlSav["Experiment"]["StatusSave"])
 
             if self.experiment_type == ExperimentType.Circuit:
@@ -352,9 +418,13 @@ class Experiment(_Experiment):
         assert isinstance(self.PlSav["Experiment"]["CameraSave"], str)
         self.CameraSave = json.loads(self.PlSav["Experiment"]["CameraSave"])
         temp = eval(f"({self.CameraSave['VisionCenter']})")
-        self.VisionCenter: _tools.position = _tools.position(temp[0], temp[2], temp[1]) # x, z, y
+        self.VisionCenter: _tools.position = _tools.position(
+            temp[0], temp[2], temp[1]
+        )  # x, z, y
         temp = eval(f"({self.CameraSave['TargetRotation']})")
-        self.TargetRotation: _tools.position = _tools.position(temp[0], temp[2], temp[1]) # x, z, y
+        self.TargetRotation: _tools.position = _tools.position(
+            temp[0], temp[2], temp[1]
+        )  # x, z, y
 
         if self.PlSav["Summary"] is None:
             self.PlSav["Summary"] = savTemplate.Circuit["Summary"]
@@ -363,7 +433,7 @@ class Experiment(_Experiment):
             self.experiment_type = ExperimentType.Circuit
             # 是否将该实验在全局范围中设置为元件坐标系
             self._is_elementXYZ: bool = False
-            self.Wires: set = set() # Set[Wire] # 存档对应的导线
+            self.Wires: set = set()  # Set[Wire] # 存档对应的导线
         elif self.PlSav["Experiment"]["Type"] == ExperimentType.Celestial.value:
             self.experiment_type = ExperimentType.Celestial
         elif self.PlSav["Experiment"]["Type"] == ExperimentType.Electromagnetism.value:
@@ -375,22 +445,28 @@ class Experiment(_Experiment):
         assert self.experiment_type == ExperimentType.Circuit
 
         for wire_dict in _wires:
-            if wire_dict["ColorName"][0] == '蓝':
+            if wire_dict["ColorName"][0] == "蓝":
                 color = WireColor.blue
-            elif wire_dict["ColorName"][0] == '红':
+            elif wire_dict["ColorName"][0] == "红":
                 color = WireColor.red
-            elif wire_dict["ColorName"][0] == '绿':
+            elif wire_dict["ColorName"][0] == "绿":
                 color = WireColor.green
-            elif wire_dict["ColorName"][0] == '黄':
+            elif wire_dict["ColorName"][0] == "黄":
                 color = WireColor.yellow
-            elif wire_dict["ColorName"][0] == '黑':
+            elif wire_dict["ColorName"][0] == "黑":
                 color = WireColor.black
             else:
                 errors.unreachable()
 
             crt_wire(
-                Pin(self.get_element_from_identifier(wire_dict["Source"]), wire_dict["SourcePin"]),
-                Pin(self.get_element_from_identifier(wire_dict["Target"]), wire_dict["TargetPin"]),
+                Pin(
+                    self.get_element_from_identifier(wire_dict["Source"]),
+                    wire_dict["SourcePin"],
+                ),
+                Pin(
+                    self.get_element_from_identifier(wire_dict["Target"]),
+                    wire_dict["TargetPin"],
+                ),
                 color=color,
             )
 
@@ -405,13 +481,16 @@ class Experiment(_Experiment):
             if self.experiment_type == ExperimentType.Circuit:
                 if element["ModelID"] == "Simple Instrument":
                     from .circuit.elements.otherCircuit import Simple_Instrument
+
                     pitches = []
                     for attr, val in element["Properties"].items():
                         if attr.startswith("音高"):
                             pitches.append(int(val))
 
                     obj = Simple_Instrument(
-                        x, y, z,
+                        x,
+                        y,
+                        z,
                         pitches=pitches,
                         identifier=element["Identifier"],
                         elementXYZ=False,
@@ -419,11 +498,16 @@ class Experiment(_Experiment):
                         volume=element["Properties"]["音量"],
                         rated_oltage=element["Properties"]["额定电压"],
                         is_ideal=bool(element["Properties"]["理想模式"]),
-                        is_pulse=bool(element["Properties"]["脉冲"])
+                        is_pulse=bool(element["Properties"]["脉冲"]),
                     )
                 else:
                     obj = self.crt_element(
-                        element["ModelID"], x, y, z, elementXYZ=False, identifier=element["Identifier"]
+                        element["ModelID"],
+                        x,
+                        y,
+                        z,
+                        elementXYZ=False,
+                        identifier=element["Identifier"],
                     )
                     obj.data["Properties"] = element["Properties"]
                 # 设置角度信息
@@ -432,10 +516,14 @@ class Experiment(_Experiment):
                 obj.set_rotation(r_x, r_y, r_z)
 
             elif self.experiment_type == ExperimentType.Celestial:
-                obj = self.crt_element(element["Model"], x, y, z, identifier=element['Identifier'])
+                obj = self.crt_element(
+                    element["Model"], x, y, z, identifier=element["Identifier"]
+                )
                 obj.data = element
             elif self.experiment_type == ExperimentType.Electromagnetism:
-                obj = self.crt_element(element["ModelID"], x, y, z, identifier=element['Identifier'])
+                obj = self.crt_element(
+                    element["ModelID"], x, y, z, identifier=element["Identifier"]
+                )
                 obj.data = element
             else:
                 errors.unreachable()
@@ -452,25 +540,33 @@ class Experiment(_Experiment):
 
     @_check_not_closed
     def crt_element(
-            self,
-            name: str,
-            x: num_type,
-            y: num_type,
-            z: num_type,
-            /,
-            **kwargs,
+        self,
+        name: str,
+        x: num_type,
+        y: num_type,
+        z: num_type,
+        /,
+        **kwargs,
     ) -> ElementBase:
-        ''' 通过元件的ModelID或其类名创建元件 '''
+        """通过元件的ModelID或其类名创建元件"""
         if not isinstance(name, str):
-            errors.type_error(f"Parameter 'name' must be of type `str`, but got value `{name}` of type `{type(name).__name__}`")
+            errors.type_error(
+                f"Parameter 'name' must be of type `str`, but got value `{name}` of type `{type(name).__name__}`"
+            )
         if not isinstance(x, (int, float)):
-            errors.type_error(f"Parameter 'x' must be of type `int | float`, but got value `{x}` of type `{type(x).__name__}`")
+            errors.type_error(
+                f"Parameter 'x' must be of type `int | float`, but got value `{x}` of type `{type(x).__name__}`"
+            )
         if not isinstance(y, (int, float)):
-            errors.type_error(f"Parameter 'y' must be of type `int | float`, but got value `{y}` of type `{type(y).__name__}`")
+            errors.type_error(
+                f"Parameter 'y' must be of type `int | float`, but got value `{y}` of type `{type(y).__name__}`"
+            )
         if not isinstance(z, (int, float)):
-            errors.type_error(f"Parameter 'z' must be of type `int | float`, but got value `{z}` of type `{type(z).__name__}`")
+            errors.type_error(
+                f"Parameter 'z' must be of type `int | float`, but got value `{z}` of type `{type(z).__name__}`"
+            )
 
-        name = name.strip().replace(' ', '_').replace('-', '_')
+        name = name.strip().replace(" ", "_").replace("-", "_")
         x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
 
         if self.experiment_type == ExperimentType.Circuit:

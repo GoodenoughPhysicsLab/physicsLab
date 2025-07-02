@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 from enum import Enum, unique
 
+
 @unique
 class ExperimentType(Enum):
-    ''' 实验的类型 '''
+    """实验的类型"""
+
     # 电学实验
     Circuit = 0
     # 电路图模式 1
@@ -13,16 +15,20 @@ class ExperimentType(Enum):
     # 电与磁实验
     Electromagnetism = 4
 
+
 @unique
 class Category(Enum):
-    ''' 实验区与黑洞区 '''
+    """实验区与黑洞区"""
+
     Experiment = "Experiment"
     Discussion = "Discussion"
 
+
 @unique
 class Tag(Enum):
-    ''' 标签 '''
-    #TODO 投稿 标签
+    """标签"""
+
+    # TODO 投稿 标签
     # 实验区
     Circuit = "Type-0"
     Celestial = "Type-3"
@@ -52,13 +58,16 @@ class Tag(Enum):
     Electronic = "电子电路"
     Interest = "兴趣"
 
+
 @unique
 class OpenMode(Enum):
-    ''' 用Experiment打开存档的模式 '''
-    load_by_sav_name = 0 # 存档的名字 (在物实内给存档取的名字)
-    load_by_filepath = 1 # 用户自己提供的存档的完整路径
-    load_by_plar_app = 2 # 通过网络请求从物实读取的存档
-    crt = 3 # 新建存档
+    """用Experiment打开存档的模式"""
+
+    load_by_sav_name = 0  # 存档的名字 (在物实内给存档取的名字)
+    load_by_filepath = 1  # 用户自己提供的存档的完整路径
+    load_by_plar_app = 2  # 通过网络请求从物实读取的存档
+    crt = 3  # 新建存档
+
 
 @unique
 class WireColor(Enum):
@@ -67,6 +76,7 @@ class WireColor(Enum):
     red = "红"
     green = "绿"
     yellow = "黄"
+
 
 @unique
 class GetUserMode(Enum):

@@ -102,8 +102,12 @@ class Decoder:
         self._outputs = []
         div_num, mod_num = divmod(bitnum, 2)
         if mod_num == 0:
-            sub_1 = Decoder(x, y, z, bitnum=div_num, elementXYZ=True, align_delays=align_delays)
-            sub_2 = Decoder(x, y, z, bitnum=div_num, elementXYZ=True, align_delays=align_delays)
+            sub_1 = Decoder(
+                x, y, z, bitnum=div_num, elementXYZ=True, align_delays=align_delays
+            )
+            sub_2 = Decoder(
+                x, y, z, bitnum=div_num, elementXYZ=True, align_delays=align_delays
+            )
             And_Gates = [
                 elements.Multiplier(x, y, z, elementXYZ=True)
                 for _ in range(2 ** (2 * div_num - 1))
@@ -122,14 +126,18 @@ class Decoder:
                 and_gate.o_low for and_gate in And_Gates
             ]
         elif mod_num == 1:
-            sub_1 = Decoder(x, y, z, bitnum=div_num + 1, elementXYZ=True, align_delays=align_delays)
-            sub_2 = Decoder(x, y, z, bitnum=div_num, elementXYZ=True, align_delays=align_delays)
+            sub_1 = Decoder(
+                x, y, z, bitnum=div_num + 1, elementXYZ=True, align_delays=align_delays
+            )
+            sub_2 = Decoder(
+                x, y, z, bitnum=div_num, elementXYZ=True, align_delays=align_delays
+            )
             And_Gates = [
                 elements.Multiplier(x, y, z, elementXYZ=True)
                 for _ in range(2 ** (2 * div_num))
             ]
             self._inputs = sub_2._inputs + sub_1._inputs
-            for a in range(2 ** div_num):
+            for a in range(2**div_num):
                 for b in range(2**div_num):
                     crt_wires(sub_1._outputs[a], And_Gates[a * 2**div_num + b].i_up)
                     crt_wires(sub_2._outputs[b], And_Gates[a * 2**div_num + b].i_lowmid)

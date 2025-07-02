@@ -1,31 +1,37 @@
 # -*- coding: utf-8 -*-
-''' 在 Python3.14之前, Thread.join 在 Windows 上会阻塞异常的传播, 详见:
-        https://www.bilibili.com/video/BV1au411q7LN/?spm_id_from=333.999.0.0
+"""在 Python3.14之前, Thread.join 在 Windows 上会阻塞异常的传播, 详见:
+    https://www.bilibili.com/video/BV1au411q7LN/?spm_id_from=333.999.0.0
 
-    因此, 我无法直接使用ThreadPoolExecutor, 我就自己写了一个线程池
-'''
+因此, 我无法直接使用ThreadPoolExecutor, 我就自己写了一个线程池
+"""
 import queue
 from threading import Thread
 from enum import Enum, unique
 from physicsLab import errors
 from physicsLab._typing import List, Callable, Self, Any
 
+
 class CanceledError(Exception):
-    ''' Task have been canceled '''
+    """Task have been canceled"""
+
     def __repr__(self) -> str:
         return "Task have been canceled"
+
 
 class _EndOfQueue:
     def __new__(cls):
         return _EndOfQueue
 
+
 @unique
 class _Status(Enum):
-    ''' task's status '''
+    """task's status"""
+
     wait = 0
     running = 1
     done = 2
     cancelled = 3
+
 
 class _Task:
     def __init__(self, func: Callable, args: tuple, kwargs: dict) -> None:
@@ -50,12 +56,14 @@ class _Task:
         else:
             return self.res
 
+
 class ThreadPool:
     def __init__(self, *, max_workers: int) -> None:
-        ''' @param max_workers: 最大线程数
-        '''
+        """@param max_workers: 最大线程数"""
         if not isinstance(max_workers, int):
-            errors.type_error(f"Parameter `max_workers` must be of type `int`, but got value `{max_workers}` of type `{type(max_workers).__name__}`")
+            errors.type_error(
+                f"Parameter `max_workers` must be of type `int`, but got value `{max_workers}` of type `{type(max_workers).__name__}`"
+            )
         if max_workers <= 0:
             raise ValueError
 
@@ -64,7 +72,7 @@ class ThreadPool:
         self.threads: List[Thread] = []
 
     def _office(self) -> None:
-        ''' workers work here '''
+        """workers work here"""
         while True:
             try:
                 _task = self.task_queue.get_nowait()
@@ -82,11 +90,13 @@ class ThreadPool:
                 _task.status = _Status.done
 
     def submit(self, func, *args, **kwargs) -> _Task:
-        ''' submit a task
-            @param func: function to be submitted
-        '''
+        """submit a task
+        @param func: function to be submitted
+        """
         if not callable(func):
-            errors.type_error(f"Parameter func must be of `callable`, but got value {func} of type `{type(func)}`")
+            errors.type_error(
+                f"Parameter func must be of `callable`, but got value {func} of type `{type(func)}`"
+            )
 
         task = _Task(func, args, kwargs)
         self.task_queue.put_nowait(task)
@@ -98,13 +108,11 @@ class ThreadPool:
         return task
 
     def submit_end(self) -> None:
-        ''' users should call this method after all tasks are submitted
-        '''
+        """users should call this method after all tasks are submitted"""
         self.task_queue.put_nowait(_EndOfQueue)
 
     def cancel_all_pending_tasks(self) -> None:
-        ''' cancel all pending tasks
-        '''
+        """cancel all pending tasks"""
         while True:
             try:
                 task = self.task_queue.get_nowait()
@@ -119,8 +127,7 @@ class ThreadPool:
         self.submit_end()
 
     def wait(self) -> None:
-        ''' blocking until all tasks are done
-        '''
+        """blocking until all tasks are done"""
         for thread in self.threads:
             while thread.is_alive():
                 thread.join(timeout=2)
