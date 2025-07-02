@@ -11,59 +11,6 @@ from physicsLab.enums import ExperimentType
 from physicsLab._typing import num_type, Optional, Self, Union, Type, List
 
 
-class TwoFour_Decoder:
-    """2-4译码器"""
-
-    def __init__(
-        self,
-        x: num_type,
-        y: num_type,
-        z: num_type,
-        /,
-        *,
-        elementXYZ: Optional[bool] = None,
-    ) -> None:
-        if (
-            not isinstance(x, (int, float))
-            or not isinstance(y, (int, float))
-            or not isinstance(z, (int, float))
-            or not isinstance(elementXYZ, (bool, type(None)))
-        ):
-            raise TypeError
-        # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
-        if elementXYZ is not True and not (
-            get_current_experiment().is_elementXYZ is True and elementXYZ is None
-        ):
-            x, y, z = native_to_elementXYZ(x, y, z)
-        x, y, z = round_data(x), round_data(y), round_data(z)
-
-        self.nor_gate = elements.Nor_Gate(x, y, z, elementXYZ=True)
-        self.nimp_gate1 = elements.Nimp_Gate(x + 1, y, z, elementXYZ=True)
-        self.nimp_gate2 = elements.Nimp_Gate(x + 1, y + 1, z, elementXYZ=True)
-        self.and_gate = elements.And_Gate(x, y + 1, z, elementXYZ=True)
-        crt_wires(self.nor_gate.i_up, self.nimp_gate1.i_low)
-        crt_wires(self.nimp_gate1.i_low, self.nimp_gate2.i_up)
-        crt_wires(self.nimp_gate2.i_up, self.and_gate.i_up)
-        crt_wires(self.nor_gate.i_low, self.nimp_gate1.i_up)
-        crt_wires(self.nimp_gate1.i_up, self.nimp_gate2.i_low)
-        crt_wires(self.nimp_gate2.i_low, self.and_gate.i_low)
-        self._inputs = [self.nor_gate.i_low, self.and_gate.i_up]
-        self._outputs = [
-            self.nor_gate.o,
-            self.nimp_gate1.o,
-            self.nimp_gate2.o,
-            self.and_gate.o,
-        ]
-
-    @property
-    def inputs(self) -> UnitPin:
-        return UnitPin(self, *self._inputs)
-
-    @property
-    def outputs(self) -> UnitPin:
-        return UnitPin(self, *self._outputs)
-
-
 class Decoder:
     def __init__(
         self,
@@ -132,9 +79,23 @@ class Decoder:
                 self._outputs = [m.o, m.i]
             return
         if bitnum == 2:
-            m = TwoFour_Decoder(x, y, z, elementXYZ=True)
-            self._inputs = m._inputs
-            self._outputs = m._outputs
+            nor_gate = elements.Nor_Gate(x, y, z, elementXYZ=True)
+            nimp_gate1 = elements.Nimp_Gate(x, y, z, elementXYZ=True)
+            nimp_gate2 = elements.Nimp_Gate(x, y, z, elementXYZ=True)
+            and_gate = elements.And_Gate(x, y, z, elementXYZ=True)
+            crt_wires(nor_gate.i_up, nimp_gate1.i_low)
+            crt_wires(nimp_gate1.i_low, nimp_gate2.i_up)
+            crt_wires(nimp_gate2.i_up, and_gate.i_up)
+            crt_wires(nor_gate.i_low, nimp_gate1.i_up)
+            crt_wires(nimp_gate1.i_up, nimp_gate2.i_low)
+            crt_wires(nimp_gate2.i_low, and_gate.i_low)
+            self._inputs = [nor_gate.i_low, and_gate.i_up]
+            self._outputs = [
+                nor_gate.o,
+                nimp_gate1.o,
+                nimp_gate2.o,
+                and_gate.o,
+            ]
             return
 
         self._inputs = []
@@ -190,6 +151,15 @@ class Decoder:
     @property
     def outputs(self) -> UnitPin:
         return UnitPin(self, *self._outputs)
+
+
+def TwoFour_Decoder(
+    x: num_type, y: num_type, z: num_type, /, *, elementXYZ: Optional[bool] = None
+) -> Decoder:
+    # Only for compatibility with old code
+    # Not recommended to use, use Decoder instead
+    # Will NOT be removed for a while
+    return Decoder(x, y, z, bitnum=2, elementXYZ=elementXYZ)
 
 
 class Switched_Register:
