@@ -63,7 +63,7 @@ class Super_AndGate:
         if elementXYZ is not True and not (
             get_current_experiment().is_elementXYZ is True and elementXYZ is None
         ):
-            x, y, z = native_to_elementXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
@@ -170,7 +170,7 @@ class Super_OrGate:
         if elementXYZ is not True and not (
             get_current_experiment().is_elementXYZ is True and elementXYZ is None
         ):
-            x, y, z = native_to_elementXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
@@ -253,7 +253,7 @@ class Super_NorGate:
         if elementXYZ is not True and not (
             get_current_experiment().is_elementXYZ is True and elementXYZ is None
         ):
-            x, y, z = native_to_elementXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
@@ -338,7 +338,7 @@ class Tick_Counter:
         if elementXYZ is not True and not (
             get_current_experiment().is_elementXYZ is True and elementXYZ is None
         ):
-            x, y, z = native_to_elementXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = num
 

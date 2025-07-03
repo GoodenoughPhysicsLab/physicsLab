@@ -756,11 +756,11 @@ class _Experiment:
             if self.experiment_type == ExperimentType.Circuit:
                 if elementXYZ and not a_element.is_elementXYZ:
                     e_x, e_y, e_z = native_to_elementXYZ(
-                        e_x, e_y, e_z, a_element.is_bigElement
+                        e_x, e_y, e_z, self._elementXYZ_origin_position, a_element.is_bigElement
                     )
                 elif not elementXYZ and a_element.is_elementXYZ:
                     e_x, e_y, e_z = elementXYZ_to_native(
-                        e_x, e_y, e_z, a_element.is_bigElement
+                        e_x, e_y, e_z, self._elementXYZ_origin_position, a_element.is_bigElement
                     )
             a_element.set_position(e_x + x, e_y + y, e_z + z, elementXYZ)
             # set_Position已处理与_elements_position有关的操作
@@ -867,9 +867,17 @@ class ElementXYZ:
     # big_element坐标修正
     _Y_AMEND: float = 0.045
 
-    def __init__(self) -> None:
+    def __init__(self, x: num_type = 0, y: num_type = 0, z: num_type = 0, /) -> None:
+        """ 元件坐标系
+
+        Args:
+            x: elementXYZ坐标原点位于物实坐标系的的(x, y, z)
+            y: elementXYZ坐标原点位于物实坐标系的的(x, y, z)
+            z: elementXYZ坐标原点位于物实坐标系的的(x, y, z)
+        """
         self._expe = get_current_experiment()
         self.origin_status: bool = self._expe.is_elementXYZ
+        self._expe._elementXYZ_origin_position = _tools.position(x, y, z)
 
     def __enter__(self) -> None:
         if self._expe.experiment_type != ExperimentType.Circuit:
@@ -886,6 +894,7 @@ def elementXYZ_to_native(
     x: num_type,
     y: num_type,
     z: num_type,
+    elementXYZ_origin_position: _tools.position,
     /,
     is_bigElement: bool = False,
 ) -> Tuple[num_type, num_type, num_type]:
@@ -894,9 +903,9 @@ def elementXYZ_to_native(
     Args:
         is_bigElement: 是否为2体积的元件 (比如全加器)
     """
-    x *= ElementXYZ._X_UNIT
-    y *= ElementXYZ._Y_UNIT
-    z *= ElementXYZ._Z_UNIT
+    x = x * ElementXYZ._X_UNIT + elementXYZ_origin_position.x
+    y = y * ElementXYZ._Y_UNIT + elementXYZ_origin_position.y
+    z = z * ElementXYZ._Z_UNIT + elementXYZ_origin_position.z
     if is_bigElement:
         y += ElementXYZ._Y_AMEND
     return x, y, z
@@ -906,12 +915,14 @@ def native_to_elementXYZ(
     x: num_type,
     y: num_type,
     z: num_type,
+    elementXYZ_origin_position: _tools.position,
+    /,
     is_bigElement: bool = False,
 ) -> Tuple[num_type, num_type, num_type]:
     """将物实的坐标系转换为元件坐标系"""
-    x /= ElementXYZ._X_UNIT
-    y /= ElementXYZ._Y_UNIT
-    z /= ElementXYZ._Z_UNIT
+    x = (x - elementXYZ_origin_position.x) / ElementXYZ._X_UNIT
+    y = (y - elementXYZ_origin_position.y) / ElementXYZ._Y_UNIT
+    z = (z - elementXYZ_origin_position.z) / ElementXYZ._Z_UNIT
     # 修改大体积逻辑电路元件的坐标
     if is_bigElement:
         y -= ElementXYZ._Y_AMEND

@@ -381,6 +381,9 @@ class Experiment(_Experiment):
         else:
             errors.unreachable()
 
+        if self.experiment_type == ExperimentType.Circuit:
+            self._elementXYZ_origin_position = _tools.position(0, 0, 0)
+
         assert isinstance(self.open_mode, OpenMode)
         assert isinstance(self._position2elements, dict)
         assert isinstance(self._id2element, dict)
@@ -394,6 +397,7 @@ class Experiment(_Experiment):
         if self.experiment_type == ExperimentType.Circuit:
             assert isinstance(self.Wires, set)
             assert isinstance(self._is_elementXYZ, bool)
+            assert isinstance(self._elementXYZ_origin_position, _tools.position)
 
         _ExperimentStack.push(self)
 

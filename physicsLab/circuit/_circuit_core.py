@@ -246,8 +246,6 @@ class _CircuitMeta(type):
         self: "CircuitBase" = cls.__new__(cls)
         self.experiment = _Expe
 
-        x, y, z = round_data(x), round_data(y), round_data(z)
-
         self.__init__(x, y, z, **kwargs)
         assert hasattr(self, "data") and isinstance(self.data, dict)
 
@@ -341,7 +339,7 @@ class CircuitBase(ElementBase, metaclass=_CircuitMeta):
             or self.experiment.is_elementXYZ is True
             and elementXYZ is None
         ):
-            x, y, z = elementXYZ_to_native(x, y, z, self.is_bigElement)
+            x, y, z = elementXYZ_to_native(x, y, z, self.experiment._elementXYZ_origin_position, is_bigElement=self.is_bigElement)
             self.is_elementXYZ = True
         else:
             self.is_elementXYZ = False

@@ -83,11 +83,12 @@ class Node:
             _gn[expe].append(self)
 
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
+        _Expe = get_current_experiment()
         if not (
             elementXYZ is True
-            or (get_current_experiment().is_elementXYZ is True and elementXYZ is None)
+            or (_Expe.is_elementXYZ is True and elementXYZ is None)
         ):
-            x, y, z = native_to_elementXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z, _Expe._elementXYZ_origin_position)
         x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
         self._pos = _tools.position(x, y, z)
 
@@ -147,7 +148,7 @@ class Node:
         """节点位置"""
         x, y, z = self._pos
         if not get_current_experiment().is_elementXYZ:
-            x, y, z = elementXYZ_to_native(x, y, z)
+            x, y, z = elementXYZ_to_native(x, y, z, get_current_experiment()._elementXYZ_origin_position)
         return _tools.position(x, y, z)
 
     def shift(
@@ -155,7 +156,7 @@ class Node:
     ) -> Self:
         """平移节点"""
         if not elementXYZ:
-            xe, ye, ze = native_to_elementXYZ(x, y, z)
+            xe, ye, ze = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
         else:
             xe, ye, ze = x, y, z
         xe, ye, ze = _tools.round_data(xe), _tools.round_data(ye), _tools.round_data(ze)
@@ -198,7 +199,7 @@ class Node:
         ):
             raise TypeError
         if not get_current_experiment().is_elementXYZ:
-            x, y, z = native_to_elementXYZ(x, y, z)
+            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
         x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
         self.locate(x, y, z)
 
@@ -487,7 +488,7 @@ def node_wrapper(name: str) -> Callable:
                 (
                     i.get_position()
                     if i.is_elementXYZ
-                    else native_to_elementXYZ(*i.get_position())
+                    else native_to_elementXYZ(*i.get_position(), get_current_experiment()._elementXYZ_origin_position)
                 )
                 for i in elements
             ]

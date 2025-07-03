@@ -6,6 +6,7 @@ import warnings
 import threading
 from .base import *
 from physicsLab.lib import *
+from physicsLab._tools import position
 from physicsLab._core import _ExperimentStack
 
 def my_test_dec(method: Callable):
@@ -707,3 +708,14 @@ class BasicTest(TestCase, ViztracerTool):
             self.assertEqual(len(lib.analog._gn[expe]), 7)
             self.assertEqual(len(lib.analog._gicw[expe]), 25)
             expe.close(delete=True)
+
+    @my_test_dec
+    def test_translate_elementXYZ(self):
+        o = position(1, 2, -1)
+        for x in range(10):
+            for y in range(10):
+                for z in range(10):
+                    x_, y_, z_ = elementXYZ_to_native(*native_to_elementXYZ(x, y, z, o), o)
+                    assert x == x_
+                    assert y == y_
+                    assert z == z_
