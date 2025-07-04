@@ -45,11 +45,11 @@ class VoidVertex(Vertex):
 
     @override
     def __eq__(self, other):
-        return isinstance(other, VoidVertex)
+        return isinstance(other, VoidVertex) and self.node == other.node # TODO 后文所有is用正常判断语句重写
 
     @override
     def __hash__(self):
-        return hash(self.__class__.__name__)
+        return hash((self.__class__.__name__, self.node))
 
 
 class Node:
@@ -755,14 +755,14 @@ def inverse(func: FunctionType, increasing: bool, vertex_id: int = 0) -> Functio
         with ElementXYZ():
             opamp = Operational_Amplifier(res.pos.x + res.width/2 + .5, res.pos.y, res.pos.z)
             node = Node(res.pos.x + .5, res.pos.y, res.pos.z, name_gen("inv-" + res.name), res.gnd)
+        inputs = {list(i - {v.output})[0] for i in _gicw[expe] if v.output in i} # 此处要求参数函数已打包
         wires = {
             *crt_wire(opamp.i_neg if increasing else opamp.i_pos, res.output),
-            *crt_wire(opamp.o, res.input[vertex_id]),
+            *crt_wire(opamp.o, *inputs),
         }
         node.input = (
             [opamp.i_pos if increasing else opamp.i_neg]
-            + res.input[:vertex_id]
-            + res.input[vertex_id + 1 :]
+            + list(set(res.input) - inputs)
         )
         node.output = opamp.o
         node.extend(res.elements + [opamp], res.wires | wires)
@@ -868,6 +868,7 @@ def signed(func: FunctionType, vertex_id: int = 0) -> FunctionType:
             op2_r2 = Resistor(res.pos.x + res.width/2 + .5, res.pos.y - 2, res.pos.z, resistance=99)
             op2_relay = Relay_Component(res.pos.x + res.width/2 + .5, res.pos.y + 1.5, res.pos.z, pull_in_current=1e-6, coil_inductance=1e-6)
             node = Node(*res.pos, name_gen("signed"), res.gnd)
+        inputs = {list(i - {v.output})[0] for i in _gicw[expe] if v.output in i} # 此处要求参数函数已打包
         wires = {
             *crt_wire(op1_r1.black, op1_r2.red),
             *crt_wire(op2_r1.black, op2_r2.red),
@@ -879,10 +880,10 @@ def signed(func: FunctionType, vertex_id: int = 0) -> FunctionType:
             *crt_wire(op2_relay.mid, op2_r1.black),
             *crt_wire(op2_relay.l_low, op2_opamp.i_pos),
             *crt_wire(op2_relay.l_up, op2_opamp.i_neg),
-            *crt_wire(op1_opamp.o, res.input[vertex_id]),
+            *crt_wire(op1_opamp.o, *inputs),
             *crt_wire(op2_r2.black, res.output),
         }
-        node.input = [op1_r2.black]
+        node.input = [op1_r2.black] + list(set(res.input) - inputs)
         node.output = op2_opamp.o
         node.extend(
             res.elements
@@ -938,6 +939,10 @@ def quadrant(
             xor = Xor_Gate(res.pos.x + res.width/2 + .5, res.pos.y, res.pos.z, high_level=1e-7)
             amp = Operational_Amplifier(res.pos.x + res.width/2  + .5, res.pos.y - 1.5, res.pos.z)
             node = Node(res.pos.x - .5, res.pos.y, res.pos.z, name_gen("quad"), res.gnd)
+        # 此处要求参数函数已打包，具体是要求空探针没有和其它节点相连；同时还要求这两个空探针不会相连
+        # TODO 将此处和收尾处理同时进行
+        inputs1 = {list(i - {v1.output})[0] for i in _gicw[expe] if v1.output in i}
+        inputs2 = {list(i - {v2.output})[0] for i in _gicw[expe] if v2.output in i}
         wires = {
             *crt_wire(relay_i1.mid, op1_r1.black),
             *crt_wire(relay_i2.mid, op2_r1.black),
@@ -964,10 +969,11 @@ def quadrant(
             *crt_wire(amp.i_pos, xor.o),
             *crt_wire(relay_o.r_up, amp.o),
             *crt_wire(op3_r2.black, res.output),
-            *crt_wire(op1_opamp.o, res.input[vertex_id1]),
-            *crt_wire(op2_opamp.o, res.input[vertex_id2]),
+            *crt_wire(op1_opamp.o, *inputs1),
+            *crt_wire(op2_opamp.o, *inputs2),
         }
-        node.input = [op1_r2.black, op2_r2.black]
+        node.input = [op1_r2.black, op2_r2.black] + \
+            list(set(res.input) - inputs1 - inputs2)
         node.output = op3_opamp.o
         node.extend(
             res.elements
