@@ -115,7 +115,10 @@ sys.path.append("/your/path/of/physicsLab") # 将字符串替换为你想添加�
 * 主仓库(github): https://github.com/GoodenoughPhysicsLab/physicsLab
 * 备份仓库(gitee): https://gitee.com/script2000/physicsLab
 
-## contribute
-`physicsLab`没有强行要求代码风格, 但需要注意与上下文保持一致
+## 贡献代码
+`physicsLab`使用`black`工具自动格式化代码风格
+```sh
+black physicsLab --exclude="mido|vendor"
+```
 
 你可以从更新文档、bugfix、写[测试代码](./test_pl)开始入手

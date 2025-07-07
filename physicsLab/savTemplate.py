@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
+
 class Generate:
-    ''' 这个类仅仅代表一个占位符, 表示对应key的value在运行时动态生成
-        如果运行时没有生成对应的value, 那么在生成json的时候会出错
-    '''
+    """这个类仅仅代表一个占位符, 表示对应key的value在运行时动态生成
+    如果运行时没有生成对应的value, 那么在生成json的时候会出错
+    """
+
 
 # 所有模板都是只读的
 # 电学实验的sav模板
@@ -11,19 +13,19 @@ Circuit = {
     "Type": 0,
     "Experiment": {
         "ID": None,
-        "Type": 0, # 实验类型： 0: 电学实验, 1: 电学电路图模式, 2: 天体彩蛋模式, 3：天体物理, 4: 电与磁实验
+        "Type": 0,  # 实验类型： 0: 电学实验, 1: 电学电路图模式, 2: 天体彩蛋模式, 3：天体物理, 4: 电与磁实验
         "Components": 7,
         "Subject": None,
         "StatusSave": Generate,
         "CameraSave": Generate,
-        "Version": 2404, # TODO 生成正确的版本号
+        "Version": 2404,  # TODO 生成正确的版本号
         "CreationDate": Generate,
         "Paused": False,
         "Summary": None,
         "Plots": None,
     },
     "ID": None,
-    "Summary": { # 发布实验
+    "Summary": {  # 发布实验
         "Type": 0,
         "ParentID": None,
         "ParentName": None,
@@ -33,9 +35,7 @@ Circuit = {
         "Coauthors": [],
         "Description": None,  # 实验介绍
         "LocalizedDescription": None,
-        "Tags": [
-            "Type-0"
-        ],
+        "Tags": ["Type-0"],
         "ModelID": None,
         "ModelName": None,
         "ModelTags": [],
@@ -51,25 +51,25 @@ Circuit = {
         "CreationDate": Generate,
         "UpdateDate": 0,
         "SortingDate": 0,
-        "ID": None, # 实验的ID
+        "ID": None,  # 实验的ID
         "Category": None,
         "Subject": "",
         "LocalizedSubject": None,
         "Image": 0,
         "ImageRegion": 0,
         "User": {
-            "ID": None, # 用户ID
-            "Nickname": None, # 用户昵称
-            "Signature": None, # 签名
+            "ID": None,  # 用户ID
+            "Nickname": None,  # 用户昵称
+            "Signature": None,  # 签名
             "Avatar": 0,
             "AvatarRegion": 0,
             "Decoration": 0,
-            "Verification": None
+            "Verification": None,
         },
         "Visibility": 0,
         "Settings": {},
         "Anonymous": False,
-        "Multilingual": False
+        "Multilingual": False,
     },
     "CreationDate": 0,
     "Speed": 1.0,
@@ -83,10 +83,7 @@ Circuit = {
     "Widgets": [],
     "WidgetGroups": [],
     "Bookmarks": {},
-    "Interfaces": {
-        "Play-Expanded": False,
-        "Chart-Expanded": False
-    }
+    "Interfaces": {"Play-Expanded": False, "Chart-Expanded": False},
 }
 
 # 天体物理的sav模板
@@ -103,7 +100,7 @@ Celestial = {
         "CreationDate": Generate,
         "Paused": False,
         "Summary": None,
-        "Plots": None
+        "Plots": None,
     },
     "ID": None,
     "Summary": {
@@ -116,9 +113,7 @@ Celestial = {
         "Coauthors": [],
         "Description": None,
         "LocalizedDescription": None,
-        "Tags": [
-            "Type-3"
-        ],
+        "Tags": ["Type-3"],
         "ModelID": None,
         "ModelName": None,
         "ModelTags": [],
@@ -147,11 +142,11 @@ Celestial = {
             "Avatar": 0,
             "AvatarRegion": 0,
             "Decoration": 0,
-            "Verification": None
+            "Verification": None,
         },
         "Visibility": 0,
         "Settings": {},
-        "Multilingual": False
+        "Multilingual": False,
     },
     "CreationDate": 0,
     "Speed": 1.0,
@@ -165,10 +160,7 @@ Celestial = {
     "Widgets": [],
     "WidgetGroups": [],
     "Bookmarks": {},
-    "Interfaces": {
-        "Play-Expanded": False,
-        "Chart-Expanded": False
-    }
+    "Interfaces": {"Play-Expanded": False, "Chart-Expanded": False},
 }
 
 # 电与磁实验的sav模板
@@ -185,7 +177,7 @@ Electromagnetism = {
         "CreationDate": Generate,
         "Paused": False,
         "Summary": None,
-        "Plots": None
+        "Plots": None,
     },
     "ID": None,
     "Summary": {
@@ -198,9 +190,7 @@ Electromagnetism = {
         "Coauthors": [],
         "Description": None,
         "LocalizedDescription": None,
-        "Tags": [
-            "Type-4"
-        ],
+        "Tags": ["Type-4"],
         "ModelID": None,
         "ModelName": None,
         "ModelTags": [],
@@ -229,7 +219,7 @@ Electromagnetism = {
             "Avatar": 0,
             "AvatarRegion": 0,
             "Decoration": 0,
-            "Verification": None
+            "Verification": None,
         },
         "Visibility": 0,
         "Settings": {},
@@ -247,8 +237,5 @@ Electromagnetism = {
     "Widgets": [],
     "WidgetGroups": [],
     "Bookmarks": {},
-    "Interfaces": {
-        "Play-Expanded": False,
-        "Chart-Expanded": False
-    }
+    "Interfaces": {"Play-Expanded": False, "Chart-Expanded": False},
 }

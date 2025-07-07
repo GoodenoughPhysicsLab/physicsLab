@@ -15,22 +15,36 @@ from physicsLab._core import get_current_experiment, native_to_elementXYZ
 from physicsLab.circuit import elements, crt_wire
 from physicsLab._tools import round_data
 from physicsLab.lib import crt_wires, D_WaterLamp
-from physicsLab._typing import Optional, Union, List, Iterator, Dict, Self, num_type, Callable, Type
+from physicsLab._typing import (
+    Optional,
+    Union,
+    List,
+    Iterator,
+    Dict,
+    Self,
+    num_type,
+    Callable,
+    Type,
+)
+
 
 def _format_velocity(velocity: float) -> float:
     velocity = min(1, velocity)
 
     return velocity
 
+
 PL_TEMP_PATH = "pltemp.mid"
 
 # midi类，用于提供physicsLab与midi文件之间的桥梁
-''' 重要midi事件及作用:
+""" 重要midi事件及作用:
     note_on        ->     message: 播放音符
     note_off       ->     message: 停止播放音符
     program_change ->     message: 改变某个音轨对应的音色
     set_tempo      -> MetaMessage: 改变midi播放速度
-'''
+"""
+
+
 class Midi:
     # 仅被Midi.sound方法调用
     # e.g. player=music.Midi.PLAYER.os
@@ -40,20 +54,22 @@ class Midi:
         pygame = 1
         os = 2
 
-    def __init__(self, midifile: Union[str, io.IOBase, tempfile._TemporaryFileWrapper]) -> None:
-        ''' .midifile: 支持三种参数
-            * str: midi文件路径
-            * str: .mido.py文件路径
-            * io.IOBase: 打开的midi文件
+    def __init__(
+        self, midifile: Union[str, io.IOBase, tempfile._TemporaryFileWrapper]
+    ) -> None:
+        """.midifile: 支持三种参数
+        * str: midi文件路径
+        * str: .mido.py文件路径
+        * io.IOBase: 打开的midi文件
 
-            Note: midifile也支持tempfile, 但你应该使用tempfile.NamedTemporaryFile()
-            (尽管tempfile.TempraryFile也可能可以运行)
-        '''
+        Note: midifile也支持tempfile, 但你应该使用tempfile.NamedTemporaryFile()
+        (尽管tempfile.TempraryFile也可能可以运行)
+        """
 
         if not isinstance(midifile, (str, io.IOBase, tempfile._TemporaryFileWrapper)):
             raise TypeError
 
-        ''' self.messages的参数格式:
+        """ self.messages的参数格式:
             mido.MidiTrack([
                 Message -> (type: {{note_on or note_off}}, channel, note, velocity, time),
                 Message ->(type: {{program_change}}, channel, program, time),
@@ -65,11 +81,11 @@ class Midi:
             channel: midi通道
             program: midi音色
             tempo: 播放速度
-        '''
+        """
         self.__use_tmpfile: bool = False
 
         if isinstance(midifile, (io.IOBase, tempfile._TemporaryFileWrapper)):
-            self.midifile: str = midifile.name # midi文件名
+            self.midifile: str = midifile.name  # midi文件名
             self.midofile = mido.MidiFile(file=midifile, clip=True)
             self.messages: mido.MidiTrack = self.__get_midi_messages()
         else:
@@ -78,29 +94,32 @@ class Midi:
             if not os.path.exists(midifile):
                 raise FileNotFoundError
 
-            if midifile.endswith(".mido.py"): # .mido.py
+            if midifile.endswith(".mido.py"):  # .mido.py
                 context = None
                 with open(midifile, encoding="utf-8") as f:
                     context = f.read()
 
                 import re
                 from mido import MidiFile, MidiTrack, Message, MetaMessage
+
                 # 正则匹配内容: MidiTrack([Message(...), ...])
                 re_context = re.search(r"MidiTrack\(\[[^\]]+\]\)", context, re.M)
                 if re_context is None:
                     raise SyntaxError(f"error context in {midifile}")
-                self.messages = eval(re_context.group()) # 用到mido import出的内容
+                self.messages = eval(re_context.group())  # 用到mido import出的内容
 
                 re_context = re.search(r"MidiFile\(.*", context, re.M)
                 if re_context is None:
                     raise SyntaxError(f"error context in {midifile}")
-                self.midofile = eval(re_context.group().replace("[track]", "[self.messages]"))
+                self.midofile = eval(
+                    re_context.group().replace("[track]", "[self.messages]")
+                )
                 self.__use_tmpfile = True
                 with tempfile.NamedTemporaryFile(delete=False) as f:
                     self.midifile = f.name
                     self.midofile.save(file=f)
 
-            else: # midifile.endswith(".mid")
+            else:  # midifile.endswith(".mid")
                 self.midifile = midifile
                 self.midofile = mido.MidiFile(self.midifile, clip=True)
                 self.messages = self.__get_midi_messages()
@@ -110,7 +129,7 @@ class Midi:
             os.remove(self.midifile)
 
     def __get_midi_messages(self) -> mido.MidiTrack:
-        ''' 使用mido打开一个midi文件并获取其messages '''
+        """使用mido打开一个midi文件并获取其messages"""
         wait_time: num_type = 0
         res = mido.MidiTrack()
         for msg in self.midofile.merged_track:
@@ -124,7 +143,9 @@ class Midi:
         return res
 
     # 播放midi类存储的信息
-    def sound(self, player: Optional[PLAYER] = None, is_sourcefile: bool = False) -> Self:
+    def sound(
+        self, player: Optional[PLAYER] = None, is_sourcefile: bool = False
+    ) -> Self:
         # 使用plmidi播放midi
         def sound_by_plmidi() -> bool:
             try:
@@ -143,7 +164,7 @@ class Midi:
 
         # 使用pygame播放midi
         def sound_by_pygame() -> bool:
-            os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+            os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
             try:
                 from pygame import mixer, time
             except ImportError:
@@ -167,7 +188,7 @@ class Midi:
             _colorUtils.cprint(_colorUtils.Cyan("sound by using os"))
 
             if os.path.exists(self.midifile):
-                os.system(f"\"{self.midifile}\"")
+                os.system(f'"{self.midifile}"')
                 return True
 
             return False
@@ -192,7 +213,7 @@ class Midi:
                 return self
 
             if sound_by_plmidi():
-                pass # needless to do anything
+                pass  # needless to do anything
             elif sound_by_pygame():
                 pass
             elif sound_by_os():
@@ -206,7 +227,7 @@ class Midi:
         return self
 
     def set_tempo(self, num: num_type = 1) -> Self:
-        ''' 将time重设为原来的num倍 '''
+        """将time重设为原来的num倍"""
         if not isinstance(num, (int, float)):
             raise TypeError
 
@@ -216,12 +237,13 @@ class Midi:
         return self
 
     # 返回 [Note(...), Chord(...), ...]
-    def _get_notes_list(self,
-                        div_time: Optional[num_type],
-                        max_notes: Optional[int],
-                        percussion_channel: Optional[int],
-                        notes_filter: Optional[Callable],
-                        ) -> List[Union["Note", "Chord"]]:
+    def _get_notes_list(
+        self,
+        div_time: Optional[num_type],
+        max_notes: Optional[int],
+        percussion_channel: Optional[int],
+        notes_filter: Optional[Callable],
+    ) -> List[Union["Note", "Chord"]]:
         res: List[Union[Note, Chord]] = []
         wait_time: int = 0
         len_res: int = 0
@@ -235,32 +257,52 @@ class Midi:
             if msg.type == "set_tempo":
                 tempo = msg.tempo
                 if div_time is None:
-                    _div_time = mido.second2tick(0.11, self.midofile.ticks_per_beat, tempo)
+                    _div_time = mido.second2tick(
+                        0.11, self.midofile.ticks_per_beat, tempo
+                    )
 
             if msg.type == "note_on":
-                velocity: float = _format_velocity(msg.velocity / 127) # 音符的响度
-                if percussion_channel is not None and msg.channel == percussion_channel - 1: # 打击乐
+                velocity: float = _format_velocity(msg.velocity / 127)  # 音符的响度
+                if (
+                    percussion_channel is not None
+                    and msg.channel == percussion_channel - 1
+                ):  # 打击乐
                     ins = 128
                 else:
                     ins: int = channels[msg.channel]
 
-                if velocity == 0 or notes_filter is not None and notes_filter(ins, velocity):
+                if (
+                    velocity == 0
+                    or notes_filter is not None
+                    and notes_filter(ins, velocity)
+                ):
                     if msg.time != 0:
                         wait_time += msg.time
                     continue
 
                 len_res += 1
                 if _div_time is None:
-                    raise RuntimeError("find some error in midifile, please manually pass in the div_time parameter")
+                    raise RuntimeError(
+                        "find some error in midifile, please manually pass in the div_time parameter"
+                    )
                 note_time = round((msg.time + wait_time) / _div_time)
 
                 if note_time != 0 or len(res) == 0:
                     if note_time == 0:
                         note_time = 1
-                    res.append(Note(time=note_time, instrument=ins, pitch=msg.note, velocity=velocity))
+                    res.append(
+                        Note(
+                            time=note_time,
+                            instrument=ins,
+                            pitch=msg.note,
+                            velocity=velocity,
+                        )
+                    )
                 else:
                     # res[-1]是`Note`或`Chord`且在赋值之后一定是Chord, 此时Note的time的值不重要(因为和弦的音符是同时播放的)
-                    res[-1] = res[-1].append(Note(time=1, instrument=ins, pitch=msg.note, velocity=velocity))
+                    res[-1] = res[-1].append(
+                        Note(time=1, instrument=ins, pitch=msg.note, velocity=velocity)
+                    )
                 wait_time = 0
             elif msg.time != 0:
                 wait_time += msg.time
@@ -270,71 +312,82 @@ class Midi:
 
         return res
 
-    def to_piece(self,
-                 div_time: Optional[num_type] = None,
-                 max_notes: Optional[int] = 800,
-                 percussion_channel: Optional[int] = 10,
-                 is_optimize: bool = True, # 是否将多个音符优化为和弦
-                 notes_filter: Optional[Callable] = None,
-                 ) -> "Piece":
-        ''' 转换为Piece类
-            @param div_time: 用来调控生成的音乐电路的节奏, 默认为None(自动计算)
-            @param max_notes: 最多的音符数量
-            @param percussion_channel: 打击乐的通道号, 默认为10
-            @param is_optimize: 是否将多个音符优化为和弦
-            @param notes_filter: 音符过滤函数, 默认为None
-        '''
-        if not isinstance(div_time, (int, float, type(None))) or \
-                not isinstance(max_notes, (int, type(None))) or \
-                not isinstance(percussion_channel, (int, type(None))) or \
-                not isinstance(is_optimize, bool) or \
-                notes_filter is not None and not callable(notes_filter):
+    def to_piece(
+        self,
+        div_time: Optional[num_type] = None,
+        max_notes: Optional[int] = 800,
+        percussion_channel: Optional[int] = 10,
+        is_optimize: bool = True,  # 是否将多个音符优化为和弦
+        notes_filter: Optional[Callable] = None,
+    ) -> "Piece":
+        """转换为Piece类
+        @param div_time: 用来调控生成的音乐电路的节奏, 默认为None(自动计算)
+        @param max_notes: 最多的音符数量
+        @param percussion_channel: 打击乐的通道号, 默认为10
+        @param is_optimize: 是否将多个音符优化为和弦
+        @param notes_filter: 音符过滤函数, 默认为None
+        """
+        if (
+            not isinstance(div_time, (int, float, type(None)))
+            or not isinstance(max_notes, (int, type(None)))
+            or not isinstance(percussion_channel, (int, type(None)))
+            or not isinstance(is_optimize, bool)
+            or notes_filter is not None
+            and not callable(notes_filter)
+        ):
             raise TypeError
         if percussion_channel is not None and not 1 <= percussion_channel <= 16:
             raise ValueError
 
-        return Piece(self._get_notes_list(div_time, max_notes, percussion_channel, notes_filter),
-                     is_optimize=is_optimize)
+        return Piece(
+            self._get_notes_list(div_time, max_notes, percussion_channel, notes_filter),
+            is_optimize=is_optimize,
+        )
 
-    ''' *.pl.py文件:
+    """ *.pl.py文件:
         pl即为 physicsLab file
         为了更方便于手动调控物实音乐电路的生成而诞生的文件格式
         该文件运行之后即可生成对应的物实播放音乐电路
-    '''
-    '''
+    """
+    """
         *.mido.py
         为了更方便的研究Midi而诞生的文件格式
         为了修改方便, 默认使用 str(mido.MidiTrack) 的方式导出
         而且是个Py文件, 大家想要自己修改也是很方便的
         也可以直接使用Midi("example.mido.py")的形式进行导入
-    '''
+    """
 
-    def write_midopy(self, path: str="pltemp.mido.py") -> Self:
-        ''' 导出一个 .mido.py 文件 '''
+    def write_midopy(self, path: str = "pltemp.mido.py") -> Self:
+        """导出一个 .mido.py 文件"""
         if not path.endswith(".mido.py"):
             path += ".mido.py"
 
         with open(path, "w", encoding="utf-8") as f:
-            f.write(f"import os, tempfile\n"
-                    f"from mido import MidiFile, MidiTrack, MetaMessage, Message\n"
-                    f"track = {self.messages}\n"
-                    f"mid = MidiFile(type={self.midofile.type}, "
-                    f"ticks_per_beat={self.midofile.ticks_per_beat}, "
-                    f"charset='{self.midofile.charset}', "
-                    f"clip={self.midofile.clip}, "
-                    f"tracks=[track])\n"
-                    f"with tempfile.NamedTemporaryFile() as f:\n"
-                    f"    mid.save(file=f)\n"
-                    f"    f.seek(0)\n"
-                    f"    os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'\n"
-                    f"    from physicsLab.music import Midi\n"
-                    f"    Midi(f).sound()")
+            f.write(
+                f"import os, tempfile\n"
+                f"from mido import MidiFile, MidiTrack, MetaMessage, Message\n"
+                f"track = {self.messages}\n"
+                f"mid = MidiFile(type={self.midofile.type}, "
+                f"ticks_per_beat={self.midofile.ticks_per_beat}, "
+                f"charset='{self.midofile.charset}', "
+                f"clip={self.midofile.clip}, "
+                f"tracks=[track])\n"
+                f"with tempfile.NamedTemporaryFile() as f:\n"
+                f"    mid.save(file=f)\n"
+                f"    f.seek(0)\n"
+                f"    os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'\n"
+                f"    from physicsLab.music import Midi\n"
+                f"    Midi(f).sound()"
+            )
 
         return self
 
-    def write_midi(self, midipath: Union[str, io.IOBase, tempfile._TemporaryFileWrapper] = PL_TEMP_PATH) -> Self:
-        """ 导出一个 .mid 文件
-            * midipath: 字符串格式的路径 或 打开的midi文件对象
+    def write_midi(
+        self,
+        midipath: Union[str, io.IOBase, tempfile._TemporaryFileWrapper] = PL_TEMP_PATH,
+    ) -> Self:
+        """导出一个 .mid 文件
+        * midipath: 字符串格式的路径 或 打开的midi文件对象
         """
         if not isinstance(midipath, (str, io.IOBase, tempfile._TemporaryFileWrapper)):
             raise TypeError
@@ -349,51 +402,66 @@ class Midi:
 
         return self
 
-    def write_plpy(self,
-                  filepath: str = "temp.pl.py",
-                  div_time: Optional[num_type] = None, # midi的time的单位长度与Note的time的单位长度不同，支持用户手动调整
-                  max_notes: Optional[int] = 800, # 最大的音符数，因为物实没法承受过多的元件
-                  percussion_channel: Optional[int] = 10,
-                  notes_filter: Optional[Callable] = None,
-                  sav_name: str = "temp" # 产生的存档的名字, 也可直接在生成.pl.py中修改
+    def write_plpy(
+        self,
+        filepath: str = "temp.pl.py",
+        div_time: Optional[
+            num_type
+        ] = None,  # midi的time的单位长度与Note的time的单位长度不同，支持用户手动调整
+        max_notes: Optional[int] = 800,  # 最大的音符数，因为物实没法承受过多的元件
+        percussion_channel: Optional[int] = 10,
+        notes_filter: Optional[Callable] = None,
+        sav_name: str = "temp",  # 产生的存档的名字, 也可直接在生成.pl.py中修改
     ) -> Self:
-        ''' 以.pl.py的格式导出 '''
-        if not (isinstance(div_time, (int, float)) or
-                isinstance(max_notes, int)) and max_notes is not None:
-           raise TypeError
+        """以.pl.py的格式导出"""
+        if (
+            not (isinstance(div_time, (int, float)) or isinstance(max_notes, int))
+            and max_notes is not None
+        ):
+            raise TypeError
 
         if not filepath.endswith(".pl.py"):
             filepath += ".pl.py"
 
-        l_notes: List[Union[Note, Chord]] = self._get_notes_list(div_time, max_notes, percussion_channel, notes_filter)
+        l_notes: List[Union[Note, Chord]] = self._get_notes_list(
+            div_time, max_notes, percussion_channel, notes_filter
+        )
         notes_str = ""
         for a_note in l_notes:
             notes_str += "        " + repr(a_note) + ",\n"
 
         with open(filepath, "w") as f:
-            f.write(f"from physicsLab import experiment\n"
-                    f"from physicsLab.music import Note, Piece, Chord\n"
-                    f"with experiment(\"{sav_name}\"):\n"
-                    f"    Piece([\n{notes_str}    ]).release(-1, -1, 0)")
+            f.write(
+                f"from physicsLab import experiment\n"
+                f"from physicsLab.music import Note, Piece, Chord\n"
+                f'with experiment("{sav_name}"):\n'
+                f"    Piece([\n{notes_str}    ]).release(-1, -1, 0)"
+            )
 
         return self
 
+
 class Note:
-    ''' 音符类 '''
-    def __init__(self,
-                 time: int, # 间隔多少时间才播放此Note
-                 playTime: int = 1,  # 音符发出声音的时长 暂时不支持相关机制
-                 instrument: int = 0, # 演奏的乐器，暂时只支持传入数字
-                 pitch: Union[int, str] = 60, # 音高/音调
-                 rising_falling: Optional[bool] = None, # 当pitch为字符串时, 此参数用来确定是否升降调
-                 velocity: Union[int, float] = 0.64 # 音量/响度
+    """音符类"""
+
+    def __init__(
+        self,
+        time: int,  # 间隔多少时间才播放此Note
+        playTime: int = 1,  # 音符发出声音的时长 暂时不支持相关机制
+        instrument: int = 0,  # 演奏的乐器，暂时只支持传入数字
+        pitch: Union[int, str] = 60,  # 音高/音调
+        rising_falling: Optional[
+            bool
+        ] = None,  # 当pitch为字符串时, 此参数用来确定是否升降调
+        velocity: Union[int, float] = 0.64,  # 音量/响度
     ) -> None:
         if not (
-                isinstance(time, int) and
-                isinstance(playTime, int) and
-                isinstance(instrument, int) and
-                isinstance(velocity, (int, float)) and 0 < velocity <= 1 and
-                (rising_falling is None or isinstance(rising_falling, bool))
+            isinstance(time, int)
+            and isinstance(playTime, int)
+            and isinstance(instrument, int)
+            and isinstance(velocity, (int, float))
+            and 0 < velocity <= 1
+            and (rising_falling is None or isinstance(rising_falling, bool))
         ):
             raise TypeError
         if time <= 0:
@@ -415,14 +483,18 @@ class Note:
         self.playTime = playTime
 
     def __repr__(self) -> str:
-        return f"Note(time={self.time}, playTime={self.playTime}, instrument={self.instrument}, " \
-               f"pitch={self.pitch}, velocity={self.velocity})"
+        return (
+            f"Note(time={self.time}, playTime={self.playTime}, instrument={self.instrument}, "
+            f"pitch={self.pitch}, velocity={self.velocity})"
+        )
 
     def append(self, other: "Note") -> "Chord":
         return Chord(self, other, time=self.time)
 
+
 class Chord:
-    ''' 和弦类 '''
+    """和弦类"""
+
     def __init__(self, *notes: Note, time: int) -> None:
         if len(notes) < 1 or time < 1:
             raise TypeError
@@ -471,36 +543,42 @@ class Chord:
         return self
 
     def release(
-            self,
-            x: num_type,
-            y: num_type,
-            z: num_type,
-            elementXYZ: Optional[bool] = None,
-            is_optimize: bool = True,
+        self,
+        x: num_type,
+        y: num_type,
+        z: num_type,
+        elementXYZ: Optional[bool] = None,
+        is_optimize: bool = True,
     ) -> elements.Simple_Instrument:
-        if not isinstance(x, (int, float)) \
-                or not isinstance(y, (int, float)) \
-                or not isinstance(z, (int, float)) \
-                or not isinstance(elementXYZ, (bool, type(None))) \
-                or not isinstance(is_optimize, bool):
+        if (
+            not isinstance(x, (int, float))
+            or not isinstance(y, (int, float))
+            or not isinstance(z, (int, float))
+            or not isinstance(elementXYZ, (bool, type(None)))
+            or not isinstance(is_optimize, bool)
+        ):
             raise TypeError
 
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
-        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
-            x, y, z = native_to_elementXYZ(x, y, z)
+        if elementXYZ is not True and not (
+            get_current_experiment().is_elementXYZ is True and elementXYZ is None
+        ):
+            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
         x, y, z = round_data(x), round_data(y), round_data(z)
 
-        first_ins: Optional[elements.Simple_Instrument] = None # 第一个音符
+        first_ins: Optional[elements.Simple_Instrument] = None  # 第一个音符
         if is_optimize:
             for delta_z, ins in enumerate(self.ins_notes):
                 notes: List[Note] = self.ins_notes[ins]
                 temp: elements.Simple_Instrument = elements.Simple_Instrument(
-                    x, y, z + delta_z,
+                    x,
+                    y,
+                    z + delta_z,
                     elementXYZ=True,
                     instrument=ins,
                     pitches=(notes[0].pitch,),
                     is_ideal=True,
-                    volume=self._get_velocity(notes, is_average=True)
+                    volume=self._get_velocity(notes, is_average=True),
                 ).set_rotation(0, 0, 0)
 
                 if first_ins is None:
@@ -516,7 +594,9 @@ class Chord:
             for ins, notes in self.ins_notes.items():
                 for a_note in notes:
                     temp = elements.Simple_Instrument(
-                        x, y, z + delta_z,
+                        x,
+                        y,
+                        z + delta_z,
                         elementXYZ=True,
                         instrument=ins,
                         pitches=(a_note.pitch,),
@@ -535,14 +615,16 @@ class Chord:
         errors.assert_true(first_ins is not None)
         return first_ins
 
+
 # 循环类，用于创建一段循环的音乐片段
 # TODO: 完善Loop存储的数据结构
 class Loop:
     def __init__(self, loop_time: int = 2, *notes: Union[Note, "Loop"]) -> None:
-        if not(
-            isinstance(notes, (Loop, tuple, list)) or
-            isinstance(loop_time, int)
-        ) or any(not isinstance(a_note, Note) for a_note in notes) or loop_time < 2:
+        if (
+            not (isinstance(notes, (Loop, tuple, list)) or isinstance(loop_time, int))
+            or any(not isinstance(a_note, Note) for a_note in notes)
+            or loop_time < 2
+        ):
             raise TypeError
 
         if isinstance(notes, Loop):
@@ -563,22 +645,26 @@ class Loop:
     def __next__(self):
         pass
 
+
 class _RestSymbol:
-    ''' 休止符 '''
+    """休止符"""
+
     def __new__(cls):
         return cls
 
+
 class Piece:
-    ''' 乐曲类 '''
-    def __init__(self,
-                 notes: Optional[List[Union[Note, Chord]]] = None, # TODO: support Loop
-                 is_optimize: bool = True, # 是否将多个音符优化为和弦
-                 ) -> None:
+    """乐曲类"""
+
+    def __init__(
+        self,
+        notes: Optional[List[Union[Note, Chord]]] = None,  # TODO: support Loop
+        is_optimize: bool = True,  # 是否将多个音符优化为和弦
+    ) -> None:
         if (
-            ( not isinstance(notes, list)
-            or not all(isinstance(val, (Note, Chord)) for val in notes) )
-            and notes is not None
-        ):
+            not isinstance(notes, list)
+            or not all(isinstance(val, (Note, Chord)) for val in notes)
+        ) and notes is not None:
             raise TypeError
 
         self.is_optimize = is_optimize
@@ -603,9 +689,10 @@ class Piece:
         return self
 
     # 将Piece转化为midi文件(暂不支持Chord)
-    def write_midi(self,
-                   filepath: str = PL_TEMP_PATH,
-                   basic_time: int = 100 # 将Note的time变为Midi的time扩大的倍数
+    def write_midi(
+        self,
+        filepath: str = PL_TEMP_PATH,
+        basic_time: int = 100,  # 将Note的time变为Midi的time扩大的倍数
     ) -> Self:
         def write_a_midi_note(a_note: Note):
             channel: int = 0
@@ -620,18 +707,22 @@ class Piece:
                     channels[channel] = a_note.instrument
 
             track.append(
-                mido.Message("note_off",
-                             channel=channel,
-                             note=a_note.pitch,
-                             velocity=int(a_note.velocity * 100),
-                             time=basic_time * none_counter)
-                ) # time通过音符后的None的数量确定
+                mido.Message(
+                    "note_off",
+                    channel=channel,
+                    note=a_note.pitch,
+                    velocity=int(a_note.velocity * 100),
+                    time=basic_time * none_counter,
+                )
+            )  # time通过音符后的None的数量确定
             track.append(
-                mido.Message("note_on",
-                             channel=channel,
-                             note=a_note.pitch,
-                             velocity=int(a_note.velocity * 100),
-                             time=0)
+                mido.Message(
+                    "note_on",
+                    channel=channel,
+                    note=a_note.pitch,
+                    velocity=int(a_note.velocity * 100),
+                    time=0,
+                )
             )
 
         track = mido.MidiTrack()
@@ -639,7 +730,7 @@ class Piece:
         channels: List[int] = [0] * 16
 
         none_counter: int = 0
-         # 500_000 / 100, 500_000是Midi.tempo的默认数字，100是self.bpm的默认数字
+        # 500_000 / 100, 500_000是Midi.tempo的默认数字，100是self.bpm的默认数字
         track.append(mido.MetaMessage("set_tempo", tempo=self.bpm * 5000, time=0))
         for a_note in self.notes:
             if a_note is _RestSymbol:
@@ -654,7 +745,12 @@ class Piece:
                 none_counter = 0
 
         for channel, program in enumerate(channels):
-            track.insert(1, mido.Message("program_change", channel=channel, program=program, time=0))
+            track.insert(
+                1,
+                mido.Message(
+                    "program_change", channel=channel, program=program, time=0
+                ),
+            )
 
         with open("temp.test.py", "w") as f:
             f.write(repr(track))
@@ -697,19 +793,25 @@ class Piece:
     def __next__(self):
         yield next(self.__iter)
 
-    def release(self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None) -> None:
-        ''' 将Piece转换为物实对应的电路
-            x, y, z: 电路最左下角的元件的坐标
-            elementXYZ: x, y, z是否是元件坐标系
-        '''
-        if not isinstance(x, (int, float)) \
-                or not isinstance(y, (int, float)) \
-                or not isinstance(z, (int, float)) \
-                or not isinstance(elementXYZ, (bool, type(None))):
+    def release(
+        self, x: num_type, y: num_type, z: num_type, elementXYZ: Optional[bool] = None
+    ) -> None:
+        """将Piece转换为物实对应的电路
+        x, y, z: 电路最左下角的元件的坐标
+        elementXYZ: x, y, z是否是元件坐标系
+        """
+        if (
+            not isinstance(x, (int, float))
+            or not isinstance(y, (int, float))
+            or not isinstance(z, (int, float))
+            or not isinstance(elementXYZ, (bool, type(None)))
+        ):
             raise TypeError
 
-        if elementXYZ is not True and not (get_current_experiment().is_elementXYZ is True and elementXYZ is None):
-            x, y, z = native_to_elementXYZ(x, y, z)
+        if elementXYZ is not True and not (
+            get_current_experiment().is_elementXYZ is True and elementXYZ is None
+        ):
+            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
 
         # 给乐器增加休止符
         while self.notes[-1] is _RestSymbol:
@@ -727,12 +829,18 @@ class Piece:
             side = 2
 
         try:
-            xPlayer = D_WaterLamp(x + 1, y + 1, z, heading=True, bitnum=side, elementXYZ=True)
-            yPlayer = D_WaterLamp(x, y + 3, z, bitnum=ceil(len_musicArray / side), elementXYZ=True)
-        except ValueError as e: #TODO 应该支持超短的bitLength而不是报错
+            xPlayer = D_WaterLamp(
+                x + 1, y + 1, z, heading=True, bitnum=side, elementXYZ=True
+            )
+            yPlayer = D_WaterLamp(
+                x, y + 3, z, bitnum=ceil(len_musicArray / side), elementXYZ=True
+            )
+        except ValueError as e:  # TODO 应该支持超短的bitLength而不是报错
             _colorUtils.cprint(
-                _colorUtils.Red("bigLength of D_WaterLamp is too short, "
-                "try to use argument \"div_time\" in class Midi to solve this problem"),
+                _colorUtils.Red(
+                    "bigLength of D_WaterLamp is too short, "
+                    'try to use argument "div_time" in class Midi to solve this problem'
+                ),
             )
             raise e
 
@@ -778,16 +886,26 @@ class Piece:
                 xcor = 0
                 ycor += 2
             if isinstance(a_note, Chord):
-                ins = a_note.release(1 + x + xcor,  4 + y + ycor, z, elementXYZ=True, is_optimize=self.is_optimize)
+                ins = a_note.release(
+                    1 + x + xcor,
+                    4 + y + ycor,
+                    z,
+                    elementXYZ=True,
+                    is_optimize=self.is_optimize,
+                )
             elif isinstance(a_note, Note):
                 ins = elements.Simple_Instrument(
-                    1 + x + xcor, 4 + y + ycor, z,
+                    1 + x + xcor,
+                    4 + y + ycor,
+                    z,
                     pitches=(a_note.pitch,),
                     instrument=a_note.instrument,
                     elementXYZ=True,
                     is_ideal=True,
-                    volume=a_note.velocity
-                ).set_rotation(0, 0, 0) # type: ignore
+                    volume=a_note.velocity,
+                ).set_rotation(
+                    0, 0, 0
+                )  # type: ignore
             # 连接x轴的d触的导线
             if xcor == 0:
                 crt_wire(yesGate.o, ins.i)

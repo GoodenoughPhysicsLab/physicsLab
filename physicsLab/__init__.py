@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-''' Python API for Physics-Lab-AR '''
+"""Python API for Physics-Lab-AR"""
 
 from .physicsLab_version import __version__
+
 # 操作实验
 from .element import search_experiment, Experiment
 from ._core import (
@@ -11,14 +12,19 @@ from ._core import (
     native_to_elementXYZ,
     ElementXYZ,
 )
+
 # 实验, 标签类型
 from .enums import ExperimentType, Category, Tag, OpenMode, WireColor, GetUserMode
+
 # 电学实验
 from .circuit import *
+
 # 天体物理实验
 from .celestial import *
+
 # 电与磁实验
 from .electromagnetism import *
+
 # `physicsLab`自定义异常类
 from .errors import *
 from . import _warn

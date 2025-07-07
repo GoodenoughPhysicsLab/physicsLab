@@ -6,6 +6,7 @@ import warnings
 import threading
 from .base import *
 from physicsLab.lib import *
+from physicsLab._tools import position
 from physicsLab._core import _ExperimentStack
 
 def my_test_dec(method: Callable):
@@ -640,16 +641,22 @@ class BasicTest(TestCase, ViztracerTool):
             expe.close(delete=True)
 
     @my_test_dec
-    def test_two_four_decoder(self):
-        with Experiment(OpenMode.crt, "__test___two_four_decoder__", ExperimentType.Circuit, force_crt=True) as expe:
+    def test_decoder(self):
+        with Experiment(OpenMode.crt, "__test___decoder__", ExperimentType.Circuit, force_crt=True) as expe:
             i = lib.Inputs(-1, 0, 0, bitnum=2)
-            decoder = lib.TwoFour_Decoder(0, 0, 0)
+            decoder = lib.Decoder(0, 0, 0, bitnum=2)
             o = lib.Outputs(1, 0, 0, bitnum=4)
             lib.crt_wires(i.outputs, decoder.inputs)
             lib.crt_wires(decoder.outputs, o.inputs)
             self.assertEqual(expe.get_elements_count(), 10)
             self.assertEqual(expe.get_wires_count(), 12)
             expe.close(delete=True)
+
+    @my_test_dec
+    def test_decoder2(self):
+        with Experiment(OpenMode.crt, "__test___decoder_2__", ExperimentType.Circuit, force_crt=True) as expe:
+            lib.Decoder(0, 0, 0, bitnum=5, align_delays=True)
+            self.assertEqual(expe.get_elements_count(), 30)
 
     @my_test_dec
     def test_switched_register(self):
@@ -701,3 +708,14 @@ class BasicTest(TestCase, ViztracerTool):
             self.assertEqual(len(lib.analog._gn[expe]), 7)
             self.assertEqual(len(lib.analog._gicw[expe]), 25)
             expe.close(delete=True)
+
+    @my_test_dec
+    def test_translate_elementXYZ(self):
+        o = position(1, 2, -1)
+        for x in range(10):
+            for y in range(10):
+                for z in range(10):
+                    x_, y_, z_ = elementXYZ_to_native(*native_to_elementXYZ(x, y, z, o), o)
+                    assert x == x_
+                    assert y == y_
+                    assert z == z_

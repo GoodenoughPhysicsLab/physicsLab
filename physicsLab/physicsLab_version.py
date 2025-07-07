@@ -1,10 +1,9 @@
 from typing import Tuple
 
+
 class _Version:
     def __init__(self, major: int, minor: int, patch: int) -> None:
-        if major < 0 \
-                or minor < 0 \
-                or patch < 0:
+        if major < 0 or minor < 0 or patch < 0:
             raise ValueError
 
         self.major = major
@@ -34,5 +33,6 @@ class _Version:
 
     def __le__(self, value: object) -> bool:
         return self.to_tuple() <= value
+
 
 __version__ = _Version(2, 0, 5)

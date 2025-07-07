@@ -6,6 +6,7 @@ from physicsLab.savTemplate import Generate
 
 num_type: TypeAlias = Union[int, float]
 
+
 class CircuitElementData(TypedDict):
     ModelID: Union[str, Type[Generate]]
     IsBroken: bool
