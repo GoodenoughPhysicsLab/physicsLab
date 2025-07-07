@@ -19,6 +19,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/GoodenoughPhysicsLab/physicsLab",
     packages=setuptools.find_packages(include=["physicsLab", "physicsLab.*"]),
+    install_requires=["requests==2.32.3"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

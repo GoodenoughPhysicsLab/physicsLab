@@ -5,7 +5,7 @@
 '''
 
 import os
-from physicsLab.vendor import requests
+import requests
 
 from physicsLab import plAR
 from physicsLab import enums

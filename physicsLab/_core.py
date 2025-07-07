@@ -12,7 +12,7 @@ import json
 import copy
 import time
 import gzip
-from .vendor import requests
+import requests
 import platform
 
 from physicsLab import plAR
