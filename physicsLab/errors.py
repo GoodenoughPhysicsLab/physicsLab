@@ -21,7 +21,7 @@ import ast
 import math
 import inspect
 import threading
-import executing
+from .vendor import executing
 
 from ._typing import NoReturn
 from physicsLab import _unwind
