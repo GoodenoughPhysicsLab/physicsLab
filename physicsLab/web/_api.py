@@ -45,7 +45,8 @@ def _check_response(
     if err_callback is not None:
         err_callback(status_code)
     raise errors.ResponseFail(
-        f"Physics-Lab-AR's server returned error code {status_code}: {response_json['Message']}"
+        status_code,
+        response_json['Message']
     )
 
 
@@ -631,6 +632,7 @@ class _User:
                 raise PermissionError("login failed")
             if status_code == 404:
                 raise errors.ResponseFail(
+                    404,
                     "experiment not found(may be you select category wrong)"
                 )
 
@@ -703,12 +705,21 @@ class _User:
 
         return _check_response(response)
 
-    def get_profile(self) -> _api_result:
-        """获取用户主页信息"""
+    def get_profile(self, user_id: Optional[str] = None) -> _api_result:
+        """获取用户主页信息
+
+        Args:
+            user_id: 要获取主页信息的用户的id, 若为None则是获取自己的主页信息
+        """
+        if not isinstance(user_id, (str, type(None))):
+            errors.type_error(f"Parameter user_id must be of type `Optional[str]`, but got value {user_id} of type `{type(user_id).__name__}`")
+
+        if user_id is None:
+            user_id = self.user_id
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Contents/GetProfile",
             json={
-                "ID": self.user_id,
+                "ID": user_id,
             },
             headers={
                 "Content-Type": "application/json",
@@ -803,8 +814,8 @@ class _User:
             response.raise_for_status()
             if response.json()["code"] != 200:
                 raise errors.ResponseFail(
-                    f"Physics-Lab-AR returned error code {response.json()['code']} : "
-                    f"{response.json()['message']}`"
+                    response.json()["code"],
+                    response.json()['message']
                 )
             return response.json()
 

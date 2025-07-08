@@ -259,12 +259,12 @@ class ExperimentError(Exception):
 class ResponseFail(Exception):
     """返回消息体失败"""
 
-    # TODO 获取对应的错误码
-    def __init__(self, err_msg: LiteralString):
+    def __init__(self, err_code: int, err_msg: str):
+        self .err_code: int = err_code
         self.err_msg: str = err_msg
 
     def __str__(self):
-        return self.err_msg
+        return f"Physics-Lab-AR's server returns error code {self.err_code} : {self.err_msg}"
 
 
 class MaxRetryError(Exception):
