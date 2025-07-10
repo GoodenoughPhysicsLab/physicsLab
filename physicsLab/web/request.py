@@ -30,7 +30,7 @@ def get_http(domain: str, path: str, port: Optional[int] = None) -> bytes:
     try:
         req = urllib.request.urlopen(url)
     except urllib.error.HTTPError as e:
-        raise errors.ResponseFail(e.code, e.reason)
+        raise errors.ResponseFail(e.code, e.reason) from e
 
     return req.read()
 
@@ -55,7 +55,7 @@ def get_https(domain: str, path: str, port: Optional[int] = None, verify: bool =
     try:
         req = urllib.request.urlopen(url)
     except urllib.error.HTTPError as e:
-        raise errors.ResponseFail(e.code, e.reason)
+        raise errors.ResponseFail(e.code, e.reason) from e
 
     return req.read()
 
@@ -71,8 +71,8 @@ def post(protocal: _Protocol, domain: str, path: str, header: dict, body: dict, 
         errors.type_error(f"Parameter header must be of type `dict`, but got value {header} of type `{type(header).__name__}`")
     if not isinstance(body, dict):
         errors.type_error(f"Parameter body must be of type `dict`, but got value {body} of type `{type(body).__name__}`")
-    if not isinstance(port, int):
-        errors.type_error(f"Parameter port must be of type `int`, but got value {port} of type `{type(port).__name__}`")
+    if not isinstance(port, (int, type(None))):
+        errors.type_error(f"Parameter port must be of type `Optional[int]`, but got value {port} of type `{type(port).__name__}`")
 
     if port is None:
         if protocal == _Protocol.https:
