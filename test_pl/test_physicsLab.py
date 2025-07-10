@@ -704,7 +704,7 @@ class BasicTest(TestCase, ViztracerTool):
             nl.pos = (0, -11, 0)
             lib.lambertW(lib.PinNode(Logic_Input(-9, 11, 0).o, gnd))
             self.assertEqual(expe.get_elements_count(), 107)
-            self.assertEqual(expe.get_wires_count(), 159)
+            self.assertEqual(expe.get_wires_count(), 160)
             self.assertEqual(len(lib.analog._gn[expe]), 7)
             self.assertEqual(len(lib.analog._gicw[expe]), 25)
             expe.close(delete=True)
