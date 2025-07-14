@@ -41,7 +41,7 @@ def get_comments(self, target_id: str, target_type: str, take: int = 16, skip: i
 *  target_id: 物实用户的ID/实验的id
 *  target_type: User, Discussion, Experiment
 *  take: 获取留言的数量
-*  skip: 跳过的留言数量, 为(unix时间戳 * 1000)
+*  skip: 跳过的留言数量
 *  comment_id: 从comment_id开始获取take条消息 (另一种skip的规则)
 
 对应的协程风格的api:
@@ -150,7 +150,7 @@ async def async_get_summary(self, content_id: str, category: physicsLab.enums.Ca
 def get_supporters(self, content_id: str, category: physicsLab.enums.Category, skip: int = 0, take: int = 16) -> physicsLab.web._api._api_result
 ```
 *  category: .Experiment 或 .Discussion
-*  skip: 传入一个时间戳, 跳过skip条消息
+*  skip: 传入一个整数, 跳过skip条消息
 *  take: 取take条消息
 
 对应的协程风格的api:

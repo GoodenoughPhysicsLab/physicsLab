@@ -42,7 +42,7 @@ user = web.token_login(
 * avatar: 当前头像的索引
 * avatar_region
 * decoration
-* verification
+* verification: 用户认证信息 Administrator|Banned etc.
 ~~为什么有些属性没写是什么意思呢? 因为我也不知道()~~
 
 `User`类也提供了一些方法, 这些方法是对物实网络api的封装:
