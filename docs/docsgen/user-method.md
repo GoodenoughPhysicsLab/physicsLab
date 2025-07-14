@@ -16,7 +16,6 @@ async def async_ban(self, target_id: str, reason: str, length: int) -> Awaitable
 ```Python
 def confirm_experiment(self, summary_id: str, category: physicsLab.enums.Category, image_counter: int) -> physicsLab.web._api._api_result
 ```
-
 对应的协程风格的api:
 ```Python
 async def async_confirm_experiment(self, summary_id: str, category: physicsLab.enums.Category, image_counter: int) -> Awaitable[physicsLab.web._api._api_result]
@@ -74,7 +73,7 @@ def get_experiment(self, content_id: str, category: Optional[physicsLab.enums.Ca
 async def async_get_experiment(self, content_id: str, category: Optional[physicsLab.enums.Category] = None) -> Awaitable[physicsLab.web._api._api_result]
 ```
 
-## 获取社区作品列表 
+## 获取社区作品列表
 ```Python
 def get_library(self) -> physicsLab.web._api._api_result
 ```
@@ -113,7 +112,6 @@ async def async_get_messages(self, category_id: int, skip: int = 0, take: int = 
 ```Python
 def get_profile(self) -> physicsLab.web._api._api_result
 ```
-
 对应的协程风格的api:
 ```Python
 async def async_get_profile(self) -> Awaitable[physicsLab.web._api._api_result]
@@ -207,7 +205,8 @@ def query_experiments(self, category: physicsLab.enums.Category, tags: Optional[
 *  exclude_languages: 除了列表内的语言的实验都会被搜索到
 *  user_id: 指定搜索的作品的发布者
 *  take: 搜索数量
-*  skip: 跳过搜索数量
+*  from_skip: 起始作品id
+*  skip: 从起始作品开始，跳过搜索数量；如果起始作品id没有传递参数，则以最新作品为起始
 
 对应的协程风格的api:
 ```Python
