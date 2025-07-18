@@ -191,7 +191,8 @@ class _User:
         @param exclude_languages: 除了列表内的语言的实验都会被搜索到
         @param user_id: 指定搜索的作品的发布者
         @param take: 搜索数量
-        @param skip: 跳过搜索数量
+        @param from_skip: 起始作品id
+        @param skip: 从起始作品开始，跳过搜索数量；如果起始作品id没有传递参数，则以最新作品为起始
         """
         if not isinstance(category, Category):
             errors.type_error(
@@ -553,7 +554,7 @@ class _User:
         @param target_id: 物实用户的ID/实验的id
         @param target_type: User, Discussion, Experiment
         @param take: 获取留言的数量
-        @param skip: 跳过的留言数量, 为(unix时间戳 * 1000)
+        @param skip: 跳过的留言数量
         @param comment_id: 从comment_id开始获取take条消息 (另一种skip的规则)
         """
         if not isinstance(target_id, str):
@@ -888,7 +889,7 @@ class _User:
     ) -> _api_result:
         """获取支持列表
         @param category: .Experiment 或 .Discussion
-        @param skip: 传入一个时间戳, 跳过skip条消息
+        @param skip: 传入一个整数, 跳过skip条消息
         @param take: 取take条消息
         """
         if not isinstance(content_id, str):

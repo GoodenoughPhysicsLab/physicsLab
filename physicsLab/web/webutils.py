@@ -161,6 +161,7 @@ class ExperimentsIter:
         @param user_id: 用户ID
         @param take: 每次获取的数量
         @param skip: 起始位置
+        @param from_skip: 起始作品id
         @param max_retry: 最大重试次数
         @param max_workers: 最大线程数
         """

@@ -583,7 +583,6 @@ class Simple_Switch(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -602,14 +601,15 @@ class Simple_Switch(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -645,7 +645,6 @@ class Push_Switch(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -664,14 +663,15 @@ class Push_Switch(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -695,7 +695,6 @@ class Air_Switch(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -714,14 +713,15 @@ class Air_Switch(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -757,7 +757,6 @@ class Incandescent_Lamp(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -776,14 +775,15 @@ class Incandescent_Lamp(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -807,7 +807,6 @@ class Battery_Source(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -826,14 +825,15 @@ class Battery_Source(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -863,7 +863,6 @@ class Resistor(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -882,14 +881,15 @@ class Resistor(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -913,7 +913,6 @@ class Fuse_Component(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -932,14 +931,15 @@ class Fuse_Component(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -963,7 +963,6 @@ class Multimeter(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -982,14 +981,15 @@ class Multimeter(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1017,7 +1017,6 @@ class Basic_Capacitor(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1036,14 +1035,15 @@ class Basic_Capacitor(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1077,7 +1077,6 @@ class Basic_Inductor(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1096,14 +1095,15 @@ class Basic_Inductor(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1127,7 +1127,6 @@ class Basic_Diode(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1146,14 +1145,15 @@ class Basic_Diode(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1177,7 +1177,6 @@ class Light_Emitting_Diode(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1196,14 +1195,15 @@ class Light_Emitting_Diode(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1227,7 +1227,6 @@ class Current_Source(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1246,14 +1245,15 @@ class Current_Source(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1277,7 +1277,6 @@ class Sinewave_Source(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1296,14 +1295,15 @@ class Sinewave_Source(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1327,7 +1327,6 @@ class Square_Source(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1346,14 +1345,15 @@ class Square_Source(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1377,7 +1377,6 @@ class Triangle_Source(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1396,14 +1395,15 @@ class Triangle_Source(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1427,7 +1427,6 @@ class Sawtooth_Source(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1446,14 +1445,15 @@ class Sawtooth_Source(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1477,7 +1477,6 @@ class Pulse_Source(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1496,14 +1495,15 @@ class Pulse_Source(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1527,7 +1527,6 @@ class Photodiode(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1546,14 +1545,15 @@ class Photodiode(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1577,7 +1577,6 @@ class Photoresistor(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1596,14 +1595,15 @@ class Photoresistor(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1627,7 +1627,6 @@ class Buzzer(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1646,14 +1645,15 @@ class Buzzer(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1677,7 +1677,6 @@ class Spark_Gap(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1696,14 +1695,15 @@ class Spark_Gap(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1727,7 +1727,6 @@ class Tesla_Coil(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1746,14 +1745,15 @@ class Tesla_Coil(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1777,7 +1777,6 @@ class Dual_Light_Emitting_Diode(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1796,14 +1795,15 @@ class Dual_Light_Emitting_Diode(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1827,7 +1827,6 @@ class Electric_Bell(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1846,14 +1845,15 @@ class Electric_Bell(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1877,7 +1877,6 @@ class Musical_Box(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1896,14 +1895,15 @@ class Musical_Box(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1927,7 +1927,6 @@ class Electric_Fan(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1946,14 +1945,15 @@ class Electric_Fan(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -1977,7 +1977,6 @@ class Simple_Switch(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -1996,14 +1995,15 @@ class Simple_Switch(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2039,7 +2039,6 @@ class SPDT_Switch(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2064,7 +2063,9 @@ class SPDT_Switch(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### right_turn_on_switch
 ```Python
@@ -2077,7 +2078,6 @@ class SPDT_Switch(CircuitBase):
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2107,7 +2107,6 @@ class DPDT_Switch(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2132,7 +2131,9 @@ class DPDT_Switch(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### right_turn_on_switch
 ```Python
@@ -2145,7 +2146,6 @@ class DPDT_Switch(CircuitBase):
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2175,7 +2175,6 @@ class Student_Source(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2194,14 +2193,15 @@ class Student_Source(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2225,7 +2225,6 @@ class Slide_Rheostat(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2244,14 +2243,15 @@ class Slide_Rheostat(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2275,7 +2275,6 @@ class Galvanometer(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2294,14 +2293,15 @@ class Galvanometer(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2325,7 +2325,6 @@ class Microammeter(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2344,14 +2343,15 @@ class Microammeter(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2375,7 +2375,6 @@ class Electricity_Meter(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2394,14 +2393,15 @@ class Electricity_Meter(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2425,7 +2425,6 @@ class Resistance_Box(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2444,14 +2443,15 @@ class Resistance_Box(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2475,7 +2475,6 @@ class Simple_Ammeter(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2494,14 +2493,15 @@ class Simple_Ammeter(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2525,7 +2525,6 @@ class Simple_Voltmeter(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2544,14 +2543,15 @@ class Simple_Voltmeter(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2575,7 +2575,6 @@ class Logic_Input(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2594,14 +2593,15 @@ class Logic_Input(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2625,7 +2625,6 @@ class Logic_Output(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2644,14 +2643,15 @@ class Logic_Output(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2675,7 +2675,6 @@ class Yes_Gate(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2694,14 +2693,15 @@ class Yes_Gate(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2725,7 +2725,6 @@ class No_Gate(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2744,14 +2743,15 @@ class No_Gate(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2775,7 +2775,6 @@ class Or_Gate(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2794,14 +2793,15 @@ class Or_Gate(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2825,7 +2825,6 @@ class And_Gate(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2844,14 +2843,15 @@ class And_Gate(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2875,7 +2875,6 @@ class Nor_Gate(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2894,14 +2893,15 @@ class Nor_Gate(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2925,7 +2925,6 @@ class Nand_Gate(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2944,14 +2943,15 @@ class Nand_Gate(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -2975,7 +2975,6 @@ class Xor_Gate(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -2994,14 +2993,15 @@ class Xor_Gate(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3025,7 +3025,6 @@ class Xnor_Gate(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3044,14 +3043,15 @@ class Xnor_Gate(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3075,7 +3075,6 @@ class Imp_Gate(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3094,14 +3093,15 @@ class Imp_Gate(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3125,7 +3125,6 @@ class Nimp_Gate(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3144,14 +3143,15 @@ class Nimp_Gate(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3175,7 +3175,6 @@ class Half_Adder(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3194,14 +3193,15 @@ class Half_Adder(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3225,7 +3225,6 @@ class Full_Adder(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3244,14 +3243,15 @@ class Full_Adder(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3275,7 +3275,6 @@ class Half_Subtractor(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3294,14 +3293,15 @@ class Half_Subtractor(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3325,7 +3325,6 @@ class Full_Subtractor(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3344,14 +3343,15 @@ class Full_Subtractor(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3375,7 +3375,6 @@ class Multiplier(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3394,14 +3393,15 @@ class Multiplier(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3425,7 +3425,6 @@ class D_Flipflop(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3444,14 +3443,15 @@ class D_Flipflop(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3475,7 +3475,6 @@ class T_Flipflop(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3494,14 +3493,15 @@ class T_Flipflop(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3525,7 +3525,6 @@ class Real_T_Flipflop(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3544,14 +3543,15 @@ class Real_T_Flipflop(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3575,7 +3575,6 @@ class JK_Flipflop(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3594,14 +3593,15 @@ class JK_Flipflop(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3625,7 +3625,6 @@ class Counter(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3644,14 +3643,15 @@ class Counter(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3675,7 +3675,6 @@ class Random_Generator(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3694,14 +3693,15 @@ class Random_Generator(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3725,7 +3725,6 @@ class Eight_Bit_Input(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3744,7 +3743,9 @@ class Eight_Bit_Input(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_num
 ```Python
@@ -3756,7 +3757,6 @@ class Eight_Bit_Input(CircuitBase):
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3780,7 +3780,6 @@ class Eight_Bit_Display(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3799,14 +3798,15 @@ class Eight_Bit_Display(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3830,7 +3830,6 @@ class Proximity_Sensor(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3849,14 +3848,15 @@ class Proximity_Sensor(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3880,7 +3880,6 @@ class Schmitt_Trigger(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3899,14 +3898,15 @@ class Schmitt_Trigger(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3930,7 +3930,6 @@ class NE555(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3949,14 +3948,15 @@ class NE555(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -3980,7 +3980,6 @@ class Ground_Component(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -3999,14 +3998,15 @@ class Ground_Component(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4030,7 +4030,6 @@ class Transformer(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4049,14 +4048,15 @@ class Transformer(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4080,7 +4080,6 @@ class Tapped_Transformer(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4099,14 +4098,15 @@ class Tapped_Transformer(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4130,7 +4130,6 @@ class Mutual_Inductor(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4149,14 +4148,15 @@ class Mutual_Inductor(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4180,7 +4180,6 @@ class Rectifier(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4199,14 +4198,15 @@ class Rectifier(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4230,7 +4230,6 @@ class Transistor(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4249,14 +4248,15 @@ class Transistor(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4280,7 +4280,6 @@ class Comparator(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4299,14 +4298,15 @@ class Comparator(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4333,7 +4333,6 @@ class Operational_Amplifier(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4352,14 +4351,15 @@ class Operational_Amplifier(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4383,7 +4383,6 @@ class Relay_Component(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4402,14 +4401,15 @@ class Relay_Component(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4433,7 +4433,6 @@ class N_MOSFET(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4452,14 +4451,15 @@ class N_MOSFET(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4483,7 +4483,6 @@ class P_MOSFET(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4502,14 +4501,15 @@ class P_MOSFET(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4533,7 +4533,6 @@ class Accelerometer(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4552,14 +4551,15 @@ class Accelerometer(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4583,7 +4583,6 @@ class Attitude_Sensor(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4602,14 +4601,15 @@ class Attitude_Sensor(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4633,7 +4633,6 @@ class Gravity_Sensor(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4652,14 +4651,15 @@ class Gravity_Sensor(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4683,7 +4683,6 @@ class Gyroscope(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4702,14 +4701,15 @@ class Gyroscope(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4733,7 +4733,6 @@ class Linear_Accelerometer(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4752,14 +4751,15 @@ class Linear_Accelerometer(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4783,7 +4783,6 @@ class Magnetic_Field_Sensor(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4802,14 +4801,15 @@ class Magnetic_Field_Sensor(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4833,7 +4833,6 @@ class Analog_Joystick(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4852,14 +4851,15 @@ class Analog_Joystick(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4883,7 +4883,6 @@ class Color_Light_Emitting_Diode(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4902,14 +4901,15 @@ class Color_Light_Emitting_Diode(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4933,7 +4933,6 @@ class Resistance_Law(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -4952,14 +4951,15 @@ class Resistance_Law(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -4983,7 +4983,6 @@ class Solenoid(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -5002,14 +5001,15 @@ class Solenoid(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_rotation
 ```Python
@@ -5040,7 +5040,6 @@ class Simple_Instrument(CircuitBase):
     def get_all_pins_property()
 ```
 获取该元件的所有引脚对应的property  
-  
 
 ### get_index
 ```Python
@@ -5059,14 +5058,15 @@ class Simple_Instrument(CircuitBase):
     def rename(self, name: str) -> Self
 ```
 重命名元件  
-@param name: 将元件重命名为name  
+  
+Args:  
+name: 将元件重命名为name  
 
 ### set_position
 ```Python
     def set_position(self, x: Union[int, float], y: Union[int, float], z: Union[int, float], elementXYZ: Optional[bool] = None) -> Self
 ```
 设置元件的位置  
-  
 
 ### set_properties
 ```Python
