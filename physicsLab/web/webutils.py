@@ -711,7 +711,7 @@ class AvatarsIter:
                     self.max_retry,
                     get_avatar,
                     self.target_id,
-                    index,
+                    index+1,
                     self.category,
                     self.size_category,
                 )
