@@ -71,7 +71,7 @@ def get_https(
 
 
 def post_http(
-    domain: str, path: str, header: dict, data: bytes, port: Optional[int] = None
+    domain: str, path: str, header: dict, body: bytes, port: Optional[int] = None
 ) -> dict:
     if not isinstance(domain, str):
         errors.type_error(
@@ -85,10 +85,9 @@ def post_http(
         errors.type_error(
             f"Parameter header must be of type `dict`, but got value {header} of type `{type(header).__name__}`"
         )
-
-    if not isinstance(data, (bytes, dict)): 
+    if not isinstance(body, (bytes, dict)):
         errors.type_error(
-            f"Parameter data must be of type `bytes` or `dict`, but got value {data} of type `{type(data).__name__}`"
+            f"Parameter body must be of type `bytes` or `dict`, but got value {body} of type `{type(body).__name__}`"
         )
     if not isinstance(port, (int, type(None))):
         errors.type_error(
@@ -97,27 +96,32 @@ def post_http(
 
     if port is None:
         port = 80
-        
-    if isinstance(data, dict):
-        final_data = json.dumps(data).encode("utf-8")
+      
+    if isinstance(body, dict):
+        final_body = json.dumps(body).encode("utf-8")
     else:
-        final_data = data
+        final_body = body
 
     url = f"http://{domain}:{port}/{path}"
-    req = urllib.request.Request(url, data=final_data, method="POST")
+    req = urllib.request.Request(url, data=final_body, method="POST")
     req.headers = header
 
     with urllib.request.urlopen(req) as response:
         if response.getcode() != 200:
             raise errors.ResponseFail(response.getcode(), response.reason)
-        return json.loads(response.read())
+        if response.info().get('Content-Encoding') == 'gzip':
+            import gzip
+            content = gzip.decompress(response.read())
+        else:
+            content = response.read()
+        return json.loads(content)
 
 
 def post_https(
     domain: str,
     path: str,
     header: dict,
-    data: bytes, 
+    body: bytes,
     port: Optional[int] = None,
     verify: bool = True,
 ) -> dict:
@@ -133,9 +137,9 @@ def post_https(
         errors.type_error(
             f"Parameter header must be of type `dict`, but got value {header} of type `{type(header).__name__}`"
         )
-    if not isinstance(data, (bytes, dict)): 
+    if not isinstance(body, (bytes, dict)):
         errors.type_error(
-            f"Parameter data must be of type `bytes` or `dict`, but got value {data} of type `{type(data).__name__}`"
+            f"Parameter body must be of type `bytes` or `dict`, but got value {body} of type `{type(body).__name__}`"
         )
     if not isinstance(port, (int, type(None))):
         errors.type_error(
@@ -150,16 +154,21 @@ def post_https(
 
         ssl._create_default_https_context = ssl._create_unverified_context
         
-    if isinstance(data, dict):
-        final_data = json.dumps(data).encode("utf-8")
+    if isinstance(body, dict):
+        final_body = json.dumps(body).encode("utf-8")
     else:
-        final_data = data
+        final_body = body
 
     url = f"https://{domain}:{port}/{path}"
-    req = urllib.request.Request(url, data=final_data, method="POST")
+    req = urllib.request.Request(url, data=final_body, method="POST")
     req.headers = header
 
     with urllib.request.urlopen(req) as response:
         if response.getcode() != 200:
             raise errors.ResponseFail(response.getcode(), response.reason)
-        return json.loads(response.read())
+        if response.info().get('Content-Encoding') == 'gzip':
+            import gzip
+            content = gzip.decompress(response.read())
+        else:
+            content = response.read()
+        return json.loads(content)
