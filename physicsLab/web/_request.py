@@ -71,7 +71,7 @@ def get_https(
 
 
 def post_http(
-    domain: str, path: str, header: dict, body: dict, port: Optional[int] = None
+    domain: str, path: str, header: dict, data: bytes, port: Optional[int] = None
 ) -> dict:
     if not isinstance(domain, str):
         errors.type_error(
@@ -85,9 +85,10 @@ def post_http(
         errors.type_error(
             f"Parameter header must be of type `dict`, but got value {header} of type `{type(header).__name__}`"
         )
-    if not isinstance(body, dict):
+
+    if not isinstance(data, (bytes, dict)): 
         errors.type_error(
-            f"Parameter body must be of type `dict`, but got value {body} of type `{type(body).__name__}`"
+            f"Parameter data must be of type `bytes` or `dict`, but got value {data} of type `{type(data).__name__}`"
         )
     if not isinstance(port, (int, type(None))):
         errors.type_error(
@@ -96,10 +97,14 @@ def post_http(
 
     if port is None:
         port = 80
+        
+    if isinstance(data, dict):
+        final_data = json.dumps(data).encode("utf-8")
+    else:
+        final_data = data
 
     url = f"http://{domain}:{port}/{path}"
-    data = json.dumps(body).encode("utf-8")
-    req = urllib.request.Request(url, data=data, method="POST")
+    req = urllib.request.Request(url, data=final_data, method="POST")
     req.headers = header
 
     with urllib.request.urlopen(req) as response:
@@ -112,7 +117,7 @@ def post_https(
     domain: str,
     path: str,
     header: dict,
-    body: dict,
+    data: bytes, 
     port: Optional[int] = None,
     verify: bool = True,
 ) -> dict:
@@ -128,9 +133,9 @@ def post_https(
         errors.type_error(
             f"Parameter header must be of type `dict`, but got value {header} of type `{type(header).__name__}`"
         )
-    if not isinstance(body, dict):
+    if not isinstance(data, (bytes, dict)): 
         errors.type_error(
-            f"Parameter body must be of type `dict`, but got value {body} of type `{type(body).__name__}`"
+            f"Parameter data must be of type `bytes` or `dict`, but got value {data} of type `{type(data).__name__}`"
         )
     if not isinstance(port, (int, type(None))):
         errors.type_error(
@@ -144,10 +149,14 @@ def post_https(
         import ssl
 
         ssl._create_default_https_context = ssl._create_unverified_context
+        
+    if isinstance(data, dict):
+        final_data = json.dumps(data).encode("utf-8")
+    else:
+        final_data = data
 
     url = f"https://{domain}:{port}/{path}"
-    data = json.dumps(body).encode("utf-8")
-    req = urllib.request.Request(url, data=data, method="POST")
+    req = urllib.request.Request(url, data=final_data, method="POST")
     req.headers = header
 
     with urllib.request.urlopen(req) as response:
