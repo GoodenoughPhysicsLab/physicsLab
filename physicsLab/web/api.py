@@ -1,3 +1,8 @@
+好的，我将根据您的要求，对提供的 _async_api.py 文件进行修改，将其中的 requests 库调用替换为 _request.py 中的函数，并严格遵守不修改其他部分代码和注释的规则。
+
+这是修改后的代码：
+
+Generated python
 # -*- coding: utf-8 -*-
 """该文件提供协程风格的api的封装
 所有以`async_`开头的函数/方法均为协程风格的api
@@ -6,7 +11,7 @@ import sys
 import asyncio
 import functools
 import contextvars
-import requests
+from . import _request
 from ._api import _User, get_avatar, get_start_page, _check_response, _api_result
 from physicsLab import plAR
 from physicsLab import enums
@@ -259,23 +264,27 @@ def anonymous_login() -> User:
     else:
         plar_version = 2411
 
-    response = requests.post(
-        "http://physics-api-cn.turtlesim.com/Users/Authenticate",
-        json={
-            "Login": None,
-            "Password": None,
-            "Version": plar_version,
-            "Device": {
-                "Identifier": "7db01528cf13e2199e141c402d79190e",
-                "Language": "Chinese",
-            },
+    body = {
+        "Login": None,
+        "Password": None,
+        "Version": plar_version,
+        "Device": {
+            "Identifier": "7db01528cf13e2199e141c402d79190e",
+            "Language": "Chinese",
         },
-        headers={
-            "Content-Type": "application/json",
-        },
+    }
+    headers = {
+        "Content-Type": "application/json",
+    }
+    
+    response_json = _request.post_http(
+        domain="physics-api-cn.turtlesim.com",
+        path="Users/Authenticate",
+        header=headers,
+        body=body,
     )
 
-    return User(_check_response(response))
+    return User(_check_response(response_json))
 
 
 def email_login(email: str, password: str) -> User:
@@ -294,24 +303,28 @@ def email_login(email: str, password: str) -> User:
         plar_version = int(f"{plar_version[0]}{plar_version[1]}{plar_version[2]}")
     else:
         plar_version = 2411
-
-    response = requests.post(
-        "http://physics-api-cn.turtlesim.com/Users/Authenticate",
-        json={
-            "Login": email,
-            "Password": password,
-            "Version": plar_version,
-            "Device": {
-                "Identifier": "7db01528cf13e2199e141c402d79190e",
-                "Language": "Chinese",
-            },
+        
+    body = {
+        "Login": email,
+        "Password": password,
+        "Version": plar_version,
+        "Device": {
+            "Identifier": "7db01528cf13e2199e141c402d79190e",
+            "Language": "Chinese",
         },
-        headers={
-            "Content-Type": "application/json",
-        },
+    }
+    headers = {
+        "Content-Type": "application/json",
+    }
+    
+    response_json = _request.post_http(
+        domain="physics-api-cn.turtlesim.com",
+        path="Users/Authenticate",
+        header=headers,
+        body=body,
     )
 
-    return User(_check_response(response))
+    return User(_check_response(response_json))
 
 
 def token_login(token: str, auth_code: str) -> User:
@@ -331,25 +344,29 @@ def token_login(token: str, auth_code: str) -> User:
     else:
         plar_version = 2411
 
-    response = requests.post(
-        "http://physics-api-cn.turtlesim.com/Users/Authenticate",
-        json={
-            "Login": None,
-            "Password": None,
-            "Version": plar_version,
-            "Device": {
-                "Identifier": "7db01528cf13e2199e141c402d79190e",
-                "Language": "Chinese",
-            },
+    body = {
+        "Login": None,
+        "Password": None,
+        "Version": plar_version,
+        "Device": {
+            "Identifier": "7db01528cf13e2199e141c402d79190e",
+            "Language": "Chinese",
         },
-        headers={
-            "Content-Type": "application/json",
-            "x-API-Token": token,
-            "x-API-AuthCode": auth_code,
-        },
+    }
+    headers = {
+        "Content-Type": "application/json",
+        "x-API-Token": token,
+        "x-API-AuthCode": auth_code,
+    }
+
+    response_json = _request.post_http(
+        domain="physics-api-cn.turtlesim.com",
+        path="Users/Authenticate",
+        header=headers,
+        body=body,
     )
 
-    return User(_check_response(response))
+    return User(_check_response(response_json))
 
 
 async def async_anonymous_login() -> Awaitable[User]:
@@ -362,3 +379,7 @@ async def async_email_login(email: str, password: str) -> Awaitable[User]:
 
 async def async_token_login(token: str) -> Awaitable[User]:
     return await _async_wrapper(token_login, token)
+content_copy
+download
+Use code with caution.
+Python
