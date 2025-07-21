@@ -12,9 +12,9 @@ import json
 import copy
 import time
 import gzip
-import requests
 import platform
 
+from physicsLab.web import _request
 from physicsLab import plAR
 from physicsLab import _tools
 from physicsLab import _warn
@@ -588,17 +588,21 @@ class _Experiment:
                 "FileSize": image_size,
                 "Extension": ".jpg",
             }
-
-        submit_response = requests.post(
-            "https://physics-api-cn.turtlesim.com/Contents/SubmitExperiment",
-            data=gzip.compress(json.dumps(submit_data).encode("utf-8")),
-            headers={
-                "x-API-Token": user.token,
-                "x-API-AuthCode": user.auth_code,
-                "x-API-Version": str(plar_version),
-                "Accept-Encoding": "gzip",
-                "Content-Type": "gzipped/json",
-            },
+        
+        headers = {
+            "x-API-Token": user.token,
+            "x-API-AuthCode": user.auth_code,
+            "x-API-Version": str(plar_version),
+            "Accept-Encoding": "gzip",
+            "Content-Type": "gzipped/json",
+        }
+        gzipped_data = gzip.compress(json.dumps(submit_data).encode("utf-8"))
+        
+        submit_response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Contents/SubmitExperiment",
+            header=headers,
+            body=gzipped_data
         )
 
         def callback(status_code):
@@ -610,9 +614,9 @@ class _Experiment:
                     )
                 )
 
-        _check_response(submit_response, callback)
+        _check_response(submit_response_json, callback)
 
-        return submit_response.json(), submit_data
+        return submit_response_json, submit_data
 
     @_check_not_closed
     def upload(
@@ -682,18 +686,22 @@ class _Experiment:
         if image_path is not None:
             submit_data["Summary"]["Image"] += 1
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com/Contents/SubmitExperiment",
-            data=gzip.compress(json.dumps(submit_data).encode("utf-8")),
-            headers={
-                "x-API-Token": user.token,
-                "x-API-AuthCode": user.auth_code,
-                "x-API-Version": str(submit_data["Summary"]["Version"]),
-                "Accept-Encoding": "gzip",
-                "Content-Type": "gzipped/json",
-            },
+        headers={
+            "x-API-Token": user.token,
+            "x-API-AuthCode": user.auth_code,
+            "x-API-Version": str(submit_data["Summary"]["Version"]),
+            "Accept-Encoding": "gzip",
+            "Content-Type": "gzipped/json",
+        }
+        gzipped_data = gzip.compress(json.dumps(submit_data).encode("utf-8"))
+        
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Contents/SubmitExperiment",
+            header=headers,
+            body=gzipped_data,
         )
-        _check_response(response)
+        _check_response(response_json)
 
         if image_path is not None:
             user.upload_image(
