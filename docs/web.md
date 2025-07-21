@@ -8,7 +8,7 @@
 
 ```python
 from physicsLab import web
-user = anonymous_login()
+user = web.anonymous_login()
 ```
 
 * 通过邮箱密码登录:

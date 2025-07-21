@@ -16,7 +16,6 @@ async def async_ban(self, target_id: str, reason: str, length: int) -> Awaitable
 ```Python
 def confirm_experiment(self, summary_id: str, category: physicsLab.enums.Category, image_counter: int) -> physicsLab.web._api._api_result
 ```
-
 对应的协程风格的api:
 ```Python
 async def async_confirm_experiment(self, summary_id: str, category: physicsLab.enums.Category, image_counter: int) -> Awaitable[physicsLab.web._api._api_result]
@@ -74,7 +73,7 @@ def get_experiment(self, content_id: str, category: Optional[physicsLab.enums.Ca
 async def async_get_experiment(self, content_id: str, category: Optional[physicsLab.enums.Category] = None) -> Awaitable[physicsLab.web._api._api_result]
 ```
 
-## 获取社区作品列表 
+## 获取社区作品列表
 ```Python
 def get_library(self) -> physicsLab.web._api._api_result
 ```
@@ -113,7 +112,6 @@ async def async_get_messages(self, category_id: int, skip: int = 0, take: int = 
 ```Python
 def get_profile(self) -> physicsLab.web._api._api_result
 ```
-
 对应的协程风格的api:
 ```Python
 async def async_get_profile(self) -> Awaitable[physicsLab.web._api._api_result]
