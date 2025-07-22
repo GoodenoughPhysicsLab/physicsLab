@@ -35,4 +35,4 @@ class _Version:
         return self.to_tuple() <= value
 
 
-__version__ = _Version(2, 0, 5)
+__version__ = _Version(2, 0, 6)
