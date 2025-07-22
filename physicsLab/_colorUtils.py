@@ -27,8 +27,10 @@ from physicsLab._typing import final
 import io
 import sys
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
+if platform.system() in ("Windows", "Linux"):
+    # Fuck you ANSI, fuck you Windows
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
 
 # Windows 11 默认支持ANSI转义, 因此只有Windows 10及以下才使用Win32 API
 _USE_WIN32_COLOR_API = platform.system() == "Windows" and (
