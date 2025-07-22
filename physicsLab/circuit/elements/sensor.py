@@ -8,7 +8,6 @@ from physicsLab._typing import (
     num_type,
     CircuitElementData,
     Generate,
-    LiteralString,
     final,
     Self,
 )
@@ -133,7 +132,7 @@ class Accelerometer(_MemsBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "加速度计"
 
 
@@ -167,7 +166,7 @@ class Analog_Joystick(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "模拟摇杆"
 
     @property
@@ -220,7 +219,7 @@ class Attitude_Sensor(_MemsBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "姿态传感器"
 
 
@@ -249,7 +248,7 @@ class Gravity_Sensor(_MemsBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "重力加速计"
 
 
@@ -278,7 +277,7 @@ class Gyroscope(_MemsBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "陀螺仪传感器"
 
 
@@ -307,7 +306,7 @@ class Linear_Accelerometer(_MemsBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "线性加速度计"
 
 
@@ -336,7 +335,7 @@ class Magnetic_Field_Sensor(_MemsBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "磁场传感器"
 
 
@@ -377,7 +376,7 @@ class Photodiode(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "光电二极管"
 
 
@@ -418,7 +417,7 @@ class Photoresistor(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "光敏电阻"
 
 
@@ -452,7 +451,7 @@ class Proximity_Sensor(_LogicBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "临近传感器"
 
     @property

@@ -10,7 +10,6 @@ from physicsLab._typing import (
     Self,
     Generate,
     override,
-    LiteralString,
     final,
 )
 
@@ -58,7 +57,7 @@ class Simple_Switch(_SwitchBase, _TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "简单开关"
 
     def __repr__(self) -> str:
@@ -96,7 +95,7 @@ class SPDT_Switch(_SwitchBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "单刀双掷开关"
 
     def __repr__(self) -> str:
@@ -153,7 +152,7 @@ class DPDT_Switch(_SwitchBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "双刀双掷开关"
 
     def __repr__(self) -> str:
@@ -234,7 +233,7 @@ class Push_Switch(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "按钮开关"
 
 
@@ -268,7 +267,7 @@ class Air_Switch(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "空气开关"
 
     @override
@@ -332,7 +331,7 @@ class Incandescent_Lamp(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "白炽灯泡"
 
 
@@ -408,7 +407,7 @@ class Battery_Source(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "一节电池"
 
 
@@ -463,7 +462,7 @@ class Student_Source(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "学生电源"
 
     @property
@@ -527,7 +526,7 @@ class Resistor(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "电阻"
 
     @property
@@ -596,7 +595,7 @@ class Fuse_Component(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "保险丝"
 
 
@@ -649,7 +648,7 @@ class Slide_Rheostat(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "滑动变阻器"
 
     @property
@@ -706,7 +705,7 @@ class Multimeter(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "多用电表"
 
 
@@ -740,7 +739,7 @@ class Galvanometer(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "灵敏电流计"
 
     @property
@@ -786,7 +785,7 @@ class Microammeter(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "微安表"
 
     @property
@@ -832,7 +831,7 @@ class Electricity_Meter(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "电能表"
 
     @property
@@ -897,7 +896,7 @@ class Resistance_Box(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "电阻箱"
 
     @property
@@ -956,7 +955,7 @@ class Simple_Ammeter(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "直流安培表"
 
     @property
@@ -1002,7 +1001,7 @@ class Simple_Voltmeter(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "直流电压表"
 
     @property

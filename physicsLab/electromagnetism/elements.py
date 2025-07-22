@@ -6,7 +6,6 @@ from physicsLab._typing import (
     num_type,
     Optional,
     final,
-    LiteralString,
 )
 
 
@@ -33,7 +32,7 @@ class Negative_Charge(ElectromagnetismBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "负电荷"
 
 
@@ -60,7 +59,7 @@ class Positive_Charge(ElectromagnetismBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "正电荷"
 
 
@@ -87,7 +86,7 @@ class Negative_Test_Charge(ElectromagnetismBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "正试验电荷"
 
 
@@ -114,7 +113,7 @@ class Positive_Test_Charge(ElectromagnetismBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "负试验电荷"
 
 
@@ -141,7 +140,7 @@ class Bar_Magnet(ElectromagnetismBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "条形磁铁"
 
 
@@ -168,7 +167,7 @@ class Compass(ElectromagnetismBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "指南针"
 
 
@@ -195,5 +194,5 @@ class Uniform_Magnetic_Field(ElectromagnetismBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "匀强磁场"

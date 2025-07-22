@@ -26,7 +26,7 @@ from .vendor import executing
 from ._typing import NoReturn
 from physicsLab import _unwind
 from physicsLab import _colorUtils
-from physicsLab._typing import Optional, LiteralString
+from physicsLab._typing import Optional
 
 BUG_REPORT: str = (
     "please send a bug-report at "
@@ -204,7 +204,7 @@ class ExperimentNotExistError(Exception):
     """实验不存在"""
 
     def __init__(
-        self, err_msg: LiteralString = "The experiment does not exist"
+        self, err_msg: str = "The experiment does not exist"
     ) -> None:
         self.err_msg = err_msg
 
@@ -241,7 +241,7 @@ class ExperimentTypeError(Exception):
 
 # 用于get_Element 获取元件引用失败
 class ElementNotFound(Exception):
-    def __init__(self, err_msg: LiteralString = "Can't find element") -> None:
+    def __init__(self, err_msg: str = "Can't find element") -> None:
         self.err_msg = err_msg
 
     def __str__(self) -> str:
@@ -260,7 +260,7 @@ class ResponseFail(Exception):
     """返回消息体失败"""
 
     # TODO 获取对应的错误码
-    def __init__(self, err_msg: LiteralString):
+    def __init__(self, err_msg: str):
         self.err_msg: str = err_msg
 
     def __str__(self):
@@ -270,7 +270,7 @@ class ResponseFail(Exception):
 class MaxRetryError(Exception):
     """重试次数过多"""
 
-    def __init__(self, err_msg: LiteralString):
+    def __init__(self, err_msg: str):
         self.err_msg = err_msg
 
     def __str__(self):

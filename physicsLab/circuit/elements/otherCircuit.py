@@ -15,7 +15,6 @@ from physicsLab._typing import (
     override,
     Union,
     Tuple,
-    LiteralString,
     final,
 )
 
@@ -57,7 +56,7 @@ class Buzzer(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "嗡鸣器"
 
 
@@ -96,7 +95,7 @@ class Spark_Gap(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "火花隙"
 
 
@@ -137,7 +136,7 @@ class Tesla_Coil(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "特斯拉线圈"
 
 
@@ -191,7 +190,7 @@ class Color_Light_Emitting_Diode(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "彩色发光二极管"
 
     @property
@@ -257,7 +256,7 @@ class Dual_Light_Emitting_Diode(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "演示发光二极管"
 
 
@@ -298,7 +297,7 @@ class Electric_Bell(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "电铃"
 
 
@@ -339,7 +338,7 @@ class Musical_Box(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "八音盒"
 
 
@@ -412,7 +411,7 @@ class Resistance_Law(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "电阻定律实验"
 
     @property
@@ -494,7 +493,7 @@ class Solenoid(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "通电螺线管"
 
     @property
@@ -567,7 +566,7 @@ class Electric_Fan(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "小电扇"
 
 
@@ -645,7 +644,7 @@ class Simple_Instrument(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "简单乐器"
 
     @property

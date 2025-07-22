@@ -11,8 +11,7 @@ from physicsLab._typing import (
     Self,
     Generate,
     final,
-    LiteralString,
-)
+    )
 
 
 class _LogicBase(CircuitBase):
@@ -130,7 +129,7 @@ class Logic_Input(_LogicBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "逻辑输入"
 
     @property
@@ -177,7 +176,7 @@ class Logic_Output(_LogicBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "逻辑输出"
 
     @property
@@ -248,7 +247,7 @@ class Yes_Gate(_2_Pin_Gate):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "是门"
 
 
@@ -273,7 +272,7 @@ class No_Gate(_2_Pin_Gate):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "非门"
 
 
@@ -344,7 +343,7 @@ class Or_Gate(_3_Pin_Gate):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "或门"
 
 
@@ -369,7 +368,7 @@ class And_Gate(_3_Pin_Gate):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "与门"
 
 
@@ -394,7 +393,7 @@ class Nor_Gate(_3_Pin_Gate):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "或非门"
 
 
@@ -419,7 +418,7 @@ class Nand_Gate(_3_Pin_Gate):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "与非门"
 
 
@@ -444,7 +443,7 @@ class Xor_Gate(_3_Pin_Gate):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "异或门"
 
 
@@ -469,7 +468,7 @@ class Xnor_Gate(_3_Pin_Gate):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "同或门"
 
 
@@ -494,7 +493,7 @@ class Imp_Gate(_3_Pin_Gate):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "蕴含门"
 
 
@@ -519,7 +518,7 @@ class Nimp_Gate(_3_Pin_Gate):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "蕴含非门"
 
 
@@ -591,7 +590,7 @@ class Half_Adder(_BigElement):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "半加器"
 
 
@@ -636,7 +635,7 @@ class Full_Adder(_BigElement):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "全加器"
 
 
@@ -681,7 +680,7 @@ class Half_Subtractor(_BigElement):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "半减器"
 
 
@@ -730,7 +729,7 @@ class Full_Subtractor(_BigElement):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "全减器"
 
 
@@ -787,7 +786,7 @@ class Multiplier(_BigElement):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "二位乘法器"
 
 
@@ -828,7 +827,7 @@ class D_Flipflop(_BigElement):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "D触发器"
 
 
@@ -869,7 +868,7 @@ class T_Flipflop(_BigElement):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "T'触发器"
 
 
@@ -910,7 +909,7 @@ class Real_T_Flipflop(_BigElement):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "T触发器"
 
 
@@ -955,7 +954,7 @@ class JK_Flipflop(_BigElement):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "JK触发器"
 
 
@@ -1004,7 +1003,7 @@ class Counter(_BigElement):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "计数器"
 
 
@@ -1053,7 +1052,7 @@ class Random_Generator(_BigElement):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "随机数发生器"
 
 
@@ -1147,7 +1146,7 @@ class Eight_Bit_Input(_LogicBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "八位输入器"
 
 
@@ -1234,7 +1233,7 @@ class Eight_Bit_Display(_LogicBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "八位显示器"
 
 
@@ -1346,7 +1345,7 @@ class Schmitt_Trigger(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "施密特触发器"
 
     def __repr__(self) -> str:

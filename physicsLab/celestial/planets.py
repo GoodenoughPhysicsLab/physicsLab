@@ -5,7 +5,6 @@ from ._planetbase import PlanetBase
 from physicsLab._typing import (
     num_type,
     Optional,
-    LiteralString,
     final,
 )
 
@@ -63,7 +62,7 @@ class Mercury(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "水星"
 
 
@@ -120,7 +119,7 @@ class Venus(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "金星"
 
 
@@ -177,7 +176,7 @@ class Earth(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "地球"
 
 
@@ -234,7 +233,7 @@ class Mars(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "火星"
 
 
@@ -291,7 +290,7 @@ class Jupiter(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "木星"
 
 
@@ -348,7 +347,7 @@ class Saturn(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "土星"
 
 
@@ -405,7 +404,7 @@ class Uranus(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "天王星"
 
 
@@ -462,7 +461,7 @@ class Neptune(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "海王星"
 
 
@@ -519,7 +518,7 @@ class Pluto(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "冥王星"
 
 
@@ -576,7 +575,7 @@ class Sun(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "太阳"
 
 
@@ -633,7 +632,7 @@ class Blue_Giant(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "蓝巨星"
 
 
@@ -690,7 +689,7 @@ class Red_Giant(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "红巨星"
 
 
@@ -747,7 +746,7 @@ class Red_Dwarf(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "红矮星"
 
 
@@ -804,7 +803,7 @@ class White_Dwarf(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "白矮星"
 
 
@@ -861,7 +860,7 @@ class Blackhole(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "黑洞"
 
 
@@ -918,7 +917,7 @@ class Fantasy_Star(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "幻想恒星"
 
 
@@ -975,7 +974,7 @@ class Moon(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "月球"
 
 
@@ -1032,7 +1031,7 @@ class Chocolate_Ball(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "巧克力球"
 
 
@@ -1089,7 +1088,7 @@ class Continential(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "大陆行星"
 
 
@@ -1146,7 +1145,7 @@ class Arctic(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "封冻行星"
 
 
@@ -1203,7 +1202,7 @@ class Arid(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "干旱行星"
 
 
@@ -1260,7 +1259,7 @@ class Barren(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "贫瘠行星"
 
 
@@ -1317,7 +1316,7 @@ class Desert(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "沙漠行星"
 
 
@@ -1374,7 +1373,7 @@ class Jungle(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "丛林行星"
 
 
@@ -1431,7 +1430,7 @@ class Toxic(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "剧毒行星"
 
 
@@ -1488,7 +1487,7 @@ class Lava(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "熔岩行星"
 
 
@@ -1545,5 +1544,5 @@ class Ocean(PlanetBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "海洋行星"

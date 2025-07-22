@@ -604,7 +604,6 @@ class Simple_Switch(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -632,7 +631,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Push_Switch"> Push_Switch </h2>
@@ -667,7 +666,6 @@ class Push_Switch(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -683,7 +681,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Air_Switch"> Air_Switch </h2>
@@ -718,7 +716,6 @@ class Air_Switch(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -746,7 +743,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Incandescent_Lamp"> Incandescent_Lamp </h2>
@@ -781,7 +778,6 @@ class Incandescent_Lamp(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -797,7 +793,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Battery_Source"> Battery_Source </h2>
@@ -832,7 +828,6 @@ class Battery_Source(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -848,7 +843,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Resistor"> Resistor </h2>
@@ -889,7 +884,6 @@ class Resistor(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -905,7 +899,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Fuse_Component"> Fuse_Component </h2>
@@ -940,7 +934,6 @@ class Fuse_Component(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -956,7 +949,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Multimeter"> Multimeter </h2>
@@ -991,7 +984,6 @@ class Multimeter(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1007,7 +999,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Basic_Capacitor"> Basic_Capacitor </h2>
@@ -1019,7 +1011,6 @@ class Basic_Capacitor(CircuitBase):
 @param is_ideal: 是否为理想模式  
 @param peak_voltage: 峰值电压, 单位为V  
 @param internal_resistance: 内阻, 单位为Ω  
-  
 
 ### get_all_pins_property
 ```Python
@@ -1047,7 +1038,6 @@ class Basic_Capacitor(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1063,7 +1053,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Basic_Inductor"> Basic_Inductor </h2>
@@ -1075,7 +1065,6 @@ class Basic_Inductor(CircuitBase):
 @param inductance: 电感，单位为 Henry  
 @param internal_resistance: 电感内部阻抗，单位为 Ohm  
 @param is_ideal: 是否为理想模式  
-  
 
 ### fix_inductance
 ```Python
@@ -1109,7 +1098,6 @@ class Basic_Inductor(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1125,7 +1113,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Basic_Diode"> Basic_Diode </h2>
@@ -1160,7 +1148,6 @@ class Basic_Diode(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1176,7 +1163,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Light_Emitting_Diode"> Light_Emitting_Diode </h2>
@@ -1211,7 +1198,6 @@ class Light_Emitting_Diode(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1227,7 +1213,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Current_Source"> Current_Source </h2>
@@ -1262,7 +1248,6 @@ class Current_Source(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1278,7 +1263,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Sinewave_Source"> Sinewave_Source </h2>
@@ -1313,7 +1298,6 @@ class Sinewave_Source(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1329,7 +1313,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Square_Source"> Square_Source </h2>
@@ -1364,7 +1348,6 @@ class Square_Source(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1380,7 +1363,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Triangle_Source"> Triangle_Source </h2>
@@ -1415,7 +1398,6 @@ class Triangle_Source(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1431,7 +1413,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Sawtooth_Source"> Sawtooth_Source </h2>
@@ -1466,7 +1448,6 @@ class Sawtooth_Source(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1482,7 +1463,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Pulse_Source"> Pulse_Source </h2>
@@ -1517,7 +1498,6 @@ class Pulse_Source(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1533,7 +1513,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Photodiode"> Photodiode </h2>
@@ -1568,7 +1548,6 @@ class Photodiode(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1584,7 +1563,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Photoresistor"> Photoresistor </h2>
@@ -1619,7 +1598,6 @@ class Photoresistor(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1635,7 +1613,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Buzzer"> Buzzer </h2>
@@ -1670,7 +1648,6 @@ class Buzzer(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1686,7 +1663,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Spark_Gap"> Spark_Gap </h2>
@@ -1721,7 +1698,6 @@ class Spark_Gap(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1737,7 +1713,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Tesla_Coil"> Tesla_Coil </h2>
@@ -1772,7 +1748,6 @@ class Tesla_Coil(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1788,7 +1763,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Dual_Light_Emitting_Diode"> Dual_Light_Emitting_Diode </h2>
@@ -1823,7 +1798,6 @@ class Dual_Light_Emitting_Diode(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1839,7 +1813,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Electric_Bell"> Electric_Bell </h2>
@@ -1874,7 +1848,6 @@ class Electric_Bell(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1890,7 +1863,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Musical_Box"> Musical_Box </h2>
@@ -1925,7 +1898,6 @@ class Musical_Box(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1941,7 +1913,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Electric_Fan"> Electric_Fan </h2>
@@ -1976,7 +1948,6 @@ class Electric_Fan(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -1992,7 +1963,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Simple_Switch"> Simple_Switch </h2>
@@ -2027,7 +1998,6 @@ class Simple_Switch(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2055,7 +2025,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="SPDT_Switch"> SPDT_Switch </h2>
@@ -2096,7 +2066,6 @@ class SPDT_Switch(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### right_turn_on_switch
 ```Python
@@ -2124,7 +2093,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="DPDT_Switch"> DPDT_Switch </h2>
@@ -2165,7 +2134,6 @@ class DPDT_Switch(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### right_turn_on_switch
 ```Python
@@ -2193,7 +2161,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Student_Source"> Student_Source </h2>
@@ -2228,7 +2196,6 @@ class Student_Source(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2244,7 +2211,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Slide_Rheostat"> Slide_Rheostat </h2>
@@ -2279,7 +2246,6 @@ class Slide_Rheostat(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2295,7 +2261,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Galvanometer"> Galvanometer </h2>
@@ -2330,7 +2296,6 @@ class Galvanometer(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2346,7 +2311,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Microammeter"> Microammeter </h2>
@@ -2381,7 +2346,6 @@ class Microammeter(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2397,7 +2361,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Electricity_Meter"> Electricity_Meter </h2>
@@ -2432,7 +2396,6 @@ class Electricity_Meter(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2448,7 +2411,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Resistance_Box"> Resistance_Box </h2>
@@ -2483,7 +2446,6 @@ class Resistance_Box(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2499,7 +2461,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Simple_Ammeter"> Simple_Ammeter </h2>
@@ -2534,7 +2496,6 @@ class Simple_Ammeter(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2550,7 +2511,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Simple_Voltmeter"> Simple_Voltmeter </h2>
@@ -2585,7 +2546,6 @@ class Simple_Voltmeter(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2601,7 +2561,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Logic_Input"> Logic_Input </h2>
@@ -2636,7 +2596,6 @@ class Logic_Input(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2652,7 +2611,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Logic_Output"> Logic_Output </h2>
@@ -2687,7 +2646,6 @@ class Logic_Output(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2703,7 +2661,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Yes_Gate"> Yes_Gate </h2>
@@ -2738,7 +2696,6 @@ class Yes_Gate(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2754,7 +2711,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="No_Gate"> No_Gate </h2>
@@ -2789,7 +2746,6 @@ class No_Gate(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2805,7 +2761,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Or_Gate"> Or_Gate </h2>
@@ -2840,7 +2796,6 @@ class Or_Gate(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2856,7 +2811,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="And_Gate"> And_Gate </h2>
@@ -2891,7 +2846,6 @@ class And_Gate(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2907,7 +2861,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Nor_Gate"> Nor_Gate </h2>
@@ -2942,7 +2896,6 @@ class Nor_Gate(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -2958,7 +2911,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Nand_Gate"> Nand_Gate </h2>
@@ -2993,7 +2946,6 @@ class Nand_Gate(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3009,7 +2961,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Xor_Gate"> Xor_Gate </h2>
@@ -3044,7 +2996,6 @@ class Xor_Gate(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3060,7 +3011,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Xnor_Gate"> Xnor_Gate </h2>
@@ -3095,7 +3046,6 @@ class Xnor_Gate(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3111,7 +3061,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Imp_Gate"> Imp_Gate </h2>
@@ -3146,7 +3096,6 @@ class Imp_Gate(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3162,7 +3111,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Nimp_Gate"> Nimp_Gate </h2>
@@ -3197,7 +3146,6 @@ class Nimp_Gate(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3213,7 +3161,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Half_Adder"> Half_Adder </h2>
@@ -3248,7 +3196,6 @@ class Half_Adder(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3264,7 +3211,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Full_Adder"> Full_Adder </h2>
@@ -3299,7 +3246,6 @@ class Full_Adder(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3315,7 +3261,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Half_Subtractor"> Half_Subtractor </h2>
@@ -3350,7 +3296,6 @@ class Half_Subtractor(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3366,7 +3311,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Full_Subtractor"> Full_Subtractor </h2>
@@ -3401,7 +3346,6 @@ class Full_Subtractor(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3417,7 +3361,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Multiplier"> Multiplier </h2>
@@ -3452,7 +3396,6 @@ class Multiplier(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3468,7 +3411,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="D_Flipflop"> D_Flipflop </h2>
@@ -3503,7 +3446,6 @@ class D_Flipflop(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3519,7 +3461,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="T_Flipflop"> T_Flipflop </h2>
@@ -3554,7 +3496,6 @@ class T_Flipflop(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3570,7 +3511,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Real_T_Flipflop"> Real_T_Flipflop </h2>
@@ -3605,7 +3546,6 @@ class Real_T_Flipflop(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3621,7 +3561,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="JK_Flipflop"> JK_Flipflop </h2>
@@ -3656,7 +3596,6 @@ class JK_Flipflop(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3672,7 +3611,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Counter"> Counter </h2>
@@ -3707,7 +3646,6 @@ class Counter(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3723,7 +3661,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Random_Generator"> Random_Generator </h2>
@@ -3758,7 +3696,6 @@ class Random_Generator(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3774,7 +3711,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Eight_Bit_Input"> Eight_Bit_Input </h2>
@@ -3809,7 +3746,6 @@ class Eight_Bit_Input(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_num
 ```Python
@@ -3830,7 +3766,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Eight_Bit_Display"> Eight_Bit_Display </h2>
@@ -3865,7 +3801,6 @@ class Eight_Bit_Display(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3881,7 +3816,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Proximity_Sensor"> Proximity_Sensor </h2>
@@ -3916,7 +3851,6 @@ class Proximity_Sensor(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3932,7 +3866,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Schmitt_Trigger"> Schmitt_Trigger </h2>
@@ -3967,7 +3901,6 @@ class Schmitt_Trigger(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -3983,7 +3916,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="NE555"> NE555 </h2>
@@ -4018,7 +3951,6 @@ class NE555(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4034,7 +3966,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Ground_Component"> Ground_Component </h2>
@@ -4069,7 +4001,6 @@ class Ground_Component(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4085,7 +4016,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Transformer"> Transformer </h2>
@@ -4120,7 +4051,6 @@ class Transformer(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4136,7 +4066,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Tapped_Transformer"> Tapped_Transformer </h2>
@@ -4171,7 +4101,6 @@ class Tapped_Transformer(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4187,7 +4116,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Mutual_Inductor"> Mutual_Inductor </h2>
@@ -4222,7 +4151,6 @@ class Mutual_Inductor(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4238,7 +4166,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Rectifier"> Rectifier </h2>
@@ -4273,7 +4201,6 @@ class Rectifier(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4289,7 +4216,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Transistor"> Transistor </h2>
@@ -4324,7 +4251,6 @@ class Transistor(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4340,7 +4266,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Comparator"> Comparator </h2>
@@ -4375,7 +4301,6 @@ class Comparator(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4391,7 +4316,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Operational_Amplifier"> Operational_Amplifier </h2>
@@ -4402,7 +4327,6 @@ class Operational_Amplifier(CircuitBase):
 @param gain: 增益系数  
 @param max_voltage: 最大电压  
 @param min_voltage: 最小电压  
-  
 
 ### get_all_pins_property
 ```Python
@@ -4430,7 +4354,6 @@ class Operational_Amplifier(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4446,7 +4369,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Relay_Component"> Relay_Component </h2>
@@ -4481,7 +4404,6 @@ class Relay_Component(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4497,7 +4419,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="N_MOSFET"> N_MOSFET </h2>
@@ -4532,7 +4454,6 @@ class N_MOSFET(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4548,7 +4469,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="P_MOSFET"> P_MOSFET </h2>
@@ -4583,7 +4504,6 @@ class P_MOSFET(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4599,7 +4519,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Accelerometer"> Accelerometer </h2>
@@ -4634,7 +4554,6 @@ class Accelerometer(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4650,7 +4569,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Attitude_Sensor"> Attitude_Sensor </h2>
@@ -4685,7 +4604,6 @@ class Attitude_Sensor(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4701,7 +4619,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Gravity_Sensor"> Gravity_Sensor </h2>
@@ -4736,7 +4654,6 @@ class Gravity_Sensor(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4752,7 +4669,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Gyroscope"> Gyroscope </h2>
@@ -4787,7 +4704,6 @@ class Gyroscope(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4803,7 +4719,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Linear_Accelerometer"> Linear_Accelerometer </h2>
@@ -4838,7 +4754,6 @@ class Linear_Accelerometer(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4854,7 +4769,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Magnetic_Field_Sensor"> Magnetic_Field_Sensor </h2>
@@ -4889,7 +4804,6 @@ class Magnetic_Field_Sensor(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4905,7 +4819,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Analog_Joystick"> Analog_Joystick </h2>
@@ -4940,7 +4854,6 @@ class Analog_Joystick(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -4956,7 +4869,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Color_Light_Emitting_Diode"> Color_Light_Emitting_Diode </h2>
@@ -4991,7 +4904,6 @@ class Color_Light_Emitting_Diode(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5007,7 +4919,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Resistance_Law"> Resistance_Law </h2>
@@ -5042,7 +4954,6 @@ class Resistance_Law(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5058,7 +4969,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Solenoid"> Solenoid </h2>
@@ -5093,7 +5004,6 @@ class Solenoid(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5109,7 +5019,7 @@ name: 将元件重命名为name
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```
 
 ## <h2 id="Simple_Instrument"> Simple_Instrument </h2>
@@ -5124,7 +5034,6 @@ class Simple_Instrument(CircuitBase):
 @param bpm: 节奏  
 @param is_ideal: 是否为理想模式  
 @param is_pulse: 简单乐器是否只响一次  
-  
 
 ### get_all_pins_property
 ```Python
@@ -5152,7 +5061,6 @@ class Simple_Instrument(CircuitBase):
   
 Args:  
 name: 将元件重命名为name  
-  
 
 ### set_position
 ```Python
@@ -5182,9 +5090,8 @@ rising_falling = True 时，为升调，为 False 时降调
 输入范围：  
 C0 ~ C8  
 注: C0: 24, C1: 36, C2: 48, C3: 60, ..., C8: 120  
-  
 
 ### zh_name
 ```Python
-    def zh_name() -> LiteralString
+    def zh_name() -> str
 ```

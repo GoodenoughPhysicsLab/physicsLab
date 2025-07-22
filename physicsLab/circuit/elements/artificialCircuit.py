@@ -10,7 +10,6 @@ from physicsLab._typing import (
     Generate,
     Self,
     override,
-    LiteralString,
     final,
     Self,
 )
@@ -57,7 +56,7 @@ class NE555(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "555定时器"
 
     @property
@@ -142,7 +141,7 @@ class Basic_Capacitor(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "电容"
 
     @property
@@ -284,7 +283,7 @@ class Basic_Inductor(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "电感"
 
     @property
@@ -418,7 +417,7 @@ class Basic_Diode(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "二极管"
 
 
@@ -459,7 +458,7 @@ class Light_Emitting_Diode(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "发光二极管"
 
 
@@ -493,7 +492,7 @@ class Ground_Component(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "接地"
 
     @property
@@ -544,7 +543,7 @@ class Transformer(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "理想变压器"
 
     @property
@@ -606,7 +605,7 @@ class Tapped_Transformer(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "中心抽头变压器"
 
     @property
@@ -667,7 +666,7 @@ class Mutual_Inductor(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "理想互感"
 
     @property
@@ -717,7 +716,7 @@ class Rectifier(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "全波整流器"
 
     @property
@@ -778,7 +777,7 @@ class Transistor(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "三极管"
 
     @property
@@ -886,7 +885,7 @@ class Comparator(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "比较器"
 
     @property
@@ -1016,7 +1015,7 @@ class Operational_Amplifier(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "运算放大器"
 
     @property
@@ -1145,7 +1144,7 @@ class Relay_Component(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "继电器"
 
     @property
@@ -1268,7 +1267,7 @@ class N_MOSFET(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "N-MOSFET"
 
     @property
@@ -1326,7 +1325,7 @@ class P_MOSFET(CircuitBase):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "P-MOSFET"
 
     @property
@@ -1376,7 +1375,7 @@ class Current_Source(_TwoPinMixIn):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "电流源"
 
 
@@ -1425,7 +1424,7 @@ class Sinewave_Source(_SourceElectricity):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "正弦波发生器"
 
 
@@ -1448,7 +1447,7 @@ class Square_Source(_SourceElectricity):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "方波发生器"
 
 
@@ -1471,7 +1470,7 @@ class Triangle_Source(_SourceElectricity):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "三角波发生器"
 
 
@@ -1494,7 +1493,7 @@ class Sawtooth_Source(_SourceElectricity):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "锯齿波发生器"
 
 
@@ -1517,5 +1516,5 @@ class Pulse_Source(_SourceElectricity):
 
     @final
     @staticmethod
-    def zh_name() -> LiteralString:
+    def zh_name() -> str:
         return "尖峰波发生器"
