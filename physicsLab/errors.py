@@ -257,7 +257,7 @@ class ExperimentError(Exception):
 
 
 class ResponseFail(Exception):
-    """返回消息体失败"""
+    """ The response successfully returned but the returned data from Quantum-Physics is invalid """
 
     def __init__(self, err_code: int, err_msg: str):
         self .err_code: int = err_code

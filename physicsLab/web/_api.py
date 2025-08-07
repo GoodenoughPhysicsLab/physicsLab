@@ -7,6 +7,7 @@
 import os
 import json
 import uuid
+import urllib
 from . import _request
 
 from physicsLab import plAR
@@ -32,8 +33,11 @@ def _check_response(
     response_json: _api_result, err_callback: Optional[Callable] = None
 ) -> _api_result:
     """检查返回的response
-    @callback: 自定义物实返回的status对应的报错信息,
-                要求传入status_code(捕获物实返回体中的status_code), 无返回值
+
+    Args:
+        callback: 自定义物实返回的status对应的报错信息,
+                  要求传入status_code(捕获物实返回体中的status_code),
+                  无返回值
     """
     errors.assert_true(err_callback is None or callable(err_callback))
     status_code = response_json["Status"]
@@ -106,21 +110,19 @@ def get_avatar(
     else:
         errors.unreachable()
 
-    protocol = "https" if usehttps else "http"
-    port = "443" if usehttps else "80"
-
-    url = (
-        f"{protocol}://physics-static-cn.turtlesim.com:{port}/{category}"
-        f"/{target_id[0:4]}/{target_id[4:6]}/{target_id[6:8]}/{target_id[8:]}/{index}.jpg!{size_category}"
-    )
-    
     domain = "physics-static-cn.turtlesim.com"
     path = f"{category}/{target_id[0:4]}/{target_id[4:6]}/{target_id[6:8]}/{target_id[8:]}/{index}.jpg!{size_category}"
 
     if usehttps:
         response_bytes = _request.get_https(domain=domain, path=path, verify=False)
     else:
-        response_bytes = _request.get_http(domain=domain, path=path)
+        try:
+            response_bytes = _request.get_http(domain=domain, path=path)
+        except urllib.error.HTTPError as e:
+            if e.getcode() == 404:
+                raise IndexError("avatar not found")
+            else:
+                raise e
 
     if b"<Error>" in response_bytes:
         raise IndexError("avatar not found")
