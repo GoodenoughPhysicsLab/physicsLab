@@ -56,8 +56,6 @@ class NotificationsIter:
     def __init__(
         self,
         user: _User,
-        /,
-        *,
         category_id: int,
         start_skip: int = 0,
         max_retry: Optional[int] = 0,
@@ -141,8 +139,6 @@ class ExperimentsIter:
     def __init__(
         self,
         user: _User,
-        /,
-        *,
         category: Category,
         start_skip: int = 0,
         from_skip: Optional[str] = None,
@@ -266,8 +262,6 @@ class BannedMsgIter:
     def __init__(
         self,
         user: _User,
-        /,
-        *,
         start_skip: int = 0,
         start_time: Optional[num_type] = None,
         end_time: Optional[num_type] = None,
@@ -379,8 +373,6 @@ class CommentsIter:
     def __init__(
         self,
         user: _User,
-        /,
-        *,
         content_id: str,
         category: str = "User",
         start_time: int = 0,
@@ -450,8 +442,6 @@ class WarnedMsgIter:
     def __init__(
         self,
         user: _User,
-        /,
-        *,
         user_id: str,
         start_time: num_type,
         end_time: Optional[num_type] = None,
@@ -530,8 +520,6 @@ class RelationsIter:
     def __init__(
         self,
         user: _User,
-        /,
-        *,
         user_id: str,
         display_type: str = "Follower",
         max_retry: Optional[int] = 0,
