@@ -25,10 +25,7 @@ def get_http(domain: str, path: str, port: Optional[int] = None) -> bytes:
         port = 80
 
     url = f"http://{domain}:{port}/{path}"
-    try:
-        req = urllib.request.urlopen(url)
-    except urllib.error.HTTPError as e:
-        raise errors.ResponseFail(e.code, e.reason) from e
+    req = urllib.request.urlopen(url)
 
     return req.read()
 
@@ -62,10 +59,7 @@ def get_https(
         ssl._create_default_https_context = ssl._create_unverified_context
 
     url = f"https://{domain}:{port}/{path}"
-    try:
-        req = urllib.request.urlopen(url)
-    except urllib.error.HTTPError as e:
-        raise errors.ResponseFail(e.code, e.reason) from e
+    req = urllib.request.urlopen(url)
 
     return req.read()
 
@@ -107,8 +101,6 @@ def post_http(
     req.headers = header
 
     with urllib.request.urlopen(req) as response:
-        if response.getcode() != 200:
-            raise errors.ResponseFail(response.getcode(), response.reason)
         if response.info().get('Content-Encoding') == 'gzip':
             import gzip
             content = gzip.decompress(response.read())
@@ -164,8 +156,6 @@ def post_https(
     req.headers = header
 
     with urllib.request.urlopen(req) as response:
-        if response.getcode() != 200:
-            raise errors.ResponseFail(response.getcode(), response.reason)
         if response.info().get('Content-Encoding') == 'gzip':
             import gzip
             content = gzip.decompress(response.read())

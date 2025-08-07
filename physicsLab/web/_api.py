@@ -7,6 +7,7 @@
 import os
 import json
 import uuid
+import urllib
 from . import _request
 
 from physicsLab import plAR
@@ -124,21 +125,19 @@ def get_avatar(
     else:
         errors.unreachable()
 
-    protocol = "https" if usehttps else "http"
-    port = "443" if usehttps else "80"
-
-    url = (
-        f"{protocol}://physics-static-cn.turtlesim.com:{port}/{category}"
-        f"/{target_id[0:4]}/{target_id[4:6]}/{target_id[6:8]}/{target_id[8:]}/{index}.jpg!{size_category}"
-    )
-    
     domain = "physics-static-cn.turtlesim.com"
     path = f"{category}/{target_id[0:4]}/{target_id[4:6]}/{target_id[6:8]}/{target_id[8:]}/{index}.jpg!{size_category}"
 
     if usehttps:
         response_bytes = _request.get_https(domain=domain, path=path, verify=False)
     else:
-        response_bytes = _request.get_http(domain=domain, path=path)
+        try:
+            response_bytes = _request.get_http(domain=domain, path=path)
+        except urllib.error.HTTPError as e:
+            if e.getcode() == 404:
+                raise IndexError("avatar not found")
+            else:
+                raise e
 
     if b"<Error>" in response_bytes:
         raise IndexError("avatar not found")
