@@ -20,14 +20,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     arg = parser.add_argument
 
-    arg('address',
-        metavar='ADDRESS',
-        help='host:port to serve on')
+    arg("address", metavar="ADDRESS", help="host:port to serve on")
 
-    arg('ports',
-        metavar='PORT',
-        nargs='+',
-        help='output port to serve')
+    arg("ports", metavar="PORT", nargs="+", help="output port to serve")
 
     return parser.parse_args()
 
@@ -41,11 +36,11 @@ def main():
         (hostname, port) = sockets.parse_address(args.address)
         with sockets.PortServer(hostname, port) as server:
             for message in server:
-                print(f'Received {message}')
+                print(f"Received {message}")
                 out.send(message)
     except KeyboardInterrupt:
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

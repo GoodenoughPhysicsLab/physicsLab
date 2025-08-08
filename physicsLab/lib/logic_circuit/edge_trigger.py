@@ -30,7 +30,9 @@ class _TriggerMeta(type):
             or get_current_experiment().is_elementXYZ is True
             and elementXYZ is None
         ):
-            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
+            x, y, z = native_to_elementXYZ(
+                x, y, z, get_current_experiment()._elementXYZ_origin_position
+            )
 
         self.__init__(x, y, z, elementXYZ=elementXYZ)
 

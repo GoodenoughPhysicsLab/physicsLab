@@ -64,7 +64,9 @@ class Decoder:
         if elementXYZ is not True and not (
             get_current_experiment().is_elementXYZ is True and elementXYZ is None
         ):
-            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
+            x, y, z = native_to_elementXYZ(
+                x, y, z, get_current_experiment()._elementXYZ_origin_position
+            )
         x, y, z = round_data(x), round_data(y), round_data(z)
 
         self.bitnum = bitnum
@@ -197,7 +199,9 @@ class Switched_Register:
         if elementXYZ is not True and not (
             get_current_experiment().is_elementXYZ is True and elementXYZ is None
         ):
-            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
+            x, y, z = native_to_elementXYZ(
+                x, y, z, get_current_experiment()._elementXYZ_origin_position
+            )
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
@@ -260,7 +264,9 @@ class EqualTo:
         if elementXYZ is not True and not (
             get_current_experiment().is_elementXYZ is True and elementXYZ is None
         ):
-            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
+            x, y, z = native_to_elementXYZ(
+                x, y, z, get_current_experiment()._elementXYZ_origin_position
+            )
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
@@ -311,7 +317,9 @@ class Signed_Sum:
         if elementXYZ is not True and not (
             get_current_experiment().is_elementXYZ is True and elementXYZ is None
         ):
-            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
+            x, y, z = native_to_elementXYZ(
+                x, y, z, get_current_experiment()._elementXYZ_origin_position
+            )
         x, y, z = round_data(x), round_data(y), round_data(z)
         self.bitnum = bitnum
 
@@ -391,7 +399,9 @@ class _Simple_Logic_Meta(type):
         if elementXYZ is not True and not (
             get_current_experiment().is_elementXYZ is True and elementXYZ is None
         ):
-            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
+            x, y, z = native_to_elementXYZ(
+                x, y, z, get_current_experiment()._elementXYZ_origin_position
+            )
         x, y, z = round_data(x), round_data(y), round_data(z)
 
         self.__init__(

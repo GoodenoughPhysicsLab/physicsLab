@@ -203,9 +203,7 @@ class ExperimentExistError(Exception):
 class ExperimentNotExistError(Exception):
     """实验不存在"""
 
-    def __init__(
-        self, err_msg: str = "The experiment does not exist"
-    ) -> None:
+    def __init__(self, err_msg: str = "The experiment does not exist") -> None:
         self.err_msg = err_msg
 
     def __str__(self):

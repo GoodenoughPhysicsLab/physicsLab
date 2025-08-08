@@ -17,8 +17,7 @@ def _is_readable(socket):
     """Return True if there is data to be read on the socket."""
 
     timeout = 0
-    (rlist, wlist, elist) = select.select(
-        [socket.fileno()], [], [], timeout)
+    (rlist, wlist, elist) = select.select([socket.fileno()], [], [], timeout)
 
     return bool(rlist)
 
@@ -36,7 +35,7 @@ class PortServer(MultiPort):
         self._socket.listen(backlog)
 
     def _get_device_type(self):
-        return 'server'
+        return "server"
 
     def _close(self):
         # Close all connections.
@@ -92,13 +91,13 @@ class SocketPort(BaseIOPort):
         else:
             self._socket = conn
 
-        kwargs = {'buffering': 0}
+        kwargs = {"buffering": 0}
 
-        self._rfile = self._socket.makefile('rb', **kwargs)
-        self._wfile = self._socket.makefile('wb', **kwargs)
+        self._rfile = self._socket.makefile("rb", **kwargs)
+        self._wfile = self._socket.makefile("wb", **kwargs)
 
     def _get_device_type(self):
-        return 'socket'
+        return "socket"
 
     def _receive(self, block=True):
         while _is_readable(self._socket):
@@ -143,22 +142,22 @@ def parse_address(address):
     Returns a tuple (host, port). Raises ValueError if format is
     invalid or port is not an integer or out of range.
     """
-    words = address.split(':')
+    words = address.split(":")
     if len(words) != 2:
-        raise ValueError('address must contain exactly one colon')
+        raise ValueError("address must contain exactly one colon")
 
     host, port = words
     try:
         port = int(port)
     except ValueError as ve:
-        raise ValueError('port number must be an integer') from ve
+        raise ValueError("port number must be an integer") from ve
 
     # Note: port 0 is not allowed.
     if not 0 < port < (2**16):
-        raise ValueError('port number out of range')
+        raise ValueError("port number out of range")
 
     return (host, port)
 
 
 def format_address(host, portno):
-    return f'{host}{portno:d}'
+    return f"{host}{portno:d}"

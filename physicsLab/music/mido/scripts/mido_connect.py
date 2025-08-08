@@ -17,14 +17,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     arg = parser.add_argument
 
-    arg('address',
-        metavar='ADDRESS',
-        help='host:port to connect to')
+    arg("address", metavar="ADDRESS", help="host:port to connect to")
 
-    arg('ports',
-        metavar='PORT',
-        nargs='+',
-        help='input ports to listen to')
+    arg("ports", metavar="PORT", nargs="+", help="input ports to listen to")
 
     return parser.parse_args()
 
@@ -37,13 +32,13 @@ def main():
         ports = [mido.open_input(name) for name in args.ports]
 
         with mido.sockets.connect(hostname, port) as server_port:
-            print('Connected.')
+            print("Connected.")
             for message in mido.ports.multi_receive(ports):
-                print(f'Sending {message}')
+                print(f"Sending {message}")
                 server_port.send(message)
     except KeyboardInterrupt:
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

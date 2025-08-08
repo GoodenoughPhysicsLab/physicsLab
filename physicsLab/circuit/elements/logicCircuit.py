@@ -11,7 +11,7 @@ from physicsLab._typing import (
     Self,
     Generate,
     final,
-    )
+)
 
 
 class _LogicBase(CircuitBase):

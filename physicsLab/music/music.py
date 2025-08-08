@@ -563,7 +563,9 @@ class Chord:
         if elementXYZ is not True and not (
             get_current_experiment().is_elementXYZ is True and elementXYZ is None
         ):
-            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
+            x, y, z = native_to_elementXYZ(
+                x, y, z, get_current_experiment()._elementXYZ_origin_position
+            )
         x, y, z = round_data(x), round_data(y), round_data(z)
 
         first_ins: Optional[elements.Simple_Instrument] = None  # 第一个音符
@@ -811,7 +813,9 @@ class Piece:
         if elementXYZ is not True and not (
             get_current_experiment().is_elementXYZ is True and elementXYZ is None
         ):
-            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
+            x, y, z = native_to_elementXYZ(
+                x, y, z, get_current_experiment()._elementXYZ_origin_position
+            )
 
         # 给乐器增加休止符
         while self.notes[-1] is _RestSymbol:

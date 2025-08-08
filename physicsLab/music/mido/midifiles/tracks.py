@@ -19,21 +19,21 @@ class MidiTrack(list):
         one will be added to the beginning of the track with a delta
         time of 0."""
         for message in self:
-            if message.type == 'track_name':
+            if message.type == "track_name":
                 return message.name
         else:
-            return ''
+            return ""
 
     @name.setter
     def name(self, name):
         # Find the first track_name message and modify it.
         for message in self:
-            if message.type == 'track_name':
+            if message.type == "track_name":
                 message.name = name
                 return
         else:
             # No track name found, add one.
-            self.insert(0, MetaMessage('track_name', name=name, time=0))
+            self.insert(0, MetaMessage("track_name", name=name, time=0))
 
     def copy(self):
         return self.__class__(self)
@@ -57,12 +57,12 @@ class MidiTrack(list):
 
     def __repr__(self):
         if len(self) == 0:
-            messages = ''
+            messages = ""
         elif len(self) == 1:
-            messages = f'[{self[0]}]'
+            messages = f"[{self[0]}]"
         else:
-            messages = '[\n  {}]'.format(',\n  '.join(repr(m) for m in self))
-        return f'{self.__class__.__name__}({messages})'
+            messages = "[\n  {}]".format(",\n  ".join(repr(m) for m in self))
+        return f"{self.__class__.__name__}({messages})"
 
 
 def _to_abstime(messages, skip_checks=False):
@@ -91,7 +91,7 @@ def fix_end_of_track(messages, skip_checks=False):
     accum = 0
 
     for msg in messages:
-        if msg.type == 'end_of_track':
+        if msg.type == "end_of_track":
             accum += msg.time
         else:
             if accum:
@@ -101,7 +101,7 @@ def fix_end_of_track(messages, skip_checks=False):
             else:
                 yield msg
 
-    yield MetaMessage('end_of_track', time=accum)
+    yield MetaMessage("end_of_track", time=accum)
 
 
 def merge_tracks(tracks, skip_checks=False):

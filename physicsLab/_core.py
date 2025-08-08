@@ -112,8 +112,73 @@ class _Experiment:
     TargetRotation: _tools.position
     experiment_type: ExperimentType
 
-    def __init__(*args, **kwargs) -> NoReturn:
-        raise NotImplementedError
+    def __init__(
+        self,
+        open_mode: OpenMode,
+        _position2elements: Dict[
+            Tuple[num_type, num_type, num_type], List["ElementBase"]
+        ],
+        _id2element: Dict[str, "ElementBase"],
+        Elements: List["ElementBase"],
+        SAV_PATH: str,
+        PlSav: dict,
+        CameraSave: dict,
+        VisionCenter: _tools.position,
+        TargetRotation: _tools.position,
+        experiment_type: ExperimentType,
+    ) -> None:
+        """Protected constructor"""
+        if not isinstance(open_mode, OpenMode):
+            errors.type_error(
+                f"Parameter open_mode must be of type `OpenMode`, but got `{open_mode}` of type `{type(open_mode).__name__}`"
+            )
+        if not isinstance(_position2elements, dict):
+            errors.type_error(
+                f"Parameter _position2elements must be of type `dict`, but got `{_position2elements}` of type `{type(_position2elements).__name__}`"
+            )
+        if not isinstance(_id2element, dict):
+            errors.type_error(
+                f"Parameter _id2element must be of type `dict`, but got `{_id2element}` of type `{type(_id2element).__name__}`"
+            )
+        if not isinstance(Elements, list):
+            errors.type_error(
+                f"Parameter Elements must be of type `list`, but got `{Elements}` of type `{type(Elements).__name__}`"
+            )
+        if not isinstance(SAV_PATH, str):
+            errors.type_error(
+                f"Parameter SAV_PATH must be of type `str`, but got `{SAV_PATH}` of type `{type(SAV_PATH).__name__}`"
+            )
+        if not isinstance(PlSav, dict):
+            errors.type_error(
+                f"Parameter PlSav must be of type `dict`, but got `{PlSav}` of type `{type(PlSav).__name__}`"
+            )
+        if not isinstance(CameraSave, dict):
+            errors.type_error(
+                f"Parameter CameraSave must be of type `dict`, but got `{CameraSave}` of type `{type(CameraSave).__name__}`"
+            )
+        if not isinstance(VisionCenter, _tools.position):
+            errors.type_error(
+                f"Parameter VisionCenter must be of type `_tools.position`, but got `{VisionCenter}` of type `{type(VisionCenter).__name__}`"
+            )
+        if not isinstance(TargetRotation, _tools.position):
+            errors.type_error(
+                f"Parameter TargetRotation must be of type `_tools.position`, but got `{TargetRotation}` of type `{type(TargetRotation).__name__}`"
+            )
+        if not isinstance(experiment_type, ExperimentType):
+            errors.type_error(
+                f"Parameter experiment_type must be of type `ExperimentType`, but got `{experiment_type}` of type `{type(experiment_type).__name__}`"
+            )
+
+        self.open_mode = open_mode
+        self._position2elements = _position2elements
+        self._id2element = _id2element
+        self.Elements = Elements
+        self.SAV_PATH = SAV_PATH
+        self.PlSav = PlSav
+        self.CameraSave = CameraSave
+        self.VisionCenter = VisionCenter
+        self.TargetRotation = TargetRotation
+        self.experiment_type = experiment_type
 
     @property
     def is_anonymous_sav(self) -> bool:
@@ -756,11 +821,19 @@ class _Experiment:
             if self.experiment_type == ExperimentType.Circuit:
                 if elementXYZ and not a_element.is_elementXYZ:
                     e_x, e_y, e_z = native_to_elementXYZ(
-                        e_x, e_y, e_z, self._elementXYZ_origin_position, a_element.is_bigElement
+                        e_x,
+                        e_y,
+                        e_z,
+                        self._elementXYZ_origin_position,
+                        a_element.is_bigElement,
                     )
                 elif not elementXYZ and a_element.is_elementXYZ:
                     e_x, e_y, e_z = elementXYZ_to_native(
-                        e_x, e_y, e_z, self._elementXYZ_origin_position, a_element.is_bigElement
+                        e_x,
+                        e_y,
+                        e_z,
+                        self._elementXYZ_origin_position,
+                        a_element.is_bigElement,
                     )
             a_element.set_position(e_x + x, e_y + y, e_z + z, elementXYZ)
             # set_Position已处理与_elements_position有关的操作
@@ -810,15 +883,15 @@ class ElementBase:
         """设置元件的位置"""
         if not isinstance(x, (int, float)):
             errors.type_error(
-                f"Parameter x must be of type `int` or `float`, but got `{type(x).__name__}`"
+                f"Parameter x must be of type `int` or `float`, but got `{x}` of type `{type(x).__name__}`"
             )
         if not isinstance(y, (int, float)):
             errors.type_error(
-                f"Parameter y must be of type `int` or `float`, but got `{type(y).__name__}`"
+                f"Parameter y must be of type `int` or `float`, but got `{y}` of type `{type(y).__name__}`"
             )
         if not isinstance(z, (int, float)):
             errors.type_error(
-                f"Parameter z must be of type `int` or `float`, but got `{type(z).__name__}`"
+                f"Parameter z must be of type `int` or `float`, but got `{z}` of type `{type(z).__name__}`"
             )
 
         x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
@@ -868,7 +941,7 @@ class ElementXYZ:
     _Y_AMEND: float = 0.045
 
     def __init__(self, x: num_type = 0, y: num_type = 0, z: num_type = 0, /) -> None:
-        """ 元件坐标系
+        """元件坐标系
 
         Args:
             x: elementXYZ坐标原点位于物实坐标系的的(x, y, z)

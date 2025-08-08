@@ -45,7 +45,9 @@ class VoidVertex(Vertex):
 
     @override
     def __eq__(self, other):
-        return isinstance(other, VoidVertex) and self.node == other.node # TODO 后文所有is用正常判断语句重写
+        return (
+            isinstance(other, VoidVertex) and self.node == other.node
+        )  # TODO 后文所有is用正常判断语句重写
 
     @override
     def __hash__(self):
@@ -91,8 +93,7 @@ class Node:
         # 元件坐标系，如果输入坐标不是元件坐标系就强转为元件坐标系
         _Expe = get_current_experiment()
         if not (
-            elementXYZ is True
-            or (_Expe.is_elementXYZ is True and elementXYZ is None)
+            elementXYZ is True or (_Expe.is_elementXYZ is True and elementXYZ is None)
         ):
             x, y, z = native_to_elementXYZ(x, y, z, _Expe._elementXYZ_origin_position)
         x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
@@ -110,7 +111,7 @@ class Node:
         res = set()
         for i in _gicw[get_current_experiment()]:
             candidate = i - set(self.input)
-            if len(candidate) == 1: 
+            if len(candidate) == 1:
                 # 长度为0说明该导线两边连的都是该节点，长度为2说明导线没连上该节点
                 res.add(list(candidate)[0].node)
         return res
@@ -153,7 +154,9 @@ class Node:
         """节点位置"""
         x, y, z = self._pos
         if not get_current_experiment().is_elementXYZ:
-            x, y, z = elementXYZ_to_native(x, y, z, get_current_experiment()._elementXYZ_origin_position)
+            x, y, z = elementXYZ_to_native(
+                x, y, z, get_current_experiment()._elementXYZ_origin_position
+            )
         return _tools.position(x, y, z)
 
     def shift(
@@ -161,7 +164,9 @@ class Node:
     ) -> Self:
         """平移节点"""
         if not elementXYZ:
-            xe, ye, ze = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
+            xe, ye, ze = native_to_elementXYZ(
+                x, y, z, get_current_experiment()._elementXYZ_origin_position
+            )
         else:
             xe, ye, ze = x, y, z
         xe, ye, ze = _tools.round_data(xe), _tools.round_data(ye), _tools.round_data(ze)
@@ -204,7 +209,9 @@ class Node:
         ):
             raise TypeError
         if not get_current_experiment().is_elementXYZ:
-            x, y, z = native_to_elementXYZ(x, y, z, get_current_experiment()._elementXYZ_origin_position)
+            x, y, z = native_to_elementXYZ(
+                x, y, z, get_current_experiment()._elementXYZ_origin_position
+            )
         x, y, z = _tools.round_data(x), _tools.round_data(y), _tools.round_data(z)
         self.locate(x, y, z)
 
@@ -428,8 +435,9 @@ def connect(*verteses: Vertex) -> List[Wire]:
     res = _gicw[expe] - res
     return list(res)
 
+
 def name_gen(name: str) -> str:
-    ''' 生成带编号的节点名称 '''
+    """生成带编号的节点名称"""
     expe = get_current_experiment()
     if _names.get(expe) is None:
         _names[expe] = {name: 1}
@@ -438,6 +446,7 @@ def name_gen(name: str) -> str:
     else:
         _names[expe][name] += 1
     return name + str(_names[expe][name] - 1)
+
 
 def node_wrapper(name: str) -> Callable:
     """用于将函数的作用效果整体包装为一个节点
@@ -505,7 +514,10 @@ def node_wrapper(name: str) -> Callable:
                 (
                     i.get_position()
                     if i.is_elementXYZ
-                    else native_to_elementXYZ(*i.get_position(), get_current_experiment()._elementXYZ_origin_position)
+                    else native_to_elementXYZ(
+                        *i.get_position(),
+                        get_current_experiment()._elementXYZ_origin_position,
+                    )
                 )
                 for i in elements
             ]
@@ -515,7 +527,9 @@ def node_wrapper(name: str) -> Callable:
             depth = (max(z) + min(z)) / 2
 
             # 生成节点
-            node = ComplexNode(nodes, width, height, depth, name_gen(name), gnd, elementXYZ=True)
+            node = ComplexNode(
+                nodes, width, height, depth, name_gen(name), gnd, elementXYZ=True
+            )
             node.extend(elements, set())
             # node.extend(elements, {crt_wire(*i)[0] for i in wires}) # 这一步冗余接线，但正好用来检查有没有空导线
             node.output = res.output
@@ -747,22 +761,31 @@ def inverse(func: FunctionType, increasing: bool, vertex_id: int = 0) -> Functio
     """反函数。参数函数必须已经打包好，且输出为节点"""
 
     def res_func(n: Node) -> ComplexNode:
-        v = VoidNode(*n.pos, n.gnd) # 生成探针
+        v = VoidNode(*n.pos, n.gnd)  # 生成探针
         expe = get_current_experiment()
         res = func(v)
         if not isinstance(res, Node):
             raise TypeError
         with ElementXYZ():
-            opamp = Operational_Amplifier(res.pos.x + res.width/2 + .5, res.pos.y, res.pos.z)
-            node = Node(res.pos.x + .5, res.pos.y, res.pos.z, name_gen("inv-" + res.name), res.gnd)
-        inputs = {list(i - {v.output})[0] for i in _gicw[expe] if v.output in i} # 此处要求参数函数已打包
+            opamp = Operational_Amplifier(
+                res.pos.x + res.width / 2 + 0.5, res.pos.y, res.pos.z
+            )
+            node = Node(
+                res.pos.x + 0.5,
+                res.pos.y,
+                res.pos.z,
+                name_gen("inv-" + res.name),
+                res.gnd,
+            )
+        inputs = {
+            list(i - {v.output})[0] for i in _gicw[expe] if v.output in i
+        }  # 此处要求参数函数已打包
         wires = {
             *crt_wire(opamp.i_neg if increasing else opamp.i_pos, res.output),
             *crt_wire(opamp.o, *inputs),
         }
-        node.input = (
-            [opamp.i_pos if increasing else opamp.i_neg]
-            + list(set(res.input) - inputs)
+        node.input = [opamp.i_pos if increasing else opamp.i_neg] + list(
+            set(res.input) - inputs
         )
         node.output = opamp.o
         node.extend(res.elements + [opamp], res.wires | wires)
@@ -859,16 +882,42 @@ def signed(func: FunctionType, vertex_id: int = 0) -> FunctionType:
         if not isinstance(res, Node):
             raise TypeError
         with ElementXYZ():
-            op1_opamp = Operational_Amplifier(res.pos.x - res.width/2 - .5, res.pos.y + .5, res.pos.z, gain=100)
-            op1_r1 = Resistor(res.pos.x - res.width/2 - .5, res.pos.y - 1, res.pos.z, resistance=1)
-            op1_r2 = Resistor(res.pos.x - res.width/2 - .5, res.pos.y - 2, res.pos.z, resistance=99)
-            op1_relay = Relay_Component(res.pos.x - res.width/2 - .5, res.pos.y + 1.5, res.pos.z, pull_in_current=1e-6, coil_inductance=1e-6)
-            op2_opamp = Operational_Amplifier(res.pos.x + res.width/2 + .5, res.pos.y + .5, res.pos.z, gain=100)
-            op2_r1 = Resistor(res.pos.x + res.width/2 + .5, res.pos.y - 1, res.pos.z, resistance=1)
-            op2_r2 = Resistor(res.pos.x + res.width/2 + .5, res.pos.y - 2, res.pos.z, resistance=99)
-            op2_relay = Relay_Component(res.pos.x + res.width/2 + .5, res.pos.y + 1.5, res.pos.z, pull_in_current=1e-6, coil_inductance=1e-6)
+            op1_opamp = Operational_Amplifier(
+                res.pos.x - res.width / 2 - 0.5, res.pos.y + 0.5, res.pos.z, gain=100
+            )
+            op1_r1 = Resistor(
+                res.pos.x - res.width / 2 - 0.5, res.pos.y - 1, res.pos.z, resistance=1
+            )
+            op1_r2 = Resistor(
+                res.pos.x - res.width / 2 - 0.5, res.pos.y - 2, res.pos.z, resistance=99
+            )
+            op1_relay = Relay_Component(
+                res.pos.x - res.width / 2 - 0.5,
+                res.pos.y + 1.5,
+                res.pos.z,
+                pull_in_current=1e-6,
+                coil_inductance=1e-6,
+            )
+            op2_opamp = Operational_Amplifier(
+                res.pos.x + res.width / 2 + 0.5, res.pos.y + 0.5, res.pos.z, gain=100
+            )
+            op2_r1 = Resistor(
+                res.pos.x + res.width / 2 + 0.5, res.pos.y - 1, res.pos.z, resistance=1
+            )
+            op2_r2 = Resistor(
+                res.pos.x + res.width / 2 + 0.5, res.pos.y - 2, res.pos.z, resistance=99
+            )
+            op2_relay = Relay_Component(
+                res.pos.x + res.width / 2 + 0.5,
+                res.pos.y + 1.5,
+                res.pos.z,
+                pull_in_current=1e-6,
+                coil_inductance=1e-6,
+            )
             node = Node(*res.pos, name_gen("signed"), res.gnd)
-        inputs = {list(i - {v.output})[0] for i in _gicw[expe] if v.output in i} # 此处要求参数函数已打包
+        inputs = {
+            list(i - {v.output})[0] for i in _gicw[expe] if v.output in i
+        }  # 此处要求参数函数已打包
         wires = {
             *crt_wire(op1_r1.black, op1_r2.red),
             *crt_wire(op2_r1.black, op2_r2.red),
@@ -924,21 +973,63 @@ def quadrant(
         if not isinstance(res, Node):
             raise TypeError
         with ElementXYZ():
-            op1_opamp = Operational_Amplifier(res.pos.x - res.width/2 - .5, res.pos.y + 1.5, res.pos.z, gain=100)
-            op1_r1 = Resistor(res.pos.x - res.width/2 - .5, res.pos.y, res.pos.z, resistance=1)
-            op1_r2 = Resistor(res.pos.x - res.width/2 - .5, res.pos.y - 1, res.pos.z, resistance=99)
-            op2_opamp = Operational_Amplifier(res.pos.x - res.width/2 - 1.5, res.pos.y + 1.5, res.pos.z, gain=100)
-            op2_r1 = Resistor(res.pos.x - res.width/2 - 1.5, res.pos.y, res.pos.z, resistance=1)
-            op2_r2 = Resistor(res.pos.x - res.width/2 - 1.5, res.pos.y - 1, res.pos.z, resistance=99)
-            op3_opamp = Operational_Amplifier(res.pos.x + res.width/2 + 1.5, res.pos.y + 1.5, res.pos.z, gain=100)
-            op3_r1 = Resistor(res.pos.x + res.width/2 + 1.5, res.pos.y, res.pos.z, resistance=1)
-            op3_r2 = Resistor(res.pos.x + res.width/2 + 1.5, res.pos.y - 1, res.pos.z, resistance=99)
-            relay_i1 = Relay_Component(res.pos.x - res.width/2 - 2.5, res.pos.y + 1, res.pos.z, pull_in_current=1e-6, coil_inductance=1e-6)
-            relay_i2 = Relay_Component(res.pos.x - res.width/2 - 2.5, res.pos.y - .5, res.pos.z, pull_in_current=1e-6, coil_inductance=1e-6)
-            relay_o = Relay_Component(res.pos.x + res.width/2 + .5, res.pos.y + 1, res.pos.z, pull_in_current=1e-6, coil_inductance=1e-6)
-            xor = Xor_Gate(res.pos.x + res.width/2 + .5, res.pos.y, res.pos.z, high_level=1e-7)
-            amp = Operational_Amplifier(res.pos.x + res.width/2  + .5, res.pos.y - 1.5, res.pos.z)
-            node = Node(res.pos.x - .5, res.pos.y, res.pos.z, name_gen("quad"), res.gnd)
+            op1_opamp = Operational_Amplifier(
+                res.pos.x - res.width / 2 - 0.5, res.pos.y + 1.5, res.pos.z, gain=100
+            )
+            op1_r1 = Resistor(
+                res.pos.x - res.width / 2 - 0.5, res.pos.y, res.pos.z, resistance=1
+            )
+            op1_r2 = Resistor(
+                res.pos.x - res.width / 2 - 0.5, res.pos.y - 1, res.pos.z, resistance=99
+            )
+            op2_opamp = Operational_Amplifier(
+                res.pos.x - res.width / 2 - 1.5, res.pos.y + 1.5, res.pos.z, gain=100
+            )
+            op2_r1 = Resistor(
+                res.pos.x - res.width / 2 - 1.5, res.pos.y, res.pos.z, resistance=1
+            )
+            op2_r2 = Resistor(
+                res.pos.x - res.width / 2 - 1.5, res.pos.y - 1, res.pos.z, resistance=99
+            )
+            op3_opamp = Operational_Amplifier(
+                res.pos.x + res.width / 2 + 1.5, res.pos.y + 1.5, res.pos.z, gain=100
+            )
+            op3_r1 = Resistor(
+                res.pos.x + res.width / 2 + 1.5, res.pos.y, res.pos.z, resistance=1
+            )
+            op3_r2 = Resistor(
+                res.pos.x + res.width / 2 + 1.5, res.pos.y - 1, res.pos.z, resistance=99
+            )
+            relay_i1 = Relay_Component(
+                res.pos.x - res.width / 2 - 2.5,
+                res.pos.y + 1,
+                res.pos.z,
+                pull_in_current=1e-6,
+                coil_inductance=1e-6,
+            )
+            relay_i2 = Relay_Component(
+                res.pos.x - res.width / 2 - 2.5,
+                res.pos.y - 0.5,
+                res.pos.z,
+                pull_in_current=1e-6,
+                coil_inductance=1e-6,
+            )
+            relay_o = Relay_Component(
+                res.pos.x + res.width / 2 + 0.5,
+                res.pos.y + 1,
+                res.pos.z,
+                pull_in_current=1e-6,
+                coil_inductance=1e-6,
+            )
+            xor = Xor_Gate(
+                res.pos.x + res.width / 2 + 0.5, res.pos.y, res.pos.z, high_level=1e-7
+            )
+            amp = Operational_Amplifier(
+                res.pos.x + res.width / 2 + 0.5, res.pos.y - 1.5, res.pos.z
+            )
+            node = Node(
+                res.pos.x - 0.5, res.pos.y, res.pos.z, name_gen("quad"), res.gnd
+            )
         # 此处要求参数函数已打包，具体是要求空探针没有和其它节点相连；同时还要求这两个空探针不会相连
         # TODO 将此处和收尾处理同时进行
         inputs1 = {list(i - {v1.output})[0] for i in _gicw[expe] if v1.output in i}
@@ -972,8 +1063,9 @@ def quadrant(
             *crt_wire(op1_opamp.o, *inputs1),
             *crt_wire(op2_opamp.o, *inputs2),
         }
-        node.input = [op1_r2.black, op2_r2.black] + \
-            list(set(res.input) - inputs1 - inputs2)
+        node.input = [op1_r2.black, op2_r2.black] + list(
+            set(res.input) - inputs1 - inputs2
+        )
         node.output = op3_opamp.o
         node.extend(
             res.elements

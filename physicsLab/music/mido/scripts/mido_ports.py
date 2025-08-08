@@ -23,22 +23,24 @@ def print_ports(heading, port_names):
 
 def main():
     print()
-    print_ports('Available input Ports:', mido.get_input_names())
-    print_ports('Available output Ports:', mido.get_output_names())
+    print_ports("Available input Ports:", mido.get_input_names())
+    print_ports("Available output Ports:", mido.get_output_names())
 
-    for name in ['MIDO_DEFAULT_INPUT',
-                 'MIDO_DEFAULT_OUTPUT',
-                 'MIDO_DEFAULT_IOPORT',
-                 'MIDO_BACKEND']:
+    for name in [
+        "MIDO_DEFAULT_INPUT",
+        "MIDO_DEFAULT_OUTPUT",
+        "MIDO_DEFAULT_IOPORT",
+        "MIDO_BACKEND",
+    ]:
         try:
             value = os.environ[name]
-            print(f'{name}={value!r}')
+            print(f"{name}={value!r}")
         except LookupError:
-            print(f'{name} not set.')
+            print(f"{name} not set.")
     print()
-    print(f'Using backend {mido.backend.name}.')
+    print(f"Using backend {mido.backend.name}.")
     print()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

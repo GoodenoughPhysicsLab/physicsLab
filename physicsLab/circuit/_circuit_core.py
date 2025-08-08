@@ -339,7 +339,13 @@ class CircuitBase(ElementBase, metaclass=_CircuitMeta):
             or self.experiment.is_elementXYZ is True
             and elementXYZ is None
         ):
-            x, y, z = elementXYZ_to_native(x, y, z, self.experiment._elementXYZ_origin_position, is_bigElement=self.is_bigElement)
+            x, y, z = elementXYZ_to_native(
+                x,
+                y,
+                z,
+                self.experiment._elementXYZ_origin_position,
+                is_bigElement=self.is_bigElement,
+            )
             self.is_elementXYZ = True
         else:
             self.is_elementXYZ = False

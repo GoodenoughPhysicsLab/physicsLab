@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-'''
+"""
 The reason why I (Arendelle (GitHub id: GoodenoughPhysicsLab) 2381642961@qq.com)
 copy this file is that when I install mido, it will download some exe, and it's
 aweful in some walled garden platform.
 
 The source of this copy is mido v1.3.3 (download from pypi)
-'''
+"""
 
 # SPDX-FileCopyrightText: 2013 Ole Martin Bjorndalen <ombdalen@gmail.com>
 #
