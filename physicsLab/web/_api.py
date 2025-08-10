@@ -5,7 +5,10 @@
 """
 
 import os
-import requests
+import json
+import uuid
+import urllib
+from . import _request
 
 from physicsLab import plAR
 from physicsLab import enums
@@ -29,7 +32,7 @@ class _api_result(TypedDict):
 
 
 def _check_response(
-    response: requests.Response, err_callback: Optional[Callable] = None
+    response_json: dict, err_callback: Optional[Callable] = None
 ) -> _api_result:
     """检查返回的response
 
@@ -42,19 +45,13 @@ def _check_response(
         _api_result: 物实api返回体结构
     """
     errors.assert_true(err_callback is None or callable(err_callback))
-
-    response.raise_for_status()
-
-    response_json = response.json()
     status_code = response_json["Status"]
 
     if status_code == 200:
         return response_json
     if err_callback is not None:
         err_callback(status_code)
-    raise errors.ResponseFail(
-        f"Physics-Lab-AR's server returned error code {status_code}: {response_json['Message']}"
-    )
+    raise errors.ResponseFail(status_code, response_json["Message"])
 
 
 def get_start_page() -> _api_result:
@@ -63,9 +60,13 @@ def get_start_page() -> _api_result:
     Returns:
         _api_result: 物实api返回体结构
     """
-    response = requests.get("https://physics-api-cn.turtlesim.com/Users")
+    """获取主页数据"""
+    response_bytes = _request.get_https(
+        domain="physics-api-cn.turtlesim.com", path="Users"
+    )
+    response_json = json.loads(response_bytes)
 
-    return _check_response(response)
+    return _check_response(response_json)
 
 
 def get_avatar(
@@ -123,22 +124,23 @@ def get_avatar(
     else:
         errors.unreachable()
 
-    protocol = "https" if usehttps else "http"
-    port = "443" if usehttps else "80"
-
-    url = (
-        f"{protocol}://physics-static-cn.turtlesim.com:{port}/{category}"
-        f"/{target_id[0:4]}/{target_id[4:6]}/{target_id[6:8]}/{target_id[8:]}/{index}.jpg!{size_category}"
-    )
+    domain = "physics-static-cn.turtlesim.com"
+    path = f"{category}/{target_id[0:4]}/{target_id[4:6]}/{target_id[6:8]}/{target_id[8:]}/{index}.jpg!{size_category}"
 
     if usehttps:
-        response = requests.get(url, verify=False)
+        response_bytes = _request.get_https(domain=domain, path=path, verify=False)
     else:
-        response = requests.get(url)
+        try:
+            response_bytes = _request.get_http(domain=domain, path=path)
+        except urllib.error.HTTPError as e:
+            if e.getcode() == 404:
+                raise IndexError("avatar not found")
+            else:
+                raise e
 
-    if b"<Error>" in response.content:
+    if b"<Error>" in response_bytes:
         raise IndexError("avatar not found")
-    return response.content
+    return response_bytes
 
 
 # TODO 进一步封装发送请求的函数
@@ -177,20 +179,26 @@ class _User:
         Returns:
             _api_result: 物实api返回体结构
         """
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com/Contents/GetLibrary",
-            json={
-                "Identifier": "Discussions",
-                "Language": "Chinese",
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+
+        """获取社区作品列表"""
+        body = {
+            "Identifier": "Discussions",
+            "Language": "Chinese",
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Contents/GetLibrary",
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def query_experiments(
         self,
@@ -294,36 +302,40 @@ class _User:
         else:
             _exclude_tags = [tag.value for tag in exclude_tags]
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com/Contents/QueryExperiments",
-            json={
-                "Query": {
-                    "Category": category.value,
-                    "Languages": languages,
-                    "ExcludeLanguages": exclude_languages,
-                    "Tags": _tags,
-                    "ExcludeTags": _exclude_tags,
-                    "ModelTags": None,
-                    "ModelID": None,
-                    "ParentID": None,
-                    "UserID": user_id,
-                    "Special": None,
-                    "From": from_skip,
-                    "Skip": skip,
-                    "Take": take,
-                    "Days": 0,
-                    "Sort": 0,  # TODO 这个也许是那个史上热门之类的?
-                    "ShowAnnouncement": False,
-                }
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "Query": {
+                "Category": category.value,
+                "Languages": languages,
+                "ExcludeLanguages": exclude_languages,
+                "Tags": _tags,
+                "ExcludeTags": _exclude_tags,
+                "ModelTags": None,
+                "ModelID": None,
+                "ParentID": None,
+                "UserID": user_id,
+                "Special": None,
+                "From": from_skip,
+                "Skip": skip,
+                "Take": take,
+                "Days": 0,
+                "Sort": 0,  # TODO 这个也许是那个史上热门之类的?
+                "ShowAnnouncement": False,
+            }
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Contents/QueryExperiments",
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def get_experiment(
         self,
@@ -353,19 +365,24 @@ class _User:
             # 如果传入的是实验ID, 先获取summary来得到ContentID
             content_id = self.get_summary(content_id, category)["Data"]["ContentID"]
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com:443/Contents/GetExperiment",
-            json={
-                "ContentID": content_id,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "ContentID": content_id,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Contents/GetExperiment",
+            port=443,
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def confirm_experiment(
         self, summary_id: str, category: Category, image_counter: int
@@ -397,22 +414,26 @@ class _User:
                 f"Parameter `image_counter` must be of type `int`, but got value `{image_counter}` of type `{type(image_counter).__name__}`"
             )
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com/Contents/ConfirmExperiment",
-            json={
-                "SummaryID": summary_id,
-                "Category": category.value,
-                "Image": image_counter,
-                "Extension": ".jpg",
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "SummaryID": summary_id,
+            "Category": category.value,
+            "Image": image_counter,
+            "Extension": ".jpg",
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Contents/ConfirmExperiment",
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def remove_experiment(
         self, summary_id: str, category: Category, reason: Optional[str] = None
@@ -447,23 +468,28 @@ class _User:
             else "2411"
         )
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com:443/Contents/RemoveExperiment",
-            json={
-                "Category": category.value,
-                "SummaryID": summary_id,
-                "Hiding": True,
-                "Reason": reason,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-                "x-API-Version": plar_ver,
-            },
+        body = {
+            "Category": category.value,
+            "SummaryID": summary_id,
+            "Hiding": True,
+            "Reason": reason,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+            "x-API-Version": plar_ver,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Contents/RemoveExperiment",
+            port=443,
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def post_comment(
         self,
@@ -545,24 +571,29 @@ class _User:
 
         assert isinstance(reply_id, str)
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com:443/Messages/PostComment",
-            json={
-                "TargetID": target_id,
-                "TargetType": target_type,
-                "Language": "Chinese",
-                "ReplyID": reply_id,
-                "Content": content,
-                "Special": special,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "TargetID": target_id,
+            "TargetType": target_type,
+            "Language": "Chinese",
+            "ReplyID": reply_id,
+            "Content": content,
+            "Special": special,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Messages/PostComment",
+            port=443,
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def remove_comment(self, comment_id: str, target_type: str) -> _api_result:
         """删除评论
@@ -587,20 +618,25 @@ class _User:
                 f"Parameter `target_type` must be one of ['User', 'Discussion', 'Experiment'], but got value `{target_type}`"
             )
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com:443/Messages/RemoveComment",
-            json={
-                "TargetType": target_type,
-                "CommentID": comment_id,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "TargetType": target_type,
+            "CommentID": comment_id,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Messages/RemoveComment",
+            port=443,
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def get_comments(
         self,
@@ -647,23 +683,28 @@ class _User:
                 f"Parameter `target_type` must be one of ['User', 'Discussion', 'Experiment'], but got value `{target_type} of type '{target_type}'"
             )
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com:443/Messages/GetComments",
-            json={
-                "TargetID": target_id,
-                "TargetType": target_type,
-                "CommentID": comment_id,
-                "Take": take,
-                "Skip": skip,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "TargetID": target_id,
+            "TargetType": target_type,
+            "CommentID": comment_id,
+            "Take": take,
+            "Skip": skip,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Messages/GetComments",
+            port=443,
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def get_summary(self, content_id: str, category: Category) -> _api_result:
         """获取实验介绍
@@ -684,17 +725,21 @@ class _User:
                 f"Parameter `category` must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`"
             )
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com/Contents/GetSummary",
-            json={
-                "ContentID": content_id,
-                "Category": category.value,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "ContentID": content_id,
+            "Category": category.value,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Contents/GetSummary",
+            header=headers,
+            body=body,
         )
 
         def callback(status_code):
@@ -702,10 +747,10 @@ class _User:
                 raise PermissionError("login failed")
             if status_code == 404:
                 raise errors.ResponseFail(
-                    "experiment not found(may be you select category wrong)"
+                    404, "experiment not found(may be you select category wrong)"
                 )
 
-        return _check_response(response, callback)
+        return _check_response(response_json, callback)
 
     def get_derivatives(self, content_id: str, category: Category) -> _api_result:
         """获取作品的详细信息, 物实第一次读取作品会使用此接口
@@ -726,20 +771,24 @@ class _User:
                 f"Parameter `category` must be an instance of Category enum, but got value `{category}` of type `{type(category).__name__}`"
             )
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com/Contents/GetDerivatives",
-            json={
-                "ContentID": content_id,
-                "Category": category.value,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "ContentID": content_id,
+            "Category": category.value,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Contents/GetDerivatives",
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def get_user(
         self,
@@ -772,37 +821,54 @@ class _User:
         else:
             errors.unreachable()
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com:443/Users/GetUser",
-            json=body,
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Users/GetUser",
+            port=443,
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
-    def get_profile(self) -> _api_result:
+    def get_profile(self, user_id: Optional[str] = None) -> _api_result:
         """获取用户主页信息
 
-        Returns:
-            _api_result: 物实api返回体结构
+        Args:
+            user_id: 要获取主页信息的用户的id, 若为None则是获取自己的主页信息
         """
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com:443/Contents/GetProfile",
-            json={
-                "ID": self.user_id,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        if not isinstance(user_id, (str, type(None))):
+            errors.type_error(
+                f"Parameter user_id must be of type `Optional[str]`, but got value {user_id} of type `{type(user_id).__name__}`"
+            )
+
+        if user_id is None:
+            user_id = self.user_id
+
+        body = {
+            "ID": user_id,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Contents/GetProfile",
+            port=443,
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def star_content(
         self, content_id: str, category: Category, star_type: int, status: bool = True
@@ -839,22 +905,26 @@ class _User:
                 f"Parameter `star_type` must be one of [0, 1], but got value `{star_type} of type '{star_type}'"
             )
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com/Contents/StarContent",
-            json={
-                "ContentID": content_id,
-                "Status": status,
-                "Category": category.value,
-                "Type": star_type,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "ContentID": content_id,
+            "Status": status,
+            "Category": category.value,
+            "Type": star_type,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Contents/StarContent",
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def upload_image(
         self, policy: str, authorization: str, image_path: str
@@ -872,8 +942,6 @@ class _User:
         Notes:
             该API为低级API, 上传图片推荐使用封装得更加完善的Experiment.upload()与Experiment.update()方法
         """
-        if policy is None or authorization is None:
-            raise RuntimeError("Sorry, Physics-Lab-AR can't upload this iamge")
         if not isinstance(policy, str):
             errors.type_error(
                 f"Parameter `policy` must be of type `str`, but got value `{policy}` of type `{type(policy).__name__}`"
@@ -890,22 +958,51 @@ class _User:
             raise FileNotFoundError(f"`{image_path}` not found")
 
         with open(image_path, "rb") as f:
-            data = {
-                "policy": (None, policy, None),
-                "authorization": (None, authorization, None),
-                "file": ("temp.jpg", f, None),
-            }
-            response = requests.post(
-                "http://v0.api.upyun.com/qphysics",
-                files=data,
+            boundary = "----WebKitFormBoundary" + uuid.uuid4().hex
+            multipart_body = bytearray()
+
+            # Field: policy
+            multipart_body.extend(f"--{boundary}\r\n".encode("utf-8"))
+            multipart_body.extend(
+                b'Content-Disposition: form-data; name="policy"\r\n\r\n'
             )
-            response.raise_for_status()
-            if response.json()["code"] != 200:
+            multipart_body.extend(policy.encode("utf-8"))
+            multipart_body.extend(b"\r\n")
+
+            # Field: authorization
+            multipart_body.extend(f"--{boundary}\r\n".encode("utf-8"))
+            multipart_body.extend(
+                b'Content-Disposition: form-data; name="authorization"\r\n\r\n'
+            )
+            multipart_body.extend(authorization.encode("utf-8"))
+            multipart_body.extend(b"\r\n")
+
+            # Field: file
+            multipart_body.extend(f"--{boundary}\r\n".encode("utf-8"))
+            multipart_body.extend(
+                b'Content-Disposition: form-data; name="file"; filename="temp.jpg"\r\n'
+            )
+            multipart_body.extend(b"Content-Type: application/octet-stream\r\n\r\n")
+            multipart_body.extend(f.read())
+            multipart_body.extend(b"\r\n")
+
+            # End boundary
+            multipart_body.extend(f"--{boundary}--\r\n".encode("utf-8"))
+
+            headers = {"Content-Type": f"multipart/form-data; boundary={boundary}"}
+
+            response_json = _request.post_http(
+                domain="v0.api.upyun.com",
+                path="qphysics",
+                header=headers,
+                body=bytes(multipart_body),
+            )
+
+            if response_json["code"] != 200:
                 raise errors.ResponseFail(
-                    f"Physics-Lab-AR returned error code {response.json()['code']} : "
-                    f"{response.json()['message']}`"
+                    response_json["code"], response_json["message"]
                 )
-            return response.json()
+            return response_json
 
     def get_message(self, message_id: str) -> _api_result:
         """读取系统邮件消息
@@ -921,19 +1018,23 @@ class _User:
                 f"Parameter `message_id` must be of type `str`, but got value `{message_id}` of type `{type(message_id).__name__}`"
             )
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com/Messages/GetMessage",
-            json={
-                "MessageID": message_id,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "MessageID": message_id,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Messages/GetMessage",
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def get_messages(
         self,
@@ -971,22 +1072,26 @@ class _User:
                 f"Parameter `no_templates` must be of type `bool`, but got value `{no_templates}` of type `{type(no_templates).__name__}`"
             )
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com/Messages/GetMessages",
-            json={
-                "CategoryID": category_id,
-                "Skip": skip,
-                "Take": take,
-                "NoTemplates": no_templates,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "CategoryID": category_id,
+            "Skip": skip,
+            "Take": take,
+            "NoTemplates": no_templates,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Messages/GetMessages",
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def get_supporters(
         self,
@@ -1023,22 +1128,26 @@ class _User:
                 f"Parameter `take` must be of type `int`, but got value `{take}` of type `{type(take).__name__}`"
             )
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com/Contents/GetSupporters",
-            json={
-                "ContentID": content_id,
-                "Category": category.value,
-                "Skip": skip,
-                "Take": take,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "ContentID": content_id,
+            "Category": category.value,
+            "Skip": skip,
+            "Take": take,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Contents/GetSupporters",
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def get_relations(
         self,
@@ -1084,23 +1193,28 @@ class _User:
         else:
             errors.unreachable()
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com:443/Users/GetRelations",
-            json={
-                "UserID": user_id,
-                "DisplayType": display_type_,
-                "Skip": skip,
-                "Take": take,
-                "Query": query,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "UserID": user_id,
+            "DisplayType": display_type_,
+            "Skip": skip,
+            "Take": take,
+            "Query": query,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Users/GetRelations",
+            port=443,
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def follow(self, target_id: str, action: bool = True) -> _api_result:
         """关注用户
@@ -1121,20 +1235,25 @@ class _User:
                 f"Parameter `action` must be of type `bool`, but got value `{action}` of type `{type(action).__name__}`"
             )
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com:443/Users/Follow",
-            json={
-                "TargetID": target_id,
-                "Action": int(action),
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "TargetID": target_id,
+            "Action": int(action),
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Users/Follow",
+            port=443,
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def rename(self, nickname: str) -> _api_result:
         """修改用户昵称
@@ -1150,20 +1269,25 @@ class _User:
                 f"Parameter `nickname` must be of type `str`, but got value `{nickname}` of type {type(nickname).__name__}`"
             )
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com:443/Users/Rename",
-            json={
-                "Target": nickname,
-                "UserID": self.user_id,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "Target": nickname,
+            "UserID": self.user_id,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Users/Rename",
+            port=443,
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def modify_information(self, target: str) -> _api_result:
         """修改用户签名
@@ -1179,20 +1303,25 @@ class _User:
                 f"Parameter `target` must be of type `str`, but got value `{target}` of type `{type(target).__name__}`"
             )
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com:443/Users/ModifyInformation",
-            json={
-                "Target": target,
-                "Field": "Signature",
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "Target": target,
+            "Field": "Signature",
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Users/ModifyInformation",
+            port=443,
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def receive_bonus(self, activity_id: str, index: int) -> _api_result:
         """领取每日签到奖励
@@ -1217,21 +1346,26 @@ class _User:
                 f"Parameter `index` must be a non-negative integer, but got value `{index}`"
             )
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com:443/Users/ReceiveBonus",
-            json={
-                "ActivityID": activity_id,
-                "Index": index,
-                "Statistic": self.statistic,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "ActivityID": activity_id,
+            "Index": index,
+            "Statistic": self.statistic,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Users/ReceiveBonus",
+            port=443,
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def ban(self, target_id: str, reason: str, length: int) -> _api_result:
         """封禁用户
@@ -1260,21 +1394,26 @@ class _User:
         if length <= 0:  # TODO 改天试试负数会发生什么
             raise ValueError
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com:443/Users/Ban",
-            json={
-                "TargetID": target_id,
-                "Reason": reason,
-                "Length": length,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "TargetID": target_id,
+            "Reason": reason,
+            "Length": length,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Users/Ban",
+            port=443,
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)
 
     def unban(self, target_id: str, reason: str) -> _api_result:
         """解除封禁
@@ -1295,17 +1434,22 @@ class _User:
                 f"Parameter reason must be of type `str`, but got value `{reason}` of type `{type(reason).__name__}`"
             )
 
-        response = requests.post(
-            "https://physics-api-cn.turtlesim.com:443/Users/Unban",
-            json={
-                "TargetID": target_id,
-                "Reason": reason,
-            },
-            headers={
-                "Content-Type": "application/json",
-                "x-API-Token": self.token,
-                "x-API-AuthCode": self.auth_code,
-            },
+        body = {
+            "TargetID": target_id,
+            "Reason": reason,
+        }
+        headers = {
+            "Content-Type": "application/json",
+            "x-API-Token": self.token,
+            "x-API-AuthCode": self.auth_code,
+        }
+
+        response_json = _request.post_https(
+            domain="physics-api-cn.turtlesim.com",
+            path="Users/Unban",
+            port=443,
+            header=headers,
+            body=body,
         )
 
-        return _check_response(response)
+        return _check_response(response_json)

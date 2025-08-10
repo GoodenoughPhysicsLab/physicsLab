@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """该文件提供更方便的遍历物实社区一些数据的迭代器"""
 import time
-import urllib3
-import requests
+import urllib.error
+from . import _request
 
 from ._api import _User, get_avatar
 from ._threadpool import ThreadPool, _Task
@@ -25,10 +25,8 @@ def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
                 return func(*args, **kwargs)
             except (
                 TimeoutError,
-                urllib3.exceptions.NewConnectionError,
-                urllib3.exceptions.MaxRetryError,
-                urllib3.exceptions.ConnectionError,
-                requests.exceptions.HTTPError,
+                urllib.error.URLError,
+                errors.ResponseFail,
             ):
                 continue
     else:
@@ -39,10 +37,8 @@ def _run_task(max_retry: Optional[int], func: Callable, *args, **kwargs):
                 return func(*args, **kwargs)
             except (
                 TimeoutError,
-                urllib3.exceptions.NewConnectionError,
-                urllib3.exceptions.MaxRetryError,
-                urllib3.exceptions.ConnectionError,
-                requests.exceptions.HTTPError,
+                urllib.error.URLError,
+                errors.ResponseFail,
             ):
                 continue
         raise errors.MaxRetryError("max retry reached")
@@ -703,7 +699,7 @@ class AvatarsIter:
                     self.max_retry,
                     get_avatar,
                     self.target_id,
-                    index,
+                    index + 1,
                     self.category,
                     self.size_category,
                 )
