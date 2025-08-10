@@ -588,7 +588,7 @@ class _Experiment:
                 "FileSize": image_size,
                 "Extension": ".jpg",
             }
-        
+
         headers = {
             "x-API-Token": user.token,
             "x-API-AuthCode": user.auth_code,
@@ -597,12 +597,12 @@ class _Experiment:
             "Content-Type": "gzipped/json",
         }
         gzipped_data = gzip.compress(json.dumps(submit_data).encode("utf-8"))
-        
+
         submit_response_json = _request.post_https(
             domain="physics-api-cn.turtlesim.com",
             path="Contents/SubmitExperiment",
             header=headers,
-            body=gzipped_data
+            body=gzipped_data,
         )
 
         def callback(status_code):
@@ -686,7 +686,7 @@ class _Experiment:
         if image_path is not None:
             submit_data["Summary"]["Image"] += 1
 
-        headers={
+        headers = {
             "x-API-Token": user.token,
             "x-API-AuthCode": user.auth_code,
             "x-API-Version": str(submit_data["Summary"]["Version"]),
@@ -694,7 +694,7 @@ class _Experiment:
             "Content-Type": "gzipped/json",
         }
         gzipped_data = gzip.compress(json.dumps(submit_data).encode("utf-8"))
-        
+
         response_json = _request.post_https(
             domain="physics-api-cn.turtlesim.com",
             path="Contents/SubmitExperiment",

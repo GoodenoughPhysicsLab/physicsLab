@@ -4,7 +4,7 @@ import json
 import urllib.error
 import urllib.request
 from physicsLab import errors
-from physicsLab._typing import Optional
+from physicsLab._typing import Optional, Union
 
 
 def get_http(domain: str, path: str, port: Optional[int] = None) -> bytes:
@@ -90,7 +90,7 @@ def post_http(
 
     if port is None:
         port = 80
-      
+
     if isinstance(body, dict):
         final_body = json.dumps(body).encode("utf-8")
     else:
@@ -101,8 +101,9 @@ def post_http(
     req.headers = header
 
     with urllib.request.urlopen(req) as response:
-        if response.info().get('Content-Encoding') == 'gzip':
+        if response.info().get("Content-Encoding") == "gzip":
             import gzip
+
             content = gzip.decompress(response.read())
         else:
             content = response.read()
@@ -113,7 +114,7 @@ def post_https(
     domain: str,
     path: str,
     header: dict,
-    body: bytes,
+    body: Union[bytes, dict],
     port: Optional[int] = None,
     verify: bool = True,
 ) -> dict:
@@ -145,7 +146,7 @@ def post_https(
         import ssl
 
         ssl._create_default_https_context = ssl._create_unverified_context
-        
+
     if isinstance(body, dict):
         final_body = json.dumps(body).encode("utf-8")
     else:
@@ -156,8 +157,9 @@ def post_https(
     req.headers = header
 
     with urllib.request.urlopen(req) as response:
-        if response.info().get('Content-Encoding') == 'gzip':
+        if response.info().get("Content-Encoding") == "gzip":
             import gzip
+
             content = gzip.decompress(response.read())
         else:
             content = response.read()

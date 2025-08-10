@@ -271,7 +271,7 @@ def anonymous_login() -> User:
     headers = {
         "Content-Type": "application/json",
     }
-    
+
     response_json = _request.post_http(
         domain="physics-api-cn.turtlesim.com",
         path="Users/Authenticate",
@@ -298,7 +298,7 @@ def email_login(email: str, password: str) -> User:
         plar_version = int(f"{plar_version[0]}{plar_version[1]}{plar_version[2]}")
     else:
         plar_version = 2411
-        
+
     body = {
         "Login": email,
         "Password": password,
@@ -311,7 +311,7 @@ def email_login(email: str, password: str) -> User:
     headers = {
         "Content-Type": "application/json",
     }
-    
+
     response_json = _request.post_http(
         domain="physics-api-cn.turtlesim.com",
         path="Users/Authenticate",

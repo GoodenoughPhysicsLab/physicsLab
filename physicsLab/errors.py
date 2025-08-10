@@ -255,10 +255,10 @@ class ExperimentError(Exception):
 
 
 class ResponseFail(Exception):
-    """ The response successfully returned but the returned data from Quantum-Physics is invalid """
+    """The response successfully returned but the returned data from Quantum-Physics is invalid"""
 
     def __init__(self, err_code: int, err_msg: str):
-        self .err_code: int = err_code
+        self.err_code: int = err_code
         self.err_msg: str = err_msg
 
     def __str__(self):

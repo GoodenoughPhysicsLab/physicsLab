@@ -32,7 +32,7 @@ class _api_result(TypedDict):
 
 
 def _check_response(
-    response_json: _api_result, err_callback: Optional[Callable] = None
+    response_json: dict, err_callback: Optional[Callable] = None
 ) -> _api_result:
     """检查返回的response
 
@@ -51,10 +51,7 @@ def _check_response(
         return response_json
     if err_callback is not None:
         err_callback(status_code)
-    raise errors.ResponseFail(
-        status_code,
-        response_json['Message']
-    )
+    raise errors.ResponseFail(status_code, response_json["Message"])
 
 
 def get_start_page() -> _api_result:
@@ -64,7 +61,9 @@ def get_start_page() -> _api_result:
         _api_result: 物实api返回体结构
     """
     """获取主页数据"""
-    response_bytes = _request.get_https(domain="physics-api-cn.turtlesim.com", path="Users")
+    response_bytes = _request.get_https(
+        domain="physics-api-cn.turtlesim.com", path="Users"
+    )
     response_json = json.loads(response_bytes)
 
     return _check_response(response_json)
@@ -196,7 +195,7 @@ class _User:
             domain="physics-api-cn.turtlesim.com",
             path="Contents/GetLibrary",
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -333,7 +332,7 @@ class _User:
             domain="physics-api-cn.turtlesim.com",
             path="Contents/QueryExperiments",
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -374,13 +373,13 @@ class _User:
             "x-API-Token": self.token,
             "x-API-AuthCode": self.auth_code,
         }
-        
+
         response_json = _request.post_https(
             domain="physics-api-cn.turtlesim.com",
             path="Contents/GetExperiment",
             port=443,
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -431,7 +430,7 @@ class _User:
             domain="physics-api-cn.turtlesim.com",
             path="Contents/ConfirmExperiment",
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -481,13 +480,13 @@ class _User:
             "x-API-AuthCode": self.auth_code,
             "x-API-Version": plar_ver,
         }
-        
+
         response_json = _request.post_https(
             domain="physics-api-cn.turtlesim.com",
             path="Contents/RemoveExperiment",
             port=443,
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -571,7 +570,7 @@ class _User:
                         pass
 
         assert isinstance(reply_id, str)
-        
+
         body = {
             "TargetID": target_id,
             "TargetType": target_type,
@@ -585,13 +584,13 @@ class _User:
             "x-API-Token": self.token,
             "x-API-AuthCode": self.auth_code,
         }
-        
+
         response_json = _request.post_https(
             domain="physics-api-cn.turtlesim.com",
             path="Messages/PostComment",
             port=443,
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -628,13 +627,13 @@ class _User:
             "x-API-Token": self.token,
             "x-API-AuthCode": self.auth_code,
         }
-        
+
         response_json = _request.post_https(
             domain="physics-api-cn.turtlesim.com",
             path="Messages/RemoveComment",
             port=443,
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -696,13 +695,13 @@ class _User:
             "x-API-Token": self.token,
             "x-API-AuthCode": self.auth_code,
         }
-        
+
         response_json = _request.post_https(
             domain="physics-api-cn.turtlesim.com",
             path="Messages/GetComments",
             port=443,
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -735,12 +734,12 @@ class _User:
             "x-API-Token": self.token,
             "x-API-AuthCode": self.auth_code,
         }
-        
+
         response_json = _request.post_https(
             domain="physics-api-cn.turtlesim.com",
             path="Contents/GetSummary",
             header=headers,
-            body=body
+            body=body,
         )
 
         def callback(status_code):
@@ -748,8 +747,7 @@ class _User:
                 raise PermissionError("login failed")
             if status_code == 404:
                 raise errors.ResponseFail(
-                    404,
-                    "experiment not found(may be you select category wrong)"
+                    404, "experiment not found(may be you select category wrong)"
                 )
 
         return _check_response(response_json, callback)
@@ -782,12 +780,12 @@ class _User:
             "x-API-Token": self.token,
             "x-API-AuthCode": self.auth_code,
         }
-        
+
         response_json = _request.post_https(
             domain="physics-api-cn.turtlesim.com",
             path="Contents/GetDerivatives",
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -822,7 +820,7 @@ class _User:
             body = {"Name": msg}
         else:
             errors.unreachable()
-            
+
         headers = {
             "Content-Type": "application/json",
             "x-API-Token": self.token,
@@ -834,7 +832,7 @@ class _User:
             path="Users/GetUser",
             port=443,
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -846,11 +844,13 @@ class _User:
             user_id: 要获取主页信息的用户的id, 若为None则是获取自己的主页信息
         """
         if not isinstance(user_id, (str, type(None))):
-            errors.type_error(f"Parameter user_id must be of type `Optional[str]`, but got value {user_id} of type `{type(user_id).__name__}`")
+            errors.type_error(
+                f"Parameter user_id must be of type `Optional[str]`, but got value {user_id} of type `{type(user_id).__name__}`"
+            )
 
         if user_id is None:
             user_id = self.user_id
-            
+
         body = {
             "ID": user_id,
         }
@@ -859,13 +859,13 @@ class _User:
             "x-API-Token": self.token,
             "x-API-AuthCode": self.auth_code,
         }
-        
+
         response_json = _request.post_https(
             domain="physics-api-cn.turtlesim.com",
             path="Contents/GetProfile",
             port=443,
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -916,12 +916,12 @@ class _User:
             "x-API-Token": self.token,
             "x-API-AuthCode": self.auth_code,
         }
-        
+
         response_json = _request.post_https(
             domain="physics-api-cn.turtlesim.com",
             path="Contents/StarContent",
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -942,8 +942,6 @@ class _User:
         Notes:
             该API为低级API, 上传图片推荐使用封装得更加完善的Experiment.upload()与Experiment.update()方法
         """
-        if policy is None or authorization is None:
-            raise RuntimeError("Sorry, Physics-Lab-AR can't upload this iamge")
         if not isinstance(policy, str):
             errors.type_error(
                 f"Parameter `policy` must be of type `str`, but got value `{policy}` of type `{type(policy).__name__}`"
@@ -960,44 +958,49 @@ class _User:
             raise FileNotFoundError(f"`{image_path}` not found")
 
         with open(image_path, "rb") as f:
-            boundary = '----WebKitFormBoundary' + uuid.uuid4().hex
+            boundary = "----WebKitFormBoundary" + uuid.uuid4().hex
             multipart_body = bytearray()
 
             # Field: policy
-            multipart_body.extend(f'--{boundary}\r\n'.encode('utf-8'))
-            multipart_body.extend(b'Content-Disposition: form-data; name="policy"\r\n\r\n')
-            multipart_body.extend(policy.encode('utf-8'))
-            multipart_body.extend(b'\r\n')
+            multipart_body.extend(f"--{boundary}\r\n".encode("utf-8"))
+            multipart_body.extend(
+                b'Content-Disposition: form-data; name="policy"\r\n\r\n'
+            )
+            multipart_body.extend(policy.encode("utf-8"))
+            multipart_body.extend(b"\r\n")
 
             # Field: authorization
-            multipart_body.extend(f'--{boundary}\r\n'.encode('utf-8'))
-            multipart_body.extend(b'Content-Disposition: form-data; name="authorization"\r\n\r\n')
-            multipart_body.extend(authorization.encode('utf-8'))
-            multipart_body.extend(b'\r\n')
+            multipart_body.extend(f"--{boundary}\r\n".encode("utf-8"))
+            multipart_body.extend(
+                b'Content-Disposition: form-data; name="authorization"\r\n\r\n'
+            )
+            multipart_body.extend(authorization.encode("utf-8"))
+            multipart_body.extend(b"\r\n")
 
             # Field: file
-            multipart_body.extend(f'--{boundary}\r\n'.encode('utf-8'))
-            multipart_body.extend(b'Content-Disposition: form-data; name="file"; filename="temp.jpg"\r\n')
-            multipart_body.extend(b'Content-Type: application/octet-stream\r\n\r\n')
+            multipart_body.extend(f"--{boundary}\r\n".encode("utf-8"))
+            multipart_body.extend(
+                b'Content-Disposition: form-data; name="file"; filename="temp.jpg"\r\n'
+            )
+            multipart_body.extend(b"Content-Type: application/octet-stream\r\n\r\n")
             multipart_body.extend(f.read())
-            multipart_body.extend(b'\r\n')
+            multipart_body.extend(b"\r\n")
 
             # End boundary
-            multipart_body.extend(f'--{boundary}--\r\n'.encode('utf-8'))
-            
+            multipart_body.extend(f"--{boundary}--\r\n".encode("utf-8"))
+
             headers = {"Content-Type": f"multipart/form-data; boundary={boundary}"}
-            
+
             response_json = _request.post_http(
                 domain="v0.api.upyun.com",
                 path="qphysics",
                 header=headers,
-                body=bytes(multipart_body)
+                body=bytes(multipart_body),
             )
 
             if response_json["code"] != 200:
                 raise errors.ResponseFail(
-                    response_json["code"],
-                    response_json['message']
+                    response_json["code"], response_json["message"]
                 )
             return response_json
 
@@ -1028,7 +1031,7 @@ class _User:
             domain="physics-api-cn.turtlesim.com",
             path="Messages/GetMessage",
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -1080,12 +1083,12 @@ class _User:
             "x-API-Token": self.token,
             "x-API-AuthCode": self.auth_code,
         }
-        
+
         response_json = _request.post_https(
             domain="physics-api-cn.turtlesim.com",
             path="Messages/GetMessages",
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -1136,12 +1139,12 @@ class _User:
             "x-API-Token": self.token,
             "x-API-AuthCode": self.auth_code,
         }
-        
+
         response_json = _request.post_https(
             domain="physics-api-cn.turtlesim.com",
             path="Contents/GetSupporters",
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -1208,7 +1211,7 @@ class _User:
             path="Users/GetRelations",
             port=443,
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -1247,7 +1250,7 @@ class _User:
             path="Users/Follow",
             port=443,
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -1281,7 +1284,7 @@ class _User:
             path="Users/Rename",
             port=443,
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -1309,13 +1312,13 @@ class _User:
             "x-API-Token": self.token,
             "x-API-AuthCode": self.auth_code,
         }
-        
+
         response_json = _request.post_https(
             domain="physics-api-cn.turtlesim.com",
             path="Users/ModifyInformation",
             port=443,
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -1359,7 +1362,7 @@ class _User:
             path="Users/ReceiveBonus",
             port=443,
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -1390,7 +1393,7 @@ class _User:
 
         if length <= 0:  # TODO 改天试试负数会发生什么
             raise ValueError
-            
+
         body = {
             "TargetID": target_id,
             "Reason": reason,
@@ -1407,7 +1410,7 @@ class _User:
             path="Users/Ban",
             port=443,
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
@@ -1430,7 +1433,7 @@ class _User:
             errors.type_error(
                 f"Parameter reason must be of type `str`, but got value `{reason}` of type `{type(reason).__name__}`"
             )
-        
+
         body = {
             "TargetID": target_id,
             "Reason": reason,
@@ -1440,13 +1443,13 @@ class _User:
             "x-API-Token": self.token,
             "x-API-AuthCode": self.auth_code,
         }
-        
+
         response_json = _request.post_https(
             domain="physics-api-cn.turtlesim.com",
             path="Users/Unban",
             port=443,
             header=headers,
-            body=body
+            body=body,
         )
 
         return _check_response(response_json)
