@@ -770,8 +770,12 @@ class _User:
         self, policy: str, authorization: str, image_path: str
     ) -> _api_result:
         """上传实验图片
-        @param authorization: 可通过/Contents/SubmitExperiment获取
+        @param authorization: 可通过/Contents/SubmitExperiment["Data"]["Token"]["Policy"]获取
+        @param policy: 可通过/Contents/SubmitExperiment的["Data"]["Token"]["Policy"]获取
         @param image_path: 待上传的图片在本地的路径
+
+        Note:
+            该API为低级API, 上传图片推荐使用封装得更加完善的Experiment.upload()与Experiment.update()方法
         """
         if policy is None or authorization is None:
             raise RuntimeError("Sorry, Physics-Lab-AR can't upload this iamge")

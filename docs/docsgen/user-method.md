@@ -289,8 +289,12 @@ async def async_unban(self, target_id: str, reason: str) -> Awaitable[physicsLab
 ```Python
 def upload_image(self, policy: str, authorization: str, image_path: str) -> physicsLab.web._api._api_result
 ```
-*  authorization: 可通过/Contents/SubmitExperiment获取
+*  authorization: 可通过/Contents/SubmitExperiment["Data"]["Token"]["Policy"]获取
+*  policy: 可通过/Contents/SubmitExperiment的["Data"]["Token"]["Policy"]获取
 *  image_path: 待上传的图片在本地的路径
+
+Note:
+该API为低级API, 上传图片推荐使用封装得更加完善的Experiment.upload()与Experiment.update()方法
 
 对应的协程风格的api:
 ```Python
