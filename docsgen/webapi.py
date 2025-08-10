@@ -35,7 +35,16 @@ def main():
         context += f"\n## {doc.splitlines()[0]}\n"
         context += f"```Python\ndef {fn_name}{method_signature}\n```\n"
         for line in doc.split('\n')[1:]:
-            context += f"{line.replace("@param", "* ").lstrip()}\n"
+            if "Args" in line:
+                context += "Args:\n"
+            elif "Returns" in line:
+                context += "Returns:\n"
+            elif "Notes" in line:
+                context += "Notes:\n"
+            elif line.lstrip() == "":
+                context += "\n"
+            else:
+                context += f"*  {line.lstrip()}\n"
 
         context += f"对应的协程风格的api:\n" \
             f"```Python\n" \

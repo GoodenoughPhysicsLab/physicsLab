@@ -16,9 +16,11 @@ from physicsLab._typing import Optional, List, TypedDict, Callable
 
 class _api_result(TypedDict):
     """物实api返回体的结构
-    @param Token: 令牌
-    @param AuthCode: 鉴权码
-    @param Data: 实际返回的数据
+
+    Attributes:
+        Token: 令牌
+        AuthCode: 鉴权码
+        Data: 实际返回的数据
     """
 
     Token: str
@@ -30,8 +32,14 @@ def _check_response(
     response: requests.Response, err_callback: Optional[Callable] = None
 ) -> _api_result:
     """检查返回的response
-    @callback: 自定义物实返回的status对应的报错信息,
-                要求传入status_code(捕获物实返回体中的status_code), 无返回值
+
+    Args:
+        response: requests响应对象
+        err_callback: 自定义物实返回的status对应的报错信息,
+                      要求传入status_code(捕获物实返回体中的status_code), 无返回值
+
+    Returns:
+        _api_result: 物实api返回体结构
     """
     errors.assert_true(err_callback is None or callable(err_callback))
 
@@ -50,7 +58,11 @@ def _check_response(
 
 
 def get_start_page() -> _api_result:
-    """获取主页数据"""
+    """获取主页数据
+
+    Returns:
+        _api_result: 物实api返回体结构
+    """
     response = requests.get("https://physics-api-cn.turtlesim.com/Users")
 
     return _check_response(response)
@@ -64,11 +76,16 @@ def get_avatar(
     usehttps: bool = False,
 ) -> bytes:
     """获取头像/实验封面
-    @param target_id: 用户id或实验id
-    @param index: 历史图片的索引
-    @param category: 只能为 "experiments" 或 "users"
-    @param size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
-    @param usehttps: 是否使用HTTPS协议，由于证书和域名不匹配，所以如果使用，则不会验证证书
+
+    Args:
+        target_id: 用户id或实验id
+        index: 历史图片的索引
+        category: 只能为 "experiments" 或 "users"
+        size_category: 只能为 "small.round" 或 "thumbnail" 或 "full"
+        usehttps: 是否使用HTTPS协议，由于证书和域名不匹配，所以如果使用，则不会验证证书
+
+    Returns:
+        bytes: 图片数据
     """
     if not isinstance(target_id, str):
         errors.type_error(
@@ -155,7 +172,11 @@ class _User:
         raise NotImplementedError
 
     def get_library(self) -> _api_result:
-        """获取社区作品列表"""
+        """获取社区作品列表
+
+        Returns:
+            _api_result: 物实api返回体结构
+        """
         response = requests.post(
             "https://physics-api-cn.turtlesim.com/Contents/GetLibrary",
             json={
@@ -184,14 +205,20 @@ class _User:
         from_skip: Optional[str] = None,
     ) -> _api_result:
         """查询实验
-        @param category: 实验区还是黑洞区
-        @param tags: 根据列表内的物实实验的标签进行对应的搜索
-        @param exclude_tags: 除了列表内的标签的实验都会被搜索到
-        @param languages: 根据列表内的语言进行对应的搜索
-        @param exclude_languages: 除了列表内的语言的实验都会被搜索到
-        @param user_id: 指定搜索的作品的发布者
-        @param take: 搜索数量
-        @param skip: 跳过搜索数量
+
+        Args:
+            category: 实验区还是黑洞区
+            tags: 根据列表内的物实实验的标签进行对应的搜索
+            exclude_tags: 除了列表内的标签的实验都会被搜索到
+            languages: 根据列表内的语言进行对应的搜索
+            exclude_languages: 除了列表内的语言的实验都会被搜索到
+            user_id: 指定搜索的作品的发布者
+            take: 搜索数量
+            skip: 跳过搜索数量
+            from_skip: 起始位置标识符
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(category, Category):
             errors.type_error(
@@ -304,9 +331,14 @@ class _User:
         category: Optional[Category] = None,
     ) -> _api_result:
         """获取实验
-        @param content_id: 当category不为None时, content_id为实验ID,
-                           否则会被识别为get_summary()["Data"]["ContentID"]的结果
-        @param category: 实验区还是黑洞区
+
+        Args:
+            content_id: 当category不为None时, content_id为实验ID,
+                       否则会被识别为get_summary()["Data"]["ContentID"]的结果
+            category: 实验区还是黑洞区
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(content_id, str):
             errors.type_error(
@@ -338,7 +370,20 @@ class _User:
     def confirm_experiment(
         self, summary_id: str, category: Category, image_counter: int
     ) -> _api_result:
-        """确认发布实验"""
+        """确认发布实验
+
+        Args:
+            summary_id: 摘要ID
+            category: 实验区还是黑洞区
+            image_counter: 图片计数器
+
+        Returns:
+            _api_result: 物实api返回体结构
+
+        Notes:
+            低级API, 请勿直接使用
+            使用Experiment.update()与Experiment.upload()方法来发布实验
+        """
         if not isinstance(summary_id, str):
             errors.type_error(
                 f"Parameter `summary_id` must be of type `str`, but got value `{summary_id}` of type `{type(summary_id).__name__}`"
@@ -373,8 +418,14 @@ class _User:
         self, summary_id: str, category: Category, reason: Optional[str] = None
     ) -> _api_result:
         """隐藏实验
-        @param summary_id: 实验ID
-        @param category: 实验区还是黑洞区
+
+        Args:
+            summary_id: 实验ID
+            category: 实验区还是黑洞区
+            reason: 隐藏原因
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(summary_id, str):
             errors.type_error(
@@ -423,11 +474,16 @@ class _User:
         special: Optional[str] = None,
     ) -> _api_result:
         """发表评论
-        @param target_id: 目标用户/实验的ID
-        @param target_type: User, Discussion, Experiment
-        @param content: 评论内容
-        @param reply_id: 被回复的user的ID (可被自动推导)
-        @param special: 为 "Reminder" 的话则是发送警告, 为None则是普通的评论
+
+        Args:
+            target_id: 目标用户/实验的ID
+            target_type: User, Discussion, Experiment
+            content: 评论内容
+            reply_id: 被回复的user的ID (可被自动推导)
+            special: 为 "Reminder" 的话则是发送警告, 为None则是普通的评论
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(target_id, str):
             errors.type_error(
@@ -510,8 +566,13 @@ class _User:
 
     def remove_comment(self, comment_id: str, target_type: str) -> _api_result:
         """删除评论
-        @param comment_id: 评论ID, 可以通过`get_comments`获取
-        @param target_type: User, Discussion, Experiment
+
+        Args:
+            comment_id: 评论ID, 可以通过`get_comments`获取
+            target_type: User, Discussion, Experiment
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(comment_id, str):
             errors.type_error(
@@ -550,11 +611,16 @@ class _User:
         comment_id: Optional[str] = None,
     ) -> _api_result:
         """获取评论板信息
-        @param target_id: 物实用户的ID/实验的id
-        @param target_type: User, Discussion, Experiment
-        @param take: 获取留言的数量
-        @param skip: 跳过的留言数量, 为(unix时间戳 * 1000)
-        @param comment_id: 从comment_id开始获取take条消息 (另一种skip的规则)
+
+        Args:
+            target_id: 物实用户的ID/实验的id
+            target_type: User, Discussion, Experiment
+            take: 获取留言的数量
+            skip: 跳过的留言数量, 为(unix时间戳 * 1000)
+            comment_id: 从comment_id开始获取take条消息 (另一种skip的规则)
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(target_id, str):
             errors.type_error(
@@ -601,8 +667,13 @@ class _User:
 
     def get_summary(self, content_id: str, category: Category) -> _api_result:
         """获取实验介绍
-        @param content_id: 实验ID
-        @param category: 实验区还是黑洞区
+
+        Args:
+            content_id: 实验ID
+            category: 实验区还是黑洞区
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(content_id, str):
             errors.type_error(
@@ -638,8 +709,13 @@ class _User:
 
     def get_derivatives(self, content_id: str, category: Category) -> _api_result:
         """获取作品的详细信息, 物实第一次读取作品会使用此接口
-        @param content_id: 实验ID
-        @param category: 实验区还是黑洞区
+
+        Args:
+            content_id: 实验ID
+            category: 实验区还是黑洞区
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(content_id, str):
             errors.type_error(
@@ -671,8 +747,13 @@ class _User:
         get_user_mode: enums.GetUserMode,
     ) -> _api_result:
         """获取用户信息
-        @param msg: 用户ID/用户名
-        @param get_user_mode: 根据ID/用户名获取用户信息
+
+        Args:
+            msg: 用户ID/用户名
+            get_user_mode: 根据ID/用户名获取用户信息
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(msg, str):
             errors.type_error(
@@ -704,7 +785,11 @@ class _User:
         return _check_response(response)
 
     def get_profile(self) -> _api_result:
-        """获取用户主页信息"""
+        """获取用户主页信息
+
+        Returns:
+            _api_result: 物实api返回体结构
+        """
         response = requests.post(
             "https://physics-api-cn.turtlesim.com:443/Contents/GetProfile",
             json={
@@ -723,10 +808,15 @@ class _User:
         self, content_id: str, category: Category, star_type: int, status: bool = True
     ) -> _api_result:
         """收藏/支持 某个实验
-        @param content_id: 实验ID
-        @param category: 实验区, 黑洞区
-        @param star_type: 0: 收藏, 1: 使用金币支持实验
-        @param status: True: 收藏, False: 取消收藏 (对支持无作用)
+
+        Args:
+            content_id: 实验ID
+            category: 实验区, 黑洞区
+            star_type: 0: 收藏, 1: 使用金币支持实验
+            status: True: 收藏, False: 取消收藏 (对支持无作用)
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(content_id, str):
             errors.type_error(
@@ -770,11 +860,16 @@ class _User:
         self, policy: str, authorization: str, image_path: str
     ) -> _api_result:
         """上传实验图片
-        @param authorization: 可通过/Contents/SubmitExperiment["Data"]["Token"]["Policy"]获取
-        @param policy: 可通过/Contents/SubmitExperiment的["Data"]["Token"]["Policy"]获取
-        @param image_path: 待上传的图片在本地的路径
 
-        Note:
+        Args:
+            authorization: 可通过/Contents/SubmitExperiment["Data"]["Token"]["Policy"]获取
+            policy: 可通过/Contents/SubmitExperiment的["Data"]["Token"]["Policy"]获取
+            image_path: 待上传的图片在本地的路径
+
+        Returns:
+            _api_result: 物实api返回体结构
+
+        Notes:
             该API为低级API, 上传图片推荐使用封装得更加完善的Experiment.upload()与Experiment.update()方法
         """
         if policy is None or authorization is None:
@@ -814,7 +909,12 @@ class _User:
 
     def get_message(self, message_id: str) -> _api_result:
         """读取系统邮件消息
-        @param message_id: 消息的id
+
+        Args:
+            message_id: 消息的id
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(message_id, str):
             errors.type_error(
@@ -843,11 +943,16 @@ class _User:
         no_templates: bool = True,
     ) -> _api_result:
         """获取用户收到的消息
-        @param category_id: 消息类型:
-            0: 全部, 1: 系统邮件, 2: 关注和粉丝, 3: 评论和回复, 4: 作品通知, 5: 管理记录
-        @param skip: 跳过skip条消息
-        @param take: 取take条消息
-        @param no_templates: 是否不返回消息种类的模板消息
+
+        Args:
+            category_id: 消息类型:
+                0: 全部, 1: 系统邮件, 2: 关注和粉丝, 3: 评论和回复, 4: 作品通知, 5: 管理记录
+            skip: 跳过skip条消息
+            take: 取take条消息
+            no_templates: 是否不返回消息种类的模板消息
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if category_id not in (0, 1, 2, 3, 4, 5):
             errors.type_error(
@@ -891,9 +996,15 @@ class _User:
         take: int = 16,
     ) -> _api_result:
         """获取支持列表
-        @param category: .Experiment 或 .Discussion
-        @param skip: 传入一个时间戳, 跳过skip条消息
-        @param take: 取take条消息
+
+        Args:
+            content_id: 内容ID
+            category: .Experiment 或 .Discussion
+            skip: 传入一个时间戳, 跳过skip条消息
+            take: 取take条消息
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(content_id, str):
             errors.type_error(
@@ -938,10 +1049,16 @@ class _User:
         query: str = "",  # TODO 获取编辑，志愿者列表啊之类的貌似也是这个api
     ) -> _api_result:
         """获取用户的关注/粉丝列表
-        @param display_type: 只能为 Follower: 粉丝, Following: 关注
-        @param skip: 跳过skip个用户
-        @param take: 取take个用户
-        @param query: 为用户id或昵称
+
+        Args:
+            user_id: 用户ID
+            display_type: 只能为 Follower: 粉丝, Following: 关注
+            skip: 跳过skip个用户
+            take: 取take个用户
+            query: 为用户id或昵称
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if display_type not in ("Follower", "Following"):
             raise ValueError(
@@ -987,8 +1104,13 @@ class _User:
 
     def follow(self, target_id: str, action: bool = True) -> _api_result:
         """关注用户
-        @param target_id: 被关注的用户的id
-        @param action: true为关注, false为取消关注
+
+        Args:
+            target_id: 被关注的用户的id
+            action: true为关注, false为取消关注
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(target_id, str):
             errors.type_error(
@@ -1016,7 +1138,12 @@ class _User:
 
     def rename(self, nickname: str) -> _api_result:
         """修改用户昵称
-        @param nickname: 新昵称
+
+        Args:
+            nickname: 新昵称
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(nickname, str):
             errors.type_error(
@@ -1040,7 +1167,12 @@ class _User:
 
     def modify_information(self, target: str) -> _api_result:
         """修改用户签名
-        @param target: 新签名
+
+        Args:
+            target: 新签名
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(target, str):
             errors.type_error(
@@ -1064,8 +1196,13 @@ class _User:
 
     def receive_bonus(self, activity_id: str, index: int) -> _api_result:
         """领取每日签到奖励
-        @param activity_id: 活动id
-        @param index: 该活动的第几次奖励
+
+        Args:
+            activity_id: 活动id
+            index: 该活动的第几次奖励
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(activity_id, str):
             errors.type_error(
@@ -1098,9 +1235,14 @@ class _User:
 
     def ban(self, target_id: str, reason: str, length: int) -> _api_result:
         """封禁用户
-        @param target_id: 要封禁的用户的id
-        @param reason: 封禁理由
-        @param length: 封禁天数
+
+        Args:
+            target_id: 要封禁的用户的id
+            reason: 封禁理由
+            length: 封禁天数
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(target_id, str):
             errors.type_error(
@@ -1136,8 +1278,13 @@ class _User:
 
     def unban(self, target_id: str, reason: str) -> _api_result:
         """解除封禁
-        @param target_id: 要解除封禁的用户的id
-        @param reason: 解封理由
+
+        Args:
+            target_id: 要解除封禁的用户的id
+            reason: 解封理由
+
+        Returns:
+            _api_result: 物实api返回体结构
         """
         if not isinstance(target_id, str):
             errors.type_error(
