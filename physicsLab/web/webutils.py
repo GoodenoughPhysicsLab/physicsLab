@@ -148,6 +148,7 @@ class ExperimentsIter:
         user_id: Optional[str] = None,
         max_retry: Optional[int] = 0,
         max_workers: int = _DEFAULT_MAX_WORKERS,
+        exclude_languages: Optional[List[str]] = None,
     ) -> None:
         """@param user: 执行查询操作的用户
         @param tags: 包含的标签列表
@@ -155,8 +156,6 @@ class ExperimentsIter:
         @param category: 实验类别
         @param languages: 语言列表
         @param user_id: 用户ID
-        @param take: 每次获取的数量
-        @param skip: 起始位置
         @param max_retry: 最大重试次数
         @param max_workers: 最大线程数
         """
@@ -216,6 +215,12 @@ class ExperimentsIter:
             errors.type_error(
                 f"Parameter `max_workers` must be of type `int`, but got value `{max_workers}` of type `{type(max_workers).__name__}`"
             )
+        if not isinstance(exclude_languages, type(None)) and (not isinstance(exclude_languages, list) or not all(
+            isinstance(tag, str) for tag in exclude_languages
+        )):
+            errors.type_error(
+                f"Parameter `exclude_languages` must be of type `Optional[List[str]]`, but got value `{exclude_languages}` of type `{type(exclude_languages).__name__}`"
+            )
         if start_skip < 0 or max_workers <= 0:
             raise ValueError
 
@@ -229,17 +234,19 @@ class ExperimentsIter:
         self.start_skip = start_skip
         self.from_skip = from_skip
         self.max_workers = max_workers
+        self.exclude_languages = exclude_languages
 
     def __iter__(self):
         while True:
             msgs = _run_task(
                 self.max_retry,
                 self.user.query_experiments,
-                self.category,
-                self.tags,
-                self.exclude_tags,
-                self.languages,
-                self.user_id,
+                category=self.category,
+                tags=self.tags,
+                exclude_tags=self.exclude_tags,
+                languages=self.languages,
+                exclude_languages=self.exclude_languages,
+                user_id=self.user_id,
                 take=self.TAKE_AMOUNT,
                 skip=self.start_skip,
                 from_skip=self.from_skip,
